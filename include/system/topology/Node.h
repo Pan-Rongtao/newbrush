@@ -49,7 +49,7 @@
 
 #pragma once
 
-#include "core/Object.h"
+#include "../../core/Object.h"
 #include "Connect.h"
 
 namespace nb { namespace Core {
@@ -74,7 +74,7 @@ class Pipe;
 class P2PPipe;
 class NodeInternal;
 class Token;
-class NB_EXPORT Node : public nbObject
+class NB_API Node : public nbObject
 {
 	friend class Pipe;
 	friend class Connect;
@@ -140,7 +140,7 @@ public:
 	//以此节点为入口，递归遍历拓扑图上的所有节点
 	void RecursiveTraverseTopologyGraph(bool isVisitOwner, Token *token=NULL, Pipe *enterPipe=NULL, nbObject *tag=NULL, Node **outHandledNode=NULL);
 
-//	Core::InternalObjectPtr<NodeInternal> xx;
+//	::coreInternalObjectPtr<NodeInternal> xx;
 
 	PipeIterator BeginPipe() { return BeginPipeOverride();}
 	PipeIterator EndPipe() {return EndPipeOverride();}
@@ -166,7 +166,7 @@ typedef nbObjectPtrDerive<Node, nbObjectPtr> NodePtr;
 
 
 class MultiPipNodeInternal;
-class NB_EXPORT MultiPipeNode : public Node
+class NB_API MultiPipeNode : public Node
 {
 public:
 	MultiPipeNode();

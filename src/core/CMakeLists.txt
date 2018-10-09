@@ -17,13 +17,12 @@ project(core)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
-add_definitions(-DNB_CORE_EXPORTS)
 
 # 3. Project Build
 
 set(LIB_NAME "core")
 
-file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.cpp")
+file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.cpp")
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})

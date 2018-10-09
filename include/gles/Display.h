@@ -1,26 +1,26 @@
 #pragma once
-#include "core/NewBrushDef.h"
+#include "../core/Def.h"
 
-namespace nb{ namespace gl{ namespace egl{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Display
+class NB_API Display
 {
 public:
 	Display();
 	Display(long id);
 
-	bool IsNull() const;
+	bool isNull() const;
 
-	long GetId() const;
+	long id() const;
 
-	void *GetEGLHandle() const;
+	void *handle() const;
 
 public:
-	static Display Default();
+	static Display defaultx();
 
 private:
 	void				*m_Handle;
 	long				m_Id;
 };
 
-}}}
+}}

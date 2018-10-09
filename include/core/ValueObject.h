@@ -1,15 +1,9 @@
 ﻿#pragma once
-
-#include "NewBrushDef.h"
 #include "OriginObject.h"
 
-#ifdef new
-#undef new
-#endif
+namespace nb { namespace core {
 
-namespace nb { namespace Core {
-
-class NB_CORE_DECLSPEC_X_INTERFACE ValueObject : public OriginObject
+class NB_API ValueObject : public OriginObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 

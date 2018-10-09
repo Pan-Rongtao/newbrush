@@ -1,63 +1,50 @@
-﻿#pragma once
-#include "UIElement.h"
-#include "system/Color.h"
-#include "system/Size.h"
-#include "Font.h"
-#include <string>
-#include "system/String.h"
+#pragma once
+#include "../gui/UIElement.h"
+#include "../gui/Brush.h"
 
-namespace nb { namespace Gui {
+namespace nb{namespace gui{
 
-class TextBlock;
-class TextBlockPrivate;
-class LetterNodeImpl;
-class NB_EXPORT LetterNode : public Core::RefObject
+enum TextAlignment
 {
-public:
-	friend class TextBlock;
-	void SetColor(const nb::System::Color& color);
-protected:
-	LetterNode();
-	~LetterNode();
-	inline LetterNodeImpl * GetPrivate() { return m_private; }
-private:
-	LetterNodeImpl * m_private;
+	Left,
+	Right,
+	Center,
+	Justify,
 };
 
-typedef nbObjectPtrDerive<LetterNode, Core::RefObjectPtr> LetterNodePtr;
-
-class NB_EXPORT TextBlock : public UIElement
+enum TextWrapping
 {
-public:
-	NB_OBJECT_TYPE_DECLARE();
-public:
-	friend class LetterNode;
-	enum AutoStretchMode
-	{
-		AutoStretchMode_Width,
-		AutoStretchMode_Height
-	};
-	TextBlock(void);
-	TextBlock(const nb::Media::Font & font);
-	~TextBlock(void);
-	NB_OBJECT_VALUE_PROPERTY_DECLARE(Color,nb::System::Color);
-	NB_X_OBJECT_PROPERTY_DECLARE(Text, nb::System::String);
-	
-	void SetStretchMode(AutoStretchMode mode);
-	virtual IElementRender * GetElementRender() const;
-	void SetFont(const nb::Media::FontPtr font);
-	void SetLetterSpacing(int letterSpacing);
-	void SetLineSpacing(int lineSpacing);
-	LetterNodePtr GetLetter(int index);
-	virtual nb::System::Size MeasureOverride(const System::Size &availableSize);
-	virtual nb::System::Size ArrangeOverride(const System::Size &finalSize);
-
-	
-	void OnTextChanged(Core::PropertyValueChangedEventArgs &args);
-private:
-	TextBlockPrivate * m_pPrivate;
+	NoWrap,
+	Wrap,
+	WrapWithOverflow,
 };
 
-typedef nbObjectPtrDerive<TextBlock, UIElementPtr> TextBlockPtr;
+enum TextTrimming
+{
+	None,
+	CharacterEllipsis,
+	WordEllipsis,
+};
+
+class TextBlock : public UIElement
+{
+public:
+	TextBlock();
+	TextBlock(const std::string &content);
+	virtual ~TextBlock();
+
+public:
+	nb::core::Property_rw<std::string>				Text;
+	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;
+	nb::core::Property_rw<std::string>				FontFamily;
+	nb::core::Property_rw<double>					FontSize;
+	nb::core::Property_rw<int>						FontWeight;
+	nb::core::Property_rw<nb::core::Color>			Foreground;
+	nb::core::Property_rw<double>					LineHeight;
+	nb::core::Property_rw<Thickness>				Padding;
+	nb::core::Property_rw<TextAlignment>			TextAlignment;
+	nb::core::Property_rw<TextTrimming>				TextTrimming;
+	nb::core::Property_rw<TextWrapping>				TextWrapping;
+};
 
 }}

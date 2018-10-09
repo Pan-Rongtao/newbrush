@@ -5,11 +5,8 @@
 #include "core/Exception.h"
 #include "EglMaster.h"
 
-using nb::Core::Exception;
-using nb::gl::egl::Surface;
-using nb::gl::egl::WindowSurface;
-using nb::gl::egl::PbufferSurface;
-using nb::gl::egl::PixmapSurface;
+using namespace nb::core;
+using namespace nb::gl;
 
 Surface::Surface()
 {
@@ -17,28 +14,40 @@ Surface::Surface()
 
 Surface::~Surface()
 {
-	eglDestroySurface(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), m_Handle);
+	eglDestroySurface(nb::gl::getCurrentDisplay().handle(), m_Handle);
 }
 
-int Surface::GetWidth() const
+void Surface::setWidth(int width)
 {
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	eglSurfaceAttrib(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, width);
+//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, &width);
+}
+
+void Surface::setHeight(int height)
+{
+	eglSurfaceAttrib(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, height);
+//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, &height);
+}
+
+int Surface::width() const
+{
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	const char *p = eglQueryString(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), EGL_WIDTH);
+	const char *p = eglQueryString(nb::gl::getCurrentDisplay().handle(), EGL_WIDTH);
 	return atoi(p);
 }
 
-int Surface::GetHeight() const
+int Surface::height() const
 {
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	const char *p = eglQueryString(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), EGL_HEIGHT);
+	const char *p = eglQueryString(nb::gl::getCurrentDisplay().handle(), EGL_HEIGHT);
 	return atoi(p);
 }
 
-void *Surface::GetEGLHandle() const
+void *Surface::handle() const
 {
 	return m_Handle;
 }
@@ -47,24 +56,24 @@ void *Surface::GetEGLHandle() const
 WindowSurface::WindowSurface(int width, int height, long windowHandle)
 : m_WindowHandle(windowHandle)
 {
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
-	if(nb::gl::egl::GetCurrentConfigure().IsNull())
+	if(nb::gl::getCurrentConfigure().isNull())
 		NB_THROW_EXCEPTION("none configure set, use egl::setconfigure to set one configure.");
 
-	m_Handle = eglCreateWindowSurface(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), nb::gl::egl::GetCurrentConfigure().GetEGLHandle(), (EGLNativeWindowType)windowHandle, NULL);
-	eglQuerySurface(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), m_Handle, EGL_WIDTH, &width);
-	eglQuerySurface(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), m_Handle, EGL_HEIGHT, &height);
+	m_Handle = eglCreateWindowSurface(nb::gl::getCurrentDisplay().handle(), nb::gl::getCurrentConfigure().handle(), (EGLNativeWindowType)windowHandle, nullptr);
+	eglQuerySurface(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, &width);
+	eglQuerySurface(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, &height);
 
-	nb::gl::egl::SurfacesMaster::Push(this);
+	nb::gl::SurfacesMaster::push(this);
 }
 
 WindowSurface::~WindowSurface()
 {
-	nb::gl::egl::SurfacesMaster::Erease(this);
+	nb::gl::SurfacesMaster::erease(this);
 }
 
-long WindowSurface::GetWindowHandle()
+long WindowSurface::windowHandle()
 {
 	return m_WindowHandle;
 }
@@ -80,7 +89,12 @@ PixmapSurface::PixmapSurface(int width, int height, void *pixmapHandle)
 {
 }
 
-void *PixmapSurface::GetPixmapHandle()
+void *PixmapSurface::pixmapHandle()
+{
+	return m_PixmapHandle;
+}
+
+const void *PixmapSurface::pixmapHandle() const
 {
 	return m_PixmapHandle;
 }

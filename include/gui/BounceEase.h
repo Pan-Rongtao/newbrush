@@ -1,21 +1,18 @@
 ﻿#pragma once
-
 #include "EasingFunctionBase.h"
 
-namespace nb { namespace Media {
+namespace nb { namespace gui {
 
-	class NB_EXPORT BounceEase : public EasingFunctionBase
-	{
-		NB_OBJECT_TYPE_DECLARE();
+class NB_API BounceEase : public EasingFunctionBase
+{
+public:
+	BounceEase(void);
+	virtual ~BounceEase(void);
 
-	public:
-		BounceEase(void);
-		virtual ~BounceEase(void);
+	void SetEasingMode(EasingMode mode);
+	double GetEaseDefault(double normalizedTime) const;
 
-		void SetEasingMode(EasingMode mode);
-		double GetEaseDefault(double normalizedTime) const;
-
-		//float m_springiness;	// 弹力值
-	};
+	//float m_springiness;	// 弹力值
+};
 
 }}

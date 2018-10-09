@@ -1,40 +1,50 @@
 ﻿#pragma once
-
 #include "ContentControl.h"
 
-#include "gui/LineMultiItemsTrack.h" // 暂时使用
+namespace nb { namespace gui {
 
-namespace nb { namespace Gui {
+class NB_API ScrollViewer : public ContentControl
+{
+public:
+	ScrollViewer();
+	virtual ~ScrollViewer();
 
-	class ScrollViewerInternal;
-	class NB_EXPORT ScrollViewer : public ContentControl
-	{
-	public:
-		ScrollViewer(void);
-		virtual ~ScrollViewer(void);
+	void lineLeft();
+	void lineRight();
+	void lineUp();
+	void lineDown();
 
-		ScrollViewerInternal * GetInternal() const {return m_internal;}
+	void pageLeft();
+	void pageRight();
+	void pageUp();
+	void pageDown();
 
-		void ScrollToVerticalOffset(float offset);
+	void scrollToLeft();
+	void scrollToRight();
+	void scrollToTop();
+	void scrollToBottom();
+	void scrollToHome();
+	void scrollToEnd();
 
-	protected:
-		float GetExtraRenderOffsetX() const;
-		float GetExtraRenderOffsetY() const;
+	void scrollToHorizontalOffset(double offset);
+	void scrollToVerticalOffset(double offset);
 
-		virtual System::Size MeasureOverride(const System::Size &availableSize) {return System::Size(0, 0);}
+public:
+	nb::core::Property_rw<bool>		CanContentScroll;
+	nb::core::Property_rw<bool>		HorizontalScrollBarVisibility;
+	nb::core::Property_rw<bool>		HorizontalScrollBarEnabled;
+	nb::core::Property_rw<bool>		VerticalScrollBarVisibility;
+	nb::core::Property_rw<bool>		VerticalScrollBarEnabled;
+	nb::core::Property_rw<double>	HorizontalOffset;
+	nb::core::Property_rw<double>	VerticalOffset;
+	nb::core::Property_rw<double>	PanningDeceleration;
+	nb::core::Property_rw<double>	ScrollableWidth;
+	nb::core::Property_rw<double>	ScrollableHeight;
 
-		virtual void OnActualSizeChanged();
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-	private:
-//		void On_LineMultItemsTrack_Move(ILineMultiItemsTrackHandle *pTrack, int nFirstItem, float fItemOffset, nb::Gui::ReboundScrollCtrler::EnumWorkMode nOrientation);
-
-		void OnTrackMove(LineMultiItemsTrack::TrackMoveEventParam &pas);
-
-	private:
-		ScrollViewerInternal * m_internal;
-		float m_verticalOffset;
-	};
-
-	typedef nbObjectPtrDerive<ScrollViewer, ContentControlPtr> ScrollViewerPtr;
+};
 
 }}

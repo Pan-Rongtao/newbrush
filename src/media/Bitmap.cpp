@@ -2,8 +2,8 @@
 #include "media/Bitmap.h"
 #include "Bitmap_Internal.h"
 
-using namespace nb::Media;
-using namespace nb::System;
+using namespace nb::core;
+using namespace nb::media;
 
 Bitmap::Bitmap()
 {
@@ -22,7 +22,7 @@ Bitmap::Bitmap(int width, int height)
 
 Bitmap::Bitmap(const SizeI &size)
 {
-	m_internal = new Bitmap_Internal(size.GetWidth(), size.GetHeight(), Bitmap::Format_Bpp32_Rgba8888);
+	m_internal = new Bitmap_Internal(size.width(), size.height(), Bitmap::Format_Bpp32_Rgba8888);
 }
 
 Bitmap::Bitmap(int width, int height, PixelFormat format)
@@ -34,7 +34,7 @@ Bitmap::Bitmap(int width, int height, PixelFormat format)
 
 Bitmap::Bitmap(const SizeI &size, PixelFormat format)
 {
-	m_internal = new Bitmap_Internal(size.GetWidth(), size.GetHeight(), format);
+	m_internal = new Bitmap_Internal(size.width(), size.height(), format);
 }
 
 Bitmap::Bitmap(const unsigned char *buffer, int width, int height, PixelFormat format)
@@ -44,7 +44,7 @@ Bitmap::Bitmap(const unsigned char *buffer, int width, int height, PixelFormat f
 
 Bitmap::Bitmap(const unsigned char *buffer, const SizeI &size, PixelFormat format)
 {
-	m_internal = new Bitmap_Internal(buffer, size.GetWidth(), size.GetHeight(), format);
+	m_internal = new Bitmap_Internal(buffer, size.width(), size.height(), format);
 }
 
 Bitmap::~Bitmap()
@@ -63,162 +63,156 @@ void Bitmap::operator = (const Bitmap &other)
 	m_internal = new Bitmap_Internal(*other.m_internal);
 }
 
-void Bitmap::LoadFile(const char *pFilePath)
+void Bitmap::loadFile(const char *pFilePath)
 {
-	m_internal->LoadFile(pFilePath);
+	m_internal->loadFile(pFilePath);
 }
 
-void Bitmap::LoadFile(const String &filePath)
+void Bitmap::loadFile(const String &filePath)
 {
-	LoadFile(filePath.ToUtf8().GetData());
+	loadFile(filePath.ToUtf8().GetData());
 }
 
-void Bitmap::LoadFileNarrowed(const nb::System::String &filePath, int jpegNarrow)
+void Bitmap::loadFileNarrowed(const String &filePath, int jpegNarrow)
 {
-	m_internal->LoadFileNarrowed(filePath, jpegNarrow);
+	m_internal->loadFileNarrowed(filePath, jpegNarrow);
 }
 
-void Bitmap::LoadData(const unsigned char *data, int nLengthBytes)
+void Bitmap::loadData(const unsigned char *data, int nLengthBytes)
 {
-	return m_internal->LoadData(data, nLengthBytes);
+	return m_internal->loadData(data, nLengthBytes);
 }
 
-const unsigned char *Bitmap::GetData() const
+const unsigned char *Bitmap::data() const
 {
-	return m_internal->GetData();
+	return m_internal->data();
 }
 
-void Bitmap::Fill(const Color &c)
+void Bitmap::fill(const Color &c)
 {
-	m_internal->Fill(c.ToInteger32());
+	m_internal->fill(c.toInteger32());
 }
 
-int Bitmap::GetWidth() const
+int Bitmap::width() const
 {
-	return m_internal->GetPixelWidth();
+	return m_internal->pixelWidth();
 }
 
-int Bitmap::GetHeight() const
+int Bitmap::height() const
 {
-	return m_internal->GetPixelHeight();
+	return m_internal->pixelHeight();
 }
 
-SizeI Bitmap::GetSize() const
+SizeI Bitmap::size() const
 {
-	return SizeI(GetWidth(), GetHeight());
+	return SizeI(width(), height());
 }
 
-int Bitmap::GetBytesCount() const
+int Bitmap::bytesCount() const
 {
-	return m_internal->GetBytesCount();
+	return m_internal->bytesCount();
 }
 
-unsigned char *Bitmap::GetScanLine(int lineIndex)
+unsigned char *Bitmap::scanLine(int lineIndex)
 {
-	return m_internal->GetScanLine(lineIndex);
+	return m_internal->scanLine(lineIndex);
 }
 
-bool Bitmap::HasPixelData() const
+bool Bitmap::hasPixelData() const
 {
-	return m_internal->HasPixelData();
+	return m_internal->hasPixelData();
 }
 
-bool Bitmap::IsNull() const
+bool Bitmap::isNull() const
 {
-	return m_internal->IsNull();
+	return m_internal->isNull();
 }
 
-Bitmap::PixelFormat Bitmap::GetPixelFormat() const
+Bitmap::PixelFormat Bitmap::pixelFormat() const
 {
-	return m_internal->GetPixelFormat();
+	return m_internal->pixelFormat();
 }
 
-int Bitmap::GetBpp() const
+int Bitmap::bpp() const
 {
-	return m_internal->GetBpp();
+	return m_internal->bpp();
 }
 
-Color Bitmap::GetPixel(int x, int y) const
+Color Bitmap::pixel(int x, int y) const
 {
-	return Color::FromInteger32(m_internal->GetPixel(x, y));
+	return Color::fromInteger32(m_internal->pixel(x, y));
 }
 
-Color Bitmap::GetPixel(const PointI &p) const
+Color Bitmap::pixel(const PointI &p) const
 {
-	return GetPixel(p.GetX(), p.GetY());
+	return pixel(p.x(), p.y());
 }
 
-void Bitmap::SetPixel(int x, int y, const Color &c)
+void Bitmap::setPixel(int x, int y, const Color &c)
 {
-	m_internal->SetPixel(x, y, c.ToInteger32());
+	m_internal->setPixel(x, y, c.toInteger32());
 }
 
-void Bitmap::SetPixel(const PointI &p, const Color &c)
+void Bitmap::setPixel(const PointI &p, const Color &c)
 {
-	SetPixel(p.GetX(), p.GetY(), c);
+	setPixel(p.x(), p.y(), c);
 }
 
-Bitmap Bitmap::Scale(int width, int height) const
+Bitmap Bitmap::scale(int width, int height) const
 {
-	Bitmap_Internal pri = m_internal->Scale(width, height);
-	return Bitmap(pri.GetData(), pri.GetPixelWidth(), pri.GetPixelHeight(), pri.GetPixelFormat());
+	Bitmap_Internal pri = m_internal->scale(width, height);
+	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-Bitmap Bitmap::Scale(const SizeI &size) const
+Bitmap Bitmap::scale(const SizeI &size) const
 {
-	return Scale(size.GetWidth(), size.GetHeight());
+	return scale(size.width(), size.height());
 }
 
-Bitmap Bitmap::ScaleWidth(int width) const
+Bitmap Bitmap::scaleWidth(int width) const
 {
-	return Scale(width, GetHeight());
+	return scale(width, height());
 }
 
-Bitmap Bitmap::ScaleHeight(int height) const
+Bitmap Bitmap::scaleHeight(int height) const
 {
-	return Scale(GetWidth(), height);
+	return scale(width(), height);
 }
 
-Bitmap Bitmap::Copy() const
+Bitmap Bitmap::copy() const
 {
-	return Copy(0, 0, GetWidth(), GetHeight());
+	return copy(0, 0, width(), height());
 }
 
-Bitmap Bitmap::Copy(int x, int y, int width, int height) const
+Bitmap Bitmap::copy(int x, int y, int width, int height) const
 {
-	Bitmap_Internal pri = m_internal->Copy(x, y, width, height);
-	return Bitmap(pri.GetData(), pri.GetPixelWidth(), pri.GetPixelHeight(), pri.GetPixelFormat());
+	Bitmap_Internal pri = m_internal->copy(x, y, width, height);
+	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-Bitmap Bitmap::Copy(const RectI &rc) const
+Bitmap Bitmap::copy(const RectI &rc) const
 {
-	return Copy(rc.GetLeft(), rc.GetTop(), rc.GetWidth(), rc.GetHeight());
+	return copy(rc.left(), rc.top(), rc.width(), rc.height());
 }
 
-Bitmap Bitmap::ToGray() const
+Bitmap Bitmap::toGray() const
 {
-	Bitmap_Internal pri = m_internal->ToGray();
-	return Bitmap(pri.GetData(), pri.GetPixelWidth(), pri.GetPixelHeight(), pri.GetPixelFormat());
+	Bitmap_Internal pri = m_internal->toGray();
+	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-Bitmap Bitmap::ConverToFormat(PixelFormat format)
+Bitmap Bitmap::converToFormat(PixelFormat format)
 {
-	Bitmap_Internal pri = m_internal->ConverToFormat(format);
-	return Bitmap(pri.GetData(), pri.GetPixelWidth(), pri.GetPixelHeight(), pri.GetPixelFormat());
+	Bitmap_Internal pri = m_internal->converToFormat(format);
+	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-void Bitmap::SaveAsFile(const String &filePath) const
+void Bitmap::saveAsFile(const String &filePath) const
 {
-	SaveAsFile(filePath.ToUtf8().GetData());
+	saveAsFile(filePath.ToUtf8().GetData());
 }
 
-void Bitmap::SaveAsFile(const char *pfilePath) const
+void Bitmap::saveAsFile(const char *pfilePath) const
 {
-	m_internal->SaveAsFile(pfilePath);
+	m_internal->saveAsFile(pfilePath);
 }
-/*
-Bitmap Bitmap::BgrToRgb() const
-{
-	Bitmap_Internal pri = m_internal->BgrToRgb();
-	return Bitmap(pri.GetData(), pri.GetPixelWidth(), pri.GetPixelHeight(), pri.GetPixelFormat());
-}*/

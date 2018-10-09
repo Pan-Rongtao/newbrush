@@ -1,9 +1,7 @@
 ﻿#pragma once
-
 #include <set>
 #include <map>
 #include <list>
-#include "core/NewBrushDef.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -11,7 +9,7 @@
 #include <pthread.h>
 #endif
 
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class ObjectLiveMonitor
 {
@@ -46,8 +44,6 @@ public:
 	void Test();
 
 private:
-
-
 	struct BlockInfo
 	{
 		BlockInfo() : m_fileName(NULL), m_line(0), m_serial(0) {}

@@ -4,73 +4,61 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
-using nb::System::String;
-using nb::gl::egl::Configure;
-using nb::gl::egl::Display;
-using nb::gl::egl::Surface;
-using nb::gl::egl::Context;
+using namespace nb::gl;
 
-nb::gl::egl::Display	m_Display;
-nb::gl::egl::Configure	m_Configure;
+nb::gl::Display	m_Display;
+nb::gl::Configure	m_Configure;
 
-nb::System::String nb::gl::egl::GetVersion()
+std::string nb::gl::getVersion()
 {
-	if(GetCurrentDisplay().IsNull())
+	if(getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	std::string s = eglQueryString(GetCurrentDisplay().GetEGLHandle(), EGL_VERSION);
-	return String::FromAscii(s.data());
+	return eglQueryString(getCurrentDisplay().handle(), EGL_VERSION);
 }
 
-nb::System::String nb::gl::egl::GetVendor()
+std::string nb::gl::getVendor()
 {
-	if(GetCurrentDisplay().IsNull())
+	if(getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	std::string s = eglQueryString(GetCurrentDisplay().GetEGLHandle(), EGL_VENDOR);
-	return String::FromAscii(s.data());
+	return eglQueryString(getCurrentDisplay().handle(), EGL_VENDOR);
 }
 
-void nb::gl::egl::Initialize(const Display &display)
+void nb::gl::initialize(const Display &display)
 {
 	m_Display = display;
 }
 
-const nb::gl::egl::Display &nb::gl::egl::GetCurrentDisplay()
+const nb::gl::Display &nb::gl::getCurrentDisplay()
 {
 	return m_Display;
 }
 
-void nb::gl::egl::SetConfigure(const Configure &configure)
+void nb::gl::setConfigure(const Configure &configure)
 {
-	if(GetCurrentDisplay().IsNull())
+	if(getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
 	m_Configure = configure;
 }
 
-const Configure &nb::gl::egl::GetCurrentConfigure()
+const Configure &nb::gl::getCurrentConfigure()
 {
 	return m_Configure;
 }
 
-void nb::gl::egl::MakeCurrent(const Surface *onScreen, const Surface *offScreen, const Context *context)
+void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)
 {
-	if(onScreen == NULL || offScreen == NULL || context == NULL)
-		NB_THROW_EXCEPTION("null param");
-	if(GetCurrentDisplay().IsNull())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
+	if(onScreen == nullptr || offScreen == nullptr || context == nullptr)	NB_THROW_EXCEPTION("null param");
+	if(getCurrentDisplay().isNull())	NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	EGLBoolean b = eglMakeCurrent(GetCurrentDisplay().GetEGLHandle(), onScreen->GetEGLHandle(), offScreen->GetEGLHandle(), context->GetEGLHandle());
+	EGLBoolean b = eglMakeCurrent(getCurrentDisplay().handle(), onScreen->handle(), offScreen->handle(), context->handle());
 	if(!b)
-	{
-		char info[100] = {0};
-		sprintf(info, "Egl::SetCurrent fail. error code[%d]", eglGetError());
-		NB_THROW_EXCEPTION(info);
-	}
+		NB_THROW_EXCEPTION("eglMakeCurrent fail");
 }
 
-void nb::gl::egl::SwapBuffers(const Surface *surface)
+void nb::gl::swapBuffers(const Surface *surface)
 {
-	eglSwapBuffers(GetCurrentDisplay().GetEGLHandle(), surface->GetEGLHandle());
+	eglSwapBuffers(getCurrentDisplay().handle(), surface->handle());
 }

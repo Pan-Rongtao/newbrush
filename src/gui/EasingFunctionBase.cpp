@@ -1,8 +1,6 @@
 ﻿#include "gui/EasingFunctionBase.h"
 
-using namespace nb::Media;
-
-NB_OBJECT_TYPE_IMPLEMENT(EasingFunctionBase, nbObject, NULL, NULL);
+using namespace nb::gui;
 
 EasingFunctionBase::EasingFunctionBase(void)
 :m_mode(EaseOut)

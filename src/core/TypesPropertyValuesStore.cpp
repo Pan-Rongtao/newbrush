@@ -2,11 +2,7 @@
 #include "PropertyValuesMgr.h"
 #include "TypesPropertyValuesStorePrivate.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 TypesPropertyValuesStore::TypesPropertyValuesStore(void)
 	: m_pPrivate(NULL)

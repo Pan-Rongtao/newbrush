@@ -1,31 +1,22 @@
 ﻿#pragma once
-#include "system/Color.h"
-#include "system/RectI.h"
-#include "gui/UIElement.h"
-#include "gui/Brush.h"
+#include "../gui/Shape.h"
 
-namespace nb { namespace Gui {
+namespace nb { namespace gui {
 
-class Rectangle_Internal;
-class NB_EXPORT Rectangle : public UIElement
+class NB_API Rectangle : public Shape
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
 	Rectangle();
 	virtual ~Rectangle();
 
-	//填充属性
-	NB_X_OBJECT_PROPERTY_DECLARE(Fill, nb::Media::Brush);
+public:
+	nb::core::Property_rw<double>		RadiusX;
+	nb::core::Property_rw<double>		RadiusY;
 
-	virtual IElementRender * GetElementRender() const;
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-private:
-	void OnFillChanged(Core::PropertyValueChangedEventArgs &args);
-
-	Rectangle_Internal		*m_internal;
 };
-
-typedef nbObjectPtrDerive<Rectangle, UIElementPtr> RectanglePtr;
 
 }}

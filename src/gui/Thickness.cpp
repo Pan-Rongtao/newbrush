@@ -1,7 +1,5 @@
 ﻿#include "gui/Thickness.h"
-using namespace nb::Gui;
-
-NB_OBJECT_TYPE_IMPLEMENT(nb::Gui::Thickness, nb::Core::ValueObject, NULL, NULL);
+using namespace nb::gui;
 
 Thickness::Thickness()
 	: m_fLeft(0)

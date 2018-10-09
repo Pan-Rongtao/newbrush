@@ -2,12 +2,13 @@
 #include "Bitmap_Internal.h"
 #include "core/Exception.h"
 
-using namespace nb::Media;
+using namespace nb::core;
+using namespace nb::media;
 bool			g_bHasInitFreeImage;
 Bitmap_Internal::Bitmap_Internal()
 : m_pFreeImage(NULL)
 {
-	InitFreeeImage();
+	initFreeeImage();
 }
 
 Bitmap_Internal::Bitmap_Internal(const char *pFilePath)
@@ -15,14 +16,14 @@ Bitmap_Internal::Bitmap_Internal(const char *pFilePath)
 {
 	//文件不存在异常
 	//if()
-	InitFreeeImage();
-	LoadFile(pFilePath);
+	initFreeeImage();
+	loadFile(pFilePath);
 }
 
 Bitmap_Internal::Bitmap_Internal(int width, int height, Bitmap::PixelFormat format)
 : m_pFreeImage(NULL)
 {
-	InitFreeeImage();
+	initFreeeImage();
 	if(width < 0 || height < 0 || format == Bitmap::Format_Invalid)
 		NB_THROW_EXCEPTION("invalid param");
 
@@ -63,7 +64,7 @@ Bitmap_Internal::Bitmap_Internal(int width, int height, Bitmap::PixelFormat form
 Bitmap_Internal::Bitmap_Internal(const unsigned char *buffer, int width, int height, Bitmap::PixelFormat format)
 : m_pFreeImage(NULL)
 {
-	InitFreeeImage();
+	initFreeeImage();
 	if(!buffer || format == Bitmap::Format_Invalid)
 		return;
 
@@ -125,7 +126,7 @@ void Bitmap_Internal::operator = (const Bitmap_Internal &other)
 	m_pFreeImage = FreeImage_Clone(other.m_pFreeImage);
 }
 
-void Bitmap_Internal::LoadFile(const char *pFilePath)
+void Bitmap_Internal::loadFile(const char *pFilePath)
 {
 	//文件不存在
 	//assert(1);
@@ -133,14 +134,14 @@ void Bitmap_Internal::LoadFile(const char *pFilePath)
 	m_pFreeImage = FreeImage_Load(FreeImage_GetFileType(pFilePath), pFilePath);
 }
 
-void Bitmap_Internal::LoadFileNarrowed(const nb::System::String &filePath, int jpegNarrow)
+void Bitmap_Internal::loadFileNarrowed(const String &filePath, int jpegNarrow)
 {
 	FreeImage_Unload(m_pFreeImage);
 	std::string s = filePath.ToUtf8().GetData();
 	m_pFreeImage = FreeImage_Load(FreeImage_GetFileType(s.data()), s.data(), 0, jpegNarrow);
 }
 
-void Bitmap_Internal::LoadData(const unsigned char *data, int nLengthBytes)
+void Bitmap_Internal::loadData(const unsigned char *data, int nLengthBytes)
 {
 	//assert
 	assert(nLengthBytes >= 0);
@@ -151,27 +152,27 @@ void Bitmap_Internal::LoadData(const unsigned char *data, int nLengthBytes)
 	FreeImage_CloseMemory(memory);
 }
 
-const unsigned char *Bitmap_Internal::GetData() const
+const unsigned char *Bitmap_Internal::data() const
 {
 	return m_pFreeImage == NULL ? NULL : FreeImage_GetBits(m_pFreeImage);
 }
 
-void Bitmap_Internal::Fill(unsigned int rgba)
+void Bitmap_Internal::fill(unsigned int rgba)
 {
 	
 }
 
-bool Bitmap_Internal::HasPixelData() const
+bool Bitmap_Internal::hasPixelData() const
 {
 	return m_pFreeImage && (bool)FreeImage_HasPixels(m_pFreeImage);
 }
 
-bool Bitmap_Internal::IsNull() const
+bool Bitmap_Internal::isNull() const
 {
 	return m_pFreeImage != NULL;
 }
 
-Bitmap::PixelFormat Bitmap_Internal::GetPixelFormat() const
+Bitmap::PixelFormat Bitmap_Internal::pixelFormat() const
 {
 	if(m_pFreeImage == NULL) 
 	{
@@ -179,7 +180,7 @@ Bitmap::PixelFormat Bitmap_Internal::GetPixelFormat() const
 	}
 	else
 	{
-		int bpp = GetBpp();
+		int bpp = this->bpp();
 		FREE_IMAGE_COLOR_TYPE ct = FreeImage_GetColorType(m_pFreeImage);
 		Bitmap::PixelFormat format = Bitmap::Format_Invalid;
 		switch(ct)
@@ -205,47 +206,47 @@ Bitmap::PixelFormat Bitmap_Internal::GetPixelFormat() const
 	}
 }
 
-int Bitmap_Internal::GetPixelWidth() const
+int Bitmap_Internal::pixelWidth() const
 {
 	return m_pFreeImage == NULL ? 0 : FreeImage_GetWidth(m_pFreeImage);
 }
 
-int Bitmap_Internal::GetPixelHeight() const
+int Bitmap_Internal::pixelHeight() const
 {
 	return m_pFreeImage == NULL ? 0 : FreeImage_GetHeight(m_pFreeImage);
 }
 
-int Bitmap_Internal::GetBpp() const
+int Bitmap_Internal::bpp() const
 {
 	return m_pFreeImage == NULL ? 0 : FreeImage_GetBPP(m_pFreeImage);
 }
 
-int Bitmap_Internal::GetBytesCount() const
+int Bitmap_Internal::bytesCount() const
 {
 	return m_pFreeImage == NULL ? 0 : FreeImage_GetDIBSize(m_pFreeImage) - sizeof(BITMAPINFOHEADER);	//纯数据字节数=FreeImage_GetDIBSize减去FreeImage的头部
 }
 
-int Bitmap_Internal::GetBytesCountPerLine() const
+int Bitmap_Internal::bytesCountPerLine() const
 {
 	return m_pFreeImage == NULL ? 0 : FreeImage_GetLine(m_pFreeImage);
 }
 
-unsigned char *Bitmap_Internal::GetScanLine(int lineIndex)
+unsigned char *Bitmap_Internal::scanLine(int lineIndex)
 {
 	return m_pFreeImage == NULL ? NULL : FreeImage_GetScanLine(m_pFreeImage, lineIndex);
 }
 
-unsigned int Bitmap_Internal::GetPixel(int x, int y) const
+unsigned int Bitmap_Internal::pixel(int x, int y) const
 {
 	return 0;
 }
 
-void Bitmap_Internal::SetPixel(int x, int y, unsigned int rgba)
+void Bitmap_Internal::setPixel(int x, int y, unsigned int rgba)
 {
 
 }
 
-Bitmap_Internal Bitmap_Internal::Scale(int width, int height) const
+Bitmap_Internal Bitmap_Internal::scale(int width, int height) const
 {
 	if(!m_pFreeImage)
 		return Bitmap_Internal();
@@ -256,17 +257,17 @@ Bitmap_Internal Bitmap_Internal::Scale(int width, int height) const
  	return bm;
 }
 
-Bitmap_Internal Bitmap_Internal::ScaleWidth(int width) const
+Bitmap_Internal Bitmap_Internal::scaleWidth(int width) const
 {
-	return Scale(width, GetPixelHeight());
+	return scale(width, pixelHeight());
 }
 
-Bitmap_Internal Bitmap_Internal::ScaleHeight(int height) const
+Bitmap_Internal Bitmap_Internal::scaleHeight(int height) const
 {
-	return Scale(GetPixelWidth(), height);
+	return scale(pixelWidth(), height);
 }
 
-Bitmap_Internal Bitmap_Internal::Copy(int x, int y, int width, int height) const
+Bitmap_Internal Bitmap_Internal::copy(int x, int y, int width, int height) const
 {
 	if(!m_pFreeImage)
 		return Bitmap_Internal();
@@ -277,7 +278,7 @@ Bitmap_Internal Bitmap_Internal::Copy(int x, int y, int width, int height) const
 	return bm;
 }
 
-Bitmap_Internal Bitmap_Internal::ToGray() const
+Bitmap_Internal Bitmap_Internal::toGray() const
 {
 	if(!m_pFreeImage)
 		return Bitmap_Internal();
@@ -288,7 +289,7 @@ Bitmap_Internal Bitmap_Internal::ToGray() const
 	return bm;
 }
 
-Bitmap_Internal Bitmap_Internal::ConverToFormat(Bitmap::PixelFormat format)
+Bitmap_Internal Bitmap_Internal::converToFormat(Bitmap::PixelFormat format)
 {
 	if(!m_pFreeImage)
 		return Bitmap_Internal();
@@ -328,7 +329,7 @@ Bitmap_Internal Bitmap_Internal::ConverToFormat(Bitmap::PixelFormat format)
 	return bm;
 }
 
-void Bitmap_Internal::SaveAsFile(const char *pFilePath) const
+void Bitmap_Internal::saveAsFile(const char *pFilePath) const
 {
 	//assert(pfilepath);
 	FREE_IMAGE_FORMAT format = FreeImage_GetFIFFromFilename(pFilePath);
@@ -339,86 +340,10 @@ void Bitmap_Internal::SaveAsFile(const char *pFilePath) const
 
 //注意，此函数必须保证第一次在主线程中调用，也就是FreeImage_Initialise();必须在主线程中第一次被执行，否则只会FreeImage的加载都将失败
 //此问题在为已知问题。
-void Bitmap_Internal::InitFreeeImage()
+void Bitmap_Internal::initFreeeImage()
 {
 	if(g_bHasInitFreeImage)
 		return;
 	FreeImage_Initialise();
 	g_bHasInitFreeImage = true;
-}
-
-Bitmap_Internal Bitmap_Internal::BgrToRgb() const
-{
-	return *this;
-	BYTE *pixels = (BYTE*)FreeImage_GetBits(m_pFreeImage);
-	if(pixels == NULL)
-		return Bitmap_Internal();
-
-	int width = GetPixelWidth();
-	int height = GetPixelHeight();
-
-	BYTE *bits = NULL;
-	int pitch = FreeImage_GetPitch(m_pFreeImage);
-	int pb = GetBpp() / 8;
-	switch(GetBpp())
-	{
-	case 1:
-	case 4:
-	case 8:
-	case 16:
-		{
-			return *this;
-		}
-		break;
-	case 24:
-		{
-			bits = new BYTE[pitch * height];
-			for(int i = 0; i < height; ++i ) 
-			{
-				for(int j = 0; j < width; ++j ) 
-				{
-					bits[pitch * i + j * pb + 0] = pixels[i * pitch + j * pb + 2];
-					bits[pitch * i + j * pb + 1] = pixels[i * pitch + j * pb + 1];
-					bits[pitch * i + j * pb + 2] = pixels[i * pitch + j * pb + 0];
-				}
-			}
-		}
-		break;
-	case 32:
-		{
-			FREE_IMAGE_COLOR_TYPE ct = FreeImage_GetColorType(m_pFreeImage);
-			if(ct == FIC_RGBALPHA)
-			{
-				bits = new BYTE[pitch * height];
-				for(int i = 0; i < height; ++i ) 
-				{
-					for(int j = 0; j < width; ++j ) 
-					{
-						bits[pitch * i + j * pb + 0] = pixels[i * pitch + j * pb + 2];
-						bits[pitch * i + j * pb + 1] = pixels[i * pitch + j * pb + 1];
-						bits[pitch * i + j * pb + 2] = pixels[i * pitch + j * pb + 0];
-						bits[pitch * i + j * pb + 3] = pixels[i * pitch + j * pb + 3];
-					}
-				}
-			}
-			else
-			{
-				return *this;
-			}
-		}
-		break;
-	default:
-		return *this;
-		break;
-	}
-
-	int rMask = FreeImage_GetRedMask(m_pFreeImage);
-	int gMask = FreeImage_GetGreenMask(m_pFreeImage);
-	int bMask = FreeImage_GetBlueMask(m_pFreeImage);
-	
-	FIBITMAP *p = FreeImage_ConvertFromRawBits((BYTE *)bits, width, height, pitch, GetBpp(), rMask, gMask, bMask);
-	Bitmap_Internal bm;
-	bm.m_pFreeImage = p;
-	delete []bits;
-	return bm;
 }

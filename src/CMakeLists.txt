@@ -8,9 +8,7 @@ project(src)
 
 add_subdirectory(core)
 add_subdirectory(system)
-add_subdirectory(math)
 add_subdirectory(media)
-add_subdirectory(network)
 add_subdirectory(gles)
 add_subdirectory(gui)
 

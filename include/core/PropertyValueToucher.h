@@ -1,13 +1,13 @@
 ﻿#pragma once
-
 #include "Type.h"
+#include "Object.h"
 #include "ValueObject.h"
 
-namespace nb {	namespace Core {
+namespace nb {	namespace core {
 	
 class RefObject;
 class PropertyLock;
-class NB_CORE_DECLSPEC_X_INTERFACE PropertyValueToucherBase
+class NB_API PropertyValueToucherBase
 {
 public:
 	bool IsRefTypeOfProperty() const;
@@ -37,7 +37,7 @@ protected:
 };
 
 template<class ValueType>
-class NB_EXPORT PropertyValueToucher : public PropertyValueToucherBase
+class NB_API PropertyValueToucher : public PropertyValueToucherBase
 {
 public:
 	PropertyValueToucher(nbObject *pObject, DependencyProperty *pProperty)
@@ -100,7 +100,7 @@ public:
 
 
 template<class ValueType>
-class NB_EXPORT ValuePropertyValueToucher : public PropertyValueToucherBase
+class NB_API ValuePropertyValueToucher : public PropertyValueToucherBase
 {
 public:
 	ValuePropertyValueToucher(nbObject *pObject, DependencyProperty *pProperty)
@@ -149,7 +149,7 @@ public:
 };
 
 template<class ValueType>
-class NB_EXPORT RefPropertyValueToucher : public PropertyValueToucherBase
+class NB_API RefPropertyValueToucher : public PropertyValueToucherBase
 {
 public:
 	RefPropertyValueToucher(nbObject *pObject, DependencyProperty *pProperty)
@@ -184,7 +184,7 @@ public:
 
 
 template<class ValueType>
-class NB_EXPORT EnumPropertyValueToucher : public PropertyValueToucherBase
+class NB_API EnumPropertyValueToucher : public PropertyValueToucherBase
 {
 public:
 	EnumPropertyValueToucher(nbObject *pObject, DependencyProperty *pProperty)
@@ -220,7 +220,7 @@ public:
 };
 
 template<class ValueType>
-class NB_EXPORT EnumPropertyValueToucher_New : public PropertyValueToucherBase
+class NB_API EnumPropertyValueToucher_New : public PropertyValueToucherBase
 {
 public:
 	EnumPropertyValueToucher_New(nbObject *pObject, DependencyProperty *pProperty)
@@ -233,9 +233,6 @@ public:
 
 	operator ValueType () const
 	{
-	//	int v = GetEnumValue(m_pProperty);
-	//	return (ValueType)v;
-
 		RefEnumObject<ValueType> *obj = dynamic_cast<RefEnumObject<ValueType> * >(GetRefValue(m_pProperty));
 		if(obj == NULL)
 		{
@@ -263,7 +260,7 @@ public:
 	}
 };
 
-class NB_EXPORT GenericsPropertyValueToucher : public PropertyValueToucherBase
+class NB_API GenericsPropertyValueToucher : public PropertyValueToucherBase
 {
 public:
 	GenericsPropertyValueToucher(nbObject *pObject, DependencyProperty *pProperty)

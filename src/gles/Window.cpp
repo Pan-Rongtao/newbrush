@@ -1,14 +1,14 @@
 #include "gles/Window.h"
 #include "EglMaster.h"
 
-using nb::gl::egl::Window;
-using nb::gl::egl::WindowMaster;
+using namespace nb::gl;
+
 Window::Window()
 {
-	WindowMaster::Push(this);
+	WindowMaster::push(this);
 }
 
 Window::~Window()
 {
-	WindowMaster::Erease(this);
+	WindowMaster::erease(this);
 }

@@ -1,46 +1,25 @@
-﻿#pragma once
+#pragma once
+#include "../gui/UIElement.h"
+#include "../gui/Brush.h"
 
-#include "UIElement.h"
-#include "UIElementArray.h"
-//#include "System/Array.h"
+namespace nb{namespace gui{
 
-namespace nb
+class NB_API Panel : public UIElement
 {
-	namespace Gui
-	{
-		class PanelPrivate;
+public:
+	Panel();
+	virtual ~Panel();
 
-		class NB_EXPORT Panel : public UIElement, public nb::System::IHasChildrenArray
-		{
-			NB_OBJECT_TYPE_DECLARE();
+	void setZIndex(std::shared_ptr<UIElement> element, int index);
+	int getZIndex(std::shared_ptr<UIElement> element);
 
-		public:
+public:
+	nb::core::Property_rw<std::shared_ptr<Brush>>					Background;
+	nb::core::Property_rw<std::vector<std::shared_ptr<UIElement>>>	Children;
 
-			Panel(void);
-			virtual ~Panel(void);
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
+};
 
-		//	void AddChild(UIElement *element);
-		//	int GetChildCount() const;
-		//	UIElement * GetChild(int index) const;
-
-			PanelPrivate * GetPrivate() const {return m_pPrivate;}
-
-			virtual IElementRender * GetElementRender() const;
-
-
-			UIElementArray * Children();
-
-		protected:
-			virtual nb::Core::InterfaceBase * GetInterfaceOverride(const std::type_info &type);
-
-		//	virtual void InvalidateMeasureOverride();
-		//	virtual void InvalidateArrangeOverride();
-
-		private:
-			nb::System::IArray * GetChildrenArray();
-			PanelPrivate *m_pPrivate;
-		};
-
-		typedef nbObjectPtrDerive<Panel, UIElementPtr> PanelPtr;
-	}
-}
+}}

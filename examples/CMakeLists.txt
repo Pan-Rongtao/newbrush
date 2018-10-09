@@ -6,16 +6,11 @@ project(examples)
 
 # 3. Sub Projects
 
-add_subdirectory(testsystem)
-add_subdirectory(testmath)
-add_subdirectory(testmedia)
-add_subdirectory(testnetwork_c)
-add_subdirectory(testnetwork_s)
-add_subdirectory(testgles)
-add_subdirectory(testgui)
-#add_subdirectory(hptest)
-#add_subdirectory(szftest)
-#add_subdirectory(hbstest)
+add_subdirectory(test-core)
+add_subdirectory(test-system)
+add_subdirectory(test-media)
+add_subdirectory(test-gles)
+add_subdirectory(test-gui)
 
 
 # 5. Project Install

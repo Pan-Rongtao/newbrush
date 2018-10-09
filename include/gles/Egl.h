@@ -1,33 +1,33 @@
 #pragma once
-#include "system/String.h"
-#include "gles/Display.h"
-#include "gles/Configure.h"
-#include "gles/Surface.h"
-#include "gles/Context.h"
+#include <string>
+#include "Display.h"
+#include "Configure.h"
+#include "Surface.h"
+#include "Context.h"
 
-namespace nb{ namespace gl{ namespace egl
+namespace nb{ namespace gl
 {
 	//获取Egl版本
-	NB_EXPORT nb::System::String GetVersion();
+	NB_API std::string getVersion();
 
 	//获取
-	NB_EXPORT nb::System::String GetVendor(); 
+	NB_API std::string getVendor(); 
 
 	//初始化
-	NB_EXPORT void Initialize(const Display &display);
+	NB_API void initialize(const Display &display);
 
 	//获取当前显示设备
-	NB_EXPORT const Display &GetCurrentDisplay();
+	NB_API const Display &getCurrentDisplay();
 
 	//设置egl配置
-	NB_EXPORT void SetConfigure(const Configure &configure);
+	NB_API void setConfigure(const Configure &configure);
 
 	//获取egl设置
-	NB_EXPORT const Configure &GetCurrentConfigure();
+	NB_API const Configure &getCurrentConfigure();
 
 	//设置当前渲染surface和context
-	NB_EXPORT void MakeCurrent(const Surface *onScreen, const Surface *offScreen, const Context *context);
+	NB_API void makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context);
 	
 	//
-	NB_EXPORT void SwapBuffers(const Surface *surface);
-}}}
+	NB_API void swapBuffers(const Surface *surface);
+}}

@@ -10,53 +10,35 @@
 **	
 ********************************************************/
 #pragma once
-#include "Control.h"
+#include "UIElement.h"
 #include "ImageSource.h"
 #include "Stretch.h"
 
-namespace nb{ namespace Gui{
+namespace nb{ namespace gui {
 
-class Image_Internal;
-class NB_EXPORT Image : public Control
+class NB_API Image : public UIElement
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	//源属性
-	NB_X_OBJECT_PROPERTY_DECLARE(Source, nb::Media::ImageSource);
-	//伸缩模式属性
-	NB_OBJECT_ENUM_PROPERTY_DECLARE(Stretch, nb::Media::Stretch);
-
-	nb::System::Size GetPixcelSize() const;
-
-public:
-	//构建一个Image，源为空，拉伸模式为Uniform
 	Image();
+	Image(const std::shared_ptr<ImageSource> &source);
+	Image(const std::shared_ptr<ImageSource> &source, nb::gui::Stretch stretch);
+	virtual ~Image();
 
-	//构建一个Image，源为source，拉伸模式为Uniform
-	Image(const nb::Media::ImageSourcePtr &source);
-
-	//构建一个Image，源为source，拉伸模式为stretch
-	Image(const nb::Media::ImageSourcePtr &source, nb::Media::Stretch stretch);
-	~Image();
-
-	IElementRender *GetElementRender() const;
+public:
+	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Source;
+	nb::core::Property_rw<nb::gui::Stretch>					Stretch;
 
 protected:
-	virtual System::Size MeasureOverride(const System::Size &availableSize);
-	virtual System::Size ArrangeOverride(const System::Size &finalSize);
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-public:
-	Image(const Image &other); //hp暂时改为公有的
 private:
+	Image(const Image &other); //hp暂时改为公有的
 	void operator = (const Image &other);
 
-	void OnSourceChanged(Core::PropertyValueChangedEventArgs &args);
-
-private:
-	Image_Internal	*m_internal;
+	void onSourceChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
+	void onStretchChanged(const nb::gui::Stretch &_old, const nb::gui::Stretch &_new);
 };
 
-typedef nbObjectPtrDerive<Image, ControlPtr> ImagePtr;
 
 }}

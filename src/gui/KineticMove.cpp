@@ -1,85 +1,70 @@
 ﻿#include "KineticMove.h"
-#include "system/System.h"
 
-using namespace nb::Gui;
-
-using namespace nb::Core;
-
-NB_OBJECT_TYPE_IMPLEMENT(KineticMove, nbObject, NULL, NULL);
-
-
-NB_X_OBJECT_PROPERTY_IMPLEMENT(KineticMove, InitSpeed, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(KineticMove, Speed, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(KineticMove, Accel, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(KineticMove, StartPos, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(KineticMove, CurrentPos, aFloat, NULL);
-NB_OBJECT_PROPERTY_IMPLEMENT_EX(KineticMove, TimeStart, nb::System::Time, NULL);
+using namespace nb::core;
+using namespace nb::gui;
 
 KineticMove::KineticMove()
+	: InitSpeed(0.0)
+	, Speed(0.0)
+	, Accel(0.0)
+	, StartPos(0.0)
+	, CurrentPos(0.0)
+	, TimeStart(Time::now())
 {
-	InitSpeed = 0.0f;
-	Speed = 0.0f;
-	Accel = 0.0f;
-	StartPos = 0.0f;
-	CurrentPos = 0.0f;
-	TimeStart() = nb::System::Time::CurrentTime();
-	m_timer = new nb::System::Timer();
-	m_timer->TimeoutEvent.Add(this, &KineticMove::OnTimeout);
+	m_timer.TickEvent.addHandler(std::bind(&KineticMove::onTick, this, std::placeholders::_1));
 }
 
 KineticMove::~KineticMove()
 {
 }
 
-void KineticMove::OnTimeout(nb::System::Timer::TimeoutParam &param)
+void KineticMove::onTick(const Timer::TickArgs &args)
 {
-	nb::System::Time timeNow = nb::System::Time::CurrentTime();
+	Time timeNow = Time::now();
 
-	float dt = 0;
-	if(timeNow >= (nb::System::Time)TimeStart())	//跨天的话，也许会出现 timeNow < TimeStart()的情况
+	float dt = 0.0;
+	if(timeNow >= TimeStart)	//跨天的话，也许会出现 timeNow < TimeStart()的情况
 	{
-		dt = (float)(timeNow - (nb::System::Time)TimeStart()).ToMilliSeconds() / 1000.0f;
+		dt = (float)(timeNow - TimeStart).totalMilliseconds() / 1000.0f;
 	}
 
-
-	float fAccel = (Float)Accel;
-    float speed = (Float)Speed + (Float)Accel * dt;
+    double speed = Speed + Accel * dt;
 
 	bool bEnd = false;
-	if(((Float)InitSpeed>0 && speed<0) || ((Float)InitSpeed<0 && speed>0))
+	if((InitSpeed > 0 && speed < 0) || (InitSpeed < 0 && speed > 0))
 	{
 		bEnd = true;
 		Stop();
 
 		speed = 0;
-		dt = -(Float)Speed/(Float)Accel;
+		dt = -Speed / Accel;
 	}
-    float fSpace = (Float)Speed * dt + (Float)Accel * dt * dt / 2;
+    float fSpace = Speed * dt + Accel * dt * dt / 2;
 
 	Speed = speed;
-	CurrentPos = (Float)CurrentPos + fSpace;
-	TimeStart() = timeNow;
+	CurrentPos = CurrentPos + fSpace;
+	TimeStart = timeNow;
 
-	int nPos = (int)(Float)CurrentPos;
+	int nPos = (int)CurrentPos;
 	if(CurrentPos >= 0)
 	{
-		if((Float)CurrentPos - nPos >= 0.5) nPos++;
+		if(CurrentPos - nPos >= 0.5) nPos++;
 	}
 	else
 	{
-		if((Float)CurrentPos - nPos <= -0.5) nPos--;
+		if(CurrentPos - nPos <= -0.5) nPos--;
 	}
 	
-	MoveDistanceEventParam pmd;
+	MoveDistanceArgs pmd;
 	pmd.m_nSpace = nPos;
-	MoveDistanceEvent.Dispatch(pmd);
-	float fCurPos = (Float)CurrentPos;
+	MoveDistanceEvent.dispatch(pmd);
+	float fCurPos = CurrentPos;
 
 	if(bEnd)
 	{
-		MoveEndEventParam pme;
-		pme.m_fSpace = (Float)CurrentPos;
-		MoveEndEvent.Dispatch(pme);
+		MoveEndArgs pme;
+		pme.m_fSpace = CurrentPos;
+		MoveEndEvent.dispatch(pme);
 	}
 }
 
@@ -89,10 +74,10 @@ void KineticMove::Start(float fAccel, float fStartSpeed, float fStartPos)
 	Speed = fStartSpeed;
 	StartPos = fStartPos;
 	CurrentPos = fStartPos;
-	float fCurPos = (Float)CurrentPos;
-	m_timer->Start(15);
+	float fCurPos = CurrentPos;
+	m_timer.start(15);
 
-	TimeStart() = nb::System::Time::CurrentTime();
+	TimeStart = Time::now();
 
 	InitSpeed = fStartSpeed;
 
@@ -100,8 +85,8 @@ void KineticMove::Start(float fAccel, float fStartSpeed, float fStartPos)
 
 void KineticMove::OffsetStartPos(float fStartPosOffset)
 {
-	StartPos = (Float)StartPos + fStartPosOffset;
-	CurrentPos = (Float)CurrentPos + fStartPosOffset;
+	StartPos = StartPos + fStartPosOffset;
+	CurrentPos = CurrentPos + fStartPosOffset;
 }
 
 void KineticMove::SetAccel(float fAccel)
@@ -111,13 +96,13 @@ void KineticMove::SetAccel(float fAccel)
 
 void KineticMove::Stop()
 {
-	m_timer->Stop();
+	m_timer.stop();
 }
 
 float KineticMove::GetSpeed() /*const*/
 {
 	//return (Float)const_cast<KineticMove *>(this)->Speed();
-	return (Float)Speed;
+	return Speed;
 }
 
 /******************************************************************************
@@ -155,7 +140,7 @@ float KineticMove::ComputeAccel(float s, float v)
 void KineticMove::ComputeVelocity(float a, float s, float &v)
 {
 	float f = -2*a*s;
-	v = (float)nb::System::Sqrt(f);
+	v = (float)sqrt(f);
 	if(s < 0) v = -v;
 }
 
@@ -197,5 +182,5 @@ void KineticMove::ComputeSpace(float v, float a, float &s)
  ******************************************************************************/
 bool KineticMove::IsRunning() const
 {
-	return m_timer->IsActive();
+	return m_timer.isActive();
 }

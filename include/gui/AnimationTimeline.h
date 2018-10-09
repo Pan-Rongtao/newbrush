@@ -1,23 +1,19 @@
 ﻿#pragma once
-
 #include "Timeline.h"
 #include "EasingFunctionBase.h"
 
-namespace nb { namespace Media {
+namespace nb { namespace gui {
 
-class NB_EXPORT AnimationTimeline : public Timeline
+class NB_API AnimationTimeline : public Timeline
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	AnimationTimeline(void);
-	virtual ~AnimationTimeline(void);
+	AnimationTimeline();
+	virtual ~AnimationTimeline();
 
-	virtual float GetFrameValue(const nb::System::TimeSpan &frame);
+	virtual float GetFrameValue(const nb::core::TimeSpan &frame);
 
 	virtual void AnimateTo(int frame){}
 
-	NB_OBJECT_PROPERTY_DECLARE(EasingFun, EasingFunctionBase);
 };
 
 }}

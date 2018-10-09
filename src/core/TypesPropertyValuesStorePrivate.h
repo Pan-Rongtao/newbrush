@@ -1,11 +1,9 @@
 ﻿#pragma once
-
 #include <map>
 #include "core/ValueObject.h"
 #include "PropertyValuesMgr.h"
 
-
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class Type;
 class DependencyProperty;

@@ -1,30 +1,30 @@
 #pragma once
-#include "math/Vec2.h"
-#include "gles/Model2D.h"
+#include "../core/Vec2.h"
+#include "Model.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Quadrangle : public Model2D
+class NB_API Quadrangle : public Model
 {
 public:
 	//构建一个矩形，它的四个顶点坐标都为0.0，颜色为0.0
 	Quadrangle();
 
-	//构建一个矩形，它的四个顶点坐标为(fisrtPosition, secondPosition, thirdPosition, fourthPosition)
+	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
 	//它的四个顶点颜色都为0.0
-	Quadrangle(const nb::Math::Vec2 &fisrtPosition, const nb::Math::Vec2 &secondPosition, const nb::Math::Vec2 &thirdPosition, const nb::Math::Vec2 &fourthPosition);
+	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3);
 
-	//构建一个矩形，它的四个顶点坐标为(fisrtPosition, secondPosition, thirdPosition, fourthPosition)
+	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
 	//它的四个顶点颜色都为unifyColor
-	Quadrangle(const nb::Math::Vec2 &fisrtPosition, const nb::Math::Vec2 &secondPosition, const nb::Math::Vec2 &thirdPosition, const nb::Math::Vec2 &fourthPosition, const nb::Math::Vec4 &unifyColor);
+	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const nb::core::Vec4 &color);
 
-	//构建一个矩形，它的四个顶点坐标为(fisrtPosition, secondPosition, thirdPosition, fourthPosition)
-	//它的四个顶点颜色为(fisrtColor, secondColor, thirdColor, fourthColor)
-	Quadrangle(const nb::Math::Vec2 &fisrtPosition, const nb::Math::Vec2 &secondPosition, const nb::Math::Vec2 &thirdPosition, const nb::Math::Vec2 &fourthPosition, 
-		const nb::Math::Vec4 &fisrtColor, const nb::Math::Vec4 &secondColor, const nb::Math::Vec4 &thirdColor, const nb::Math::Vec4 &fourthColor);
+	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
+	//它的四个顶点颜色为(color0, color1, color2, color3)
+	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const nb::core::Vec4 &color0, const nb::core::Vec4 &color1, const nb::core::Vec4 &color2, const nb::core::Vec4 &color3);
 
-protected:
-	virtual IndicesSequece VertextsSequenceOverride() const;
+private:
+	std::vector<uint16_t> getIndices() const;
+	nb::core::Vec3 getCenter(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3) const;
 };
 
-}}}
+}}

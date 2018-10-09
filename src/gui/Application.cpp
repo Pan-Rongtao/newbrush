@@ -1,45 +1,41 @@
 #include "gui/Application.h"
 #include "core/Exception.h"
-#include "gui/Window.h"
-#include "core/ApplicationRealize.h"
-#include "Application_Internal.h"
 
-using nb::Gui::Application;
-using nb::Core::ExceptionPtr;
+using namespace nb::core;
+using namespace nb::gui;
 
-NB_OBJECT_TYPE_IMPLEMENT(Application, nbObject, NULL, NULL);
-
+static std::shared_ptr<Application> g_app;
 Application::Application()
 {
-	m_internal = new nb::Gui::Application_Internal();
-	nbCoreApplication::InitGlobal();
+	if (!g_app)	throw LogicException(__FILE__, __LINE__);
+	g_app = std::shared_ptr<Application>(this);
+	Windows.setGetter(std::bind(&Application::m_windows, this));
 }
 
 Application::~Application()
 {
-	delete m_internal;
 }
 
-int Application::Run()
+std::shared_ptr<Application> Application::current()
+{
+	if (!g_app)
+		g_app = std::make_shared<Application>();
+	return g_app;
+}
+
+int Application::run()
 {
 	try
 	{
-		m_internal->Run();
-		return 0;
+		return nb::gl::Application::run();
 	}
-	catch(ExceptionPtr &ex)
+	catch(Exception &e)
 	{
-		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n\r\n");
-		printf("异常: %s\r\n", ex->GetErrorMessageData());
-		printf("文件: %s\r\n", ex->GetFileNameData());
-		printf("行数: %d\r\n\r\n", ex->GetFileLine());
-		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n\r\n");
+		printf("exception: %s\r\n", e.what().data());
 	}
 	catch(...)
 	{
-		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n\r\n");
-		printf("未处理的异常: （非NewBrush异常）\r\n\r\n");
-		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n\r\n");
+		printf("other exception\r\n");
 	}
 	return 1;
 }

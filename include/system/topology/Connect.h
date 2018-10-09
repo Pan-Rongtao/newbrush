@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "core/Object.h"
+#include "../../core/Object.h"
 
 namespace nb { namespace System { namespace Topology {
 

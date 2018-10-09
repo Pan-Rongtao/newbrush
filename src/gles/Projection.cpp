@@ -1,55 +1,51 @@
 #include "gles/Projection.h"
-#include "system/System.h"
+#include <math.h>
 
-using nb::gl::Gles::Projection;
-using nb::gl::Gles::OrthographicProjection;
-using nb::gl::Gles::PerspectiveProjection;
+using namespace nb::core;
+using namespace nb::gl;
 
-const nb::Math::Matrix4x4 &Projection::GetMatrix() const
+Matrix4x4 &Projection::matrix()
 {
 	return m_matrix;
 }
 
-OrthographicProjection::OrthographicProjection(float left, float right, float bottom, float top, float near, float far)
+const Matrix4x4 &Projection::matrix() const
 {
-	m_matrix = nb::Math::Matrix4x4::Identify();
+	return m_matrix;
 }
 
-////////////////////
-
-PerspectiveProjection::PerspectiveProjection()
+void Projection::ortho(float left, float right, float bottom, float top, float near, float far)
 {
-//	m_matrix = nb::Math::Matrix4x4::Identify();
-//	return;
-	float fovy = 45.0f;
-	float near = 0.1f;
-	float far = 10000.0f;
-	float aspect = 800.0f / 480.0f;
-	float range = (float)nb::System::Tan(fovy * nb::System::AngleToRadian(0.5)) * near;
+	m_matrix = Matrix4x4::identity();
+	m_matrix[0][0] = 2 / (right - left);
+	m_matrix[1][1] = 2 / (top - bottom);
+	m_matrix[2][2] = 2 / (far - near);
+	m_matrix[3][0] = -(right + left) / (right - left);
+	m_matrix[3][1] = -(top + bottom) / (top - bottom);
+	m_matrix[3][2] = -(far + near) / (far - near);
+}
+
+void Projection::perspective(float fovy, float aspect, float near, float far)
+{
+	float range = tanf((float)fovy * nb::angleToRadian(0.5)) * near;
 	float left = -range * aspect;
 	float right = range * aspect;
 	float bottom = -range;
 	float top = range;
 
-	m_matrix.At(0, 0) = (2 * near) / (right - left);
-	m_matrix.At(1, 1) = (2 * near) / (top - bottom);
-	m_matrix.At(2, 2) = -(far + near) / (far - near);
-	m_matrix.At(2, 3) = -1;
-	m_matrix.At(3, 2) = -(2 * far * near) / (far - near);
+	m_matrix = Matrix4x4::identity();
+	m_matrix[0][0] = (2 * near) / (right - left);
+	m_matrix[1][1] = (2 * near) / (top - bottom);
+	m_matrix[2][2] = -(far + near) / (far - near);
+	m_matrix[2][3] = -1;
+	m_matrix[3][2] = -(2 * far * near) / (far - near);
+	m_matrix[3][3] = 0;
 }
 
-PerspectiveProjection::PerspectiveProjection(float fovy, float aspect, float near, float far)
+std::shared_ptr<Projection> Projection::instance()
 {
-	float range = (float)nb::System::Tan(fovy * nb::System::AngleToRadian(0.5)) * near;
-	float left = -range * aspect;
-	float right = range * aspect;
-	float bottom = -range;
-	float top = range;
-
-	m_matrix = nb::Math::Matrix4x4::Identify();
-	m_matrix.At(0, 0) = (2 * near) / (right - left);
-	m_matrix.At(1, 1) = (2 * near) / (top - bottom);
-	m_matrix.At(2, 2) = -(far + near) / (far - near);
-	m_matrix.At(2, 3) = -1;
-	m_matrix.At(3, 2) = -(2 * far * near) / (far - near);
+	static std::shared_ptr<Projection> p;
+	if (!p)
+		p = std::make_shared<Projection>();
+	return p;
 }

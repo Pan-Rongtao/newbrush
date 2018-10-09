@@ -1,20 +1,18 @@
 #pragma once
 #include "ImageButton.h"
-#include "system/String.h"
 
-class NB_EXPORT ImageTextButton : public ImageButton
+namespace nb{ namespace gui{
+
+class NB_API ImageTextButton : public ImageButton
 {
-	NB_OBJECT_TYPE_DECLARE();
 public:
-	ImageTextButton(void);
-	virtual ~ImageTextButton(void);
-
-	NB_X_OBJECT_PROPERTY_DECLARE(Text, nb::System::String);
+	ImageTextButton();
+	virtual ~ImageTextButton();
 
 public:
-	void OnTextChanged(nb::Core::PropertyValueChangedEventArgs &args);
-
-	typedef nbObjectPtrDerive<ImageTextButton, ImageButtonPtr> ImageTextButtonPtr;
+	nb::core::Property_rw<std::string>		Text;
 
 };
-typedef nbObjectPtrDerive<ImageTextButton, ImageButtonPtr> ImageTextButtonPtr;
+
+
+}}

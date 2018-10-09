@@ -1,19 +1,13 @@
 ﻿#pragma once
-
-#include <typeinfo>
+#include <string>
 #include "RefObject.h"
-//#include "ObjectPtr.h"
-
-//using namespace nb::Core;    //这里不能使用名字空间
 
 class nbObject;
 
-
-namespace nb { namespace Core {
-
-class DependencyProperty;
+namespace nb { namespace core {
 
 class Type;
+class DependencyProperty;
 class PropertyValueBase;
 class DependencyPropertyInternal;
 
@@ -26,12 +20,7 @@ public:
 	OriginObject *m_oldObject;
 };
 
-
-
-
-
-
-class NB_CORE_DECLSPEC_X_INTERFACE DependencyProperty : public RefObject
+class NB_API DependencyProperty : public RefObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 
@@ -46,11 +35,6 @@ public:
 	DependencyProperty(void);
 	virtual ~DependencyProperty(void);
 
-	void SetValue(int value);
-	void SetValue(nbObject *pObject);
-
-	void GetValue(int &value);
-
 	Type * GetElementType() const;
 
 	funPropertyChanged_Old GetChangedFun_Old() const {return m_funPropertyChanged_Old;}
@@ -58,9 +42,8 @@ public:
 
 	static DependencyProperty * PrepareProperty(const std::string &key, const std::type_info &type, const std::type_info &propertyType, funPropertyValueChanged fun=NULL);
 	static DependencyProperty * PrepareProperty(const char *pkey, const std::type_info &type, const std::type_info &propertyType, funPropertyValueChanged fun=NULL);
-	static DependencyProperty * PrepareExternalProperty(const char *pkey, const std::type_info &type, const std::type_info &propertyType, funPropertyValueChanged fun=NULL);
-
 	static DependencyProperty * PrepareProperty(int offset, const char *pkey, const std::type_info &type, const std::type_info &propertyType, bool isImmobile, funPropertyValueChanged fun);
+	static DependencyProperty * PrepareExternalProperty(const char *pkey, const std::type_info &type, const std::type_info &propertyType, funPropertyValueChanged fun=NULL);
 
 	template<class T, class propT>
 	static DependencyProperty * PrepareProperty(const char *pkey, funPropertyValueChanged fun=NULL)
@@ -101,14 +84,12 @@ private:
 	friend class Type;
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE DependencyPropertyPtr : public nbObjectPtrDerive<DependencyProperty, RefObjectPtr>
+class NB_API DependencyPropertyPtr : public nbObjectPtrDerive<DependencyProperty, RefObjectPtr>
 {
 public:
 	DependencyPropertyPtr(){}
 	DependencyPropertyPtr(DependencyProperty *pObject) : nbObjectPtrDerive(pObject){}
-	virtual ~DependencyPropertyPtr()
-	{
-	}
+	virtual ~DependencyPropertyPtr(){}
 };
 
 }}

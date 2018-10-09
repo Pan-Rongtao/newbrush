@@ -1,29 +1,22 @@
 ﻿#pragma once
-
 #include "AnimationTimeline.h"
-#include "system/Point.h"
+#include "../core/Point.h"
 
-using namespace nb::System;
+namespace nb{ namespace gui {
 
-namespace nb 
-{ 
-	namespace Media
-	{
-		class NB_EXPORT PointAnimation : public AnimationTimeline
-		{
-			NB_OBJECT_TYPE_DECLARE();
+class NB_API PointAnimation : public AnimationTimeline
+{
+public:
+	PointAnimation();
+	virtual ~PointAnimation();
 
-		public:
-			PointAnimation(void);
-			virtual ~PointAnimation(void);
+	virtual void AnimateTo(int frame);
 
-			virtual void AnimateTo(int frame);
+	nb::core::Property_rw<nb::core::Point>		From;
+	nb::core::Property_rw<nb::core::Point>		To;
 
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(From, nb::System::Point);
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(To, nb::System::Point);
+protected:
+	virtual void OnFrameChanged(const nb::core::TimeSpan &frame);
+};
 
-		protected:
-			virtual void OnFrameChanged(const nb::System::TimeSpan &frame);
-		};
-	}
-}
+}}

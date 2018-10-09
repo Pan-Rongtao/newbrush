@@ -11,48 +11,28 @@
 **	
 ********************************************************/
 #pragma once
-#include "system/String.h"
-#include "media/Bitmap.h"
-#include "core/Object.h"
-#include "gles/Texture2D.h"
+#include "../core/Property.h"
+#include "../media/Bitmap.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace gui {
 
-class NB_EXPORT ImageSource : public nbObject
+class NB_API ImageSource
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	//设置uri源
-	//异常：path不存在
-	void SetUri(const nb::System::String &path);
-
-	//获取uri源
-	const nb::System::String GetUri() const;
-
-	//获取像素宽
-	int GetPixelWidth() const;
-
-	//获取像素高
-	int GetPixcelHeight() const;
-
-	//
-	nb::gl::Gles::Texture2D *GetTexture() const;
-
-public:
-	//构建一个ImageSource，它的源为NULL
 	ImageSource();
+	ImageSource(const std::string &uri);
 
-	//构建一个ImageSource，它的源为path
-	ImageSource(const nb::System::String &path);
+	void load(const std::string &uri);
+
+public:
+	nb::core::Property_r<double>		Width = nb::core::Property_r<double>( property_getter(double) { return m_bm ? m_bm->width() : 0.0; } );
+	nb::core::Property_r<double>		Height = nb::core::Property_r<double>( property_getter(double) { return m_bm ? m_bm->width() : 0.0; } );
 
 private:
 	ImageSource(const ImageSource &other);
 	void operator = (const ImageSource &other);
 
-	
-	nb::gl::Gles::Texture2D		*m_Texture;
+	std::shared_ptr<nb::media::Bitmap> 		m_bm;
 };
-typedef nbObjectPtrDerive<ImageSource, nbObjectPtr>	ImageSourcePtr;
 
 }}

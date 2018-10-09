@@ -17,13 +17,12 @@ project(system)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
-add_definitions(-DNB_SYSTEM_EXPORTS)
 
 # 3. Project Build
 
 set(LIB_NAME "system")
 
-file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/topology/*.h" "*.cpp" "topology/*.cpp")
+file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/topology/*.h" "*.h" "*.cpp" "topology/*.cpp")
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})

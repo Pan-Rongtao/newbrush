@@ -7,7 +7,7 @@
 
 class Assembly;
 
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class TypeInternal
 {

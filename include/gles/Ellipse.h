@@ -1,17 +1,18 @@
 #pragma once
-#include "gles/Model2D.h"
+#include "Model.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Ellipse : public Model2D
+class NB_API Ellipse : public Model
 {
 public:
-	//构建一个椭圆，它的中心点是center，它的两个半轴长度分别为a、b
-	Ellipse(const nb::Math::Vec2 &center, float a, float b);
+	//构建一个椭圆，它的中心点是center，它的两个半轴长度分别为a、b，cartesian是否为笛卡尔坐标系
+	//
+	Ellipse(const nb::core::Vec2 &center, float a, float b, bool cartesian);
 
-protected:
-	virtual IndicesSequece VertextsSequenceOverride() const;
+private:
+	std::vector<uint16_t> getIndices() const;
 
 };
 
-}}}
+}}

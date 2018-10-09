@@ -1,37 +1,36 @@
 ﻿#pragma once
-
 #include <typeinfo>
-#include "NewBrushDef.h"
-#include "CoreDef.h"
+#include <stdio.h>
+#include "Def.h"
 
 #define NB_OBJECT_TYPE_DECLARE() \
 	private: \
 	static void *s_pPrepareType; \
 
 #define NB_OBJECT_TYPE_IMPLEMENT(thisClass, parentClass, TypeObjectIsEqualFun, TypeObjectCopyFun) \
-	void *thisClass::s_pPrepareType = nb::Core::OriginObject::PrepargeType<thisClass, parentClass>(TypeObjectIsEqualFun, TypeObjectCopyFun);
+	void *thisClass::s_pPrepareType = nb::core::OriginObject::PrepargeType<thisClass, parentClass>(TypeObjectIsEqualFun, TypeObjectCopyFun);
 
 #define NB_OBJECT_NO_ASSEMBLY_TYPE_IMPLEMENT(thisClass, parentClass) \
-	void *thisClass::s_pPrepareType = nb::Core::OriginObject::PrepargeNoAssemblyType<thisClass, parentClass>();
+	void *thisClass::s_pPrepareType = nb::core::OriginObject::PrepargeNoAssemblyType<thisClass, parentClass>();
 
 class Assembly;
-namespace nb { namespace Core{
+namespace nb { namespace core{
 
-class NB_CORE_DECLSPEC_X_INTERFACE InterfaceBase
+class NB_API InterfaceBase
 {
 public:
 	virtual ~InterfaceBase() {}
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE OriginObject
+class NB_API OriginObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 
 public:
-	typedef nb::Core::OriginObject * (* NewObjectAssemblerFun)(); 
-	typedef nb::Core::OriginObject *(* NewCopyObjectAssemblerFun)(const nb::Core::OriginObject &);
+	typedef nb::core::OriginObject * (* NewObjectAssemblerFun)(); 
+	typedef nb::core::OriginObject *(* NewCopyObjectAssemblerFun)(const nb::core::OriginObject &);
 	typedef bool (* IsEqualTypeObjectFun)(const OriginObject &left, const OriginObject &right);
-	typedef void (* CopyObjectFun)(nb::Core::OriginObject &dest, const nb::Core::OriginObject &src);
+	typedef void (* CopyObjectFun)(nb::core::OriginObject &dest, const nb::core::OriginObject &src);
 
 public:
 	OriginObject(void);
@@ -56,7 +55,7 @@ public:
 	}
 
 	template<class T>
-	static bool IsEqualFun(const nb::Core::OriginObject &left, const nb::Core::OriginObject &right)
+	static bool IsEqualFun(const nb::core::OriginObject &left, const nb::core::OriginObject &right)
 	{
 		const T *pLeft = dynamic_cast<const T *>(&left);
 		if(pLeft == NULL) ThrowException("对象比较时，左侧类型不允许。");
@@ -68,7 +67,7 @@ public:
 	}
 
 	template<class T>
-	static void CopyFun(nb::Core::OriginObject &dest, const nb::Core::OriginObject &src)
+	static void CopyFun(nb::core::OriginObject &dest, const nb::core::OriginObject &src)
 	{
 		T *pDest = dynamic_cast<T *>(&dest);
 		if(pDest == NULL) ThrowException("对象复制时，目标类型不允许。");
@@ -89,9 +88,6 @@ protected:
 
 	virtual InterfaceBase * GetInterfaceOverride(const std::type_info &type) {return NULL;}
 
-//protected:
-//	static void *s_pPrepareType;
-
 private:
 	template<class T>
 	static OriginObject * NewObjectAssembler()
@@ -101,7 +97,7 @@ private:
 
 
 	template<class T>
-	static nb::Core::OriginObject * NewObjectCopyAssembler(const nb::Core::OriginObject &other)
+	static nb::core::OriginObject * NewObjectCopyAssembler(const nb::core::OriginObject &other)
 	{
 		const T *t = dynamic_cast<const T *>(&other);
 
@@ -113,21 +109,15 @@ private:
 	}
 };
 
-
-class NB_CORE_DECLSPEC_X_INTERFACE EnumObject : public OriginObject
+class NB_API EnumObject : public OriginObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE RockOriginObject : public OriginObject
+class NB_API RockOriginObject : public OriginObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 };
-
-//template<class T>
-//class EnumObject : public BaseEnumObject
-//{
-//};
 
 }}
 

@@ -17,19 +17,19 @@
 **	
 ********************************************************/
 #pragma once
-#include "gles/Texture2D.h"
+#include "Texture2D.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class NB_EXPORT TextureMipmap : public Texture2D
+class NB_API TextureMipmap : public Texture2D
 {
 public:
 	//构建多级纹理
-	void Generate();
+	void generate();
 
 public:
 	TextureMipmap();
 	~TextureMipmap();
 };
 
-}}}
+}}

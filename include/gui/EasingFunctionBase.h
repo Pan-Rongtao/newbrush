@@ -1,17 +1,13 @@
 ﻿#pragma once
+#include "../core/Def.h"
 
-#include "core/Object.h"
-#include "GuiDef.h"
+namespace nb { namespace gui {
 
-namespace nb { namespace Media {
-
-class NB_EXPORT EasingFunctionBase : public nbObject
+class NB_API EasingFunctionBase
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	EasingFunctionBase(void);
-	virtual ~EasingFunctionBase(void);
+	EasingFunctionBase();
+	virtual ~EasingFunctionBase();
 
 	double GetEase(double normalizedTime) const;
 

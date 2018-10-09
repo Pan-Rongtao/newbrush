@@ -4,9 +4,9 @@
 
  * All rights reserved
 
- * 编写者: 何平
+ * 编写者: 潘荣涛
 
- * 编写日期: 2016-03
+ * 编写日期: 2018-09
 
  * 简要描述: 表格布局容器
 
@@ -19,70 +19,41 @@
  * 修改记录:
 
  *****************************************************************************/
-
 #pragma once
+#include "../gui/Panel.h"
+#include "../gui/RowDefinition.h"
+#include "../gui/ColumnDefinition.h"
 
-#include "Panel.h"
-#include "system/Size.h"
-#include "RowDefinitionCollection.h"
-#include "ColDefinitionCollection.h"
+namespace nb { namespace gui {
 
-
-namespace nb { namespace Gui {
-
-class GridPrivate;
-
-//class __declspec(dllimport) GridTest
-//{
-//public:
-//	static int a();
-//};
-
-class NB_GUI_DECLSPEC_INTERFACE Grid : public Panel
+class NB_API Grid : public Panel
 {
-	NB_OBJECT_TYPE_DECLARE();
+public:
+	Grid();
+	virtual ~Grid();
+
+	void setRow(int row, std::shared_ptr<UIElement> element);
+	int getRow(std::shared_ptr<UIElement> element);
+
+	void setColumn(int col, std::shared_ptr<UIElement> element);
+	int getColumn(std::shared_ptr<UIElement> element);
+
+	void setRowSpan(std::shared_ptr<UIElement> element, int value);
+	int getRowSpan(std::shared_ptr<UIElement> element);
+
+	void setColumnSpan(std::shared_ptr<UIElement> element, int value);
+	int getColumnSpan(std::shared_ptr<UIElement> element);
 
 public:
-	Grid(void);
-	virtual ~Grid(void);
-
-	static void SetRow(UIElement *element, int row);
-	static int GetRow(UIElement *element);
-
-	static bool IsSetRow(UIElement *element);
-	static bool IsSetCol(UIElement *element);
-
-	static void SetCol(UIElement *element, int col);
-	static int GetCol(UIElement *element);
-
-	NB_X_OBJECT_PROPERTY_DECLARE_IMMOBILE(RowDefCollection, RowDefinitionCollection, Grid);
-	NB_X_OBJECT_PROPERTY_DECLARE_IMMOBILE(ColDefCollection, ColDefinitionCollection, Grid);
-
-	NB_X_OBJECT_EXTERNAL_PROPERTY_DECLARE(Row, aInt);
-	NB_X_OBJECT_EXTERNAL_PROPERTY_DECLARE(Col, aInt);
-
-	GridPrivate * GetPrivate() const;
+	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;
+	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		ColumnDefinitions;
 
 protected:
-	virtual System::Size ArrangeOverride(const nb::System::Size &finalSize);
-	virtual System::Size MeasureOverride(const System::Size &availableSize);
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
 private:
-	inline int GetElementActualRow(UIElement *element, int rows) const;
-	inline int GetElementActualCol(UIElement *element, int cols) const;
 
-	void OnColDefinitionCollectionChanged(Core::PropertyValueChangedEventArgs &args);
-	void OnRowDefinitionCollectionChanged(Core::PropertyValueChangedEventArgs &args);
-
-
-	GridPrivate *m_private;
-};
-
-typedef nbObjectPtrDerive<Grid, PanelPtr> GridPtr;
-	
-
-class TestObjectEx : public TestObject
-{
 };
 
 }}

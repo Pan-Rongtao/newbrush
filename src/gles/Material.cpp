@@ -1,60 +1,39 @@
 #include "gles/Material.h"
 #include "gles/Program.h"
 
-using nb::gl::Gles::Material;
-using nb::gl::Gles::MaterialEventListener;
-using nb::gl::Gles::Program;
-using nb::gl::Gles::Texture;
+using namespace nb::gl;
 
 Material::Material()
-: m_Program(NULL)
-, m_Texture(NULL)
-, m_Listener(NULL)
 {
 }
 
-Material::Material(Program *program)
-: m_Program(program)
-, m_Texture(NULL)
-, m_Listener(NULL)
+Material::Material(std::shared_ptr<Program> program)
+: m_program(program)
 {
 }
 
-Material::Material(Program *program, Texture *texture)
-: m_Program(program)
-, m_Texture(texture)
-, m_Listener(NULL)
+Material::Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures)
+: m_program(program)
+, m_textures(textures)
 {
 }
 
-void Material::SetProgram(Program *program)
+void Material::setProgram(std::shared_ptr<Program> program)
 {
-	m_Program = program;
+	m_program = program;
 }
 
-Program *Material::GetProgram() const
+std::shared_ptr<Program> Material::program()
 {
-	return m_Program;
+	return m_program;
 }
 
-void Material::SetTexture(Texture *texture)
+std::vector<std::shared_ptr<Texture>>& Material::textures()
 {
-	m_Texture = texture;
-	if(m_Listener)
-		m_Listener->On_Texture_Changed();
+	return m_textures;
 }
 
-Texture *Material::GetTexture() const
+const std::vector<std::shared_ptr<Texture>>& Material::textures() const
 {
-	return m_Texture;
-}
-
-bool Material::Equal(Material *material) const
-{
-	return m_Program->Equal(material->m_Program) && m_Texture == material->m_Texture;
-}
-
-void Material::SetListener(MaterialEventListener *listener)
-{
-	m_Listener = listener;
+	return m_textures;
 }

@@ -3,11 +3,7 @@
 #include "core/Type.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 NB_OBJECT_TYPE_IMPLEMENT(OriginObject, OriginObject, NULL, NULL);
 
@@ -35,5 +31,5 @@ void * OriginObject::PrepargeType(const std::type_info &type, const std::type_in
 
 void OriginObject::ThrowException(const char *pMessage)
 {
-	throw ExceptionPtr::GetPtrInstance(pMessage);
+	NB_THROW_EXCEPTION(pMessage);
 }

@@ -1,10 +1,9 @@
 ﻿#pragma once
-
 #include "Object.h"
 
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
-class NB_CORE_DECLSPEC_X_INTERFACE ObjectAttachmentSymbol : public nbObject
+class NB_API ObjectAttachmentSymbol : public nbObject
 {
 public:
 	ObjectAttachmentSymbol(void);

@@ -1,18 +1,14 @@
 ﻿#pragma once
-
-#include <map>
 #include "ValueObject.h"
-#include <vector>
 
-
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class Type;
 class DependencyProperty;
 class RefObject;
 
 class TypesPropertyValuesStorePrivate;
-class NB_CORE_DECLSPEC_X_INTERFACE TypesPropertyValuesStore
+class NB_API TypesPropertyValuesStore
 {
 public:
 	TypesPropertyValuesStore(void);

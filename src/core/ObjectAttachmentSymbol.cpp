@@ -1,10 +1,6 @@
 ﻿#include "core/ObjectAttachmentSymbol.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 ObjectAttachmentSymbol::ObjectAttachmentSymbol(void)
 {

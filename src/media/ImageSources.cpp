@@ -1,8 +1,8 @@
 #include "media/ImageSources.h"
 #include "ImageSources_Internal.h"
 
-using nb::System::String;
-using nb::Media::ImageSources;
+using namespace nb::core;
+using namespace nb::media;
 
 ImageSources::ImageSources()
 {
@@ -14,42 +14,42 @@ ImageSources::~ImageSources()
 	delete m_Internal;
 }
 
-void ImageSources::PushBack(const nb::System::String &source)
+void ImageSources::pushBack(const String &source)
 {
-	m_Internal->PushBack(source);
+	m_Internal->pushBack(source);
 }
 
-void ImageSources::Insert(int index, const nb::System::String &source)
+void ImageSources::insert(int index, const String &source)
 {
-	m_Internal->Insert(index, source);
+	m_Internal->insert(index, source);
 }
 
-void ImageSources::Remove(int index)
+void ImageSources::remove(int index)
 {
-	m_Internal->Remove(index);
+	m_Internal->remove(index);
 }
 
-void ImageSources::Clear()
+void ImageSources::clear()
 {
-	m_Internal->Clear();
+	m_Internal->clear();
 }
 
-int ImageSources::GetCount() const
+int ImageSources::count() const
 {
-	return m_Internal->GetCount();
+	return m_Internal->count();
 }
 
-const nb::System::String &ImageSources::operator [] (int index) const
+const String &ImageSources::operator [] (int index) const
 {
 	return m_Internal->operator [](index);
 }
 
-void ImageSources::Get(std::vector<nb::System::String> &ret) const
+void ImageSources::get(std::vector<String> &ret) const
 {
-	m_Internal->Get(ret);
+	m_Internal->get(ret);
 }
 
-void ImageSources::Set(const std::vector<nb::System::String> &sources)
+void ImageSources::set(const std::vector<String> &sources)
 {
-	m_Internal->Set(sources);
+	m_Internal->set(sources);
 }

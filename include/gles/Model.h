@@ -1,141 +1,197 @@
 /*******************************************************
-**	Model
+**	Vertex/Mesh/Model
 **
-**	模型
 **	
-**	模型是描述集合物体构造的数据结构
-**	它的核心是顶点集合，
-**		一般有一维、二维、三维模型
-**
-**		零维是一个无限小的点，一维是一个无限细的线，
-**		二维是一个无限薄的平面，三维是一个无限大的立方体
-**
-**		Vertext：	Position	Color		TextureCoordinate		Normal
+**		模型由Mesh集合构成，Mesh则由顶点集合构成，一个顶点包含position、color、texCoord以及normal属性数据，
+**		一般而言，简单的模型由一个Mesh构成，而复杂的模型可能由多个Mesh构成。
+**	
+**		顶点的构成如下：
+**		Vertex：	Position	Color		TextureCoordinate		Normal
 **						3		  4					2				  3			= 12
+**		Mesh可选择性的构建这些属性，Mesh中的顶点集合使用同样的属性构成，也就是说，Mesh中的
+**		每个顶点都拥有相同的数据空间，比如Position|Color；而如果一个模型有多个Mesh，理论上每个Mesh
+**		都可以拥有自己的顶点属性构成，因为在实际绘制过程中，每个Mesh都是单独绘制的。但即使这样，
+**		也没有区分使用不同顶点属性构成的必要。
 **		
 **		潘荣涛
 **	
 ********************************************************/
 #pragma once
-#include "math/Vec3.h"
-#include "math/Matrix4x4.h"
-#include "system/EnumFlags.h"
-#include "gles/IndicesSequece.h"
+#include "../core/Vec3.h"
+#include "../core/Matrix4x4.h"
+#include "../core/EnumFlags.h"
+#include <vector>
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class ModelEventListener;
-class NB_EXPORT Model
+class NB_API Vertex
 {
 public:
 	//顶点属性类型
-	enum VertexAttributesType
+	enum VertexAttribute
 	{
-		Vertex_Attribute_Position				= 0x00000001 << 0,	//位置
-		Vertex_Attribute_Color					= 0x00000001 << 1,	//颜色
-		Vertex_Attribute_TextureCoordinate		= 0x00000001 << 2,	//纹理坐标
-		Vertex_Attribute_Normal					= 0x00000001 << 3,	//法线
+		positionAttribute			= 0x00000001 << 0,		//位置
+		colorAttribute				= 0x00000001 << 1,		//颜色
+		textureCoordinateAttribute	= 0x00000001 << 2,		//纹理坐标
+		normalAttribute				= 0x00000001 << 3,		//法线
 	};
 
 public:
-	//构建一个模型，它的顶点数据类型为flags
-	//异常：nVertexCount < 0
-	Model(int nVertexCount, nb::System::EnumFlags<VertexAttributesType> flags);
+	Vertex();
+	explicit Vertex(const nb::core::Vec3 &position);
+	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color);
+	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color, const nb::core::Vec2 &texCoord);
+	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color, const nb::core::Vec2 &texCoord, const nb::core::Vec3 &normal);
 
-	virtual ~Model();
+	//位置
+	nb::core::Vec3 &position();
+	const nb::core::Vec3 &position() const;
 
-public:
-	//是否包含顶点属性
-	bool HasVertexAttribute(VertexAttributesType type) const;
+	//颜色
+	nb::core::Vec4 &color();
+	const nb::core::Vec4 &color() const;
 
-	//获取数据
-	float *GetData() const;
+	//纹理坐标
+	nb::core::Vec2 &texCoord();
+	const nb::core::Vec2 &texCoord() const;
 
-	//获取顶点个数
-	int GetVertexCount() const;
-
-	//设置位置数据
-	void SetPositionArrayData(float *data);
-	void SetPositionAt(int vertexIndex, const nb::Math::Vec3 &position);
-
-	//获取位置数据
-	float *GetPositionArrayData() const;
-	nb::Math::Vec3 GetPositionAt(int vertexIndex) const;
-
-	//设置颜色数据
-	void SetColorArrayData(float *data);
-	void SetColorAt(int vertexIndex, const nb::Math::Vec4 &color);
-
-	//获取颜色数据
-	float *GetColorArrayData() const;
-	nb::Math::Vec4 GetColorAt(int vertexIndex) const;
-
-	//设置纹理坐标数据
-	void SetTextureCoordinateArrayData(float *data);
-	void SetTextureCoordinateAt(int vertexIndex, const nb::Math::Vec2 &texCoord);
-
-	//获取纹理坐标数据
-	float *GetTextureCoordinateArrayData() const;
-	nb::Math::Vec2 GetTextureCoordinateAt(int vertexIndex) const;
-
-	//设置纹理坐标数据
-	void SetNormalArrayData(float *data);
-	void SetNormalAt(int vertexIndex, const nb::Math::Vec3 &texCoord);
-
-	//获取法线数据
-	float *GetNormalArrayData() const;
-	nb::Math::Vec3 GetNormalAt(int vertexIndex) const;
-
-	//获取顶点数据间的单元间隔，
-	//比如如果顶点属性为Vertex_Attribute_Position | Vertex_Attribute_Color | Vertex_Attribute_TextureCoordinate，返回3 + 4 + 2=9
-	int GetVertexStrideUnit() const;
-
-	//将所有顶点颜色统一
-	void UnifyColor(const nb::Math::Vec4 &color);
-
-	//顶点序列，默认为顺序。如果需要重置序列，重写此方法
-	virtual IndicesSequece VertextsSequenceOverride() const;
-
-	//设置模型矩阵
-	void SetMatrix(const nb::Math::Matrix4x4 &matrix);
-
-	//获取模型矩阵
-	nb::Math::Matrix4x4 &GetMatrix();
-	const nb::Math::Matrix4x4 &GetMatrix() const;
-
-	//命中测试
-	virtual bool HitTest(int x, int y) const;
-
-	bool TriangleTest(const nb::Math::Vec3 & a, const nb::Math::Vec3 &b, const nb::Math::Vec3 &c, int x, int y) const;
-
-	//设置事件监听
-	void SetListener(ModelEventListener *listener);
+	//法向量
+	nb::core::Vec3 &normal();
+	const nb::core::Vec3 &normal() const;
 
 public:
 	//获取位置数据组件数
-	static int PositionDimension();
+	static int positionDimension();
 
 	//获取颜色数据组件数
-	static int ColorDimension();
+	static int colorDimension();
 
 	//获取纹理坐标数据组件数
-	static int TextureCoordinateDimension();
+	static int textureCoordinateDimension();
 
 	//获取法线数据组件数
-	static int NormalDimension();
+	static int normalDimension();
 
 private:
-	int											m_nVertexCount;
-	nb::System::EnumFlags<VertexAttributesType>	m_AttributeFlags;
-	float										*m_Data;
-	nb::Math::Matrix4x4							m_Matrix;
-	ModelEventListener							*m_Listener;
+	nb::core::Vec3	m_position;
+	nb::core::Vec4	m_color;
+	nb::core::Vec2	m_texCoord;
+	nb::core::Vec3	m_normal;
 };
 
-class NB_EXPORT ModelEventListener
+class NB_API Mesh
 {
 public:
-	virtual void On_ModelData_Changed(Model::VertexAttributesType type) { (void)type; }
+	Mesh(const nb::core::EnumFlags<Vertex::VertexAttribute> &attributes);
+	Mesh(const nb::core::EnumFlags<Vertex::VertexAttribute> &attributes, const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
+
+	//是否有属性
+	bool hasAttribute(Vertex::VertexAttribute attr) const;
+
+	//获取顶点个数
+	uint32_t vertexCount() const;
+
+	//获取位置数据
+	float *positionData();
+	const float *positionData() const;
+
+	//设置第vertexIndex个顶点的位置为position
+	void setPositionAt(uint32_t vertexIndex, const nb::core::Vec3 &position);
+
+	//获取第vertexIndex个顶点的位置数据
+	nb::core::Vec3 positionAt(uint32_t vertexIndex) const;
+
+	//获取颜色数据
+	float *colorData();
+	const float *colorData() const;
+
+	//设置第vertexIndex个顶点的颜色为color
+	void setColorAt(uint32_t vertexIndex, const nb::core::Vec4 &color);
+
+	//获取第vertexIndex个顶点的颜色
+	nb::core::Vec4 colorAt(uint32_t vertexIndex) const;
+
+	//获取纹理坐标数据
+	float *textureCoordinateData();
+	const float *textureCoordinateData() const;
+
+	//设置第vertexIndex个顶点的纹理坐标为texCoord
+	void setTextureCoordinateAt(uint32_t vertexIndex, const nb::core::Vec2 &texCoord);
+
+	//获取第vertexIndex个顶点的纹理坐标
+	nb::core::Vec2 textureCoordinateAt(uint32_t vertexIndex) const;
+
+	//获取法线数据
+	float *normalData();
+	const float *normalData() const;
+
+	//设置第vertexIndex个顶点的法线为texCoord
+	void setNormalAt(uint32_t vertexIndex, const nb::core::Vec3 &normal);
+
+	//获取第vertexIndex个顶点的法线
+	nb::core::Vec3 normalAt(uint32_t vertexIndex) const;
+
+	//将所有顶点颜色统一
+	void unifyColor(const nb::core::Vec4 &color);
+
+	//顶点序列(逆时针)
+	const std::vector<uint16_t> &indices() const;
+
+private:
+	nb::core::EnumFlags<Vertex::VertexAttribute>	m_attributes;
+	std::vector<Vertex>								m_vertexs;
+	std::vector<uint16_t>							m_indices;
 };
 
-}}}
+class NB_API Model
+{
+public:
+	//构建一个模型，它的顶点个数为_vertexCount，属性类型为flags
+	//异常：nVertexCount < 0
+	Model();
+	virtual ~Model();
+
+public:
+	//mesh个数
+	uint32_t meshCount() const;
+
+	//mesh
+	Mesh &mesh(uint32_t index);
+	const Mesh &mesh(uint32_t index) const;
+
+	std::vector<Mesh> &meshs();
+	const std::vector<Mesh> &meshs() const;
+
+	//设置模型矩阵(经过了平移、旋转、缩放）
+	void setMatrix(const nb::core::Matrix4x4 &matrix);
+
+	//获取模型矩阵(经过了平移、旋转、缩放）
+	const nb::core::Matrix4x4 &getMatrix() const;
+
+	//平移
+	void translate(float x, float y, float z);
+
+	//旋转（角度）
+	void rotate(float angle, float x, float y, float z);
+
+	//缩放
+	void scale(float x, float y, float z);
+
+	//命中测试
+	virtual bool hitTest(int x, int y) const;
+
+	bool triangleTest(const nb::core::Vec3 & a, const nb::core::Vec3 &b, const nb::core::Vec3 &c, int x, int y) const;
+
+	virtual void cullFace();
+
+protected:
+	std::vector<Mesh>								m_meshs;
+
+private:
+	nb::core::Matrix4x4								m_matrix;
+	nb::core::Matrix4x4								m_TranslateMatrix;
+	nb::core::Matrix4x4								m_RotateMatrix;
+	nb::core::Matrix4x4								m_ScaleMatrix;
+};
+
+}}

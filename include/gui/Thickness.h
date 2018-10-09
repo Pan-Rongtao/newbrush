@@ -11,15 +11,12 @@
 ********************************************************/
 
 #pragma once
-#include "core/ValueObject.h"
-#include "system/Global.h"
+#include "../core/Def.h"
 
-namespace nb{ namespace Gui{
+namespace nb{ namespace gui{
 
-class NB_EXPORT Thickness : public Core::ValueObject
+class NB_API Thickness
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
 	Thickness();
 	Thickness(float uniform);

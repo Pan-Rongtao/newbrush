@@ -1,26 +1,16 @@
 ﻿#pragma once
+#include "../core/Property.h"
 
-#include "UIElementFactory.h"
-#include "NameRealm.h"
+namespace nb { namespace gui {
 
-namespace nb { namespace Gui {
-
-class NB_EXPORT ControlTemplate : public nbObject
+class NB_API ControlTemplate
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	ControlTemplate(void);
-	virtual ~ControlTemplate(void);
+	ControlTemplate();
+	virtual ~ControlTemplate();
 
-	NB_OBJECT_PROPERTY_DECLARE(VisualTree, UIElementFactory);
+	nb::core::Property_rw<std::string>		Name;
 
-	void SetNameRealm(NameRealm *nr) {m_NameRealm = nr;}
-	const NameRealmPtr &GetNameRealm() const {return m_NameRealm;}
-private:
-	NameRealmPtr m_NameRealm;
 };
-
-typedef nbObjectPtrDerive<ControlTemplate, nbObjectPtr> ControlTemplatePtr;
 
 }}

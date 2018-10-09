@@ -1,12 +1,7 @@
 ﻿#include "gui/PowerEase.h"
-#include "system/System.h"
-
 #include <math.h>
 
-using namespace nb::Media;
-
-
-NB_OBJECT_TYPE_IMPLEMENT(PowerEase, EasingFunctionBase, NULL, NULL);
+using namespace nb::gui;
 
 const double p = 3.0;
 
@@ -23,7 +18,7 @@ PowerEase::~PowerEase(void)
  	if(normalizedTime < 0) normalizedTime = 0;
  	else if(normalizedTime > 1) normalizedTime = 1;
  
-	double v = nb::System::Pow(normalizedTime, p);
+	double v = pow(normalizedTime, p);
  	double ease = v;
   	//if(ease < -1) ease = -1;
   	//else if(ease > 1) ease = 1;

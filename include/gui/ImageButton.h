@@ -1,25 +1,24 @@
 ﻿#pragma once
-
 #include "Button.h"
 #include "ImageSource.h"
 
-class NB_EXPORT ImageButton : public nb::Gui::Button
+namespace nb{namespace gui{
+
+class NB_API ImageButton : public nb::gui::Button
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	ImageButton(void);
-	virtual ~ImageButton(void);
+	ImageButton();
+	virtual ~ImageButton();
 
-	NB_X_OBJECT_PROPERTY_DECLARE(NormalImage, nb::Media::ImageSource);
-	NB_X_OBJECT_PROPERTY_DECLARE(PressImage, nb::Media::ImageSource);
+	nb::core::Property_rw<std::shared_ptr<ImageSource>>				NormalImage;
+	nb::core::Property_rw<std::shared_ptr<nb::gui::ImageSource>>	PressImage;
 
-//	ImageSource * m_x;
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
 private:
-	void OnNormalImageChanged(nb::Core::PropertyValueChangedEventArgs &args);
-	void OnPressImageChanged(nb::Core::PropertyValueChangedEventArgs &args);
 
 };
 
-typedef nbObjectPtrDerive<ImageButton, nb::Gui::ButtonPtr> ImageButtonPtr;
+}}

@@ -14,40 +14,35 @@
  * 修改记录:
 
  *****************************************************************************/
-
 #pragma once
-#include "Panel.h"
-#include "system/Size.h"
+#include "../gui/Panel.h"
+#include "../core/Size.h"
 
+namespace nb{ namespace gui {
 
-namespace nb
+class NB_API Canvas : public Panel
 {
-	namespace Gui
-	{
-		class NB_EXPORT Canvas : public Panel
-		{
-			NB_OBJECT_TYPE_DECLARE();
-		public:
-			Canvas(void);
-			virtual ~Canvas(void);
+public:
+	Canvas();
+	virtual ~Canvas();
 
-			static void SetTop(UIElement *element, float fTopLength);
-			static float GetTop(UIElement *element);
+public:
+	void setTop(std::shared_ptr<UIElement> element, double fTopLength);
+	double getTop(std::shared_ptr<UIElement> element);
 
-			static void SetBottom(UIElement *element, float fBottomLength);
-			static float GetBottom(UIElement *element);
+	void setBottom(std::shared_ptr<UIElement> element, double fBottomLength);
+	double getBottom(std::shared_ptr<UIElement> element);
 
-			static void SetLeft(UIElement *element, float fLeftLength);
-			static float GetLeft(UIElement *element);
+	void setLeft(std::shared_ptr<UIElement> element, double fLeftLength);
+	double getLeft(std::shared_ptr<UIElement> element);
 
-			static void SetRight(UIElement *element, float fRightLength);
-			static float GetRight(UIElement *element);
+	void setRight(std::shared_ptr<UIElement> element, double fRightLength);
+	double getRight(std::shared_ptr<UIElement> element);
 
 
-		protected:
-			virtual System::Size ArrangeOverride(const nb::System::Size &finalSize);
-			virtual System::Size MeasureOverride(const nb::System::Size &availableSize);
-		};
-		typedef nbObjectPtrDerive<Canvas, PanelPtr> CanvasPtr;
-	}
-}
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
+};
+
+}}

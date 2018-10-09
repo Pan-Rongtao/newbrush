@@ -1,33 +1,34 @@
 ﻿#pragma once
+#include "../core/Def.h"
 
-#include "core/ValueObject.h"
+namespace nb{ namespace gui{
 
-class GridLength : public nb::Core::ValueObject
+class NB_API GridLength
 {
-	NB_OBJECT_TYPE_DECLARE();
-
 public:
-	enum UnitType
+	enum GridUnitType
 	{
-		UnitType_Auto,
-		UnitType_Length,
-		UnitType_Star
+		Auto,
+		Pixcel,
+		Star
 	};
 
 public:
-	GridLength(void) : m_unitType(UnitType_Length), m_value(0) {}
-	GridLength(float value) : m_unitType(UnitType_Length), m_value(value) {}
-	GridLength(float value, UnitType type) : m_unitType(type), m_value(value) {}
+	GridLength();
+	GridLength(double value);
+	GridLength(double value, GridUnitType type);
+	bool operator == (const GridLength &other) const;
+	bool operator != (const GridLength &other) const;
 
-//	~GridLength(void);
+	bool isAuto() const;
+	bool isStar() const;
+	double value() const;
 
-	bool IsAuto() const {return m_unitType == UnitType_Auto;}
-	bool IsStar() const {return m_unitType == UnitType_Star;}
-	float GetValue() const {return m_value;}
-
-	UnitType GetUnitType() const {return m_unitType;}
+	GridUnitType gridUnitType() const;
 
 private:
-	UnitType m_unitType;
-	float m_value;
+	GridUnitType	m_type;
+	double			m_value;
 };
+
+}}

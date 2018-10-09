@@ -1,33 +1,32 @@
 #include "media/ImagePool.h"
 #include "ImagePool_Internal.h"
 
-using nb::Media::ImagePool;
-using nb::Media::Bitmap;
-using nb::Media::ImagePoolEvent;
-using nb::Media::ImageSources;
+using namespace nb::core;
+using namespace nb::System;
+using namespace nb::media;
 
 ImagePool::ImagePool()
 {
-	m_pInternal = new ImagePool_Internal(this, nb::System::SizeI(160, 160));
+	m_pInternal = new ImagePool_Internal(this, SizeI(160, 160));
 }
 
-ImagePool::ImagePool(const nb::System::SizeI &scaleSize)
+ImagePool::ImagePool(const SizeI &scaleSize)
 {
 	m_pInternal = new ImagePool_Internal(this, scaleSize);
 }
 
-ImagePool::ImagePool(const nb::System::SizeI &scaleSize, ImagePool::Cache cache)
+ImagePool::ImagePool(const SizeI &scaleSize, ImagePool::Cache cache)
 {
 	m_pInternal = new ImagePool_Internal(this, scaleSize);
-	SetCache(cache);
+	setCache(cache);
 }
 
-ImagePool::ImagePool(const nb::System::SizeI &scaleSize, ImagePool::Cache cache, const nb::System::EnumFlags<nb::Media::ImagePool::FileType> &flags, ImagePool::LoadingDirection direction)
+ImagePool::ImagePool(const SizeI &scaleSize, ImagePool::Cache cache, const EnumFlags<ImagePool::FileType> &flags, ImagePool::LoadingDirection direction)
 {
 	m_pInternal = new ImagePool_Internal(this, scaleSize);
-	SetCache(cache);
-	SetFilter(flags);
-	SetLoadingDirection(direction);
+	setCache(cache);
+	setFilter(flags);
+	setLoadingDirection(direction);
 }
 
 ImagePool::~ImagePool()
@@ -44,132 +43,132 @@ void ImagePool::operator = (const ImagePool &other)
 {
 }
 
-void ImagePool::SetCache(ImagePool::Cache cache)
+void ImagePool::setCache(ImagePool::Cache cache)
 {
-	m_pInternal->SetCache(cache);
+	m_pInternal->setCache(cache);
 }
 
-ImagePool::Cache ImagePool::GetCache() const
+ImagePool::Cache ImagePool::cache() const
 {
-	return m_pInternal->GetCache();
+	return m_pInternal->cache();
 }
 
-void ImagePool::SetFilter(const nb::System::EnumFlags<FileType> &flags)
+void ImagePool::setFilter(const EnumFlags<FileType> &flags)
 {
-	m_pInternal->SetFilter(flags);
+	m_pInternal->setFilter(flags);
 }
 
-nb::System::EnumFlags<nb::Media::ImagePool::FileType> ImagePool::GetFilter() const
+EnumFlags<ImagePool::FileType> ImagePool::filter() const
 {
-	return m_pInternal->GetFilter();
+	return m_pInternal->filter();
 }
 
-void ImagePool::SetImageMemoryLimit(nb::Media::ImagePool::FileType type, int bytesLimit)
+void ImagePool::setImageMemoryLimit(ImagePool::FileType type, int bytesLimit)
 {
-	m_pInternal->SetImageMemoryLimit(type, bytesLimit);
+	m_pInternal->setImageMemoryLimit(type, bytesLimit);
 }
 
-void ImagePool::SetImageMemoryLimitAllType(int bytesLimit)
+void ImagePool::setImageMemoryLimitAllType(int bytesLimit)
 {
-	m_pInternal->SetImageMemoryLimitAllType(bytesLimit);
+	m_pInternal->setImageMemoryLimitAllType(bytesLimit);
 }
 
-void ImagePool::SetLoadingDirection(ImagePool::LoadingDirection direction)
+void ImagePool::setLoadingDirection(ImagePool::LoadingDirection direction)
 {
-	m_pInternal->SetLoadingDirection(direction);
+	m_pInternal->setLoadingDirection(direction);
 }
 
-ImagePool::LoadingDirection ImagePool::GetLoadingDirection() const
+ImagePool::LoadingDirection ImagePool::loadingDirection() const
 {
-	return m_pInternal->GetLoadingDirection();
+	return m_pInternal->loadingDirection();
 }
 
-void ImagePool::SetSourceFiles(const ImageSources &filePaths)
+void ImagePool::setSourceFiles(const ImageSources &filePaths)
 {
-	m_pInternal->SetSourceFiles(filePaths);
+	m_pInternal->setSourceFiles(filePaths);
 }
 
-void ImagePool::AppendSource(const nb::System::String &sSource)
+void ImagePool::appendSource(const String &sSource)
 {
-	m_pInternal->AppendSource(sSource);
+	m_pInternal->appendSource(sSource);
 }
 
-void ImagePool::InsertSource(int index, const nb::System::String &sSource)
+void ImagePool::insertSource(int index, const String &sSource)
 {
-	m_pInternal->InsertSource(index, sSource);
+	m_pInternal->insertSource(index, sSource);
 }
 
-void ImagePool::RemoveSource(int index)
+void ImagePool::removeSource(int index)
 {
-	m_pInternal->RemoveSource(index);
+	m_pInternal->removeSource(index);
 }
 
-void ImagePool::UpdateSourceAt(int index, const nb::System::String &sSource)
+void ImagePool::updateSourceAt(int index, const String &sSource)
 {
-	m_pInternal->UpdateSourceAt(index, sSource);
+	m_pInternal->updateSourceAt(index, sSource);
 }
 
-void ImagePool::GetSourceFileList(ImageSources &ret) const
+void ImagePool::getSourceFileList(ImageSources &ret) const
 {
-	m_pInternal->GetSourceFileList(ret);
+	m_pInternal->getSourceFileList(ret);
 }
 
-nb::System::String ImagePool::GetSourceAt(int index) const
+String ImagePool::sourceAt(int index) const
 {
-	return m_pInternal->GetSourceAt(index);
+	return m_pInternal->sourceAt(index);
 }
 
-int ImagePool::GetSourceFileCount() const
+int ImagePool::sourceFileCount() const
 {
-	return m_pInternal->GetSourceFileCount();
+	return m_pInternal->sourceFileCount();
 }
 
-void ImagePool::SetSentry(int sentry)
+void ImagePool::setSentry(int sentry)
 {
-	m_pInternal->SetSentry(sentry);
+	m_pInternal->setSentry(sentry);
 }
 
-int ImagePool::GetSentry() const
+int ImagePool::sentry() const
 {
-	return m_pInternal->GetSentry();
+	return m_pInternal->sentry();
 }
 
-void ImagePool::StartLoading()
+void ImagePool::startLoading()
 {
-	m_pInternal->StartLoading();
+	m_pInternal->startLoading();
 }
 
-void ImagePool::StopLoading(bool bClear)
+void ImagePool::stopLoading(bool bClear)
 {
-	m_pInternal->StopLoading(bClear);
+	m_pInternal->stopLoading(bClear);
 }
 
-bool ImagePool::IsWorking() const
+bool ImagePool::isWorking() const
 {
-	return m_pInternal->IsWorking();
+	return m_pInternal->isWorking();
 }
 
-bool ImagePool::GetImageItemPropertyAndLock(int index, ImagePool::ImageItemProperty &itemProperty)
+bool ImagePool::getImageItemPropertyAndLock(int index, ImagePool::ImageItemProperty &itemProperty)
 {
-	return m_pInternal->GetImageItemPropertyAndLock(index, itemProperty);
+	return m_pInternal->getImageItemPropertyAndLock(index, itemProperty);
 }
 
-void ImagePool::GetImageItemPropertyUnlock(int index)
+void ImagePool::getImageItemPropertyUnlock(int index)
 {
-	m_pInternal->GetImageItemPropertyUnlock(index);
+	m_pInternal->getImageItemPropertyUnlock(index);
 }
 
-nb::System::SizeI ImagePool::GetScaleSize() const
+SizeI ImagePool::scaleSize() const
 {
-	return m_pInternal->GetScaleSize();
+	return m_pInternal->scaleSize();
 }
 
-void ImagePool::SetListener(ImagePoolEvent *p)
+void ImagePool::setListener(ImagePoolEvent *p)
 {
-	m_pInternal->SetListener(p);
+	m_pInternal->setListener(p);
 }
 
-ImagePoolEvent *ImagePool::GetListener() const
+ImagePoolEvent *ImagePool::getListener() const
 {
-	return m_pInternal->GetListener();
+	return m_pInternal->getListener();
 }

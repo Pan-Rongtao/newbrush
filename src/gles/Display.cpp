@@ -1,16 +1,16 @@
 #include "gles/Display.h"
-#include "system/PlatformConfigure.h"
+#include "core/Def.h"
 #include <EGL/egl.h>
-#if NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#if NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
 	#include <wayland-client.h>
 #endif
 #include "core/Exception.h"
 
-using nb::gl::egl::Display;
-using nb::Core::Exception;
+using namespace nb::gl;
+using namespace nb::core;
 
 Display::Display()
-: m_Handle(NULL)
+: m_Handle(nullptr)
 , m_Id(-1)
 {
 }
@@ -30,28 +30,28 @@ Display::Display(long id)
 	m_Id = id;
 }
 
-bool Display::IsNull() const
+bool Display::isNull() const
 {
-	return m_Handle == NULL;
+	return m_Handle == nullptr;
 }
 
-long Display::GetId() const
+long Display::id() const
 {
 	return m_Id;
 }
 
-void *Display::GetEGLHandle() const
+void *Display::handle() const
 {
 	return m_Handle;
 }
 
-nb::gl::egl::Display nb::gl::egl::Display::Default()
+Display Display::defaultx()
 {
 	EGLNativeDisplayType id = EGLNativeDisplayType(-1);
-#if NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_WIN32 || NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
 	id = EGL_DEFAULT_DISPLAY;
-#elif NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	id = (EGLNativeDisplayType)(wl_display_connect(NULL));	//如果使用wayland，传入EGL_DEFAULT_DISPLAY会导致eglInitialize挂死
+#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+	id = (EGLNativeDisplayType)(wl_display_connect(nullptr));	//如果使用wayland，传入EGL_DEFAULT_DISPLAY会导致eglInitialize挂死
 #else
 #error "not realize fun Display::Default() in this platform.\r\n"
 #endif

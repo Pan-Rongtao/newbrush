@@ -1,10 +1,7 @@
 ﻿#pragma once
-
 #include "ObjectLiveMonitor.h"
 
-//class nbCoreApplication;
-
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class TypeInternal;
 class DependencyPropertyInternal;

@@ -1,10 +1,10 @@
 #pragma once
 #define FREEIMAGE_COLORORDER	FREEIMAGE_COLORORDER_RGB	//使用RGB存储格式
 #include "freeImage/FreeImage.h"
-#include "system/String.h"
+#include "core/String.h"
 #include "media/Bitmap.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace media{
 
 class GifReader_Internal
 {
@@ -12,15 +12,15 @@ public:
 	GifReader_Internal();
 	~GifReader_Internal();
 
-	bool Open(const nb::System::String &path);
+	bool open(const nb::core::String &path);
 
-	void Close();
+	void close();
 
-	bool HasData() const;
+	bool hasData() const;
 
-	int GetFrameCount() const;
+	int frameCount() const;
 
-	Bitmap GetFrame(int index) const;
+	Bitmap frame(int index) const;
 
 
 private:

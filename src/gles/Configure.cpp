@@ -3,16 +3,15 @@
 #include "core/Exception.h"
 #include <EGL/egl.h>
 
-using nb::gl::egl::Configure;
+using namespace nb::gl;
 
 Configure::Configure()
-: m_Handle(NULL)
+: m_handle(nullptr)
 {
-
 }
 
 Configure::Configure(int *attributes)
-: m_Handle(NULL)
+: m_handle(nullptr)
 {
 	const EGLint attribs[] =
 	{
@@ -26,66 +25,62 @@ Configure::Configure(int *attributes)
 		EGL_NONE
 	};
 	EGLint	numConfigs(0);
-	eglChooseConfig(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), attribs, &m_Handle, 1, &numConfigs);
+	eglChooseConfig(nb::gl::getCurrentDisplay().handle(), attribs, &m_handle, 1, &numConfigs);
 }
 
-Configure::Configure(void *eglHandle)
+bool Configure::isNull() const
 {
-	m_Handle = eglHandle;
+	return m_handle == nullptr;
 }
 
-bool Configure::IsNull() const
+int *Configure::attributes() const
 {
-	return m_Handle == NULL;
-}
-
-int *Configure::GetAttributes() const
-{
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	int *ret = NULL;
-	EGLBoolean b = eglGetConfigAttrib(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), m_Handle, 0, ret);
+	int *ret = nullptr;
+	EGLBoolean b = eglGetConfigAttrib(nb::gl::getCurrentDisplay().handle(), m_handle, 0, ret);
 	if(!b)
 		NB_THROW_EXCEPTION("configure get attributes fail.");
 
 	return ret;
 }
 
-void *Configure::GetEGLHandle() const
+void *Configure::handle() const
 {
-	return m_Handle;
+	return m_handle;
 }
 
-int Configure::SystemRecommendMaxSupportCount()
+int Configure::systemRecommendMaxSupportCount()
 {
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
 	EGLint count = 0;
-	EGLBoolean b = eglGetConfigs(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), NULL, 0, &count);
+	EGLBoolean b = eglGetConfigs(nb::gl::getCurrentDisplay().handle(), nullptr, 0, &count);
 	if(!b)
 		NB_THROW_EXCEPTION("get configs fail.");
 
 	return count;
 }
 
-Configure Configure::FromSystemRecommend(int index)
+Configure Configure::fromSystemRecommend(int index)
 {
-	int maxCount = SystemRecommendMaxSupportCount();
+	int maxCount = systemRecommendMaxSupportCount();
 	if(index < 0 || index >= maxCount)
 		NB_THROW_EXCEPTION("index out bound.");
 
-	if(nb::gl::egl::GetCurrentDisplay().IsNull())
+	if(nb::gl::getCurrentDisplay().isNull())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
 	EGLConfig *eglHandle = new EGLConfig[maxCount];
 	int x = 0;
-	EGLBoolean b = eglGetConfigs(nb::gl::egl::GetCurrentDisplay().GetEGLHandle(), eglHandle, maxCount, &x);
+	EGLBoolean b = eglGetConfigs(nb::gl::getCurrentDisplay().handle(), eglHandle, maxCount, &x);
 	if(!b)
 		NB_THROW_EXCEPTION("get configs fail.");
 
-	Configure ret = Configure(eglHandle[index]);
+	Configure ret;
+	ret.m_handle = eglHandle[index];
 	delete []eglHandle;
 	return ret;
 }

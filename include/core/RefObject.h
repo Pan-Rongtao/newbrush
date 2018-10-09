@@ -1,19 +1,11 @@
 ﻿#pragma once
-
 #include "OriginObject.h"
 
-
-#ifdef DEBUG
-#ifdef new
-#undef new
-#endif
-#endif
-
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class RefObjectPtr;
 class RefObjectWeatPtr;
-class NB_CORE_DECLSPEC_X_INTERFACE RefObject : public OriginObject
+class NB_API RefObject : public OriginObject
 {
 	NB_OBJECT_TYPE_DECLARE();
 
@@ -47,7 +39,7 @@ private:
 	void * m_pWeatPtrData;
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE RefObjectWeatPtr
+class NB_API RefObjectWeatPtr
 {
 	friend class RefObject;
 public:
@@ -71,7 +63,7 @@ private:
 
 
 template<class T>
-class NB_EXPORT_NO RefObjectWeatPtrT : public RefObjectWeatPtr
+class RefObjectWeatPtrT : public RefObjectWeatPtr
 {
 public:
 	RefObjectWeatPtrT(){}
@@ -82,7 +74,7 @@ public:
 	T * operator ->() const {return (T *)RefObjectWeatPtr::operator ->();}
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE SharedPtrBase
+class NB_API SharedPtrBase
 {
 public:
 	SharedPtrBase(void);
@@ -137,9 +129,6 @@ public:
 
 	bool operator == (T *right) const { return m_ptr == right; }
 
-	//template<class Tr>
-	//bool operator == (Tr *right) const { return m_ptr == right; }
-
 
 	void operator = (T *ptr) { Set(ptr); }
 
@@ -162,7 +151,7 @@ template< class Tp, class Ts>
 bool operator == (Tp * const p, const SharedPtr<Ts> &s) { return s.Get() == p; }
 
 
-class NB_CORE_DECLSPEC_X_INTERFACE RefObjectPtr
+class NB_API RefObjectPtr
 {
 public:
 	RefObjectPtr(void);
@@ -215,7 +204,7 @@ private:
 
 
 template<class T>
-class NB_EXPORT_NO RefObjectPtrT : public RefObjectPtr
+class RefObjectPtrT : public RefObjectPtr
 {
 public:
 	RefObjectPtrT(){}
@@ -285,7 +274,7 @@ private:
 }}
 
 template<class T, class ParentPtrT>
-class NB_EXPORT nbObjectPtrDerive : public ParentPtrT
+class NB_API nbObjectPtrDerive : public ParentPtrT
 {
 public:
 	nbObjectPtrDerive(){}
@@ -298,25 +287,6 @@ public:
 
 	void operator = (T *pObject) {ParentPtrT::Equal(pObject);}
 
-//	bool operator == (T *other) const {return true;}
-
 	T & operator * () const {return *GetRealize();}
 
-//	bool operator == (T *other) const {return ParentPtrT::GetRealize() == other;}
-//	bool operator == (const nb::Core::RefObjectPtr &other) const {return ParentPtrT::GetRealize() == other.GetRealize();}
-
-//	static T * DynamicCast(nb::Core::RefObject *pObject)
-//	{
-//		return dynamic_cast<T *>(pObject);
-//	}
-
-//	operator ParentPtrT *() const {return NULL;}
 };
-
-
-
-//#define new DEBUG_NEW
-//#define new(xx) DEBUG_NEW
-
-//#define DEBUG_NEW new(__FILE__, __LINE__)
-//#define new new(__FILE__, __LINE__) 

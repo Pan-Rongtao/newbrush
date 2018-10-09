@@ -11,54 +11,39 @@
 **	
 ********************************************************/
 #pragma once
-#include "system/Global.h"
+#include <vector>
+#include "../core/Def.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
 class Program;
 class Texture;
-class MaterialEventListener;
-class NB_EXPORT Material
+class NB_API Material
 {
-public:
-	//设置program
-	void SetProgram(Program *program);
-
-	//获取program
-	Program *GetProgram() const;
-
-	//设置纹理
-	void SetTexture(Texture *texture);
-
-	//获取纹理
-	Texture *GetTexture() const;
-
-	//判断是否与材质material相同
-	bool Equal(Material *material) const;
-
-	//
-	void SetListener(MaterialEventListener *listener);
-
 public:
 	//构建一个材质，它的Program为空，纹理为空
 	Material();
 
 	//构建一个材质，它的Program为program，它的纹理为空
-	Material(Program *program);
+	Material(std::shared_ptr<Program> program);
 
 	//构建一个材质，它的Program为program，它的纹理texture
-	Material(Program *program, Texture *texture);
+	Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures);
+
+public:
+	//设置program
+	void setProgram(std::shared_ptr<Program> program);
+
+	//获取program
+	std::shared_ptr<Program> program();
+
+	//纹理
+	std::vector<std::shared_ptr<Texture>> &textures();
+	const std::vector<std::shared_ptr<Texture>> &textures() const;
 
 private:
-	Program					*m_Program;
-	Texture					*m_Texture;
-	MaterialEventListener	*m_Listener;
+	std::shared_ptr<Program>				m_program;
+	std::vector<std::shared_ptr<Texture>>	m_textures;
 };
 
-class NB_EXPORT MaterialEventListener
-{
-public:
-	virtual void On_Texture_Changed() {}
-};
-
-}}}
+}}

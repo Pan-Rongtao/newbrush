@@ -1,25 +1,13 @@
 ﻿#include "ReboundScroll.h"
-#include "system/System.h"
+#include <algorithm>
 
-using namespace nb::Gui;
-
-using namespace nb::Core;
-
-NB_OBJECT_TYPE_IMPLEMENT(ReboundScroll, nbObject, NULL, NULL);
-
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, IsRuning, aBool, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, UseRebound, aBool, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, TopLeftReboundPos, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, BottomRightReboundPos, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, ReboundStopLength, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, ReboundAccel, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, ContentHeight, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScroll, PageHeight, aFloat, NULL);
+using namespace nb::gui;
+using namespace nb::core;
 
 ReboundScroll::ReboundScroll()
 : m_bElastic(false)
 , m_bElasticDec(false)
-, m_fElasticSpace(0.0f)
+, m_fElasticSpace(0.0)
 {
 	IsRuning = false;
 	UseRebound = true;
@@ -28,27 +16,27 @@ ReboundScroll::ReboundScroll()
 	BottomRightReboundPos = -1.0f;
 	ReboundStopLength = -1.0f;
 
-	m_pKineticMove = new KineticMove();
-	m_pKineticMove->MoveDistanceEvent.Add(this, &ReboundScroll::OnKineticMove);
-	m_pKineticMove->MoveEndEvent.Add(this, &ReboundScroll::OnKineticMoveEnd);
+	m_pKineticMove = std::make_shared<KineticMove>();
+	m_pKineticMove->MoveDistanceEvent.addHandler(std::bind(&ReboundScroll::onKineticMove, this, std::placeholders::_1));
+	m_pKineticMove->MoveEndEvent.addHandler(std::bind(&ReboundScroll::onKineticMoveEnd, this, std::placeholders::_1));
 }
 
 ReboundScroll::~ReboundScroll()
 {
 }
 
-void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
+void ReboundScroll::onKineticMove(const KineticMove::MoveDistanceArgs &args)
 {
-	ScrollEventParam p;
-	p.m_nSpace = param.m_nSpace;
-	this->ScrollEvent.Dispatch(p);
+	ScrollArgs p;
+	p.m_nSpace = args.m_nSpace;
+	this->ScrollEvent.dispatch(p);
 
-	bool bUseRebound = (Boolx)UseRebound;
-	float fTopLeftReboundPos = (Float)TopLeftReboundPos;
-	float fBottomRightReboundPos = (Float)BottomRightReboundPos;
-	float fReboundAccel = (Float)ReboundAccel;
-	float fReboundStopLength = (Float)ReboundStopLength;
-	float fPageHeight = (Float)PageHeight;
+	bool bUseRebound = UseRebound;
+	float fTopLeftReboundPos = TopLeftReboundPos;
+	float fBottomRightReboundPos = BottomRightReboundPos;
+	float fReboundAccel = ReboundAccel;
+	float fReboundStopLength = ReboundStopLength;
+	float fPageHeight = PageHeight;
 
 	if(!bUseRebound) return;
 
@@ -57,13 +45,13 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 		//向上滚动
 		if(!m_bElastic)
 		{
-			if(param.m_nSpace > -fTopLeftReboundPos)
+			if(args.m_nSpace > -fTopLeftReboundPos)
 			{
 				m_pKineticMove->SetAccel(-fReboundAccel);
 			}
 			if(fReboundStopLength >= 0)
 			{
-				if(param.m_nSpace >= -fTopLeftReboundPos + fReboundStopLength)
+				if(args.m_nSpace >= -fTopLeftReboundPos + fReboundStopLength)
 				{
 					m_pKineticMove->SetAccel(-1e+38f);//-1e+256);
 				}
@@ -73,13 +61,13 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 		{
 			if(!m_bElasticDec)
 			{
-				if(param.m_nSpace < -fTopLeftReboundPos+2*(m_fElasticSpace-(-fTopLeftReboundPos))/3)
+				if(args.m_nSpace < -fTopLeftReboundPos+2*(m_fElasticSpace-(-fTopLeftReboundPos))/3)
 				{
 					float fSpeed = m_pKineticMove->GetSpeed();
 
 					m_pKineticMove->Stop();
 
-					float f = -fTopLeftReboundPos-param.m_nSpace;
+					float f = -fTopLeftReboundPos- args.m_nSpace;
 				//	if(f <= -0.00001 || f >= 0.00001)
 					if(f <= -0.00001)
 					{
@@ -88,11 +76,11 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 						fAccel = KineticMove::ComputeAccel(f, fSpeed);
 
 						//启动滚动
-						m_pKineticMove->Start(fAccel, fSpeed, (float)param.m_nSpace);
+						m_pKineticMove->Start(fAccel, fSpeed, (float)args.m_nSpace);
 					}
 					else
 					{
-						OnScrollEndEvent();
+						onScrollEndEvent();
 					}
 					m_bElasticDec = true;
 				}
@@ -104,14 +92,14 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 		//向下滚动
 		if(!m_bElastic)
 		{
-			if(param.m_nSpace+fBottomRightReboundPos < fPageHeight)
+			if(args.m_nSpace+fBottomRightReboundPos < fPageHeight)
 			{
 				m_pKineticMove->SetAccel(fReboundAccel);
 			}
 
 			if(fReboundStopLength >= 0)
 			{
-				if(param.m_nSpace+fBottomRightReboundPos < fPageHeight - fReboundStopLength)
+				if(args.m_nSpace+fBottomRightReboundPos < fPageHeight - fReboundStopLength)
 				{
 					m_pKineticMove->SetAccel(1e+38f);//1e+256);
 				}
@@ -122,13 +110,13 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 			if(!m_bElasticDec)
 			{
 				float fRight = m_fElasticSpace + fBottomRightReboundPos;
-				if(param.m_nSpace + fBottomRightReboundPos > fRight + (fPageHeight-fRight)/3)
+				if(args.m_nSpace + fBottomRightReboundPos > fRight + (fPageHeight-fRight)/3)
 				{
 					float fSpeed = m_pKineticMove->GetSpeed();
 
 					m_pKineticMove->Stop();
 
-					float f = fPageHeight - (param.m_nSpace + fBottomRightReboundPos);
+					float f = fPageHeight - (args.m_nSpace + fBottomRightReboundPos);
 				//	if(f <= -0.00001 || f >= 0.00001)
 					if(f >= 0.00001)
 					{
@@ -137,11 +125,11 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 						fAccel = KineticMove::ComputeAccel(f, fSpeed);
 
 						//启动滚动
-						m_pKineticMove->Start(fAccel, fSpeed, (float)param.m_nSpace);
+						m_pKineticMove->Start(fAccel, fSpeed, (float)args.m_nSpace);
 					}
 					else
 					{
-						OnScrollEndEvent();
+						onScrollEndEvent();
 					}
 					m_bElasticDec = true;
 				}
@@ -150,15 +138,15 @@ void ReboundScroll::OnKineticMove(KineticMove::MoveDistanceEventParam &param)
 	}
 }
 
-void ReboundScroll::OnKineticMoveEnd(KineticMove::MoveEndEventParam &param)
+void ReboundScroll::onKineticMoveEnd(const KineticMove::MoveEndArgs &args)
 {
-	bool bUseRebound = (Boolx)UseRebound;
-	float fTopLeftReboundPos = (Float)TopLeftReboundPos;
-	float fBottomRightReboundPos = (Float)BottomRightReboundPos;
-	float fPageHeight = (Float)PageHeight;
+	bool bUseRebound = UseRebound;
+	float fTopLeftReboundPos = TopLeftReboundPos;
+	float fBottomRightReboundPos = BottomRightReboundPos;
+	float fPageHeight = PageHeight;
 	if(!bUseRebound)
 	{
-		OnScrollEndEvent();
+		onScrollEndEvent();
 		return;
 	}
 
@@ -167,12 +155,12 @@ void ReboundScroll::OnKineticMoveEnd(KineticMove::MoveEndEventParam &param)
 	{
 		if(m_bScrollDown)
 		{
-			if(param.m_fSpace > -fTopLeftReboundPos)
+			if(args.m_fSpace > -fTopLeftReboundPos)
 			{
-				m_fElasticSpace = param.m_fSpace;
+				m_fElasticSpace = args.m_fSpace;
 
 				//启动回弹
-				m_pKineticMove->Start((-fTopLeftReboundPos - param.m_fSpace)*20, 0, param.m_fSpace);
+				m_pKineticMove->Start((-fTopLeftReboundPos - args.m_fSpace)*20, 0, args.m_fSpace);
 
 				m_bElasticDec = false;
 				m_bElastic = true;
@@ -182,12 +170,12 @@ void ReboundScroll::OnKineticMoveEnd(KineticMove::MoveEndEventParam &param)
 		}
 		else
 		{
-			if(param.m_fSpace + fBottomRightReboundPos < fPageHeight)
+			if(args.m_fSpace + fBottomRightReboundPos < fPageHeight)
 			{
-				m_fElasticSpace = param.m_fSpace;
+				m_fElasticSpace = args.m_fSpace;
 
 				//启动滚动
-				m_pKineticMove->Start(-(param.m_fSpace + fBottomRightReboundPos - fPageHeight)*20, 0, param.m_fSpace);
+				m_pKineticMove->Start(-(args.m_fSpace + fBottomRightReboundPos - fPageHeight)*20, 0, args.m_fSpace);
 
 				m_bElasticDec = false;
 				m_bElastic = true;
@@ -197,19 +185,19 @@ void ReboundScroll::OnKineticMoveEnd(KineticMove::MoveEndEventParam &param)
 		}
 	}
 
-	OnScrollEndEvent();
+	onScrollEndEvent();
 }
 
-inline void ReboundScroll::OnScrollEndEvent()
+inline void ReboundScroll::onScrollEndEvent()
 {
 	IsRuning = false;
-	ScrollEndEventParam p;
-	this->ScrollEndEvent.Dispatch(p);
+	ScrollEndArgs p;
+	this->ScrollEndEvent.dispatch(p);
 }
 
-void ReboundScroll::Start(float fAccel, float fStartSpeed, float fStartPos, float fPageHeight, float fContentHeight)
+void ReboundScroll::start(float fAccel, float fStartSpeed, float fStartPos, float fPageHeight, float fContentHeight)
 {
-	ContentHeight = nb::System::Max(fContentHeight, fPageHeight);
+	ContentHeight = std::max(fContentHeight, fPageHeight);
 	PageHeight = fPageHeight;
 
 	m_bScrollDown = fStartSpeed > 0 ? true : false;
@@ -223,20 +211,20 @@ void ReboundScroll::Start(float fAccel, float fStartSpeed, float fStartPos, floa
 	IsRuning = true;
 }
 
-void ReboundScroll::OffsetStartPos(float fStartPosOffset)
+void ReboundScroll::offsetStartPos(float fStartPosOffset)
 {
 //	if(m_bElastic) return;		// 处于反弹过程中，设置将无效
 
 	m_pKineticMove->OffsetStartPos(fStartPosOffset);
 
-	BottomRightReboundPos = (Float)BottomRightReboundPos - fStartPosOffset;
+	BottomRightReboundPos = BottomRightReboundPos - fStartPosOffset;
 	if(m_bElastic) 
 	{
 		m_fElasticSpace += fStartPosOffset;
 	}
 }
 
-void ReboundScroll::Stop()
+void ReboundScroll::stop()
 {
 	m_pKineticMove->Stop();
 

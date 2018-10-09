@@ -18,12 +18,17 @@
 
 *****************************************************************************/
 #pragma once
-#include "core/NewBrushDef.h"
+#include "../core/Def.h"
+#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#include <Windows.h>
+#define  WIN32_LEAN_AND_MEAN
+#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#include <pthread.h>
+#endif
 
 namespace nb{ namespace System{
 
-class CriticalSection_Internal;
-class NB_EXPORT CriticalSection
+class NB_API CriticalSection
 {
 public:
 	//+1Ëø¼ÆÊý
@@ -38,7 +43,11 @@ public:
 	~CriticalSection();
 
 private:
-	CriticalSection_Internal	*m_pInternal;
+#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+	CRITICAL_SECTION	m_Win32CriticalSection;
+#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+	pthread_mutex_t		m_mutex;
+#endif
 };
 
 }}

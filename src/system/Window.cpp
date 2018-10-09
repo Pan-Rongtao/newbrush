@@ -1,191 +1,104 @@
 #include "system/Window.h"
-#include "system/Platform.h"
-#include "core/Exception.h"
-#include "NativeWindow.h"
-#include "Window_Win32.h"
-#include "Window_X11.h"
-#include "Window_Wayland.h"
+#include "Window_Internal.h"
 
-using nb::System::PointI;
-using nb::System::SizeI;
-using nb::System::RectI;
-using nb::System::Window;
-using nb::System::WindowEvent;
+using namespace nb::System;
 
 Window::Window()
+	: m_internal(new Window_Internal(this))
 {
-	CreateNative();
 }
 
 Window::Window(int width, int height)
+	: m_internal(new Window_Internal(this))
 {
-	CreateNative();
-	SetSize(SizeI(width, height));
+	setWidth(width);
+	setHeight(height);
 }
 
 Window::Window(int x, int y, int width, int height)
+	: m_internal(new Window_Internal(this))
 {
-	CreateNative();
-	SetRect(RectI(x, y, width, height));
+	setX(x);
+	setY(y);
+	setWidth(width);
+	setHeight(height);
 }
 
-Window::Window(const nb::System::String &caption)
+Window::Window(const std::string &title)
+	: m_internal(new Window_Internal(this))
 {
-	CreateNative();
-	SetCaption(caption);
+	setTitle(title);
 }
 
-Window::Window(const nb::System::String &caption, int width, int height)
+Window::Window(const std::string &title, int width, int height)
+	: m_internal(new Window_Internal(this))
 {
-	CreateNative();
-	SetCaption(caption);
-	SetSize(SizeI(width, height));
-}
-
-Window::Window(const nb::System::String &caption, const nb::System::RectI &rect)
-{
-	CreateNative();
-	SetCaption(caption);
-	SetRect(rect);
+	setWidth(width);
+	setHeight(height);
+	setTitle(title);
 }
 
 Window::~Window()
 {
-	ReleaseNative();
+	delete m_internal;
 }
 
-void Window::SetCaption(const nb::System::String &caption)
+void Window::setTitle(const std::string &title)
 {
-	m_pNative->SetCaption(caption);
+	m_internal->setTitle(title);
 }
 
-nb::System::String Window::GetCaption() const
+std::string Window::title() const
 {
-	return m_pNative->GetCaption();
+	return m_internal->title();
 }
 
-void Window::SetX(int x)
+void Window::setX(int x)
 {
-	SetRect(RectI(x, GetPos().GetY(), GetWidth(), GetHeight()));
+	m_internal->setX(x);
 }
 
-int Window::GetX() const
+int Window::x() const
 {
-	return GetRect().GetX();
+	return m_internal->x();
 }
 
-void Window::SetY(int y)
+void Window::setY(int y)
 {
-	SetRect(RectI(GetPos().GetX(), y, GetWidth(), GetHeight()));
+	m_internal->setY(y);
 }
 
-int Window::GetY() const
+int Window::y() const
 {
-	return GetRect().GetY();
+	return m_internal->y();
 }
 
-void Window::SetWidth(int width)
+void Window::setWidth(int width)
 {
-	SetRect(RectI(GetPos(), width, GetHeight()));
+	m_internal->setWidth(width);
 }
 
-int Window::GetWidth() const
+int Window::width() const
 {
-	return GetRect().GetWidth();
+	return m_internal->width();
 }
 
-void Window::SetHeight(int height)
+void Window::setHeight(int height)
 {
-	SetRect(RectI(GetPos(), GetWidth(), height));
+	m_internal->setHeight(height);
 }
 
-int Window::GetHeight() const
+int Window::height() const
 {
-	return GetRect().GetHeight();
+	return m_internal->height();
 }
 
-void Window::SetPos(const nb::System::PointI &pos)
+void Window::pending()
 {
-	SetRect(RectI(pos, GetWidth(), GetHeight()));
+	m_internal->pending();
 }
 
-void Window::SetPos(int x, int y)
+long Window::handle() const
 {
-	SetPos(PointI(x, y));
-}
-
-nb::System::PointI Window::GetPos() const
-{
-	return GetRect().GetLeftTop();
-}
-
-void Window::SetSize(const nb::System::SizeI &size)
-{
-	SetRect(RectI(GetPos(), size));
-}
-
-nb::System::SizeI Window::GetSize() const
-{
-	return nb::System::SizeI(GetWidth(), GetHeight());
-}
-
-void Window::SetRect(const nb::System::RectI &rect)
-{
-	if(rect.GetWidth() < 0 || rect.GetHeight() < 0)
-		NB_THROW_EXCEPTION("invalid window size.");
-
-	m_pNative->SetRect(rect);
-}
-
-nb::System::RectI Window::GetRect() const
-{
-	return m_pNative->GetRect();
-}
-
-void Window::Pending()
-{
-	m_pNative->Pending();
-}
-/*
-void Window::Peek()
-{
-//	m_pNative->Pending();
-}
-*/
-
-void Window::SetListener(WindowEvent *listener)
-{
-	m_pListener = listener;
-}
-
-WindowEvent *Window::GetListener() const
-{
-	return m_pListener;
-}
-
-long Window::GetWindowHandle() const
-{
-	return (long)m_pNative->GetWindowHandle();
-}
-
-void Window::CreateNative()
-{
-	m_pListener = NULL;
-#if NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_WIN32
-	m_pNative = new Window_Win32(this);
-#elif NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
-	m_pNative = new Window_X11(this);
-#elif NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	m_pNative = new Window_Wayland(this);
-#else
-	#error "not complite fun [Window::Window()] in file Windows.cpp"
-#endif
-//	if(m_pListener)
-//		m_pListener->OnPrimaryAction(WindowEvent::PrimaryAction_Create);
-}
-
-void Window::ReleaseNative()
-{
-	delete m_pNative;
-	m_pNative = NULL;
+	return m_internal->handle();
 }

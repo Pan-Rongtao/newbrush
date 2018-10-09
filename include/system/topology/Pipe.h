@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "core/Object.h"
+#include "../../core/Object.h"
 #include "Token.h"
 #include "Connect.h"
 
@@ -32,7 +32,7 @@ namespace nb { namespace System { namespace Topology {
 
 class Node;
 class Token;
-class NB_EXPORT Pipe : public nbObject
+class NB_API Pipe : public nbObject
 {
 	friend class Node;
 	friend class Connect;
@@ -123,7 +123,7 @@ typedef nbObjectPtrDerive<Pipe, nbObjectPtr> PipePtr;
 
 class P2PPipeInternal;
 
-class NB_EXPORT P2PPipe : public Pipe
+class NB_API P2PPipe : public Pipe
 {
 public:
 	class ConnectArgu : public Connect::PipeArgu
@@ -156,7 +156,7 @@ private:
 typedef nbObjectPtrDerive<P2PPipe, PipePtr> P2PPipePtr;
 
 
-class NB_EXPORT KeyPipeBase : public P2PPipe
+class NB_API KeyPipeBase : public P2PPipe
 {
 
 };

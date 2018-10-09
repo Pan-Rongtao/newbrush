@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <map>
 #include <list>
 #include "core/DependencyProperty.h"
@@ -8,7 +7,7 @@
 #include "core/RefObject.h"
 #include "core/PropertyLock.h"
 
-namespace nb {	namespace Core {
+namespace nb {	namespace core {
 
 
 class PropertyValuesMgr
@@ -16,8 +15,6 @@ class PropertyValuesMgr
 public:
 	PropertyValuesMgr(void);
 	virtual ~PropertyValuesMgr(void);
-
-	//GetValuePropertyValue() {}
 
 	void SetPtrPropertyValue(DependencyProperty *pProperty, nbObject *pValue);
 

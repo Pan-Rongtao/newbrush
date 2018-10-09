@@ -1,7 +1,8 @@
 #include "media/GifReader.h"
 #include "GifReader_Internal.h"
 
-using nb::Media::GifReader;
+using namespace nb::core;
+using namespace nb::media;
 
 GifReader::GifReader()
 : m_internal(NULL)
@@ -14,27 +15,27 @@ GifReader::~GifReader()
 	delete m_internal;
 }
 
-bool GifReader::Open(const nb::System::String &path)
+bool GifReader::open(const String &path)
 {
-	return m_internal->Open(path);
+	return m_internal->open(path);
 }
 
-void GifReader::Close()
+void GifReader::close()
 {
-	return m_internal->Close();
+	return m_internal->close();
 }
 
-bool GifReader::HasData() const
+bool GifReader::hasData() const
 {
-	return m_internal->HasData();
+	return m_internal->hasData();
 }
 
-int GifReader::GetFrameCount() const
+int GifReader::frameCount() const
 {
-	return m_internal->GetFrameCount();
+	return m_internal->frameCount();
 }
 
-nb::Media::Bitmap GifReader::GetFrame(int index) const
+Bitmap GifReader::frame(int index) const
 {
-	return m_internal->GetFrame(index);
+	return m_internal->frame(index);
 }

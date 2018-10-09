@@ -1,158 +1,86 @@
-﻿#pragma once
+#pragma once
+#include "../core/Def.h"
+#include "../core/Property.h"
+#include "../core/Size.h"
+#include "../core/Rect.h"
+#include "../gui/Thickness.h"
 
-#include "core/Object.h"
-#include "GuiDef.h"
+namespace nb{namespace gui{
 
-#include "system/Size.h"
-#include "system/Rect.h"
-#include "gui/Thickness.h"
-#include "VisualStateManager.h"
-
-namespace nb
+enum Visibility
 {
-	namespace Core
-	{
+	Hidden,
+	Visible,
+	Collapsed,
+};
 
-	}
+enum HorizontalAlignment
+{
+	HorizontalAlignmentLeft = 0,
+	HorizontalAlignmentCenter = 1,
+	HorizontalAlignmentRight = 2,
+	HorizontalAlignmentStretch = 3
+};
 
-	namespace Media
-	{
-		class Transform;
-	};
+enum VerticalAlignment
+{
+	VerticalAlignmentTop = 0,
+	VerticalAlignmentCenter = 1,
+	VerticalAlignmentBottom = 2,
+	VerticalAlignmentStretch = 3
+};
 
-	namespace Gui
-	{
-		enum HorizontalAlignment
-		{
-			HorizontalAlignment_Left = 0,
-			HorizontalAlignment_Center = 1,
-			HorizontalAlignment_Right = 2,
-			HorizontalAlignment_Stretch = 3
-		};
+enum FlowDirection
+{
+	LeftToRight,
+	RightToLeft,
+};
 
-		enum VerticalAlignment
-		{
-			VerticalAlignment_Top = 0,
-			VerticalAlignment_Center = 1,
-			VerticalAlignment_Bottom = 2,
-			VerticalAlignment_Stretch = 3
-		};
-
-		enum VisibilityEnum
-		{
-			//显示组件。
-			Visibility_Visible = 0,		
-
-			//不要显示的元素，但是，保留空间中的元素格式。
-			Visibility_Hidden = 1,		
-
-			//不要显示元素，并且不希望它的保留空间。格式。
-			Visibility_Collapsed,
-		};
-
-		class UIElementPrivate;
-		class PanelPrivate;
-		class IElementRender;
-		class BaseTrack;
-		class NB_EXPORT UIElement : public nbObject
-		{
-			NB_OBJECT_TYPE_DECLARE();
-			
-			friend class UIElementPrivate;
-			friend class PanelPrivate;
-
-		public:
-			UIElement(void);
-			virtual ~UIElement(void);
-
-			void Measure(float width, float height);
-			void Arrange(const nb::System::Rect &rect);
-
-			float GetDesignWidth() const;
-			float GetDesignHeight() const;
-
-			float GetActualWidth() const;
-			float GetActualHeight() const;
-
-			float GetX() const;
-			float GetY() const;
-
-			const System::Size &GetDesiredSize() const;
-
-			void GotoVisualState(const char *groupName, const char *stateName);
-
-			void InvalidateArrange();
-			void InvalidateMeasure();
-
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(Width, Core::Float);
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(Height, Core::Float);
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(Margin, Thickness);
-
-		//	NB_OBJECT_VALUE_PROPERTY_DECLARE_1(WidthTest, Float);
-			
-			NB_OBJECT_PROPERTY_DECLARE(Width1, Core::Float);
-
-			NB_OBJECT_ENUM_PROPERTY_DECLARE(HorzAlignment, HorizontalAlignment);
-			NB_OBJECT_ENUM_PROPERTY_DECLARE(VertAlignment, VerticalAlignment);
-			NB_OBJECT_ENUM_PROPERTY_DECLARE_NEW(Visibility, VisibilityEnum);
-
-			NB_OBJECT_ENUM_PROPERTY_DECLARE_NEW(Visibility_New, VisibilityEnum);
+enum Orientation
+{
+	Horizontal,
+	Vertical,
+};
 
 
-			NB_OBJECT_PROPERTY_DECLARE(VisualStateMgr, VisualStateManager);
+class NB_API UIElement
+{
+public:
+	UIElement();
+	virtual ~UIElement();
 
-		//	static nbDependencyProperty * property_Widthex;
-		//	static nbDependencyProperty * WidthexProperty();
-		//	RockPV<aFloat> Widthex;
+	void measure(const nb::core::Size &availabelSize);
+	void arrage(const nb::core::Rect &finalRect);
 
-			NB_X_OBJECT_PROPERTY_DECLARE(RenderTransform, Media::Transform);
-			NB_X_ROCK_OBJECT_PROPERTY_DECLARE(Widthex, Core::aFloat);
-			NB_X_ROCK_OBJECT_PROPERTY_DECLARE(Opacity, Core::aFloat);
+public:
+	nb::core::Property_rw<Visibility>			Visibility;
+	nb::core::Property_rw<double>				Opacity;
+	nb::core::Property_rw<bool>					Focusable;
+	nb::core::Property_rw<double>				Width;
+	nb::core::Property_rw<double>				Height;
+	nb::core::Property_rw<double>				MinWidth;
+	nb::core::Property_rw<double>				MinHeight;
+	nb::core::Property_rw<double>				MaxWidth;
+	nb::core::Property_rw<double>				MaxHeight;
+	nb::core::Property_rw<nb::core::Size>		DesiredSize;
+	nb::core::Property_r<nb::core::Size>		ActualSize;
+	nb::core::Property_rw<Thickness>			Magin;
+	nb::core::Property_rw<HorizontalAlignment>	HorizontalAlignment;
+	nb::core::Property_rw<VerticalAlignment>	VerticalAlignment;
+	nb::core::Property_rw<FlowDirection>		FlowDirection;
 
-			UIElementPrivate * GetPrivate() const {return m_pPrivate;}
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-			virtual IElementRender * GetElementRender() const {return NULL;}
-
-			BaseTrack * GetTrack() const;
-
-		protected:
-			virtual System::Size MeasureOverride(const System::Size &availableSize) {return System::Size(0, 0);}
-			virtual System::Size ArrangeOverride(const System::Size &finalSize) {return finalSize;}
-
-			virtual void OnPointerPress(bool &handled){}
-			virtual void OnPointerRelease(){}
-
-			void OnRenderTransformChanged(nb::Core::PropertyValueChangedEventArgs &args);
-
-			virtual float GetExtraRenderOffsetX() const {return 0;}
-			virtual float GetExtraRenderOffsetY() const {return 0;}
-
-			virtual void OnActualSizeChanged(){}
-
-		//	virtual void InvalidateMeasureOverride(){}
-		//	virtual void InvalidateArrangeOverride(){}
-
-		//	virtual void ChildInvalidateMeasureOverride(UIElement *child) {}
-		//	virtual void ChildInvalidateArrangeOverride(UIElement *child) {}
+private:
+	void onVisibilityChanged(const bool &_old, const bool &_new);
+	void onOpacityChanged(const double &_old, const double &_new);
+	void onFocusableChanged(const bool &_old, const bool &_new);
+	void onDesiredSizeChanged(const nb::core::Size &_old, const nb::core::Size &_new);
+	void onMaginChanged(const Thickness &_old, const Thickness &_new);
 
 
-		protected:
-			void SetTrack(BaseTrack *track);
+};
 
-		private:
-			void OnWidthPropertyChanged(Core::PropertyValueChangedEventArgs &args);
-			void OnHeightPropertyChanged(Core::PropertyValueChangedEventArgs &args);
-			
-			void OnTestWidthChanged(nb::Core::PropertyValueChangedEventArgs &args);
-
-		private:
-
-			float m_width;
-			float m_height;
-
-			mutable UIElementPrivate *m_pPrivate;
-		};
-
-		typedef nbObjectPtrDerive<UIElement, nbObjectPtr> UIElementPtr;
-	}
-}
+}}

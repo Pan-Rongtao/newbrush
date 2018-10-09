@@ -1,11 +1,10 @@
 ﻿#pragma once
-
-#include "OriginObject.h"
 #include <list>
-
+#include "Object.h"
+#include "OriginObject.h"
 #include "Exception.h"
 
-struct nbEventParam //: public nbObject
+struct nbEventParam
 {
 public:
 	nbEventParam() : m_bHandled(false) {}
@@ -23,16 +22,7 @@ public:
 
 class nbEventPrivate;
 
-class NB_CORE_DECLSPEC_X_INTERFACE nbEventException : public nb::Core::Exception
-{
-public:
-	typedef nbObjectPtrDerive<nbEventException, nb::Core::ExceptionPtr> Ptr;
-
-	nbEventException(){}
-	nbEventException(char *pMessage) : nb::Core::Exception(pMessage){}
-};
-
-class NB_CORE_DECLSPEC_X_INTERFACE nbEventBase : public nb::Core::RefObject
+class NB_API nbEventBase : public nb::core::RefObject
 {
 public:
 	friend class nbEventPrivate;
@@ -65,19 +55,13 @@ private:
 	};
 
 	ItemInfo *m_pFirstItem;
-	NB_LINUX_STD std::list<ItemInfo *> *m_plstItems;
+	std::list<ItemInfo *> *m_plstItems;
 
 	nbEventPrivate *m_private;
 };
 
-//template<class ParamType>
-//class NB_EXPORT_NO nbTestEvent : public nbEventBase
-//{
-//public:
-//};
-
 template<class ParamType>
-class NB_EXPORT_NO nbEvent : public nbEventBase
+class nbEvent : public nbEventBase
 {
 public:
 	typedef void (nbObject::* funAccepterConvert)(ParamType &param);
@@ -130,7 +114,7 @@ public:
 
 
 template<class ParamType>
-class NB_EXPORT_NO nbWatchAccepterEvent : public nbEvent<ParamType>
+class nbWatchAccepterEvent : public nbEvent<ParamType>
 {
 public:
 
@@ -165,17 +149,53 @@ private:
 	IWatchAccepterEventWatcher * m_watch;
 };
 
-class NB_CORE_DECLSPEC_X_INTERFACE nbEventBaseTest  
+#include <vector>
+#include <functional>
+namespace nb{ namespace core{
+
+template<class ArgsT>
+class Event
 {
 public:
-	nbEventBaseTest();
-	virtual ~nbEventBaseTest();
+	void addHandler(std::function<void(const ArgsT &args)> handler)
+	{
+		m_handlers.push_back(handler);
+	}
+
+	void removeHandler(std::function<void(const ArgsT &args)> handler)
+	{
+		for (auto iter = m_handlers.begin(); iter != m_handlers.end();)
+		{
+			if (iter->target_type() == handler.target_type())
+			{
+				iter = m_handlers.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
+
+	void dispatch(const ArgsT &args)
+	{
+		for (int i = 0; i != m_handlers.size(); ++i)
+			if (m_handlers[i])
+				m_handlers[i](args);
+	}
+
+	void operator += (std::function<void(const ArgsT &args)> handler)
+	{
+		addHandler(handler);
+	}
+
+	void operator -=(std::function<void(const ArgsT &args)> handler)
+	{
+		remove(handler);
+	}
+
+private:
+	std::vector<std::function<void(const ArgsT &)>>	m_handlers;
 };
 
-template<class ParamType>
-class NB_CORE_DECLSPEC_X_INTERFACE nbEventTest : public nbEventBaseTest
-{
-public:
-	nbEventTest(){}
-	void aa(){}
-};
+}}

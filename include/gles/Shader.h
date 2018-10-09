@@ -15,65 +15,57 @@
 **	
 ********************************************************/
 #pragma once
-#include "system/String.h"
+#include "../core/Def.h"
+#include <string>
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Shader
+class NB_API Shader
 {
 public:
 	//设置源码
-	void SetSourceCode(const nb::System::String &sourceCode);
+	void setSource(const std::string &source);
 
 	//获取源码
-	nb::System::String GetSourceCode() const;
+	const std::string &source() const;
 
 	//编译
 	//异常：编译失败
-	void Compile();
+	void compile();
 
 	//是否已编译
-	bool HasCompiled() const;
+	bool hasCompiled() const;
 
 	//获取shader句柄
-	unsigned int GetShaderHandle() const;
-
-	//是否相同
-	bool Equal(Shader *shader) const;
+	unsigned int handle() const;
 
 	virtual ~Shader();
 
 protected:
 	Shader();
-	Shader(const nb::System::String &sourceCode);
+	Shader(const std::string &source);
 
-	nb::System::String	m_SourceCode;
+	std::string			m_Source;
 	unsigned int		m_ShaderHandle;
 };
 
-class NB_EXPORT VertexShader : public Shader
+class NB_API VertexShader : public Shader
 {
 public:
 	//构建一个顶点着色器，源码为空
 	VertexShader();
 
 	//构建一个顶点着色器，源码为sourceCode
-	VertexShader(const nb::System::String &sourceCode);
+	VertexShader(const std::string &source);
 
-public:
-	//通用顶点着色器
-	static VertexShader *Common();
 };
 
-class NB_EXPORT FragmentShader : public Shader
+class NB_API FragmentShader : public Shader
 {
 public:
 	FragmentShader();
-	FragmentShader(const nb::System::String &sourceCode);
+	FragmentShader(const std::string &source);
 
-public:
-	//通用片元着色器
-	static FragmentShader *Common();
 };
 
-}}}
+}}

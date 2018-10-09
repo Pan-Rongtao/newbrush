@@ -13,88 +13,12 @@
 #include "freeImage/FreeImage.h"
 #include "media/Bitmap.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace media{
 
 class Bitmap_Internal
 {
 	friend class GifReader_Internal;
 	friend class TiffReader_Internal;
-public:
-	//从文件中加载图片
-	//异常：文件名不存在
-	//异常：加载失败
-	void LoadFile(const char *pFilePath);
-
-	void LoadFileNarrowed(const nb::System::String &filePath, int jpegNarrow);
-
-	//从数据块加载数据
-	//异常：nLengthBytes < 0
-	void LoadData(const unsigned char *data, int nLengthBytes);
-
-	//获取图像数据，返回纯图像数据的起始位置
-	const unsigned char *GetData() const;
-
-	//填充某种颜色
-	void Fill(unsigned int rgba);
-
-	//是否有数据
-	bool HasPixelData() const;
-
-	//是否为空
-	bool IsNull() const;
-
-	//获取格式
-	Bitmap::PixelFormat GetPixelFormat() const;
-
-	//获取图片宽高，返回的是像素单位；如果bitmap不包括图片数据，将返回0
-	int GetPixelWidth() const;
-	int GetPixelHeight() const;
-
-	//获取位深，可能值为1、4、8、16、24、32
-	int GetBpp() const;
-
-	int GetBytesCount() const;
-	int GetBytesCountPerLine() const;
-	//获取一行数据
-	//异常：lineIndex < 0
-	unsigned char *GetScanLine(int lineIndex);
-
-	//获取单个像素颜色
-	//异常：x，y越界
-	unsigned int GetPixel(int x, int y) const;
-
-	//设置单个像素颜色
-	//异常：x，y越界
-	void SetPixel(int x, int y, unsigned int rgba);
-
-	//拉伸至宽高width和height
-	//异常：width < 0 或者 height < 0
-	Bitmap_Internal Scale(int width, int height) const;
-
-	//拉伸至宽高width
-	//异常：width < 0
-	Bitmap_Internal ScaleWidth(int width) const;
-
-	//拉伸至宽高height
-	//异常：height < 0
-	Bitmap_Internal ScaleHeight(int height) const;
-
-	//复制图像的某个区域
-	//异常：x，y越界；width < 0 或者 height < 0
-	Bitmap_Internal Copy(int x, int y, int width, int height) const;
-
-	//转换为灰色图像
-	Bitmap_Internal ToGray() const;
-
-	//转换格式
-	Bitmap_Internal ConverToFormat(Bitmap::PixelFormat format);
-
-	//保存至文件，如果文件存在，将覆盖
-	//异常：指定文件目录不存在
-	void SaveAsFile(const char *pFilePath) const;
-
-	Bitmap_Internal BgrToRgb() const;
-
 public:
 	//构建一个Bitmap_Internal，它不包含任何数据
 	Bitmap_Internal();
@@ -117,8 +41,82 @@ public:
 
 	void operator = (const Bitmap_Internal &other);
 
+public:
+	//从文件中加载图片
+	//异常：文件名不存在
+	//异常：加载失败
+	void loadFile(const char *pFilePath);
+
+	void loadFileNarrowed(const nb::core::String &filePath, int jpegNarrow);
+
+	//从数据块加载数据
+	//异常：nLengthBytes < 0
+	void loadData(const unsigned char *data, int nLengthBytes);
+
+	//获取图像数据，返回纯图像数据的起始位置
+	const unsigned char *data() const;
+
+	//填充某种颜色
+	void fill(unsigned int rgba);
+
+	//是否有数据
+	bool hasPixelData() const;
+
+	//是否为空
+	bool isNull() const;
+
+	//获取格式
+	Bitmap::PixelFormat pixelFormat() const;
+
+	//获取图片宽高，返回的是像素单位；如果bitmap不包括图片数据，将返回0
+	int pixelWidth() const;
+	int pixelHeight() const;
+
+	//获取位深，可能值为1、4、8、16、24、32
+	int bpp() const;
+
+	int bytesCount() const;
+	int bytesCountPerLine() const;
+	//获取一行数据
+	//异常：lineIndex < 0
+	unsigned char *scanLine(int lineIndex);
+
+	//获取单个像素颜色
+	//异常：x，y越界
+	unsigned int pixel(int x, int y) const;
+
+	//设置单个像素颜色
+	//异常：x，y越界
+	void setPixel(int x, int y, unsigned int rgba);
+
+	//拉伸至宽高width和height
+	//异常：width < 0 或者 height < 0
+	Bitmap_Internal scale(int width, int height) const;
+
+	//拉伸至宽高width
+	//异常：width < 0
+	Bitmap_Internal scaleWidth(int width) const;
+
+	//拉伸至宽高height
+	//异常：height < 0
+	Bitmap_Internal scaleHeight(int height) const;
+
+	//复制图像的某个区域
+	//异常：x，y越界；width < 0 或者 height < 0
+	Bitmap_Internal copy(int x, int y, int width, int height) const;
+
+	//转换为灰色图像
+	Bitmap_Internal toGray() const;
+
+	//转换格式
+	Bitmap_Internal converToFormat(Bitmap::PixelFormat format);
+
+	//保存至文件，如果文件存在，将覆盖
+	//异常：指定文件目录不存在
+	void saveAsFile(const char *pFilePath) const;
+
 private:
-	void InitFreeeImage();
+	void initFreeeImage();
 
 	FIBITMAP		*m_pFreeImage;
 };

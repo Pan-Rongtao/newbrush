@@ -1,32 +1,25 @@
 ﻿#pragma once
-
 #include <map>
 #include <list>
 #include <vector>
 #include <typeinfo>
-
 #include "RefObject.h"
 #include "DependencyProperty.h"
 #include "Assembly.h"
 
-class PropertyInternal;
-
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
 class TypeInternal;
 
-class NB_CORE_DECLSPEC_X_INTERFACE Type : public RefObject
+class NB_API Type : public RefObject
 {
 public:
-//	typedef OriginObject *(* NewObjectAssemblerFun)();
-
 	typedef bool (* IsEqualObjectFun)(const OriginObject &left, const OriginObject &right);
 	typedef void (* CopyObjectFun)(OriginObject &dest, const OriginObject &src);
 
 public:
 	virtual ~Type(void);
 
-//	static Type * RegisterType(const std::type_info &type, Type *pParentType, Assembly *pAssembly);
 	static Type * GetType(const std::type_info &type);
 
 	template<class T>
@@ -98,13 +91,9 @@ public:
 private:
 	static void * PropergeType(Type *pUse, const std::type_info &parentType, Assembly *pAssembly)
 	{
-//		new TypeT<int>();
 		return NULL;
 	}
 
-//	static void * PrepareProperty(constt std::type_info &type);
-
-protected:
 private:
 	Type(const std::type_info &type, Type *pParent, Assembly *pAssembly, IsEqualObjectFun funIsEqualObject, CopyObjectFun funCopy, int selfPropertyCount);
 	Type(const std::string &typeName, Type *pParent, Assembly *pAssembly, IsEqualObjectFun funIsEqualObject, CopyObjectFun funCopy, int selfPropertyCount);
@@ -117,7 +106,6 @@ private:
 
 private:
 	Type * const m_pParent;
-	//const std::type_info &m_typeInfo;
 	const std::string m_sTypeName;
 
 	const bool m_bIsRefType;
@@ -139,30 +127,4 @@ private:
 
 typedef nbObjectPtrDerive<Type, RefObjectPtr> TypePtr;
 
-template<class T>
-class NB_EXPORT_NO TypeT : public Type
-{
-private:
-	TypeT(Type *pParent, Assembly *pAssembly=NULL)
-		: Type(typeid(T), pParent, pAssembly)
-	{
-	}
-
-public:
-	static bool IsEqual(const T &left, const T &right) {return left == right;}
-
-	virtual bool IsTheType(const OriginObject &object)
-	{
-		return dynamic_cast<const T *>(&object) != NULL;
-	}
-
-	static TypeT & Instance()
-	{
-		static TypeT<T> type;
-		return type;
-	}
-};
-
 }}
-
-#define NB_TYPE(TYPE) (nb::Core::Type::GetType(typeid(TYPE)))

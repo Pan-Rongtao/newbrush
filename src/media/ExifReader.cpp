@@ -1,19 +1,20 @@
 #include "media/ExifReader.h"
 #include "ExifReader_Internal.h"
 
-using nb::Media::ExifReader;
+using namespace nb::core;
+using namespace nb::media;
 
 ExifReader::ExifReader()
-: m_internal(NULL)
+: m_internal(nullptr)
 {
 	m_internal = new ExifReader_Internal();
 }
 
-ExifReader::ExifReader(const nb::System::String &fileName)
-: m_internal(NULL)
+ExifReader::ExifReader(const String &fileName)
+: m_internal(nullptr)
 {
 	m_internal = new ExifReader_Internal();
-	Open(fileName);
+	open(fileName);
 }
 
 ExifReader::ExifReader(const ExifReader &other)
@@ -32,27 +33,27 @@ ExifReader::~ExifReader()
 	delete m_internal;
 }
 
-void ExifReader::Open(const nb::System::String &fileName)
+void ExifReader::open(const String &fileName)
 {
-	m_internal->Open(fileName);
+	m_internal->open(fileName);
 }
 
-int ExifReader::GetWidth() const
+int ExifReader::width() const
 {
-	return m_internal->GetWidth();
+	return m_internal->width();
 }
 
-int ExifReader::GetHeight() const
+int ExifReader::height() const
 {
-	return m_internal->GetHeight();
+	return m_internal->height();
 }
 
-void ExifReader::GetThumbnailsProperties(std::vector<ThumbnailProperties> &results) const
+void ExifReader::getThumbnailsProperties(std::vector<ThumbnailProperties> &results) const
 {
-	m_internal->GetThumbnailsProperties(results);
+	m_internal->getThumbnailsProperties(results);
 }
 
-void ExifReader::GetThumbnails(std::vector<nb::Media::Bitmap> &results) const
+void ExifReader::getThumbnails(std::vector<Bitmap> &results) const
 {
-	m_internal->GetThumbnails(results);
+	m_internal->getThumbnails(results);
 }

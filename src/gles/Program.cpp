@@ -1,34 +1,21 @@
 #include "gles/Program.h"
 #include "core/Exception.h"
 #include "gles/Shader.h"
-#include "system/String.h"
 #include <GLES2/gl2.h>
+#include <cstring>
 
-using nb::System::String;
-using nb::Math::Vec2;
-using nb::Math::Vec2I;
-using nb::Math::Vec3;
-using nb::Math::Vec3I;
-using nb::Math::Vec4;
-using nb::Math::Vec4I;
-using nb::Math::Matrix2x2;
-using nb::Math::Matrix3x3;
-using nb::Math::Matrix4x4;
-using nb::gl::Gles::Program;
-using nb::gl::Gles::VertexShader;
-using nb::gl::Gles::FragmentShader;
+using namespace nb::core;
+using namespace nb::gl;
 
 Program::Program()
-: m_VertexShader(NULL)
-, m_FragmentShader(NULL)
-, m_ProgramHandle(0)
+: m_ProgramHandle(0)
 {
 	m_ProgramHandle = glCreateProgram();
 	if(m_ProgramHandle == 0)
 		NB_THROW_EXCEPTION("create shader program fail.");
 }
 
-Program::Program(VertexShader *verShader, FragmentShader *fragShader)
+Program::Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader)
 : m_VertexShader(verShader)
 , m_FragmentShader(fragShader)
 , m_ProgramHandle(0)
@@ -36,9 +23,6 @@ Program::Program(VertexShader *verShader, FragmentShader *fragShader)
 	m_ProgramHandle = glCreateProgram();
 	if(m_ProgramHandle == 0)
 		NB_THROW_EXCEPTION("create shader program fail.");
-
-	m_VertexShader->Compile();
-	m_FragmentShader->Compile();
 }
 
 Program::~Program()
@@ -50,28 +34,30 @@ Program::~Program()
 	}
 }
 
-void Program::SetVertexShader(VertexShader *verShader)
+void Program::setVertexShader(std::shared_ptr<VertexShader> verShader)
 {
 	m_VertexShader = verShader;
-	m_VertexShader->Compile();
 }
 
-void Program::SetFragmentShader(FragmentShader *fragShader)
+std::shared_ptr<VertexShader> Program::vertexShader()
+{
+	return m_VertexShader;
+}
+
+void Program::setFragmentShader(std::shared_ptr<FragmentShader> fragShader)
 {
 	m_FragmentShader = fragShader;
-	m_FragmentShader->Compile();
 }
 
-void Program::SetShader(VertexShader *verShader, FragmentShader *fragShader)
+std::shared_ptr<FragmentShader> Program::fragmentShader()
 {
-	SetVertexShader(verShader);
-	SetFragmentShader(fragShader);
+	return m_FragmentShader;
 }
 
-void Program::Link()
+void Program::link()
 {
-	glAttachShader(m_ProgramHandle, m_VertexShader->GetShaderHandle());
-	glAttachShader(m_ProgramHandle, m_FragmentShader->GetShaderHandle());
+	glAttachShader(m_ProgramHandle, m_VertexShader->handle());
+	glAttachShader(m_ProgramHandle, m_FragmentShader->handle());
 	glLinkProgram(m_ProgramHandle);
 	int nLinkStatus;
 	glGetProgramiv(m_ProgramHandle, GL_LINK_STATUS, &nLinkStatus);
@@ -81,253 +67,287 @@ void Program::Link()
 		glGetProgramiv(m_ProgramHandle, GL_INFO_LOG_LENGTH, &nLogLeng);
 
 		char *pLog = new char[nLogLeng];
-		glGetProgramInfoLog(m_ProgramHandle, nLogLeng, NULL, pLog);
+		glGetProgramInfoLog(m_ProgramHandle, nLogLeng, nullptr, pLog);
 		std::string sLog = pLog;
 		delete []pLog;
 		NB_THROW_EXCEPTION((std::string("program::link fail, reason:") + sLog).data());
 	}
 }
 
-int Program::GetAttributeLocation(const char *name) const
+int Program::getAttributeLocation(const char *name) const
 {
 	return glGetAttribLocation(m_ProgramHandle, name);
 }
 
-int Program::GetUniformLocation(const char *name) const
+int Program::getUniformLocation(const char *name) const
 {
 	return glGetUniformLocation(m_ProgramHandle, name);
 }
 
-void Program::Use()
+void Program::bindAttributeLocation(unsigned int location, const char *name)
+{
+	glBindAttribLocation(m_ProgramHandle, location, name);
+}
+
+void Program::use()
 {
 	glUseProgram(m_ProgramHandle);
 }
 
-void Program::UnUse()
+void Program::disuse()
 {
 	glUseProgram(0);
 }
 
-bool Program::Equal(Program *program) const
-{
-	return m_VertexShader->Equal(program->m_VertexShader) && m_FragmentShader->Equal(program->m_FragmentShader);
-}
-
-void Program::VertexAttribute(int location, float v)
+void Program::vertexAttribute(int location, float v)
 {
 	glVertexAttrib1f(location, v);
 }
 
-void Program::VertexAttribute(int location, const nb::Math::Vec2 &vec)
+void Program::vertexAttribute(int location, const Vec2 &vec)
 {
-	glVertexAttrib2f(location, vec.X(), vec.Y());
+	glVertexAttrib2f(location, vec.x(), vec.y());
 }
 
-void Program::VertexAttribute(int location, const nb::Math::Vec3 &vec)
+void Program::vertexAttribute(int location, const Vec3 &vec)
 {
-	glVertexAttrib3f(location, vec.X(), vec.Y(), vec.Z());
+	glVertexAttrib3f(location, vec.x(), vec.y(), vec.z());
 }
 
-void Program::VertexAttribute(int location, const nb::Math::Vec4 &vec)
+void Program::vertexAttribute(int location, const Vec4 &vec)
 {
-	glVertexAttrib4f(location, vec.X(), vec.Y(), vec.Z(), vec.W());
+	glVertexAttrib4f(location, vec.x(), vec.y(), vec.z(), vec.w());
 }
 
-void Program::VertexAttribute(int location, nb::Math::Vec2 *vec)
+void Program::vertexAttribute(int location, Vec2 *vec)
 {
 //	glVertexAttrib2fv(location, data);
 }
 
-void Program::VertexAttribute(int location, nb::Math::Vec3 *vec)
+void Program::vertexAttribute(int location, Vec3 *vec)
 {
 //
 }
 
-void Program::VertexAttribute(int location, nb::Math::Vec4 *vec)
+void Program::vertexAttribute(int location, Vec4 *vec)
 {
 //
 }
 
-void Program::VertexAttributePointer(int location, int dimension, int stride, const void *data)
+void Program::vertexAttributePointer(int location, int dimension, int stride, const void *data)
 {
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, dimension, GL_FLOAT, GL_FALSE, stride, data);
 }
 
-void Program::Uniform(int location, float v)
+void Program::uniform(int location, float v)
 {
 	glUniform1f(location, v);
 }
 
-void Program::Uniform(int location, float *v, int count)
+void Program::uniform(int location, float *v, int count)
 {
 	glUniform1fv(location, count, v);
 }
 
-void Program::Uniform(int location, const Vec2 &vec)
+void Program::uniform(int location, const Vec2 &vec)
 {
-	glUniform2f(location, vec.X(), vec.Y());
+	glUniform2f(location, vec.x(), vec.y());
 }
 
-void Program::Uniform(int location, Vec2 *vec, int count)
+void Program::uniform(int location, Vec2 *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	float *data = new float[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), &(vec->at(0)), dimension * sizeof(float));
 	glUniform2fv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Vec3 &vec)
+void Program::uniform(int location, const Vec3 &vec)
 {
-	glUniform3f(location, vec.X(), vec.Y(), vec.Z());
+	glUniform3f(location, vec.x(), vec.y(), vec.z());
 }
 
-void Program::Uniform(int location, Vec3 *vec, int count)
+void Program::uniform(int location, Vec3 *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	float *data = new float[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), &(vec->at(0)), dimension * sizeof(float));
 	glUniform3fv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Vec4 &vec)
+void Program::uniform(int location, const Vec4 &vec)
 {
-	glUniform4f(location, vec.X(), vec.Y(), vec.Z(), vec.W());
+	glUniform4f(location, vec.x(), vec.y(), vec.z(), vec.w());
 }
 
-void Program::Uniform(int location, Vec4 *vec, int count)
+void Program::uniform(int location, Vec4 *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	float *data = new float[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), &(vec->at(0)), dimension * sizeof(float));
 	glUniform4fv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, int v)
+void Program::uniform(int location, int v)
 {
 	glUniform1i(location, v);
 }
 
-void Program::Uniform(int location, int *v, int count)
+void Program::uniform(int location, int *v, int count)
 {
 	glUniform1iv(location, count, v);
 }
 
-void Program::Uniform(int location, const Vec2I &vec)
+void Program::uniform(int location, const Vec2I &vec)
 {
-	glUniform2i(location, vec.X(), vec.Y());
+	glUniform2i(location, vec.x(), vec.y());
 }
 
-void Program::Uniform(int location, Vec2I *vec, int count)
+void Program::uniform(int location, Vec2I *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	int *data = new int[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), vec[i].data(), dimension * sizeof(float));
 	glUniform2iv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Vec3I &vec)
+void Program::uniform(int location, const Vec3I &vec)
 {
-	glUniform3i(location, vec.X(), vec.Y(), vec.Z());
+	glUniform3i(location, vec.x(), vec.y(), vec.z());
 }
 
-void Program::Uniform(int location, Vec3I *vec, int count)
+void Program::uniform(int location, Vec3I *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	int *data = new int[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), vec[i].data(), dimension * sizeof(float));
 	glUniform3iv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Vec4I &vec)
+void Program::uniform(int location, const Vec4I &vec)
 {
-	glUniform4i(location, vec.X(), vec.Y(), vec.Z(), vec.W());
+	glUniform4i(location, vec.x(), vec.y(), vec.z(), vec.w());
 }
 
-void Program::Uniform(int location, Vec4I *vec, int count)
+void Program::uniform(int location, Vec4I *vec, int count)
 {
-	int dimension = vec->GetDimension();
+	int dimension = vec->dimension();
 	int *data = new int[count * dimension];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), vec[i].GetData(), dimension * sizeof(float));
+		memcpy(data + i * dimension * sizeof(float), vec[i].data(), dimension * sizeof(float));
 	glUniform4iv(location, count, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Matrix2x2 &matrix)
+void Program::uniform(int location, const Matrix2x2 &matrix)
 {
-	int n = matrix.GetColumn() * matrix.GetRow();
+	int n = matrix.column() * matrix.row();
 	float *data = new float[n];
-	memcpy(data, matrix.GetData(), n * sizeof(float));
+	memcpy(data, matrix.data(), n * sizeof(float));
 	glUniformMatrix2fv(location, 1, GL_FALSE, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, Matrix2x2 *matrix, int count)
+void Program::uniform(int location, Matrix2x2 *matrix, int count)
 {
-	int n = matrix->GetColumn() * matrix->GetRow();
+	int n = matrix->column() * matrix->row();
 	float *data = new float[n * count];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), matrix[i].GetData(), n * sizeof(float));
+		memcpy(data + i * n * sizeof(float), matrix[i].data(), n * sizeof(float));
 	glUniformMatrix2fv(location, count, GL_FALSE, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Matrix3x3 &matrix)
+void Program::uniform(int location, const Matrix3x3 &matrix)
 {
-	int n = matrix.GetColumn() * matrix.GetRow();
+	int n = matrix.column() * matrix.row();
 	float *data = new float[n];
-	memcpy(data, matrix.GetData(), n * sizeof(float));
+	memcpy(data, matrix.data(), n * sizeof(float));
 	glUniformMatrix3fv(location, 1, GL_FALSE, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, Matrix3x3 *matrix, int count)
+void Program::uniform(int location, Matrix3x3 *matrix, int count)
 {
-	int n = matrix->GetColumn() * matrix->GetRow();
+	int n = matrix->column() * matrix->row();
 	float *data = new float[n * count];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), matrix[i].GetData(), n * sizeof(float));
+		memcpy(data + i * n * sizeof(float), matrix[i].data(), n * sizeof(float));
 	glUniformMatrix3fv(location, count, GL_FALSE, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, const Matrix4x4 &matrix)
+void Program::uniform(int location, const Matrix4x4 &matrix)
 {
-	int n = matrix.GetColumn() * matrix.GetRow();
+	int n = matrix.column() * matrix.row();
 	float *data = new float[n];
-	memcpy(data, matrix.GetData(), n * sizeof(float));
+	memcpy(data, matrix.data(), n * sizeof(float));
 	glUniformMatrix4fv(location, 1, GL_FALSE, data);
 	delete []data;
 }
 
-void Program::Uniform(int location, Matrix4x4 *matrix, int count)
+void Program::uniform(int location, Matrix4x4 *matrix, int count)
 {
-	int n = matrix->GetColumn() * matrix->GetRow();
+	int n = matrix->column() * matrix->row();
 	float *data = new float[n * count];
 	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), matrix[i].GetData(), n * sizeof(float));
+		memcpy(data + i * n * sizeof(float), matrix[i].data(), n * sizeof(float));
 	glUniformMatrix4fv(location, count, GL_FALSE, data);
 	delete []data;
 }
 
-static Program *g_CommonProgram = NULL;
-Program *Program::Common()
+void Program::uniformDefault()
 {
-	if(g_CommonProgram == NULL)
+	SourceDecoder decoder;
+	decoder.decode(m_VertexShader->source(), m_FragmentShader->source());
+	std::map<std::string, size_t> uniforms;
+	decoder.getUniforms(uniforms);
+	for (auto iter = uniforms.begin(); iter != uniforms.end(); ++iter)
 	{
-		g_CommonProgram = new Program(VertexShader::Common(), FragmentShader::Common());
-		g_CommonProgram->Link();
+		int location = getUniformLocation(iter->first.data());
+		size_t hash = iter->second;
+		if (hash == typeid(int).hash_code())
+		{
+			uniform(location, 1);
+		}
+		else if (hash == typeid(float).hash_code())
+		{
+			uniform(location, 1.0f);
+		}
+		else if (hash == typeid(nb::core::Vec2).hash_code())
+		{
+			uniform(location, Vec2(1.0f, 1.0f));
+		}
+		else if (hash == typeid(nb::core::Vec3).hash_code())
+		{
+			uniform(location, Vec3(1.0f, 1.0f, 1.0f));
+		}
+		else if (hash == typeid(nb::core::Vec4).hash_code())
+		{
+			uniform(location, Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		}
+		else if (hash == typeid(nb::core::Matrix2x2).hash_code())
+		{
+			uniform(location, Matrix2x2::identity());
+		}
+		else if (hash == typeid(nb::core::Matrix3x3).hash_code())
+		{
+			uniform(location, Matrix3x3::identity());
+		}
+		else if (hash == typeid(nb::core::Matrix4x4).hash_code())
+		{
+			uniform(location, Matrix4x4::identity());
+		}
 	}
-	return g_CommonProgram;
 }

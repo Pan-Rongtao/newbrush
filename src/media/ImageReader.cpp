@@ -1,12 +1,9 @@
 #include "media/ImageReader.h"
 #include "core/Exception.h"
 #include "media/ExifReader.h"
-#include "system/System.h"
 
-using nb::Media::ImageReader;
-using nb::Media::Bitmap;
-using nb::Media::ExifReader;
-using nb::System::SizeI;
+using namespace nb::core;
+using namespace nb::media;
 
 ImageReader::ImageReader()
 : m_ScaleSize(160, 160)
@@ -14,10 +11,10 @@ ImageReader::ImageReader()
 
 }
 
-ImageReader::ImageReader(const nb::System::SizeI &size)
+ImageReader::ImageReader(const SizeI &size)
 : m_ScaleSize(size)
 {
-	if(size.Width() < 0 || size.Height() < 0)
+	if(size.width() < 0 || size.height() < 0)
 		NB_THROW_EXCEPTION("size illegal.");
 }
 
@@ -26,74 +23,74 @@ ImageReader::~ImageReader()
 
 }
 
-void ImageReader::SetScaledSize(const nb::System::SizeI &size)
+void ImageReader::setScaledSize(const SizeI &size)
 {
 	m_ScaleSize = size;
 }
 
-nb::System::SizeI ImageReader::GetScaledSize() const
+SizeI ImageReader::scaledSize() const
 {
 	return m_ScaleSize;
 }
 
-void ImageReader::Read(const nb::System::String &path, nb::Media::Bitmap *pBm)
+void ImageReader::read(const String &path, Bitmap *pBm)
 {
 	ExifReader exif;
 	try{
-		exif.Open(path);
+		exif.open(path);
 	}
-	catch(nb::Core::ExceptionPtr &e){
+	catch(Exception &e){
 		(void)e;
 	}
 	std::vector<ExifReader::ThumbnailProperties> thumbsProperties;
-	exif.GetThumbnailsProperties(thumbsProperties);
-	nb::System::SizeI maxThumb(0, 0);
+	exif.getThumbnailsProperties(thumbsProperties);
+	SizeI maxThumb(0, 0);
 	for(int i = 0; i != thumbsProperties.size(); ++i)
 	{
-		nb::System::SizeI szOne(thumbsProperties[i].Width, thumbsProperties[i].Height);
-		if(szOne.Width() > maxThumb.GetWidth() && szOne.Height() > maxThumb.GetHeight())
+		SizeI szOne(thumbsProperties[i].Width, thumbsProperties[i].Height);
+		if(szOne.width() > maxThumb.width() && szOne.height() > maxThumb.height())
 			maxThumb = szOne;
 	}
 	//如果需要伸缩的尺寸大于最大取缩略图尺寸100，直接读原图
-	if(thumbsProperties.empty() || (GetScaledSize().GetWidth() - maxThumb.GetWidth() > 100 || GetScaledSize().GetHeight() - maxThumb.GetHeight() > 100))
+	if(thumbsProperties.empty() || (scaledSize().width() - maxThumb.width() > 100 || scaledSize().height() - maxThumb.height() > 100))
 	{
-		pBm->LoadFile(path);
+		pBm->loadFile(path);
 //		*pBm = pBm->Scale(GetScaledSize());
 	}
 	else
 	{
-		std::vector<nb::Media::Bitmap> thumbs;
-		exif.GetThumbnails(thumbs);
+		std::vector<Bitmap> thumbs;
+		exif.getThumbnails(thumbs);
 		*pBm = thumbs[0];
 //		*pBm = pBm->Scale(GetScaledSize());
 	}
-	*pBm = pBm->Scale(GetScaledSize());
+	*pBm = pBm->scale(scaledSize());
 }
 
-void ImageReader::ReadUniform(const nb::System::String &path, nb::Media::Bitmap *pBm, nb::System::SizeI &OriginalSize)
+void ImageReader::readUniform(const String &path, Bitmap *pBm, SizeI &OriginalSize)
 {
 	ExifReader exif;
 	try{
-		exif.Open(path);
+		exif.open(path);
 	}
-	catch(nb::Core::ExceptionPtr &e){
+	catch(Exception &e){
 		(void)e;
 	}
-	OriginalSize = nb::System::SizeI(exif.GetWidth(), exif.GetHeight());
+	OriginalSize = SizeI(exif.width(), exif.height());
 	std::vector<ExifReader::ThumbnailProperties> thumbsProperties;
-	exif.GetThumbnailsProperties(thumbsProperties);
-	nb::System::SizeI maxThumb(0, 0);
+	exif.getThumbnailsProperties(thumbsProperties);
+	SizeI maxThumb(0, 0);
 	for(int i = 0; i != thumbsProperties.size(); ++i)
 	{
-		nb::System::SizeI szOne(thumbsProperties[i].Width, thumbsProperties[i].Height);
-		if(szOne.Width() > maxThumb.GetWidth() && szOne.Height() > maxThumb.GetHeight())
+		SizeI szOne(thumbsProperties[i].Width, thumbsProperties[i].Height);
+		if(szOne.width() > maxThumb.width() && szOne.height() > maxThumb.height())
 			maxThumb = szOne;
 	}
 	//如果需要伸缩的尺寸大于最大取缩略图尺寸100，直接读原图
-	if(thumbsProperties.empty() || (GetScaledSize().GetWidth() - maxThumb.GetWidth() > 100 || GetScaledSize().GetHeight() - maxThumb.GetHeight() > 100))
+	if(thumbsProperties.empty() || (scaledSize().width() - maxThumb.width() > 100 || scaledSize().height() - maxThumb.height() > 100))
 	{
-		int nSourceSize = exif.GetWidth() * exif.GetHeight();
-		int nDestSize = m_ScaleSize.GetWidth() * m_ScaleSize.GetHeight();
+		int nSourceSize = exif.width() * exif.height();
+		int nDestSize = m_ScaleSize.width() * m_ScaleSize.height();
 		int nJpegNarrow = 8;
 		for(int i = 1; i <= 8; i = i << 1)
 		{
@@ -104,34 +101,34 @@ void ImageReader::ReadUniform(const nb::System::String &path, nb::Media::Bitmap 
 			}
 		}
 		//取最近的nJpegNarrow
-		if(nJpegNarrow != 1 && (nb::System::Abs(nSourceSize >> nJpegNarrow) - nDestSize) > (nb::System::Abs((nSourceSize >> (nJpegNarrow >> 1)) - nDestSize)))
+		if(nJpegNarrow != 1 && (std::abs(nSourceSize >> nJpegNarrow) - nDestSize) > (std::abs((nSourceSize >> (nJpegNarrow >> 1)) - nDestSize)))
 		{
 			nJpegNarrow = (nJpegNarrow >> 1);
 		}
-		pBm->LoadFileNarrowed(path, nJpegNarrow);
+		pBm->loadFileNarrowed(path, nJpegNarrow);
 	}
 	else
 	{
-		std::vector<nb::Media::Bitmap> thumbs;
-		exif.GetThumbnails(thumbs);
+		std::vector<Bitmap> thumbs;
+		exif.getThumbnails(thumbs);
 		*pBm = thumbs[0];
 	}
 
 	SizeI szFinal;
-	float pixcelRatio = (float)(pBm->GetWidth()) / pBm->GetHeight();
-	float containerRatio = (float)(m_ScaleSize.Width()) / m_ScaleSize.Height();
+	float pixcelRatio = (float)(pBm->width()) / pBm->height();
+	float containerRatio = (float)(m_ScaleSize.width()) / m_ScaleSize.height();
 	if(pixcelRatio < containerRatio)
 	{
-		szFinal.Height() = m_ScaleSize.Height();
-		szFinal.Width() = (int)(szFinal.Height() * pixcelRatio);
+		szFinal.height() = m_ScaleSize.height();
+		szFinal.width() = (int)(szFinal.height() * pixcelRatio);
 	}
 	else
 	{
-		szFinal.Width() = m_ScaleSize.Width();
-		szFinal.Height() = (int)(szFinal.Width() / pixcelRatio);
+		szFinal.width() = m_ScaleSize.width();
+		szFinal.height() = (int)(szFinal.width() / pixcelRatio);
 	}
 	//使之四像素对齐
-	szFinal.Width() = szFinal.Width() / 4 * 4;
-	szFinal.Height() = szFinal.Height() / 4 * 4;
-	*pBm = pBm->Scale(szFinal);
+	szFinal.width() = szFinal.width() / 4 * 4;
+	szFinal.height() = szFinal.height() / 4 * 4;
+	*pBm = pBm->scale(szFinal);
 }

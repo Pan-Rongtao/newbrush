@@ -3,22 +3,12 @@
 #include "InternalCore.h"
 #include "ObjectLiveMonitor.h"
 
-
-#ifdef new
-#undef new
-#endif
-
-//#ifdef _DEBUG
-//#define new DEBUG_NEW
-//#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 NB_OBJECT_TYPE_IMPLEMENT(RefObject, OriginObject, NULL, NULL);
 
-
 #define NB_REF_ROCK_VALUE_OBJECT_PROPARE_TYPE_IMPLEMENT(T) \
-	void *RefRockValueObjectsPropareType::s_p##T##PrepareType = nb::Core::OriginObject::PrepargeType<T, RefObject>(NULL, NULL);
+	void *RefRockValueObjectsPropareType::s_p##T##PrepareType = nb::core::OriginObject::PrepargeType<T, RefObject>(NULL, NULL);
 
 class RefRockValueObjectsPropareType
 {
@@ -117,12 +107,11 @@ void SharedPtrBase::Verify(RefObject *obj) const
 {
 	if(obj != NULL && !obj->IsCanRef())
 	{
-		NB_OUTA("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		NB_OUTA("[New Brush] Error!!");
-	//	NB_OUTA("[New Brush] Non ref object, prohibited assignment to Ptr.");
-		NB_OUTA("[New Brush] 不是可计数对象，禁止保存到 Shared Ptr 。");
-		NB_OUTA("[New Brush] exit(1)");
-		NB_OUTA("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
+		printf("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
+		printf("[New Brush] Error!!\r\n");
+		printf("[New Brush] 不是可计数对象，禁止保存到 Shared Ptr 。\r\n");
+		printf("[New Brush] exit(1)\r\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
 		exit(1);
 		return;
 	}
@@ -176,12 +165,11 @@ void RefObjectPtr::Equal(RefObject *pRealize)
 
 	if(pRealize != NULL && !pRealize->IsCanRef())
 	{
-		NB_OUTA("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		NB_OUTA("[New Brush] Error!!");
-	//	NB_OUTA("[New Brush] Non ref object, prohibited assignment to Ptr.");
-		NB_OUTA("[New Brush] 不是可计数对象，禁止保存到 Ptr 。");
-		NB_OUTA("[New Brush] exit(1)");
-		NB_OUTA("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
+		printf("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
+		printf("[New Brush] Error!!\r\n");
+		printf("[New Brush] 不是可计数对象，禁止保存到 Ptr 。\r\n");
+		printf("[New Brush] exit(1)\r\n");
+		printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
 		exit(1);
 		return;
 	}
@@ -235,17 +223,13 @@ void RefObject::operator = (const RefObject &r)
 
 void RefObject::AddRef()
 {
-//	nbInternalCore::GetRefPtrCriticalSection()->Lock();
 	m_nRef++;
-//	nbInternalCore::GetRefPtrCriticalSection()->Unlock();
 }
 
 void RefObject::ReleaseRef()
 {
-//	nbInternalCore::GetRefPtrCriticalSection()->Lock();
 	m_nRef--;
 	if(m_nRef == 0) delete this;
-//	nbInternalCore::GetRefPtrCriticalSection()->Unlock();
 }
 
 void * RefObject::operator new(size_t t)
@@ -265,17 +249,6 @@ void RefObject::operator delete(void *p)
 {
 	if(p == NULL) return;
 
-//	假如RefObject不是第一继承，将无法强制转换到RefObject
-//	RefObject *pObject = (RefObject *)p;
-//	if(pObject->m_nRef != 0)
-//	{
-//		NB_OUTA("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//		NB_OUTA("Error!!");
-//		NB_OUTA("对象已被智能指针管理，不能使用Delete删除对象。");
-//		NB_OUTA("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
-//		exit(1);
-//	}
-
 	nbInternalCore::GetObjectLiveMonitor()->Free(p);
 }
 
@@ -287,5 +260,4 @@ void RefObject::operator delete(void *p, const char * /*lpszFileName*/, int /*nL
 bool RefObject::IsCanRef() const
 {
 	return m_bIsCanRef;
-	//return nbInternalCore::GetObjectLiveMonitor()->IsExist((void *)this);
 }

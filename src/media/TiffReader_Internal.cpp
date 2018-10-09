@@ -1,7 +1,8 @@
 #include "TiffReader_Internal.h"
 #include "Bitmap_Internal.h"
 
-using nb::Media::TiffReader_Internal;
+using namespace nb::core;
+using namespace nb::media;
 
 TiffReader_Internal::TiffReader_Internal()
 : m_pFreeImage(NULL)
@@ -10,34 +11,34 @@ TiffReader_Internal::TiffReader_Internal()
 
 TiffReader_Internal::~TiffReader_Internal()
 {
-	Close();
+	close();
 }
 
-bool TiffReader_Internal::Open(const nb::System::String &path)
+bool TiffReader_Internal::open(const String &path)
 {
 	m_pFreeImage = FreeImage_OpenMultiBitmap(FIF_TIFF, path.ToUtf8().GetData(), false, true, true, TIFF_ADOBE_DEFLATE);
 	return m_pFreeImage != NULL;
 }
 
-void TiffReader_Internal::Close()
+void TiffReader_Internal::close()
 {
 	FreeImage_CloseMultiBitmap(m_pFreeImage);
 	m_pFreeImage = NULL;
 }
 
-bool TiffReader_Internal::HasData() const
+bool TiffReader_Internal::hasData() const
 {
-	return m_pFreeImage == NULL || GetFrameCount() == 0;
+	return m_pFreeImage == NULL || frameCount() == 0;
 }
 
-int TiffReader_Internal::GetFrameCount() const
+int TiffReader_Internal::frameCount() const
 {
 	return m_pFreeImage ? FreeImage_GetPageCount(m_pFreeImage) : 0;
 }
 
-nb::Media::Bitmap TiffReader_Internal::GetFrame(int index) const
+Bitmap TiffReader_Internal::frame(int index) const
 {
-	if(index <0 || index >= GetFrameCount())
+	if(index <0 || index >= frameCount())
 		NB_THROW_EXCEPTION("out of range.");
 
 	if(m_pFreeImage == NULL)
@@ -48,7 +49,7 @@ nb::Media::Bitmap TiffReader_Internal::GetFrame(int index) const
 	p = FreeImage_ConvertTo24Bits(p);
 	Bitmap_Internal bm_interal;
 	bm_interal.m_pFreeImage = p;
-	Bitmap bm(bm_interal.GetData(), bm_interal.GetPixelWidth(), bm_interal.GetPixelHeight(), bm_interal.GetPixelFormat());
+	Bitmap bm(bm_interal.data(), bm_interal.pixelWidth(), bm_interal.pixelHeight(), bm_interal.pixelFormat());
 	FreeImage_UnlockPage(m_pFreeImage, p, false);
 	return bm;
 }

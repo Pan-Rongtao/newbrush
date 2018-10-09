@@ -1,7 +1,7 @@
 #include <GLES2/gl2.h>
 #include "gles/TextureMipmap.h"
 
-using nb::gl::Gles::TextureMipmap;
+using namespace nb::gl;
 
 TextureMipmap::TextureMipmap()
 {
@@ -13,7 +13,7 @@ TextureMipmap::~TextureMipmap()
 
 }
 
-void TextureMipmap::Generate()
+void TextureMipmap::generate()
 {
 	glGenerateMipmap(GL_TEXTURE_2D);
 }

@@ -40,8 +40,8 @@
 
 //链路事件集
 
-#include "core/Object.h"
-#include "core/Event.h"
+#include "../core/Object.h"
+#include "../core/Event.h"
 
 
 
@@ -60,14 +60,14 @@ class event__##name : public LEvent<param> \
 }name; \
 
 class LinkageEventsInternal;
-class NB_EXPORT LinkageEvents : public nbObject
+class NB_API LinkageEvents : public nbObject
 {
 public:
 
 	///////////////////////////////////////////////////////////////////////////
 	//链路事件集中的某一个事件
 	//
-	class NB_EXPORT LEventBase
+	class NB_API LEventBase
 	{
 		friend class LinkageEventsInternal;
 	public:

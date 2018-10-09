@@ -5,60 +5,27 @@
 **	
 **	渲染物是描述可渲染对象的数据结构
 **
-**	一般而言，渲染物都有自己的模型结构、材质和program等
+**	一般而言，渲染物都有自己的模型结构、材质等
 **		
 **		
 **		潘荣涛
 **	
 ********************************************************/
 #pragma once
-#include "system/Global.h"
-#include "gles/Model.h"
-#include "gles/Material.h"
+#include <string>
+#include "../core/Def.h"
+#include "../gles/Model.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+struct aiNode;
+struct aiMesh;
+struct aiScene;
+namespace nb{ namespace gl{
 
 class Model;
 class Material;
-class Program;
-class NB_EXPORT RenderObject : public ModelEventListener, public MaterialEventListener
+class Storage;
+class NB_API RenderObject
 {
-public:
-	//渲染模式
-	enum RenderMode
-	{
-		RenderMode_Mapping	= 0,		//贴图
-		RenderMode_Color	= 1,		//颜色
-	};
-
-public:	
-	//设置是否可渲染，这将决定物体是否绘制
-	void SetRenderable(bool bRenderable);
-
-	//是否可渲染
-	bool IsRenderable() const;
-
-	//设置模型
-	void SetModel(Model *model);
-
-	//获取模型
-	Model *GetModel() const;
-
-	//设置材质
-	void SetMaterial(Material *material);
-
-	//获取材质
-	Material *GetMaterial() const;
-
-	//设置渲染模式
-	void SetRenderMode(RenderMode mode);
-
-	//获取渲染模式
-	RenderMode GetRenderMode() const;
-
-	//是否可以进行batching
-	bool CanBatchWith(const RenderObject *renderObject) const;
-
 public:
 	//构建一个空的RenderObject，它的可渲染状态为true
 	RenderObject();
@@ -67,19 +34,50 @@ public:
 	RenderObject(bool bRenderable);
 
 	//构建一个RenderObject，它的模型为model，材质为materia，可渲染状态为true
-	RenderObject(Model *model, Material *material);
+	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material);
 
 	//构建一个RenderObject，它的模型为model，材质为materia，可渲染状态为bRenderable
-	RenderObject(Model *model, Material *material, bool bRenderable);
+	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material, bool bRenderable);
+
+public:	
+	//从文件中加载
+	void loadFromFile(const std::string &path);
+
+	//设置是否可渲染，这将决定物体是否绘制
+	void setRenderable(bool bRenderable);
+
+	//是否可渲染
+	bool renderable() const;
+
+	//设置模型
+	void setModel(std::shared_ptr<Model> model);
+
+	//获取模型
+	std::shared_ptr<Model> model();
+
+	//设置材质
+	void setMaterial(std::shared_ptr<Material> material);
+
+	//获取材质
+	std::shared_ptr<Material> material();
+
+	//设置存储
+	void setStorage(std::shared_ptr<Storage> storage);
+
+	//获取存储
+	std::shared_ptr<Storage> storage();
+
+	//绘制
+	virtual void draw() const;
 
 private:
-	virtual void On_ModelData_Changed(Model::VertexAttributesType type);
-	virtual void On_Texture_Changed();
+	void loopNode(aiNode * node, const aiScene * scene);
+	Mesh processMesh(aiMesh * mesh, const aiScene * scene);
 
-	bool					m_bRenderable;
-	Model					*m_Model;
-	Material				*m_Material;
-	RenderMode				m_RenderMode;
+	bool						m_renderable;
+	std::shared_ptr<Model>		m_model;
+	std::shared_ptr<Material>	m_material;
+	std::shared_ptr<Storage>	m_storage;
 };
 
-}}}
+}}

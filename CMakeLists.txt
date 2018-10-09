@@ -28,7 +28,6 @@ endif()
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(examples)
-add_subdirectory(doc)
 
 # 5. Project Install
 # N/A

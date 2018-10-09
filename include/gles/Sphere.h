@@ -1,17 +1,18 @@
 #pragma once
-#include "gles/Model3D.h"
+#include "Model.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class Sphere : public Model3D
+class NB_API Sphere : public Model
 {
 public:
-	//构建一个球体，它的圆心是centerPoint，它的半径是R
-	Sphere(const nb::Math::Vec3 &centerPoint, float R);
+	//构建一个球体，它的圆心是centerPoint，它的半径是r
+	Sphere(const nb::core::Vec3 &centerPoint, float r, bool cartesian);
 
-protected:
-	virtual IndicesSequece VertextsSequenceOverride() const;
+private:
+	virtual void cullFace() override;
+	std::vector<uint16_t> getIndices() const;
 
 };
 
-}}}
+}}

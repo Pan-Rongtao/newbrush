@@ -1,36 +1,30 @@
 ﻿#pragma once
+#include "core/Point.h"
 
-#include "core/Object.h"
-#include "system/Point.h"
+namespace nb{ namespace gui {
 
-namespace nb
+class MovePositionAnalyse
 {
-	namespace Gui
-	{
-		class MovePositionAnalyse : public nbObject
-		{
-			NB_OBJECT_TYPE_DECLARE();
-		public:
-			MovePositionAnalyse();
-			MovePositionAnalyse(float xLock, float yLock);
-			virtual ~MovePositionAnalyse();
+public:
+	MovePositionAnalyse();
+	MovePositionAnalyse(float xLock, float yLock);
+	virtual ~MovePositionAnalyse();
 
-			void SetLock(float xLock, float yLock);
-			void Start(nb::System::Point pos);
-			void Move(nb::System::Point pos);
-			void Cancel();
-			bool IsActive() const;
-			nb::System::Point GetStartPos() const;
-			nb::System::Point GetActivePos() const;
+	void SetLock(float xLock, float yLock);
+	void Start(nb::core::Point pos);
+	void Move(nb::core::Point pos);
+	void Cancel();
+	bool IsActive() const;
+	nb::core::Point GetStartPos() const;
+	nb::core::Point GetActivePos() const;
 
-		private:
-			float m_xLock;
-			float m_yLock;
-			bool m_bActive;
-			bool m_bStart;
-			nb::System::Point m_ptOrigin;
-			nb::System::Point m_ptActive;
-		};
-		typedef nbObjectPtrDerive<MovePositionAnalyse, nbObjectPtr> MovePositionAnalysePtr;
-	}
-}
+private:
+	float m_xLock;
+	float m_yLock;
+	bool m_bActive;
+	bool m_bStart;
+	nb::core::Point m_ptOrigin;
+	nb::core::Point m_ptActive;
+};
+
+}}

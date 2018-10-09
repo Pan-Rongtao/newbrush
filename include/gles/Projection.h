@@ -1,29 +1,25 @@
 #pragma once
-#include "math/Matrix4x4.h"
+#include "../core/Matrix4x4.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
-class Projection
+class NB_API Projection
 {
 public:
-	const nb::Math::Matrix4x4 &GetMatrix() const;
+	//矩阵
+	nb::core::Matrix4x4 &matrix();
+	const nb::core::Matrix4x4 &matrix() const;
+
+	//正射投影
+	void ortho(float left, float right, float bottom, float top, float near, float far);
+
+	//透视投影
+	void perspective(float fovy, float aspect, float near, float far);
+
+	static std::shared_ptr<Projection> instance();
 
 protected:
-	nb::Math::Matrix4x4		m_matrix;
+	nb::core::Matrix4x4		m_matrix;
 };
 
-
-class OrthographicProjection : public Projection
-{
-public:
-	OrthographicProjection(float left, float right, float bottom, float top, float near, float far);
-};
-
-class PerspectiveProjection : public Projection
-{
-public:
-	PerspectiveProjection();
-	PerspectiveProjection(float angle, float aspect, float near, float far);
-};
-
-}}}
+}}

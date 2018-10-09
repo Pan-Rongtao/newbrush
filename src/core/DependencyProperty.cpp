@@ -2,19 +2,13 @@
 #include "InternalCore.h"
 #include "PropertyInternal.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 NB_OBJECT_TYPE_IMPLEMENT(DependencyProperty, RefObject, NULL, NULL);
 
 DependencyProperty::DependencyProperty(void)
 	: m_pType(NULL)
 	, m_pElementType(NULL)
-	, m_offset(0)
-	, m_index(-1)
 	, m_isImmobile(false)
 	, m_funPropertyChanged_Old(NULL)
 	, m_funPropertyValueChanged(NULL)
@@ -23,7 +17,6 @@ DependencyProperty::DependencyProperty(void)
 
 DependencyProperty::~DependencyProperty(void)
 {
-
 }
 
 DependencyProperty * DependencyProperty::PrepareProperty(const std::string &key, const std::type_info &type, const std::type_info &propertyType, funPropertyValueChanged fun)
@@ -51,7 +44,6 @@ Type * DependencyProperty::GetElementType() const
 {
 	return m_pElementType;
 }
-
 
 DependencyProperty * DependencyProperty::PrepareProperty(int offset, const char *pkey, const std::type_info &type, const std::type_info &propertyType, bool isImmobile, funPropertyValueChanged fun)
 {

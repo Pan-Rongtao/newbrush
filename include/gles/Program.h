@@ -7,109 +7,122 @@
 **	才有意义，link后程序就可以随时使用
 **
 **	Program（程序）
-**	ProgramFactory（程序工厂）
 **
 **		潘荣涛
 **	
 ********************************************************/
 #pragma once
-#include "core/NewBrushDef.h"
-#include "math/Vec2.h"
-#include "math/Vec2I.h"
-#include "math/Vec3.h"
-#include "math/Vec3I.h"
-#include "math/Vec4.h"
-#include "math/Vec4I.h"
-#include "math/Matrix2x2.h"
-#include "math/Matrix3x3.h"
-#include "math/Matrix4x4.h"
+#include "../core/Def.h"
+#include "../core/Vec2.h"
+#include "../core/Vec3.h"
+#include "../core/Vec4.h"
+#include "../core/Matrix2x2.h"
+#include "../core/Matrix3x3.h"
+#include "../core/Matrix4x4.h"
+#include "SourceDecoder.h"
 
-namespace nb{ namespace gl{ namespace Gles{
+namespace nb{ namespace gl{
 
 class VertexShader;
 class FragmentShader;
-class NB_EXPORT Program
+class NB_API Program
 {
 public:
-	//设置顶点着色器和片元着色器
-	void SetVertexShader(VertexShader *verShader);
-	void SetFragmentShader(FragmentShader *fragShader);
-	void SetShader(VertexShader *verShader, FragmentShader *fragShader);
-
-	//链接
-	//异常：
-	void Link();
-
-	//获取program中attribute类型变量sName的位置/地址
-	//如果未找到变量，返回-1
-	int GetAttributeLocation(const char *name) const;
-
-	//获取program中uniform类型变量sName的位置/地址
-	//如果未找到变量，返回-1
-	int GetUniformLocation(const char *name) const;
-
-	//使用
-	//异常：
-	void Use();
-
-	//取消使用
-	//异常：
-	void UnUse();
-
-	//是否与program相同
-	bool Equal(Program *program) const;
-
-	//更新位置为location的attribute
-	void VertexAttribute(int location, float v);
-	void VertexAttribute(int location, const nb::Math::Vec2 &vec);
-	void VertexAttribute(int location, const nb::Math::Vec3 &vec);
-	void VertexAttribute(int location, const nb::Math::Vec4 &vec);
-	void VertexAttribute(int location, nb::Math::Vec2 *vec);
-	void VertexAttribute(int location, nb::Math::Vec3 *vec);
-	void VertexAttribute(int location, nb::Math::Vec4 *vec);
-	void VertexAttributePointer(int location, int dimension, int stride, const void *data);
-
-	//更新位置为location的unform
-	void Uniform(int location, float v);
-	void Uniform(int location, float *v, int count);
-	void Uniform(int location, const nb::Math::Vec2 &vec);
-	void Uniform(int location, nb::Math::Vec2 *vec, int count);
-	void Uniform(int location, const nb::Math::Vec3 &vec);
-	void Uniform(int location, nb::Math::Vec3 *vec, int count);
-	void Uniform(int location, const nb::Math::Vec4 &vec);
-	void Uniform(int location, nb::Math::Vec4 *vec, int count);
-
-	void Uniform(int location, int v);
-	void Uniform(int location, int *v, int count);
-	void Uniform(int location, const nb::Math::Vec2I &vec);
-	void Uniform(int location, nb::Math::Vec2I *vec, int count);
-	void Uniform(int location, const nb::Math::Vec3I &vec);
-	void Uniform(int location, nb::Math::Vec3I *vec, int count);
-	void Uniform(int location, const nb::Math::Vec4I &vec);
-	void Uniform(int location, nb::Math::Vec4I *vec, int count);
-
-	void Uniform(int location, const nb::Math::Matrix2x2 &matrix);
-	void Uniform(int location, nb::Math::Matrix2x2 *matrix, int count);
-	void Uniform(int location, const nb::Math::Matrix3x3 &matrix);
-	void Uniform(int location, nb::Math::Matrix3x3 *matrix, int count);
-	void Uniform(int location, const nb::Math::Matrix4x4 &matrix);
-	void Uniform(int location, nb::Math::Matrix4x4 *matrix, int count);
+	enum AttributeLocation
+	{
+		positionLocation	= 0,	//"nb_Position"
+		colorLocation,				//"nb_Color"
+		texCoordLocaltion,			//"nb_TextCoord"
+		normalLocation,				//"nb_Normal"
+	};
 
 public:
 	//构建一个Program，未指定顶点着色器和片元着色器
 	Program();
 
 	//构建一个Program，并为它指定了顶点着色器和片元着色器
-	Program(VertexShader *verShader, FragmentShader *fragShader);
+	Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader);
 	~Program();
 
 public:
-	static Program *Common();
+	//设置顶点着色器
+	void setVertexShader(std::shared_ptr<VertexShader> verShader);
+
+	//获取顶点着色器
+	std::shared_ptr<VertexShader> vertexShader();
+
+	//设置片元着色器
+	void setFragmentShader(std::shared_ptr<FragmentShader> fragShader);
+
+	//获取片元着色器
+	std::shared_ptr<FragmentShader> fragmentShader();
+
+	//链接
+	//异常：
+	void link();
+
+	//获取program中attribute类型变量sName的位置/地址
+	//如果未找到变量，返回-1
+	int getAttributeLocation(const char *name) const;
+
+	//获取program中uniform类型变量sName的位置/地址
+	//如果未找到变量，返回-1
+	int getUniformLocation(const char *name) const;
+
+	//绑定attribute位置
+	void bindAttributeLocation(unsigned int location, const char *name);
+
+	//使用
+	//异常：
+	void use();
+
+	//取消使用
+	//异常：
+	void disuse();
+
+	//更新位置为location的attribute
+	void vertexAttribute(int location, float v);
+	void vertexAttribute(int location, const nb::core::Vec2 &vec);
+	void vertexAttribute(int location, const nb::core::Vec3 &vec);
+	void vertexAttribute(int location, const nb::core::Vec4 &vec);
+	void vertexAttribute(int location, nb::core::Vec2 *vec);
+	void vertexAttribute(int location, nb::core::Vec3 *vec);
+	void vertexAttribute(int location, nb::core::Vec4 *vec);
+	void vertexAttributePointer(int location, int dimension, int stride, const void *data);
+
+	//更新位置为location的unform
+	void uniform(int location, float v);
+	void uniform(int location, float *v, int count);
+	void uniform(int location, const nb::core::Vec2 &vec);
+	void uniform(int location, nb::core::Vec2 *vec, int count);
+	void uniform(int location, const nb::core::Vec3 &vec);
+	void uniform(int location, nb::core::Vec3 *vec, int count);
+	void uniform(int location, const nb::core::Vec4 &vec);
+	void uniform(int location, nb::core::Vec4 *vec, int count);
+
+	void uniform(int location, int v);
+	void uniform(int location, int *v, int count);
+	void uniform(int location, const nb::core::Vec2I &vec);
+	void uniform(int location, nb::core::Vec2I *vec, int count);
+	void uniform(int location, const nb::core::Vec3I &vec);
+	void uniform(int location, nb::core::Vec3I *vec, int count);
+	void uniform(int location, const nb::core::Vec4I &vec);
+	void uniform(int location, nb::core::Vec4I *vec, int count);
+
+	void uniform(int location, const nb::core::Matrix2x2 &matrix);
+	void uniform(int location, nb::core::Matrix2x2 *matrix, int count);
+	void uniform(int location, const nb::core::Matrix3x3 &matrix);
+	void uniform(int location, nb::core::Matrix3x3 *matrix, int count);
+	void uniform(int location, const nb::core::Matrix4x4 &matrix);
+	void uniform(int location, nb::core::Matrix4x4 *matrix, int count);
+
+	//解析并提交所有的uniform变量
+	void uniformDefault();
 
 private:
-	VertexShader	*m_VertexShader;
-	FragmentShader	*m_FragmentShader;
-	unsigned int	m_ProgramHandle;
+	std::shared_ptr<VertexShader>	m_VertexShader;
+	std::shared_ptr<FragmentShader>	m_FragmentShader;
+	unsigned int					m_ProgramHandle;
 };
 
-}}}
+}}

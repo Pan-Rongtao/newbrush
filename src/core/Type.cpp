@@ -4,11 +4,7 @@
 #include "core/DependencyProperty.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 Type::Type(const std::type_info &type, Type *pParent, Assembly *pAssembly, IsEqualObjectFun funIsEqualObject, CopyObjectFun funCopy, int selfPropertyCount)
 	: m_sTypeName(type.name())
@@ -44,11 +40,6 @@ Type::~Type(void)
 	delete m_pProperties;
 	delete m_pExternalProperties;
 }
-
-//Type * Type::RegisterType(const std::type_info &type, Type *pParentType, Assembly *pAssembly)
-//{
-//	return nbInternalCore::GetTypeInternal()->RegisterType(type, pParentType, pAssembly, NULL, NULL);
-//}
 
 Type * Type::GetType(const std::type_info &type)
 {
@@ -91,8 +82,8 @@ void Type::AttachPropertyPrivate(const std::string &key, DependencyProperty *pPr
 
 	if(m_pProperties->m_map.find(key) != m_pProperties->m_map.end())
 	{
-		char pc[1024];
-		nbSnprintf(pc, 1023, "属性Key值 “%s” 已经被注册了。不能重复注册。", key.data());
+		char pc[1024] = { 0 };
+		NB_SPRINTF(pc, sizeof(pc) - 1, "属性Key值 “%s” 已经被注册了。不能重复注册。", key.data());
 		NB_THROW_EXCEPTION(pc);
 	}
 
@@ -111,8 +102,8 @@ void Type::AttachExternalPropertyPrivate(const std::string &key, DependencyPrope
 
 	if(m_pExternalProperties->m_map.find(key) != m_pExternalProperties->m_map.end())
 	{
-		char pc[1024];
-		nbSnprintf(pc, 1023, "属性Key值 “%s” 已经被注册了。不能重复注册。", key.data());
+		char pc[1024] = { 0 };
+		NB_SPRINTF(pc, sizeof(pc) -1, "属性Key值 “%s” 已经被注册了。不能重复注册。", key.data());
 		NB_THROW_EXCEPTION(pc);
 	}
 
@@ -124,7 +115,6 @@ void Type::AttachExternalPropertyPrivate(const std::string &key, DependencyPrope
 bool Type::IsRefType() const
 {
 	return m_bIsRefType;
-//	return m_sTypeName == typeid(RefObject).name();
 }
 
 DependencyProperty * Type::GetExternalProperty(const char *pKey) const
@@ -137,16 +127,11 @@ DependencyProperty * Type::GetExternalProperty(const char *pKey) const
 
 int Type::GetParentPropertyCount() const
 {
-//	if(m_nParentPropertyCount < 0) m_nParentPropertyCount = m_pParent->GetPropertyCount();
 	return m_nParentPropertyCount;
 }
 
 int Type::GetPropertyCount() const
 {
-//	if(m_pProperties == NULL) return GetParentPropertyCount(); 
-
-//	return GetParentPropertyCount() + m_pProperties->m_vec.size();
-
 	return GetParentPropertyCount() + m_selfPropertyCount;
 }
 

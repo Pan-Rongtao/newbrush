@@ -1,10 +1,10 @@
 #pragma once
-#include "core/Object.h"
+#include "../core/Def.h"
 
 namespace nb{ namespace System{
 
-class NativeThread;
-class NB_EXPORT Thread
+class Thread_Internal;
+class NB_API Thread
 {
 public:
 	enum Priority
@@ -21,31 +21,31 @@ public:
 
 public:
 	//设置优先级（暂时无效，请勿使用）
-	void SetPriority(Priority priority);
+	void setPriority(Priority priority);
 
 	//获取优先级
-	Priority GetPriority() const;
+	Priority priority() const;
 
 	//启动线程，如果线程已经处于启动状态，将维持运行状态
-	void Start();
+	void start();
 
 	//强制终止线程（不建议使用）
-	void Quit();
+	void quit();
 
 	//线程是否处于运行状态
-	bool IsRunning();
+	bool isRunning();
 
 	//
-	bool Wait(unsigned long nTime = 1);
+	bool wait(unsigned long nTime = 1);
 
 	//需要重写的线程执行函数，在调用Start后运行此函数
-	virtual void Run();
+	virtual void run();
 
 protected:
 	//休眠秒/毫秒/微秒
-	static void Sleep(unsigned long seconds);
-	static void MSleep(unsigned long milliSeconds);
-	static void USleep(unsigned long uSeconds);
+	static void sleep(unsigned long seconds);
+	static void msleep(unsigned long milliseconds);
+	static void usleep(unsigned long useconds);
 
 protected:
 	//构建一个新的线程，并处于未运行状态
@@ -53,7 +53,7 @@ protected:
 	virtual ~Thread();
 
 private:
-	NativeThread	*m_pNative;
+	Thread_Internal	*m_internal;
 };
 
 }}

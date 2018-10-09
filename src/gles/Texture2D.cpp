@@ -1,99 +1,95 @@
 #include <GLES2/gl2.h>
 #include "gles/Texture2D.h"
 
-using nb::System::String;
-using nb::gl::Gles::Texture;
-using nb::gl::Gles::Texture2D; 
-using nb::gl::Gles::TextureWrapping;
-using nb::gl::Gles::TextureFilter;
-using nb::Media::Bitmap;
+using namespace nb::media;
+using namespace nb::gl;
 
 Texture2D::Texture2D()
 : m_nPixcelWidth(0)
 , m_nPixcelHeight(0)
 {
-	SetTextureWrapping(TextureWrapping());
-	SetTextureFilter(TextureFilter());
+	setWrapping(TextureWrapping());
+	setFilter(TextureFilter());
 }
 
-Texture2D::Texture2D(const nb::System::String &path)
+Texture2D::Texture2D(const std::string &path)
 : m_nPixcelWidth(0)
 , m_nPixcelHeight(0)
 {
-	LoadFromPath(path);
-	SetTextureWrapping(TextureWrapping());
-	SetTextureFilter(TextureFilter());
+	loadFromPath(path);
+	setWrapping(TextureWrapping());
+	setFilter(TextureFilter());
 }
 
-Texture2D::Texture2D(const nb::System::String &path, const TextureFilter &filter)
+Texture2D::Texture2D(const std::string &path, const TextureFilter &filter)
 : m_nPixcelWidth(0)
 , m_nPixcelHeight(0)
 {
-	LoadFromPath(path);
-	SetTextureWrapping(TextureWrapping());
-	SetTextureFilter(filter);
+	loadFromPath(path);
+	setWrapping(TextureWrapping());
+	setFilter(filter);
 }
 
-Texture2D::Texture2D(const nb::System::String &path, const TextureWrapping &wrapping, const TextureFilter &filter)
+Texture2D::Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter)
 : m_nPixcelWidth(0)
 , m_nPixcelHeight(0)
 {
-	LoadFromPath(path);
-	SetTextureWrapping(wrapping);
-	SetTextureFilter(filter);
+	loadFromPath(path);
+	setWrapping(wrapping);
+	setFilter(filter);
 }
 
 Texture2D::Texture2D(const char *data, int width, int height, Texture::PixelFormat format)
 {
-	LoadFromData(data, width, height, format);
+	loadFromData(data, width, height, format);
 }
 
 Texture2D::~Texture2D()
 {
 }
 
-void Texture2D::Bind()
+void Texture2D::bind()
 {
-	glBindTexture(GL_TEXTURE_2D, m_TextureHandle);
+	glBindTexture(GL_TEXTURE_2D, m_handle);
 }
 
-void Texture2D::Unbind()
+void Texture2D::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::SetTextureWrapping(const TextureWrapping &wrapping)
+void Texture2D::setWrapping(const TextureWrapping &wrapping)
 {
-	Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureWrapping::ToGlValue(wrapping.GetS()));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureWrapping::ToGlValue(wrapping.GetT()));
-	Unbind();
-	m_Wrapping = wrapping;
+	bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureWrapping::glValue(wrapping.s()));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureWrapping::glValue(wrapping.t()));
+	unbind();
+	m_wrapping = wrapping;
 }
 
-void Texture2D::SetTextureFilter(const TextureFilter &filter)
+void Texture2D::setFilter(const TextureFilter &filter)
 {
-	Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter::ToGlValue(filter.GetMagnifyFilter()));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter::ToGlValue(filter.GetNarrowFilter()));
-	Unbind();
-	m_Filter = filter;
+	bind();
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter::glValue(filter.magnifyFilter()));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter::glValue(filter.narrowFilter()));
+	unbind();
+	m_filter = filter;
 }
 
-void Texture2D::LoadFromPath(const String &path)
+void Texture2D::loadFromPath(const std::string &path)
 {
-	Bitmap bm(path);
+	Bitmap bm(path.data());
 	int glFormat;
 	int glType;
-	BitmapFormatToGlFormat(bm.GetPixelFormat(), glFormat, glType);
-	Bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.GetWidth(), bm.GetHeight(), 0, glFormat, glType, bm.GetData());
-	Unbind();
-	m_nPixcelWidth = bm.GetWidth();
-	m_nPixcelHeight = bm.GetHeight();
+	bitmapFormatToGlFormat(bm.pixelFormat(), glFormat, glType);
+	bind();
+	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
+	unbind();
+	m_nPixcelWidth = bm.width();
+	m_nPixcelHeight = bm.height();
 }
 
-void Texture2D::LoadFromData(const char *data, int width, int height, Texture::PixelFormat format)
+void Texture2D::loadFromData(const char *data, int width, int height, Texture::PixelFormat format)
 {
 	int glFormat = GL_RGBA;
 	int glType = GL_UNSIGNED_BYTE;
@@ -106,24 +102,24 @@ void Texture2D::LoadFromData(const char *data, int width, int height, Texture::P
 	case Texture::Format_Bpp32_Rgb5551:		glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_5_5_5_1; break;
 	case Texture::Format_Bpp32_Rgba8888:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_BYTE; break;
 	}
-	Bind();
+	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
-	Unbind();
+	unbind();
 	m_nPixcelWidth = width;
 	m_nPixcelHeight = height;
 }
 
-int Texture2D::GetPixcelWidth() const
+int Texture2D::pixcelWidth() const
 {
 	return m_nPixcelWidth;
 }
 
-int Texture2D::GetPixcelHeight() const
+int Texture2D::pixcelHeight() const
 {
 	return m_nPixcelHeight;
 }
 
-int Texture2D::MaxWidthSupported()
+int Texture2D::maxWidthSupported()
 {
 	int nRet = 0;
 	glEnable(GL_TEXTURE_2D);
@@ -131,7 +127,7 @@ int Texture2D::MaxWidthSupported()
 	return nRet;
 }
 
-int Texture2D::MaxHeightSupported()
+int Texture2D::maxHeightSupported()
 {
-	return MaxWidthSupported();
+	return maxWidthSupported();
 }

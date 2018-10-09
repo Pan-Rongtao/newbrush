@@ -1,8 +1,8 @@
 ﻿#include "MovePositionAnalyse.h"
-#include "system/System.h"
+#include <cmath>
 
-using namespace nb::Gui;
-NB_OBJECT_TYPE_IMPLEMENT(MovePositionAnalyse, nbObject, NULL, NULL);
+using namespace nb::core;
+using namespace nb::gui;
 
 MovePositionAnalyse::MovePositionAnalyse()
 : m_xLock(-1)
@@ -28,7 +28,7 @@ void MovePositionAnalyse::SetLock(float xLock, float yLock)
 	m_yLock = yLock;
 }
 
-void MovePositionAnalyse::Start(nb::System::Point pos)
+void MovePositionAnalyse::Start(Point pos)
 {
 	m_bStart = true;
 	m_bActive = false;
@@ -36,7 +36,7 @@ void MovePositionAnalyse::Start(nb::System::Point pos)
 	m_ptActive = pos;
 }
 
-void MovePositionAnalyse::Move(nb::System::Point pos)
+void MovePositionAnalyse::Move(Point pos)
 {
 	if(!m_bActive)
 	{
@@ -46,7 +46,7 @@ void MovePositionAnalyse::Move(nb::System::Point pos)
 
 		if(m_xLock >= 0)
 		{
-			if(nb::System::Abs(pos.GetX() - m_ptOrigin.GetX()) >= m_xLock)
+			if(abs(pos.x() - m_ptOrigin.x()) >= m_xLock)
 				xActive = true;
 		}
 		else
@@ -56,7 +56,7 @@ void MovePositionAnalyse::Move(nb::System::Point pos)
 
 		if(m_yLock >= 0)
 		{
-			if(nb::System::Abs(pos.GetY() - m_ptOrigin.GetY()) >= m_yLock)
+			if(abs(pos.y() - m_ptOrigin.y()) >= m_yLock)
 				yActive = true;
 		}
 		else
@@ -92,12 +92,12 @@ bool MovePositionAnalyse::IsActive() const
 	return m_bActive;
 }
 
-nb::System::Point MovePositionAnalyse::GetStartPos() const
+Point MovePositionAnalyse::GetStartPos() const
 {
 	return m_ptOrigin;
 }
 
-nb::System::Point MovePositionAnalyse::GetActivePos() const
+Point MovePositionAnalyse::GetActivePos() const
 {
 	return m_ptActive;
 }

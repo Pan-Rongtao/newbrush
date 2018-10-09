@@ -1,97 +1,87 @@
 ﻿#include "gui/ScrollViewer.h"
-#include "ElementRender.h"
-#include "UIElementPrivate.h"
 
-#include "gui/LineMultiItemsTrack.h"
+using namespace nb::core;
+using namespace nb::gui;
 
-using namespace nb::Gui;
-
-namespace nb { namespace Gui {
-
-	class ScrollViewerInternal : public IElementRender
-	{
-	public:
-		ScrollViewerInternal(ScrollViewer *owner) : m_owner(owner)
-		{
-			Window *win = ((UIElement *)m_owner)->GetPrivate()->GetWindow();
-		}
-
-		virtual void OnRender(float x, float y)
-		{
-		}
-
-	private:
-		ScrollViewer *m_owner;
-	};
-
-}}
-
-ScrollViewer::ScrollViewer(void)
-: m_verticalOffset(0)
+ScrollViewer::ScrollViewer()
 {
-	m_internal = new ScrollViewerInternal(this);
 
-	LineMultiItemsTrack *pTrack = new LineMultiItemsTrack();
-	pTrack->SetItemCount(1);
-	pTrack->SetItemSize(1000);
-	pTrack->SetPageSize(400);
-	//pTrack->SetAccel(1000);
-
-//	pTrack->SetEventInterface(this);
-
-	pTrack->TrackMoveEvent.Add(this, &ScrollViewer::OnTrackMove);
-
-	SetTrack(pTrack);
 }
 
 ScrollViewer::~ScrollViewer(void)
 {
-	delete m_internal;
 }
 
-float ScrollViewer::GetExtraRenderOffsetX() const
+void ScrollViewer::lineLeft()
 {
-	return 0;
 }
 
-float ScrollViewer::GetExtraRenderOffsetY() const
+void ScrollViewer::lineRight()
 {
-	return m_verticalOffset;
 }
 
-void ScrollViewer::ScrollToVerticalOffset(float offset)
+void ScrollViewer::lineUp()
 {
-	m_verticalOffset = offset;
 }
 
-//void ScrollViewer::On_LineMultItemsTrack_Move(ILineMultiItemsTrackHandle *pTrack, int nFirstItem, float fItemOffset, nb::Gui::ReboundScrollCtrler::EnumWorkMode nOrientation)
-//{
-//	ScrollToVerticalOffset(fItemOffset);
-//}
-
-void ScrollViewer::OnTrackMove(LineMultiItemsTrack::TrackMoveEventParam &pas)
+void ScrollViewer::lineDown()
 {
-	ScrollToVerticalOffset(pas.m_fFirstItemOffset);
 }
 
-void ScrollViewer::OnActualSizeChanged()
+void ScrollViewer::pageLeft()
 {
-	float w = GetActualWidth();
-	float h = GetActualHeight();
+}
 
-	LineMultiItemsTrack *pTrack = (LineMultiItemsTrack *)GetTrack();
+void ScrollViewer::pageRight()
+{
+}
 
-	if(Content != NULL)
-	{
-		pTrack->SetItemSize(Content->GetActualHeight());
-		
-	}
-	else
-	{
-		pTrack->SetItemSize(h);
-	}
+void ScrollViewer::pageUp()
+{
+}
 
-	UIElement *content = Content;
+void ScrollViewer::pageDown()
+{
+}
 
-	pTrack->SetPageSize(h);
+void ScrollViewer::scrollToLeft()
+{
+}
+
+void ScrollViewer::scrollToRight()
+{
+}
+
+void ScrollViewer::scrollToTop()
+{
+}
+
+void ScrollViewer::scrollToBottom()
+{
+}
+
+void ScrollViewer::scrollToHome()
+{
+}
+
+void ScrollViewer::scrollToEnd()
+{
+}
+
+void ScrollViewer::scrollToHorizontalOffset(double offset)
+{
+}
+
+void ScrollViewer::scrollToVerticalOffset(double offset)
+{
+}
+
+Size ScrollViewer::measureOverride(const Size & availableSize) const
+{
+	return Size();
+}
+
+Size ScrollViewer::arrangeOverride(const Size & finalSize) const
+{
+	return Size();
 }

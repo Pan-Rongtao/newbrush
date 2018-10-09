@@ -3,21 +3,10 @@
 #include "InternalCore.h"
 #include "TypePrivate.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 DependencyProperty * DependencyPropertyInternal::TypePropertys::NewProperty(int offset, const char *pkey, const std::type_info &type, bool isExternal, bool isImmobile)
 {
-//	if(m_keys.find(pkey) != m_keys.end())
-//	{
-//		char pc[1024];
-//		sprintf(pc, "属性Key值 “%s” 已经被注册了。不能重复注册。", pkey);
-//		NB_THROW_EXCEPTION("pc");
-//	}
-
 	Info *pinfo = new Info();
 	pinfo->m_key = pkey;
 	pinfo->m_sElementType = type.name();
@@ -47,11 +36,6 @@ DependencyPropertyInternal::TypePropertys::~TypePropertys()
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-
 DependencyPropertyInternal::DependencyPropertyInternal(void)
 {
 }
@@ -59,11 +43,6 @@ DependencyPropertyInternal::DependencyPropertyInternal(void)
 DependencyPropertyInternal::~DependencyPropertyInternal(void)
 {
 	//不做释放，AppPreparePropertys时已经全部释放了
-//	std::map<std::string, TypePropertys *>::iterator itor = m_mapPrepare.begin();
-//	for(; itor != m_mapPrepare.end(); itor++)
-//	{
-//		delete itor->second;
-//	}
 }
 
 DependencyProperty * DependencyPropertyInternal::PrepareProperty(const std::string &key, const std::type_info &type, const std::type_info &propertyType, bool isExternal, bool isImmobile)
@@ -129,9 +108,8 @@ void DependencyPropertyInternal::AppPreparePropertys()
 
 		if(pType == NULL)
 		{
-			std::string ss;
-			char pc[1024];
-			nbSnprintf(pc, 1023, "使用未注册的类型：%s", itor->first.data());
+			char pc[1024] = { 0 };
+			NB_SPRINTF(pc, sizeof(pc) - 1, "使用未注册的类型：%s", itor->first.data());
 			NB_THROW_EXCEPTION(pc);
 		}
 		
@@ -141,11 +119,6 @@ void DependencyPropertyInternal::AppPreparePropertys()
 	}
 	m_mapPrepare.clear();
 }
-
-//void DependencyPropertyInternal::SetPropertyElementType(nbDependencyProperty *pProperty, nbType *pElementType)
-//{
-//	pProperty->m_pElementType = pElementType;
-//}
 
 void DependencyPropertyInternal::TypePropertys_ApplyPropertys(TypePropertys *pTP, Type *pType)
 {
@@ -159,9 +132,8 @@ void DependencyPropertyInternal::TypePropertys_ApplyPropertys(TypePropertys *pTP
 
 		if(pElementType == NULL)
 		{
-			std::string ss;
-			char pc[1024];
-			nbSnprintf(pc, 1023, "使用未注册的类型： %s", pinfo->m_sElementType.data());
+			char pc[1024] = { 0 };
+			NB_SPRINTF(pc, sizeof(pc) - 1, "使用未注册的类型： %s", pinfo->m_sElementType.data());
 			NB_THROW_EXCEPTION(pc);
 		}
 

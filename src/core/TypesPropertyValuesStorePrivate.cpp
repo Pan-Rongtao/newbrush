@@ -1,11 +1,7 @@
 ﻿#include "TypesPropertyValuesStorePrivate.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 TypesPropertyValuesStorePrivate::TypesPropertyValuesStorePrivate(void)
 {

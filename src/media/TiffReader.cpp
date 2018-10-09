@@ -1,10 +1,11 @@
 #include "media/TiffReader.h"
 #include "TiffReader_Internal.h"
 
-using nb::Media::TiffReader;
+using namespace nb::core;
+using namespace nb::media;
 
 TiffReader::TiffReader()
-: m_internal(NULL)
+: m_internal(nullptr)
 {
 	m_internal = new TiffReader_Internal();
 }
@@ -14,27 +15,27 @@ TiffReader::~TiffReader()
 	delete m_internal;
 }
 
-bool TiffReader::Open(const nb::System::String &path)
+bool TiffReader::open(const String &path)
 {
-	return m_internal->Open(path);
+	return m_internal->open(path);
 }
 
-void TiffReader::Close()
+void TiffReader::close()
 {
-	return m_internal->Close();
+	return m_internal->close();
 }
 
-bool TiffReader::HasData() const
+bool TiffReader::hasData() const
 {
-	return m_internal->HasData();
+	return m_internal->hasData();
 }
 
-int TiffReader::GetFrameCount() const
+int TiffReader::frameCount() const
 {
-	return m_internal->GetFrameCount();
+	return m_internal->frameCount();
 }
 
-nb::Media::Bitmap TiffReader::GetFrame(int index) const
+Bitmap TiffReader::frame(int index) const
 {
-	return m_internal->GetFrame(index);
+	return m_internal->frame(index);
 }

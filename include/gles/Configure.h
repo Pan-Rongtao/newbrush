@@ -1,31 +1,29 @@
 #pragma once
-#include "core/NewBrushDef.h"
+#include "../core/Def.h"
 
-namespace nb{ namespace gl{ namespace egl{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Configure
+class NB_API Configure
 {
 public:
 	Configure();
 	Configure(int *attributes);
 
-	bool IsNull() const;
+	bool isNull() const;
 
-	int *GetAttributes() const;
+	int *attributes() const;
 
-	void *GetEGLHandle() const;
+	void *handle() const;
 
 public:
-	//系统推荐的配置最大数
-	static int SystemRecommendMaxSupportCount();
+	//系统推荐的配置最大数s
+	static int systemRecommendMaxSupportCount();
 
 	//从系统推荐中构建
-	static Configure FromSystemRecommend(int index);
+	static Configure fromSystemRecommend(int index);
 
 private:
-	Configure(void *eglHandle);
-
-	void		*m_Handle;
+	void		*m_handle;
 };
 
-}}}
+}}

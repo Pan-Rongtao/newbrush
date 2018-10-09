@@ -1,15 +1,7 @@
 ﻿#include "core/ValueObject.h"
 #include "InternalCore.h"
 
-#ifdef new
-#undef new
-#endif
-
-//#ifdef _DEBUG
-//#define new DEBUG_NEW
-//#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 NB_OBJECT_TYPE_IMPLEMENT(ValueObject, OriginObject, NULL, NULL);
 
@@ -20,7 +12,7 @@ NB_OBJECT_TYPE_IMPLEMENT(ValueObject, OriginObject, NULL, NULL);
 //NB_OBJECT_TYPE_IMPLEMENT(Bool, ValueObject, &ValueObject::IsEqualFun<Bool>, &ValueObject::CopyFun<Bool>);
 
 #define NB_ROCK_VALUE_OBJECT_PROPARE_TYPE_IMPLEMENT(T) \
-	void *RockValueObjectsPropareType::s_p##T##PrepareType = nb::Core::OriginObject::PrepargeType<T, ValueObject>(&ValueObject::IsEqualFun<T>, &ValueObject::CopyFun<T>);
+	void *RockValueObjectsPropareType::s_p##T##PrepareType = nb::core::OriginObject::PrepargeType<T, ValueObject>(&ValueObject::IsEqualFun<T>, &ValueObject::CopyFun<T>);
 
 class RockValueObjectsPropareType
 {
@@ -32,7 +24,7 @@ public:
 	static void *s_pBoolxPrepareType;
 };
 
-//void *RockValueObjectsPropareType::s_pIntPrepareType = nb::Core::OriginObject::PrepargeType<Int, ValueObject>(&ValueObject::IsEqualFun<Int>, &ValueObject::CopyFun<Int>);
+//void *RockValueObjectsPropareType::s_pIntPrepareType = nb::core::OriginObject::PrepargeType<Int, ValueObject>(&ValueObject::IsEqualFun<Int>, &ValueObject::CopyFun<Int>);
 
 NB_ROCK_VALUE_OBJECT_PROPARE_TYPE_IMPLEMENT(Int);
 NB_ROCK_VALUE_OBJECT_PROPARE_TYPE_IMPLEMENT(Long);
@@ -44,10 +36,6 @@ NB_ROCK_VALUE_OBJECT_PROPARE_TYPE_IMPLEMENT(Boolx);
 
 ValueObject::ValueObject(void)
 {
-//	nbInternalCore::GetObjectLiveMonitor()->ObjectHeapConstructPermit(this);
-
-//	RockValueObjectsPropareType x;
-//	x.s_pIntPrepareType = NULL;
 }
 
 ValueObject::~ValueObject(void)

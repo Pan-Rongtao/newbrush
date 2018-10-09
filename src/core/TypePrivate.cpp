@@ -2,11 +2,7 @@
 #include "core/Type.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 TypeInternal::TypeInternal(void)
 {
@@ -14,12 +10,6 @@ TypeInternal::TypeInternal(void)
 
 TypeInternal::~TypeInternal(void)
 {
-//	std::map<const std::type_info *, nbType *>::iterator itor = m_mapType.begin();
-//	for(; itor != m_mapType.end(); itor++)
-//	{
-//		delete itor->second;
-//	}
-	//m_mapType.clear();
 }
 
 Type * TypeInternal::RegisterType(const std::type_info &type, Type *pParentType, Assembly *pAssembly, Type::IsEqualObjectFun funIsEqual, Type::CopyObjectFun funCopy, int propertyCount)

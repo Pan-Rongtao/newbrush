@@ -1,50 +1,22 @@
 ﻿#pragma once
+#include "../core/Property.h"
+#include "../core/TimeSpan.h"
 
-#include "system/TimeSpan.h"
-#include "core/Object.h"
-#include "system/Array.h"
-#include "GuiDef.h"
+namespace nb { namespace gui{
 
-namespace nb { namespace Media
+class NB_API Timeline
 {
-class TimelinePrivate;
-class NB_GUI_DECLSPEC_INTERFACE Timeline : public nbObject
-{
-	NB_OBJECT_TYPE_DECLARE();
+public:
+	Timeline();
+	virtual ~Timeline();
 
-	friend class TimelinePrivate;
+	void start();
 
 public:
-	Timeline(void);
-	virtual ~Timeline(void);
+	nb::core::Property_rw<nb::core::TimeSpan>		BeginTime;
+	nb::core::Property_rw<nb::core::TimeSpan>		Duration;
+	nb::core::Property_rw<bool>						AutoReverse;
 
-	virtual float GetFrameValue(const nb::System::TimeSpan &frame) {return 0;}
-
-	void Begin();
-
-	void SetCurrentFrame(const nb::System::TimeSpan &frame);
-
-	TimelinePrivate * GetPrivate() const;
-
-	NB_X_OBJECT_PROPERTY_DECLARE(Duration, nb::System::TimeSpan);
-
-protected:
-	virtual void BeginOverride() {}
-	virtual void OnFrameChanged(const nb::System::TimeSpan &frame) {}
-
-private:
-	nb::System::TimeSpan m_duration;
-	nb::System::TimeSpan m_beginTime;
-
-//	nb::Gui::Timer m_timer;
-
-	TimelinePrivate * m_private;
 };
-
-class NB_GUI_DECLSPEC_INTERFACE TimelineCollection : public System::ObjectArray<Timeline>
-{
-};
-
-typedef nbObjectPtrDerive<Timeline, nbObjectPtr> TimelinePtr;
 
 }}

@@ -1,16 +1,23 @@
 #pragma once
-#include <vector>
-#include "core/Object.h"
+#include "../core/Object.h"
 
-namespace nb{ namespace gl{ namespace egl{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Surface
+class NB_API Surface
 {
 public:
-	int GetWidth() const;
-	int GetHeight() const;
+	//设置宽
+	void setWidth(int width);
 
-	void *GetEGLHandle() const;
+	//设置高
+	void setHeight(int height);
+
+	//获取宽高
+	int width() const;
+	int height() const;
+
+	//egl id
+	void *handle() const;
 
 	virtual ~Surface();
 
@@ -24,34 +31,35 @@ private:
 	void operator = (const Surface &other);
 };
 
-class NB_EXPORT WindowSurface : public Surface
+class NB_API WindowSurface : public Surface
 {
 public:
 	WindowSurface(int width, int height, long windowHandle);
 	~WindowSurface();
 
-	long GetWindowHandle();
+	long windowHandle();
 
 private:
 	long		m_WindowHandle;
 };
 
-class NB_EXPORT PbufferSurface : public Surface
+class NB_API PbufferSurface : public Surface
 {
 public:
 	PbufferSurface(int width, int height);
 
 };
 
-class NB_EXPORT PixmapSurface : public Surface
+class NB_API PixmapSurface : public Surface
 {
 public:
 	PixmapSurface(int width, int height, void *pixmapHandle);
 
-	void *GetPixmapHandle();
+	void *pixmapHandle();
+	const void *pixmapHandle() const;
 
 private:
 	void		*m_PixmapHandle;
 };
 
-}}}
+}}

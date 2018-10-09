@@ -4,40 +4,33 @@
 
  * All rights reserved
 
- * 编写者: 怀保胜
+ * 编写者: 潘荣涛
 
- * 编写日期: 2016-04
+ * 编写日期: 2018-09
 
- * 简要描述: 自动换行布局容器
+ * 简要描述: 堆栈容器
 
-			
 
  * 修改记录:
 
  *****************************************************************************/
-
 #pragma once
+#include "../gui/Panel.h"
 
-#include "WrapPanel.h"
-#include "system/Size.h"
+namespace nb{ namespace gui{
 
-namespace nb
+class NB_API StackPanel : public Panel
 {
-	namespace Gui
-	{
-		class NB_EXPORT StackPanel : public Panel
-		{
-			NB_OBJECT_TYPE_DECLARE();
-		public:
-			StackPanel(void);
-			virtual ~StackPanel(void);
+public:
+	StackPanel();
+	virtual ~StackPanel();
 
-			NB_OBJECT_ENUM_PROPERTY_DECLARE_NEW(Orientation, nb::Gui::Orientation);
-			
-		protected:
-			virtual System::Size ArrangeOverride(const nb::System::Size &finalSize);
-			virtual System::Size MeasureOverride(const nb::System::Size &availableSize);
-		};
-		typedef nbObjectPtrDerive<StackPanel, PanelPtr> StackPanelPtr;
-	}
-}
+public:
+	nb::core::Property_rw<Orientation>	Orientation;
+
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
+};
+
+}}

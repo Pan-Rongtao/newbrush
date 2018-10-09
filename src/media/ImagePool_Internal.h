@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <set>
-#include "system/EnumFlags.h"
-#include "system/String.h"
+#include "core/EnumFlags.h"
+#include "core/String.h"
 #include "system/Thread.h"
 #include "system/CriticalSection.h"
 #include "media/Bitmap.h"
@@ -10,69 +10,67 @@
 #include "media/ImageReader.h"
 #include "core/Exception.h"
 
-namespace nb { namespace Media {
+namespace nb { namespace media {
 
 class ImagePool_Internal : public nb::System::Thread
 {
 public:
-	ImagePool_Internal(ImagePool *pOwner, const nb::System::SizeI &scaleSize);
+	ImagePool_Internal(ImagePool *pOwner, const nb::core::SizeI &scaleSize);
 	~ImagePool_Internal();
 
-	void SetCache(ImagePool::Cache cache);
+	void setCache(ImagePool::Cache cache);
 
-	ImagePool::Cache GetCache() const;
+	ImagePool::Cache cache() const;
 
-	void SetFilter(nb::System::EnumFlags<nb::Media::ImagePool::FileType> flags);
+	void setFilter(nb::core::EnumFlags<ImagePool::FileType> flags);
 
-	nb::System::EnumFlags<nb::Media::ImagePool::FileType> GetFilter() const;
+	nb::core::EnumFlags<ImagePool::FileType> filter() const;
 
-	void SetImageMemoryLimit(nb::Media::ImagePool::FileType type, int bytesLimit);
+	void setImageMemoryLimit(ImagePool::FileType type, int bytesLimit);
 
-	void SetImageMemoryLimitAllType(int bytesLimit);
+	void setImageMemoryLimitAllType(int bytesLimit);
 
-	void SetLoadingDirection(ImagePool::LoadingDirection direction);
+	void setLoadingDirection(ImagePool::LoadingDirection direction);
 
-	ImagePool::LoadingDirection GetLoadingDirection() const;
+	ImagePool::LoadingDirection loadingDirection() const;
 
-	void SetSourceFiles(const ImageSources &filePaths);
+	void setSourceFiles(const ImageSources &filePaths);
 
-	void AppendSource(const nb::System::String &sSource);
+	void appendSource(const nb::core::String &sSource);
 
-	void InsertSource(int index, const nb::System::String &sSource);
+	void insertSource(int index, const nb::core::String &sSource);
 
-	void RemoveSource(int index);
+	void removeSource(int index);
 
-	void UpdateSourceAt(int index, const nb::System::String &sSource);
+	void updateSourceAt(int index, const nb::core::String &sSource);
 
-	void GetSourceFileList(ImageSources &ret) const;
+	void getSourceFileList(ImageSources &ret) const;
 
-	nb::System::String GetSourceAt(int index) const;
+	nb::core::String sourceAt(int index) const;
 
-	int GetSourceFileCount() const;
+	int sourceFileCount() const;
 
-	void SetSentry(int sentry);
+	void setSentry(int sentry);
 
-	int GetSentry() const;
+	int sentry() const;
 
-	void StartLoading();
+	void startLoading();
 
-	void StopLoading(bool bClear);
+	void stopLoading(bool bClear);
 
-	bool IsWorking() const;
+	bool isWorking() const;
 
-	bool HasImageLoaded(int index) const;
+	bool getImageItemPropertyAndLock(int index, ImagePool::ImageItemProperty &itemProperty);
 
-	bool GetImageItemPropertyAndLock(int index, ImagePool::ImageItemProperty &itemProperty);
+	void getImageItemPropertyUnlock(int index);
 
-	void GetImageItemPropertyUnlock(int index);
+	nb::core::SizeI scaleSize() const;
 
-	nb::System::SizeI GetScaleSize() const;
-
-	void SetListener(ImagePoolEvent *p);
-	ImagePoolEvent *GetListener() const;
+	void setListener(ImagePoolEvent *p);
+	ImagePoolEvent *getListener() const;
 
 protected:
-	virtual void Run();
+	virtual void run() override;
 
 private:
 	struct FilterItemProperty
@@ -85,16 +83,16 @@ private:
 	class FilterItemManager
 	{
 	public:
-		void SetFilter(nb::System::EnumFlags<ImagePool::FileType> flags);
-		nb::System::EnumFlags<ImagePool::FileType> GetFilter() const;
-		void SetBytesLimit(ImagePool::FileType type, int bytesLimit);
-		void SetBytesLimitAllType(int bytesLimit);
-		bool TestSuffixAndBytesLimit(const nb::System::String &path) const;
+		void SetFilter(nb::core::EnumFlags<ImagePool::FileType> flags);
+		nb::core::EnumFlags<ImagePool::FileType> filter() const;
+		void setBytesLimit(ImagePool::FileType type, int bytesLimit);
+		void setBytesLimitAllType(int bytesLimit);
+		bool testSuffixAndBytesLimit(const nb::core::String &path) const;
 		~FilterItemManager();
 
 	private:
-		void Clear();
-		std::string GetSuffix(const std::string &s) const;
+		void clear();
+		std::string getSuffix(const std::string &s) const;
 
 		std::vector<FilterItemProperty *>		m_Filters;
 		nb::System::CriticalSection				m_Lock;
@@ -103,41 +101,40 @@ private:
 	class ImageItem
 	{
 	public:
-		ImageItem(const nb::System::String &source) : m_Source(source), m_Bm(NULL), m_bError(false), m_bLock(false) {}
+		ImageItem(const nb::core::String &source) : m_Source(source), m_Bm(NULL), m_bError(false), m_bLock(false) {}
 
-		void Lock()		{m_bLock = true; m_Lock.Lock();}
-		void Unlock()	{m_bLock = false; m_Lock.Unlock();}
-		bool IsLocked() {return m_bLock;}
+		void lock()		{m_bLock = true; m_Lock.Lock();}
+		void unlock()	{m_bLock = false; m_Lock.Unlock();}
+		bool isLocked() {return m_bLock;}
 
-		nb::System::String			m_Source;
+		nb::core::String			m_Source;
 		Bitmap						*m_Bm;
 		bool						m_bError;
-		nb::System::SizeI			m_OriginalSize;
+		nb::core::SizeI				m_OriginalSize;
 		bool						m_bLock;
 		nb::System::CriticalSection m_Lock;
 	};
 	class ImageItemManager
 	{
 	public:
-		bool CheckIndex(int index) const;
-		void SetSourceFiles(const ImageSources &filePaths);
-		void GetSourceFiles(ImageSources &ret) const;
-		void SetSourceAt(int index, const nb::System::String &path);
-		nb::System::String GetSourceAt(int index) const;
-		ImageItem *GetItemAt(int index) const;
-		void Push(const nb::System::String &path);
-		void Insert(int index, const nb::System::String &path);
-		void Remove(int index);
-		void EraseLoaded(int index);
-		int GetCount() const;
-		void Clear();
-		void GetLoadedItems(std::vector<int> &loadedIndices) const;
-		bool HasImageLoaded(int index) const;
-		int GetLoadedBytes() const;
-		void MarkLoaded(int index, Bitmap *bm, bool bError, const nb::System::SizeI &originalSize);
-		bool TryLockOne(int index);
-		void UnlockOne(int index);
-		bool IsLocked(int index) const;
+		void setSourceFiles(const ImageSources &filePaths);
+		void getSourceFiles(ImageSources &ret) const;
+		void setSourceAt(int index, const nb::core::String &path);
+		nb::core::String sourceAt(int index) const;
+		ImageItem *itemAt(int index) const;
+		void push(const nb::core::String &path);
+		void insert(int index, const nb::core::String &path);
+		void remove(int index);
+		void eraseLoaded(int index);
+		int count() const;
+		void clear();
+		void getLoadedItems(std::vector<int> &loadedIndices) const;
+		bool hasImageLoaded(int index) const;
+		int loadedBytes() const;
+		void markLoaded(int index, Bitmap *bm, bool bError, const nb::core::SizeI &originalSize);
+		bool tryLockOne(int index);
+		void unlockOne(int index);
+		bool isLocked(int index) const;
 
 		~ImageItemManager();
 
@@ -150,28 +147,28 @@ private:
 	class SharedPathItem
 	{
 	public:
-		SharedPathItem(const nb::System::String &path) : m_Path(path), m_bLocked(false), m_nRefCount(1) {}
+		SharedPathItem(const nb::core::String &path) : m_Path(path), m_bLocked(false), m_nRefCount(1) {}
 
-		void Lock()				{m_bLocked = true;}
-		void Unlock()			{m_bLocked = false;}
-		bool IsLocked() const	{return m_bLocked;}
-		void AddRef()			{m_nRefCount++;}
-		void SubRef()			{m_nRefCount--;}
-		int GetRef() const		{return m_nRefCount;}
+		void lock()				{m_bLocked = true;}
+		void unlock()			{m_bLocked = false;}
+		bool isLocked() const	{return m_bLocked;}
+		void addRef()			{m_nRefCount++;}
+		void subRef()			{m_nRefCount--;}
+		int ref() const		{return m_nRefCount;}
 
 		bool operator < (const SharedPathItem &other) const {return m_Path < other.m_Path;}
 	private:
-		nb::System::String	m_Path;
+		nb::core::String	m_Path;
 		bool				m_bLocked;
 		int					m_nRefCount;
 	};
 	class SharedPathsManager
 	{
 	public:
-		void RequestSourcePath(const nb::System::String &path);
-		void RemoveRef(const nb::System::String &path);
-		bool TryLockSourcePath(const nb::System::String &path);
-		void UnlockSourcePath(const nb::System::String &path);
+		void requestSourcePath(const nb::core::String &path);
+		void removeRef(const nb::core::String &path);
+		bool tryLockSourcePath(const nb::core::String &path);
+		void unlockSourcePath(const nb::core::String &path);
 
 	private:
 		std::set<SharedPathItem>			m_SourcePaths;
@@ -181,11 +178,11 @@ private:
 	ImagePool_Internal(const ImagePool_Internal &other) : m_Cache(ImagePool::Cache::CacheMode_Count_Limit, -1) {}
 	void operator = (const ImagePool_Internal &other)	{}
 
-	void Clear();
-	int CalcNextLoadIndex(int &nNewCacheRangeBeg, int &nNewCacheRangeEnd) const;
-	int CalcFarestLoadedIndex(int nNewCacheRangeBeg, int nNewCacheRangeEnd) const;
-	int GetLoadedBytes() const;
-	bool IsCacheFull() const;
+	void clear();
+	int calcNextLoadIndex(int &nNewCacheRangeBeg, int &nNewCacheRangeEnd) const;
+	int calcFarestLoadedIndex(int nNewCacheRangeBeg, int nNewCacheRangeEnd) const;
+	int loadedBytes() const;
+	bool isCacheFull() const;
 
 	bool										m_bStopFlag;
 	ImagePool::Cache							m_Cache;

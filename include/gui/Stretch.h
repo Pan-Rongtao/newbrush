@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace nb{ namespace Media{
+namespace nb{ namespace gui{
 
 //描述如何调节内容大小以适应目标空间
 enum Stretch

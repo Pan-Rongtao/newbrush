@@ -1,11 +1,7 @@
 ﻿#include "core/Assembly.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 Assembly::Assembly(NewObjectAssemblerFun pFun, NewCopyObjectAssemblerFun pFunCopy)
 	: m_pFun(pFun)
@@ -24,7 +20,7 @@ OriginObject * Assembly::CreateObjectInstance()
 	return m_pFun();
 }
 
-OriginObject * Assembly::CreateObjectInstance(const nb::Core::OriginObject &other)
+OriginObject * Assembly::CreateObjectInstance(const nb::core::OriginObject &other)
 {
 	if(m_pFunCopy == NULL) NB_THROW_EXCEPTION("复制构建对象函数指针为空。");
 

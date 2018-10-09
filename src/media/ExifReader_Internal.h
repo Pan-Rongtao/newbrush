@@ -1,24 +1,24 @@
 #pragma once
 #include <vector>
-#include "system/String.h"
+#include "core/String.h"
 #include "media/Bitmap.h"
 #include "media/ExifReader.h"
 #include "exiv2/exiv2.hpp"
 
-namespace nb{namespace Media{
+namespace nb{namespace media{
 
 class ExifReader_Internal
 {
 public:
 	ExifReader_Internal();
 
-	void Open(const nb::System::String &fileName);
+	void open(const nb::core::String &fileName);
 
-	int GetWidth() const;
-	int GetHeight() const;
+	int width() const;
+	int height() const;
 
-	void GetThumbnailsProperties(std::vector<ExifReader::ThumbnailProperties> &results) const;
-	void GetThumbnails(std::vector<nb::Media::Bitmap> &results) const;
+	void getThumbnailsProperties(std::vector<ExifReader::ThumbnailProperties> &results) const;
+	void getThumbnails(std::vector<Bitmap> &results) const;
 
 private:
 	Exiv2::Image::AutoPtr	m_ImageLoaded;

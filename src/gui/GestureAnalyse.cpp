@@ -1,32 +1,21 @@
 ﻿#include "GestureAnalyse.h"
 
-using namespace nb::Gui;
+using namespace nb::core;
+using namespace nb::gui;
 
-NB_OBJECT_TYPE_IMPLEMENT(GestureAnalyse, nbObject, NULL, NULL);
 GestureAnalyse::GestureAnalyse()
 : m_bPress(false)
 , m_bOffsetActive(false)
 {
-	m_timeLast = nb::System::Time::CurrentTime();
-	m_timePrev = nb::System::Time::CurrentTime();
-	m_timer = new nb::System::Timer();
-	m_timer->SetSingleShot(true);
-	m_timer->TimeoutEvent.Add(this, &GestureAnalyse::OnTimeout);
+	m_timeLast = Time::now();
+	m_timePrev = Time::now();
+	m_timer.setSingleShot(true);
+	m_timer.TickEvent.addHandler(std::bind(&GestureAnalyse::onTick, this, std::placeholders::_1));
 }
 
 GestureAnalyse::~GestureAnalyse()
 {
 	ClearNodeQueue();
-}
-
-void GestureAnalyse::OnTimeout(nb::System::Timer::TimeoutParam &param)
-{
-	//int nCount = (int)m_queueNode.size();
-	
-	Node *pLast = m_queueNode.back();
-	
-	AddPos(pLast->m_pos);
-	m_timer->Start(25);
 }
 
 inline void GestureAnalyse::ClearNodeQueue()
@@ -39,21 +28,21 @@ inline void GestureAnalyse::ClearNodeQueue()
 	}
 }
 
-void GestureAnalyse::AddPos(nb::System::Point pos)
+void GestureAnalyse::AddPos(Point pos)
 {
 	Node *pNode = new Node;
 	pNode->m_pos = pos;
-	pNode->m_time = nb::System::Time::CurrentTime();
+	pNode->m_time = Time::now();
 	m_queueNode.push(pNode);
 
 	Node *pHead = m_queueNode.front();
-	while(pHead && (pHead->m_time - pNode->m_time).ToMilliSeconds() > 200)
+	while(pHead && (pHead->m_time - pNode->m_time).totalMilliseconds() > 200)
 	{
 		delete pHead;
 		m_queueNode.pop();
 	}
 }
-void GestureAnalyse::GesturePress(nb::System::Point pos)
+void GestureAnalyse::GesturePress(Point pos)
 {
 	ClearNodeQueue();
 	m_bPress = true;
@@ -64,40 +53,40 @@ void GestureAnalyse::GesturePress(nb::System::Point pos)
 
 	Node *pNode = new Node;
 	pNode->m_pos = pos;
-	pNode->m_time = nb::System::Time::CurrentTime();
+	pNode->m_time = Time::now();
 	m_queueNode.push(pNode);
 
-	m_timer->Start(25);
+	m_timer.start(25);
 }
 
-void GestureAnalyse::GestureMove(nb::System::Point pos)
+void GestureAnalyse::GestureMove(Point pos)
 {
 	if(!m_bPress) return;
 
 	AddPos(pos);
 
-	nb::System::Time timePrev = m_timeLast;
-	nb::System::Point ptPrev = m_ptLast;
+	Time timePrev = m_timeLast;
+	Point ptPrev = m_ptLast;
 
-	m_timeLast = nb::System::Time::CurrentTime();
+	m_timeLast = Time::now();
 	m_ptLast = pos;
 
-	int msecs = (int)(m_timePrev - m_timeLast).ToMilliSeconds();
+	int msecs = (int)(m_timePrev - m_timeLast).totalMilliseconds();
 //	if(msecs > 50)
 	{
 		m_timePrev = timePrev;
 		m_ptPrev = ptPrev;
 	}
 	
-	m_timer->Stop();
-	m_timer->Start(25);
+	m_timer.stop();
+	m_timer.start(25);
 }
 
-void GestureAnalyse::GestureRelease(nb::System::Point pos)
+void GestureAnalyse::GestureRelease(Point pos)
 {
 	m_bPress = false;
 
-	m_timer->Stop();
+	m_timer.stop();
 }
 
 float GestureAnalyse::GetHorizontalSpeed() const
@@ -109,11 +98,11 @@ float GestureAnalyse::GetHorizontalSpeed() const
 	Node *pLast = m_queueNode.back();
 	//int msecs = pHead->m_time.msecsTo(pLast->m_time);
 
-	nb::System::Time time = nb::System::Time::CurrentTime();
-	int msecs = (int)(time - pHead->m_time).ToMilliSeconds();
+	Time time = Time::now();
+	int msecs = (int)(time - pHead->m_time).totalMilliseconds();
 	if(msecs == 0) return 0;
 
-	float fSpace = pLast->m_pos.GetX() - pHead->m_pos.GetX();
+	float fSpace = pLast->m_pos.x() - pHead->m_pos.x();
 
 	return fSpace / (msecs /1000.0f) * .75f;//.35f;
 }
@@ -125,10 +114,20 @@ float GestureAnalyse::GetVerticalSpeed() const
 
 	Node *pHead = m_queueNode.front();
 	Node *pLast = m_queueNode.back();
-	int msecs = (int)(pLast->m_time - pHead->m_time).ToMilliSeconds();
+	int msecs = (int)(pLast->m_time - pHead->m_time).totalMilliseconds();
 	if(msecs == 0) return 0;
 
-	float fSpace = pLast->m_pos.GetY() - pHead->m_pos.GetY();
+	float fSpace = pLast->m_pos.y() - pHead->m_pos.y();
 
 	return fSpace / (msecs /1000.0f) * .35f;
+}
+
+void GestureAnalyse::onTick(const Timer::TickArgs & args)
+{	
+	//int nCount = (int)m_queueNode.size();
+
+	Node *pLast = m_queueNode.back();
+
+	AddPos(pLast->m_pos);
+	m_timer.start(25);
 }

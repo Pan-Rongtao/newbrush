@@ -1,12 +1,9 @@
 ﻿#pragma once
-
 #include "core/Event.h"
 
 class nbEventPrivate
 {
 public:
-//	typedef void (nbObject::* funAccepterBase)();
-
 	nbEventPrivate(nbEventBase *owner);
 	virtual ~nbEventPrivate(void);
 
@@ -21,8 +18,6 @@ public:
 
 	bool m_isDispatching;
 	bool m_bNeedDelete;
-protected:
-//	virtual void DispatchTrigger(nbObject *pAccepter, funAccepterBase pfun, nbEventParam &param) const {}
 
 private:
 
@@ -33,7 +28,7 @@ private:
 	};
 
 	ItemInfo *m_pFirstItem;
-	NB_LINUX_STD std::list<ItemInfo *> *m_plstItems;
+	std::list<ItemInfo *> *m_plstItems;
 
 	nbEventBase *m_owner;
 };

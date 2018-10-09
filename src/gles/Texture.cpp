@@ -1,42 +1,135 @@
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #include "gles/Texture.h"
 
-using nb::Media::Bitmap;
-using nb::gl::Gles::Texture;
-using nb::gl::Gles::TextureWrapping;
-using nb::gl::Gles::TextureFilter;
+using namespace nb::core;
+using namespace nb::media;
+using namespace nb::gl;
 
+//class TexutreWrapping
+TextureWrapping::TextureWrapping()
+{
+}
+
+TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t)
+	: m_s(s)
+	, m_t(t)
+	, m_BorderColor(0.0f, 0.0f, 0.0f, 1.0f)
+{
+}
+
+TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t, const Vec4 &borderColor)
+	: m_s(s)
+	, m_t(t)
+	, m_BorderColor(borderColor)
+{
+}
+
+TextureWrapping::WrappingMode TextureWrapping::s() const
+{
+	return m_s;
+}
+
+TextureWrapping::WrappingMode TextureWrapping::t() const
+{
+	return m_t;
+}
+
+int TextureWrapping::glValue(TextureWrapping::WrappingMode wrapping)
+{
+	GLint nGl = GL_REPEAT;
+	switch (wrapping)
+	{
+	case WrappingMode_Repeat:				nGl = GL_REPEAT;							break;
+	case WrappingMode_Mirrored_Repeat:		nGl = GL_MIRRORED_REPEAT;					break;
+	case WrappingMode_Clamp_To_Edge:		nGl = GL_CLAMP_TO_EDGE;						break;
+	case WrappingMode_Clamp_To_Border:		printf("warning, not in opengl es 2.0");	break;
+	default:																			break;
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
+	return nGl;
+}
+
+//class TextureFilter
+TextureFilter::TextureFilter()
+	: m_MagnifyFilter(Point)
+	, m_NarrowFilter(Point)
+{
+}
+
+TextureFilter::TextureFilter(Filter uniformFilter)
+	: m_MagnifyFilter(uniformFilter)
+	, m_NarrowFilter(uniformFilter)
+{
+}
+
+TextureFilter::TextureFilter(Filter magnify, Filter narrow)
+	: m_MagnifyFilter(magnify)
+	, m_NarrowFilter(narrow)
+{
+}
+
+TextureFilter::Filter TextureFilter::magnifyFilter() const
+{
+	return m_MagnifyFilter;
+}
+
+TextureFilter::Filter TextureFilter::narrowFilter() const
+{
+	return m_NarrowFilter;
+}
+
+TextureFilter TextureFilter::defaultx()
+{
+	return Filter();
+}
+
+int TextureFilter::glValue(TextureFilter::Filter filter)
+{
+	GLint nGl = GL_NEAREST;
+	switch (filter)
+	{
+	case TextureFilter::Point:			nGl = GL_NEAREST;																	break;
+	case TextureFilter::Bilinear:		nGl = GL_LINEAR;																	break;
+	case TextureFilter::Trilinear:		nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
+	case TextureFilter::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
+	default:																												break;
+	}
+	return nGl;
+}
+
+//class Texture
 Texture::Texture()
 {
-	glGenTextures(1, &m_TextureHandle);
+	glGenTextures(1, &m_handle);
 }
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &m_TextureHandle);
+	glDeleteTextures(1, &m_handle);
 }
 
-TextureWrapping &Texture::GetTextureWrapping()
+TextureWrapping &Texture::wrapping()
 {
-	return m_Wrapping;
+	return m_wrapping;
 }
 
-const TextureWrapping &Texture::GetTextureWrapping() const
+const TextureWrapping &Texture::wrapping() const
 {
-	return m_Wrapping;
+	return m_wrapping;
 }
 
-TextureFilter &Texture::GetTexureFilter()
+TextureFilter &Texture::filter()
 {
-	return m_Filter;
+	return m_filter;
 }
 
-const TextureFilter &Texture::GetTexureFilter() const
+const TextureFilter &Texture::filter() const
 {
-	return m_Filter;
+	return m_filter;
 }
 
-void Texture::BitmapFormatToGlFormat(nb::Media::Bitmap::PixelFormat bmFormat, int &glInteralFormat, int &glPixcelDepth) const
+void Texture::bitmapFormatToGlFormat(nb::media::Bitmap::PixelFormat bmFormat, int &glInteralFormat, int &glPixcelDepth) const
 {
 	switch(bmFormat)
 	{

@@ -1,29 +1,22 @@
 ﻿#pragma once
-
 #include "AnimationTimeline.h"
-#include "system/Color.h"
+#include "../core/Color.h"
 
-using namespace nb::System;
+namespace nb{ namespace gui {
 
-namespace nb 
-{ 
-	namespace Media
-	{
-		class NB_EXPORT ColorAnimation : public AnimationTimeline
-		{
-			NB_OBJECT_TYPE_DECLARE();
+class NB_API ColorAnimation : public AnimationTimeline
+{
+public:
+	ColorAnimation();
+	virtual ~ColorAnimation();
 
-		public:
-			ColorAnimation(void);
-			virtual ~ColorAnimation(void);
+	virtual void AnimateTo(int frame);
 
-			virtual void AnimateTo(int frame);
+	nb::core::Property_rw<nb::core::Color>		From;
+	nb::core::Property_rw<nb::core::Color>		To;
 
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(From, nb::System::Color);
-			NB_OBJECT_VALUE_PROPERTY_DECLARE(To, nb::System::Color);
+protected:
+	virtual void OnFrameChanged(const nb::core::TimeSpan &frame);
+};
 
-		protected:
-			virtual void OnFrameChanged(const nb::System::TimeSpan &frame);
-		};
-	}
-}
+}}

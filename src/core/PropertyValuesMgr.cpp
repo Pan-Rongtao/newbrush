@@ -2,15 +2,10 @@
 #include "core/Exception.h"
 #include "core/Type.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 PropertyValuesMgr::PropertyValuesMgr(void)
 {
-	///这里的nb::Core命名空间是哪里来的？？？这个异常时测试使用	throw ExceptionPtr::GetPtrInstance("存储数据时，锁验证失败。");
 }
 
 PropertyValuesMgr::~PropertyValuesMgr(void)
@@ -50,22 +45,7 @@ nbObject * PropertyValuesMgr::GetPtrPropertyValue()
 
 void PropertyValuesMgr::SetPtrPropertyValue(DependencyProperty *pProperty, nbObject *pValue)
 {
-/*	std::map<DependencyPropertyPtr, PropertyStorageCellBase *>::iterator itor = m_propertyValues.find(pProperty);
-	PtrPropertyStorageCell *pCell;
-	if(itor == NULL)
-	{
-		pCell = new PtrPropertyStorageCell();
-		m_propertyValues[pProperty] = pCell;
-	}
-	else
-	{
-		pCell = dynamic_cast<PtrPropertyStorageCell *>(itor->second);
-		NB_THROW_EXCEPTION("pProperty并不是指针类型。");
-	}
 
-	//还没有判断存储的类型与Property指定的类型是否相符合
-
-	pCell->m_pValue = pValue;*/
 }
 
 void PropertyValuesMgr::SaveRefValue(DependencyProperty *pProperty, RefObject *pv, nbObject *pObject, PropertyLock *lock)
@@ -88,18 +68,6 @@ void PropertyValuesMgr::SaveRefValue(DependencyProperty *pProperty, RefObject *p
 	else
 	{
 		m_RefValues[pProperty] = pv;
-	}
-
-
-	if(pOld != NULL)
-	{
-//		DependencyProperty::funPropertyChanged fun = pProperty->GetChangedFun();
-//		if(fun != NULL)
-//		{
-//			(pObject->*(fun))(pProperty, pv, pOld);
-//		}
-
-//		delete pOld;
 	}
 
 	// 发出改变消息
@@ -152,15 +120,7 @@ void PropertyValuesMgr::SaveValueValue(DependencyProperty *pProperty, const Valu
 		{
 			if(fun(v, *pOld)) return;
 		}
-
-	//	nbType::CopyObjectFun funCopy = pProperty->GetElementType()->GetCopyObjectFun();
-	//	if(funCopy == NULL)
-	//	{
-	//		NB_THROW_EXCEPTION("在保存属性值时失败，原因是缺少属性的复制函数。");
-	//	}
-	//	funCopy(*pOld, v);
-
-
+		
 		OriginObject *pOriginObject = pProperty->GetElementType()->GetAssembly()->CreateObjectInstance(v);
 		if(pOriginObject == NULL)
 		{
@@ -283,9 +243,6 @@ void PropertyValuesMgr::SaveEnumValue(DependencyProperty *pProperty, int v, Prop
 		NB_THROW_EXCEPTION("存储数据时，锁验证失败。");
 	}
 
-//	ValueObject *pOld = NULL;
-//	ValueObject *pNew;
-
 	std::map<DependencyPropertyPtr, int>::iterator itor = m_EnumValues.find(pProperty);
 	if(itor != m_EnumValues.end())
 	{
@@ -300,15 +257,6 @@ void PropertyValuesMgr::SaveEnumValue(DependencyProperty *pProperty, int v, Prop
 	{
 		m_EnumValues[pProperty] = v;
 	}
-
-
-	// 发出改变消息
-//	DependencyProperty::funPropertyValueChanged fun = pProperty->GetValueChangedFun();
-//	if(fun != NULL)
-//	{
-//		(pObject->*(fun))(pProperty, pNew, pOld);
-//	}
-
 }
 
 int PropertyValuesMgr::GetEnumValue(DependencyProperty *pProperty) const

@@ -1,7 +1,51 @@
 ﻿#include "gui/RowDefinition.h"
 			
-using namespace nb::Gui;
+using namespace nb::gui;
 
-NB_OBJECT_TYPE_IMPLEMENT(GridLength, nb::Core::ValueObject, NULL, NULL);
+GridLength::GridLength()
+	: m_type(Pixcel)
+	, m_value(0.0)
+{
+}
 
+GridLength::GridLength(double value)
+	: m_type(Pixcel)
+	, m_value(value)
+{
+}
 
+GridLength::GridLength(double value, GridUnitType type)
+	: m_type(type)
+	, m_value(value)
+{
+}
+
+bool GridLength::operator==(const GridLength & other) const
+{
+	return !(operator !=(other));
+}
+
+bool GridLength::operator!=(const GridLength & other) const
+{
+	return m_type != other.m_type || m_value == other.m_value;
+}
+
+bool GridLength::isAuto() const
+{
+	return m_type == Auto;
+}
+
+bool GridLength::isStar() const
+{
+	return m_type == Star;
+}
+
+double GridLength::value() const
+{
+	return m_value;
+}
+
+GridLength::GridUnitType GridLength::gridUnitType() const
+{
+	return m_type;
+}

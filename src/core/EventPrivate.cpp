@@ -1,10 +1,6 @@
 ﻿#include "EventPrivate.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 nbEventPrivate::nbEventPrivate(nbEventBase *owner)
 	: m_isDispatching(false)
@@ -25,7 +21,7 @@ nbEventPrivate::~nbEventPrivate(void)
 
 	if(m_plstItems != NULL)
 	{
-		NB_LINUX_STD std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
+		std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
 		for(; itor != m_plstItems->end(); itor++)
 		{
 			ItemInfo *pItem = *itor;
@@ -57,7 +53,7 @@ void nbEventPrivate::Add(nbObject *pAccepter, nbEventBase::funAccepterBase pfun)
 		return;
 	}
 
-	if(m_plstItems == NULL) m_plstItems = new NB_LINUX_STD std::list<ItemInfo *>();
+	if(m_plstItems == NULL) m_plstItems = new std::list<ItemInfo *>();
 
 	ItemInfo *pItem = new ItemInfo();
 	pItem->m_pAccepter = pAccepter;
@@ -93,7 +89,7 @@ void nbEventPrivate::Sub(nbObject *pAccepter, nbEventBase::funAccepterBase pfun)
 
 	if(m_plstItems != NULL)
 	{
-		NB_LINUX_STD std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
+		std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
 		for(; itor != m_plstItems->end(); itor++)
 		{
 			ItemInfo *pItem = *itor;
@@ -114,7 +110,7 @@ void nbEventPrivate::Sub(nbObject *pAccepter)
 {
 	if(m_plstItems != NULL)
 	{
-		NB_LINUX_STD std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
+		std::list<ItemInfo *>::iterator itor = m_plstItems->begin();
 		for(; itor != m_plstItems->end();)
 		{
 			ItemInfo *pItem = *itor;
@@ -123,7 +119,7 @@ void nbEventPrivate::Sub(nbObject *pAccepter)
 				pAccepter->EventRefRelease(m_owner);
 
 				delete pItem;
-				NB_LINUX_STD std::list<ItemInfo *>::iterator itorErase = itor;
+				std::list<ItemInfo *>::iterator itorErase = itor;
 				itor++;
 				m_plstItems->erase(itorErase);
 
@@ -169,7 +165,7 @@ bool nbEventPrivate::IsExist(nbObject *pAccepter, nbEventBase::funAccepterBase p
 
 	if(m_plstItems != NULL)
 	{
-		NB_LINUX_STD std::list<ItemInfo *>::const_iterator itor = m_plstItems->begin();
+		std::list<ItemInfo *>::const_iterator itor = m_plstItems->begin();
 		for(; itor != m_plstItems->end(); itor++)
 		{
 			const ItemInfo *pItem = *itor;
@@ -200,7 +196,7 @@ void nbEventPrivate::Dispatch(nbEventParam &param)
 
 	if(!param.m_bHandled &&  m_plstItems != NULL)
 	{
-		NB_LINUX_STD std::list<ItemInfo *>::const_iterator itor = m_plstItems->begin();
+		std::list<ItemInfo *>::const_iterator itor = m_plstItems->begin();
 		for(; itor != m_plstItems->end(); itor++)
 		{
 			ItemInfo *pInfo = *itor;

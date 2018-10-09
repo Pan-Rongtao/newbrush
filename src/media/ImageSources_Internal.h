@@ -1,26 +1,26 @@
 #pragma once
 #include <vector>
-#include "system/String.h"
+#include "core/String.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace media{
 
 class ImageSources_Internal
 {
 public:
-	void PushBack(const nb::System::String &source);
-	void Insert(int index, const nb::System::String &source);
-	void Remove(int index);
-	void Clear();
-	int GetCount() const;
+	void pushBack(const nb::core::String &source);
+	void insert(int index, const nb::core::String &source);
+	void remove(int index);
+	void clear();
+	int count() const;
 
-	const nb::System::String &operator [] (int index) const;
+	const nb::core::String &operator [] (int index) const;
 
-	void Set(const std::vector<nb::System::String> &sources);
-	void Get(std::vector<nb::System::String> &ret) const;
+	void set(const std::vector<nb::core::String> &sources);
+	void get(std::vector<nb::core::String> &ret) const;
 
 
 private:
-	std::vector<nb::System::String>	m_Sources;
+	std::vector<nb::core::String>	m_Sources;
 };
 
 }}

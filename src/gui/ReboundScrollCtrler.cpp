@@ -1,28 +1,7 @@
 ﻿#include "ReboundScrollCtrler.h"
-#include "system/System.h"
 
-using namespace nb::Gui;
-
-using namespace nb::Core;
-using namespace nb::System;
-
-NB_OBJECT_TYPE_IMPLEMENT(ReboundScrollCtrler, nbObject, NULL, NULL);
-
-
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, ItemCount, aInt, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, FirstItem, aInt, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, ItemSize, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, FirstItemOffset, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, PageSize, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, Accel, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, ReboundAccel, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, MaxSpeed, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, HoldBackSpeed, aFloat, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, CycMode, aBool, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, PressItem, aInt, NULL);
-NB_OBJECT_PROPERTY_IMPLEMENT_EX(ReboundScrollCtrler, WorkMode, nb::Core::EnumObject, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, MinScrollItem, aInt, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(ReboundScrollCtrler, MaxScrollItem, aInt, NULL);
+using namespace nb::core;
+using namespace nb::gui;
 
 ReboundScrollCtrler::ReboundScrollCtrler()
 : m_bScrollByIncDec(false)
@@ -30,17 +9,17 @@ ReboundScrollCtrler::ReboundScrollCtrler()
 , m_fOffsetOfPressPosToPressItemBegin(0.0f)
 , m_nPressFirstItem(-1)
 {
-	m_pReboundScroll = new ReboundScroll();
-	m_pReboundScroll->ScrollEvent.Add(this, &ReboundScrollCtrler::OnKineticScroll);
-	m_pReboundScroll->ScrollEndEvent.Add(this, &ReboundScrollCtrler::OnKineticScrollEnd);
-	m_pMovePositionAnalyse = new MovePositionAnalyse();
-	m_pGestureAnalyse = new GestureAnalyse();
+	m_pReboundScroll = std::make_shared<ReboundScroll>();
+	m_pReboundScroll->ScrollEvent.addHandler(std::bind(&ReboundScrollCtrler::OnKineticScroll, this, std::placeholders::_1));
+	m_pReboundScroll->ScrollEndEvent.addHandler(std::bind(&ReboundScrollCtrler::OnKineticScrollEnd, this, std::placeholders::_1));
+	m_pMovePositionAnalyse = std::make_shared<MovePositionAnalyse>();
+	m_pGestureAnalyse = std::make_shared<GestureAnalyse>();
 	ItemSize = 10.0f;
 	PageSize = 100.0f;
 	ItemCount = 0;
 	FirstItem = 0;
 	FirstItemOffset = 0.0f;
-	WorkMode() = nb::Gui::WorkMode_Hor;
+	WorkMode = WorkMode_Hor;
 	PressItem = -1;
 	Accel = 120.0f;
 	HoldBackSpeed = 300.0f;
@@ -62,7 +41,7 @@ void ReboundScrollCtrler::SetGestureLock(int xGestureLock, int yGestureLock)
 
 bool ReboundScrollCtrler::IsScrolling() const
 {
-	return (Boolx)m_pReboundScroll->IsRuning;
+	return m_pReboundScroll->IsRuning;
 }
 
 bool ReboundScrollCtrler::IsActiveScroll() const
@@ -77,18 +56,18 @@ float ReboundScrollCtrler::GetOffsetOfPressPosToPressItemBegin() const
 
 inline int ReboundScrollCtrler::GetVisibleItems() /*const*/
 {
-	return static_cast<int>((Float)PageSize / (Float)ItemSize);
+	return static_cast<int>(PageSize / ItemSize);
 }
 
 inline void ReboundScrollCtrler::AdjustFirstItem()
 {
-	bool bCycMode = (Boolx)CycMode;
+	bool bCycMode = CycMode;
 	if(!bCycMode) return;
 
-	int nItemCount = (Int)ItemCount;
+	int nItemCount = ItemCount;
 	if(nItemCount == 0) return;
 
-	int nFirstItem = (Int)FirstItem;
+	int nFirstItem = FirstItem;
 	if(nFirstItem < 0)
 	{
 		FirstItem = nItemCount - 1 - ((-nFirstItem-1) % nItemCount);
@@ -101,7 +80,7 @@ inline void ReboundScrollCtrler::AdjustFirstItem()
 
 void ReboundScrollCtrler::StopScroll()
 {
-	m_pReboundScroll->Stop();
+	m_pReboundScroll->stop();
 	m_pMovePositionAnalyse->Cancel();
 }
 
@@ -109,11 +88,11 @@ void ReboundScrollCtrler::ZeroItemOffset()
 {
 	StopScroll();
 
-	float nPageSize = (Float)PageSize;
-	float nItemSize = (Float)ItemSize;
-	int nFirstItem = (Int)FirstItem;
-	int nItemCount = (Int)ItemCount;
-	float fFirstItemOffset = (Float)FirstItemOffset;
+	float nPageSize = PageSize;
+	float nItemSize = ItemSize;
+	int nFirstItem = FirstItem;
+	int nItemCount = ItemCount;
+	float fFirstItemOffset = FirstItemOffset;
 	float f = fFirstItemOffset - static_cast<int>(fFirstItemOffset / nItemSize) * nItemSize;
 
 	if(nItemSize > nPageSize)
@@ -134,7 +113,7 @@ void ReboundScrollCtrler::ZeroItemOffset()
 			int nVisibleItems = GetVisibleItems();
 			if(nVisibleItems == 0) nVisibleItems = 1;
 
-			m_pReboundScroll->Start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*nItemSize, nVisibleItems*nItemSize, nItemCount*nItemSize);
+			m_pReboundScroll->start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*nItemSize, nVisibleItems*nItemSize, nItemCount*nItemSize);
 		}
 		else
 		{
@@ -147,11 +126,11 @@ void ReboundScrollCtrler::ZeroItemOffset()
 
 void ReboundScrollCtrler::ScrollIncrease(int nItems, float fAccel)
 {
-	m_pReboundScroll->Stop();
-	int nItemCount = (Int)ItemCount;
-	int nFirstItem = (Int)FirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
+	m_pReboundScroll->stop();
+	int nItemCount = ItemCount;
+	int nFirstItem = FirstItem;
+	float fFirstItemOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
 
 	if(nItemCount == 0)
 	{
@@ -171,18 +150,18 @@ void ReboundScrollCtrler::ScrollIncrease(int nItems, float fAccel)
 
 	int nVisibleItems = GetVisibleItems();
 	if(nVisibleItems == 0) nVisibleItems = 1;
-	m_pReboundScroll->Start(fAccel, v, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
+	m_pReboundScroll->start(fAccel, v, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
 
 	m_bScrollByIncDec = true;
 }
 
 void ReboundScrollCtrler::ScrollDecrease(int nItems, float fAccel)
 {
-	int nItemCount = (Int)ItemCount;
-	int nFirstItem = (Int)FirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
+	int nItemCount = ItemCount;
+	int nFirstItem = FirstItem;
+	float fFirstItemOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
 	if(nItemCount == 0)
 	{
 		FirstItem = 1;
@@ -205,7 +184,7 @@ void ReboundScrollCtrler::ScrollDecrease(int nItems, float fAccel)
 
 	int nVisibleItems = GetVisibleItems();
 	if(nVisibleItems == 0) nVisibleItems = 1;
-	m_pReboundScroll->Start(fAccel, v, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
+	m_pReboundScroll->start(fAccel, v, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
 
 	m_bScrollByIncDec = true;
 }
@@ -217,9 +196,9 @@ void ReboundScrollCtrler::ScrollDistance(float fDistance, float fAccel)
 	if(fAccel < 0) fAccel = -fAccel;
 	if(fDistance > 0) fAccel = -fAccel;
 
-	float fFirstItemOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
-	int nFirstItem = (Int)FirstItem;
+	float fFirstItemOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
+	int nFirstItem = FirstItem;
 
 	float k = fFirstItemOffset+fItemSize*nFirstItem;
 
@@ -233,24 +212,24 @@ void ReboundScrollCtrler::ScrollDistance(float fDistance, float fAccel)
 	m_bScrollByIncDec = true;
 }
 
-void ReboundScrollCtrler::PointerPressEvent(nb::System::Point pos)
+void ReboundScrollCtrler::PointerPressEvent(Point pos)
 {
-	float fItemSize = (Float)ItemSize;
-	int nItemCount = (Int)ItemCount;
+	float fItemSize = ItemSize;
+	int nItemCount = ItemCount;
 	if(nItemCount == 0) return;
 
 	m_bScrollByIncDec = false;
 
-	m_pReboundScroll->Stop();
+	m_pReboundScroll->stop();
 
 	m_pMovePositionAnalyse->Start(pos);
 	m_pGestureAnalyse->GesturePress(pos);
 
-	m_fPressFirstItemOffset = (Float)FirstItemOffset;
-	m_nPressFirstItem = (Int)FirstItem;
+	m_fPressFirstItemOffset = FirstItemOffset;
+	m_nPressFirstItem = FirstItem;
 
 
-	int nOffset = (int)(pos.GetY()-m_fPressFirstItemOffset);
+	int nOffset = (int)(pos.y()-m_fPressFirstItemOffset);
 	int nPressItem = static_cast<int>(nOffset / fItemSize);
 	PressItem = nPressItem;
 	m_fOffsetOfPressPosToPressItemBegin = nOffset - nPressItem * fItemSize;
@@ -263,13 +242,13 @@ void ReboundScrollCtrler::PointerPressEvent(nb::System::Point pos)
 	PressItem = nPressItem;
 }
 
-void ReboundScrollCtrler::PointerMoveEvent(nb::System::Point pos)
+void ReboundScrollCtrler::PointerMoveEvent(Point pos)
 {
-	int nItemCount = (Int)ItemCount;
-	int nFirstItem = (Int)FirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
+	int nItemCount = ItemCount;
+	int nFirstItem = FirstItem;
+	float fFirstItemOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
 	if(nItemCount == 0) return;
 
 	m_pMovePositionAnalyse->Move(pos);
@@ -277,17 +256,17 @@ void ReboundScrollCtrler::PointerMoveEvent(nb::System::Point pos)
 		return;
 
 
-	nb::System::Point ptOrigin = m_pMovePositionAnalyse->GetActivePos();
+	Point ptOrigin = m_pMovePositionAnalyse->GetActivePos();
 
 	AdjustDragPos(ptOrigin, pos);
 	m_pGestureAnalyse->GestureMove(pos);
 
 	float fOffset;
-	EnumWorkMode nWorkMode = (EnumWorkMode)WorkMode();
+	EnumWorkMode nWorkMode = WorkMode;
 	if(nWorkMode == WorkMode_Hor)
-		fOffset = pos.GetX() - ptOrigin.GetX();
+		fOffset = pos.x() - ptOrigin.x();
 	else
-		fOffset = pos.GetY() - ptOrigin.GetY();
+		fOffset = pos.y() - ptOrigin.y();
 
 //	if(fOffset != 0)
 	{
@@ -323,37 +302,37 @@ void ReboundScrollCtrler::PointerMoveEvent(nb::System::Point pos)
 		fFirstItemOffset -= k*fItemSize;
 		FirstItemOffset = fFirstItemOffset;
 
-		nFirstItem = (Int)FirstItem;
-		fFirstItemOffset = (Float)FirstItemOffset;
-		ScrollEventParam param;
-		param.m_nFirstItem = nFirstItem;
-		param.m_fFirstItemOffset = fFirstItemOffset;
-		param.m_nWorkMode = (EnumWorkMode)WorkMode();
-		ScrollEvent.Dispatch(param);
+		nFirstItem = FirstItem;
+		fFirstItemOffset = FirstItemOffset;
+		ScrollArgs args;
+		args.m_nFirstItem = nFirstItem;
+		args.m_fFirstItemOffset = fFirstItemOffset;
+		args.m_nWorkMode = WorkMode;
+		ScrollEvent.dispatch(args);
 		if(nOldFirstItem != nFirstItem)
 		{
-			FirstItemChangedEventParam p;
-			p.m_nNewFirstItem = nFirstItem;
-			p.m_nOldFirstItem = nOldFirstItem;
-			FirstItemChangedEvent.Dispatch(p);
+			FirstItemChangedArgs p;
+			p.oldItem = nOldFirstItem;
+			p.newItem = nFirstItem;
+			FirstItemChangedEvent.dispatch(p);
 		}
 	}
 }
 
-void ReboundScrollCtrler::PointerReleaseEvent(nb::System::Point pos)
+void ReboundScrollCtrler::PointerReleaseEvent(Point pos)
 {
-	int nItemCount = (Int)ItemCount;
-	int nFirstItem = (Int)FirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
+	int nItemCount = ItemCount;
+	int nFirstItem = FirstItem;
+	float fFirstItemOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
 	if(m_bScrollByIncDec) return;
 
 	if(nItemCount == 0) return;
 
 	if(m_pMovePositionAnalyse->IsActive())
 	{
-		nb::System::Point ptOrigin = m_pMovePositionAnalyse->GetActivePos();
+		Point ptOrigin = m_pMovePositionAnalyse->GetActivePos();
 		AdjustDragPos(ptOrigin, pos);
 	}
 
@@ -362,7 +341,7 @@ void ReboundScrollCtrler::PointerReleaseEvent(nb::System::Point pos)
 
 	//获取速度
 	float fSpeed;
-	EnumWorkMode nWorkMode = (EnumWorkMode)WorkMode();
+	EnumWorkMode nWorkMode = WorkMode;
 	if(nWorkMode == WorkMode_Hor)
 		fSpeed = m_pGestureAnalyse->GetHorizontalSpeed();
 	else
@@ -378,18 +357,18 @@ void ReboundScrollCtrler::PointerReleaseEvent(nb::System::Point pos)
 
 void ReboundScrollCtrler::ScrollWork(float fSpeed, float fAccel, bool bUseHoldBackSpeed)
 {
-	int nFirstItem = (Int)FirstItem;
+	int nFirstItem = FirstItem;
 	int nOldFirstItem = nFirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
+	float fFirstItemOffset = FirstItemOffset;
 	float fOldOffset = fFirstItemOffset;
-	float fHoldBackSpeed = (Float)HoldBackSpeed;
-	float fMaxSpeed = (Float)MaxSpeed;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
-	bool bCycMode = (Boolx)CycMode;
-	int nMinScrollItem = (Int)MinScrollItem;
-	int nMaxScrollItem = (Int)MaxScrollItem;
-	int nItemCount = (Int)ItemCount;
+	float fHoldBackSpeed = HoldBackSpeed;
+	float fMaxSpeed = MaxSpeed;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
+	bool bCycMode = CycMode;
+	int nMinScrollItem = MinScrollItem;
+	int nMaxScrollItem = MaxScrollItem;
+	int nItemCount = ItemCount;
 
 	if(!bUseHoldBackSpeed || (fSpeed > fHoldBackSpeed || fSpeed < -fHoldBackSpeed))
 	{
@@ -494,7 +473,7 @@ void ReboundScrollCtrler::ScrollWork(float fSpeed, float fAccel, bool bUseHoldBa
 		int nItems = nItemCount;
 		if(nItems < nVisibleItems) nItems = nVisibleItems;
 //		m_pReboundScroll->Start(fAccel, fSpeed, m_fFirstItemOffset - m_nFirstItem*fItemSize, nVisibleItems*fItemSize, nItems*fItemSize);
-		m_pReboundScroll->Start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, nItems*fItemSize);
+		m_pReboundScroll->start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, nItems*fItemSize);
 
 		m_pReboundScroll->TopLeftReboundPos = nLeftItem >= 0 ? nLeftItem*fItemSize : 0;
 		m_pReboundScroll->BottomRightReboundPos = nRightItem >= 0 ? (nRightItem+1)*fItemSize : nItems*fItemSize;
@@ -509,12 +488,12 @@ void ReboundScrollCtrler::ScrollWork(float fSpeed, float fAccel, bool bUseHoldBa
 		if(nFirstItem < 0 || (nFirstItem == 0 && fFirstItemOffset > 0))
 		{
 		//	m_pReboundScroll->Start(-80, 0.1, m_fFirstItemOffset - m_nFirstItem*fItemSize, nVisibleItems*fItemSize, m_nItemCount*fItemSize);
-			m_pReboundScroll->Start(-80, 0.1f, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, nb::System::Max(nItemCount*fItemSize, fPageSize));
+			m_pReboundScroll->start(-80, 0.1f, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, std::max(nItemCount*fItemSize, fPageSize));
 		}
 		else if(nFirstItem + nVisibleItems > nItemCount || (nFirstItem + nVisibleItems == nItemCount && fFirstItemOffset < 0))
 		{
 		//	m_pReboundScroll->Start(80, -0.1, m_fFirstItemOffset - m_nFirstItem*fItemSize, nVisibleItems*fItemSize, m_nItemCount*fItemSize);
-			m_pReboundScroll->Start(80, -0.1f, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, nb::System::Max(nItemCount*fItemSize, fPageSize));
+			m_pReboundScroll->start(80, -0.1f, fFirstItemOffset - nFirstItem*fItemSize, fPageSize, std::max(nItemCount*fItemSize, fPageSize));
 		}
 		else
 		{
@@ -525,20 +504,20 @@ loop:
 			{
 				if(f > -(fItemSize-fPageSize)-0.001f && f < 0.001f)
 				{
-					ScrollEventParam param;
+					ScrollArgs param;
 					param.m_nFirstItem = nFirstItem;
 					param.m_fFirstItemOffset = fFirstItemOffset;
-					param.m_nWorkMode = (EnumWorkMode)WorkMode();
-					ScrollEvent.Dispatch(param);
+					param.m_nWorkMode = WorkMode;
+					ScrollEvent.dispatch(param);
 					if(nOldFirstItem != nFirstItem)
 					{
-						FirstItemChangedEventParam p;
-						p.m_nNewFirstItem = nFirstItem;
-						p.m_nOldFirstItem = nOldFirstItem;
-						FirstItemChangedEvent.Dispatch(p);
+						FirstItemChangedArgs p;
+						p.newItem = nFirstItem;
+						p.oldItem = nOldFirstItem;
+						FirstItemChangedEvent.dispatch(p);
 					}
-					ScrollEndEventParam pp;
-					ScrollEndEvent.Dispatch(pp);
+					ScrollEndArgs pp;
+					ScrollEndEvent.dispatch(pp);
 					return;
 				}
 				else
@@ -565,7 +544,7 @@ loop:
 					int nVisibleItems = GetVisibleItems();
 					if(nVisibleItems == 0) nVisibleItems = 1;
 
-					m_pReboundScroll->Start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
+					m_pReboundScroll->start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
 				}
 			}
 			else
@@ -582,34 +561,34 @@ loop:
 					int nVisibleItems = GetVisibleItems();
 					if(nVisibleItems == 0) nVisibleItems = 1;
 
-					m_pReboundScroll->Start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
+					m_pReboundScroll->start(fAccel, fSpeed, fFirstItemOffset - nFirstItem*fItemSize, nVisibleItems*fItemSize, nItemCount*fItemSize);
 				}
 				else
 				{
 					fFirstItemOffset = 0.0f;
 					FirstItemOffset = fFirstItemOffset;
-					ScrollEndEventParam p;
-					ScrollEndEvent.Dispatch(p);
+					ScrollEndArgs p;
+					ScrollEndEvent.dispatch(p);
 				}
 			}
 		}
 	}
 }
 
-inline void ReboundScrollCtrler::AdjustDragPos(nb::System::Point posOrigin, nb::System::Point &pos) /*const*/
+inline void ReboundScrollCtrler::AdjustDragPos(Point posOrigin, Point &pos) /*const*/
 {
-	int nFirstItem = (Int)FirstItem;
+	int nFirstItem = FirstItem;
 	int nOldFirstItem = nFirstItem;
-	float fFirstItemOffset = (Float)FirstItemOffset;
+	float fFirstItemOffset = FirstItemOffset;
 	float fOldOffset = fFirstItemOffset;
-	float fHoldBackSpeed = (Float)HoldBackSpeed;
-	float fMaxSpeed = (Float)MaxSpeed;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
-	bool bCycMode = (Boolx)CycMode;
-	int nMinScrollItem = (Int)MinScrollItem;
-	int nMaxScrollItem = (Int)MaxScrollItem;
-	int nItemCount = (Int)ItemCount;
+	float fHoldBackSpeed = HoldBackSpeed;
+	float fMaxSpeed = MaxSpeed;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
+	bool bCycMode = CycMode;
+	int nMinScrollItem = MinScrollItem;
+	int nMaxScrollItem = MaxScrollItem;
+	int nItemCount = ItemCount;
 
 	if(bCycMode) return;
 
@@ -617,11 +596,11 @@ inline void ReboundScrollCtrler::AdjustDragPos(nb::System::Point posOrigin, nb::
 	float fPressOffset = m_fPressFirstItemOffset - m_nPressFirstItem * fItemSize;
 
 	float fOffset;
-	EnumWorkMode nWorkMode = (EnumWorkMode)WorkMode();
+	EnumWorkMode nWorkMode = WorkMode;
 	if(nWorkMode == WorkMode_Hor)
-		fOffset = pos.GetX() - posOrigin.GetX();
+		fOffset = pos.x() - posOrigin.x();
 	else
-		fOffset = pos.GetY() - posOrigin.GetY();
+		fOffset = pos.y() - posOrigin.y();
 
 	//假如不对pos进行调整，拖动到pos后的预计总体偏移
 	float fPredictOffset = fPressOffset + fOffset;
@@ -639,26 +618,26 @@ inline void ReboundScrollCtrler::AdjustDragPos(nb::System::Point posOrigin, nb::
 		{
 			if(nWorkMode == WorkMode_Hor)
 			{
-				if(fPressOffset + nLeftReboundItem*fItemSize >= 0) pos.SetX(pos.GetX() - (fPredictOffset - fPressOffset)/2);
-				else pos.SetX(pos.GetX() - (fPredictOffset + nLeftReboundItem*fItemSize)/2);
+				if(fPressOffset + nLeftReboundItem*fItemSize >= 0) pos.setX(pos.x() - (fPredictOffset - fPressOffset)/2);
+				else pos.setX(pos.x() - (fPredictOffset + nLeftReboundItem*fItemSize)/2);
 
-				fOffset = pos.GetX() - posOrigin.GetX();
+				fOffset = pos.x() - posOrigin.x();
 				fPredictOffset = fPressOffset + fOffset;
 				if(fPredictOffset > nLeftReboundItem*fItemSize + fPageSize/2)
 				{
-					pos.SetX(pos.GetX() - (fPredictOffset + nLeftReboundItem*fItemSize - fPageSize/2));
+					pos.setX(pos.x() - (fPredictOffset + nLeftReboundItem*fItemSize - fPageSize/2));
 				}
 			}
 			else
 			{
-				if(fPressOffset >= nLeftReboundItem*fItemSize) pos.SetY(pos.GetY() - (fPredictOffset - fPressOffset)/2);
-				else pos.SetY(pos.GetY() - (fPredictOffset + nLeftReboundItem*fItemSize)/2);
+				if(fPressOffset >= nLeftReboundItem*fItemSize) pos.setY(pos.y() - (fPredictOffset - fPressOffset)/2);
+				else pos.setY(pos.y() - (fPredictOffset + nLeftReboundItem*fItemSize)/2);
 
-				fOffset = pos.GetY() - posOrigin.GetY();
+				fOffset = pos.y() - posOrigin.y();
 				fPredictOffset = fPressOffset + fOffset;
 				if(fPredictOffset > nLeftReboundItem*fItemSize + fPageSize/2)
 				{
-					pos.SetY(pos.GetY() - (fPredictOffset + nLeftReboundItem*fItemSize - fPageSize/2));
+					pos.setY(pos.y() - (fPredictOffset + nLeftReboundItem*fItemSize - fPageSize/2));
 				}
 			}
 		}
@@ -671,50 +650,50 @@ inline void ReboundScrollCtrler::AdjustDragPos(nb::System::Point posOrigin, nb::
 			{
 				if((nRightReboundItem-nLeftReboundItem)*fItemSize > fPageSize/2)
 				{
-					if(fPressOffset + nRightReboundItem*fItemSize <= fPageSize) pos.SetX(pos.GetX() - (fPredictOffset - fPressOffset)/2);
-					else pos.SetX(pos.GetX() + (fPageSize - (fPredictOffset+nRightReboundItem*fItemSize))/2);
+					if(fPressOffset + nRightReboundItem*fItemSize <= fPageSize) pos.setX(pos.x() - (fPredictOffset - fPressOffset)/2);
+					else pos.setX(pos.x() + (fPageSize - (fPredictOffset+nRightReboundItem*fItemSize))/2);
 
-					fOffset = pos.GetX() - posOrigin.GetX();
+					fOffset = pos.x() - posOrigin.x();
 					fPredictOffset = fPressOffset + fOffset;
 					if(fPredictOffset + nRightReboundItem*fItemSize < fPageSize/2)
 					{
-						pos.SetX(pos.GetX() - (fPredictOffset + nRightReboundItem*fItemSize - fPageSize/2));
+						pos.setX(pos.x() - (fPredictOffset + nRightReboundItem*fItemSize - fPageSize/2));
 					}
 				}
 				else
 				{
-					pos.SetX(posOrigin.GetX());
+					pos.setX(posOrigin.x());
 				}
 			}
 			else
 			{
 				if((nRightReboundItem-nLeftReboundItem)*fItemSize > fPageSize/2)
 				{
-					if(fPressOffset + nRightReboundItem*fItemSize <= fPageSize) pos.SetY(pos.GetY() - (fPredictOffset - fPressOffset)/2);
-					else pos.SetY(pos.GetY() + (fPageSize - (fPredictOffset+nRightReboundItem*fItemSize))/2);
+					if(fPressOffset + nRightReboundItem*fItemSize <= fPageSize) pos.setY(pos.y() - (fPredictOffset - fPressOffset)/2);
+					else pos.setY(pos.y() + (fPageSize - (fPredictOffset+nRightReboundItem*fItemSize))/2);
 
-					fOffset = pos.GetY() - posOrigin.GetY();
+					fOffset = pos.y() - posOrigin.y();
 					fPredictOffset = fPressOffset + fOffset;
 					if(fPredictOffset + nRightReboundItem*fItemSize < fPageSize/2)// && fPredictOffset + nLeftReboundItem*fItemSize > 0)
 					{
-						pos.SetY(pos.GetY() - (fPredictOffset + nRightReboundItem*fItemSize - fPageSize/2));
+						pos.setY(pos.y() - (fPredictOffset + nRightReboundItem*fItemSize - fPageSize/2));
 					}
 				}
 				else
 				{
-					pos.SetY(posOrigin.GetY());
+					pos.setY(posOrigin.y());
 				}
 			}
 		}
 	}
 }
 
-void ReboundScrollCtrler::OnKineticScroll(ReboundScroll::ScrollEventParam &param)
+void ReboundScrollCtrler::OnKineticScroll(const ReboundScroll::ScrollArgs &param)
 {
-	int nOldFirstItem = (Int)FirstItem;
-	float fOldOffset = (Float)FirstItemOffset;
-	float fItemSize = (Float)ItemSize;
-	float fPageSize = (Float)PageSize;
+	int nOldFirstItem = FirstItem;
+	float fOldOffset = FirstItemOffset;
+	float fItemSize = ItemSize;
+	float fPageSize = PageSize;
 
 	FirstItemOffset = param.m_nSpace;
 	float fFirstItemOffset = param.m_nSpace;
@@ -747,25 +726,25 @@ void ReboundScrollCtrler::OnKineticScroll(ReboundScroll::ScrollEventParam &param
 	FirstItemOffset = fFirstItemOffset;
 
 
-	EnumWorkMode nWorkMode = (EnumWorkMode)WorkMode();
-	ScrollEventParam pse;
-	pse.m_nFirstItem = (Int)FirstItem;
-	pse.m_fFirstItemOffset = (Float)FirstItemOffset;
+	EnumWorkMode nWorkMode = WorkMode;
+	ScrollArgs pse;
+	pse.m_nFirstItem = FirstItem;
+	pse.m_fFirstItemOffset = FirstItemOffset;
 	pse.m_nWorkMode = nWorkMode;
-	ScrollEvent.Dispatch(pse);
-	int nFirstItem = (Int)FirstItem;
+	ScrollEvent.dispatch(pse);
+	int nFirstItem = FirstItem;
 	if(nOldFirstItem != nFirstItem)
 	{
-		FirstItemChangedEventParam p;
-		p.m_nNewFirstItem = nFirstItem;
-		p.m_nOldFirstItem = nOldFirstItem;
-		FirstItemChangedEvent.Dispatch(p);
+		FirstItemChangedArgs p;
+		p.newItem = nFirstItem;
+		p.oldItem = nOldFirstItem;
+		FirstItemChangedEvent.dispatch(p);
 	}
 }
 
-void ReboundScrollCtrler::OnKineticScrollEnd(ReboundScroll::ScrollEndEventParam &param)
+void ReboundScrollCtrler::OnKineticScrollEnd(const ReboundScroll::ScrollEndArgs &param)
 {
 	m_bScrollByIncDec = false;
-	ScrollEndEventParam p;
-	ScrollEndEvent.Dispatch(p);
+	ScrollEndArgs p;
+	ScrollEndEvent.dispatch(p);
 }

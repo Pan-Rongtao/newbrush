@@ -11,38 +11,52 @@
 **		潘荣涛
 **	
 ********************************************************/
-
 #pragma once
-#include "core/Object.h"
+#include "../core/Property.h"
+#include "../core/Color.h"
+#include "../gui/ImageSource.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace gui {
 
-class NB_EXPORT Brush : public nbObject
+//class Brush
+class NB_API Brush
 {
-	NB_OBJECT_TYPE_DECLARE();
-
-//public funs.
-public:
-	//设置透明度，范围为0.0~1.0，假如不在范围内，将取校正值
-	void SetOpacity(float opacity);
-
-	//获取透明度
-	float GetOpacity() const;
-
-	//矩阵变换相关
-	
-
 protected:
 	Brush();
-	Brush(float opacity);
+	Brush(double opacity);
 	virtual ~Brush();
 
+public:
+	nb::core::Property_rw<double>	Opacity;
+
 private:
+	Brush(const Brush &other);
+	void operator = (const Brush &other);
 
-
-	float	m_fOpacity;
 };
 
-typedef nbObjectPtrDerive<Brush, nbObjectPtr> BrushPtr;
+//class SolidColorBrush
+class NB_API SolidColorBrush : public Brush
+{
+public:
+	SolidColorBrush();
+	explicit SolidColorBrush(const nb::core::Color &color);
+	virtual ~SolidColorBrush();
+
+public:
+	nb::core::Property_rw<nb::core::Color>	Color;
+};
+
+//class ImageBrush
+class NB_API ImageBrush : public Brush
+{
+public:
+	ImageBrush();
+	explicit ImageBrush(const std::shared_ptr<ImageSource> &imgSource);
+	~ImageBrush();
+
+public:
+	nb::core::Property_rw<std::shared_ptr<ImageSource>>	ImageSource;
+};
 
 }}

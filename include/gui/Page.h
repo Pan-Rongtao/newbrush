@@ -1,37 +1,23 @@
 ﻿#pragma once
+#include "../gui/UIElement.h"
+#include "../gui/Brush.h"
 
-#include "Panel.h"
-#include "UIElement.h"
+namespace nb { namespace gui {
 
-namespace nb { namespace Gui {
-
-class PagePrivate;
-class Window;
-
-class NB_EXPORT Page : public UIElement
+class NB_API Page : public UIElement
 {
-	friend class Window;
-
-	NB_OBJECT_TYPE_DECLARE();
 public:
-	Page(void);
-	virtual ~Page(void);
-	void SetRootPanel(Panel *pPanel);
-	Panel * GetRootPanel() const;
+	Page();
+	virtual ~Page();
 
-	Window * GetWindow() const {return m_window;}
+public:
+	nb::core::Property_rw<std::string>				Title;
+	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;
 
-	PagePrivate * GetPrivate() const {return m_private;}
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-private:
-	virtual System::Size ArrangeOverride(const nb::System::Size &finalSize);
-	virtual System::Size MeasureOverride(const System::Size &availableSize);
-
-	PagePrivate *m_private;
-	PanelPtr m_pRootPanel;
-
-	Window * m_window;
 };
 
-typedef nbObjectPtrDerive<Page, nbObjectPtr> PagePtr;
 }}

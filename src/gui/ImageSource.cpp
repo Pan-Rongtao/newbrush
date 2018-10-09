@@ -1,45 +1,20 @@
 ﻿#include "gui/ImageSource.h"
 #include "gles/Texture.h"
 
-using namespace nb::Media;
-using namespace nb::gl::Gles;
-using namespace nb::System;
-
-NB_OBJECT_NO_ASSEMBLY_TYPE_IMPLEMENT(ImageSource, nbObject);
+using namespace nb::media;
+using namespace nb::gui;
+using namespace nb::gl;
 
 ImageSource::ImageSource()
-: m_Texture(NULL)
 {
 }
 
-ImageSource::ImageSource(const String &path)
+ImageSource::ImageSource(const std::string &uri)
 {
-	SetUri(path);
+	load(uri);
 }
 
-void ImageSource::SetUri(const String &path)
+void ImageSource::load(const std::string &uri)
 {
-	m_Texture = new Texture2D();
-	m_Texture->LoadFromPath(path);
-}
-
-const String ImageSource::GetUri() const
-{
-	return "";
-//	return m_Texture == NULL ? "" : m_Texture->GetLoadedPath();
-}
-
-int ImageSource::GetPixelWidth() const
-{
-	return m_Texture == NULL ? 0 : m_Texture->GetPixcelWidth();
-}
-
-int ImageSource::GetPixcelHeight() const
-{
-	return m_Texture == NULL ? 0 : m_Texture->GetPixcelHeight();
-}
-
-nb::gl::Gles::Texture2D *ImageSource::GetTexture() const
-{
-	return m_Texture;
+	m_bm = std::make_shared<Bitmap>(uri.data());
 }

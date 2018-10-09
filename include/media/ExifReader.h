@@ -26,13 +26,13 @@
 *****************************************************************************/
 #pragma once
 #include <vector>
-#include "system/String.h"
-#include "media/Bitmap.h"
+#include "../core/String.h"
+#include "Bitmap.h"
 
-namespace nb{ namespace Media{
+namespace nb{ namespace media{
 
 class ExifReader_Internal;
-class NB_EXPORT ExifReader
+class NB_API ExifReader
 {
 public:
 	struct ThumbnailProperties
@@ -43,31 +43,31 @@ public:
 	};
 
 public:
-	//打开
-	//异常：文件不存在
-	void Open(const nb::System::String &fileName);
-
-	//获取宽度
-	int GetWidth() const;
-
-	//获取高度
-	int GetHeight() const;
-
-	//获取缩略图基本信息
-	void GetThumbnailsProperties(std::vector<ThumbnailProperties> &results) const;
-
-	//获取缩略图
-	void GetThumbnails(std::vector<nb::Media::Bitmap> &results) const;
-
-public:
 	//构建一个ExifReader读取器
 	ExifReader();
 
 	//构建一个ExifReader，它指向路径为fileName的文件
 	//异常：文件不存在
-	explicit ExifReader(const nb::System::String &fileName);
+	explicit ExifReader(const nb::core::String &fileName);
 
 	~ExifReader();
+
+public:
+	//打开
+	//异常：文件不存在
+	void open(const nb::core::String &fileName);
+
+	//获取宽度
+	int width() const;
+
+	//获取高度
+	int height() const;
+
+	//获取缩略图基本信息
+	void getThumbnailsProperties(std::vector<ThumbnailProperties> &results) const;
+
+	//获取缩略图
+	void getThumbnails(std::vector<Bitmap> &results) const;
 
 private:
 	ExifReader(const ExifReader &other);

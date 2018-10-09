@@ -17,18 +17,15 @@ project(gui)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
-add_definitions(-DNB_CORE_EXPORTS)
-add_definitions(-DNB_GUI_EXPORTS)
-
 # 3. Project Build
 
 set(LIB_NAME "gui")
 
-file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.cpp")
+file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.cpp")
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
-target_link_libraries(${LIB_NAME} core system math media gles)
+target_link_libraries(${LIB_NAME} core system media gles)
 
 # 4. Project Install
 if(WIN32)

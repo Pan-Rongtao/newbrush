@@ -59,8 +59,8 @@ public:
 		return Pipe::NodeIterator();
 	}
 
-	Core::RefObjectWeatPtrT<Node> m_node0;
-	Core::RefObjectWeatPtrT<Node> m_node1;
+	core::RefObjectWeatPtrT<Node> m_node0;
+	core::RefObjectWeatPtrT<Node> m_node1;
 
 };
 }}}

@@ -2,9 +2,9 @@
 
 #include "RefObject.h"
 
-namespace nb { namespace Core {
+namespace nb { namespace core {
 
-class NB_CORE_DECLSPEC_X_INTERFACE PropertyLock : public RefObject
+class NB_API PropertyLock : public RefObject
 {
 public:
 	PropertyLock(void);

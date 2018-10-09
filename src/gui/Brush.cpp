@@ -1,31 +1,48 @@
 ﻿#include "gui/Brush.h"
-#include "system/System.h"
 
-using namespace nb::Media;
+using namespace nb::core;
+using namespace nb::gui;
 
-NB_OBJECT_NO_ASSEMBLY_TYPE_IMPLEMENT(Brush, nbObject);
-
+//class Brush
 Brush::Brush()
-{ 
-	SetOpacity(1.0f);
+	: Opacity(1.0)
+{
 }
 
-Brush::Brush(float opacity)
+Brush::Brush(double opacity)
+	: Opacity(opacity)
 {
-	SetOpacity(opacity);
 }
 
 Brush::~Brush()
 {
-
 }
 
-void Brush::SetOpacity(float opacity)
+//class SolidColorBrush
+SolidColorBrush::SolidColorBrush()
+	: Color(Color::black())
 {
-	m_fOpacity = System::Bound(0.0f, 1.0f, opacity);
 }
 
-float Brush::GetOpacity() const
+SolidColorBrush::SolidColorBrush(const nb::core::Color &color)
+	: Color(color)
 {
-	return m_fOpacity;
+}
+
+SolidColorBrush::~SolidColorBrush()
+{
+}
+
+//class ImageBrush
+ImageBrush::ImageBrush()
+{
+}
+
+ImageBrush::ImageBrush(const std::shared_ptr<nb::gui::ImageSource> &imgSource)
+	: ImageSource(imgSource)
+{
+}
+
+ImageBrush::~ImageBrush()
+{
 }

@@ -1,46 +1,33 @@
 ﻿#pragma once
+#include "../gui/UIElement.h"
+#include "../gui/ControlTemplate.h"
+#include "../gui/Brush.h"
+#include "../gui/Thickness.h"
 
-#include "UIElement.h"
-#include "ControlTemplate.h"
+namespace nb{ namespace gui {
 
-namespace nb
+class NB_API Control : public UIElement
 {
-	namespace Gui
-	{
-		class NameRealm;
-		class ControlPrivate;
+public:
+	Control();
+	virtual ~Control();
 
-		class NB_EXPORT Control : public UIElement
-		{
-			NB_OBJECT_TYPE_DECLARE();
+public:
+	nb::core::Property_rw<std::shared_ptr<Brush>>			Background;
+	nb::core::Property_rw<std::shared_ptr<Brush>>			BorderBrush;
+	nb::core::Property_rw<Thickness>						BorderThickness;
+	nb::core::Property_rw<Thickness>						Padding;
+	nb::core::Property_rw<nb::gui::HorizontalAlignment>		HorizontalContentAlignment;
+	nb::core::Property_rw<nb::gui::VerticalAlignment>		VerticalContentAlignment;
+	nb::core::Property_rw<int>								TabIndex;
+	nb::core::Property_rw<std::shared_ptr<ControlTemplate>>	Template;
 
-		public:
-			Control(void);
-			virtual ~Control(void);
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-			NB_X_OBJECT_PROPERTY_DECLARE(Template, ControlTemplate);
+private:
 
-			virtual IElementRender * GetElementRender() const;
-			IElementRender * GetElementRenderNoOveride() const;
+};
 
-
-			ControlPrivate * GetPrivate() const {return m_private;}
-
-			void GotoVisualState(const char *groupName, const char *stateName);
-
-		protected:
-			virtual System::Size MeasureOverride(const System::Size &availableSize);
-			virtual System::Size ArrangeOverride(const System::Size &finalSize);
-
-			NameRealm * GetTemplateInstanceNameRealm() const;
-
-		private:
-
-			void OnTemplateChanged(Core::PropertyValueChangedEventArgs &args);
-
-			ControlPrivate *m_private;
-		};
-
-		typedef nbObjectPtrDerive<Control, UIElementPtr> ControlPtr;
-	}
-}
+}}

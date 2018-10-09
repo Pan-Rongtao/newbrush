@@ -1,32 +1,44 @@
 ﻿#include "gui/Window.h"
-#include "Window_Internal.h"
+#include "core/Exception.h"
 #include "WindowManager.h"
+#include "gles/Egl.h"
+#include "gles/Window.h"
+#include "gui/Application.h"
 
-using nb::Gui::Window;
-using nb::Gui::Panel;
-using nb::Gui::Page;
-using nb::Gui::UIElement;
-using nb::Gui::WindowManager;
+using namespace nb::core;
+using namespace nb::gui;
 
 Window::Window()
 {
-	m_internal = new Window_Internal(this);
-	WindowManager::Push(this);
+	m_glWindow = std::make_shared<nb::gl::Window>();
+	try {
+		std::shared_ptr<nb::gl::WindowSurface> windowSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
+		std::shared_ptr<nb::gl::Context> context = std::make_shared<nb::gl::Context>(nb::gl::getCurrentConfigure());
+		nb::gl::makeCurrent(windowSurface, windowSurface, context);
+	}
+	catch (Exception &e)
+	{
+		NB_THROW_EXCEPTION("you should create Application before you create a nb::gui::Window");
+	}
 }
 
 Window::~Window()
 {
-	delete m_internal;
-	WindowManager::Erease(this);
+
 }
 
-void Window::SetPage(Page *page)
+void nb::gui::Window::active()
 {
-	m_internal->SetPage(page);
-	page->m_window = this;
 }
 
-void Window::Render()
+void nb::gui::Window::show()
 {
-	m_internal->Render();
+}
+
+void nb::gui::Window::hide()
+{
+}
+
+void nb::gui::Window::close()
+{
 }

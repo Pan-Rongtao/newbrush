@@ -1,11 +1,9 @@
 #pragma once
+#include "../core/Object.h"
+#include "../core/Exception.h"
+#include "../core/DataSerial.h"
 
-#include "core/Object.h"
-#include "core/Exception.h"
-
-#include "DataSerial.h"
-
-class NB_EXPORT GenericVariant : public nbObject
+class NB_API GenericVariant : public nbObject
 {
 public:
 	GenericVariant(void);
@@ -47,7 +45,7 @@ public:
 		Holder<T> *h = dynamic_cast<Holder<T> *>(m_content);
 		if(h == NULL) NB_THROW_EXCEPTION("GenericVariant存储的类型不是所获取的类型。");
 
-		return h->GetValue();
+		return h->value();
 	}
 
 	template<class T>
@@ -58,7 +56,7 @@ public:
 		Holder<T> *h = dynamic_cast<Holder<T> *>(m_content);
 		if(h == NULL) NB_THROW_EXCEPTION("GenericVariant存储的类型不是所获取的类型。");
 
-		return h->GetValue();
+		return h->value();
 	}
 
 	template<class T>
@@ -104,8 +102,8 @@ private:
 	class Holder : public PlaceHolder {
 	public:
 		Holder(const ValueType& value) : m_held(value) {}
-		ValueType &GetValue() {return m_held;}
-		const ValueType &GetValue() const {return m_held;}
+		ValueType &value() {return m_held;}
+		const ValueType &value() const {return m_held;}
 
 		virtual PlaceHolder * Clone() const
 		{
@@ -133,7 +131,7 @@ private:
 
 };
 
-typedef nbObjectPtrDerive<GenericVariant, nb::Core::RefObjectPtr> GenericVariantPtr;
+typedef nbObjectPtrDerive<GenericVariant, nb::core::RefObjectPtr> GenericVariantPtr;
 
 //DataSerial & operator << (DataSerial &serial, GenericVariant &variant)
 //{

@@ -1,24 +1,18 @@
 ﻿#include <stdlib.h>
 #include <map>
 #include "core/Object.h"
-
-#include "InternalCore.h"
 #include "core/Type.h"
 #include "core/Event.h"
 #include "core/TypesPropertyValuesStore.h"
 #include "core/ObjectAttachmentSymbol.h"
-
+#include "InternalCore.h"
 #include "PropertyValuesMgr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+using namespace nb::core;
 
 void * nbObject::s_pMallocingObject = NULL;
 
-using namespace nb::Core;
-
-namespace nb { namespace Core { 
+namespace nb { namespace core { 
 class ObjectAttachmentsMgr
 {
 public:
@@ -214,25 +208,7 @@ nbObject::nbObject(void)
 	, m_pTypesPropertyValuesStore(NULL)
 	, m_pObjectAttachmentsMgr(NULL)
 	, m_pvs(NULL)
-//待实现	, m_pObjectKeyTags(NULL)
 {
-/*	if(this != s_pMallocingObject)
-	{
-		NB_OUTA("\r\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		NB_OUTA("Error!!");
-		NB_OUTA("Use new to create the NewBrush Object, please.");
-		NB_OUTA("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
-		exit(1);
-	}*/
-
-//	m_bIsCanRef = (this == s_pMallocingObject);
-//	m_bIsCanRef = !s_pMallocingObject;
-
-}
-
-int TestObject::a()
-{
-	return 10;
 }
 
 nbObject::~nbObject(void)
@@ -243,7 +219,7 @@ nbObject::~nbObject(void)
 
 		m_psetEvent = NULL;
 
-		NB_LINUX_STD std::map<nbEventBase *, int>::iterator itor = pset->begin();
+		std::map<nbEventBase *, int>::iterator itor = pset->begin();
 		for(; itor != pset->end(); itor++)
 		{
 			nbEventBase *pEvent = itor->first;
@@ -261,18 +237,6 @@ nbObject::~nbObject(void)
 
 	delete m_pvs;
 }
-
-
-void nbObject::Test()
-{
-}
-
-
-/*
-void * nbObject::operator new[](size_t t)
-{
-	return malloc(t);
-}*/
 
 Type *nbObject::GetType(const std::type_info &info)
 {
@@ -306,7 +270,6 @@ void nbObject::EventRefRelease(nbEventBase *pEvent)
 	}
 }
 
-
 void nbObject::SetRefValue(DependencyProperty *pProp, RefObject *pv)
 {
 	if(pProp->m_offset > 0)
@@ -315,8 +278,8 @@ void nbObject::SetRefValue(DependencyProperty *pProp, RefObject *pv)
 		{
 			if(GetRefValue(pProp) != NULL)
 			{
-				char c[255];
-				NB_SNPRINTF(c, 254, "属性 %s 具有Immobile标志，只能设置一次属性值。", pProp->GetName().data());
+				char c[1024] = {0};
+				sprintf(c, "属性 %s 具有Immobile标志，只能设置一次属性值。", pProp->GetName().data());
 				NB_THROW_EXCEPTION(c);
 			}
 		}
@@ -423,12 +386,12 @@ bool nbObject::IsSavedPropertyValue(DependencyProperty *pProp) const
 	return pMgr->IsSavedPropertyValue(pProp);
 }
 
-nb::Core::TypesPropertyValuesStore *nbObject::GetTypesPropertyValuesStore() const
+nb::core::TypesPropertyValuesStore *nbObject::GetTypesPropertyValuesStore() const
 {
 	if(m_pTypesPropertyValuesStore == NULL)
 	{
 		nbObject *pThis = const_cast<nbObject *>(this);
-		pThis->m_pTypesPropertyValuesStore = new nb::Core::TypesPropertyValuesStore();
+		pThis->m_pTypesPropertyValuesStore = new nb::core::TypesPropertyValuesStore();
 	}
 
 	return m_pTypesPropertyValuesStore;
@@ -463,10 +426,10 @@ RefObject * nbObject::GetAttachment(ObjectAttachmentSymbol *symbol) const
 	return m_pObjectAttachmentsMgr->GetAttachment(symbol);
 }
 
-nb::Core::ObjectAttachmentsMgr * nbObject::TakeObjectAttachmentsMgr()
+nb::core::ObjectAttachmentsMgr * nbObject::TakeObjectAttachmentsMgr()
 {
 	if(m_pObjectAttachmentsMgr == NULL)
-		m_pObjectAttachmentsMgr = new nb::Core::ObjectAttachmentsMgr;
+		m_pObjectAttachmentsMgr = new nb::core::ObjectAttachmentsMgr;
 
 	return m_pObjectAttachmentsMgr;
 }
@@ -476,11 +439,11 @@ void nbObject::NotifyContentChanged()
 	if(m_pvs != NULL) m_pvs->Notify(this);
 }
 
-void nbObject::AddPV(nb::Core::PVBaseBase *pv)
+void nbObject::AddPV(nb::core::PVBaseBase *pv)
 {
 	if(m_pvs == NULL)
 	{
-		m_pvs = new nb::Core::ObjectPVsMgr(pv);
+		m_pvs = new nb::core::ObjectPVsMgr(pv);
 	}
 	else
 	{
@@ -488,32 +451,8 @@ void nbObject::AddPV(nb::Core::PVBaseBase *pv)
 	}
 }
 
-void nbObject::SubPV(nb::Core::PVBaseBase *pv)
+void nbObject::SubPV(nb::core::PVBaseBase *pv)
 {
 	//调用端保证已经有了m_pvs，这样就不用判断是否为空了
 	m_pvs->Sub(pv);
 }
-
-//void nbObject::SetKeyTag(RefObject *key, RefObject *value)
-//{
-//}
-
-//RefObject * nbObject::GetKeyTag(RefObject *key) const
-//{
-//	return NULL;
-//}
-
-
-/*PVBaseBase * nbObject::GetPVer(nbDependencyProperty *pProp) const
-{
-	if(pProp->m_offset > 0)
-	{
-		const std::type_info &type = typeid(*this);
-		if(pProp->m_pType->GetTypeName() == type.name())
-		{
-			PVBaseBase *x = (PVBaseBase *)(((int)this) + pProp->m_offset);
-		}
-	}
-
-	return NULL;
-}*/

@@ -2,8 +2,7 @@
 #include <vector>
 #include <algorithm>
 
-using nb::Gui::Window;
-using nb::Gui::WindowManager;
+using namespace nb::gui;
 
 static std::vector<Window *> g_Windows;
 void WindowManager::Push(Window *window)

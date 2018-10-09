@@ -1,22 +1,16 @@
 ﻿#pragma once
-
 #include "ContentControl.h"
 
-namespace nb { namespace Gui {
+namespace nb { namespace gui {
 
-class NB_EXPORT Button : public ContentControl
+class NB_API Button : public ContentControl
 {
-	NB_OBJECT_TYPE_DECLARE();
 public:
-	Button(void);
-	virtual ~Button(void);
+	Button();
+	virtual ~Button();
 
 protected:
-	virtual void OnPointerPress(bool &handled);
-	virtual void OnPointerRelease();
 };
-
-typedef nbObjectPtrDerive<Button, ControlPtr> ButtonPtr;
 
 }}
 

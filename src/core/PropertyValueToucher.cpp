@@ -2,21 +2,16 @@
 #include "core/Type.h"
 #include "core/Exception.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-using namespace nb::Core;
+using namespace nb::core;
 
 bool PropertyValueToucherBase::IsRefTypeOfProperty() const
 {
 	return m_pProperty->GetElementType()->IsRefType();
 }
 
-
 void PropertyValueToucherBase::ThrowException(const char *pMessage) const
 {
-	throw ExceptionPtr::GetPtrInstance(pMessage);
+	NB_THROW_EXCEPTION(pMessage);
 }
 
 void PropertyValueToucherBase::SetRefValue(DependencyProperty *pProp, RefObject *pv)

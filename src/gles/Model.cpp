@@ -1,247 +1,301 @@
-#include <GLES2/gl2.h>
-#include <assert.h>
 #include "gles/Model.h"
 #include "core/Exception.h"
+#include <GLES2/gl2.h>
 
-using nb::Math::Vec2;
-using nb::Math::Vec3;
-using nb::Math::Vec4;
-using nb::Math::Matrix4x4;
-using nb::gl::Gles::Model;
-using nb::gl::Gles::ModelEventListener;
-using nb::gl::Gles::IndicesSequece;
+using namespace nb::core;
+using namespace nb::gl;
 
-Model::Model(int nVertexCount, nb::System::EnumFlags<Model::VertexAttributesType> flags)
-: m_AttributeFlags(flags)
-, m_Data(NULL)
-, m_nVertexCount(nVertexCount)
-, m_Matrix(Matrix4x4::Identify())
-, m_Listener(NULL)
+//class Vertex
+Vertex::Vertex()
 {
-	if(nVertexCount < 0)
-	{
-		m_nVertexCount = 0;
-		NB_THROW_EXCEPTION("invalid param");
-	}
+}
 
-	m_Data = new float[GetVertexStrideUnit() * nVertexCount];
+Vertex::Vertex(const Vec3 & position)
+	: m_position(position)
+{
+}
+
+nb::gl::Vertex::Vertex(const Vec3 & position, const Vec4 & color)
+	: m_position(position), m_color(color)
+{
+}
+
+Vertex::Vertex(const Vec3 & position, const Vec4 & color, const Vec2 & texCoord)
+	: m_position(position), m_color(color), m_texCoord(texCoord)
+{
+}
+
+Vertex::Vertex(const Vec3 & position, const Vec4 & color, const Vec2 & texCoord, const Vec3 & normal)
+	: m_position(position)
+	, m_color(color)
+	, m_texCoord(texCoord)
+	, m_normal(normal)
+{
+}
+
+Vec3 & nb::gl::Vertex::position()
+{
+	return m_position;
+}
+
+const Vec3 & nb::gl::Vertex::position() const
+{
+	return m_position;
+}
+
+Vec4 & nb::gl::Vertex::color()
+{
+	return m_color;
+}
+
+const Vec4 & nb::gl::Vertex::color() const
+{
+	return m_color;
+}
+
+Vec2 & nb::gl::Vertex::texCoord()
+{
+	return m_texCoord;
+}
+
+const Vec2 & nb::gl::Vertex::texCoord() const
+{
+	return m_texCoord;
+}
+
+Vec3 & nb::gl::Vertex::normal()
+{
+	return m_normal;
+}
+
+const Vec3 & nb::gl::Vertex::normal() const
+{
+	return m_normal;
+}
+
+int nb::gl::Vertex::positionDimension()
+{
+	return 3;
+}
+
+int nb::gl::Vertex::colorDimension()
+{
+	return 4;
+}
+
+int nb::gl::Vertex::textureCoordinateDimension()
+{
+	return 2;
+}
+
+int nb::gl::Vertex::normalDimension()
+{
+	return 3;
+}
+
+//class Mesh
+Mesh::Mesh(const EnumFlags<Vertex::VertexAttribute>& attributes)
+	: m_attributes(attributes)
+{
+}
+
+Mesh::Mesh(const EnumFlags<Vertex::VertexAttribute>& attributes, const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
+	: m_attributes(attributes)
+	, m_vertexs(vertexs)
+	, m_indices(indices)
+{
+}
+
+bool Mesh::hasAttribute(Vertex::VertexAttribute attr) const
+{
+	return m_attributes.testFlag(attr);
+}
+
+uint32_t Mesh::vertexCount() const
+{
+	return m_vertexs.size();
+}
+
+void Mesh::setPositionAt(uint32_t vertexIndex, const Vec3 &position)
+{
+	if (positionData() == nullptr)	throw ArgumentException("vertexIndex");
+	m_vertexs[vertexIndex].position() = position;
+}
+
+float *Mesh::positionData()
+{
+	return hasAttribute(Vertex::positionAttribute) ? m_vertexs[0].position().data() : nullptr;
+}
+
+const float *Mesh::positionData() const
+{
+	return hasAttribute(Vertex::positionAttribute) ? m_vertexs[0].position().data() : nullptr;
+}
+
+Vec3 Mesh::positionAt(uint32_t vertexIndex) const
+{
+	if (!hasAttribute(Vertex::positionAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	return m_vertexs[vertexIndex].position();
+}
+
+void Mesh::setColorAt(uint32_t vertexIndex, const Vec4 &color)
+{
+	if (!hasAttribute(Vertex::colorAttribute))	throw ArgumentException("vertexIndex");
+	m_vertexs[vertexIndex].color() = color;
+}
+
+float *Mesh::colorData()
+{
+	return hasAttribute(Vertex::colorAttribute) ? m_vertexs[0].color().data() : nullptr;
+}
+
+const float *Mesh::colorData() const
+{
+	return hasAttribute(Vertex::colorAttribute) ? m_vertexs[0].color().data() : nullptr;
+}
+
+Vec4 Mesh::colorAt(uint32_t vertexIndex) const
+{
+	if (!hasAttribute(Vertex::colorAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	return m_vertexs[vertexIndex].color();
+}
+
+void Mesh::setTextureCoordinateAt(uint32_t vertexIndex, const Vec2 &texCoord)
+{
+	if (!hasAttribute(Vertex::textureCoordinateAttribute))	throw ArgumentException("vertexIndex");
+	m_vertexs[vertexIndex].texCoord() = texCoord;
+}
+
+float *Mesh::textureCoordinateData()
+{
+	return hasAttribute(Vertex::textureCoordinateAttribute) ? m_vertexs[0].texCoord().data() : nullptr;
+}
+
+const float *Mesh::textureCoordinateData() const
+{
+	return hasAttribute(Vertex::textureCoordinateAttribute) ? m_vertexs[0].texCoord().data() : nullptr;
+}
+
+Vec2 Mesh::textureCoordinateAt(uint32_t vertexIndex) const
+{
+	if (!hasAttribute(Vertex::textureCoordinateAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	return m_vertexs[vertexIndex].texCoord();
+}
+
+void Mesh::setNormalAt(uint32_t vertexIndex, const Vec3 &normal)
+{
+	if (!hasAttribute(Vertex::normalAttribute))	throw ArgumentException("vertexIndex");
+	m_vertexs[vertexIndex].normal() = normal;
+}
+
+float *Mesh::normalData()
+{
+	return hasAttribute(Vertex::normalAttribute) ? m_vertexs[0].normal().data() : nullptr;
+}
+
+const float *Mesh::normalData() const
+{
+	return hasAttribute(Vertex::normalAttribute) ? m_vertexs[0].normal().data() : nullptr;
+}
+
+Vec3 Mesh::normalAt(uint32_t vertexIndex) const
+{
+	if (!hasAttribute(Vertex::normalAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	return m_vertexs[vertexIndex].normal();
+}
+
+void Mesh::unifyColor(const Vec4 &color)
+{
+	if (!hasAttribute(Vertex::colorAttribute))	return;
+	for (int i = 0; i != vertexCount(); ++i)
+		setColorAt(i, color);
+}
+
+const std::vector<uint16_t> &Mesh::indices() const
+{
+	return m_indices;
+}
+
+////////////////////////class Model
+Model::Model()
+	: m_matrix(Matrix4x4::identity())
+	, m_TranslateMatrix(Matrix4x4::identity())
+	, m_RotateMatrix(Matrix4x4::identity())
+	, m_ScaleMatrix(Matrix4x4::identity())
+{
 }
 
 Model::~Model()
 {
-	delete [] m_Data;
 }
 
-bool Model::HasVertexAttribute(VertexAttributesType type) const
+uint32_t Model::meshCount() const
 {
-	return m_AttributeFlags.TestFlag(type);
+	return m_meshs.size();
 }
 
-float *Model::GetData() const
+Mesh & Model::mesh(uint32_t index)
 {
-	return m_Data;
+	if (index >= meshCount())	throw ArgumentException("mesh");
+	return m_meshs[index];
 }
 
-int Model::GetVertexCount() const
+const Mesh & Model::mesh(uint32_t index) const
 {
-	return m_nVertexCount;
+	if (index >= meshCount())	throw ArgumentException("mesh");
+	return m_meshs[index];
 }
 
-void Model::SetPositionArrayData(float *data)
+std::vector<Mesh>& nb::gl::Model::meshs()
 {
-	for(int i = 0; i != GetVertexCount(); ++i)
-		SetPositionAt(i, Vec3(*(data + PositionDimension() * i), *(data + PositionDimension() * i + 1), *(data + PositionDimension() * i + 2)));
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Position);
+	return m_meshs;
 }
 
-void Model::SetPositionAt(int vertexIndex, const nb::Math::Vec3 &position)
+const std::vector<Mesh>& nb::gl::Model::meshs() const
 {
-	if(GetPositionArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetPositionArrayData() + vertexIndex * GetVertexStrideUnit();
-	*(p + 0) = position.X();
-	*(p + 1) = position.Y();
-	*(p + 2) = position.Z();
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Position);
+	return m_meshs;
 }
 
-float *Model::GetPositionArrayData() const
+void Model::setMatrix(const Matrix4x4 &matrix)
 {
-	return HasVertexAttribute(Vertex_Attribute_Position) ? m_Data : NULL;
+	m_matrix = matrix;
 }
 
-Vec3 Model::GetPositionAt(int vertexIndex) const
+const Matrix4x4 &Model::getMatrix() const
 {
-	if(GetPositionArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetPositionArrayData() + vertexIndex * GetVertexStrideUnit();
-	return Vec3(*(p + 0), *(p + 1), *(p + 2));
+	return m_matrix;
 }
 
-void Model::SetColorArrayData(float *data)
+void Model::translate(float x, float y, float z)
 {
-	for(int i = 0; i != GetVertexCount(); ++i)
-		SetColorAt(i, Vec4(*(data + ColorDimension() * i), *(data + ColorDimension() * i + 1), *(data + ColorDimension() * i + 2), *(data + ColorDimension() * i + 3)));
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Color);
+	m_TranslateMatrix.translate(x, y, z);
+	m_matrix = m_TranslateMatrix * m_RotateMatrix * m_ScaleMatrix;
 }
 
-void Model::SetColorAt(int vertexIndex, const nb::Math::Vec4 &color)
+void Model::rotate(float angle, float x, float y, float z)
 {
-	if(GetColorArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetColorArrayData() + vertexIndex * GetVertexStrideUnit();
-	*(p + 0) = color.X();
-	*(p + 1) = color.Y();
-	*(p + 2) = color.Z();
-	*(p + 3) = color.W();
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Color);
+	m_RotateMatrix.rotateAngle(angle, x, y, z);
+	m_matrix = m_TranslateMatrix * m_RotateMatrix * m_ScaleMatrix;
 }
 
-float *Model::GetColorArrayData() const
+void Model::scale(float x, float y, float z)
 {
-	return m_Data + (HasVertexAttribute(Vertex_Attribute_Position) ? PositionDimension() : 0);
+	m_ScaleMatrix.scale(x, y, z);
+	m_matrix = m_TranslateMatrix * m_RotateMatrix * m_ScaleMatrix;
 }
 
-Vec4 Model::GetColorAt(int vertexIndex) const
-{
-	if(GetColorArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetColorArrayData() + vertexIndex * GetVertexStrideUnit();
-	return Vec4(*(p + 0), *(p + 1), *(p + 2), *(p + 3));
-}
-
-void Model::SetTextureCoordinateArrayData(float *data)
-{
-	for(int i = 0; i != GetVertexCount(); ++i)
-		SetTextureCoordinateAt(i, Vec2(*(data + TextureCoordinateDimension() * i), *(data + TextureCoordinateDimension() * i + 1)));
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_TextureCoordinate);
-}
-
-void Model::SetTextureCoordinateAt(int vertexIndex, const nb::Math::Vec2 &texCoord)
-{
-	if(GetTextureCoordinateArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetTextureCoordinateArrayData() + vertexIndex * GetVertexStrideUnit();
-	*(p + 0) = texCoord.X();
-	*(p + 1) = texCoord.Y();
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_TextureCoordinate);
-}
-
-float *Model::GetTextureCoordinateArrayData() const
-{
-	int offset = 0;
-	if(HasVertexAttribute(Vertex_Attribute_Position))	offset += PositionDimension();
-	if(HasVertexAttribute(Vertex_Attribute_Color))		offset += ColorDimension();
-	return m_Data + offset;
-}
-
-Vec2 Model::GetTextureCoordinateAt(int vertexIndex) const
-{
-	if(GetTextureCoordinateArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetTextureCoordinateArrayData() + vertexIndex * GetVertexStrideUnit();
-	return Vec2(*(p + 0), *(p + 1));
-}
-
-void Model::SetNormalArrayData(float *data)
-{
-	for(int i = 0; i != GetVertexCount(); ++i)
-		SetNormalAt(i, Vec3(*(data + NormalDimension() * i), *(data + NormalDimension() * i + 1), *(data + NormalDimension() * i + 2)));
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Normal);
-}
-
-void Model::SetNormalAt(int vertexIndex, const nb::Math::Vec3 &texCoord)
-{
-	if(GetNormalArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetNormalArrayData() + vertexIndex * GetVertexStrideUnit();
-	*(p + 0) = texCoord.X();
-	*(p + 1) = texCoord.Y();
-	*(p + 2) = texCoord.Z();
-	if(m_Listener)
-		m_Listener->On_ModelData_Changed(Vertex_Attribute_Normal);
-}
-
-float *Model::GetNormalArrayData() const
-{
-	int offset = 0;
-	if(HasVertexAttribute(Vertex_Attribute_Position))			offset += PositionDimension();
-	if(HasVertexAttribute(Vertex_Attribute_Color))				offset += ColorDimension();
-	if(HasVertexAttribute(Vertex_Attribute_TextureCoordinate))	offset += TextureCoordinateDimension();
-	return m_Data + offset;
-}
-
-Vec3 Model::GetNormalAt(int vertexIndex) const
-{
-	if(GetNormalArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	float *p = GetNormalArrayData() + vertexIndex * GetVertexStrideUnit();
-	return Vec3(*(p + 0), *(p + 1), *(p + 2));
-}
-
-int Model::GetVertexStrideUnit() const
-{
-	int units = 0;
-	if(HasVertexAttribute(Vertex_Attribute_Position))			units += PositionDimension();
-	if(HasVertexAttribute(Vertex_Attribute_Color))				units += ColorDimension();
-	if(HasVertexAttribute(Vertex_Attribute_TextureCoordinate))	units += TextureCoordinateDimension();
-	if(HasVertexAttribute(Vertex_Attribute_Normal))				units += NormalDimension();
-	return units;
-}
-
-void Model::UnifyColor(const nb::Math::Vec4 &color)
-{
-	if(GetColorArrayData() == NULL)
-		NB_THROW_EXCEPTION("no such attribute");
-	for(int i = 0; i != GetVertexCount(); ++i)
-		SetColorAt(i, color);
-}
-
-IndicesSequece Model::VertextsSequenceOverride() const
-{
-	unsigned short count = GetVertexCount();
-	unsigned short *indices = new unsigned short[count];
-	for(unsigned short i = 0; i != count; ++i)
-		indices[i] = i;
-	IndicesSequece ret(indices, count);
-	delete []indices;
-	return ret;
-}
-
-void Model::SetMatrix(const nb::Math::Matrix4x4 &matrix)
-{
-	m_Matrix = matrix;
-}
-
-nb::Math::Matrix4x4 &Model::GetMatrix()
-{
-	return m_Matrix;
-}
-
-const nb::Math::Matrix4x4 &Model::GetMatrix() const
-{
-	return m_Matrix;
-}
-
-bool Model::HitTest(int x, int y) const
+bool Model::hitTest(int x, int y) const
 {
 	return false;
 }
 
-bool Model::TriangleTest(const nb::Math::Vec3 & a, const nb::Math::Vec3 &b, const nb::Math::Vec3 &c, int x, int y) const
+bool Model::triangleTest(const Vec3 & a, const Vec3 &b, const Vec3 &c, int x, int y) const
 {
 /*	CELL::Ray ray = Domain::GetInstance()->GetCamera()->GetPrivateData()->CreateRayFromScreen(x, y);
 	float t, u, v;
-	CELL::float4 tranVec1 = GetModelMatrix().GetPrivateData()->m_matrix * CELL::float4(a.X(),a.Y(),a.Z(),1.0);
-	CELL::float4 tranVec2 = GetModelMatrix().GetPrivateData()->m_matrix * CELL::float4(b.X(),b.Y(),b.Z(), 1.0);
-	CELL::float4 tranVec3 = GetModelMatrix().GetPrivateData()->m_matrix * CELL::float4(c.X(),c.Y(),c.Z(),1.0);
+	CELL::float4 tranVec1 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(a.x(),a.y(),a.z(),1.0);
+	CELL::float4 tranVec2 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(b.x(),b.y(),b.z(), 1.0);
+	CELL::float4 tranVec3 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(c.x(),c.y(),c.z(),1.0);
 
 	CELL::float3 v1(tranVec1.x, tranVec1.y, tranVec1.z);
 	CELL::float3 v2(tranVec2.x, tranVec2.y, tranVec2.z);
@@ -250,27 +304,7 @@ bool Model::TriangleTest(const nb::Math::Vec3 & a, const nb::Math::Vec3 &b, cons
 	return false;
 }
 
-int Model::PositionDimension()
+void Model::cullFace()
 {
-	return 3;
-}
-
-int Model::ColorDimension()
-{
-	return 4;
-}
-
-int Model::TextureCoordinateDimension()
-{
-	return 2;
-}
-
-int Model::NormalDimension()
-{
-	return 3;
-}
-
-void Model::SetListener(ModelEventListener *listener)
-{
-	m_Listener = listener;
+	glDisable(GL_CULL_FACE);
 }

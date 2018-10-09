@@ -1,15 +1,13 @@
 ﻿#pragma once
-
 #include "EasingFunctionBase.h"
 
-namespace nb { namespace Media {
+namespace nb { namespace gui {
 
-class NB_EXPORT LineEase : public EasingFunctionBase
+class NB_API LineEase : public EasingFunctionBase
 {
-	NB_OBJECT_TYPE_DECLARE();
 public:
-	LineEase(void);
-	virtual ~LineEase(void);
+	LineEase();
+	virtual ~LineEase();
 
 	void SetEasingMode(EasingMode mode);
 	double GetEaseDefault(double normalizedTime) const;

@@ -1,89 +1,61 @@
-﻿#include <assert.h>
-#include "gui/Image.h"
-#include "Image_Internal.h"
+﻿#include "gui/Image.h"
 
-using namespace nb::Gui;
+using namespace nb::gui;
+using namespace nb::core;
 
-using namespace nb::Core;
-using namespace nb::System;
-using namespace nb::Media;
-
-
-NB_OBJECT_TYPE_IMPLEMENT(Image, Control, NULL, NULL);
-
-NB_X_OBJECT_PROPERTY_IMPLEMENT(Image, Source, ImageSource, &Image::OnSourceChanged);
-NB_OBJECT_PROPERTY_IMPLEMENT_EX(Image, Stretch, EnumObject, NULL);
-
-Image::Image(void)
-: m_internal(NULL)
+Image::Image()
+	: Source(nullptr)
+	, Stretch(Origion)
 {
-	m_internal = new Image_Internal(this);
-	Stretch() = nb::Media::Origion;
+	Source.setNotify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Stretch.setNotify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-Image::Image(const nb::Media::ImageSourcePtr &source)
-: m_internal(NULL)
+Image::Image(const std::shared_ptr<ImageSource> &source)
+	: Source(source)
+	, Stretch(Origion)
 {
-	m_internal = new Image_Internal(this);
-	Source = source;
-	Stretch() = nb::Media::Origion;
+	Source.setNotify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Stretch.setNotify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-Image::Image(const nb::Media::ImageSourcePtr &source, nb::Media::Stretch stretch)
-: m_internal(NULL)
+Image::Image(const std::shared_ptr<ImageSource> &source, nb::gui::Stretch stretch)
+	: Source(source)
+	, Stretch(stretch)
 {
-	m_internal = new Image_Internal(this);
-	Source = source;
-	Stretch() = nb::Media::Origion;
+	Source.setNotify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Stretch.setNotify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-//never use this bellow
-Image::Image(const Image &other)
-: m_internal(NULL)
+Size Image::measureOverride(const Size & availableSize) const
 {
-	delete m_internal;
-	m_internal = new Image_Internal(this);
-	Source = other.Source;
+	std::shared_ptr<ImageSource> source = Source;
+	return Size((float)source->Width, (float)source->Height);
 }
 
-Image::~Image()
-{
-	delete m_internal;
-	m_internal = NULL;
-}
-//never use this bellow
-void Image::operator = (const Image &other)
-{
-	delete m_internal;
-	m_internal = new Image_Internal(this);
-	Source = other.Source;
-}
-
-IElementRender *Image::GetElementRender() const
-{
-	return m_internal;
-}
-
-Size Image::MeasureOverride(const Size &availableSize)
-{
-	return GetPixcelSize();
-	//return availableSize;
-}
-
-nb::System::Size Image::ArrangeOverride(const nb::System::Size &finalSize)
+Size Image::arrangeOverride(const Size & finalSize) const
 {
 	return finalSize;
 }
 
-void Image::OnSourceChanged(PropertyValueChangedEventArgs &args)
+Image::Image(const Image &other)
 {
-	m_internal->OnSourceChanged(args);
-	NotifyContentChanged();
 }
 
-Size Image::GetPixcelSize() const
+Image::~Image()
 {
-	if(Source == NULL) return Size(0, 0);
-	return Size(Source->GetPixelWidth(), Source->GetPixcelHeight());
 }
 
+void Image::operator = (const Image &other)
+{
+}
+
+void Image::onSourceChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
+{
+	
+}
+
+void Image::onStretchChanged(const nb::gui::Stretch &_old, const nb::gui::Stretch &_new)
+{
+	
+}

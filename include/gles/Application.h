@@ -1,18 +1,9 @@
 #pragma once
-#include "core/NewBrushDef.h"
-#include "gles/Display.h"
-#include "gles/Configure.h"
-#include "gles/RenderObject.h"
+#include "../core/Def.h"
 
-namespace nb{ namespace gl{ namespace egl{
-class Surface;
-class WindowSurface;
-class Context;
-}}}
+namespace nb{ namespace gl{
 
-namespace nb{ namespace gl{ namespace Gles{
-
-class NB_EXPORT Application
+class NB_API Application
 {
 public:
 	//构建一个Application对象
@@ -21,7 +12,7 @@ public:
 	virtual ~Application();
 
 	//运行
-	void Run();
+	int run();
 
 protected:
 	//初始化
@@ -38,8 +29,8 @@ protected:
 
 
 private:
-	void Initialize();
-	void Render();
+	void initialize();
+	void render();
 };
 
-}}}
+}}

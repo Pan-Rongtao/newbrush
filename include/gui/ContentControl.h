@@ -1,34 +1,21 @@
 ﻿#pragma once
-
 #include "Control.h"
 
-namespace nb { namespace  Gui {
+namespace nb { namespace  gui {
 
-class ContentControlPrivate;
-class NB_EXPORT ContentControl : public Control
+class NB_API ContentControl : public Control
 {
-	NB_OBJECT_TYPE_DECLARE();
+public:
+	ContentControl();
+	virtual ~ContentControl();
 
 public:
-	ContentControl(void);
-	virtual ~ContentControl(void);
-
-	NB_X_OBJECT_PROPERTY_DECLARE(Content, UIElement);
-
-	virtual IElementRender * GetElementRender() const;
-
-	ContentControlPrivate * GetPrivate() const;
+	nb::core::Property_rw<std::shared_ptr<UIElement>>	Content;
 
 protected:
-	virtual System::Size MeasureOverride(const System::Size &availableSize);
-	virtual System::Size ArrangeOverride(const nb::System::Size &finalSize);
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
 
-	void OnContentChanged(Core::PropertyValueChangedEventArgs &args);
-
-private:
-	ContentControlPrivate * m_private;
 };
-
-typedef nbObjectPtrDerive<ContentControl, ControlPtr> ContentControlPtr;
 
 }}

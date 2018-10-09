@@ -1,22 +1,25 @@
 #pragma once
-#include "math/Matrix4x4.h"
+#include "../core/Matrix4x4.h"
 
-namespace nb{ namespace gl{ namespace Gles {
+namespace nb{ namespace gl{
 
-class Camera
+class NB_API Camera
 {
 public:
 	//构建一个摄像机，它的位置为(0.0, 0.0, 1.0)，目标点为(0.0, 0.0, 0.0)，它的上轴为(0.0, 1.0, 0.0)
 	Camera();
-	
-	//构建一个摄像机，它的位置为position，目标点为target，它的上轴为upVec
-	Camera(const nb::Math::Vec3 &position, const nb::Math::Vec3 &target, const nb::Math::Vec3 &upVec);
 
+	static std::shared_ptr<Camera> instance();
+		
 	//获取观察矩阵
-	nb::Math::Matrix4x4 GetMatrix() const;
+	nb::core::Matrix4x4 &matrix();
+	const nb::core::Matrix4x4 &matrix() const;
+
+	//lookup
+	void lookat(const nb::core::Vec3 &position, const nb::core::Vec3 &target, const nb::core::Vec3 &upVec);
 
 private:
-	nb::Math::Matrix4x4		m_matrix;
+	nb::core::Matrix4x4		m_matrix;
 };
 
-}}}
+}}

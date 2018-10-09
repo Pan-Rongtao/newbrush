@@ -1,6 +1,6 @@
 ﻿#include "gui/LineEase.h"
 
-using namespace nb::Media;
+using namespace nb::gui;
 
 LineEase::LineEase(void)
 {

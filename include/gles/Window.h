@@ -1,14 +1,14 @@
 #pragma once
-#include "core/NewBrushDef.h"
+#include "core/Def.h"
 #include "system/Window.h"
 
-namespace nb{ namespace gl{ namespace egl{
+namespace nb{ namespace gl{
 
-class NB_EXPORT Window : public nb::System::Window
+class NB_API Window : public nb::System::Window
 {
 public:
 	Window();
 	~Window();
 };
 
-}}}
+}}

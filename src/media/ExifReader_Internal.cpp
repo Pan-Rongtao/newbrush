@@ -1,14 +1,14 @@
 #include "ExifReader_Internal.h"
 
-using nb::Media::ExifReader_Internal;
-using nb::Media::ExifReader;
+using namespace nb::core;
+using namespace nb::media;
 
 ExifReader_Internal::ExifReader_Internal()
 {
 
 }
 
-void ExifReader_Internal::Open(const nb::System::String &fileName)
+void ExifReader_Internal::open(const String &fileName)
 {
 	try{
 		m_ImageLoaded = Exiv2::ImageFactory::open(fileName.ToUtf8().GetData());
@@ -20,17 +20,17 @@ void ExifReader_Internal::Open(const nb::System::String &fileName)
 	}
 }
 
-int ExifReader_Internal::GetWidth() const
+int ExifReader_Internal::width() const
 {
 	return m_ImageLoaded.get() == NULL ? 0 : m_ImageLoaded->pixelWidth();
 }
 
-int ExifReader_Internal::GetHeight() const
+int ExifReader_Internal::height() const
 {
 	return m_ImageLoaded.get() == NULL ? 0 : m_ImageLoaded->pixelHeight();
 }
 
-void ExifReader_Internal::GetThumbnailsProperties(std::vector<ExifReader::ThumbnailProperties> &results) const
+void ExifReader_Internal::getThumbnailsProperties(std::vector<ExifReader::ThumbnailProperties> &results) const
 {
 	if(m_ImageLoaded.get() == NULL)
 		return;
@@ -47,7 +47,7 @@ void ExifReader_Internal::GetThumbnailsProperties(std::vector<ExifReader::Thumbn
 	}
 }
 
-void ExifReader_Internal::GetThumbnails(std::vector<nb::Media::Bitmap> &results) const
+void ExifReader_Internal::getThumbnails(std::vector<Bitmap> &results) const
 {
 	if(m_ImageLoaded.get() == NULL)
 		return;
@@ -60,7 +60,7 @@ void ExifReader_Internal::GetThumbnails(std::vector<nb::Media::Bitmap> &results)
 		const unsigned char *data = preview.pData();
 		int size = preview.size();
 		Bitmap bm;
-		bm.LoadData(data, size);
+		bm.loadData(data, size);
 		results.push_back(bm);
 	}
 }

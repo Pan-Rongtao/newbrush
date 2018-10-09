@@ -1,70 +1,63 @@
 #include "system/Thread.h"
-#include "system/Platform.h"
-#include "Thread_Win32.h"
-#include "Thread_Linux.h"
+#include "Thread_Internal.h"
 
-using nb::System::Thread;
-Thread::Thread() 
-: m_pNative(NULL)
+using namespace nb::System;
+
+Thread::Thread()
 {
-#if NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_WIN32 || NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_WINCE
-	m_pNative = new Thread_Windows(this);
-#elif NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NEWBRUSH_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	m_pNative = new Thread_Linux(this);
-#else
-	#error "unrealized Thread::Thread on this platform"
-#endif
+	m_internal = new Thread_Internal(this);
 }
 
 Thread::~Thread()
 {
+	delete m_internal;
 }
 
-void Thread::SetPriority(Priority priority)
+void Thread::setPriority(Priority priority)
 {
-	m_pNative->SetPriority(priority);
+	m_internal->setPriority(priority);
 }
 
-Thread::Priority Thread::GetPriority() const
+Thread::Priority Thread::priority() const
 {
-	return m_pNative->GetPriority();
+	return m_internal->priority();
 }
 
-void Thread::Start()
+void Thread::start()
 {
-	m_pNative->Start();
+	m_internal->start();
 }
 
-void Thread::Quit()
+void Thread::quit()
 {
-	m_pNative->Quit();
+	m_internal->quit();
 }
 
-bool Thread::IsRunning()
+bool Thread::isRunning()
 {
-	return m_pNative->IsRunning();
+	return m_internal->isRunning();
 }
 
-bool Thread::Wait(unsigned long nMs)
+bool Thread::wait(unsigned long nMs)
 {
-	return m_pNative->Wait(nMs);
+	return m_internal->wait(nMs);
 }
 
-void Thread::Run()
+void Thread::run()
 {
 }
 
-void Thread::Sleep(unsigned long seconds)
+void Thread::sleep(unsigned long seconds)
 {
-	nb::System::Platform::Sleep(seconds);
+	nb::sleep(seconds);
 }
 
-void Thread::MSleep(unsigned long milliSeconds)
+void Thread::msleep(unsigned long milliseconds)
 {
-	nb::System::Platform::MSleep(milliSeconds);
+	nb::msleep(milliseconds);
 }
 
-void Thread::USleep(unsigned long uSeconds)
+void Thread::usleep(unsigned long useconds)
 {
-	nb::System::Platform::USleep(uSeconds);
+	nb::usleep(useconds);
 }

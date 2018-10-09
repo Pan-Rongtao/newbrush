@@ -1,31 +1,23 @@
 ﻿#include "gui/Rectangle.h"
-#include "Rectangle_Internal.h"
-#include "UIElementPrivate.h"
 
-using namespace nb::Gui;
-
-using namespace nb::Core;
-
-NB_OBJECT_TYPE_IMPLEMENT(Rectangle, UIElement, NULL, NULL);
-NB_X_OBJECT_PROPERTY_IMPLEMENT(Rectangle, Fill, nb::Media::Brush, &Rectangle::OnFillChanged);
+using namespace nb::core;
+using namespace nb::gui;
 
 Rectangle::Rectangle()
 {
-	m_internal = new Rectangle_Internal(this);
+
 }
 
 Rectangle::~Rectangle()
 {
-	delete m_internal;
 }
 
-IElementRender * Rectangle::GetElementRender() const
+Size nb::gui::Rectangle::measureOverride(const Size & availableSize) const
 {
-	return m_internal;
+	return Size();
 }
 
-void Rectangle::OnFillChanged(PropertyValueChangedEventArgs &args)
+Size nb::gui::Rectangle::arrangeOverride(const Size & finalSize) const
 {
-	m_internal->OnFillChanged(args);
+	return Size();
 }
-

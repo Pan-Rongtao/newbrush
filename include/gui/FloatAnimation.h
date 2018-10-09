@@ -1,24 +1,22 @@
 ﻿#pragma once
-
 #include "AnimationTimeline.h"
 
-namespace nb { namespace Media {
+namespace nb { namespace gui {
 
-	class NB_EXPORT FloatAnimation : public AnimationTimeline
-	{
-		NB_OBJECT_TYPE_DECLARE();
-
-	public:
-		FloatAnimation(void);
-		virtual ~FloatAnimation(void);
+class NB_API FloatAnimation : public AnimationTimeline
+{
+public:
+	FloatAnimation(void);
+	virtual ~FloatAnimation(void);
 
 //		virtual void AnimateTo(int frame);
 
-		NB_OBJECT_VALUE_PROPERTY_DECLARE(From, Core::Float);
-		NB_OBJECT_VALUE_PROPERTY_DECLARE(To, Core::Float);
+	nb::core::Property_rw<double>		From;
+	nb::core::Property_rw<double>		To;
 
-	protected:
-		virtual void OnFrameChanged(const nb::System::TimeSpan &frame);
+protected:
+	virtual void OnFrameChanged(const nb::core::TimeSpan &frame);
 
-	};
+};
+
 }}
