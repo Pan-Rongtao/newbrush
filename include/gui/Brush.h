@@ -56,7 +56,7 @@ public:
 	~ImageBrush();
 
 public:
-	nb::core::Property_rw<std::shared_ptr<ImageSource>>	ImageSource;
+	nb::core::Property_rw<std::shared_ptr<ImageSource>>	ImageSource1;
 };
 
 }}

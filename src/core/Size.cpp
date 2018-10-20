@@ -1,6 +1,7 @@
 ﻿#include "core/Size.h"
 #include "core/Exception.h"
 #include <algorithm>
+#include <math.h>
 
 using namespace nb::core;
 

@@ -39,7 +39,7 @@ ImageBrush::ImageBrush()
 }
 
 ImageBrush::ImageBrush(const std::shared_ptr<nb::gui::ImageSource> &imgSource)
-	: ImageSource(imgSource)
+	: ImageSource1(imgSource)
 {
 }
 

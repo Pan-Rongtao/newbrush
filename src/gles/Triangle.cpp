@@ -1,4 +1,5 @@
 #include "gles/Triangle.h"
+#include <math.h>
 
 using namespace nb::core;
 using namespace nb::gl;

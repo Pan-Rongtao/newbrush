@@ -5,7 +5,7 @@ using namespace nb::gui;
 
 UIElement::UIElement()
 {
-	Visibility.setNotify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Visibility1.setNotify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Opacity.setNotify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Focusable.setNotify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
 	DesiredSize.setNotify(std::bind(&UIElement::onDesiredSizeChanged, this, std::placeholders::_1, std::placeholders::_2));

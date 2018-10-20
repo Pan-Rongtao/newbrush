@@ -53,7 +53,7 @@ public:
 	void arrage(const nb::core::Rect &finalRect);
 
 public:
-	nb::core::Property_rw<Visibility>			Visibility;
+	nb::core::Property_rw<Visibility>			Visibility1;
 	nb::core::Property_rw<double>				Opacity;
 	nb::core::Property_rw<bool>					Focusable;
 	nb::core::Property_rw<double>				Width;
@@ -65,9 +65,9 @@ public:
 	nb::core::Property_rw<nb::core::Size>		DesiredSize;
 	nb::core::Property_r<nb::core::Size>		ActualSize;
 	nb::core::Property_rw<Thickness>			Magin;
-	nb::core::Property_rw<HorizontalAlignment>	HorizontalAlignment;
-	nb::core::Property_rw<VerticalAlignment>	VerticalAlignment;
-	nb::core::Property_rw<FlowDirection>		FlowDirection;
+	nb::core::Property_rw<HorizontalAlignment>	HorizontalAlignment1;
+	nb::core::Property_rw<VerticalAlignment>	VerticalAlignment1;
+	nb::core::Property_rw<FlowDirection>		FlowDirection1;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;

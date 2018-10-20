@@ -1,4 +1,5 @@
 ﻿#include "KineticMove.h"
+#include <math.h>
 
 using namespace nb::core;
 using namespace nb::gui;

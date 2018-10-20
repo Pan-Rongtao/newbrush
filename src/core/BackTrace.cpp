@@ -22,9 +22,9 @@ void OnSignal(int32_t sig)
 	for (size_t i = 0; i != count; ++i)
 		contexts.push_back(symbols[i]);
 
-	BackTrace::SignalEventParam p;
-	p.m_Context = contexts;
-	BackTrace::signalEvent().Dispatch(p);
+	BackTrace::SignalArgs args;
+	args.symbols = contexts;
+	BackTrace::signalEvent().dispatch(args);
 
 	exit(0);
 }

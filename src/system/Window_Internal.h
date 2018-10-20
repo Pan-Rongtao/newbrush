@@ -112,12 +112,12 @@ private:
 	};
 	struct UserData
 	{
-		UserData() : windowEvent(NULL) {}
+		UserData() {}
 
 		Globals						wlGlobals;					//全局对象结构，作为userdata传入
 		SeatGroup					wlSeatGroup;				//设备组结构，作为userdata传入
 		Listeners					wlListeners;				//监听结构
-		WindowEvent *				windowEvent;
+	//	WindowEvent *				windowEvent;
 	};
 
 	wl_display						*m_wlDisplay;				//wayland服务的连接

@@ -1,4 +1,5 @@
 ﻿#include <algorithm>
+#include <math.h>
 #include "core/Color.h"
 #include "core/Exception.h"
 
@@ -174,21 +175,21 @@ void Color::setArgbF(float a, float r, float g, float b)
 
 float Color::hue() const
 {
-	float h, s, v;
+	float h = 0.0f, s = 0.0f, v = 0.0f;
 	rgbF2Hsv(redF(), greenF(), blueF(), h, s, v);
 	return h;
 }
 
 float Color::saturation() const
 {
-	float h, s, v;
+	float h = 0.0f, s = 0.0f, v = 0.0f;
 	rgbF2Hsv(redF(), greenF(), blueF(), h, s, v);
 	return s;
 }
 
 float Color::value() const
 {
-	float h, s, v;
+	float h = 0.0f, s = 0.0f, v = 0.0f;
 	rgbF2Hsv(redF(), greenF(), blueF(), h, s, v);
 	return v;
 }

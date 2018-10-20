@@ -9,6 +9,7 @@ Image::Image()
 {
 	Source.setNotify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Stretch.setNotify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
+//	Stretch.setNotify([this] {});
 }
 
 Image::Image(const std::shared_ptr<ImageSource> &source)

@@ -11,8 +11,8 @@ public:
 
 
 public:
-	struct SignalArgs { std::vector<std::string> m_Context; };
-	nb::core::Event<SignalArgs> &signalEvent();
+	struct SignalArgs { std::vector<std::string> symbols; };
+	static nb::core::Event<SignalArgs> &signalEvent();
 };
 
 }}

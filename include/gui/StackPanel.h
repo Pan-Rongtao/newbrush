@@ -26,7 +26,7 @@ public:
 	virtual ~StackPanel();
 
 public:
-	nb::core::Property_rw<Orientation>	Orientation;
+	nb::core::Property_rw<Orientation>	Orientation1;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;

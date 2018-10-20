@@ -70,17 +70,15 @@ std::string nb::getTargetPlatformName()
 
 uint64_t nb::getTickCount()
 {
-	uint64_t nRet = 0;
 #if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
-	nRet = ::GetTickCount();
+	return ::GetTickCount();
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
 	struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
-	nRet = (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
+	return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 #else
 	#error "not define getTickCount on this platform"
 #endif
-	return nRet;
 }
 
 int nb::getCurrentProcessId()

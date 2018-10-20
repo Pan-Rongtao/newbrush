@@ -104,9 +104,9 @@ void Window_Internal::setTitle(const std::string & title)
 #if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
 	::SetWindowTextA(m_hwnd, title.data());
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
-	int x = XStoreName(m_X11Display, m_X11WindowID, title.ToUtf8().GetData());
+	int x = XStoreName(m_X11Display, m_X11WindowID, title.data());
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	wl_shell_surface_set_title(m_wlShellSurface, title.ToUtf8().GetData());
+	wl_shell_surface_set_title(m_wlShellSurface, title.data());
 #endif
 }
 
@@ -118,7 +118,7 @@ std::string Window_Internal::title() const
 	return arr;
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
 	Status x = XFetchName(m_X11Display, m_X11WindowID, &arr);
-	return (x == 0 || arr == NULL) ? "" : String::FromUtf8(pName);
+	return (x == 0 || arr == NULL) ? "" : arr;
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
 	return "";
 #endif
@@ -565,31 +565,31 @@ void Window_Internal::onWaylandSeatCapabilitties(void *data, struct wl_seat *wl_
 
 void Window_Internal::onWaylandPointerEnter(void *data, struct wl_pointer *wl_pointer, uint32_t serial, struct wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
-	WindowEvent *pEvent = (WindowEvent *)data;
-	if (!pEvent)
-		return;
+//	WindowEvent *pEvent = (WindowEvent *)data;
+//	if (!pEvent)
+//		return;
 
-	pEvent->OnPointerAction(nb::System::PointerAction_Down, surface_x, surface_y);
+//	pEvent->OnPointerAction(nb::System::PointerAction_Down, surface_x, surface_y);
 }
 
 void Window_Internal::onWaylandPointerLeave(void *data, struct wl_pointer *wl_pointer, uint32_t serial, struct wl_surface *surface)
 {
-	WindowEvent *pEvent = (WindowEvent *)data;
-	if (!pEvent)
-		return;
+//	WindowEvent *pEvent = (WindowEvent *)data;
+//	if (!pEvent)
+//		return;
 
-	pEvent->OnPointerAction(PointerAction_Up, x_pointer_move, y_pointer_move);
+//	pEvent->OnPointerAction(PointerAction_Up, x_pointer_move, y_pointer_move);
 }
 
 void Window_Internal::onWaylandPointerMotion(void *data, struct wl_pointer *wl_pointer, uint32_t time, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
 	x_pointer_move = surface_x;
 	y_pointer_move = surface_y;
-	WindowEvent *pEvent = (WindowEvent *)data;
-	if (!pEvent)
-		return;
+//	WindowEvent *pEvent = (WindowEvent *)data;
+//	if (!pEvent)
+//		return;
 
-	pEvent->OnPointerAction(PointerAction_Move, surface_x, surface_y);
+//	pEvent->OnPointerAction(PointerAction_Move, surface_x, surface_y);
 }
 
 void Window_Internal::onWaylandPointerButton(void *data, struct wl_pointer *wl_pointer, uint32_t serial, uint32_t time, uint32_t button, uint32_t state)

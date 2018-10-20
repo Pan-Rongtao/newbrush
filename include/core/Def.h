@@ -5,6 +5,11 @@
 #include <memory>
 #include <algorithm>
 
+//要求c++11
+//#if __cplusplus < 201103L
+//	#error "c++11 supported requested."
+//#endif
+
 //平台识别,如果识别不了平台，编译器则会输出报错，并终止编译
 #define PLATFORM_UNKNOWN					0x00000001
 #define PLATFORM_WINDOWS					0x00000002

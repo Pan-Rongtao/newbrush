@@ -30,7 +30,7 @@ inline void GestureAnalyse::ClearNodeQueue()
 
 void GestureAnalyse::AddPos(Point pos)
 {
-	Node *pNode = new Node;
+/*	Node *pNode = new Node;
 	pNode->m_pos = pos;
 	pNode->m_time = Time::now();
 	m_queueNode.push(pNode);
@@ -40,7 +40,7 @@ void GestureAnalyse::AddPos(Point pos)
 	{
 		delete pHead;
 		m_queueNode.pop();
-	}
+	}*/
 }
 void GestureAnalyse::GesturePress(Point pos)
 {

@@ -53,6 +53,8 @@ void TestBitmap::Test()
 	fread(pData, nLength, 1, pFile);
 	bm4.loadData(pData, nLength);
 	bm4.saveAsFile("f:/1.png");
+	delete[]pData;
+	fclose(pFile);
 
 	File f("f:/download/22.bmp");
 	f.Open(File::OpenExistsOnly, File::Read);

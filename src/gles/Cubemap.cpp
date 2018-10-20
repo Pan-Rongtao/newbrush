@@ -48,8 +48,8 @@ void Cubemap::setFilter(const TextureFilter &filter)
 void Cubemap::load(const std::vector<std::string> &paths)
 {
 	Bitmap bms[6];
-	int glFormat[6];
-	int glType[6];
+	int glFormat[6] = { 0 };
+	int glType[6] = { 0 };
 	for (int i = 0; i != paths.size(); ++i)
 	{
 		bms[i].loadFile(paths[i].data());

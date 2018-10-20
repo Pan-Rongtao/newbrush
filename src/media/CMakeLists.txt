@@ -28,7 +28,7 @@ set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
 if(WIN32 AND NOT MINGW)
 	target_link_libraries(${LIB_NAME} core system libexiv2 optimized FreeImage debug FreeImaged)
 elseif(UNIX AND NOT ANDROID)
-	target_link_libraries(${LIB_NAME} freeimage.a exiv2)
+	target_link_libraries(${LIB_NAME} core system freeimage.a exiv2)
 endif()
 
 # 4. Project Install

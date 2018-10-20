@@ -53,7 +53,7 @@ void Thread_Internal::start()
 #if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS || NB_SDK_TARGET_PLATFORM == PLATFORM_WINCE
 	::ResumeThread(m_ThreadHandle);
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	int ret = pthread_create(&m_ThreadHandle, NULL, &Thread_Linux::fun, m_pV);
+	int ret = pthread_create(&m_ThreadHandle, NULL, &Thread_Internal::fun, m_pV);
 #endif
 }
 
