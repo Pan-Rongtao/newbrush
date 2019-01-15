@@ -208,12 +208,12 @@ void MyApplication::drawPhone(bool bOrigin)
 	ro->storage()->insert("viewPos", cameraPosition);
 	ro->storage()->insert("material.shininess", 32.0);
 	if(bOrigin)
-		ro->storage()->insert("light.direction", Vec3(1.0, -0.0, 3.0));
+		ro->storage()->insert("light.direction", Vec3(1.0f, -0.0f, 3.0f));
 	else
-		ro->storage()->insert("light.direction", Vec3(1.0, -0.0, -3.0));
-	ro->storage()->insert("light.ambient", Vec3(0.5, 0.5, 0.5));
-	ro->storage()->insert("light.diffuse", Vec3(0.4, 0.4, 0.4));
-	ro->storage()->insert("light.specular", Vec3(0.5, 0.5, 0.5));
+		ro->storage()->insert("light.direction", Vec3(1.0f, -0.0f, -3.0f));
+	ro->storage()->insert("light.ambient", Vec3(0.5f, 0.5f, 0.5f));
+	ro->storage()->insert("light.diffuse", Vec3(0.4f, 0.4f, 0.4f));
+	ro->storage()->insert("light.specular", Vec3(0.5f, 0.5f, 0.5f));
 	//	ro->material()->setTexture(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 
 	std::shared_ptr<Cubemap> cm = std::make_shared<Cubemap>();

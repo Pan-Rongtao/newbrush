@@ -5,11 +5,8 @@
 #include "core/Encoding.h"
 
 using namespace nb::core;
-
-//NB_OBJECT_TYPE_IMPLEMENT(String, ValueObject, &ValueObject::IsEqualFun<String>, &ValueObject::CopyFun<String>);
-NB_OBJECT_TYPE_IMPLEMENT(String, RefObject, NULL, NULL);
-
 static const int IncreaseBytesStep = 16;
+
 String::String()
 : m_pData(NULL)
 , m_nSize(0)
@@ -1012,19 +1009,4 @@ int String::WStrLen(const Char *p) const
 	while((p++)->GetUnicode() != 0)
 		++n;
 	return n;
-}
-
-
-DataSerial & operator << (DataSerial &serial, const String &str)
-{
-	serial << str.ToUtf8();
-	return serial;
-}
-
-DataSerial & operator >> (DataSerial &serial, String &str)
-{
-	Stream arr;
-	serial >> arr;
-	str = str.FromUtf8(arr.GetData());
-	return serial;
 }

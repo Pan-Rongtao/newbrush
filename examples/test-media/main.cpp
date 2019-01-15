@@ -1,7 +1,6 @@
 #include "TestBase.h"
 #include "core/Exception.h"
 #include "TestBitmap.h"
-#include "TestImagePool.h"
 #include "TestExifReader.h"
 #include "TestGifReader.h"
 #include "TestTiffReader.h"
@@ -24,7 +23,7 @@ private:
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestImagePool> test;
+		TestHandle<TestBitmap> test;
 		test->Test();
 		while(1)
 		{

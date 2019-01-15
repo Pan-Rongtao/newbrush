@@ -350,26 +350,3 @@ int Stream::GetCapacity() const
 {
 	return m_nCapacity;
 }
-
-
-DataSerial & operator << (DataSerial &serial, const Stream &arr)
-{
-	serial << arr.GetLength();
-	serial.Write((unsigned char *)arr.GetData(), arr.GetLength());
-	return serial;
-}
-
-DataSerial & operator >> (DataSerial &serial, Stream &arr)
-{
-	int len;
-	serial >> len;
-	char *pc = new char[len+1];
-	pc[len] = '\0';
-	serial.Read((unsigned char *)pc, len);
-
-	arr.Clear();
-	arr.Append(pc);
-
-	delete [] pc;
-	return serial;
-}

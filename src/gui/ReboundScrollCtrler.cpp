@@ -349,7 +349,7 @@ void ReboundScrollCtrler::PointerReleaseEvent(Point pos)
 
 
 	//加速度
-	float accel = (Float)Accel;
+	float accel = (float)Accel;
 	float fAccel = fSpeed > 0 ? -accel : accel;
 
 	ScrollWork(fSpeed, fAccel, true);

@@ -1,5 +1,6 @@
 #include "GifReader_Internal.h"
 #include "Bitmap_Internal.h"
+#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;

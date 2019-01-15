@@ -20,7 +20,7 @@ Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
 		for (int i = 1; i != ELLIPSE_VERTEX_COUNT; ++i)
 		{
 			double radian = oneRadian * i;
-			Vec2 texCoord(0.5 * cos(radian) + 0.5, 0.5 * sin(radian) + 0.5);
+			Vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(0.5 * sin(radian) + 0.5));
 			vertexs.push_back(Vertex(Vec3(a * cosf(radian), b * sinf(radian), 0.0f), Vec4(), texCoord));
 		}
 	}
@@ -30,7 +30,7 @@ Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
 		{
 			double radian = oneRadian * i;
 			Vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(1 - (0.5 * sin(radian) + 0.5)));
-			vertexs.push_back(Vertex(Vec3(a * cosf(radian), b * sinf(radian), 0.0f), Vec4(), texCoord));
+			vertexs.push_back(Vertex(Vec3((float)(a * cosf(radian)), (float)(b * sinf(radian)), 0.0f), Vec4(), texCoord));
 		}
 	}
 	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));

@@ -6,6 +6,7 @@
 #include "core/Matrix4x4.h"
 #include "core/TickCounter.h"
 #include "core/Any.h"
+#include "core/Exception.h"
 
 using namespace nb::core;
 template <class T>

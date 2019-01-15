@@ -371,10 +371,10 @@ bool SizeI::equals(const SizeI &other) const
 
 SizeI SizeI::multiplyRound(float f) const
 {
-	return SizeI(std::round(width() * f), std::round(height() * f));
+	return SizeI((int)std::round(width() * f), (int)std::round(height() * f));
 }
 
 SizeI SizeI::divideRound(float f) const
 {
-	return SizeI(std::round(width() / f), std::round(height() / f));
+	return SizeI((int)std::round(width() / f), (int)std::round(height() / f));
 }

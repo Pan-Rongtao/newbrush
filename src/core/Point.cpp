@@ -371,12 +371,12 @@ bool PointI::equals(const PointI &p) const
 
 PointI PointI::multiplyRound(float f) const
 {
-	return PointI(std::round(x() * f), std::round(y() * f));
+	return PointI((int)std::round(x() * f), (int)std::round(y() * f));
 }
 
 PointI PointI::divideRound(float f) const
 {
-	return PointI(std::round(x() / f), std::round(y() / f));
+	return PointI((int)std::round(x() / f), (int)std::round(y() / f));
 }
 
 //////////////////////class Point3D
@@ -790,10 +790,10 @@ bool Point3DI::equals(const Point3DI &other) const
 
 Point3DI Point3DI::multiplyRound(float f) const
 {
-	return Point3DI(std::round(x() * f), std::round(y() * f), std::round(z() * f));
+	return Point3DI((int)std::round(x() * f), (int)std::round(y() * f), (int)std::round(z() * f));
 }
 
 Point3DI Point3DI::divideRound(float f) const
 {
-	return Point3DI(std::round(x() / f), std::round(y() / f), std::round(z() / f));
+	return Point3DI((int)std::round(x() / f), (int)std::round(y() / f), (int)std::round(z() / f));
 }

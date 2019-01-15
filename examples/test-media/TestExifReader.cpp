@@ -1,6 +1,7 @@
 #include "TestExifReader.h"
 #include "media/Bitmap.h"
 #include "media/ExifReader.h"
+#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;

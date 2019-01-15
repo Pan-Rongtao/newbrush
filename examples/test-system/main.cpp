@@ -22,7 +22,6 @@
 #include "TestStream.h"
 #include "TestChar.h"
 #include "TestString.h"
-#include "TestThread.h"
 
 template <class T>
 class TestHandle
