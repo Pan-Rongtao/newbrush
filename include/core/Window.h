@@ -3,7 +3,7 @@
 #include "../core/Event.h"
 #include <string>
 
-namespace nb{ namespace System{
+namespace nb{ namespace core{
 
 class Window_Internal;
 class NB_API Window

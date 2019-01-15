@@ -27,9 +27,12 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.c
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
 if(WIN32 AND NOT MINGW)
-  target_link_libraries(${LIB_NAME})
+	target_link_libraries(${LIB_NAME})
 elseif(UNIX AND NOT ANDROID)
-  target_link_libraries(${LIB_NAME} pthread)
+	set(CMAKE_PREFIX_PATH   "$ENV{SDKTARGETSYSROOT}/usr/lib/cmake")
+	include(FindPkgConfig)
+	pkg_check_modules(WaylandEGL REQUIRED wayland-egl)
+	target_link_libraries(${LIB_NAME} wayland-client ${WaylandEGL_LIBRARIES})
 endif()
 
 # 4. Project Install

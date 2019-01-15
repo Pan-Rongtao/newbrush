@@ -7,7 +7,6 @@ project(src)
 # 3. Sub Projects
 
 add_subdirectory(core)
-add_subdirectory(system)
 add_subdirectory(media)
 add_subdirectory(gles)
 add_subdirectory(gui)

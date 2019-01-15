@@ -10,8 +10,4 @@ project(include)
 
 
 # 5. Project Install
-install(DIRECTORY core DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)
-install(DIRECTORY system DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)
-install(DIRECTORY media DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)
-install(DIRECTORY gles DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)
-install(DIRECTORY gui DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)
+install(DIRECTORY core media gles gui DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/newbrush)

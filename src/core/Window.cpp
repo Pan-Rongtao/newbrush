@@ -1,7 +1,7 @@
-#include "system/Window.h"
+#include "core/Window.h"
 #include "Window_Internal.h"
 
-using namespace nb::System;
+using namespace nb::core;
 
 Window::Window()
 	: m_internal(new Window_Internal(this))

@@ -1,10 +1,10 @@
 #pragma once
 #include "core/Def.h"
-#include "system/Window.h"
+#include "core/Window.h"
 
 namespace nb{ namespace gl{
 
-class NB_API Window : public nb::System::Window
+class NB_API Window : public nb::core::Window
 {
 public:
 	Window();

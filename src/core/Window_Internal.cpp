@@ -1,10 +1,9 @@
 #include "Window_Internal.h"
 #include "core/Exception.h"
-#include "system/Window.h"
+#include "core/Window.h"
 #include <cstring>
 
 using namespace nb::core;
-using namespace nb::System;
 
 #if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
 	bool Window_Internal::m_pressed = false;

@@ -1,7 +1,7 @@
 #pragma once
 #include "TestBase.h"
 #include "gles/Application.h"
-#include "system/Window.h"
+#include "core/Window.h"
 #include "gles/Context.h"
 #include "core/Timer.h"
 #include "gles/Camera.h"
@@ -28,9 +28,9 @@ protected:
 	virtual void OnIdledOverride();
 
 private:
-	void OnResize(const nb::System::Window::ResizeArgs &args);
-	void OnPointerAction(const nb::System::Window::PointerEventArgs &args);
-	void OnKeyAction(const nb::System::Window::KeyEventArgs &args);
+	void OnResize(const nb::core::Window::ResizeArgs &args);
+	void OnPointerAction(const nb::core::Window::PointerEventArgs &args);
+	void OnKeyAction(const nb::core::Window::KeyEventArgs &args);
 
 	void OnTick(const nb::core::Timer::TickArgs & param);
 

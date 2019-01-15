@@ -12,7 +12,7 @@
 	#include <wayland-egl.h>
 #endif
 
-namespace nb{ namespace System{
+namespace nb{ namespace core{
 
 class Window;
 class Window_Internal
@@ -55,7 +55,7 @@ private:
 	WindowEvent::KeyCode nativeKeyToKeycode(int key);
 	::Display						*m_X11Display;
 	::Window						m_X11WindowID;
-	nb::System::RectI				m_rect;
+	nb::core::RectI					m_rect;
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
 	//wl_registry globalœ˚œ¢
 	static void onWaylandRegistryGlobal(void *data, struct wl_registry *wl_registry, uint32_t name, const char *interface, uint32_t version);

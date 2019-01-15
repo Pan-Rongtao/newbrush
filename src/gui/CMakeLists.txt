@@ -25,7 +25,7 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.c
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
-target_link_libraries(${LIB_NAME} core system media gles)
+target_link_libraries(${LIB_NAME} core media gles)
 
 # 4. Project Install
 if(WIN32)

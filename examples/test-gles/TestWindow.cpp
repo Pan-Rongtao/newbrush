@@ -4,7 +4,8 @@
 
 #include "core/Exception.h"
 
-using namespace nb::System;
+using namespace nb::core;
+
 void TestWindow::Test()
 {
 	nb::gl::initialize(nb::gl::Display::defaultx());
@@ -34,17 +35,17 @@ void TestWindow::Test()
 	}
 }
 
-void TestWindow::OnResize(const nb::System::Window::ResizeArgs & args)
+void TestWindow::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("TestWindow::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 }
 
-void TestWindow::OnPointerAction(const nb::System::Window::PointerEventArgs & args)
+void TestWindow::OnPointerAction(const nb::core::Window::PointerEventArgs & args)
 {
 	printf("TestWindow::OnPointerAction--action[%d], x[%d], y[%d]\r\n", args.action, args.x, args.y);
 }
 
-void TestWindow::OnKeyAction(const nb::System::Window::KeyEventArgs & args)
+void TestWindow::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 {
 	printf("TestWindow::OnKeyAction---action[%d], key[%d],mask[%d]\r\n", args.action, args.key, args.mask);
 }

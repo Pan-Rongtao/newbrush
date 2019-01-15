@@ -8,7 +8,7 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-Window::Window()
+nb::gui::Window::Window()
 {
 	m_glWindow = std::make_shared<nb::gl::Window>();
 	try {
@@ -22,7 +22,7 @@ Window::Window()
 	}
 }
 
-Window::~Window()
+nb::gui::Window::~Window()
 {
 
 }

@@ -42,6 +42,7 @@ endif()
 
 # 4. Sub Projects
 
+add_subdirectory(3rdparty)
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(examples)

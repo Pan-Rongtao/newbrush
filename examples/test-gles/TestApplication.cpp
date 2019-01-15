@@ -21,7 +21,6 @@
 #include "gles/Gl.h"
 
 using namespace nb::core;
-using namespace nb::System;
 using namespace nb::gl;
 /*	float z = 480.0f / (float)(2 * Tan((22.5f * Pi()) / 180.0f));
 Vec3 position(800.0f / 2.0f, 480.0f / 2.0f, -z);
@@ -297,7 +296,7 @@ void MyApplication::OnIdledOverride()
 {
 }
 
-void MyApplication::OnResize(const nb::System::Window::ResizeArgs & args)
+void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 	Projection::instance()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
@@ -318,7 +317,7 @@ void MyApplication::OnResize(const nb::System::Window::ResizeArgs & args)
 bool bPress = false;
 static int pressX = 0;
 static int pressY = 0;
-void MyApplication::OnPointerAction(const nb::System::Window::PointerEventArgs & args)
+void MyApplication::OnPointerAction(const nb::core::Window::PointerEventArgs & args)
 {
 	switch (args.action)
 	{
@@ -346,7 +345,7 @@ void MyApplication::OnPointerAction(const nb::System::Window::PointerEventArgs &
 	}
 }
 
-void MyApplication::OnKeyAction(const nb::System::Window::KeyEventArgs & args)
+void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 {
 //	printf("MyApplication::OnKeyAction---action[%d], key[%d],mask[%d]\r\n", action, key, mask);
 	switch (args.action)
