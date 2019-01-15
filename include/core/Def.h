@@ -25,6 +25,7 @@
 #if defined(WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_WINDOWS)	//windows
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_WINDOWS
+	#pragma warning(disable: 4251)
 #elif defined(WINCE)															//wince
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_WINCE

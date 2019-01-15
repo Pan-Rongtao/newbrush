@@ -21,7 +21,7 @@ Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
 		{
 			double radian = oneRadian * i;
 			Vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(0.5 * sin(radian) + 0.5));
-			vertexs.push_back(Vertex(Vec3(a * cosf(radian), b * sinf(radian), 0.0f), Vec4(), texCoord));
+			vertexs.push_back(Vertex(Vec3(a * (float)cosf(radian), b * (float)sinf(radian), 0.0f), Vec4(), texCoord));
 		}
 	}
 	else

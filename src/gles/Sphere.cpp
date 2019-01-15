@@ -28,7 +28,7 @@ Sphere::Sphere(const Vec3 &centerPoint, float r, bool cartesian)
 				float x = r * sinf(angleStep * (float)i) * sinf(angleStep * (float)j);
 				float y = r * cosf(angleStep * (float)i);
 				float z = r * sinf(angleStep * (float)i) * cosf(angleStep * (float)j);
-				vertexs.push_back(Vertex(Vec3(x, y, z), Vec4(), Vec2((float)j / (float)vSlices, 1.0 - ((float)i / (float)hSlices))));
+				vertexs.push_back(Vertex(Vec3(x, y, z), Vec4(), Vec2((float)j / (float)vSlices, 1.0f - ((float)i / (float)hSlices))));
 			}
 		}
 	}
