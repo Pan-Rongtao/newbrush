@@ -645,7 +645,13 @@ void ImagePool_Internal::FilterItemManager::SetFilter(EnumFlags<ImagePool::FileT
 	{
 		std::vector<std::string> suffixs;
 		suffixs.push_back("png");
-		m_Filters.push_back(new ImagePool_Internal::FilterItemProperty(ImagePool::FileType_Jpeg, suffixs));
+		m_Filters.push_back(new ImagePool_Internal::FilterItemProperty(ImagePool::FileType_Png, suffixs));
+	}
+	if (flags.testFlag(ImagePool::FileType_Gif))
+	{
+		std::vector<std::string> suffixs;
+		suffixs.push_back("gif");
+		m_Filters.push_back(new ImagePool_Internal::FilterItemProperty(ImagePool::FileType_Gif, suffixs));
 	}
 	m_Lock.Unlock();
 }
@@ -677,6 +683,7 @@ void ImagePool_Internal::FilterItemManager::setBytesLimitAllType(int bytesLimit)
 	setBytesLimit(ImagePool::FileType_Bmp, bytesLimit);
 	setBytesLimit(ImagePool::FileType_Jpeg, bytesLimit);
 	setBytesLimit(ImagePool::FileType_Png, bytesLimit);
+	setBytesLimit(ImagePool::FileType_Gif, bytesLimit);
 	m_Lock.Unlock();
 }
 

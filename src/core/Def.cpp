@@ -165,7 +165,7 @@ void nb::usleep(int useconds)
 #if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
 	::Sleep(useconds / 1000);
 #elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	usleep(useconds);
+	::usleep(useconds);
 #else
 	#error "not define usleep on this platform."
 #endif

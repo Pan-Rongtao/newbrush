@@ -4,7 +4,7 @@
 
 namespace nb{ namespace media{
 
-class ImageReader
+class NB_API ImageReader
 {
 public:
 	//ÉèÖÃ×°ÔØ³ß´ç

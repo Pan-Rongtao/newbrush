@@ -21,6 +21,7 @@ public:
 		FileType_Jpeg		= 0x00000002,	//JPEG
 		FileType_Bmp		= 0x00000004,	//BMP
 		FileType_Png		= 0x00000008,	//PNG
+		FileType_Gif		= 0x00000010,	//GIF
 		FileType_Reserve	= 0x80000000,	//Ô¤Áô
 	};
 

@@ -57,7 +57,7 @@ void TestTimeSpan::Test()
 	ts11 = *ts7;
 
 	bool e6 = ts11.equals(*ts7);
-	int k = (new TimeSpan())->compare(TimeSpan::zero());
+	//int k = (new TimeSpan())->compare(TimeSpan::zero());
 
 	TimeSpan ts12 = ts11 + TimeSpan::fromMilliseconds(12);
 	ts12 -= TimeSpan::fromMilliseconds(12);
@@ -70,14 +70,17 @@ void TestTimeSpan::Test()
 	tsAdd += TimeSpan::fromMilliseconds(1005);
 
 
-ofstream f1("F:\\download\\all valid timespan.txt");
-for(TimeSpan ts = tsMin; ts <= tsMax - TimeSpan::fromHours(1); ts += TimeSpan::fromHours(1))
-		{
-			++xx;
-			f1 << ts.days() << "£¬" << ts.hours() << "£º" << ts.minutes() << "£º" << ts.seconds() << "£º" << ts.milliseconds() << "\r\n";
-		}
-		f1.close();
+	ofstream f1("F:\\download\\all valid timespan.txt");
+	for(TimeSpan ts = tsMin; ts <= tsMax - TimeSpan::fromHours(1); ts += TimeSpan::fromHours(1))
+	{
+		++xx;
+		f1 << ts.days() << "£¬" << ts.hours() << "£º" << ts.minutes() << "£º" << ts.seconds() << "£º" << ts.milliseconds() << "\r\n";
+	}
+	f1.close();
 
 
+	delete ts7;
+	delete ts8;
+	delete ts9;
 	bool bEnd = true;
 }
