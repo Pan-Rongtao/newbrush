@@ -14,13 +14,11 @@ project(newbrush)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories(include)
-include_directories(${CMAKE_SOURCE_DIR}/../uit-3rdparty/include)
-include_directories(${CMAKE_SOURCE_DIR}/../uit-3rdparty/include/freetype)
-if(MSVC)
-	include_directories(${CMAKE_SOURCE_DIR}/../uit-3rdparty/include/opengl)
-	link_directories(${CMAKE_SOURCE_DIR}/../uit-3rdparty/lib/win32)
-elseif(UNIX AND NOT ANDROID)
-	link_directories(${CMAKE_SOURCE_DIR}/../uit-3rdparty/lib/linux-arm/release)
+if(WIN32)
+	include_directories(${CMAKE_SOURCE_DIR}/3rdparty/include)
+	include_directories(${CMAKE_SOURCE_DIR}/3rdparty/include/freetype)
+	include_directories(${CMAKE_SOURCE_DIR}/3rdparty/include/opengl)
+	link_directories(${CMAKE_SOURCE_DIR}/3rdparty/lib/win32)
 endif()
 
 # 4. Sub Projects
