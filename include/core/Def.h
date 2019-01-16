@@ -19,6 +19,7 @@
 #define PLATFORM_MAC						0x00000020
 #define PLATFORM_IOS						0x00000040
 #define PLATFORM_ANDROID					0x00000080
+#define PLATFORM_ANDROID					0x00000100
 #define NB_SDK_TARGET_PLATFORM				PLATFORM_UNKNOWN
 
 //类UNIX下可使用g++ -dM -E - </dev/null命令查看编译器默认宏
@@ -29,6 +30,9 @@
 #elif defined(WINCE)															//wince
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_WINCE
+#elif defined(__QNX__)
+	#undef	NB_SDK_TARGET_PLATFORM
+	#define NB_SDK_TARGET_PLATFORM		PLATFORM_QNX
 #elif defined(__ARMEL__) || defined(LINUX_ARM) || defined(__aarch64__)			//linux-arm
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_LINUX_ARM
