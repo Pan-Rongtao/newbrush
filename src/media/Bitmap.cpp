@@ -20,31 +20,14 @@ Bitmap::Bitmap(int width, int height)
 	m_internal = new Bitmap_Internal(width, height, Bitmap::Format_Bpp32_Rgba8888);
 }
 
-Bitmap::Bitmap(const SizeI &size)
-{
-	m_internal = new Bitmap_Internal(size.width(), size.height(), Bitmap::Format_Bpp32_Rgba8888);
-}
-
 Bitmap::Bitmap(int width, int height, PixelFormat format)
 {
-	//rewrite when define assert
-	assert(width >= 0 && height >= 0);
 	m_internal = new Bitmap_Internal(width, height, format);
 }
 
-Bitmap::Bitmap(const SizeI &size, PixelFormat format)
-{
-	m_internal = new Bitmap_Internal(size.width(), size.height(), format);
-}
-
-Bitmap::Bitmap(const unsigned char *buffer, int width, int height, PixelFormat format)
+Bitmap::Bitmap(const char *buffer, int width, int height, PixelFormat format)
 {
 	m_internal = new Bitmap_Internal(buffer, width, height, format);
-}
-
-Bitmap::Bitmap(const unsigned char *buffer, const SizeI &size, PixelFormat format)
-{
-	m_internal = new Bitmap_Internal(buffer, size.width(), size.height(), format);
 }
 
 Bitmap::~Bitmap()
@@ -63,27 +46,17 @@ void Bitmap::operator = (const Bitmap &other)
 	m_internal = new Bitmap_Internal(*other.m_internal);
 }
 
-void Bitmap::loadFile(const char *pFilePath)
+void Bitmap::load(const std::string &path, int jpegNarrow)
 {
-	m_internal->loadFile(pFilePath);
+	m_internal->load(path, jpegNarrow);
 }
 
-void Bitmap::loadFile(const String &filePath)
+void Bitmap::load(const char *data, int nLengthBytes)
 {
-	loadFile(filePath.ToUtf8().GetData());
+	return m_internal->load(data, nLengthBytes);
 }
 
-void Bitmap::loadFileNarrowed(const String &filePath, int jpegNarrow)
-{
-	m_internal->loadFileNarrowed(filePath, jpegNarrow);
-}
-
-void Bitmap::loadData(const unsigned char *data, int nLengthBytes)
-{
-	return m_internal->loadData(data, nLengthBytes);
-}
-
-const unsigned char *Bitmap::data() const
+const char *Bitmap::data() const
 {
 	return m_internal->data();
 }
@@ -103,17 +76,12 @@ int Bitmap::height() const
 	return m_internal->pixelHeight();
 }
 
-SizeI Bitmap::size() const
+int Bitmap::bytes() const
 {
-	return SizeI(width(), height());
+	return m_internal->bytes();
 }
 
-int Bitmap::bytesCount() const
-{
-	return m_internal->bytesCount();
-}
-
-unsigned char *Bitmap::scanLine(int lineIndex)
+char *Bitmap::scanLine(int lineIndex)
 {
 	return m_internal->scanLine(lineIndex);
 }
@@ -121,11 +89,6 @@ unsigned char *Bitmap::scanLine(int lineIndex)
 bool Bitmap::hasPixelData() const
 {
 	return m_internal->hasPixelData();
-}
-
-bool Bitmap::isNull() const
-{
-	return m_internal->isNull();
 }
 
 Bitmap::PixelFormat Bitmap::pixelFormat() const
@@ -143,40 +106,15 @@ Color Bitmap::pixel(int x, int y) const
 	return Color::fromInteger32(m_internal->pixel(x, y));
 }
 
-Color Bitmap::pixel(const PointI &p) const
-{
-	return pixel(p.x(), p.y());
-}
-
 void Bitmap::setPixel(int x, int y, const Color &c)
 {
 	m_internal->setPixel(x, y, c.toInteger32());
-}
-
-void Bitmap::setPixel(const PointI &p, const Color &c)
-{
-	setPixel(p.x(), p.y(), c);
 }
 
 Bitmap Bitmap::scale(int width, int height) const
 {
 	Bitmap_Internal pri = m_internal->scale(width, height);
 	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
-}
-
-Bitmap Bitmap::scale(const SizeI &size) const
-{
-	return scale(size.width(), size.height());
-}
-
-Bitmap Bitmap::scaleWidth(int width) const
-{
-	return scale(width, height());
-}
-
-Bitmap Bitmap::scaleHeight(int height) const
-{
-	return scale(width(), height);
 }
 
 Bitmap Bitmap::copy() const
@@ -190,29 +128,19 @@ Bitmap Bitmap::copy(int x, int y, int width, int height) const
 	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-Bitmap Bitmap::copy(const RectI &rc) const
+Bitmap Bitmap::gray() const
 {
-	return copy(rc.left(), rc.top(), rc.width(), rc.height());
-}
-
-Bitmap Bitmap::toGray() const
-{
-	Bitmap_Internal pri = m_internal->toGray();
+	Bitmap_Internal pri = m_internal->gray();
 	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-Bitmap Bitmap::converToFormat(PixelFormat format)
+Bitmap Bitmap::convert(PixelFormat toFormat)
 {
-	Bitmap_Internal pri = m_internal->converToFormat(format);
+	Bitmap_Internal pri = m_internal->convert(toFormat);
 	return Bitmap(pri.data(), pri.pixelWidth(), pri.pixelHeight(), pri.pixelFormat());
 }
 
-void Bitmap::saveAsFile(const String &filePath) const
+void Bitmap::save(const std::string &path) const
 {
-	saveAsFile(filePath.ToUtf8().GetData());
-}
-
-void Bitmap::saveAsFile(const char *pfilePath) const
-{
-	m_internal->saveAsFile(pfilePath);
+	m_internal->save(path);
 }

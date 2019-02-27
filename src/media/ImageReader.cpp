@@ -33,11 +33,11 @@ SizeI ImageReader::scaledSize() const
 	return m_ScaleSize;
 }
 
-void ImageReader::read(const String &path, Bitmap *pBm)
+void ImageReader::read(const std::string &path, Bitmap *pBm)
 {
 	ExifReader exif;
 	try{
-		exif.open(path);
+		exif.open(path.data());
 	}
 	catch(Exception &e){
 		(void)e;
@@ -54,7 +54,7 @@ void ImageReader::read(const String &path, Bitmap *pBm)
 	//如果需要伸缩的尺寸大于最大取缩略图尺寸100，直接读原图
 	if(thumbsProperties.empty() || (scaledSize().width() - maxThumb.width() > 100 || scaledSize().height() - maxThumb.height() > 100))
 	{
-		pBm->loadFile(path);
+		pBm->load(path);
 //		*pBm = pBm->Scale(GetScaledSize());
 	}
 	else
@@ -64,14 +64,14 @@ void ImageReader::read(const String &path, Bitmap *pBm)
 		*pBm = thumbs[0];
 //		*pBm = pBm->Scale(GetScaledSize());
 	}
-	*pBm = pBm->scale(scaledSize());
+	*pBm = pBm->scale(m_ScaleSize.width(), m_ScaleSize.height());
 }
 
-void ImageReader::readUniform(const String &path, Bitmap *pBm, SizeI &OriginalSize)
+void ImageReader::readUniform(const std::string &path, Bitmap *pBm, SizeI &OriginalSize)
 {
 	ExifReader exif;
 	try{
-		exif.open(path);
+		exif.open(path.data());
 	}
 	catch(Exception &e){
 		(void)e;
@@ -105,7 +105,7 @@ void ImageReader::readUniform(const String &path, Bitmap *pBm, SizeI &OriginalSi
 		{
 			nJpegNarrow = (nJpegNarrow >> 1);
 		}
-		pBm->loadFileNarrowed(path, nJpegNarrow);
+		pBm->load(path, nJpegNarrow);
 	}
 	else
 	{
@@ -130,5 +130,5 @@ void ImageReader::readUniform(const String &path, Bitmap *pBm, SizeI &OriginalSi
 	//使之四像素对齐
 	szFinal.width() = szFinal.width() / 4 * 4;
 	szFinal.height() = szFinal.height() / 4 * 4;
-	*pBm = pBm->scale(szFinal);
+	*pBm = pBm->scale(szFinal.width(), szFinal.height());
 }

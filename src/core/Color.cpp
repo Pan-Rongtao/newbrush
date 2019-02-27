@@ -25,11 +25,6 @@ Color::Color(const Color &other)
 	setArgb(other.alpha(), other.red(), other.green(), other.blue());
 }
 
-Color::~Color()
-{
-
-}
-
 void Color::operator =(const Color &other)
 {
 	setArgb(other.alpha(), other.red(), other.green(), other.blue());
@@ -380,707 +375,707 @@ void Color::hsv2RgbF(float h, float s, float v, float &r, float &g, float &b)
 	}
 }
 
-Color Color::aliceBlue()
+Color Colors::aliceBlue()
 {
 	return Color(240, 248, 255);
 }
 
-Color Color::antiqueWhite()
+Color Colors::antiqueWhite()
 {
 	return Color(250, 235, 215);
 }
 
-Color Color::aqua()
+Color Colors::aqua()
 {
 	return Color(0, 255, 255);
 }
 
-Color Color::aquamarine()
+Color Colors::aquamarine()
 {
 	return Color(127, 255, 212);
 }
 
-Color Color::azure()
+Color Colors::azure()
 {
 	return Color(240, 255, 255);
 }
 
-Color Color::beige()
+Color Colors::beige()
 {
 	return Color(245, 245, 220);
 }
 
-Color Color::bisque()
+Color Colors::bisque()
 {
 	return Color(255, 228, 196);
 }
 
-Color Color::black()
+Color Colors::black()
 {
 	return Color(0, 0, 0);
 }
 
-Color Color::blanchedAlmond()
+Color Colors::blanchedAlmond()
 {
 	return Color(255, 255, 205);
 }
 
-Color Color::bluePure()
+Color Colors::blue()
 {
 	return Color(0, 0, 255);
 }
 
-Color Color::blueViolet()
+Color Colors::blueViolet()
 {
 	return Color(138, 43, 226);
 }
 
-Color Color::brown()
+Color Colors::brown()
 {
 	return Color(165, 42, 42);
 }
 
-Color Color::burlyWood()
+Color Colors::burlyWood()
 {
 	return Color(222, 184, 135);
 }
 
-Color Color::cadetBlue()
+Color Colors::cadetBlue()
 {
 	return Color(95, 158, 160);
 }
 
-Color Color::chartreuse()
+Color Colors::chartreuse()
 {
 	return Color(127, 255, 0);
 }
 
-Color Color::chocolate()
+Color Colors::chocolate()
 {
 	return Color(210, 105, 30);
 }
 
-Color Color::coral()
+Color Colors::coral()
 {
 	return Color(255, 127, 80);
 }
 
-Color Color::cornflowerBlue()
+Color Colors::cornflowerBlue()
 {
 	return Color(100, 149, 237);
 }
 
-Color Color::cornsilk()
+Color Colors::cornsilk()
 {
 	return Color(255, 248, 220);
 }
 
-Color Color::crimson()
+Color Colors::crimson()
 {
 	return Color(220, 20, 60);
 }
 
-Color Color::cyan()
+Color Colors::cyan()
 {
 	return Color(0, 255, 255);
 }
 
-Color Color::darkBlue()
+Color Colors::darkBlue()
 {
 	return Color(0, 0, 139);
 }
 
-Color Color::darkCyan()
+Color Colors::darkCyan()
 {
 	return Color(0, 139, 139);
 }
 
-Color Color::darkGoldenrod()
+Color Colors::darkGoldenrod()
 {
 	return Color(184, 134, 11);
 }
 
-Color Color::darkGray()
+Color Colors::darkGray()
 {
 	return Color(169, 169, 169);
 }
 
-Color Color::darkGreen()
+Color Colors::darkGreen()
 {
 	return Color(0, 100, 0);
 }
 
-Color Color::darkKhaki()
+Color Colors::darkKhaki()
 {
 	return Color(189, 183, 107);
 }
 
-Color Color::darkMagenta()
+Color Colors::darkMagenta()
 {
 	return Color(139, 0, 139);
 }
 
-Color Color::darkOliveGreen()
+Color Colors::darkOliveGreen()
 {
 	return Color(85, 107, 47);
 }
 
-Color Color::darkOrange()
+Color Colors::darkOrange()
 {
 	return Color(255, 140, 0);
 }
 
-Color Color::darkOrchid()
+Color Colors::darkOrchid()
 {
 	return Color(153, 50, 204);
 }
 
-Color Color::darkRed()
+Color Colors::darkRed()
 {
 	return Color(139, 0, 0);
 }
 
-Color Color::darkSalmon()
+Color Colors::darkSalmon()
 {
 	return Color(233, 150, 122);
 }
 
-Color Color::darkSeaGreen()
+Color Colors::darkSeaGreen()
 {
 	return Color(143, 188, 143);
 }
 
-Color Color::darkSlateBlue()
+Color Colors::darkSlateBlue()
 {
 	return Color(72, 61, 139);
 }
 
-Color Color::darkSlateGray()
+Color Colors::darkSlateGray()
 {
 	return Color(40, 79, 79);
 }
 
-Color Color::darkTurquoise()
+Color Colors::darkTurquoise()
 {
 	return Color(0, 206, 209);
 }
 
-Color Color::darkViolet()
+Color Colors::darkViolet()
 {
 	return Color(148, 0, 211);
 }
 
-Color Color::deepPink()
+Color Colors::deepPink()
 {
 	return Color(255, 20, 147);
 }
 
-Color Color::deepSkyBlue()
+Color Colors::deepSkyBlue()
 {
 	return Color(0, 191, 255);
 }
 
-Color Color::dimGray()
+Color Colors::dimGray()
 {
 	return Color(105, 105, 105);
 }
 
-Color Color::dodgerBlue()
+Color Colors::dodgerBlue()
 {
 	return Color(30, 144, 255);
 }
 
-Color Color::firebrick()
+Color Colors::firebrick()
 {
 	return Color(178, 34, 34);
 }
 
-Color Color::floralWhite()
+Color Colors::floralWhite()
 {
 	return Color(255, 250, 240);
 }
 
-Color Color::forestGreen()
+Color Colors::forestGreen()
 {
 	return Color(34, 139, 34);
 }
 
-Color Color::fuchsia()
+Color Colors::fuchsia()
 {
 	return Color(255, 0, 255);
 }
 
-Color Color::gainsboro()
+Color Colors::gainsboro()
 {
 	return Color(220, 220, 220);
 }
 
-Color Color::ghostWhite()
+Color Colors::ghostWhite()
 {
 	return Color(248, 248, 255);
 }
 
-Color Color::gold()
+Color Colors::gold()
 {
 	return Color(255, 215, 0);
 }
 
-Color Color::goldenrod()
+Color Colors::goldenrod()
 {
 	return Color(218, 165, 32);
 }
 
-Color Color::gray()
+Color Colors::gray()
 {
 	return Color(128, 128, 128);
 }
 
-Color Color::greenPure()
+Color Colors::green()
 {
 	return Color(0, 128, 0);
 }
 
-Color Color::greenYellow()
+Color Colors::greenYellow()
 {
 	return Color(173, 255, 47);
 }
 
-Color Color::honeydew()
+Color Colors::honeydew()
 {
 	return Color(240, 255, 240);
 }
 
-Color Color::hotPink()
+Color Colors::hotPink()
 {
 	return Color(255, 105, 180);
 }
 
-Color Color::indianRed()
+Color Colors::indianRed()
 {
 	return Color(205, 92, 92);
 }
 
-Color Color::indigo()
+Color Colors::indigo()
 {
 	return Color(75, 0, 130);
 }
 
-Color Color::ivory()
+Color Colors::ivory()
 {
 	return Color(255, 240, 240);
 }
 
-Color Color::khaki()
+Color Colors::khaki()
 {
 	return Color(240, 230, 140);
 }
 
-Color Color::lavender()
+Color Colors::lavender()
 {
 	return Color(230, 230, 250);
 }
 
-Color Color::lavenderBlush()
+Color Colors::lavenderBlush()
 {
 	return Color(255, 240, 245);
 }
 
-Color Color::lawnGreen()
+Color Colors::lawnGreen()
 {
 	return Color(124, 252, 0);
 }
 
-Color Color::lemonChiffon()
+Color Colors::lemonChiffon()
 {
 	return Color(255, 250, 205);
 }
 
-Color Color::lightBlue()
+Color Colors::lightBlue()
 {
 	return Color(173, 216, 230);
 }
 
-Color Color::lightCoral()
+Color Colors::lightCoral()
 {
 	return Color(240, 128, 128);
 }
 
-Color Color::lightCyan()
+Color Colors::lightCyan()
 {
 	return Color(224, 255, 255);
 }
 
-Color Color::lightGoldenrodYellow()
+Color Colors::lightGoldenrodYellow()
 {
 	return Color(250, 250, 210);
 }
 
-Color Color::lightGray()
+Color Colors::lightGray()
 {
 	return Color(211, 211, 211);
 }
 
-Color Color::lightGreen()
+Color Colors::lightGreen()
 {
 	return Color(144, 238, 144);
 }
 
-Color Color::lightPink()
+Color Colors::lightPink()
 {
 	return Color(255, 182, 193);
 }
 
-Color Color::lightSalmon()
+Color Colors::lightSalmon()
 {
 	return Color(255, 160, 122);
 }
 
-Color Color::lightSeaGreen()
+Color Colors::lightSeaGreen()
 {
 	return Color(32, 178, 170);
 }
 
-Color Color::lightSkyBlue()
+Color Colors::lightSkyBlue()
 {
 	return Color(135, 206, 250);
 }
 
-Color Color::lightSlateGray()
+Color Colors::lightSlateGray()
 {
 	return Color(119, 136, 153);
 }
 
-Color Color::lightSteelBlue()
+Color Colors::lightSteelBlue()
 {
 	return Color(176, 196, 222);
 }
 
-Color Color::lightYellow()
+Color Colors::lightYellow()
 {
 	return Color(255, 255, 224);
 }
 
-Color Color::lime()
+Color Colors::lime()
 {
 	return Color(0, 255, 0);
 }
 
-Color Color::limeGreen()
+Color Colors::limeGreen()
 {
 	return Color(50, 205, 50);
 }
 
-Color Color::linen()
+Color Colors::linen()
 {
 	return Color(250, 240, 230);
 }
 
-Color Color::magenta()
+Color Colors::magenta()
 {
 	return Color(255, 0, 255);
 }
 
-Color Color::maroon()
+Color Colors::maroon()
 {
 	return Color(128, 0, 0);
 }
 
-Color Color::mediumAquamarine()
+Color Colors::mediumAquamarine()
 {
 	return Color(102, 205, 170);
 }
 
-Color Color::mediumBlue()
+Color Colors::mediumBlue()
 {
 	return Color(0, 0, 205);
 }
 
-Color Color::mediumOrchid()
+Color Colors::mediumOrchid()
 {
 	return Color(186, 85, 211);
 }
 
-Color Color::mediumPurple()
+Color Colors::mediumPurple()
 {
 	return Color(147, 112, 219);
 }
 
-Color Color::mediumSeaGreen()
+Color Colors::mediumSeaGreen()
 {
 	return Color(60, 179, 113);
 }
 
-Color Color::mediumSlateBlue()
+Color Colors::mediumSlateBlue()
 {
 	return Color(123, 104, 238);
 }
 
-Color Color::mediumSpringGreen()
+Color Colors::mediumSpringGreen()
 {
 	return Color(0, 250, 154);
 }
 
-Color Color::mediumTurquoise()
+Color Colors::mediumTurquoise()
 {
 	return Color(72, 209, 204);
 }
 
-Color Color::mediumVioletRed()
+Color Colors::mediumVioletRed()
 {
 	return Color(199, 21, 112);
 }
 
-Color Color::midnightBlue()
+Color Colors::midnightBlue()
 {
 	return Color(25, 25, 112);
 }
 
-Color Color::mintCream()
+Color Colors::mintCream()
 {
 	return Color(245, 255, 250);
 }
 
-Color Color::mistyRose()
+Color Colors::mistyRose()
 {
 	return Color(255, 228, 225);
 }
 
-Color Color::moccasin()
+Color Colors::moccasin()
 {
 	return Color(255, 228, 181);
 }
 
-Color Color::navajoWhite()
+Color Colors::navajoWhite()
 {
 	return Color(255, 222, 173);
 }
 
-Color Color::navy()
+Color Colors::navy()
 {
 	return Color(0, 0, 128);
 }
 
-Color Color::oldLace()
+Color Colors::oldLace()
 {
 	return Color(253, 245, 230);
 }
 
-Color Color::olive()
+Color Colors::olive()
 {
 	return Color(128, 128, 0);
 }
 
-Color Color::oliveDrab()
+Color Colors::oliveDrab()
 {
 	return Color(107, 142, 45);
 }
 
-Color Color::orange()
+Color Colors::orange()
 {
 	return Color(255, 165, 0);
 }
 
-Color Color::orangeRed()
+Color Colors::orangeRed()
 {
 	return Color(255, 69, 0);
 }
 
-Color Color::orchid()
+Color Colors::orchid()
 {
 	return Color(218, 112, 214);
 }
 
-Color Color::paleGoldenrod()
+Color Colors::paleGoldenrod()
 {
 	return Color(238, 232, 170);
 }
 
-Color Color::paleGreen()
+Color Colors::paleGreen()
 {
 	return Color(152, 251, 152);
 }
 
-Color Color::paleTurquoise()
+Color Colors::paleTurquoise()
 {
 	return Color(175, 238, 238);
 }
 
-Color Color::paleVioletRed()
+Color Colors::paleVioletRed()
 {
 	return Color(219, 112, 147);
 }
 
-Color Color::papayaWhip()
+Color Colors::papayaWhip()
 {
 	return Color(255, 239, 213);
 }
 
-Color Color::peachPuff()
+Color Colors::peachPuff()
 {
 	return Color(255, 218, 155);
 }
 
-Color Color::peru()
+Color Colors::peru()
 {
 	return Color(205, 133, 63);
 }
 
-Color Color::pink()
+Color Colors::pink()
 {
 	return Color(255, 192, 203);
 }
 
-Color Color::plum()
+Color Colors::plum()
 {
 	return Color(221, 160, 221);
 }
 
-Color Color::powderBlue()
+Color Colors::powderBlue()
 {
 	return Color(176, 224, 230);
 }
 
-Color Color::purple()
+Color Colors::purple()
 {
 	return Color(128, 0, 128);
 }
 
-Color Color::redPure()
+Color Colors::red()
 {
 	return Color(255, 0, 0);
 }
 
-Color Color::rosyBrown()
+Color Colors::rosyBrown()
 {
 	return Color(188, 143, 143);
 }
 
-Color Color::royalBlue()
+Color Colors::royalBlue()
 {
 	return Color(65, 105, 225);
 }
 
-Color Color::saddleBrown()
+Color Colors::saddleBrown()
 {
 	return Color(139, 69, 19);
 }
 
-Color Color::salmon()
+Color Colors::salmon()
 {
 	return Color(250, 128, 114);
 }
 
-Color Color::sandyBrown()
+Color Colors::sandyBrown()
 {
 	return Color(244, 164, 96);
 }
 
-Color Color::seaGreen()
+Color Colors::seaGreen()
 {
 	return Color(46, 139, 87);
 }
 
-Color Color::seaShell()
+Color Colors::seaShell()
 {
 	return Color(255, 245, 238);
 }
 
-Color Color::sienna()
+Color Colors::sienna()
 {
 	return Color(160, 82, 45);
 }
 
-Color Color::silver()
+Color Colors::silver()
 {
 	return Color(192, 192, 192);
 }
 
-Color Color::skyBlue()
+Color Colors::skyBlue()
 {
 	return Color(135, 206, 235);
 }
 
-Color Color::slateBlue()
+Color Colors::slateBlue()
 {
 	return Color(106, 90, 205);
 }
 
-Color Color::slateGray()
+Color Colors::slateGray()
 {
 	return Color(112, 128, 144);
 }
 
-Color Color::snow()
+Color Colors::snow()
 {
 	return Color(255, 250, 250);
 }
 
-Color Color::springGreen()
+Color Colors::springGreen()
 {
 	return Color(0, 255, 127);
 }
 
-Color Color::steelBlue()
+Color Colors::steelBlue()
 {
 	return Color(70, 130, 180);
 }
 
-Color Color::tan()
+Color Colors::tan()
 {
 	return Color(210, 180, 140);
 }
 
-Color Color::teal()
+Color Colors::teal()
 {
 	return Color(0, 128, 128);
 }
 
-Color Color::thistle()
+Color Colors::thistle()
 {
 	return Color(216, 191, 216);
 }
 
-Color Color::tomato()
+Color Colors::tomato()
 {
 	return Color(253, 99, 71);
 }
 
-Color Color::transparent()
+Color Colors::transparent()
 {
 	return Color(0, 255, 255, 255);
 }
 
-Color Color::turquoise()
+Color Colors::turquoise()
 {
 	return Color(64, 224, 208);
 }
 
-Color Color::violet()
+Color Colors::violet()
 {
 	return Color(238, 130, 238);
 }
 
-Color Color::wheat()
+Color Colors::wheat()
 {
 	return Color(245, 222, 179);
 }
 
-Color Color::white()
+Color Colors::white()
 {
 	return Color(255, 255, 255);
 }
 
-Color Color::whiteSmoke()
+Color Colors::whiteSmoke()
 {
 	return Color(245, 245, 245);
 }
 
-Color Color::yellow()
+Color Colors::yellow()
 {
 	return Color(255, 255, 0);
 }
 
-Color Color::yellowGreen()
+Color Colors::yellowGreen()
 {
 	return Color(154, 205, 50);
 }

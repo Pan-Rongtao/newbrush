@@ -64,6 +64,7 @@ std::string nb::getTargetPlatformName()
 	case PLATFORM_MAC:			return "Mac";
 	case PLATFORM_IOS:			return "Ios";
 	case PLATFORM_ANDROID:		return "Android";
+	case PLATFORM_QNX:			return "Qnx";
 	default:					return "Unknown";
 	}
 }
@@ -89,17 +90,6 @@ int nb::getCurrentProcessId()
 	return getpid();
 #else
 	#error "not define getCurrentProcessId on this platform"
-#endif
-}
-
-int nb::getCurrentThreadId()
-{
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
-	return ::GetCurrentThreadId();
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	return pthread_self();
-#else
-	#error "not define getCurrentThreadId on this platform"
 #endif
 }
 
@@ -147,26 +137,5 @@ std::string nb::getProcessName(int pid)
 
 #else
 	#error "not define getProcessName on this platform."
-#endif
-}
-
-void nb::sleep(int seconds)
-{
-	msleep(seconds * 1000);
-}
-
-void nb::msleep(int milliseconds)
-{
-	usleep(milliseconds * 1000);
-}
-
-void nb::usleep(int useconds)
-{
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
-	::Sleep(useconds / 1000);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
-	::usleep(useconds);
-#else
-	#error "not define usleep on this platform."
 #endif
 }

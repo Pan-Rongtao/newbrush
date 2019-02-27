@@ -12,7 +12,7 @@ class ExifReader_Internal
 public:
 	ExifReader_Internal();
 
-	void open(const nb::core::String &fileName);
+	void open(const std::string &path);
 
 	int width() const;
 	int height() const;

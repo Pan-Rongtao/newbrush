@@ -5,27 +5,9 @@ using namespace nb::core;
 using namespace nb::media;
 
 ExifReader::ExifReader()
-: m_internal(nullptr)
+	: m_internal(nullptr)
 {
 	m_internal = new ExifReader_Internal();
-}
-
-ExifReader::ExifReader(const String &fileName)
-: m_internal(nullptr)
-{
-	m_internal = new ExifReader_Internal();
-	open(fileName);
-}
-
-ExifReader::ExifReader(const ExifReader &other)
-{
-	m_internal = new ExifReader_Internal(*(other.m_internal));
-}
-
-void ExifReader::operator = (const ExifReader &other)
-{
-	delete m_internal;
-	m_internal = new ExifReader_Internal(*(other.m_internal));
 }
 
 ExifReader::~ExifReader()
@@ -33,9 +15,9 @@ ExifReader::~ExifReader()
 	delete m_internal;
 }
 
-void ExifReader::open(const String &fileName)
+void ExifReader::open(const std::string &path)
 {
-	m_internal->open(fileName);
+	m_internal->open(path);
 }
 
 int ExifReader::width() const

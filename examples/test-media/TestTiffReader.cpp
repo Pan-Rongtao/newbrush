@@ -12,7 +12,7 @@ void TestTiffReader::Test()
 		Bitmap bm = TiffR.frame(i);
 		char arr[20] = {0};
 		sprintf(arr, "d:/%d.jpg", i);
-		bm.saveAsFile(arr);
+		bm.save(arr);
 	}
 
 }

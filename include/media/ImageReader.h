@@ -14,10 +14,10 @@ public:
 	nb::core::SizeI scaledSize() const;
 
 	//读取path的文件，并把伸缩后的图片数据保存在bm中
-	void read(const nb::core::String &path, Bitmap *pBm);
+	void read(const std::string &path, Bitmap *pBm);
 
 	//读取path的文件，并把等比例伸缩后的数据保存到bm中
-	void readUniform(const nb::core::String &path, Bitmap *pBm, nb::core::SizeI &OriginalSize);
+	void readUniform(const std::string &path, Bitmap *pBm, nb::core::SizeI &OriginalSize);
 
 public:
 	//构建一个图片读取器，它读取的伸缩尺寸为160x160

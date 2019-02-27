@@ -12,7 +12,7 @@ void TestGifReader::Test()
 		Bitmap bm = gifR.frame(i);
 		char arr[20] = {0};
 		sprintf(arr, "f:/pics/gif/%d.jpg", i);
-		bm.saveAsFile(arr);
+		bm.save(arr);
 	}
 
 }

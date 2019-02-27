@@ -19,7 +19,7 @@
 #define PLATFORM_MAC						0x00000020
 #define PLATFORM_IOS						0x00000040
 #define PLATFORM_ANDROID					0x00000080
-#define PLATFORM_ANDROID					0x00000100
+#define PLATFORM_QNX						0x00000100
 #define NB_SDK_TARGET_PLATFORM				PLATFORM_UNKNOWN
 
 //类UNIX下可使用g++ -dM -E - </dev/null命令查看编译器默认宏
@@ -133,14 +133,7 @@ namespace nb {
 	//获取当前进程id
 	NB_API int getCurrentProcessId();
 
-	//获取当前线程id
-	NB_API int getCurrentThreadId();
-
 	//根据pid获取进程名
 	NB_API std::string getProcessName(int pid);
 
-	//休眠秒/毫秒/微秒
-	NB_API void sleep(int seconds);
-	NB_API void msleep(int milliseconds);
-	NB_API void usleep(int useconds);
 }

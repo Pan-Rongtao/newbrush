@@ -52,7 +52,7 @@ void Cubemap::load(const std::vector<std::string> &paths)
 	int glType[6] = { 0 };
 	for (int i = 0; i != paths.size(); ++i)
 	{
-		bms[i].loadFile(paths[i].data());
+		bms[i].load(paths[i].data());
 		bitmapFormatToGlFormat(bms[i].pixelFormat(), glFormat[i], glType[i]);
 	}
 

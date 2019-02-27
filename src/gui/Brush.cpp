@@ -20,7 +20,7 @@ Brush::~Brush()
 
 //class SolidColorBrush
 SolidColorBrush::SolidColorBrush()
-	: Color(Color::black())
+	: Color(Colors::black())
 {
 }
 

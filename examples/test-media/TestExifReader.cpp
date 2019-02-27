@@ -47,18 +47,19 @@ void TestExifReader::Test()
 			int k = nb::getTickCount();
 			char arr[100] = {0};
 			sprintf(arr, "d:/%d.jpg", i);
-			thumbs[0].saveAsFile(arr);
+			thumbs[0].save(arr);
 			int kk = nb::getTickCount();
 		//	printf("[%d]thumb [%s] [%d]\r\n", i, sFile, kk - k);
 		}
 	}
 
-	ExifReader reader1("e:/pics/111.jpg");
+	ExifReader reader1;
+	reader1.open("e:/pics/111.jpg");
 	std::vector<Bitmap> thumbs;
 	reader1.getThumbnails(thumbs);
 	Bitmap *bm = new Bitmap();
-	bm->loadFileNarrowed("f:/xxx/3.jpg", 8);
-	bm->saveAsFile("f:/xxx/yyy.jpg");
+	bm->load("f:/xxx/3.jpg", 8);
+	bm->save("f:/xxx/yyy.jpg");
 	delete bm;
 /*
 	ExifReader reader2("f:/xxx/0.jpg");

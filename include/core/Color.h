@@ -32,7 +32,7 @@ public:
 	Color(uint8_t a, uint8_t r, uint8_t g, uint8_t b);
 
 	Color(const Color &other);
-	~Color();
+	~Color() = default;
 
 	void operator =(const Color &other);
 	bool operator ==(const Color &other) const;
@@ -166,6 +166,24 @@ public:
 	//判断颜色值是否相等
 	bool equals(const Color &other) const;
 
+private:
+	//返回值将被四舍五入，比如如果R计算为127.5，置为128
+	static uint8_t argbF2Argb(float f);
+	//返回结果将保持float的小数精度
+	static float argb2ArgbF(uint8_t n);
+
+	//rgbF与hsv的转换
+	static void rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v);
+	static void hsv2RgbF(float h, float s, float v, float &r, float &g, float &b);
+	
+	uint8_t		m_Alpha;
+	uint8_t		m_Red;
+	uint8_t		m_Green;
+	uint8_t		m_Blue;
+};
+
+class NB_API Colors
+{
 public:
 	static Color aliceBlue();
 	static Color antiqueWhite();
@@ -176,7 +194,7 @@ public:
 	static Color bisque();
 	static Color black();
 	static Color blanchedAlmond();
-	static Color bluePure();
+	static Color blue();
 	static Color blueViolet();
 	static Color brown();
 	static Color burlyWood();
@@ -218,7 +236,7 @@ public:
 	static Color gold();
 	static Color goldenrod();
 	static Color gray();
-	static Color greenPure();
+	static Color green();
 	static Color greenYellow();
 	static Color honeydew();
 	static Color hotPink();
@@ -280,7 +298,7 @@ public:
 	static Color plum();
 	static Color powderBlue();
 	static Color purple();
-	static Color redPure();
+	static Color red();
 	static Color rosyBrown();
 	static Color royalBlue();
 	static Color saddleBrown();
@@ -309,21 +327,6 @@ public:
 	static Color yellow();
 	static Color yellowGreen();
 	
-private:
-	//返回值将被四舍五入，比如如果R计算为127.5，置为128
-	static uint8_t argbF2Argb(float f);
-	//返回结果将保持float的小数精度
-	static float argb2ArgbF(uint8_t n);
-
-	//rgbF与hsv的转换
-	static void rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v);
-	static void hsv2RgbF(float h, float s, float v, float &r, float &g, float &b);
-
-
-	uint8_t		m_Alpha;
-	uint8_t		m_Red;
-	uint8_t		m_Green;
-	uint8_t		m_Blue;
 };
 
 }}

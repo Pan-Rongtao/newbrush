@@ -46,16 +46,14 @@ public:
 	//构建一个ExifReader读取器
 	ExifReader();
 
-	//构建一个ExifReader，它指向路径为fileName的文件
-	//异常：文件不存在
-	explicit ExifReader(const nb::core::String &fileName);
+	ExifReader(const ExifReader &other) = delete;
+	void operator = (const ExifReader &other) = delete;
 
 	~ExifReader();
 
-public:
 	//打开
 	//异常：文件不存在
-	void open(const nb::core::String &fileName);
+	void open(const std::string &path);
 
 	//获取宽度
 	int width() const;
@@ -70,9 +68,6 @@ public:
 	void getThumbnails(std::vector<Bitmap> &results) const;
 
 private:
-	ExifReader(const ExifReader &other);
-	void operator = (const ExifReader &other);
-
 	ExifReader_Internal		*m_internal;
 };
 
