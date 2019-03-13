@@ -27,21 +27,24 @@
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_WINDOWS
 	#pragma warning(disable: 4251)
+	#if _MSC_VER < 1900
+		#error "you must build under vs2015 or later version"
+	#endif
 #elif defined(WINCE)															//wince
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_WINCE
-#elif defined(__QNX__)
+#elif defined(__ANDROID__) || (__Android__)										//android
+	#undef	NB_SDK_TARGET_PLATFORM
+	#define NB_SDK_TARGET_PLATFORM		PLATFORM_ANDROID
+#elif defined(__QNX__) || defined(__QNXNTO)										//qnx(gcc 5.4)
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_QNX
-#elif defined(__ARMEL__) || defined(LINUX_ARM) || defined(__aarch64__)			//linux-arm
+#elif defined(__ARM_ARCH)														//linux-arm，该值为几代表第几代，比如是7代表第7代v7
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_LINUX_ARM
 #elif defined(linux) || defined(__linux__) || defined(__LINUX__)				//linux-x11
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_LINUX_X11
-#elif defined(__ANDROID__) || (__Android__)										//android
-	#undef	NB_SDK_TARGET_PLATFORM
-	#define NB_SDK_TARGET_PLATFORM		PLATFORM_ANDROID
 #elif defined(__IOS__) || defined(__Ios__) || defined(ios)						//ios（ios只能主动设置？）
 	#undef	NB_SDK_TARGET_PLATFORM
 	#define NB_SDK_TARGET_PLATFORM		PLATFORM_IOS
