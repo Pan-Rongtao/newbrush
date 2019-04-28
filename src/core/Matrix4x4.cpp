@@ -239,8 +239,8 @@ Matrix4x4 &Matrix4x4::rotateRadianZ(float radian)
 
 Matrix4x4 &Matrix4x4::rotateAngle(float angle, float x, float y, float z)
 {
-	float radian = (float)nb::angleToRadian(angle);
-	return rotateRadian(radian, x, y, z);
+	auto radian = NB_ANG2RAD(angle);
+	return rotateRadian((float)radian, x, y, z);
 }
 
 Matrix4x4 &Matrix4x4::rotateAngleX(float angle)

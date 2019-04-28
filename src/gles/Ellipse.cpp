@@ -13,7 +13,7 @@ Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
 	std::vector<Vertex> vertexs;
 	//中心点
 	vertexs.push_back(Vertex(Vec3(), Vec4(), Vec2(0.5, 0.5)));
-	double oneRadian = (2 * nb::pi()) / (ELLIPSE_VERTEX_COUNT - 2);
+	double oneRadian = NB_2PI / (ELLIPSE_VERTEX_COUNT - 2);
 	//是否是笛卡尔坐标系，顶点和纹理坐标将不同
 	if (cartesian)
 	{

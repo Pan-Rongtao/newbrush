@@ -1,13 +1,13 @@
 #pragma once
 #include <map>
 #include "core/Def.h"
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	#include <Windows.h>
 	#include <WindowsX.h>
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	#include <X11/X.h>
 	#include <X11/Xlib.h>
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	#include <wayland-client.h>
 	#include <wayland-egl.h>
 #endif
@@ -44,19 +44,19 @@ private:
 	Window				*m_pW;
 
 	//根据不同平台的私有变量和私有函数
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	HINSTANCE						m_instance;
 	HWND							m_hwnd;
 	static bool						m_pressed;
 	static std::map<long, Window *>	m_windows;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	void x11WindowPending();
 	WindowEvent::KeyCode nativeKeyToKeycode(int key);
 	::Display						*m_X11Display;
 	::Window						m_X11WindowID;
 	nb::core::RectI					m_rect;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	//wl_registry global消息
 	static void onWaylandRegistryGlobal(void *data, struct wl_registry *wl_registry, uint32_t name, const char *interface, uint32_t version);
 

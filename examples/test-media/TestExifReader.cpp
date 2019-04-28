@@ -27,7 +27,7 @@ void TestExifReader::Test()
 		/*
 		for(int j = 0; j != thumbs.size(); ++i)
 		{
-			int k = nb::getTickCount();
+			int k = NB_GET_TICK_COUT;
 			Bitmap &bm = thumbs[j];
 			int w = bm.GetWidth();
 			int h = bm.GetHeight();
@@ -36,7 +36,7 @@ void TestExifReader::Test()
 			char arr[100] = {0};
 			sprintf(arr, "d:/%d.jpg", i);
 			bm.saveAsFile(arr);
-			int kk = nb::getTickCount();
+			int kk = NB_GET_TICK_COUT;
 			printf("[%d]thumb [%s] [%d]\r\n", i, sFile, kk - k);
 			bool xx = 10;
 		}
@@ -44,11 +44,11 @@ void TestExifReader::Test()
 
 		if(!thumbs.empty())
 		{
-			int k = nb::getTickCount();
+			int k = NB_GET_TICK_COUT;
 			char arr[100] = {0};
 			sprintf(arr, "d:/%d.jpg", i);
 			thumbs[0].save(arr);
-			int kk = nb::getTickCount();
+			int kk = NB_GET_TICK_COUT;
 		//	printf("[%d]thumb [%s] [%d]\r\n", i, sFile, kk - k);
 		}
 	}

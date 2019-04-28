@@ -5,11 +5,11 @@
 
 using namespace nb::core;
 
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	bool Window_Internal::m_pressed = false;
 	std::map<long, Window *> Window_Internal::m_windows;
 	#define WINDOW_CLASS_NAME	"Newbrush Class"
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif defined NB_OS_FAMILY_UNIX
 	static wl_fixed_t x_pointer_move = 0;
 	static wl_fixed_t y_pointer_move = 0;
 #endif
@@ -17,7 +17,7 @@ using namespace nb::core;
 Window_Internal::Window_Internal(Window *p)
 	: m_pW(p)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	m_instance = ::GetModuleHandle(NULL);
 
 	WNDCLASSA windowClass = { 0 };
@@ -45,8 +45,7 @@ Window_Internal::Window_Internal(Window *p)
 	::ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	::UpdateWindow(m_hwnd);
 	m_windows[(long)m_hwnd] = m_pW;
-
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	m_X11Display = XOpenDisplay(nullptr);
 	if (m_X11Display == nullptr)
 		throw SystemException("XOpenDiplay return nullptr");
@@ -55,8 +54,7 @@ Window_Internal::Window_Internal(Window *p)
 	m_X11WindowID = XCreateSimpleWindow(m_X11Display, RootWindow(m_X11Display, screen), 0, 0, 800, 480, 1, BlackPixel(m_X11Display, screen), WhitePixel(m_X11Display, screen));
 	XSelectInput(m_X11Display, m_X11WindowID, StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask);
 	XMapWindow(m_X11Display, m_X11WindowID);
-
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	m_wlDisplay = wl_display_connect(NULL);
 	if (m_wlDisplay == NULL)
 		throw SystemException("create window fail.");
@@ -84,14 +82,14 @@ Window_Internal::Window_Internal(Window *p)
 
 Window_Internal::~Window_Internal()
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	if (::DestroyWindow(m_hwnd) || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
 	{
 		printf("DestroyWindow or UnregisterClass window class fail. error code[%d]", GetLastError());
 	}
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	XCloseDisplay(m_X11Display);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	wl_shell_surface_destroy(m_wlShellSurface);
 	wl_surface_destroy(m_wlSurface);
 	//是否要删除shell和compositor？
@@ -100,11 +98,11 @@ Window_Internal::~Window_Internal()
 
 void Window_Internal::setTitle(const std::string & title)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	::SetWindowTextA(m_hwnd, title.data());
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	int x = XStoreName(m_X11Display, m_X11WindowID, title.data());
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	wl_shell_surface_set_title(m_wlShellSurface, title.data());
 #endif
 }
@@ -112,152 +110,152 @@ void Window_Internal::setTitle(const std::string & title)
 std::string Window_Internal::title() const
 {
 	char arr[256] = { 0 };
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	GetWindowTextA(m_hwnd, arr, sizeof(arr));
 	return arr;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	Status x = XFetchName(m_X11Display, m_X11WindowID, &arr);
 	return (x == 0 || arr == NULL) ? "" : arr;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return "";
 #endif
 }
 
 void Window_Internal::setX(int x)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x, y(), x + width(), y() + height()};
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
 	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x, y(), width(), height());
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	//	wl_shell_surface_resize(m_wlShellSurface, m_wlGlobals.wlSeat, );
 #endif
 }
 
 int Window_Internal::x() const
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcWindow;
 	::GetWindowRect(m_hwnd, &rcWindow);
 	return rcWindow.left;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_WINDOWS
 	//	XWindowAttributes attrs;
 	//	XGetWindowAttributes(m_X11Display, m_X11WindowID, &attrs);
 	return 0;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return 0;
 #endif
 }
 
 void Window_Internal::setY(int y)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x(), y, x() + width(), y + height() };
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
 	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y, width(), height());
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	//	wl_shell_surface_resize(m_wlShellSurface, m_wlGlobals.wlSeat, );
 #endif
 }
 
 int Window_Internal::y() const
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcWindow;
 	::GetWindowRect(m_hwnd, &rcWindow);
 	return rcWindow.top;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	//	XWindowAttributes attrs;
 	//	XGetWindowAttributes(m_X11Display, m_X11WindowID, &attrs);
 	return 0;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return 0;
 #endif
 }
 
 void Window_Internal::setWidth(int width)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x(), y(), x() + width, y() + height() };
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
 	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y(), width, height());
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	//	wl_shell_surface_resize(m_wlShellSurface, m_wlGlobals.wlSeat, );
 #endif
 }
 
 int Window_Internal::width() const
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcClient;
 	::GetClientRect(m_hwnd, &rcClient);
 	return rcClient.right - rcClient.left;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	//	XWindowAttributes attrs;
 	//	XGetWindowAttributes(m_X11Display, m_X11WindowID, &attrs);
 	return 0;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return 0;
 #endif
 }
 
 void Window_Internal::setHeight(int height)
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x(), y(), x() + width(), y() + height };
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
 	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y(), width(), height);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	//	wl_shell_surface_resize(m_wlShellSurface, m_wlGlobals.wlSeat, );
 #endif
 }
 
 int Window_Internal::height() const
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcClient;
 	::GetClientRect(m_hwnd, &rcClient);
 	return rcClient.bottom - rcClient.top;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	//	XWindowAttributes attrs;
 	//	XGetWindowAttributes(m_X11Display, m_X11WindowID, &attrs);
 	return 0;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return 0;
 #endif
 }
 
 long Window_Internal::handle() const
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	return (long)m_hwnd;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	return m_X11WindowID;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	return (long)m_wlWindow;
 #endif
 }
 
 void Window_Internal::pending()
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	MSG msg = { 0 };
 	if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		::TranslateMessage(&msg);
 		::DispatchMessage(&msg);
 	}
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 	x11WindowPending();
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 	wl_display_dispatch_pending(m_wlDisplay);
 #endif
 }
@@ -265,7 +263,7 @@ void Window_Internal::pending()
 //////////////////////////
 //以下为其他私有函数，callback等
 
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 
 LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -394,7 +392,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 	}
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
+#elif defined NB_OS_FAMILY_UNIX
 void Window_Internal::x11WindowPending()
 {
 	if (!XPending(m_X11Display))
@@ -493,7 +491,7 @@ KeyCode Window_Internal::nativeKeyToKeycode(int key)
 	return ret;
 }
 
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif NB_OS == NB_OS_LINUX_ARM
 
 void Window_Internal::onWaylandRegistryGlobal(void *data, struct wl_registry *wl_registry, uint32_t name, const char *interface, uint32_t version)
 {

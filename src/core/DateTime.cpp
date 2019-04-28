@@ -1,9 +1,9 @@
 ﻿#include "core/DateTime.h"
 #include <time.h>
 #include <algorithm>
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 #include <sys/timeb.h>
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif defined NB_OS_FAMILY_UNIX
 #include <sys/time.h>
 #endif
 
@@ -61,12 +61,12 @@ Date Date::today()
 {
 	const time_t t = time(nullptr);
 	tm Tm;
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	errno_t ret = localtime_s(&Tm, &t);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif defined NB_OS_FAMILY_UNIX
 	localtime_r(&t, &Tm);
 #else
-#error "not Date::today() on this platform"
+	#error "not Date::today() on this platform"
 #endif
 	return Date(Tm.tm_year + 1900, Tm.tm_mon + 1, Tm.tm_mday);
 }
@@ -410,14 +410,14 @@ Time Time::midnight()
 
 Time Time::now()
 {
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS
+#ifdef NB_OS_FAMILY_WINDOWS
 	_timeb tb;
 	tm Tm;
 	errno_t ret = _ftime_s(&tb);
 	ret = localtime_s(&Tm, &tb.time);
 	unsigned short ms = tb.millitm;
 	return Time(Tm.tm_hour, Tm.tm_min, Tm.tm_sec, ms);
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11 || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#elif defined NB_OS_FAMILY_UNIX
 	struct timeval tv;
 	gettimeofday(&tv, 0);
 

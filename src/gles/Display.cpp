@@ -1,7 +1,7 @@
 #include "gles/Display.h"
 #include "core/Def.h"
 #include <EGL/egl.h>
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#if NB_OS == NB_OS_LINUX_ARM
 	#include <wayland-client.h>
 #endif
 #include "core/Exception.h"
@@ -48,13 +48,10 @@ void *Display::handle() const
 Display Display::defaultx()
 {
 	EGLNativeDisplayType id = EGLNativeDisplayType(-1);
-#if NB_SDK_TARGET_PLATFORM == PLATFORM_WINDOWS || NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_X11
-	id = EGL_DEFAULT_DISPLAY;
-#elif NB_SDK_TARGET_PLATFORM == PLATFORM_LINUX_ARM
+#if NB_OS == NB_OS_LINUX && NB_ARCH == NB_ARCH_ARM
 	id = (EGLNativeDisplayType)(wl_display_connect(nullptr));	//如果使用wayland，传入EGL_DEFAULT_DISPLAY会导致eglInitialize挂死
 #else
-#error "not realize fun Display::Default() in this platform.\r\n"
+	id = EGL_DEFAULT_DISPLAY;
 #endif
-
 	return Display((long)id);
 }

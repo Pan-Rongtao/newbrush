@@ -27,7 +27,7 @@ void Projection::ortho(float left, float right, float bottom, float top, float n
 
 void Projection::perspective(float fovy, float aspect, float near, float far)
 {
-	float range = tanf((float)fovy * (float)nb::angleToRadian(0.5)) * near;
+	float range = (float)(tan(fovy * NB_ANG2RAD(0.5)) * near);
 	float left = -range * aspect;
 	float right = range * aspect;
 	float bottom = -range;

@@ -8,8 +8,8 @@ using namespace nb::gl;
 void TestModel::Test()
 {
 	Model *model = new Model();
-	int k = nb::getTickCount();
-	printf("cost=%d\r\n", nb::getTickCount() - k);
+	int k = NB_GET_TICK_COUT;
+	printf("cost=%d\r\n", NB_GET_TICK_COUT - k);
 
 	while(1) {}
 }

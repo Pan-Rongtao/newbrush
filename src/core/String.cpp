@@ -747,9 +747,15 @@ String String::CutLeft(int count) const
 	return Mid(count);
 }
 
+template<class T>
+NB_API const T &bound(const T &lower, const T &upper, const T &value)
+{
+	return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
+}
+
 String String::CutRight(int count) const
 {
-	int nCutSize = nb::bound(0, GetSize(), count);
+	int nCutSize = bound(0, GetSize(), count);
 	return CutMid(GetSize() - nCutSize, nCutSize);
 }
 
