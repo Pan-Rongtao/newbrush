@@ -21,16 +21,16 @@ class NB_API ImageSource
 public:
 	ImageSource();
 	ImageSource(const std::string &uri);
+	ImageSource(const ImageSource &other) = delete;
+	void operator = (const ImageSource &other) = delete;
 
 	void load(const std::string &uri);
 
 public:
-	nb::core::Property_r<double>		Width = nb::core::Property_r<double>( property_getter(double) { return m_bm ? m_bm->width() : 0.0; } );
-	nb::core::Property_r<double>		Height = nb::core::Property_r<double>( property_getter(double) { return m_bm ? m_bm->width() : 0.0; } );
+	nb::core::Property_r<double>		Width;
+	nb::core::Property_r<double>		Height;
 
 private:
-	ImageSource(const ImageSource &other);
-	void operator = (const ImageSource &other);
 
 	std::shared_ptr<nb::media::Bitmap> 		m_bm;
 };

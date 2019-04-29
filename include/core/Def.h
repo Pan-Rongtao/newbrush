@@ -76,6 +76,8 @@
 #define NB_HALF_PI					1.57079632679489661
 #define NB_ANG2RAD(angle)			(0.01745329251994329 * angle)
 #define NB_RAD2ANG(radian)			(57.2957795130823208 * radian)
+#define NB_DOUBLE_MAX				std::numeric_limits<double>::max()
+#define NB_DOUBLE_NAN				DBL_EPSILON
 #define NB_PID						nb::getPid()
 #define NB_GET_TICK_COUT			nb::getTickCount()
 
@@ -84,4 +86,11 @@ namespace nb
 	//获取开机以来的时钟滴答数（毫秒数）
 	NB_API uint64_t getTickCount();
 
+	//取边界内的合法值（传入的min和max会被修正），返回值可以是min, max，也可以是value本身；Bound(1, 5, 10) = 5; Bound(1, 5, 0) = 1; Bound(1, 5, 3) = 3;
+	//min和max被定义为宏，需要加()
+	template<class T>
+	NB_API const T &bound(const T &lower, const T &upper, const T &value)
+	{
+		return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
+	}
 }

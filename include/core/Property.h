@@ -11,23 +11,24 @@ template<typename T>
 class Property_rw
 {
 public:
-	Property_rw() : m_notify(nullptr), m_v(T()) {}
-	Property_rw(T v) : m_notify(nullptr), m_v(v) {}
+	Property_rw() : m_v(T()) {}
+	Property_rw(T v) : m_v(v) {}
 
-	void setNotify(std::function<void(const T &, const T &)> notify)
+	//设置通知函数
+	void notify(std::function<void(const T &, const T &)> notify)
 	{
 		m_notify = std::move(notify);
 	}
 
-	void operator =(const Property_rw &other)
+	//绑定，可以是任意返回T&的函数，表达式；绑定后，属性返回值将受绑定函数影响，如果传入nullptr表示取消绑定
+	void bind(std::function<const T&(void)> binder)
 	{
-		if (m_v != other.m_v)
-		{
-			T old = m_v;
-			m_v = other.m_v;
-			if (m_notify)
-				m_notify(old, m_v);
-		}
+		m_binder = std::move(binder);
+	}
+
+	void operator =(const Property_rw<T> &other)
+	{
+		operator=(other.m_binder ? other.m_binder() : other.m_v);
 	}
 
 	void operator =(const T &v)
@@ -41,13 +42,22 @@ public:
 		}
 	}
 
+	bool operator == (const T &v) const { return v == operator()(); }
+	bool operator != (const T &v) const { return !operator==(v); }
+
 	operator const T&() const
 	{
-		return m_v;
+		return m_binder ? m_binder() : m_v;
+	}
+
+	const T & operator()() const
+	{
+		return m_binder ? m_binder() : m_v;
 	}
 
 private:
 	std::function<void(const T &, const T &)>	m_notify;
+	std::function<const T&(void)>				m_binder;
 	T											m_v;
 };
 
@@ -55,22 +65,24 @@ template<typename T>
 class Property_r
 {
 public:
-	Property_r() : m_getter(nullptr), m_v(T()) {}
-	explicit Property_r(T v) :  m_getter(nullptr), m_v(v) {}
-	Property_r(std::function<T(void)> getter) : m_getter(getter) {}
+	Property_r() : m_v(T()) {}
+	explicit Property_r(T v) : m_v(v) {}
+	void operator = (const T &v) = delete;
+	void operator = (const Property_r<T> &v) = delete;
 
-	void setGetter(std::function<T(void)> getter)
+	//绑定，可以是任意返回T&的函数，表达式；绑定后，属性返回值将受绑定函数影响，如果传入nullptr表示取消绑定
+	void bind(std::function<const T&(void)> binder)
 	{
-		m_getter = getter;
+		m_binder = binder;
 	}
 
-	operator T() const
+	operator const T&() const
 	{
-		return m_getter ? m_getter() : m_v;
+		return m_binder ? m_binder() : m_v;
 	}
 
 private:
-	std::function<T(void)>		m_getter;
+	std::function<const T &(void)>	m_binder;
 	T							m_v;
 };
 
@@ -82,20 +94,14 @@ public:
 	Property_w() : m_v(T()) {}
 	Property_w(const T &v) : m_v(v) {}
 
-	void setNotify(std::function<void(const T &, const T &)> notify)
+	void notify(std::function<void(const T &, const T &)> notify)
 	{
 		m_notify = std::move(notify);
 	}
 
-	void operator =(const Property_w &other)
+	void operator =(const Property_w<T> &other)
 	{
-		if (m_v != other.m_v)
-		{
-			T old = m_v;
-			m_v = other.m_v();
-			if (m_notify)
-				m_notify(old, m_v);
-		}
+		operator=(other.m_v);
 	}
 
 	void operator =(const T &v)

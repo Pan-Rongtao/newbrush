@@ -11,9 +11,13 @@ void TestWindow::Test()
 	nb::gl::initialize(nb::gl::Display::defaultx());
 	nb::gl::setConfigure(nb::gl::Configure::fromSystemRecommend(0));
 	m_window = new Window(200, 200, 800, 480);
+	m_window1 = new Window(200, 200, 800, 480);
 	m_window->ResizeEvent.addHandler(std::bind(&TestWindow::OnResize, this, std::placeholders::_1));
 	m_window->PointerEvent.addHandler(std::bind(&TestWindow::OnPointerAction, this, std::placeholders::_1));
 	m_window->KeyEvent.addHandler(std::bind(&TestWindow::OnKeyAction, this, std::placeholders::_1));
+	m_window1->ResizeEvent.addHandler(std::bind(&TestWindow::OnResize, this, std::placeholders::_1));
+	m_window1->PointerEvent.addHandler(std::bind(&TestWindow::OnPointerAction, this, std::placeholders::_1));
+	m_window1->KeyEvent.addHandler(std::bind(&TestWindow::OnKeyAction, this, std::placeholders::_1));
 
 	m_window->setTitle("1111");
 
@@ -32,6 +36,7 @@ void TestWindow::Test()
 	while(1) 
 	{
 		m_window->pending();
+		m_window1->pending();
 	}
 }
 

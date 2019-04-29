@@ -23,7 +23,8 @@ public:
 private:
 	void notifyIsBool(bool _old, bool _new);
 
-	Size	m_range1;
+	Size	m_range1{Size(11,22)};
+	bool	m_b{false};
 };
 
 class AA

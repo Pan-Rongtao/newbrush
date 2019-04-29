@@ -1,15 +1,33 @@
 #include "gui/UIElement.h"
 
 using namespace nb::core;
+using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
+	: Visibility(Visibility)
+	, Opacity(1.0)
+	, Focusable(false)
+	, Width(NB_DOUBLE_NAN)
+	, Height(NB_DOUBLE_NAN)
+	, MinWidth(0.0)
+	, MinHeight(0.0)
+	, MaxWidth(NB_DOUBLE_MAX)
+	, MaxHeight(NB_DOUBLE_MAX)
+	, DesiredSize()
+	, ActualSize(Size(0.0, 0.0))
+	, Margin(0.0)
+	, HorizontalAlignment(HorizontalAlignment::HorizontalAlignmentStretch)
+	, VerticalAlignment(VerticalAlignment::VerticalAlignmentStretch)
+	, FlowDirection(FlowDirection::LeftToRight)
+	, Renderer()
 {
-	Visibility1.setNotify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Opacity.setNotify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Focusable.setNotify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
-	DesiredSize.setNotify(std::bind(&UIElement::onDesiredSizeChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Magin.setNotify(std::bind(&UIElement::onMaginChanged, this, std::placeholders::_1, std::placeholders::_2));
+	DesiredSize.bind([&]()->Size& { return m_desiredSize; });
+	Renderer.bind([&]()->std::shared_ptr<RenderObject>& {return m_renderer; });
+	Visibility.notify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Opacity.notify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Focusable.notify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Margin.notify(std::bind(&UIElement::onMaginChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 UIElement::~UIElement()
@@ -18,6 +36,35 @@ UIElement::~UIElement()
 
 void UIElement::measure(const Size & availabelSize)
 {
+	//如果不可见或两次measure参数一致，忽略
+	if ((Visibility != Visibility::Visible))
+		return;
+
+	//减去magin计算出本来的constrainedSize
+	Size constrainedSize = Size(availabelSize.width() - Margin().left() - Margin().right(), availabelSize.height() - Margin().top() - Margin().bottom());
+	//如果手动设置了Width，调整constrainedSize.width()到bound(MinWidth, MaxWidth, Width)
+	//否则若未手动设置Width，调整constrainedSize.width()到(MinWidth, MaxWidth, constrainedSize.width())
+	//同样的规则应用于Height
+	constrainedSize.width() = (float)nb::bound<double>(MinWidth, MaxWidth, (Width == NB_DOUBLE_NAN) ? constrainedSize.width() : Width);
+	Width = constrainedSize.width();
+	constrainedSize.height() = (float)nb::bound<double>(MinHeight, MaxHeight, (Height == NB_DOUBLE_NAN) ? constrainedSize.height() : Height);
+	Height = constrainedSize.height();
+
+	//mesure后更新了desiredSize
+	//重新调整DesiredSize
+	//如果手动设置了Width，调整DesiredSize.width()到(MinWidth, MaxWidth, Width)
+	//否则若未手动设置
+	measureOverride(constrainedSize);
+	m_desiredSize.width() = (float)nb::bound<double>(MinWidth, MaxWidth, (Width == NB_DOUBLE_NAN) ? m_desiredSize.width() : Width);
+	Width = m_desiredSize.width();
+	m_desiredSize.height() = (float)nb::bound<double>(MinHeight, MaxHeight, (Height == NB_DOUBLE_NAN) ? m_desiredSize.height() : Height);
+	Height = m_desiredSize.height();
+
+	//由于child不关注和计算magin，因此需重新+margin
+	m_desiredSize.width() += (Margin().left() + Margin().right());
+	m_desiredSize.height() += (Margin().top() + Margin().bottom());
+	m_desiredSize.width() = (float)nb::bound<double>(0.0, availabelSize.width(), m_desiredSize.width());
+	m_desiredSize.height() = (float)nb::bound<double>(0.0, availabelSize.height(), m_desiredSize.height());
 }
 
 void UIElement::arrage(const Rect & finalRect)
@@ -34,7 +81,7 @@ Size UIElement::arrangeOverride(const Size & finalSize) const
 	return finalSize;
 }
 
-void UIElement::onVisibilityChanged(const bool & _old, const bool & _new)
+void UIElement::onVisibilityChanged(const nb::gui::Visibility & _old, const nb::gui::Visibility & _new)
 {
 }
 

@@ -11,20 +11,20 @@ Thickness::Thickness()
 
 Thickness::Thickness(float uniform)
 {
-	Reset(uniform, uniform, uniform, uniform);
+	reset(uniform, uniform, uniform, uniform);
 }
 
 Thickness::Thickness(float left, float top, float right, float bottom)
 {
-	Reset(left, top, right, bottom);
+	reset(left, top, right, bottom);
 }
 
 Thickness::Thickness(const Thickness &other)
 {
-	Reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
+	reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
 }
 
-void Thickness::Reset(float left, float top, float right, float bottom)
+void Thickness::reset(float left, float top, float right, float bottom)
 {
 	m_fLeft = left;
 	m_fTop = top;
@@ -34,7 +34,7 @@ void Thickness::Reset(float left, float top, float right, float bottom)
 
 void Thickness::operator = (const Thickness &other)
 {
-	Reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
+	reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
 }
 
 bool Thickness::operator == (const Thickness &other) const
@@ -67,47 +67,47 @@ void Thickness::operator += (float f)
 	operator = (operator +(f));
 }
 
-float &Thickness::Left()
+float &Thickness::left()
 {
 	return m_fLeft;
 }
 
-const float &Thickness::Left() const
+const float &Thickness::left() const
 {
 	return m_fLeft;
 }
 
-float &Thickness::Top()
+float &Thickness::top()
 {
 	return m_fTop;
 }
 
-const float &Thickness::Top() const
+const float &Thickness::top() const
 {
 	return m_fTop;
 }
 
-float &Thickness::Right()
+float &Thickness::right()
 {
 	return m_fRight;
 }
 
-const float &Thickness::Right() const
+const float &Thickness::right() const
 {
 	return m_fRight;
 }
 
-float &Thickness::Bottom()
+float &Thickness::bottom()
 {
 	return m_fBottom;
 }
 
-const float &Thickness::Bottom() const
+const float &Thickness::bottom() const
 {
 	return m_fBottom;
 }
 
-bool Thickness::Equals(const Thickness &other) const
+bool Thickness::equals(const Thickness &other) const
 {
 	return *this == other;
 }

@@ -32,17 +32,17 @@ public:
 	Thickness operator + (float f) const;
 	void operator += (float f);
 
-	void Reset(float left, float top, float right, float bottom);
-	float &Left();
-	const float &Left() const;
-	float &Top();
-	const float &Top() const;
-	float &Right();
-	const float &Right() const;
-	float &Bottom();
-	const float &Bottom() const;
+	void reset(float left, float top, float right, float bottom);
+	float &left();
+	const float &left() const;
+	float &top();
+	const float &top() const;
+	float &right();
+	const float &right() const;
+	float &bottom();
+	const float &bottom() const;
 
-	bool Equals(const Thickness &other) const;
+	bool equals(const Thickness &other) const;
 
 private:
 	float	m_fLeft;

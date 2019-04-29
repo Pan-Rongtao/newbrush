@@ -14,4 +14,5 @@ private:
 	void OnKeyAction(const nb::core::Window::KeyEventArgs &args);
 
 	nb::core::Window	*m_window;
+	nb::core::Window	*m_window1;
 };

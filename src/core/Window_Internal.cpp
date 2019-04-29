@@ -33,8 +33,9 @@ Window_Internal::Window_Internal(Window *p)
 	windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	//	windowClass.hIconSm			= 0;
 	if (::RegisterClassA(&windowClass) == 0)
-		throw SystemException();
-
+	{
+		//already exist class name, not a error
+	}
 	RECT rcClient = { 0, 0, 800, 480 };
 	::AdjustWindowRect(&rcClient, WS_TILEDWINDOW, false);
 	int width = rcClient.right - rcClient.left;

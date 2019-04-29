@@ -1,7 +1,7 @@
 #include "TestApp.h"
 #include "TestRectanglePage.h"
 
-using nb::gui::Window;
+using namespace nb::gui;
 TestApp::TestApp(void)
 {
 }
@@ -12,5 +12,7 @@ TestApp::~TestApp(void)
 
 void TestApp::Test()
 {
+	Window w;
+	w.Width = 10;
 	this->run();
 }

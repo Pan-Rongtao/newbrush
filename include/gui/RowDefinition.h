@@ -11,7 +11,7 @@ public:
 	~RowDefinition();
 
 	nb::core::Property_rw<GridLength>		Height;
-	nb::core::Property_r<double>			ActualHeight = nb::core::Property_r<double>(property_getter(double) { return m_actualHeight; });
+	nb::core::Property_r<double>			ActualHeight;
 
 private:
 	float	m_actualHeight;

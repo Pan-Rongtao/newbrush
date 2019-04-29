@@ -19,12 +19,6 @@ public:
 	//运行
 	int run();
 
-public:
-	nb::core::Property_rw<std::shared_ptr<Window>>					MainWindow;
-	nb::core::Property_r<std::vector<std::shared_ptr<Window>>>		Windows;
-
-private:
-	std::vector<std::shared_ptr<Window>>	m_windows;
 };
 
 }}
