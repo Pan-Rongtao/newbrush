@@ -14,6 +14,8 @@ public:
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);
 
+	virtual void renderOverride() override;
+
 public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>					Background;
 	nb::core::Property_rw<std::vector<std::shared_ptr<UIElement>>>	Children;

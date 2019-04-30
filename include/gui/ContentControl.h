@@ -11,6 +11,8 @@ public:
 
 public:
 	nb::core::Property_rw<std::shared_ptr<UIElement>>	Content;
+	
+	virtual void renderOverride() override;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;

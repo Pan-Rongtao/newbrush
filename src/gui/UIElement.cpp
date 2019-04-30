@@ -7,23 +7,17 @@ using namespace nb::gui;
 UIElement::UIElement()
 	: Visibility(Visibility)
 	, Opacity(1.0)
-	, Focusable(false)
 	, Width(NB_DOUBLE_NAN)
 	, Height(NB_DOUBLE_NAN)
-	, MinWidth(0.0)
-	, MinHeight(0.0)
 	, MaxWidth(NB_DOUBLE_MAX)
 	, MaxHeight(NB_DOUBLE_MAX)
-	, DesiredSize()
-	, ActualSize(Size(0.0, 0.0))
-	, Margin(0.0)
 	, HorizontalAlignment(HorizontalAlignment::HorizontalAlignmentStretch)
 	, VerticalAlignment(VerticalAlignment::VerticalAlignmentStretch)
 	, FlowDirection(FlowDirection::LeftToRight)
-	, Renderer()
+	, Renderer(std::make_shared<nb::gl::RenderObject>())
 {
 	DesiredSize.bind([&]()->Size& { return m_desiredSize; });
-	Renderer.bind([&]()->std::shared_ptr<RenderObject>& {return m_renderer; });
+//	Renderer.bind([&]()->std::shared_ptr<RenderObject>& {return m_renderer; });
 	Visibility.notify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Opacity.notify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Focusable.notify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -81,8 +75,13 @@ Size UIElement::arrangeOverride(const Size & finalSize) const
 	return finalSize;
 }
 
+void UIElement::renderOverride()
+{
+}
+
 void UIElement::onVisibilityChanged(const nb::gui::Visibility & _old, const nb::gui::Visibility & _new)
 {
+
 }
 
 void UIElement::onOpacityChanged(const double & _old, const double & _new)

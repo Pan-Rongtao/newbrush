@@ -72,6 +72,8 @@ public:
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
 
+	virtual void renderOverride();
+
 protected:
 	virtual core::Size measureOverride(const core::Size &availableSize) const;
 	virtual core::Size arrangeOverride(const core::Size &finalSize) const;

@@ -80,6 +80,10 @@ public:
 	{
 		return m_binder ? m_binder() : m_v;
 	}
+	const T & operator()() const
+	{
+		return m_binder ? m_binder() : m_v;
+	}
 
 private:
 	std::function<const T &(void)>	m_binder;

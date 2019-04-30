@@ -11,6 +11,12 @@ ContentControl::~ContentControl()
 {
 }
 
+void ContentControl::renderOverride()
+{
+	if (Content())
+		Content()->renderOverride();
+}
+
 Size nb::gui::ContentControl::measureOverride(const Size & availableSize) const
 {
 	return Size();
