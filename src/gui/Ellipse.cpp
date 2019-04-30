@@ -10,12 +10,12 @@ Ellipse::~Ellipse()
 {
 }
 
-Size Ellipse::measureOverride(const Size & availableSize) const
+Size Ellipse::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Ellipse::arrangeOverride(const Size & finalSize) const
+Size Ellipse::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

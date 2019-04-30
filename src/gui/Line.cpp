@@ -11,12 +11,12 @@ Line::~Line()
 {
 }
 
-Size Line::measureOverride(const Size & availableSize) const
+Size Line::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Line::arrangeOverride(const Size & finalSize) const
+Size Line::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

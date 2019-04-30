@@ -11,12 +11,12 @@ Control::~Control()
 {
 }
 
-Size nb::gui::Control::measureOverride(const Size & availableSize) const
+Size nb::gui::Control::measureOverride(const Size & availableSize)
 {
-	return Size();
+	return UIElement::measureOverride(availableSize);
 }
 
-Size nb::gui::Control::arrangeOverride(const Size & finalSize) const
+Size nb::gui::Control::arrangeOverride(const Size & finalSize)
 {
-	return finalSize;
+	return UIElement::arrangeOverride(finalSize);;
 }

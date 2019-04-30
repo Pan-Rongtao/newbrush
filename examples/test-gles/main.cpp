@@ -24,7 +24,7 @@ private:
 int main(int argc, char* argv[])
 {
 	try{
-		TestHandle<TestWindow> test;
+		TestHandle<TestApplication> test;
 		test->Test();
 	}
 	catch(Exception &e)

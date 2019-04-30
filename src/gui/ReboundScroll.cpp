@@ -32,11 +32,11 @@ void ReboundScroll::onKineticMove(const KineticMove::MoveDistanceArgs &args)
 	this->ScrollEvent.dispatch(p);
 
 	bool bUseRebound = UseRebound;
-	float fTopLeftReboundPos = TopLeftReboundPos;
-	float fBottomRightReboundPos = BottomRightReboundPos;
-	float fReboundAccel = ReboundAccel;
-	float fReboundStopLength = ReboundStopLength;
-	float fPageHeight = PageHeight;
+	auto fTopLeftReboundPos = TopLeftReboundPos;
+	auto fBottomRightReboundPos = BottomRightReboundPos;
+	auto fReboundAccel = ReboundAccel;
+	auto fReboundStopLength = ReboundStopLength;
+	auto fPageHeight = PageHeight;
 
 	if(!bUseRebound) return;
 

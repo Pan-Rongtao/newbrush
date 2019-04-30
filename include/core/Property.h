@@ -11,7 +11,9 @@ template<typename T>
 class Property_rw
 {
 public:
-	Property_rw() : m_v(T()) {}
+	Property_rw() : m_v(T()) 
+	{
+	}
 	Property_rw(T v) : m_v(v) {}
 
 	//设置通知函数
@@ -21,7 +23,7 @@ public:
 	}
 
 	//绑定，可以是任意返回T&的函数，表达式；绑定后，属性返回值将受绑定函数影响，如果传入nullptr表示取消绑定
-	void bind(std::function<const T&(void)> binder)
+	void bind(std::function<T&(void)> binder)
 	{
 		m_binder = std::move(binder);
 	}
@@ -50,6 +52,11 @@ public:
 		return m_binder ? m_binder() : m_v;
 	}
 
+	T & operator()()
+	{
+		return m_binder ? m_binder() : m_v;
+	}
+
 	const T & operator()() const
 	{
 		return m_binder ? m_binder() : m_v;
@@ -57,7 +64,7 @@ public:
 
 private:
 	std::function<void(const T &, const T &)>	m_notify;
-	std::function<const T&(void)>				m_binder;
+	std::function<T&(void)>						m_binder;
 	T											m_v;
 };
 

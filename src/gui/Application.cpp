@@ -1,6 +1,7 @@
 #include "gui/Application.h"
 #include "core/Exception.h"
 #include "gui/Window.h"
+#include "WindowCollections.h"
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -23,8 +24,13 @@ std::shared_ptr<Application> Application::current()
 
 int Application::run()
 {
-	try
+	try 
 	{
+		for (auto w : WindowCollections::Windows())
+		{
+			w->onRender(w->DrawContext());
+			w->measure(Size((float)w->Width, (float)w->Height));
+		}
 		return nb::gl::Application::run();
 	}
 	catch(Exception &e)

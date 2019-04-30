@@ -11,12 +11,12 @@ Page::~Page(void)
 {
 }
 
-Size Page::measureOverride(const Size & availableSize) const
+Size Page::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Page::arrangeOverride(const Size & finalSize) const
+Size Page::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

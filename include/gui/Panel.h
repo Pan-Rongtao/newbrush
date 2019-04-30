@@ -14,15 +14,15 @@ public:
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);
 
-	virtual void renderOverride() override;
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
 public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>					Background;
 	nb::core::Property_rw<std::vector<std::shared_ptr<UIElement>>>	Children;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) const;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) const;
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 };
 
 }}

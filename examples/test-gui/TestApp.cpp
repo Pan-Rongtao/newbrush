@@ -13,7 +13,6 @@ TestApp::~TestApp(void)
 void TestApp::Test()
 {
 	Window w;
-	auto panelRoot = std::make_shared<Panel>();
-	w.Content = panelRoot;
+	w.Content = std::make_shared<Panel>();
 	this->run();
 }

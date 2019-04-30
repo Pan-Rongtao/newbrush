@@ -11,12 +11,12 @@ WrapPanel::~WrapPanel()
 {
 }
 
-Size WrapPanel::measureOverride(const Size & availableSize) const
+Size WrapPanel::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size WrapPanel::arrangeOverride(const Size & finalSize) const
+Size WrapPanel::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
 }

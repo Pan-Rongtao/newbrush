@@ -2,9 +2,12 @@
 #include "../core/Property.h"
 #include "../core/Event.h"
 #include "../gui/ContentControl.h"
+#include "../gles/Context.h"
 
 namespace nb{ namespace gl{
 	class Window;
+	class Context;
+	class Surface;
 }}
 
 namespace nb{ namespace gui {
@@ -40,6 +43,8 @@ public:
 	nb::core::Property_rw<double>							Top;
 	nb::core::Property_rw<std::string>						Title;
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Icon;
+	nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	DrawContext;
+	nb::core::Property_rw<std::shared_ptr<nb::gl::Surface>>	DrawSurface;
 
 private:
 	void onWindowStateChanged(const gui::WindowState &_old, const gui::WindowState &_new);

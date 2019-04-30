@@ -11,12 +11,12 @@ StackPanel::~StackPanel()
 {
 }
 
-Size StackPanel::measureOverride(const Size & availableSize) const
+Size StackPanel::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size StackPanel::arrangeOverride(const Size & finalSize) const
+Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

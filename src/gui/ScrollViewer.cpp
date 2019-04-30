@@ -76,12 +76,12 @@ void ScrollViewer::scrollToVerticalOffset(double offset)
 {
 }
 
-Size ScrollViewer::measureOverride(const Size & availableSize) const
+Size ScrollViewer::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size ScrollViewer::arrangeOverride(const Size & finalSize) const
+Size ScrollViewer::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

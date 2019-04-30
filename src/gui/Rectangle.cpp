@@ -12,12 +12,12 @@ Rectangle::~Rectangle()
 {
 }
 
-Size nb::gui::Rectangle::measureOverride(const Size & availableSize) const
+Size nb::gui::Rectangle::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size nb::gui::Rectangle::arrangeOverride(const Size & finalSize) const
+Size nb::gui::Rectangle::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

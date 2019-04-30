@@ -65,17 +65,17 @@ void UIElement::arrage(const Rect & finalRect)
 {
 }
 
-Size UIElement::measureOverride(const Size & availableSize) const
+Size UIElement::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size UIElement::arrangeOverride(const Size & finalSize) const
+Size UIElement::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
 }
 
-void UIElement::renderOverride()
+void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 }
 

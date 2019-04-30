@@ -54,12 +54,12 @@ double Canvas::getRight(std::shared_ptr<UIElement> element)
 	return 0.0;
 }
 
-Size Canvas::measureOverride(const Size & availableSize) const
+Size Canvas::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Canvas::arrangeOverride(const Size & finalSize) const
+Size Canvas::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

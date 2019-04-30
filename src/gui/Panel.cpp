@@ -2,13 +2,14 @@
 #include "gles/Quadrangle.h"
 #include "gles/Material.h"
 #include "gles/Programs.h"
+#include "gles/Context.h"
 
 using namespace nb::core;
 using namespace nb::gui;
 
 Panel::Panel()
 {
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 0.0), Vec2(100.0, 0.0), Vec2(0.0, 100.0), Vec2(100.0, 100.0)));
+	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 100), Vec2(100, 100), Vec2(100, 0.0), Vec2(0.0, 0.0)));
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 }
 
@@ -25,21 +26,23 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 	return 0;
 }
 
-Size Panel::measureOverride(const Size & availableSize) const
+Size Panel::measureOverride(const Size & availableSize)
 {
-	return Size();
+	return UIElement::measureOverride(availableSize);
 }
 
-Size Panel::arrangeOverride(const Size & finalSize) const
+Size Panel::arrangeOverride(const Size & finalSize)
 {
-	return finalSize;
+	return UIElement::arrangeOverride(finalSize);
 }
 
-void Panel::renderOverride()
+void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	Renderer()->draw();
+	static int i = 0;
+	if (i++ == 0)
+		drawContext->queue(Renderer());
 	for (auto child : Children())
 	{
-		child->renderOverride();
+		child->onRender(drawContext);
 	}
 }

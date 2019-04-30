@@ -11,18 +11,26 @@ ContentControl::~ContentControl()
 {
 }
 
-void ContentControl::renderOverride()
+void ContentControl::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	if (Content())
-		Content()->renderOverride();
+		Content()->onRender(drawContext);
 }
 
-Size nb::gui::ContentControl::measureOverride(const Size & availableSize) const
+Size nb::gui::ContentControl::measureOverride(const Size & availableSize)
 {
-	return Size();
+	if (Content())
+	{
+		Content()->measure(availableSize);
+		return Content()->DesiredSize;
+	}
+	else
+	{
+		return Control::measureOverride(availableSize);
+	}
 }
 
-Size nb::gui::ContentControl::arrangeOverride(const Size & finalSize) const
+Size nb::gui::ContentControl::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

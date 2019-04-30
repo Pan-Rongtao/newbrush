@@ -18,7 +18,7 @@ using namespace nb::core;
 using namespace nb::gl;
 
 RenderObject::RenderObject()
-: m_renderable(false)
+: m_renderable(true)
 , m_storage(std::make_shared<Storage>())
 {
 }

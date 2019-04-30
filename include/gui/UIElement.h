@@ -6,6 +6,10 @@
 #include "../gui/Thickness.h"
 #include "../gles/RenderObject.h"
 
+namespace nb{ namespace gl{
+	class Context;
+}}
+
 namespace nb{namespace gui{
 
 enum class Visibility
@@ -72,11 +76,11 @@ public:
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
 
-	virtual void renderOverride();
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
 protected:
-	virtual core::Size measureOverride(const core::Size &availableSize) const;
-	virtual core::Size arrangeOverride(const core::Size &finalSize) const;
+	virtual core::Size measureOverride(const core::Size &availableSize);
+	virtual core::Size arrangeOverride(const core::Size &finalSize);
 
 private:
 	void onVisibilityChanged(const nb::gui::Visibility &_old, const nb::gui::Visibility &_new);
@@ -85,7 +89,6 @@ private:
 	void onDesiredSizeChanged(const core::Size &_old, const core::Size &_new);
 	void onMaginChanged(const Thickness &_old, const Thickness &_new);
 
-private:
 	nb::core::Size											m_desiredSize;
 	std::shared_ptr<gl::RenderObject>						m_renderer;
 };

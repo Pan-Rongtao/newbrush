@@ -11,12 +11,12 @@ Shape::~Shape()
 {
 }
 
-Size Shape::measureOverride(const Size & availableSize) const
+Size Shape::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Shape::arrangeOverride(const Size & finalSize) const
+Size Shape::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

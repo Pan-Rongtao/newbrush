@@ -28,13 +28,13 @@ Image::Image(const std::shared_ptr<ImageSource> &source, nb::gui::Stretch stretc
 	Stretch.notify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-Size Image::measureOverride(const Size & availableSize) const
+Size Image::measureOverride(const Size & availableSize)
 {
 	std::shared_ptr<ImageSource> source = Source;
 	return Size((float)source->Width, (float)source->Height);
 }
 
-Size Image::arrangeOverride(const Size & finalSize) const
+Size Image::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
 }

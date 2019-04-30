@@ -36,7 +36,7 @@ MyApplication::MyApplication()
 {
 	m_timer.setInterval(20);
 	m_timer.TickEvent.addHandler(std::bind(&MyApplication::OnTick, this, std::placeholders::_1));
-	m_timer.start();
+//	m_timer.start();
 }
 
 void MyApplication::DrawTriangles(bool bOrigin)

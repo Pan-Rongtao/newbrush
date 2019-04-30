@@ -47,12 +47,12 @@ int Grid::getColumnSpan(std::shared_ptr<UIElement> element)
 	return 0;
 }
 
-Size Grid::measureOverride(const Size & availableSize) const
+Size Grid::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size Grid::arrangeOverride(const Size & finalSize) const
+Size Grid::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }
