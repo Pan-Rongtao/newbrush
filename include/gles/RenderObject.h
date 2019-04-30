@@ -60,6 +60,7 @@ public:
 
 	//获取材质
 	std::shared_ptr<Material> material();
+	std::shared_ptr<Material> material() const;
 
 	//设置存储
 	void setStorage(std::shared_ptr<Storage> storage);

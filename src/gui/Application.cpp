@@ -28,6 +28,7 @@ int Application::run()
 	{
 		for (auto w : WindowCollections::Windows())
 		{
+			w->init();
 			w->onRender(w->DrawContext());
 			w->measure(Size((float)w->Width, (float)w->Height));
 		}

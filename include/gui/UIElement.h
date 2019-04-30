@@ -76,6 +76,7 @@ public:
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
 
+	virtual void init();
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
 protected:

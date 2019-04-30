@@ -91,6 +91,11 @@ std::shared_ptr<Material> RenderObject::material()
 	return m_material;
 }
 
+std::shared_ptr<Material> nb::gl::RenderObject::material() const
+{
+	return m_material;
+}
+
 void RenderObject::setStorage(std::shared_ptr<Storage> storage)
 {
 	m_storage = storage;
@@ -103,8 +108,10 @@ std::shared_ptr<Storage> RenderObject::storage()
 
 void RenderObject::draw() const
 {
-	std::shared_ptr<Program> program = m_material->program();
-	std::vector<std::shared_ptr<Texture>> textures = m_material->textures();
+	if (!material())
+		return;
+	auto program = m_material->program();
+	auto textures = m_material->textures();
 	if (!m_renderable || !m_model || m_model->meshCount() == 0 || !m_material || !program)
 		return;
 

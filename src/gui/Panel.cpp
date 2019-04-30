@@ -9,8 +9,6 @@ using namespace nb::gui;
 
 Panel::Panel()
 {
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 100), Vec2(100, 100), Vec2(100, 0.0), Vec2(0.0, 0.0)));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 }
 
 Panel::~Panel()
@@ -24,6 +22,12 @@ void Panel::setZIndex(std::shared_ptr<UIElement> element, int index)
 int Panel::getZIndex(std::shared_ptr<UIElement> element)
 {
 	return 0;
+}
+
+void Panel::init()
+{
+	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 100), Vec2(100, 100), Vec2(100, 0.0), Vec2(0.0, 0.0)));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 }
 
 Size Panel::measureOverride(const Size & availableSize)
