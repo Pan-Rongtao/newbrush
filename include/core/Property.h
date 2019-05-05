@@ -2,18 +2,13 @@
 #include <functional>
 #include "../core/Def.h"
 
-#define property_setter(variableType) [&](variableType value)
-#define property_getter(variableType) [&]()->variableType
-
 namespace nb{namespace core{
 
 template<typename T>
 class Property_rw
 {
 public:
-	Property_rw() : m_v(T()) 
-	{
-	}
+	Property_rw() : m_v(T())  {}
 	Property_rw(T v) : m_v(v) {}
 
 	//设置通知函数
