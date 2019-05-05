@@ -6,19 +6,7 @@
 #include "gui/Rectangle.h"
 
 using namespace nb::gui;
-
-TestWindow::TestWindow()
-{
-
-
-}
-
-TestWindow::~TestWindow()
-{
-
-}
-
-void TestWindow::Test()
+void TestWindow::test()
 {
 //	nb::gl::Gles::Application app;
 //	nb::gui::Window w;

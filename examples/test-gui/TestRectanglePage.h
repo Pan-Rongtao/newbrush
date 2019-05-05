@@ -9,7 +9,7 @@ public:
 	TestRectanglePage();
 	~TestRectanglePage();
 
-	virtual void Test();
+	virtual void test();
 
 private:
 	void TestSolidColorBrush();

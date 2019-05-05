@@ -510,8 +510,8 @@ void MyApplication::OnTick(const Timer::TickArgs & param)
 }
 
 //////////
-void TestApplication::Test()
+void TestApplication::test()
 {
-	MyApplication	m_app;
-	m_app.run();
+	MyApplication app;
+	app.run();
 }

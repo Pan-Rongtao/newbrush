@@ -3,7 +3,7 @@
 
 using namespace nb::media;
 
-void TestTiffReader::Test()
+void TestTiffReader::test()
 {
 	TiffReader TiffR;
 	bool b = TiffR.open("d:/pic.tiff");

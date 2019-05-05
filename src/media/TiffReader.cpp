@@ -15,7 +15,7 @@ TiffReader::~TiffReader()
 	delete m_internal;
 }
 
-bool TiffReader::open(const String &path)
+bool TiffReader::open(const std::string &path)
 {
 	return m_internal->open(path);
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "../core/String.h"
 #include "Bitmap.h"
 
 namespace nb{ namespace media{
@@ -15,7 +14,7 @@ public:
 
 public:
 	//打开一个tiff文件
-	bool open(const nb::core::String &path);
+	bool open(const std::string &path);
 
 	//关闭文件
 	void close();

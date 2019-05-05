@@ -6,19 +6,7 @@
 #include "gui/Image.h"
 
 using namespace nb::gui;
-
-TestRectanglePage::TestRectanglePage()
-{
-	InitRootPage();
-	Test();
-
-}
-
-TestRectanglePage::~TestRectanglePage()
-{
-}
-
-void TestRectanglePage::Test()
+void TestRectanglePage::test()
 {
 	TestSolidColorBrush();
 	TestImageBrush();

@@ -1,5 +1,5 @@
 #pragma once
-#include "TestBase.h"
+#include "../TestBase.h"
 #include <core/Property.h>
 #include <core/Size.h>
 
@@ -9,7 +9,7 @@ class TestProperty : public TestBase
 {
 public:
 	TestProperty();
-	virtual void Test() override;
+	virtual void test() override;
 
 	Property_rw<bool>	IsBool;
 	Property_rw<int>	Integer0;

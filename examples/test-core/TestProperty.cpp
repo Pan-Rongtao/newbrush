@@ -5,7 +5,7 @@ TestProperty::TestProperty()
 	IsBool.notify(std::bind(&TestProperty::notifyIsBool, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void TestProperty::Test()
+void TestProperty::test()
 {
 	bool b = IsBool;
 

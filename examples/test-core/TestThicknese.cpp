@@ -2,15 +2,7 @@
 #include "gui/Thickness.h"
 
 using namespace nb::gui;
-TestThicknese::TestThicknese(void)
-{
-}
-
-TestThicknese::~TestThicknese(void)
-{
-}
-
-void TestThicknese::Test()
+void TestThicknese::test()
 {
 	Thickness tk(10);
 	Thickness tk1(-1, 2, 5, 5);

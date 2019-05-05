@@ -1,12 +1,11 @@
 #pragma once
 #include "core/Window.h"
-#include "TestBase.h"
+#include "../TestBase.h"
 
 class TestWindow : public TestBase
 {
 public:
-
-	void Test();
+	void test();
 
 private:
 	void OnResize(const nb::core::Window::ResizeArgs &args);

@@ -2,7 +2,7 @@
 #include "gles/Egl.h"
 
 using namespace nb::gl;
-void TestEgl::Test()
+void TestEgl::test()
 {
 	Display display = nb::gl::getCurrentDisplay();
 

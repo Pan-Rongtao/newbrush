@@ -15,9 +15,9 @@ TiffReader_Internal::~TiffReader_Internal()
 	close();
 }
 
-bool TiffReader_Internal::open(const String &path)
+bool TiffReader_Internal::open(const std::string &path)
 {
-	m_pFreeImage = FreeImage_OpenMultiBitmap(FIF_TIFF, path.ToUtf8().GetData(), false, true, true, TIFF_ADOBE_DEFLATE);
+	m_pFreeImage = FreeImage_OpenMultiBitmap(FIF_TIFF, path.data(), false, true, true, TIFF_ADOBE_DEFLATE);
 	return m_pFreeImage != NULL;
 }
 

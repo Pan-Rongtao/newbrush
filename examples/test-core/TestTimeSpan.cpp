@@ -3,17 +3,8 @@
 #include <stdio.h>
 #include <fstream>
 
-using namespace std;
 using namespace  nb::core;
-TestTimeSpan::TestTimeSpan(void)
-{
-}
-
-TestTimeSpan::~TestTimeSpan(void)
-{
-}
-
-void TestTimeSpan::Test()
+void TestTimeSpan::test()
 {
 	TimeSpan tsMax = TimeSpan::maxValue();
 	TimeSpan tsMin = TimeSpan::minValue();
@@ -70,7 +61,7 @@ void TestTimeSpan::Test()
 	tsAdd += TimeSpan::fromMilliseconds(1005);
 
 
-	ofstream f1("F:\\download\\all valid timespan.txt");
+	std::ofstream f1("F:\\download\\all valid timespan.txt");
 	for(TimeSpan ts = tsMin; ts <= tsMax - TimeSpan::fromHours(1); ts += TimeSpan::fromHours(1))
 	{
 		++xx;

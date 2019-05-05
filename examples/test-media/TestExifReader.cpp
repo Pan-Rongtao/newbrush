@@ -7,7 +7,7 @@ using namespace nb::core;
 using namespace nb::media;
 
 static int FILE_COUNT = 23;
-void TestExifReader::Test()
+void TestExifReader::test()
 {
 	ExifReader reader;
 //	reader.Open("d:/err_exif.jpg");

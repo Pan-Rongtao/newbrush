@@ -15,7 +15,7 @@ GifReader::~GifReader()
 	delete m_internal;
 }
 
-bool GifReader::open(const String &path)
+bool GifReader::open(const std::string &path)
 {
 	return m_internal->open(path);
 }

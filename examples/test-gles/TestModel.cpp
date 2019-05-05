@@ -5,7 +5,7 @@
 using namespace nb::core;
 using namespace nb::gl;
 
-void TestModel::Test()
+void TestModel::test()
 {
 	Model *model = new Model();
 	int k = NB_GET_TICK_COUT;

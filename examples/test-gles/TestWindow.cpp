@@ -6,7 +6,7 @@
 
 using namespace nb::core;
 
-void TestWindow::Test()
+void TestWindow::test()
 {
 	nb::gl::initialize(nb::gl::Display::defaultx());
 	nb::gl::setConfigure(nb::gl::Configure::fromSystemRecommend(0));

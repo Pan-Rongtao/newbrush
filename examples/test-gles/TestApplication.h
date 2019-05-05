@@ -1,5 +1,5 @@
 #pragma once
-#include "TestBase.h"
+#include "../TestBase.h"
 #include "gles/Application.h"
 #include "core/Window.h"
 #include "gles/Context.h"
@@ -43,7 +43,7 @@ private:
 class TestApplication : public TestBase
 {
 public:
-	virtual void Test();
+	virtual void test();
 
 private:
 };

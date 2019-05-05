@@ -1,4 +1,4 @@
-#include "TestBase.h"
+#include "../TestBase.h"
 #include "core/Exception.h"
 #include "TestBitmap.h"
 #include "TestExifReader.h"
@@ -7,24 +7,11 @@
 
 using namespace nb::core;
 
-template <class T>
-class TestHandle
-{
-public:
-	TestHandle<T>() {m_pInter = new T();}
-	~TestHandle() {delete m_pInter;}
-
-	T * operator ->() {return (T *)m_pInter;}
-
-private:
-	TestBase *m_pInter;
-};
-
 int main(int argc, char *argv[])
 {
 	try{
 		TestHandle<TestBitmap> test;
-		test->Test();
+		test->test();
 		while(1)
 		{
 		}

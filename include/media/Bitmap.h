@@ -16,7 +16,6 @@
 ********************************************************/
 #pragma once
 #include "../core/Def.h"
-#include "../core/String.h"
 #include "../core/Point.h"
 #include "../core/Color.h"
 #include "../core/Size.h"
@@ -45,7 +44,7 @@ public:
 	Bitmap();
 
 	//从文件创建一个Bitmap
-	explicit Bitmap(const core::String &filePath);
+	explicit Bitmap(const std::string &path);
 
 	//创建一个指定尺寸的Bitmap，图像数据未初始化(PixelFormat=Format_Bpp32_Argb8888)
 	Bitmap(int width, int height);

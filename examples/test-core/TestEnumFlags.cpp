@@ -2,14 +2,6 @@
 #include "core/EnumFlags.h"
 
 using namespace nb::core;
-TestEnumFlags::TestEnumFlags(void)
-{
-}
-
-TestEnumFlags::~TestEnumFlags(void)
-{
-}
-
 enum MutexFlag
 {
 	Flag_0x00000001 = 0x00000001,
@@ -46,13 +38,7 @@ enum MutexFlag
 	Flag_0x80000000 = 0x80000000,
 };
 
-void Fun(EnumFlags<MutexFlag> flags)
-{
-	uint32_t xxx = (int)flags;
-	bool bb = 0;
-}
-
-void TestEnumFlags::Test()
+void TestEnumFlags::test()
 {
 	EnumFlags<MutexFlag> mf;
 	EnumFlags<MutexFlag> mf1(1);
@@ -223,7 +209,10 @@ void TestEnumFlags::Test()
 	mf.removeFlags(Flag_0x80000000);
 	printf("mf=%u\n", (int)mf);
 
-	Fun(Flag_0x80000000 | (Flag_0x40000000 | Flag_0x00800000 | Flag_0x00000002));
+	auto f = [](EnumFlags<MutexFlag> flags) {
+		uint32_t xxx = (int)flags;
+		bool bb = 0;
+	};
+	f(Flag_0x80000000 | (Flag_0x40000000 | Flag_0x00800000 | Flag_0x00000002));
 
-	//mf = 1;
 }

@@ -3,7 +3,7 @@
 
 using namespace nb::media;
 
-void TestGifReader::Test()
+void TestGifReader::test()
 {
 	GifReader gifR;
 	bool b = gifR.open("f:/pics/gif/fire.gif");

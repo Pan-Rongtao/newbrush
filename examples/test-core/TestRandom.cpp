@@ -3,15 +3,7 @@
 #include <set>
 
 using namespace nb::core;
-TestRandom::TestRandom(void)
-{
-}
-
-TestRandom::~TestRandom(void)
-{
-}
-
-void TestRandom::Test()
+void TestRandom::test()
 {
 	Random rd;
 	Random rd1(-5, 7);

@@ -2,7 +2,7 @@
 #include <core/Exception.h>
 
 using namespace nb::core;
-void TestException::Test()
+void TestException::test()
 {
 //	throw Exception();
 //	throw Exception("123");

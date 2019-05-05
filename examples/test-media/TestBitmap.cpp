@@ -1,21 +1,11 @@
 #include "TestBitmap.h"
 #include "media/Bitmap.h"
-#include "core/File.h"
 #include "core/Size.h"
 #include <stdio.h>
 
 using namespace nb::core;
 using namespace nb::media;
-
-TestBitmap::TestBitmap(void)
-{
-}
-
-TestBitmap::~TestBitmap(void)
-{
-}
-
-void TestBitmap::Test()
+void TestBitmap::test()
 {
 	Bitmap bmttt;
 	bmttt.load("e:/Pics/4.jpg");
@@ -58,13 +48,13 @@ void TestBitmap::Test()
 	bm4.save("f:/1.png");
 	delete[]pData;
 	fclose(pFile);
-
+	/*
 	File f("f:/download/22.bmp");
 	f.Open(File::OpenExistsOnly, File::Read);
 	Stream stream = f.ReadAll();
 	auto len = f.GetLenght();
 	bm4.load((const char *)stream.GetData(), (int)len);
-
+	*/
 
 	Bitmap bm5(bm4.data(), bm4.width(), bm4.height(), bm4.pixelFormat());
 	int w5 = bm5.width();

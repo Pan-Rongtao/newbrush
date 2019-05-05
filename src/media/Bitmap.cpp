@@ -10,9 +10,9 @@ Bitmap::Bitmap()
 	m_internal = new Bitmap_Internal();
 }
 
-Bitmap::Bitmap(const String &filePath)
+Bitmap::Bitmap(const std::string &path)
 {
-	m_internal = new Bitmap_Internal(filePath.ToUtf8().GetData());
+	m_internal = new Bitmap_Internal(path);
 }
 
 Bitmap::Bitmap(int width, int height)

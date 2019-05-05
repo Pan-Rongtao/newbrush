@@ -3,15 +3,7 @@
 
 using namespace nb::gl;
 
-TestTexture2D::TestTexture2D()
-{
-}
-
-TestTexture2D::~TestTexture2D()
-{
-}
-
-void TestTexture2D::Test()
+void TestTexture2D::test()
 {
 //	Texture2D texture2d;
 	int maxWidth = Texture2D::maxWidthSupported();

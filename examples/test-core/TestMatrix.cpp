@@ -5,7 +5,7 @@
 
 using namespace nb::core;
 
-void TestMatrix::Test()
+void TestMatrix::test()
 {
 
 }

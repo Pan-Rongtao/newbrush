@@ -3,16 +3,7 @@
 #include "limits.h"
 
 using namespace nb::core;
-
-TestColor::TestColor(void)
-{
-}
-
-TestColor::~TestColor(void)
-{
-}
-
-void TestColor::Test()
+void TestColor::test()
 {
 	Color c1;
 	Color c2(255, 0, 0);

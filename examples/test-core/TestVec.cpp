@@ -5,7 +5,7 @@
 
 using namespace nb::core;
 
-void TestVec::Test()
+void TestVec::test()
 {
 	////////////////////////
 	Vec2 vc2_0;

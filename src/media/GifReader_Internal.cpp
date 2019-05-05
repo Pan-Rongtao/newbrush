@@ -15,9 +15,9 @@ GifReader_Internal::~GifReader_Internal()
 	close();
 }
 
-bool GifReader_Internal::open(const String &path)
+bool GifReader_Internal::open(const std::string &path)
 {
-	m_pFreeImage = FreeImage_OpenMultiBitmap(FIF_GIF, path.ToUtf8().GetData(), false, true, true, GIF_PLAYBACK);
+	m_pFreeImage = FreeImage_OpenMultiBitmap(FIF_GIF, path.data(), false, true, true, GIF_PLAYBACK);
 	return m_pFreeImage != nullptr;
 }
 

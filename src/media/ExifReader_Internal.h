@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "core/String.h"
+#include <string>
 #include "media/Bitmap.h"
 #include "media/ExifReader.h"
 #include "exiv2/exiv2.hpp"

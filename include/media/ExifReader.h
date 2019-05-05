@@ -26,7 +26,7 @@
 *****************************************************************************/
 #pragma once
 #include <vector>
-#include "../core/String.h"
+#include <string>
 #include "Bitmap.h"
 
 namespace nb{ namespace media{
