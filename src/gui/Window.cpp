@@ -11,6 +11,16 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
+auto lookat = [](double width, double height) 
+{
+	Projection::instance()->perspective(45.0f, width / height, 0.1f, 10000.0f);
+	float z = (float)height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
+	Vec3 position((float)width / 2.0f, height / 2.0f, -z);
+	Vec3 target((float)width / 2.0f, height / 2.0f, 0.0f);
+	Vec3 upVec(0.0f, -1.0f, 0.0f);
+	Camera::instance()->lookat(position, target, upVec);
+};
+
 nb::gui::Window::Window()
 {
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -74,32 +84,20 @@ void nb::gui::Window::onLeftChanged(const double & _old, const double & _new)
 void nb::gui::Window::onTopChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setY((int)_new);
-	nb::gl::Viewport(0, 0, Width, Height);
 }
 
 void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setWidth((int)_new);
 	nb::gl::Viewport(0, 0, Width, Height);
-
-	Projection::instance()->perspective(45.0f, Width / Height, 0.1f, 10000.0f);
-	float z = (float)Height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)Width / 2.0f, Height / 2.0f, -z);
-	Vec3 target((float)Width / 2.0f, Height / 2.0f, 0.0f);
-	Vec3 upVec(0.0f, -1.0f, 0.0f);
-	Camera::instance()->lookat(position, target, upVec);
+	lookat(Width, Height);
 }
 
 void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setHeight((int)_new);
-
-	Projection::instance()->perspective(45.0f, Width / Height, 0.1f, 10000.0f);
-	float z = (float)Height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)Width / 2.0f, Height / 2.0f, -z);
-	Vec3 target((float)Width / 2.0f, Height / 2.0f, 0.0f);
-	Vec3 upVec(0.0f, -1.0f, 0.0f);
-	Camera::instance()->lookat(position, target, upVec);
+	nb::gl::Viewport(0, 0, Width, Height);
+	lookat(Width, Height);
 }
 
 void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string & _new)

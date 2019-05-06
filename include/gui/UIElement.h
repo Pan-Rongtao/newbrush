@@ -69,6 +69,8 @@ public:
 	core::Property_rw<double>								MaxHeight;
 	core::Property_r<core::Size>							DesiredSize;
 	core::Property_r<core::Size>							ActualSize;
+	core::Property_rw<core::Size>							RenderSize;
+	core::Property_rw<core::Point>							Offset;
 	core::Property_rw<Thickness>							Margin;
 	core::Property_rw<HorizontalAlignment>					HorizontalAlignment;
 	core::Property_rw<VerticalAlignment>					VerticalAlignment;

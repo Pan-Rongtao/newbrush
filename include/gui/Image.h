@@ -20,11 +20,13 @@ class NB_API Image : public UIElement
 {
 public:
 	Image();
-	Image(const std::shared_ptr<ImageSource> &source);
-	Image(const std::shared_ptr<ImageSource> &source, nb::gui::Stretch stretch);
-	virtual ~Image();
+	virtual ~Image() = default;
+	Image(const Image &other) = delete;
+	void operator = (const Image &other) = delete;
 
 public:
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Source;
 	nb::core::Property_rw<nb::gui::Stretch>					Stretch;
 
@@ -33,8 +35,6 @@ protected:
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
 private:
-	Image(const Image &other); //hp暂时改为公有的
-	void operator = (const Image &other);
 
 	void onSourceChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
 	void onStretchChanged(const nb::gui::Stretch &_old, const nb::gui::Stretch &_new);

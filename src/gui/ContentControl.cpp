@@ -17,7 +17,7 @@ void ContentControl::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		Content()->onRender(drawContext);
 }
 
-Size nb::gui::ContentControl::measureOverride(const Size & availableSize)
+Size ContentControl::measureOverride(const Size & availableSize)
 {
 	if (Content())
 	{
@@ -30,7 +30,15 @@ Size nb::gui::ContentControl::measureOverride(const Size & availableSize)
 	}
 }
 
-Size nb::gui::ContentControl::arrangeOverride(const Size & finalSize)
+Size ContentControl::arrangeOverride(const Size & finalSize)
 {
-	return Size();
+	if (Content())
+	{
+		Content()->arrage(Rect(Offset().x(), Offset().y(), DesiredSize));
+		return finalSize;
+	}
+	else
+	{
+		return Control::measureOverride(finalSize);
+	}
 }

@@ -26,8 +26,6 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 
 void Panel::init()
 {
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 100), Vec2(100, 100), Vec2(100, 0.0), Vec2(0.0, 0.0)));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 }
 
 Size Panel::measureOverride(const Size & availableSize)
@@ -43,8 +41,12 @@ Size Panel::arrangeOverride(const Size & finalSize)
 void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	static int i = 0;
-	if (i++ == 0)
+/*	if (i++ == 0)
+	{
+		Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(0.0, 100), Vec2(100, 100), Vec2(100, 0.0), Vec2(0.0, 0.0)));
+		Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 		drawContext->queue(Renderer());
+	}*/
 	for (auto child : Children())
 	{
 		child->onRender(drawContext);

@@ -5,7 +5,7 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
-	: Visibility(Visibility)
+	: Visibility(Visibility::Visible)
 	, Opacity(1.0)
 	, Width(NB_DOUBLE_NAN)
 	, Height(NB_DOUBLE_NAN)
@@ -35,34 +35,103 @@ void UIElement::measure(const Size & availabelSize)
 		return;
 
 	//减去magin计算出本来的constrainedSize
-	Size constrainedSize = Size(availabelSize.width() - Margin().left() - Margin().right(), availabelSize.height() - Margin().top() - Margin().bottom());
-	//如果手动设置了Width，调整constrainedSize.width()到bound(MinWidth, MaxWidth, Width)
-	//否则若未手动设置Width，调整constrainedSize.width()到(MinWidth, MaxWidth, constrainedSize.width())
+	auto constrainedSize = Size(availabelSize.width() - Margin().left() - Margin().right(), availabelSize.height() - Margin().top() - Margin().bottom());
+	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
+	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	constrainedSize.width() = (float)nb::bound<double>(MinWidth, MaxWidth, (Width == NB_DOUBLE_NAN) ? constrainedSize.width() : Width);
-	Width = constrainedSize.width();
-	constrainedSize.height() = (float)nb::bound<double>(MinHeight, MaxHeight, (Height == NB_DOUBLE_NAN) ? constrainedSize.height() : Height);
-	Height = constrainedSize.height();
+	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
+	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
+	constrainedSize.reset(Width, Height);
 
-	//mesure后更新了desiredSize
-	//重新调整DesiredSize
-	//如果手动设置了Width，调整DesiredSize.width()到(MinWidth, MaxWidth, Width)
-	//否则若未手动设置
-	measureOverride(constrainedSize);
-	m_desiredSize.width() = (float)nb::bound<double>(MinWidth, MaxWidth, (Width == NB_DOUBLE_NAN) ? m_desiredSize.width() : Width);
-	Width = m_desiredSize.width();
-	m_desiredSize.height() = (float)nb::bound<double>(MinHeight, MaxHeight, (Height == NB_DOUBLE_NAN) ? m_desiredSize.height() : Height);
-	Height = m_desiredSize.height();
+	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
+	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
+	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
+	//同样的规则应用于Height
+	auto desiredSizeTemp = measureOverride(constrainedSize);
+	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : desiredSizeTemp.width());
+	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : desiredSizeTemp.height());
+	desiredSizeTemp.reset(Width, Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
-	m_desiredSize.width() += (Margin().left() + Margin().right());
-	m_desiredSize.height() += (Margin().top() + Margin().bottom());
-	m_desiredSize.width() = (float)nb::bound<double>(0.0, availabelSize.width(), m_desiredSize.width());
-	m_desiredSize.height() = (float)nb::bound<double>(0.0, availabelSize.height(), m_desiredSize.height());
+	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
+	//保证在（0, availabelSize)区间
+	desiredSizeTemp.width() = (float)nb::bound<double>(0.0, availabelSize.width(), desiredSizeTemp.width());
+	desiredSizeTemp.height() = (float)nb::bound<double>(0.0, availabelSize.height(), desiredSizeTemp.height());
+	m_desiredSize = desiredSizeTemp;
 }
 
 void UIElement::arrage(const Rect & finalRect)
 {
+	//如果不可见或两次arrage参数一致，忽略
+	if ((Visibility != Visibility::Visible))
+		return;
+
+	//减去magin计算出本来的arrangeSize以及clientSize
+	auto arrangeSize = Size(finalRect.width() - Margin().left() - Margin().right(), finalRect.height() - Margin().top() - Margin().bottom());
+	auto clientSize = arrangeSize;
+	//调整arrange大于DesiredSize
+	arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
+	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
+	if (HorizontalAlignment != HorizontalAlignment::HorizontalAlignmentStretch)
+		arrangeSize.setWidth(DesiredSize().width());
+	if (VerticalAlignment != VerticalAlignment::VerticalAlignmentStretch)
+		arrangeSize.setHeight(DesiredSize().height());
+
+	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
+	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
+	//同样的规则应用于Height
+	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : arrangeSize.width());
+	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : arrangeSize.height());
+	arrangeSize.reset(Width, Height);
+
+	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
+	auto innerInkSize = arrangeOverride(arrangeSize);
+	RenderSize = innerInkSize;
+	//裁剪，保证innerInkSize在Max之内
+	if (Width == NB_DOUBLE_NAN)
+		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = MaxWidth;
+	if (Height == NB_DOUBLE_NAN)
+		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = MaxHeight;
+	Size clipInkSize(std::min((double)innerInkSize.width(), Width()), std::min((double)innerInkSize.height(), Height()));
+
+	switch (HorizontalAlignment)
+	{
+	case HorizontalAlignment::HorizontalAlignmentLeft:		Offset().x() = finalRect.x() + Margin().left();																		break;
+	case HorizontalAlignment::HorizontalAlignmentCenter:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	case HorizontalAlignment::HorizontalAlignmentRight:		Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
+	default:
+	{
+		if (RenderSize().width() >= clientSize.width())
+		{
+			Offset().x() = finalRect.left() + Margin().left();
+		}
+		else
+		{
+			Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;
+		}
+	}
+		break;
+	}
+
+	switch (VerticalAlignment)
+	{
+	case VerticalAlignment::VerticalAlignmentTop:		Offset().y() = finalRect.top() + Margin().top();														break;
+	case VerticalAlignment::VerticalAlignmentCenter:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
+	case VerticalAlignment::VerticalAlignmentBottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
+	default:
+	{
+		if (RenderSize().height() >= clientSize.height())
+		{
+			Offset().y() = finalRect.top() + Margin().top();
+		}
+		else
+		{
+			Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;
+		}
+	}
+		break;
+	}
+
 }
 
 Size UIElement::measureOverride(const Size & availableSize)
