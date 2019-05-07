@@ -5,43 +5,39 @@ using namespace nb::media;
 using namespace nb::gl;
 
 Texture2D::Texture2D()
-: m_nPixcelWidth(0)
-, m_nPixcelHeight(0)
 {
 	setWrapping(TextureWrapping());
 	setFilter(TextureFilter());
 }
 
 Texture2D::Texture2D(const std::string &path)
-: m_nPixcelWidth(0)
-, m_nPixcelHeight(0)
+	: Texture2D(path, TextureWrapping(), TextureFilter())
 {
-	loadFromPath(path);
-	setWrapping(TextureWrapping());
-	setFilter(TextureFilter());
 }
 
 Texture2D::Texture2D(const std::string &path, const TextureFilter &filter)
-: m_nPixcelWidth(0)
-, m_nPixcelHeight(0)
+	: Texture2D(path, TextureWrapping(), filter)
 {
-	loadFromPath(path);
-	setWrapping(TextureWrapping());
-	setFilter(filter);
 }
 
 Texture2D::Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter)
-: m_nPixcelWidth(0)
-, m_nPixcelHeight(0)
 {
 	loadFromPath(path);
 	setWrapping(wrapping);
 	setFilter(filter);
 }
 
-Texture2D::Texture2D(const char *data, int width, int height, Texture::PixelFormat format)
+Texture2D::Texture2D(const nb::media::Bitmap &bm)
+	: Texture2D()
 {
-	loadFromData(data, width, height, format);
+	int glFormat;
+	int glType;
+	bitmapFormatToGlFormat(bm.pixelFormat(), glFormat, glType);
+	bind();
+	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
+	unbind();
+	m_nPixcelWidth = bm.width();
+	m_nPixcelHeight = bm.height();
 }
 
 Texture2D::~Texture2D()
@@ -95,12 +91,12 @@ void Texture2D::loadFromData(const char *data, int width, int height, Texture::P
 	int glType = GL_UNSIGNED_BYTE;
 	switch(format)
 	{
-	case Texture::Format_Bpp8_Alpha:		glFormat = GL_ALPHA;	glType = GL_UNSIGNED_BYTE; break;
-	case Texture::Format_Bpp16_Rgb565:		glFormat = GL_RGB;		glType = GL_UNSIGNED_SHORT_5_6_5; break;
-	case Texture::Format_Bpp24_Rgb888:		glFormat = GL_RGB;		glType = GL_UNSIGNED_BYTE; break;
+	case Texture::Format_Bpp8_Alpha:		glFormat = GL_ALPHA;	glType = GL_UNSIGNED_BYTE;			break;
+	case Texture::Format_Bpp16_Rgb565:		glFormat = GL_RGB;		glType = GL_UNSIGNED_SHORT_5_6_5;	break;
+	case Texture::Format_Bpp24_Rgb888:		glFormat = GL_RGB;		glType = GL_UNSIGNED_BYTE;			break;
 	case Texture::Format_Bpp32_Rgb4444:		glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_4_4_4_4; break;
 	case Texture::Format_Bpp32_Rgb5551:		glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_5_5_5_1; break;
-	case Texture::Format_Bpp32_Rgba8888:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_BYTE; break;
+	case Texture::Format_Bpp32_Rgba8888:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_BYTE;			break;
 	}
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);

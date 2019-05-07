@@ -14,6 +14,7 @@
 #pragma once
 #include <string>
 #include "Texture.h"
+#include "media/Bitmap.h"
 
 namespace nb{ namespace gl{
 
@@ -37,12 +38,10 @@ public:
 	Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter);
 
 	//构建一个2D纹理对象，它将从内存载入数据
-	//
-	Texture2D(const char *data, int width, int height, Texture::PixelFormat format);
+	Texture2D(const nb::media::Bitmap &bm);
 
 	virtual ~Texture2D();
 
-public:
 	//纹理支持的最大尺寸，不同的GPU将返回不同的值；MaxWidth和MaxHeight一般是一样的值
 	//注意：此接口依赖于egl的初始化，需在egl初始化完成后才能够得到正确的值，不然将返回0
 	static int maxWidthSupported();
@@ -74,8 +73,8 @@ public:
 	int pixcelHeight() const;
 
 private:
-	int					m_nPixcelWidth;
-	int					m_nPixcelHeight;
+	int					m_nPixcelWidth{ 0 };
+	int					m_nPixcelHeight{ 0 };
 };
 
 }}

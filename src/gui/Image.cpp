@@ -14,7 +14,7 @@ using namespace nb::gui;
 
 Image::Image()
 	: Source(nullptr)
-	, Stretch(Origion)
+	, Stretch(Uniform)
 {
 	Source.notify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Stretch.notify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -22,18 +22,56 @@ Image::Image()
 
 void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(Offset().x(), Offset().y() + RenderSize().height()), Vec2(Offset().x() + RenderSize().width(), 
-		Offset().y() + RenderSize().height()), Vec2(Offset().x() + RenderSize().width(), Offset().y()), Vec2(Offset().x(), Offset().y())));
+	Rect rc;
+	switch (Stretch)
+	{
+	case Stretch::Origion:	rc.setSize(Source()->width(), Source()->width());	break;
+	case Stretch::Fill:		rc.setSize(ActualSize);								break;
+	case Stretch::Uniform:	
+	{
+		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto containerRatio = ActualSize().width() / ActualSize().height();
+		if (pixelRatio < containerRatio)
+		{
+			rc.setSize(ActualSize().height() * pixelRatio, ActualSize().height());
+			rc.moveHorizontal(rc.left() + (ActualSize().width() - rc.width()) / 2);
+		}
+		else
+		{
+			rc.setSize(ActualSize().width(), ActualSize().width() / pixelRatio);
+			rc.moveVertical(rc.top() + (ActualSize().height() - rc.height()) / 2);
+		}
+	}
+	break;
+	case Stretch::UniformToFill:
+	{
+		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto containerRatio = ActualSize().width() / ActualSize().height();
+		if (pixelRatio < containerRatio)
+		{
+			rc.setSize(ActualSize().width(), ActualSize().width() / pixelRatio);
+		}
+		else
+		{
+			rc.setSize(ActualSize().height() * pixelRatio, ActualSize().height());
+		}
+	}
+	break;
+	default:
+		break;
+	}
+	rc.move(Offset().x(), Offset().y());
+	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(rc.left(), rc.bottom()), 
+		Vec2(rc.right(), rc.bottom()), Vec2(rc.right(), rc.top()), Vec2(rc.left(), rc.top())));
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
 	drawContext->queue(Renderer());
-//	Renderer()->storage()->insert("unif_colorMode", 1);
-	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
+	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
 }
 
 Size Image::measureOverride(const Size & availableSize)
 {
 	if (Source())
-		return Size(Source()->Width, Source()->Height);
+		return Size(Source()->width(), Source()->heigth());
 	else
 		return Size();
 }

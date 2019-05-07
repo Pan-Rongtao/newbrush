@@ -6,12 +6,13 @@
 #include "core/Matrix4x4.h"
 #include "core/Any.h"
 #include "core/Exception.h"
+#include "TestTexture2D.h"
 
 using namespace nb::core;
 int main(int argc, char* argv[])
 {
 	try{
-		TestHandle<TestApplication> test;
+		TestHandle<TestTexture2D> test;
 		test->test();
 	}
 	catch(Exception &e)

@@ -1,6 +1,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "gles/Texture.h"
+#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -102,6 +103,8 @@ int TextureFilter::glValue(TextureFilter::Filter filter)
 Texture::Texture()
 {
 	glGenTextures(1, &m_handle);
+	if (glGetError() == GL_INVALID_OPERATION)
+		throw nb::core::LogicException(__FILE__, __LINE__);
 }
 
 Texture::~Texture()

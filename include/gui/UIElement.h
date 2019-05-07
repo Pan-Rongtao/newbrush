@@ -93,6 +93,7 @@ private:
 	void onMaginChanged(const Thickness &_old, const Thickness &_new);
 
 	nb::core::Size											m_desiredSize;
+	nb::core::Size											m_actualSize;
 	std::shared_ptr<gl::RenderObject>						m_renderer;
 };
 

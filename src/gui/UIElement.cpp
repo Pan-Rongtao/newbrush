@@ -17,7 +17,7 @@ UIElement::UIElement()
 	, Renderer(std::make_shared<nb::gl::RenderObject>())
 {
 	DesiredSize.bind([&]()->Size& { return m_desiredSize; });
-//	Renderer.bind([&]()->std::shared_ptr<RenderObject>& {return m_renderer; });
+	ActualSize.bind([&]()->Size& {return m_actualSize; });
 	Visibility.notify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Opacity.notify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Focusable.notify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -131,7 +131,7 @@ void UIElement::arrage(const Rect & finalRect)
 	}
 		break;
 	}
-
+	m_actualSize = RenderSize;
 }
 
 Size UIElement::measureOverride(const Size & availableSize)

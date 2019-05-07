@@ -7,8 +7,9 @@ void TestApp::test()
 {
 	Window w;
 	auto image = std::make_shared<Image>();
-	image->Source = std::make_shared<ImageSource>("E:/Pics/5.jpg");
-	image->Margin = Thickness(1);
+	image->Source = std::make_shared<ImageSource>("e:/Pics/3.jpg");
+	image->Margin = Thickness(20);
+	image->Stretch = Stretch::Uniform;
 	w.Content = image;
 	this->run();
 }

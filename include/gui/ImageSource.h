@@ -24,15 +24,14 @@ public:
 	ImageSource(const ImageSource &other) = delete;
 	void operator = (const ImageSource &other) = delete;
 
-	void load(const std::string &uri);
-
 public:
-	nb::core::Property_r<double>		Width;
-	nb::core::Property_r<double>		Height;
+	double width() const;
+	double heigth() const;
+
+	nb::core::Property_rw<std::shared_ptr<media::Bitmap>> 	Bm;
 
 private:
 
-	std::shared_ptr<nb::media::Bitmap> 		m_bm;
 };
 
 }}
