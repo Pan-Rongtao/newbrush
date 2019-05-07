@@ -63,7 +63,7 @@ const char *Bitmap::data() const
 
 void Bitmap::fill(const Color &c)
 {
-	m_internal->fill(c.toInteger32());
+	m_internal->fill(c.toIntegerArgb());
 }
 
 int Bitmap::width() const
@@ -103,12 +103,12 @@ int Bitmap::bpp() const
 
 Color Bitmap::pixel(int x, int y) const
 {
-	return Color::fromInteger32(m_internal->pixel(x, y));
+	return Color::fromIntegerArgb(m_internal->pixel(x, y));
 }
 
 void Bitmap::setPixel(int x, int y, const Color &c)
 {
-	m_internal->setPixel(x, y, c.toInteger32());
+	m_internal->setPixel(x, y, c.toIntegerArgb());
 }
 
 Bitmap Bitmap::scale(int width, int height) const

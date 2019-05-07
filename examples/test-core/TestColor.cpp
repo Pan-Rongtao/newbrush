@@ -10,11 +10,11 @@ void TestColor::test()
 	Color c3(125, 0, 255, 0);
 	Color c4(c1);
 	c4 = c3;
-	Color c5 = Color::fromInteger32(0xFF00AA77);
+	Color c5 = Color::fromIntegerArgb(0xFF00AA77);
+	c5 = Color::fromIntegerRgb(0x00aa88);
 	Color c6 = Color::fromRgbF(0.3f, 0.5f, 1.000f);
 	Color c7 = Color::fromArgbF(0.0f, 1.0f, 1.0f, 0.0f);
 
-	bool b1 = Color::isValidArgb(255, 255, 255, 255);
 	bool b2 = Color::isValidArgbF(1.000000000000001f, 0.0f, 0.0f, 0.0f);
 	Color c8 = Color::fromArgbF(1.000000000000001f, 0.0f, 0.0f, 0.0f);
 	int a = c8.alpha();
@@ -40,8 +40,8 @@ void TestColor::test()
 	c9.setRgbF(0.3f, 0.7f, 0.6f);
 	c9.setArgbF(0.0f, 0.2f, 0.4f, 0.8f);
 
-	c9.setInteger32(0x44124366);
-	unsigned int xx = c9.toInteger32();
+	c9.setIntegerArgb(0x44124366);
+	unsigned int xx = c9.toIntegerArgb();
 
 	bool b5 = Color::isValidHsv(360.0, 1.0, 1.0000);
 
@@ -65,6 +65,11 @@ void TestColor::test()
 	c20.setHue(360);
 	c20.setSaturation(0.49f);
 	c20.setValue(0.99f);
+
+	Color c21 = Color(255, 150, 221);
+	auto xxx = c21.toIntegerArgb();
+	xxx = c21.toIntegerRgb();
+	std::string s = c21.toString();
 
 	return;
 	uint64_t n = NB_GET_TICK_COUT;

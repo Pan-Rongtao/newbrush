@@ -13,11 +13,11 @@
 #pragma once
 #include <vector>
 #include "../core/Def.h"
+#include "Program.h"
+#include "Texture.h"
 
 namespace nb{ namespace gl{
 
-class Program;
-class Texture;
 class NB_API Material
 {
 public:

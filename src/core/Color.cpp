@@ -2,17 +2,18 @@
 #include <math.h>
 #include "core/Color.h"
 #include "core/Exception.h"
+#include <regex>
 
 using namespace nb::core;
 
 Color::Color()
+	: Color(255, 0, 0, 0)
 {
-	setArgb(255, 0, 0, 0);
 }
 
 Color::Color(uint8_t r, uint8_t g, uint8_t b)
+	: Color(255, r, g, b)
 {
-	setArgb(255, r, g, b);
 }
 
 Color::Color(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
@@ -32,86 +33,85 @@ void Color::operator =(const Color &other)
 
 bool Color::operator ==(const Color &other) const
 {
-	return alpha() == other.alpha() && red() == other.red() && green() == other.green() && blue() == other.blue();
+	return !(operator!=(other));
 }
 
 bool Color::operator !=(const Color &other) const
 {
-	return !(*this == other);
+	return (alpha() != other.alpha()) || (red() != other.red() || green() != other.green()) || (blue() != other.blue());
 }
 
 uint8_t &Color::alpha()
 {
-	return m_Alpha;
+	return m_alpha;
 }
 
-uint8_t Color::alpha() const
+const uint8_t &Color::alpha() const
 {
-	return m_Alpha;
+	return m_alpha;
 }
 
 uint8_t &Color::red()
 {
-	return m_Red;
+	return m_red;
 }
 
-uint8_t Color::red() const
+const uint8_t &Color::red() const
 {
-	return m_Red;
+	return m_red;
 }
 
 uint8_t &Color::green()
 {
-	return m_Green;
+	return m_green;
 }
 
-uint8_t Color::green() const
+const uint8_t &Color::green() const
 {
-	return m_Green;
+	return m_green;
 }
 
 uint8_t &Color::blue()
 {
-	return m_Blue;
+	return m_blue;
 }
 
-uint8_t Color::blue() const
+const uint8_t &Color::blue() const
 {
-	return m_Blue;
+	return m_blue;
 }
 
 void Color::setAlpha(uint8_t a)
 {
-	setArgb(a, red(), green(), blue());
+	m_alpha = a;
 }
 
 void Color::setRed(uint8_t r)
 {
-	setArgb(alpha(), r, green(), blue());
+	m_red = r;
 }
 
 void Color::setGreen(uint8_t g)
 {
-	setArgb(alpha(), red(), g, blue());
+	m_green = g;
 }
 
 void Color::setBlue(uint8_t b)
 {
-	setArgb(alpha(), red(), green(), b);
+	m_blue = b;
 }
 
 void Color::setRgb(uint8_t r, uint8_t g, uint8_t b)
 {
-	setArgb(alpha(), r, g, b);
+	setRed(r);
+	setGreen(g);
+	setBlue(b);
 }
 
 void Color::setArgb(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
 {
-	if (!isValidArgb(a, r, g, b))	throw ArgumentException("argb", __FILE__, __LINE__);
-	m_Alpha = a;
-	m_Red = r;
-	m_Green = g;
-	m_Blue = b;
+	setAlpha(a);
+	setRgb(r, g, b);
 }
 
 float Color::alphaF() const
@@ -212,19 +212,7 @@ void Color::setHsv(float h, float s, float v)
 	setArgbF(alphaF(), r, g, b);
 }
 
-////屏蔽cmyk格式
-/*
-void Color::SetCmyk(int c, int m, int y, int k)
-{
-
-}
-
-void Color::GetCmyk(int *c, int *m, int *y, int *k)
-{
-
-}
-*/
-void Color::setInteger32(uint32_t argb)
+void Color::setIntegerArgb(uint32_t argb)
 {
 	int a = (argb & 0xff000000) >> 24;
 	int r = (argb & 0x00ff0000) >> 16;
@@ -233,9 +221,27 @@ void Color::setInteger32(uint32_t argb)
 	setArgb(a, r, g, b);
 }
 
-uint32_t Color::toInteger32() const
+void Color::setIntegerRgb(uint32_t rgb)
 {
-	return (alpha() << 24) | (red() << 16) | (green() << 8) | (blue()) ;
+	setIntegerArgb(rgb | 0xff000000);
+}
+
+uint32_t Color::toIntegerArgb() const
+{
+	return (alpha() << 24) | (red() << 16) | (green() << 8) | (blue());
+}
+
+uint32_t Color::toIntegerRgb() const
+{
+	return (red() << 16) | (green() << 8) | (blue()) ;
+}
+
+std::string Color::toString() const
+{
+	auto x = toIntegerRgb();
+	char arr[10] = { 0 };
+	snprintf(arr, sizeof(arr), "#%6X", x);
+	return arr;
 }
 
 bool Color::equals(const Color &other) const
@@ -243,9 +249,48 @@ bool Color::equals(const Color &other) const
 	return *this == other;
 }
 
-bool Color::isValidArgb(int a, int r, int g, int b)
+Color Color::fromIntegerArgb(uint32_t argb)
 {
-	return (a >= 0 && a <= 255) && (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255);
+	Color c;
+	c.setIntegerArgb(argb);
+	return c;
+}
+
+Color Color::fromIntegerRgb(uint32_t rgb)
+{
+	return Color::fromIntegerArgb(rgb | 0xff000000);
+}
+
+Color Color::fromRgbF(float r, float g, float b)
+{
+	return fromArgbF(1.0f, r, g, b);
+}
+
+Color Color::fromArgbF(float a, float r, float g, float b)
+{
+	return Color(argbF2Argb(a), argbF2Argb(r), argbF2Argb(g), argbF2Argb(b));
+}
+
+Color Color::fromString(const std::string &sHex)
+{
+	std::regex reg("^#[A-Za-z0-9]{6}$");
+	if(!std::regex_match(sHex, reg))	throw ArgumentException("sHex", __FILE__, __LINE__);
+
+	try {
+		auto x = std::stoi("0x" + sHex.substr(1), 0, 16);
+		return Color::fromIntegerRgb(x);
+	}
+	catch (...)
+	{
+		throw ArgumentException("sHex", __FILE__, __LINE__);
+	}
+}
+
+Color Color::fromHsv(float h, float s, float v)
+{
+	Color c;
+	c.setHsv(h, s, v);
+	return c;
 }
 
 bool Color::isValidArgbF(float a, float r, float g, float b)
@@ -258,42 +303,6 @@ bool Color::isValidHsv(float h, float s, float v)
 	return (h >= 0.0 && h <= 360.0) && (s >= 0.0 && s <= 1.0) && (v >= 0.0 && v <= 1.0);
 }
 
-Color Color::fromInteger32(unsigned int argb)
-{
-	Color c;
-	c.setInteger32(argb);
-	return c;
-}
-
-Color Color::fromHsv(float h, float s, float v)
-{
-	Color c;
-	c.setHsv(h, s, v);
-	return c;
-}
-/*
-Color Color::FromCmyk(int c, int m, int y, int k)
-{
-	return Color();
-}
-*/
-
-Color Color::fromRgbF(float r, float g, float b)
-{
-	return fromArgbF(1.0f, r, g, b);
-}
-
-Color Color::fromArgbF(float a, float r, float g, float b)
-{
-	return Color(argbF2Argb(a), argbF2Argb(r), argbF2Argb(g), argbF2Argb(b));
-}
-
-/*
-Color Color::FromRGBAHexString(const String &sHex)
-{
-
-}
-*/
 uint8_t Color::argbF2Argb(float f)
 {
 	if (f < 0.0 || f > 1.0)		throw ArgumentOutOfRangeException("f", 0.0, 1.0, f, __FILE__, __LINE__);
@@ -302,8 +311,6 @@ uint8_t Color::argbF2Argb(float f)
 
 float Color::argb2ArgbF(uint8_t n)
 {
-	if (n < 0 && n > 255)
-		throw ArgumentOutOfRangeException("n", 0, 255, n, __FILE__, __LINE__);
 	return (float)n / 255.0f;
 }
 //以下为公式

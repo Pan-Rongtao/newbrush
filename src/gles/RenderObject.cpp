@@ -1,13 +1,8 @@
 #include "gles/RenderObject.h"
-#include "gles/Program.h"
-#include "gles/Texture.h"
-#include "gles/Projection.h"
-#include "gles/Camera.h"
-#include "gles/Material.h"
-#include "core/Matrix4x4.h"
 #include <GLES2/gl2.h>
-#include "gles/Model.h"
-#include "gles/Storage.h"
+#include "core/Matrix4x4.h"
+#include "gles/Camera.h"
+#include "gles/Projection.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"

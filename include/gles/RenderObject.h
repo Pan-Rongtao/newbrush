@@ -15,15 +15,14 @@
 #include <string>
 #include "../core/Def.h"
 #include "../gles/Model.h"
+#include "../gles/Material.h"
+#include "../gles/Storage.h"
 
 struct aiNode;
 struct aiMesh;
 struct aiScene;
 namespace nb{ namespace gl{
 
-class Model;
-class Material;
-class Storage;
 class NB_API RenderObject
 {
 public:

@@ -38,8 +38,19 @@ public:
 	bool operator ==(const Color &other) const;
 	bool operator !=(const Color &other) const;
 
-	//整型argb是否合法，argb：[0~255]
-	static bool isValidArgb(int a, int r, int g, int b);
+	//argb/rgb组成的32位整形数，格式化为0xAARRGGBB/0xRRGGBB
+	static Color fromIntegerArgb(uint32_t argb);
+	static Color fromIntegerRgb(uint32_t rgb);
+
+	//浮点形式的argb，a、r、g、b范围0.0~1.0
+	static Color fromRgbF(float r, float g, float b);
+	static Color fromArgbF(float a, float r, float g, float b);
+
+	//#AARRGGBB argb字符串
+	static Color fromString(const std::string &sHex);
+
+	//HSV（色调、饱和度、亮度）格式的数据读入，h：[0.0~360.0]	s：[0.0~1.0]	v：[0.0~1.0]
+	static Color fromHsv(float h, float s, float v);
 
 	//浮点argb是否合法，argb：[0.0~1.0]
 	static bool isValidArgbF(float a, float r, float g, float b);
@@ -47,39 +58,22 @@ public:
 	//HSV格式数据是否合法，h：[0.0~360.0]	s：[0.0~1.0]	v：[0.0~1.0]
 	static bool isValidHsv(float h, float s, float v);
 
-	//argb组成的32位整形数，格式化为0xAARRGGBB
-	static Color fromInteger32(unsigned int argb);
-
-	//HSV（色调、饱和度、亮度）格式的数据读入，h：[0.0~360.0]	s：[0.0~1.0]	v：[0.0~1.0]
-	static Color fromHsv(float h, float s, float v);
-
-	////屏蔽cmyk格式
-	//Cmyk格式的数据格式
-	//static Color FromCmyk(int c, int m, int y, int k);
-
-	//浮点形式的argb，a、r、g、b范围0.0~1.0
-	static Color fromRgbF(float r, float g, float b);
-	static Color fromArgbF(float a, float r, float g, float b);
-
-	//#AARRGGBB argb字符串
-	//static Color FromArgbHexString(const String &sHex);
-
 public:
 	//alpha值
 	uint8_t &alpha();
-	uint8_t alpha() const;
+	const uint8_t &alpha() const;
 
 	//red值
 	uint8_t &red();
-	uint8_t red() const;
+	const uint8_t &red() const;
 
 	//green值
 	uint8_t &green();
-	uint8_t green() const;
+	const uint8_t &green() const;
 
 	//blue值
 	uint8_t &blue();
-	uint8_t blue() const;
+	const uint8_t &blue() const;
 
 	//设置alpha值
 	void setAlpha(uint8_t a);
@@ -150,18 +144,16 @@ public:
 	//设置色调、饱和度、亮度值
 	void setHsv(float h, float s, float v);
 
-	////屏蔽cmyk格式
-	//void SetCmyk(int c, int m, int y, int k);
-	//void GetCmyk(int *c, int *m, int *y, int *k);
-
-	//void SetRgbaHexString(const String &sHex);
-	//String GetRgbaHexString() const;
-
-	//转换成32位整数，0xAARRGGBB
-	void setInteger32(uint32_t argb);
+	//转换成32位整数，0xAARRGGBB/0xRRGGBB
+	void setIntegerArgb(uint32_t argb);
+	void setIntegerRgb(uint32_t rgb);
 
 	//转换为整数
-	uint32_t toInteger32() const;
+	uint32_t toIntegerArgb() const;
+	uint32_t toIntegerRgb() const;
+
+	//转换为字符串，形如#FFFFFF
+	std::string toString() const;
 
 	//判断颜色值是否相等
 	bool equals(const Color &other) const;
@@ -176,10 +168,10 @@ private:
 	static void rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v);
 	static void hsv2RgbF(float h, float s, float v, float &r, float &g, float &b);
 	
-	uint8_t		m_Alpha;
-	uint8_t		m_Red;
-	uint8_t		m_Green;
-	uint8_t		m_Blue;
+	uint8_t		m_alpha;
+	uint8_t		m_red;
+	uint8_t		m_green;
+	uint8_t		m_blue;
 };
 
 class NB_API Colors

@@ -163,7 +163,7 @@ void Bitmap_Internal::setPixel(int x, int y, unsigned int rgba)
 	if (!m_pFreeImage)
 		return;
 
-	Color c = Color::fromInteger32(rgba);
+	Color c = Color::fromIntegerArgb(rgba);
 	RGBQUAD quad{ c.red(), c.green(), c.blue(), c.alpha() };
 	FreeImage_SetPixelColor(m_pFreeImage, x, y, &quad);
 }

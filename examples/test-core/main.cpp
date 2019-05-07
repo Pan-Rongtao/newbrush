@@ -4,12 +4,13 @@
 #include "TestVecI.h"
 #include "TestException.h"
 #include "TestProperty.h"
+#include "TestColor.h"
 #include "core/Exception.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestProperty> test;
+		TestHandle<TestColor> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)
