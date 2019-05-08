@@ -39,6 +39,10 @@ int Application::run()
 	{
 		printf("exception: %s\r\n", e.what().data());
 	}
+	catch (std::exception &e)
+	{
+		printf("exception:%s\r\n", e.what());
+	}
 	catch(...)
 	{
 		printf("other exception\r\n");

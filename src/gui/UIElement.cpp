@@ -144,10 +144,6 @@ Size UIElement::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-void UIElement::init()
-{
-}
-
 void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 }

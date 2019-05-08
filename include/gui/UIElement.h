@@ -56,6 +56,8 @@ public:
 
 	void measure(const core::Size &availabelSize);
 	void arrage(const core::Rect &finalRect);
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
+
 
 public:
 	core::Property_rw<Visibility>							Visibility;
@@ -77,9 +79,6 @@ public:
 	core::Property_rw<FlowDirection>						FlowDirection;
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
-
-	virtual void init();
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
 protected:
 	virtual core::Size measureOverride(const core::Size &availableSize);

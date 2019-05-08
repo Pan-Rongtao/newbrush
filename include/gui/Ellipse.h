@@ -3,13 +3,13 @@
 
 namespace nb{ namespace gui{
 
-class Ellipse : public Shape
+class NB_API Ellipse : public Shape
 {
 public:
 	Ellipse();
-	virtual ~Ellipse();
 
 public:
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

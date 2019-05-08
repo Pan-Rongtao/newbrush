@@ -2,6 +2,7 @@
 #include "TestRectanglePage.h"
 #include "gui/Image.h"
 #include "gui/Rectangle.h"
+#include "gui/Ellipse.h"
 #include "core/Color.h"
 
 using namespace nb::core;
@@ -15,10 +16,16 @@ void TestApp::test()
 	image->Stretch = Stretch::Uniform;
 	w.Content = image;*/
 
-	auto rect = std::make_shared<Rectangle>();
+/*	auto rect = std::make_shared<Rectangle>();
 	//rect->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
-	rect->Fill = std::make_shared<SolidColorBrush>(Colors::aliceBlue());
+	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	w.Content = rect;
-	w.Content()->Margin = 20;
+	*/
+
+	auto ellipse = std::make_shared<nb::gui::Ellipse>();
+	ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	w.Content = ellipse;
+
+	w.Content()->Margin = 200;
 	this->run();
 }
