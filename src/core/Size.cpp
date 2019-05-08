@@ -7,14 +7,7 @@ using namespace nb::core;
 
 ////////////////////class Size
 Size::Size()
-	: m_width(0.0f)
-	, m_height(0.0f)
-{
-}
-
-Size::Size(const Size &other)
-	: m_width(other.width())
-	, m_height(other.height())
+	: Size(0.0f, 0.0f)
 {
 }
 
@@ -24,7 +17,8 @@ Size::Size(float width, float height)
 {
 }
 
-Size::~Size()
+Size::Size(const Size &other)
+	: Size(other.width(), other.height())
 {
 }
 
@@ -178,14 +172,7 @@ bool Size::equals(const Size &other) const
 
 ////////////////class SizeI
 SizeI::SizeI()
-	: m_width(0)
-	, m_height(0)
-{
-}
-
-SizeI::SizeI(const SizeI &other)
-	: m_width(other.width())
-	, m_height(other.height())
+	: SizeI(0, 0)
 {
 }
 
@@ -195,7 +182,8 @@ SizeI::SizeI(int width, int height)
 {
 }
 
-SizeI::~SizeI()
+SizeI::SizeI(const SizeI &other)
+	: SizeI(other.width(), other.height())
 {
 }
 

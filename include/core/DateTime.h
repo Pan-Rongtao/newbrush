@@ -14,7 +14,7 @@
 namespace nb{ namespace core {
 
 //星期枚举
-enum Week
+enum class Week
 {
 	Sunday		= 0,
 	Monday		= 1,
@@ -26,7 +26,7 @@ enum Week
 };
 
 //月份枚举
-enum Month
+enum class Month
 {
 	January		= 1,
 	February	= 2,
@@ -48,9 +48,12 @@ class NB_API Date
 public:
 	//构建一个日期1/1/1
 	Date();
-	Date(const Date &other);
+
+	//构建一个日期，它的年月日是year/month/day
 	Date(int year, int month, int day);
-	~Date();
+
+	//从其他的Date构建一个Date
+	Date(const Date &other);
 
 	//最大值 9999/12/31
 	static Date maxValue();
@@ -148,15 +151,14 @@ public:
 	//构建一个Time，00:00:00.0
 	Time();
 
-	//从其他时间构建一个新的Time
-	Time(const Time &other);
-
 	//构建一个Time，hour:minute:second.0
 	Time(int hour, int minute, int second);
 
 	//构建一个Time，hour:minute:second.millisecond
 	Time(int hour, int minute, int second, int millisecond);
-	~Time();
+
+	//从其他时间构建一个新的Time
+	Time(const Time &other);
 
 	//最大时间23:59:59.999
 	static Time maxValue();
@@ -245,14 +247,13 @@ class NB_API DateTime
 public:
 	//构建默认日期1/1/1 00:00:00.000
 	DateTime();
-	DateTime(const DateTime &other);
 	DateTime(int year, int month, int day);
 	DateTime(int year, int month, int day, int hour, int minute, int second);
 	DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond);
 	DateTime(const Date &date, const Time &time);
 	DateTime(const Date &date, int hour, int minute, int second, int millisecond);
 	DateTime(int year, int month, int day, const Time &time);
-	~DateTime();
+	DateTime(const DateTime &other);
 
 	//最大有效日期9999/12/31 23:59:59:999
 	static DateTime maxValue();

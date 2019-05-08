@@ -4,8 +4,13 @@
 using namespace nb::core;
 
 Timer::Timer()
-	: m_interval(1000)
-	, m_singleShot(false)
+	: Timer(1000, false)
+{
+}
+
+Timer::Timer(uint64_t ms, bool singleShot)
+	: m_interval(ms)
+	, m_singleShot(singleShot)
 {
 }
 

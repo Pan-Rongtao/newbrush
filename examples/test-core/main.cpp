@@ -5,12 +5,13 @@
 #include "TestException.h"
 #include "TestProperty.h"
 #include "TestColor.h"
+#include "TestDateTime.h"
 #include "core/Exception.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestColor> test;
+		TestHandle<TestDateTime> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)

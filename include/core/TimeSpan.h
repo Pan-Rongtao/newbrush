@@ -18,12 +18,20 @@ namespace nb{ namespace core {
 class NB_API TimeSpan
 {
 public:
+	//构建一个时间间隔TimeSpan，0
 	TimeSpan();
-	TimeSpan(const TimeSpan &other);
+
+	//以时、分、秒的方式构建一个TimeStan
 	TimeSpan(int hours, int minutes, int seconds);
+
+	//以时、分、秒、毫秒的方式构建一个TimeStan
 	TimeSpan(int hours, int minutes, int seconds, int milliseconds);
+
+	//以天、时、分、秒、毫秒的方式构建一个TimeStan
 	TimeSpan(int days, int hours, int minutes, int seconds, int milliseconds);
-	~TimeSpan();
+
+	//从其他TimeSpan构建一个TimeSpan
+	TimeSpan(const TimeSpan &other);
 
 	//365 * 10000-00:00:00.000 3650000天0小时0分0秒0毫秒
 	static TimeSpan maxValue();

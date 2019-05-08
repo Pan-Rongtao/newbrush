@@ -5,10 +5,7 @@ using namespace nb::core;
 
 //////////////////////////////class Rect
 Rect::Rect()
-	: m_x(0.0f)
-	, m_y(0.0f)
-	, m_width(0.0f)
-	, m_height(0.0f)
+	: Rect(0.0f, 0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -21,46 +18,27 @@ Rect::Rect(float x, float y, float width, float height)
 }
 
 Rect::Rect(float x, float y, const Size &size)
-	: m_x(x)
-	, m_y(y)
-	, m_width(size.width())
-	, m_height(size.height())
+	: Rect(x, y, size.width(), size.height())
 {
 }
 
 Rect::Rect(const Point &leftTop, float width, float height)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(width)
-	, m_height(height)
+	: Rect(leftTop.x(), leftTop.y(), width, height)
 {
 }
 
 Rect::Rect(const Point &leftTop, const Size &size)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(size.width())
-	, m_height(size.height())
+	: Rect(leftTop.x(), leftTop.y(), size.width(), size.height())
 {
 }
 
 Rect::Rect(const Point &leftTop, const Point &rightBottom)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(rightBottom.x() - leftTop.x())
-	, m_height(rightBottom.y() - leftTop.y())
+	: Rect(leftTop.x(), leftTop.y(), rightBottom.x() - leftTop.x(), rightBottom.y() - leftTop.y())
 {
 }
 
 Rect::Rect(const Rect &other)
-	: m_x(other.x())
-	, m_y(other.y())
-	, m_width(other.width())
-	, m_height(other.height())
-{
-}
-
-Rect::~Rect()
+	: Rect(other.x(), other.y(), other.width(), other.height())
 {
 }
 
@@ -307,22 +285,13 @@ bool Rect::contains(const Rect &rc) const
 {
 	bool bHorizontal = false;
 	bool bVertical = false;
-	if(width() >= 0)
-	{
-		bHorizontal = rc.width() >= 0 ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() <= right() && rc.right() >= left());
-	}
-	else
-	{
-		bHorizontal = rc.width() >= 0 ? (rc.left() >= right() && rc.right() <= left()) : (rc.left() <= left() && rc.right() >= right());
-	}
-	if(height() >= 0)
-	{
-		bVertical = rc.height() >= 0 ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() <= bottom() && rc.bottom() >= top());
-	}
-	else
-	{
-		bVertical = rc.height() >= 0 ? (rc.top() >= bottom() && rc.bottom() <= top()) : (rc.top() <= top() && rc.bottom() >= bottom()); 
-	}
+
+	if(width() >= 0)	bHorizontal = rc.width() >= 0 ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() <= right() && rc.right() >= left());
+	else				bHorizontal = rc.width() >= 0 ? (rc.left() >= right() && rc.right() <= left()) : (rc.left() <= left() && rc.right() >= right());
+
+	if(height() >= 0)	bVertical = rc.height() >= 0 ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() <= bottom() && rc.bottom() >= top());
+	else				bVertical = rc.height() >= 0 ? (rc.top() >= bottom() && rc.bottom() <= top()) : (rc.top() <= top() && rc.bottom() >= bottom());
+
 	return bHorizontal && bVertical;
 }
 
@@ -440,10 +409,7 @@ Rect Rect::merge(const Rect &other) const
 
 ////////////////////class RectI
 RectI::RectI()
-	: m_x(0)
-	, m_y(0)
-	, m_width(0)
-	, m_height(0)
+	: RectI(0, 0, 0, 0)
 {
 }
 
@@ -456,46 +422,27 @@ RectI::RectI(int x, int y, int width, int height)
 }
 
 RectI::RectI(int x, int y, const SizeI &size)
-	: m_x(x)
-	, m_y(y)
-	, m_width(size.width())
-	, m_height(size.height())
+	: RectI(x, y, size.width(), size.height())
 {
 }
 
 RectI::RectI(const PointI &leftTop, int width, int height)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(width)
-	, m_height(height)
+	: RectI(leftTop.x(), leftTop.y(), width, height)
 {
 }
 
 RectI::RectI(const PointI &leftTop, const SizeI &size)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(size.width())
-	, m_height(size.height())
+	: RectI(leftTop.x(), leftTop.y(), size.width(), size.height())
 {
 }
 
 RectI::RectI(const PointI &leftTop, const PointI &rightBottom)
-	: m_x(leftTop.x())
-	, m_y(leftTop.y())
-	, m_width(rightBottom.x() - leftTop.x())
-	, m_height(rightBottom.y() - leftTop.y())
+	: RectI(leftTop.x(), leftTop.y(), rightBottom.x() - leftTop.x(), rightBottom.y() - leftTop.y())
 {
 }
 
 RectI::RectI(const RectI &other)
-	: m_x(other.x())
-	, m_y(other.y())
-	, m_width(other.width())
-	, m_height(other.height())
-{
-}
-
-RectI::~RectI()
+	: RectI(other.x(), other.y(), other.width(), other.height())
 {
 }
 
@@ -743,22 +690,13 @@ bool RectI::contains(const RectI &rc) const
 {
 	bool bHorizontal = false;
 	bool bVertical = false;
-	if (width() >= 0)
-	{
-		bHorizontal = rc.width() >= 0 ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() < right() && rc.right() >= left() - 1);
-	}
-	else
-	{
-		bHorizontal = rc.width() >= 0 ? (rc.left() >= right() + 1 && rc.right() <= left() + 1) : (rc.left() <= left() && rc.right() >= right());
-	}
-	if (height() >= 0)
-	{
-		bVertical = rc.height() >= 0 ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() < bottom() && rc.bottom() >= top() - 1);
-	}
-	else
-	{
-		bVertical = rc.height() >= 0 ? (rc.top() >= bottom() + 1 && rc.bottom() <= top() + 1) : (rc.top() <= top() && rc.bottom() >= bottom());
-	}
+
+	if (width() >= 0)	bHorizontal = rc.width() >= 0 ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() < right() && rc.right() >= left() - 1);
+	else				bHorizontal = rc.width() >= 0 ? (rc.left() >= right() + 1 && rc.right() <= left() + 1) : (rc.left() <= left() && rc.right() >= right());
+
+	if (height() >= 0)	bVertical = rc.height() >= 0 ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() < bottom() && rc.bottom() >= top() - 1);
+	else				bVertical = rc.height() >= 0 ? (rc.top() >= bottom() + 1 && rc.bottom() <= top() + 1) : (rc.top() <= top() && rc.bottom() >= bottom());
+
 	return bHorizontal && bVertical;
 }
 

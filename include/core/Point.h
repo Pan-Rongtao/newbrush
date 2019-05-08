@@ -19,10 +19,15 @@ namespace nb{ namespace core {
 class NB_API Point
 {
 public:
+	//构建一个Point(0.0, 0.0)
 	Point();
+
+	//构建一个Point(x, y)
 	Point(float x, float y);
+
+	//从其他Point构建一个新的Point
 	Point(const Point &other);
-	~Point();
+
 	//零值，x=0.0; y=0.0
 	static Point zero();
 
@@ -87,10 +92,16 @@ private:
 class NB_API PointI
 {
 public:
+	//构建一个PointI(0, 0)
 	PointI();
+
+	//构建一个PointI(x, y)
 	PointI(int x, int y);
+
+	//从其他PointI构建一个PointI
 	PointI(const PointI &other);
-	~PointI();
+
+	//零值(0, 0)
 	static PointI zero();
 
 	void operator = (const PointI &p);
@@ -114,8 +125,13 @@ public:
 	void operator /= (float f);
 
 public:
+	//设置x
 	void setX(int x);
+
+	//设置y
 	void setY(int y);
+
+	//重置x, y
 	void reset(int x, int y);
 
 	//x
@@ -159,11 +175,18 @@ private:
 class NB_API Point3D
 {
 public:
+	//构建一个Point3D(0.0, 0.0, 0.0)
 	Point3D();
-	Point3D(const Point3D &other);
+
+	//构建一个Point3D(x, y, z)
 	Point3D(float x, float y, float z);
+
+	//构建一个Point3D(p.x, p.y, z)
 	Point3D(const Point &p, float z);
-	~Point3D();
+
+	//从其他Piont3D构建一个新的Point3D
+	Point3D(const Point3D &other);
+
 	//零值，x=0.0; y=0.0; z=0.0
 	static Point3D zero();
 
@@ -233,11 +256,18 @@ private:
 class NB_API Point3DI
 {
 public:
+	//构建一个Point3D(0.0, 0.0, 0.0)
 	Point3DI();
-	Point3DI(const Point3DI &other);
-	Point3DI(const PointI &p, int z);
+
+	//构建一个Point3D(x, y, z)
 	Point3DI(int x, int y, int z);
-	~Point3DI();
+
+	//构建一个Point3D(p.x, p.y, z)
+	Point3DI(const PointI &p, int z);
+	
+	//从其他Point3DI构建一个Point3DI
+	Point3DI(const Point3DI &other);
+
 	//零值，x=0.0; y=0.0; z=0.0
 	static Point3DI zero();
 

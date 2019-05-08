@@ -6,14 +6,7 @@ using namespace nb::core;
 
 //////////////////class Point
 Point::Point()
-	: m_x(0.0f)
-	, m_y(0.0f)
-{
-}
-
-Point::Point(const Point &other)
-	: m_x(other.x())
-	, m_y(other.y())
+	: Point(0.0f, 0.0f)
 {
 }
 
@@ -23,7 +16,8 @@ Point::Point(float x, float y)
 {
 }
 
-Point::~Point()
+Point::Point(const Point &other)
+	: Point(other.x(), other.y())
 {
 }
 
@@ -178,14 +172,7 @@ bool Point::equals(const Point &p) const
 
 ///////////////class PointI
 PointI::PointI()
-	: m_x(0)
-	, m_y(0)
-{
-}
-
-PointI::PointI(const PointI &other)
-	: m_x(other.x())
-	, m_y(other.y())
+	: PointI(0, 0)
 {
 }
 
@@ -195,7 +182,8 @@ PointI::PointI(int x, int y)
 {
 }
 
-PointI::~PointI()
+PointI::PointI(const PointI &other)
+	: PointI(other.x(), other.y())
 {
 }
 
@@ -381,16 +369,7 @@ PointI PointI::divideRound(float f) const
 
 //////////////////////class Point3D
 Point3D::Point3D()
-	: m_x(0.0f)
-	, m_y(0.0f)
-	, m_z(0.0f)
-{
-}
-
-Point3D::Point3D(const Point3D &other)
-	: m_x(other.x())
-	, m_y(other.y())
-	, m_z(other.z())
+	: Point3D(0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -402,13 +381,12 @@ Point3D::Point3D(float x, float y, float z)
 }
 
 Point3D::Point3D(const Point &p, float z)
-	: m_x(p.x())
-	, m_y(p.y())
-	, m_z(z)
+	: Point3D(p.x(), p.y(), z)
 {
 }
 
-Point3D::~Point3D()
+Point3D::Point3D(const Point3D &other)
+	: Point3D(other.x(), other.y(), other.z())
 {
 }
 
@@ -575,23 +553,7 @@ bool Point3D::isZero() const
 
 ////////////////////class Point3DI
 Point3DI::Point3DI()
-: m_x(0)
-, m_y(0)
-, m_z(0)
-{
-}
-
-Point3DI::Point3DI(const Point3DI &other)
-	: m_x(other.x())
-	, m_y(other.y())
-	, m_z(other.z())
-{
-}
-
-Point3DI::Point3DI(const PointI &p, int z)
-	: m_x(p.x())
-	, m_y(p.y())
-	, m_z(z)
+	: Point3DI(0, 0, 0)
 {
 }
 
@@ -602,7 +564,13 @@ Point3DI::Point3DI(int x, int y, int z)
 {
 }
 
-Point3DI::~Point3DI()
+Point3DI::Point3DI(const PointI &p, int z)
+	: Point3DI(p.x(), p.y(), z)
+{
+}
+
+Point3DI::Point3DI(const Point3DI &other)
+	: Point3DI(other.x(), other.y(), other.z())
 {
 }
 

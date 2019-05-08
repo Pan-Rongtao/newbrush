@@ -36,10 +36,6 @@ TimeSpan::TimeSpan(int days, int hours, int minutes, int seconds, int millisecon
 {
 }
 
-TimeSpan::~TimeSpan()
-{
-}
-
 TimeSpan TimeSpan::maxValue()
 {
 	return TimeSpan(MaxDays, 0, 0, 0, 0);

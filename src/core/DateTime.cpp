@@ -23,16 +23,7 @@ using namespace nb::core;
 
 ////////////////////////////////////class Date
 Date::Date()
-	: m_year(1)
-	, m_month(1)
-	, m_day(1)
-{
-}
-
-Date::Date(const Date &other)
-	: m_year(other.year())
-	, m_month(other.month())
-	, m_day(other.day())
+	: Date(1, 1, 1)
 {
 }
 
@@ -43,7 +34,8 @@ Date::Date(int y, int m, int d)
 {
 }
 
-Date::~Date()
+Date::Date(const Date &other)
+	: Date(other.year(), other.month(), other.day())
 {
 }
 
@@ -170,7 +162,7 @@ Week Date::week() const
 		d = m_day;
 	}
 	int nWeek = y + y / 4 + c / 4 - 2 * c + 26 * (m + 1) / 10 + d - 1;  //蔡勒公式
-	nWeek = nWeek >= 0 ? (nWeek % 7) : (nWeek % 7 + 7);				//nWeek为负时取模
+	nWeek = nWeek >= 0 ? (nWeek % 7) : (nWeek % 7 + 7);					//nWeek为负时取模
 	return (Week)nWeek;
 }
 
@@ -186,7 +178,7 @@ int Date::dayOfYear() const
 
 int Date::weekOfYear() const
 {
-	int nWeekBeg = Date(m_year, 1, 1).week();
+	int nWeekBeg = static_cast<int>(Date(m_year, 1, 1).week());
 	int nPassedDays = dayOfYear();
 	int nWeeks = nPassedDays < (7 - nWeekBeg + 2) ? 1 : (nPassedDays - (7 - nWeekBeg + 2)) / 7 + 2;
 	return nWeeks;
@@ -353,26 +345,12 @@ int Date::dayOfOrigin() const
 
 //////////////////////////////////class Time
 Time::Time()
-	: m_hour(0)
-	, m_minute(0)
-	, m_second(0)
-	, m_millisecond(0)
-{
-}
-
-Time::Time(const Time &other)
-	: m_hour(other.hour())
-	, m_minute(other.minute())
-	, m_second(other.second())
-	, m_millisecond(other.millisecond())
+	: Time(0, 0, 0, 0)
 {
 }
 
 Time::Time(int hour, int minute, int second)
-	: m_hour(hour)
-	, m_minute(minute)
-	, m_second(second)
-	, m_millisecond(0)
+	: Time(hour, minute, second, 0)
 {
 }
 
@@ -384,7 +362,8 @@ Time::Time(int hour, int minute, int second, int millisecond)
 {
 }
 
-Time::~Time()
+Time::Time(const Time &other)
+	: Time(other.hour(), other.minute(), other.second(), other.millisecond())
 {
 }
 
@@ -540,12 +519,6 @@ DateTime::DateTime()
 {
 }
 
-DateTime::DateTime(const DateTime &other)
-	: m_date(other.date())
-	, m_time(other.time())
-{
-}
-
 DateTime::DateTime(int year, int month, int day)
 	: m_date(year, month, day)
 {
@@ -581,7 +554,9 @@ DateTime::DateTime(int year, int month, int day, const Time &time)
 {
 }
 
-DateTime::~DateTime()
+DateTime::DateTime(const DateTime &other)
+	: m_date(other.date())
+	, m_time(other.time())
 {
 }
 

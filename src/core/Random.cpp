@@ -8,8 +8,8 @@ using namespace nb::core;
 static std::default_random_engine g_randomEngine((unsigned int)time(nullptr));
 
 Random::Random()
+	: Random(0, 100)
 {
-	setRange(0, 100);
 }
 
 Random::Random(int min, int max)
@@ -151,8 +151,8 @@ int Random::generateOne(int min, int max)
 //////////////////////////////////////////////////////////////////////////
 //RandomF
 RandomF::RandomF()
+	: RandomF(0.0, 100.0)
 {
-	setRange(0.0, 1.0);
 }
 
 RandomF::RandomF(double min, double max)

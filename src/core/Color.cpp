@@ -22,8 +22,8 @@ Color::Color(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
 }
 
 Color::Color(const Color &other)
+	: Color(other.alpha(), other.red(), other.green(), other.blue())
 {
-	setArgb(other.alpha(), other.red(), other.green(), other.blue());
 }
 
 void Color::operator =(const Color &other)
@@ -161,7 +161,9 @@ void Color::setRgbF(float r, float g, float b)
 
 void Color::setArgbF(float a, float r, float g, float b)
 {
-	if (!isValidArgbF(a, r, g, b))	throw ArgumentException("argb", __FILE__, __LINE__);
+	if (!isValidArgbF(a, r, g, b))
+		throw ArgumentException("argb", __FILE__, __LINE__);
+
 	setAlpha(argbF2Argb(a));
 	setRed(argbF2Argb(r));
 	setGreen(argbF2Argb(g));
@@ -206,7 +208,9 @@ void Color::setValue(float v)
 
 void Color::setHsv(float h, float s, float v)
 {
-	if (!isValidHsv(h, s, v))	throw ArgumentException("hsv", __FILE__, __LINE__);
+	if (!isValidHsv(h, s, v))
+		throw ArgumentException("hsv", __FILE__, __LINE__);
+
 	float r, g, b;
 	hsv2RgbF(h, s, v, r, g, b);
 	setArgbF(alphaF(), r, g, b);
@@ -228,7 +232,7 @@ void Color::setIntegerRgb(uint32_t rgb)
 
 uint32_t Color::toIntegerArgb() const
 {
-	return (alpha() << 24) | (red() << 16) | (green() << 8) | (blue());
+	return (alpha() << 24) | toIntegerRgb();
 }
 
 uint32_t Color::toIntegerRgb() const
@@ -273,8 +277,9 @@ Color Color::fromArgbF(float a, float r, float g, float b)
 
 Color Color::fromString(const std::string &sHex)
 {
-	std::regex reg("^#[A-Za-z0-9]{6}$");
-	if(!std::regex_match(sHex, reg))	throw ArgumentException("sHex", __FILE__, __LINE__);
+	std::regex reg("^#[0-9A-Za-z]{6}$");
+	if(!std::regex_match(sHex, reg))
+		throw ArgumentException("sHex", __FILE__, __LINE__);
 
 	try {
 		auto x = std::stoi("0x" + sHex.substr(1), 0, 16);
@@ -305,7 +310,9 @@ bool Color::isValidHsv(float h, float s, float v)
 
 uint8_t Color::argbF2Argb(float f)
 {
-	if (f < 0.0 || f > 1.0)		throw ArgumentOutOfRangeException("f", 0.0, 1.0, f, __FILE__, __LINE__);
+	if (f < 0.0 || f > 1.0)
+		throw ArgumentOutOfRangeException("f", 0.0, 1.0, f, __FILE__, __LINE__);
+
 	return (uint8_t)std::round(f * 255);
 }
 
@@ -318,10 +325,10 @@ void Color::rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v)
 {
 	if (!isValidArgbF(1.0, r, g, b))
 		throw ArgumentException("rgb", __FILE__, __LINE__);
-	float fMax = std::max(std::max(r, g), b);
-	float fMin = std::min(std::min(r, g), b);
-	v = fMax;
 
+	float fMax = std::max({ r, g, b });
+	float fMin = std::min({ r, g, b });
+	v = fMax;
 	if(fMax == 0.0)
 	{
 		s = 0.0;
@@ -336,25 +343,22 @@ void Color::rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v)
 		}
 		else
 		{
-			if(r == fMax)
-				h = (g - b) / (fMax - fMin);
-			else if(g == fMax)
-				h = 2 + (b - r) / (fMax - fMin); 
-			else if(b == fMax)
-				h = 4 + (r - g) / (fMax - fMin);
+			if(r == fMax)		h = (g - b) / (fMax - fMin);
+			else if(g == fMax)	h = 2 + (b - r) / (fMax - fMin);
+			else if(b == fMax)	h = 4 + (r - g) / (fMax - fMin);
 
 			h *= 60;
 			if(h < 0)
-				h += 360; 
+				h += 360;
 		}
-	} 
-
+	}
 }
 //以下为公式
 void Color::hsv2RgbF(float h, float s, float v, float &r, float &g, float &b)
 {
-	////
-	if (!isValidHsv(h, s, v))	throw ArgumentException("hsv", __FILE__, __LINE__);
+	if (!isValidHsv(h, s, v))
+		throw ArgumentException("hsv", __FILE__, __LINE__);
+
 	if(s == 0.0)
 	{
 		r = g = b = v;

@@ -31,8 +31,8 @@ public:
 	//构建一个Color，它的argb为(a, r, g, b)
 	Color(uint8_t a, uint8_t r, uint8_t g, uint8_t b);
 
+	//从其他Color构建一个Color
 	Color(const Color &other);
-	~Color() = default;
 
 	void operator =(const Color &other);
 	bool operator ==(const Color &other) const;

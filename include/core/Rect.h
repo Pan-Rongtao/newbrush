@@ -23,16 +23,31 @@ namespace nb{ namespace core{
 class NB_API Rect
 {
 public:
+	//构建一个Rect(0.0, 0.0, 0.0, 0.0)
 	Rect();
+
+	//构建一个Rect(x, y, width, height)
 	Rect(float x, float y, float width, float height);
+
+	//构建一个Rect(x, y, size.width, size.height)
 	Rect(float x, float y, const Size &size);
+
+	//构建一个Rect(leftTop.x, leftTop.y, width, height)
 	Rect(const Point &leftTop, float width, float height);
+
+	//构建一个Rect(leftTop.x, leftTop.y, size.width, size.height)
 	Rect(const Point &leftTop, const Size &size);
+
+	//构建一个Rect，塔尔左上角为leftTop，它的右下角为rightBottom
 	Rect(const Point &leftTop, const Point &rightBottom);
+
+	//从其他Rect构建一个Rect
 	Rect(const Rect &other);
-	~Rect();
-	//左、右、顶、底、尺寸都是0被定义为Zero
+
+	//构建一个零Rect：左、右、顶、底、尺寸都是0.0被定义为Zero
 	static Rect zero();
+
+	//从左、顶、右、底部构建一个Rect
 	static Rect fromLTRB(float left, float top, float right, float bottom);
 
 	void operator = (const Rect &other);
@@ -171,16 +186,31 @@ private:
 class NB_API RectI
 {
 public:
+	//构建一个RectI(0, 0, 0, 0)
 	RectI();
+
+	//构建一个RectI(x, y, width, height)
 	RectI(int x, int y, int width, int height);
+
+	//构建一个RectI(x, y, size.width, size.height)
 	RectI(int x, int y, const SizeI &size);
+
+	//构建一个RectI(leftTop.x, leftTop.y, width, height)
 	RectI(const PointI &leftTop, int width, int height);
+
+	//构建一个RectI(leftTop.x, leftTop.y, size.width, size.height)
 	RectI(const PointI &leftTop, const SizeI &size);
+
+	//构建一个RectI，塔尔左上角为leftTop，它的右下角为rightBottom
 	RectI(const PointI &leftTop, const PointI &rightBottom);
+
+	//从其他RectI构建一个RectI
 	RectI(const RectI &other);
-	~RectI();
-	//左、右、顶、底、尺寸都是0被定义为Zero
+
+	//构建一个零RectI：左、右、顶、底、尺寸都是0被定义为Zero
 	static RectI zero();
+
+	//从左、顶、右、底部构建一个Rect
 	static RectI fromLTRB(int left, int top, int right, int bottom);
 
 	void operator = (const RectI &other);

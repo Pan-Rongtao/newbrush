@@ -27,7 +27,7 @@ void TestDateTime::test()
 
 	Date curD = Date::today();
 
-	int dw = curD.week();
+	int dw = static_cast<int>(curD.week());
 	int nPd = Date(2016, 3, 1).dayOfYear();
 
 	int nDaysInYear = Date::daysInYear(2016);

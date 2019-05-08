@@ -19,10 +19,16 @@ namespace nb{ namespace core {
 class NB_API Size
 {
 public:
+	//构建一个Size(0.0, 0.0)
 	Size();
+
+	//构建一个Size(width, height)
 	Size(float width, float height);
+
+	//从其他Size构建一个Size
 	Size(const Size &other);
-	~Size();
+
+	//零Size(0.0, 0.0)
 	static Size zero();
 
 	void operator = (const Size &other);
@@ -87,10 +93,16 @@ private:
 class NB_API SizeI
 {
 public:
+	//构建一个SizeI(0, 0)
 	SizeI();
+
+	//构建一个SizeI(width, height)
 	SizeI(int width, int height);
+
+	//从其他SizeI构建一个SizeI
 	SizeI(const SizeI &other);
-	~SizeI();
+
+	//零Size(0, 0)
 	static SizeI zero();
 
 	void operator = (const SizeI &other);
