@@ -30,7 +30,7 @@ int Application::run()
 		{
 			w->init();
 			w->measure(Size((float)w->Width, (float)w->Height));
-			w->arrage(Rect(0, 0, w->Width, w->Height));
+			w->arrage(Rect(0.0f, 0.0f, w->Width, w->Height));
 			w->onRender(w->DrawContext());
 		}
 		return nb::gl::Application::run();

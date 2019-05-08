@@ -23,10 +23,6 @@ enum PenLineJoin
 class NB_API Shape : public UIElement
 {
 public:
-	Shape();
-	virtual ~Shape();
-
-public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Fill;
 	nb::core::Property_rw<nb::gui::Stretch>				Stretch;
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Stroke;
@@ -35,8 +31,7 @@ public:
 	nb::core::Property_rw<Thickness>					StrokeThickness;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	Shape();
 
 };
 

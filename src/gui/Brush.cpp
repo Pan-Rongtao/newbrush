@@ -29,20 +29,12 @@ SolidColorBrush::SolidColorBrush(const nb::core::Color &color)
 {
 }
 
-SolidColorBrush::~SolidColorBrush()
-{
-}
-
 //class ImageBrush
 ImageBrush::ImageBrush()
 {
 }
 
 ImageBrush::ImageBrush(const std::shared_ptr<nb::gui::ImageSource> &imgSource)
-	: ImageSource1(imgSource)
-{
-}
-
-ImageBrush::~ImageBrush()
+	: Source(imgSource)
 {
 }

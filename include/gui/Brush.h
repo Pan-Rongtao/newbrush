@@ -26,12 +26,11 @@ protected:
 	Brush(double opacity);
 	virtual ~Brush();
 
-public:
-	nb::core::Property_rw<double>	Opacity;
+	nb::core::Property_rw<double>			Opacity;
 
 private:
-	Brush(const Brush &other);
-	void operator = (const Brush &other);
+	Brush(const Brush &other) = delete;
+	void operator = (const Brush &other) = delete;
 
 };
 
@@ -41,9 +40,7 @@ class NB_API SolidColorBrush : public Brush
 public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const nb::core::Color &color);
-	virtual ~SolidColorBrush();
 
-public:
 	nb::core::Property_rw<nb::core::Color>	Color;
 };
 
@@ -53,10 +50,8 @@ class NB_API ImageBrush : public Brush
 public:
 	ImageBrush();
 	explicit ImageBrush(const std::shared_ptr<ImageSource> &imgSource);
-	~ImageBrush();
 
-public:
-	nb::core::Property_rw<std::shared_ptr<ImageSource>>	ImageSource1;
+	nb::core::Property_rw<std::shared_ptr<ImageSource>>	Source;
 };
 
 }}
