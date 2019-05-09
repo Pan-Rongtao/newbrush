@@ -16,8 +16,8 @@ UIElement::UIElement()
 	, FlowDirection(FlowDirection::LeftToRight)
 	, Renderer(std::make_shared<nb::gl::RenderObject>())
 {
-	DesiredSize.bind([&]()->Size& { return m_desiredSize; });
-	ActualSize.bind([&]()->Size& {return m_actualSize; });
+	DesiredSize.getter([&]()->Size& { return m_desiredSize; });
+	ActualSize.getter([&]()->Size& {return m_actualSize; });
 	Visibility.notify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Opacity.notify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Focusable.notify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));

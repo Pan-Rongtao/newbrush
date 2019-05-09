@@ -23,9 +23,10 @@ void TestApp::test()
 	*/
 
 	auto ellipse = std::make_shared<nb::gui::Ellipse>();
-	ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	//ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	ellipse->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
 	w.Content = ellipse;
 
-	w.Content()->Margin = 200;
+	w.Content()->Margin = Thickness(300, 200, 300, 200);
 	this->run();
 }

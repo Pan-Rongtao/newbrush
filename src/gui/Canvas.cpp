@@ -13,7 +13,8 @@ Canvas::~Canvas()
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, double fTopLength)
 {
-	std::vector<std::shared_ptr<UIElement>> children = Children;
+	auto child = std::find(Children().begin(), Children().end(), element);
+//	if(child != Children().end())
 }
 
 double Canvas::getTop(std::shared_ptr<UIElement> element)
@@ -56,10 +57,19 @@ double Canvas::getRight(std::shared_ptr<UIElement> element)
 
 Size Canvas::measureOverride(const Size & availableSize)
 {
-	return Size();
+	for (auto child : Children())
+	{
+		child->measure(availableSize);
+	}
+	return availableSize;
 }
 
 Size Canvas::arrangeOverride(const Size & finalSize)
 {
-	return Size();
+	for (auto child : Children())
+	{
+		Rect rc(child->Offset().x() + getLeft(child), child->Offset().y() + getTop(child), child->ActualSize);
+		child->arrage(rc);
+	}
+	return finalSize;
 }

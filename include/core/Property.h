@@ -1,3 +1,18 @@
+/*******************************************************
+**	Property_rw, Property_r, Property_w
+**
+**	属性类
+**		属性给外部提供方便的访问权限控制的能力。使用一个
+**	属性就像使用一个变量一样方便。不同的属性提供不同的访问
+**	能力：Property_rw供读写，Property_r供只读，Property_w供
+**	只写。
+**
+**		只有可写的属性类型才能绑定外部依赖：绑定是一个
+**	std::function，可以返回一个成语变量，另一个属性，或
+**	一个可执行函数体或lambda表达式。
+**
+**
+********************************************************/
 #pragma once
 #include <functional>
 #include "../core/Def.h"
@@ -73,23 +88,23 @@ public:
 	void operator = (const Property_r<T> &v) = delete;
 
 	//绑定，可以是任意返回T&的函数，表达式；绑定后，属性返回值将受绑定函数影响，如果传入nullptr表示取消绑定
-	void bind(std::function<const T&(void)> binder)
+	void getter(std::function<T&(void)> getter)
 	{
-		m_binder = binder;
+		m_getter = getter;
 	}
 
 	operator const T&() const
 	{
-		return m_binder ? m_binder() : m_v;
+		return m_getter ? m_getter() : m_v;
 	}
 	const T & operator()() const
 	{
-		return m_binder ? m_binder() : m_v;
+		return m_getter ? m_getter() : m_v;
 	}
 
 private:
-	std::function<const T &(void)>	m_binder;
-	T							m_v;
+	std::function<T &(void)>	m_getter;
+	T								m_v;
 };
 
 

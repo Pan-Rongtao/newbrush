@@ -26,8 +26,9 @@ void TestProperty::test()
 	s1 = Range1;
 	Range = Range1;
 	
-	bool br = Visible;
-	Visible.bind([&]()->bool& {return m_b; });
+	SZR.getter([&]()->Size& {return m_szGetter; });
+	((Size)SZR).setHeight(1);
+	Size sz = SZR;
 
 	bool bxx = Visible;
 	m_b = true;

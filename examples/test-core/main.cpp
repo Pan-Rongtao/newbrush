@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestDateTime> test;
+		TestHandle<TestProperty> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)
