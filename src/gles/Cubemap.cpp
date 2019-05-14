@@ -11,11 +11,6 @@ Cubemap::Cubemap()
 	setFilter(TextureFilter());
 }
 
-Cubemap::~Cubemap()
-{
- 
-}
-
 void Cubemap::bind()
 {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_handle);

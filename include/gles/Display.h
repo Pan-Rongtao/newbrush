@@ -8,6 +8,7 @@ class NB_API Display
 public:
 	Display();
 	Display(long id);
+	static Display defaultx();
 
 	bool isNull() const;
 
@@ -16,7 +17,6 @@ public:
 	void *handle() const;
 
 public:
-	static Display defaultx();
 
 private:
 	void				*m_Handle;

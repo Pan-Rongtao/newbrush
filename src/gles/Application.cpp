@@ -71,7 +71,6 @@ void Application::render()
 		float fps = frames * 1000.0f / (tick1 - tick);
 		frames = 0;
 		tick = tick1;
-//		printf("FPS[%.2f]; Batching count[%d]; Drawcalls[%d], Objects[%d], saved by batching[%d]\r\n", fps, bd->GetBatchingCount(), bd->GetBatchingCount(), bd->GetRenderObjectCount(), bd->GetRenderObjectCount() - bd->GetBatchingCount());
 		printf("fps:%.2f\r\n", fps);
 	}
 }

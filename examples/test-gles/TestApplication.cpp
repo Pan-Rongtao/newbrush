@@ -18,7 +18,6 @@
 #include "gles/Sphere.h"
 #include "gles/Storage.h"
 #include "gles/Projection.h"
-#include "gles/Gl.h"
 
 using namespace nb::core;
 using namespace nb::gl;

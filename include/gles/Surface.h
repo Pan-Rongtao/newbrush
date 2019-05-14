@@ -6,6 +6,10 @@ namespace nb{ namespace gl{
 class NB_API Surface
 {
 public:
+	virtual ~Surface();
+	Surface(const Surface &other) = delete;
+	void operator = (const Surface &other) = delete;
+
 	//…Ë÷√øÌ
 	void setWidth(int width);
 
@@ -18,17 +22,10 @@ public:
 
 	//egl id
 	void *handle() const;
-
-	virtual ~Surface();
-
+	
 protected:
 	Surface();
-
 	void		*m_Handle;
-
-private:
-	Surface(const Surface &other);
-	void operator = (const Surface &other);
 };
 
 class NB_API WindowSurface : public Surface

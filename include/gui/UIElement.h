@@ -79,7 +79,7 @@ public:
 	core::Property_rw<FlowDirection>						FlowDirection;
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
-
+	
 protected:
 	virtual core::Size measureOverride(const core::Size &availableSize);
 	virtual core::Size arrangeOverride(const core::Size &finalSize);

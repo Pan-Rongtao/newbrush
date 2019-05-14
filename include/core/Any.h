@@ -100,7 +100,7 @@ private:
 template<typename T>
 T any_cast(const Any &any)
 {
-	if (any.type() != typeid(T))	throw 0;
+	if (any.type() != typeid(T))	throw std::bad_cast();
 	return static_cast<Any::HolderImp<T> *>(any.m_holder)->m_v;
 }
 

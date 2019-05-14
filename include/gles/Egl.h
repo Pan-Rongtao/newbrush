@@ -30,4 +30,8 @@ namespace nb{ namespace gl
 	
 	//
 	NB_API void swapBuffers(const Surface *surface);
+
+	//设置视口大小
+	NB_API void Viewport(int x, int y, unsigned int width, unsigned height);
+
 }}

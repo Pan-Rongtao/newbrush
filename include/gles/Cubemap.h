@@ -21,10 +21,9 @@ class NB_API Cubemap : public Texture
 public:
 	//构建一个空的Cubmap
 	Cubemap();
+	~Cubemap() = default;
 
-	~Cubemap();
-
-public:
+	//重写bind/unbind
 	virtual void bind() override;
 	virtual void unbind() override;
 

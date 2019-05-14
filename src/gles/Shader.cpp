@@ -5,48 +5,51 @@
 using namespace nb::gl;
 
 Shader::Shader()
-: m_ShaderHandle(0)
+	: m_shaderHandle(0)
 {
 }
 
 Shader::~Shader()
 {
-	if(m_ShaderHandle != 0)
-	{
-		glDeleteShader(m_ShaderHandle);
-		m_ShaderHandle = 0;
-	}
+	if (m_shaderHandle != 0)
+		glDeleteShader(m_shaderHandle);
 }
 
 Shader::Shader(const std::string &source)
-: m_Source(source)
+	: m_source(source)
+	, m_shaderHandle(0)
 {
 }
 
 void Shader::setSource(const std::string &source)
 {
-	m_Source = source;
+	m_source = source;
+}
+
+std::string &Shader::source()
+{
+	return m_source;
 }
 
 const std::string &Shader::source() const
 {
-	return m_Source;
+	return m_source;
 }
 
 void Shader::compile()
 {
-	const char *pSource = m_Source.data();
-	glShaderSource(m_ShaderHandle, 1, &pSource, nullptr);
-	glCompileShader(m_ShaderHandle);
+	const char *pSource = m_source.data();
+	glShaderSource(m_shaderHandle, 1, &pSource, nullptr);
+	glCompileShader(m_shaderHandle);
 	GLint nShaderStatus;
-	glGetShaderiv(m_ShaderHandle, GL_COMPILE_STATUS, &nShaderStatus);
+	glGetShaderiv(m_shaderHandle, GL_COMPILE_STATUS, &nShaderStatus);
 	if(!nShaderStatus)
 	{
 		GLint nLogLeng;
-		glGetShaderiv(m_ShaderHandle, GL_INFO_LOG_LENGTH, &nLogLeng);
+		glGetShaderiv(m_shaderHandle, GL_INFO_LOG_LENGTH, &nLogLeng);
 
 		char *pLog = new char[nLogLeng];
-		glGetShaderInfoLog(m_ShaderHandle, nLogLeng, nullptr, pLog);
+		glGetShaderInfoLog(m_shaderHandle, nLogLeng, nullptr, pLog);
 		std::string sLog = pLog;
 		delete []pLog;
 
@@ -63,50 +66,38 @@ bool Shader::hasCompiled() const
 
 unsigned int Shader::handle() const
 {
-	return m_ShaderHandle;
+	return m_shaderHandle;
 }
 
 /////////////
 VertexShader::VertexShader()
+	: VertexShader("")
 {
-	m_ShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-	if(m_ShaderHandle == 0)
-	{
-		char info[100] = {0};
-		sprintf(info, "create vertex shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
-		NB_THROW_EXCEPTION(info);
-	}
 }
 
 VertexShader::VertexShader(const std::string &source)
-: Shader(source)
+	: Shader(source)
 {
-	m_ShaderHandle = glCreateShader(GL_VERTEX_SHADER);
-	if(m_ShaderHandle == 0)
+	m_shaderHandle = glCreateShader(GL_VERTEX_SHADER);
+	if(m_shaderHandle == 0)
 	{
 		char info[100] = {0};
 		sprintf(info, "create vertex shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
-		NB_THROW_EXCEPTION(info);
+		throw nb::core::LogicException(__FILE__, __LINE__);
 	}
 }
 
 /////
 FragmentShader::FragmentShader()
+	: FragmentShader("")
 {
-	m_ShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-	if(m_ShaderHandle == 0)
-	{
-		char info[100] = {0};
-		sprintf(info, "create fragment shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
-		NB_THROW_EXCEPTION(info);
-	}
 }
 
 FragmentShader::FragmentShader(const std::string &source)
-: Shader(source)
+	: Shader(source)
 {
-	m_ShaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-	if(m_ShaderHandle == 0)
+	m_shaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
+	if(m_shaderHandle == 0)
 	{
 		char info[100] = {0};
 		sprintf(info, "create fragment shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());

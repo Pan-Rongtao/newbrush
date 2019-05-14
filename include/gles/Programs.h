@@ -11,11 +11,6 @@ public:
 	PrimitiveProgram();
 };
 
-class NB_API TextureProgram : public Program
-{
-
-};
-
 class NB_API PhongProgram : public Program
 {
 public:

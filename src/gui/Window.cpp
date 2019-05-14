@@ -1,7 +1,6 @@
 ﻿#include "gui/Window.h"
 #include "gles/Egl.h"
 #include "gles/Window.h"
-#include "gles/Gl.h"
 #include "gles/Projection.h"
 #include "gles/Camera.h"
 #include "gui/Application.h"

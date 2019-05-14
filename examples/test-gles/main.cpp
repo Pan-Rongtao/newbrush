@@ -12,7 +12,7 @@ using namespace nb::core;
 int main(int argc, char* argv[])
 {
 	try{
-		TestHandle<TestTexture2D> test;
+		TestHandle<TestApplication> test;
 		test->test();
 	}
 	catch(Exception &e)

@@ -27,17 +27,17 @@ public:
 	virtual ~Canvas();
 
 public:
-	void setTop(std::shared_ptr<UIElement> element, double fTopLength);
-	double getTop(std::shared_ptr<UIElement> element);
-
-	void setBottom(std::shared_ptr<UIElement> element, double fBottomLength);
-	double getBottom(std::shared_ptr<UIElement> element);
-
-	void setLeft(std::shared_ptr<UIElement> element, double fLeftLength);
+	void setLeft(std::shared_ptr<UIElement> element, double left);
 	double getLeft(std::shared_ptr<UIElement> element);
 
-	void setRight(std::shared_ptr<UIElement> element, double fRightLength);
+	void setRight(std::shared_ptr<UIElement> element, double right);
 	double getRight(std::shared_ptr<UIElement> element);
+
+	void setTop(std::shared_ptr<UIElement> element, double top);
+	double getTop(std::shared_ptr<UIElement> element);
+
+	void setBottom(std::shared_ptr<UIElement> element, double bottom);
+	double getBottom(std::shared_ptr<UIElement> element);
 
 
 protected:

@@ -62,3 +62,8 @@ void nb::gl::swapBuffers(const Surface *surface)
 {
 	eglSwapBuffers(getCurrentDisplay().handle(), surface->handle());
 }
+
+void nb::gl::Viewport(int x, int y, unsigned int width, unsigned height)
+{
+	glViewport(x, y, width, height);
+}

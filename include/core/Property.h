@@ -87,7 +87,8 @@ public:
 	void operator = (const T &v) = delete;
 	void operator = (const Property_r<T> &v) = delete;
 
-	//绑定，可以是任意返回T&的函数，表达式；绑定后，属性返回值将受绑定函数影响，如果传入nullptr表示取消绑定
+	//设置getter，可以是任意返回T&的函数，表达式；绑定后，属性值将受getter影响，如果传入nullptr表示取消getter
+	//需要注意的是，你必须返回一个非临时值来保证T&的时效性
 	void getter(std::function<T&(void)> getter)
 	{
 		m_getter = getter;
@@ -104,7 +105,7 @@ public:
 
 private:
 	std::function<T &(void)>	m_getter;
-	T								m_v;
+	T							m_v;
 };
 
 

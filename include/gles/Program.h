@@ -42,7 +42,7 @@ public:
 
 	//构建一个Program，并为它指定了顶点着色器和片元着色器
 	Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader);
-	~Program();
+	virtual ~Program();
 
 public:
 	//设置顶点着色器

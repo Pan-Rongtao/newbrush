@@ -23,10 +23,15 @@ namespace nb{ namespace gl{
 class NB_API Shader
 {
 public:
+	virtual ~Shader();
+	Shader(const Shader &other) = delete;
+	void operator =(const Shader &other) = delete;
+
 	//设置源码
 	void setSource(const std::string &source);
 
-	//获取源码
+	//源码
+	std::string &source();
 	const std::string &source() const;
 
 	//编译
@@ -39,14 +44,12 @@ public:
 	//获取shader句柄
 	unsigned int handle() const;
 
-	virtual ~Shader();
-
 protected:
 	Shader();
 	Shader(const std::string &source);
 
-	std::string			m_Source;
-	unsigned int		m_ShaderHandle;
+	std::string			m_source;
+	unsigned int		m_shaderHandle;
 };
 
 class NB_API VertexShader : public Shader
@@ -55,7 +58,7 @@ public:
 	//构建一个顶点着色器，源码为空
 	VertexShader();
 
-	//构建一个顶点着色器，源码为sourceCode
+	//构建一个顶点着色器，源码为source
 	VertexShader(const std::string &source);
 
 };
@@ -63,7 +66,10 @@ public:
 class NB_API FragmentShader : public Shader
 {
 public:
+	//构建一个片源着色器，源码为空
 	FragmentShader();
+
+	//构建一个片源着色器，源码为source
 	FragmentShader(const std::string &source);
 
 };
