@@ -12,14 +12,14 @@ namespace nb{ namespace gl{
 
 namespace nb{namespace gui{
 
-enum class Visibility
+enum class VisibilityE
 {
 	Hidden,
 	Visible,
 	Collapsed,
 };
 
-enum class HorizontalAlignment
+enum class HorizontalAlignmentE
 {
 	HorizontalAlignmentLeft = 0,
 	HorizontalAlignmentCenter = 1,
@@ -27,7 +27,7 @@ enum class HorizontalAlignment
 	HorizontalAlignmentStretch = 3
 };
 
-enum class VerticalAlignment
+enum class VerticalAlignmentE
 {
 	VerticalAlignmentTop = 0,
 	VerticalAlignmentCenter = 1,
@@ -35,13 +35,13 @@ enum class VerticalAlignment
 	VerticalAlignmentStretch = 3
 };
 
-enum class FlowDirection
+enum class FlowDirectionE
 {
 	LeftToRight,
 	RightToLeft,
 };
 
-enum class Orientation
+enum class OrientationE
 {
 	Horizontal,
 	Vertical,
@@ -60,7 +60,7 @@ public:
 
 
 public:
-	core::Property_rw<Visibility>							Visibility;
+	core::Property_rw<VisibilityE>							Visibility;
 	core::Property_rw<double>								Opacity;
 	core::Property_rw<bool>									Focusable;
 	core::Property_rw<double>								Width;
@@ -74,9 +74,9 @@ public:
 	core::Property_rw<core::Size>							RenderSize;
 	core::Property_rw<core::Point>							Offset;
 	core::Property_rw<Thickness>							Margin;
-	core::Property_rw<HorizontalAlignment>					HorizontalAlignment;
-	core::Property_rw<VerticalAlignment>					VerticalAlignment;
-	core::Property_rw<FlowDirection>						FlowDirection;
+	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
+	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
+	core::Property_rw<FlowDirectionE>						FlowDirection;
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
 	
@@ -85,7 +85,7 @@ protected:
 	virtual core::Size arrangeOverride(const core::Size &finalSize);
 
 private:
-	void onVisibilityChanged(const nb::gui::Visibility &_old, const nb::gui::Visibility &_new);
+	void onVisibilityChanged(const gui::VisibilityE &_old, const gui::VisibilityE &_new);
 	void onOpacityChanged(const double &_old, const double &_new);
 	void onFocusableChanged(const bool &_old, const bool &_new);
 	void onDesiredSizeChanged(const core::Size &_old, const core::Size &_new);

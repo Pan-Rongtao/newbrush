@@ -5,15 +5,15 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
-	: Visibility(Visibility::Visible)
+	: Visibility(VisibilityE::Visible)
 	, Opacity(1.0)
 	, Width(NB_DOUBLE_NAN)
 	, Height(NB_DOUBLE_NAN)
 	, MaxWidth(NB_DOUBLE_MAX)
 	, MaxHeight(NB_DOUBLE_MAX)
-	, HorizontalAlignment(HorizontalAlignment::HorizontalAlignmentStretch)
-	, VerticalAlignment(VerticalAlignment::VerticalAlignmentStretch)
-	, FlowDirection(FlowDirection::LeftToRight)
+	, HorizontalAlignment(HorizontalAlignmentE::HorizontalAlignmentStretch)
+	, VerticalAlignment(VerticalAlignmentE::VerticalAlignmentStretch)
+	, FlowDirection(FlowDirectionE::LeftToRight)
 	, Renderer(std::make_shared<nb::gl::RenderObject>())
 {
 	DesiredSize.getter([&]()->Size& { return m_desiredSize; });
@@ -31,7 +31,7 @@ UIElement::~UIElement()
 void UIElement::measure(const Size & availabelSize)
 {
 	//如果不可见或两次measure参数一致，忽略
-	if ((Visibility != Visibility::Visible))
+	if ((Visibility != VisibilityE::Visible))
 		return;
 
 	//减去magin计算出本来的constrainedSize
@@ -63,7 +63,7 @@ void UIElement::measure(const Size & availabelSize)
 void UIElement::arrage(const Rect & finalRect)
 {
 	//如果不可见或两次arrage参数一致，忽略
-	if ((Visibility != Visibility::Visible))
+	if ((Visibility != VisibilityE::Visible))
 		return;
 
 	//减去magin计算出本来的arrangeSize以及clientSize
@@ -72,9 +72,9 @@ void UIElement::arrage(const Rect & finalRect)
 	//调整arrange大于DesiredSize
 	arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignment::HorizontalAlignmentStretch)
+	if (HorizontalAlignment != HorizontalAlignmentE::HorizontalAlignmentStretch)
 		arrangeSize.setWidth(DesiredSize().width());
-	if (VerticalAlignment != VerticalAlignment::VerticalAlignmentStretch)
+	if (VerticalAlignment != VerticalAlignmentE::VerticalAlignmentStretch)
 		arrangeSize.setHeight(DesiredSize().height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
@@ -96,9 +96,9 @@ void UIElement::arrage(const Rect & finalRect)
 
 	switch (HorizontalAlignment)
 	{
-	case HorizontalAlignment::HorizontalAlignmentLeft:		Offset().x() = finalRect.x() + Margin().left();																		break;
-	case HorizontalAlignment::HorizontalAlignmentCenter:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
-	case HorizontalAlignment::HorizontalAlignmentRight:		Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
+	case HorizontalAlignmentE::HorizontalAlignmentLeft:		Offset().x() = finalRect.x() + Margin().left();														break;
+	case HorizontalAlignmentE::HorizontalAlignmentCenter:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	case HorizontalAlignmentE::HorizontalAlignmentRight:	Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
 	default:
 	{
 		if (RenderSize().width() >= clientSize.width())
@@ -115,9 +115,9 @@ void UIElement::arrage(const Rect & finalRect)
 
 	switch (VerticalAlignment)
 	{
-	case VerticalAlignment::VerticalAlignmentTop:		Offset().y() = finalRect.top() + Margin().top();														break;
-	case VerticalAlignment::VerticalAlignmentCenter:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
-	case VerticalAlignment::VerticalAlignmentBottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
+	case VerticalAlignmentE::VerticalAlignmentTop:		Offset().y() = finalRect.top() + Margin().top();														break;
+	case VerticalAlignmentE::VerticalAlignmentCenter:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
+	case VerticalAlignmentE::VerticalAlignmentBottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
 	default:
 	{
 		if (RenderSize().height() >= clientSize.height())
@@ -148,7 +148,7 @@ void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 }
 
-void UIElement::onVisibilityChanged(const nb::gui::Visibility & _old, const nb::gui::Visibility & _new)
+void UIElement::onVisibilityChanged(const nb::gui::VisibilityE & _old, const nb::gui::VisibilityE & _new)
 {
 
 }

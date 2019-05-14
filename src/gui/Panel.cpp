@@ -28,16 +28,6 @@ void Panel::init()
 {
 }
 
-Size Panel::measureOverride(const Size & availableSize)
-{
-	return UIElement::measureOverride(availableSize);
-}
-
-Size Panel::arrangeOverride(const Size & finalSize)
-{
-	return UIElement::arrangeOverride(finalSize);
-}
-
 void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	static int i = 0;

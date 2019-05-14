@@ -12,7 +12,7 @@ public:
 public:
 	nb::core::Property_rw<int>				Delay;
 	nb::core::Property_rw<int>				Interval;
-	nb::core::Property_rw<Orientation>		Orientation1;
+	nb::core::Property_rw<OrientationE>		Orientation;
 	nb::core::Property_rw<bool>				IsDirectionReversed;
 
 protected:

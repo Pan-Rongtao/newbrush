@@ -27,7 +27,7 @@ public:
 	virtual ~WrapPanel();
 
 public:
-	nb::core::Property_rw<Orientation>	Orientation1;
+	nb::core::Property_rw<OrientationE>	Orientation;
 	nb::core::Property_rw<double>		ItemWidth;
 	nb::core::Property_rw<double>		ItemHeight;
 

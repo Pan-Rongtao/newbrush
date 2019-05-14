@@ -19,8 +19,7 @@ Canvas::~Canvas()
 
 void Canvas::setLeft(std::shared_ptr<UIElement> element, double left)
 {
-	auto child = std::find(Children().begin(), Children().end(), element);
-	if (child != Children().end())
+	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
 		AttachedProperties::registerAttached(element, CANVAS_ATTACHED_PROPERTY_LEFT, left);
 	}
@@ -34,8 +33,7 @@ double Canvas::getLeft(std::shared_ptr<UIElement> element)
 
 void Canvas::setRight(std::shared_ptr<UIElement> element, double right)
 {
-	auto child = std::find(Children().begin(), Children().end(), element);
-	if (child != Children().end())
+	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
 		AttachedProperties::registerAttached(element, CANVAS_ATTACHED_PROPERTY_RIGHT, right);
 	}
@@ -49,8 +47,7 @@ double Canvas::getRight(std::shared_ptr<UIElement> element)
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, double top)
 {
-	auto child = std::find(Children().begin(), Children().end(), element);
-	if (child != Children().end())
+	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
 		AttachedProperties::registerAttached(element, CANVAS_ATTACHED_PROPERTY_TOP, top);
 	}
@@ -64,8 +61,7 @@ double Canvas::getTop(std::shared_ptr<UIElement> element)
 
 void Canvas::setBottom(std::shared_ptr<UIElement> element, double bottom)
 {
-	auto child = std::find(Children().begin(), Children().end(), element);
-	if (child != Children().end())
+	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
 		AttachedProperties::registerAttached(element, CANVAS_ATTACHED_PROPERTY_BOTTOM, bottom);
 	}
@@ -90,7 +86,7 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : Children())
 	{
-		Rect rc(child->Offset().x() + getLeft(child), child->Offset().y() + getTop(child), child->ActualSize);
+		Rect rc((float)getLeft(child), (float)getTop(child), child->DesiredSize);
 		child->arrage(rc);
 	}
 	return finalSize;

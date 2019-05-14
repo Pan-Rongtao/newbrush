@@ -3,7 +3,7 @@
 
 namespace nb{namespace gui{
 
-enum Dock
+enum class DockE
 {
 	Left,
 	Right,
@@ -17,12 +17,14 @@ public:
 	DockPanel();
 	virtual ~DockPanel();
 
-	void setDock(std::shared_ptr<UIElement> element, Dock dock);
-	Dock getDock(std::shared_ptr<UIElement> element);
+	void setDock(std::shared_ptr<UIElement> element, DockE dock);
+	DockE getDock(std::shared_ptr<UIElement> element);
 
-public:
 	nb::core::Property_rw<bool>		LastChildFill;
 
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 };
 
 }}

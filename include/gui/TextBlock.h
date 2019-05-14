@@ -42,9 +42,9 @@ public:
 	nb::core::Property_rw<nb::core::Color>			Foreground;
 	nb::core::Property_rw<double>					LineHeight;
 	nb::core::Property_rw<Thickness>				Padding;
-	nb::core::Property_rw<TextAlignment>			TextAlignment1;
-	nb::core::Property_rw<TextTrimming>				TextTrimming1;
-	nb::core::Property_rw<TextWrapping>				TextWrapping1;
+	nb::core::Property_rw<TextAlignment>			TextAlignment;
+	nb::core::Property_rw<TextTrimming>				TextTrimming;
+	nb::core::Property_rw<TextWrapping>				TextWrapping;
 };
 
 }}

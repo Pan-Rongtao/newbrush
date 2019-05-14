@@ -10,23 +10,25 @@ using namespace nb::gui;
 void TestApp::test()
 {
 	Window w;
-/*	auto image = std::make_shared<Image>();
+/*
+	auto image = std::make_shared<Image>();
 	image->Source = std::make_shared<ImageSource>("e:/Pics/3.jpg");
 	image->Margin = Thickness(20);
 	image->Stretch = Stretch::Uniform;
-	w.Content = image;*/
-
-/*	auto rect = std::make_shared<Rectangle>();
+	w.Content = image;
+	*/
+	auto rect = std::make_shared<Rectangle>();
 	//rect->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
 	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	rect->Margin = Thickness(20);
 	w.Content = rect;
-	*/
+	
 
-	auto ellipse = std::make_shared<nb::gui::Ellipse>();
+/*	auto ellipse = std::make_shared<nb::gui::Ellipse>();
 	//ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	ellipse->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
-	w.Content = ellipse;
+	w.Content = ellipse;*/
 
-	w.Content()->Margin = Thickness(300, 200, 300, 200);
+//	w.Content()->Margin = Thickness(300, 200, 300, 200);
 	this->run();
 }

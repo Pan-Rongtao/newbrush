@@ -17,8 +17,8 @@ public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>			BorderBrush;
 	nb::core::Property_rw<Thickness>						BorderThickness;
 	nb::core::Property_rw<Thickness>						Padding;
-	nb::core::Property_rw<nb::gui::HorizontalAlignment>		HorizontalContentAlignment;
-	nb::core::Property_rw<nb::gui::VerticalAlignment>		VerticalContentAlignment;
+	nb::core::Property_rw<nb::gui::HorizontalAlignmentE>	HorizontalContentAlignment;
+	nb::core::Property_rw<nb::gui::VerticalAlignmentE>		VerticalContentAlignment;
 	nb::core::Property_rw<int>								TabIndex;
 	nb::core::Property_rw<std::shared_ptr<ControlTemplate>>	Template;
 

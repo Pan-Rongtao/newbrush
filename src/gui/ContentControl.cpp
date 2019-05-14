@@ -34,11 +34,7 @@ Size ContentControl::arrangeOverride(const Size & finalSize)
 {
 	if (Content())
 	{
-		Content()->arrage(Rect(Offset().x(), Offset().y(), DesiredSize));
-		return finalSize;
+		Content()->arrage(Rect(0.0, 0.0, DesiredSize));
 	}
-	else
-	{
-		return Control::measureOverride(finalSize);
-	}
+	return finalSize;
 }
