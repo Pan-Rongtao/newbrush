@@ -213,10 +213,15 @@ float Rect::bottom() const
 	return top() + height();
 }
 
+void Rect::setLeftTop(float left, float top)
+{
+	setLeft(left);
+	setTop(top);
+}
+
 void Rect::setLeftTop(const Point &p)
 {
-	setLeft(p.x());
-	setTop(p.y());
+	setLeftTop(p.x(), p.y());
 }
 
 Point Rect::leftTop() const
@@ -224,10 +229,15 @@ Point Rect::leftTop() const
 	return Point(left(), top());
 }
 
+void Rect::setRightTop(float right, float top)
+{
+	setRight(right);
+	setTop(top);
+}
+
 void Rect::setRightTop(const Point &p)
 {
-	setRight(p.x());
-	setTop(p.y());
+	setRightTop(p.x(), p.y());
 }
 
 Point Rect::rightTop() const
@@ -235,10 +245,15 @@ Point Rect::rightTop() const
 	return Point(right(), top());
 }
 
+void Rect::setLeftBottom(float left, float bottom)
+{
+	setLeft(left);
+	setBottom(bottom);
+}
+
 void Rect::setLeftBottom(const Point &p)
 {
-	setLeft(p.x());
-	setBottom(p.y());
+	setLeftBottom(p.x(), p.y());
 }
 
 Point Rect::leftBottom() const
@@ -246,10 +261,15 @@ Point Rect::leftBottom() const
 	return Point(left(), bottom());
 }
 
+void Rect::setRightBottom(float right, float bottom)
+{
+	setRight(right);
+	setBottom(bottom);
+}
+
 void Rect::setRightBottom(const Point &p)
 {
-	setRight(p.x());
-	setBottom(p.y());
+	setRightBottom(p.x(), p.y());
 }
 
 Point Rect::rightBottom() const

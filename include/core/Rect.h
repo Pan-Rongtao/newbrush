@@ -109,18 +109,22 @@ public:
 	float bottom() const;
 
 	//设置矩形的左上角坐标（左边和顶部），宽和高都可能会改变，但绝不会改变右下角坐标（右边和底部）
+	void setLeftTop(float left, float top);
 	void setLeftTop(const Point &p);
 	Point leftTop() const;
 
 	//设置矩形的右上角坐标（右边和顶部），宽和高都可能会改变，但绝不会改变左下角坐标（左边和底部）
+	void setRightTop(float right, float top);
 	void setRightTop(const Point &p);
 	Point rightTop() const;
 
 	//设置矩形的左下角坐标（左边和底部），宽和高都可能会改变，但绝不会改变右上角坐标（右边和顶部）
+	void setLeftBottom(float left, float bottom);
 	void setLeftBottom(const Point &p);
 	Point leftBottom() const;
 
 	//设置矩形的右下角坐标（右边和底部），宽和高都可能会改变，但绝不会改变左上角坐标（左边和顶部）
+	void setRightBottom(float right, float bottom);
 	void setRightBottom(const Point &p);
 	Point rightBottom() const;
 
