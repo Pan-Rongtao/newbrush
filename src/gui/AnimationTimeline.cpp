@@ -1,19 +1,18 @@
 ﻿#include "gui/AnimationTimeline.h"
-#include "gui/EasingFunctionBase.h"
-#include "gui/LineEase.h"
+#include "gui/EasingFunction.h"
 
 using namespace nb::core;
 using namespace nb::gui;
 
-AnimationTimeline::AnimationTimeline(void)
+AnimationTimeline::AnimationTimeline()
 {
 }
 
-AnimationTimeline::~AnimationTimeline(void)
+AnimationTimeline::~AnimationTimeline()
 {
 }
 
-float AnimationTimeline::GetFrameValue(const TimeSpan &frame)
+float AnimationTimeline::getCurrentValue(const TimeSpan &frame)
 {
 	return 0.0;
 }

@@ -5,7 +5,7 @@
 
 namespace nb{ namespace gui{
 
-class AttachedProperties
+class NB_API AttachedProperties
 {
 public:
 	//注册一个依赖属性，如果此属性已存在，则只修改属性值

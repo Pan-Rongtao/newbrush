@@ -3,16 +3,18 @@
 
 namespace nb { namespace gui {
 
-class NB_API FloatAnimation : public AnimationTimeline
+class NB_API DoubleAnimation : public AnimationTimeline
 {
 public:
-	FloatAnimation(void);
-	virtual ~FloatAnimation(void);
+	DoubleAnimation();
+	virtual ~DoubleAnimation();
 
 //		virtual void AnimateTo(int frame);
 
 	nb::core::Property_rw<double>		From;
 	nb::core::Property_rw<double>		To;
+	nb::core::Property_rw<double>		By;
+	//nb::core::Property_rw<>			EasingFunction;
 
 protected:
 	virtual void OnFrameChanged(const nb::core::TimeSpan &frame);

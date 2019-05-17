@@ -166,4 +166,5 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			}
 		}
 	}
+	return finalSize;
 }

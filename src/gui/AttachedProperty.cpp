@@ -1,4 +1,4 @@
-#include "AttachedProperty.h"
+#include "gui/AttachedProperty.h"
 
 using namespace nb::core;
 using namespace nb::gui;
