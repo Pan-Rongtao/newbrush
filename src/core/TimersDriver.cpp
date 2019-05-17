@@ -14,7 +14,7 @@ TimersDriver *TimersDriver::instance()
 void TimersDriver::add(Timer *timer)
 {
 	remove(timer);
-	m_tickSequence.insert(std::make_pair(NB_GET_TICK_COUT + timer->interval(), timer));
+	m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
 }
 
 void TimersDriver::remove(Timer *timer)
@@ -40,7 +40,7 @@ bool TimersDriver::has(Timer * timer) const
 
 void TimersDriver::drive()
 {
-	uint64_t currentTick = NB_GET_TICK_COUT;
+	uint64_t currentTick = NB_TICK_COUT;
 	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); )
 	{
 		//到点的timer发送事件并移除此tick对应的timer序列
@@ -52,7 +52,7 @@ void TimersDriver::drive()
 			iter = m_tickSequence.erase(iter);
 			// 假如不是单次触发模式，将此timer重新加入到队列中
 			if (!timer->isSingleShot())
-				m_tickSequence.insert(std::make_pair(NB_GET_TICK_COUT + timer->interval(), timer));
+				m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
 		}
 		else
 		{

@@ -25,12 +25,12 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc;
 	switch (Stretch)
 	{
-	case Stretch::Origion:	rc.setSize(Source()->width(), Source()->width());	break;
-	case Stretch::Fill:		rc.setSize(ActualSize);								break;
+	case Stretch::Origion:	rc.setSize((float)Source()->width(), (float)Source()->width());	break;
+	case Stretch::Fill:		rc.setSize(ActualSize);											break;
 	case Stretch::Uniform:	
 	{
-		auto pixelRatio = Source()->width() / Source()->heigth();
-		auto containerRatio = ActualSize().width() / ActualSize().height();
+		float pixelRatio = Source()->width() / Source()->heigth();
+		float containerRatio = ActualSize().width() / ActualSize().height();
 		if (pixelRatio < containerRatio)
 		{
 			rc.setSize(ActualSize().height() * pixelRatio, ActualSize().height());

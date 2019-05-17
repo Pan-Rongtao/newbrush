@@ -26,13 +26,13 @@ Size StackPanel::measureOverride(const Size & availableSize)
 	{
 		if (Orientation == OrientationE::Horizontal)
 		{
-			child->measure(Size(NB_DOUBLE_MAX, availableSize.height()));
+			child->measure(Size((float)NB_DOUBLE_MAX, availableSize.height()));
 			ret.width() += child->DesiredSize().width();
 			ret.height() = std::max(ret.height(), child->DesiredSize().height());
 		}
 		else
 		{
-			child->measure(Size(availableSize.width(), NB_DOUBLE_MAX));
+			child->measure(Size(availableSize.width(), (float)NB_DOUBLE_MAX));
 			ret.width() = std::max(ret.width(), child->DesiredSize().width());
 			ret.height() += child->DesiredSize().height();
 		}
@@ -43,7 +43,7 @@ Size StackPanel::measureOverride(const Size & availableSize)
 Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
-	double xOffset = 0.0, yOffset = 0.0;
+	float xOffset = 0.0f, yOffset = 0.0f;
 	for (auto child : Children())
 	{
 		child->arrage(Rect(xOffset, yOffset, child->DesiredSize()));

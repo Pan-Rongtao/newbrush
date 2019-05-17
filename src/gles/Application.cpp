@@ -59,13 +59,13 @@ void Application::IdledOverride()
 void Application::render()
 {
 	static int frames = 0;
-	static uint64_t tick = NB_GET_TICK_COUT;
+	static uint64_t tick = NB_TICK_COUT;
 	for (int i = 0; i != ContextMaster::count(); ++i)
 	{
 		ContextMaster::at(i)->draw();
 	}
 	++frames;
-	uint64_t tick1 = NB_GET_TICK_COUT;
+	uint64_t tick1 = NB_TICK_COUT;
 	if(tick1 - tick >= 2000)
 	{
 		float fps = frames * 1000.0f / (tick1 - tick);

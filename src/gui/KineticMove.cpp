@@ -23,10 +23,10 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 {
 	Time timeNow = Time::now();
 
-	float dt = 0.0;
+	double dt = 0.0;
 	if(timeNow >= TimeStart)	//跨天的话，也许会出现 timeNow < TimeStart()的情况
 	{
-		dt = (float)(timeNow - TimeStart).totalMilliseconds() / 1000.0f;
+		dt = (timeNow - TimeStart).totalMilliseconds() / 1000.0;
 	}
 
     double speed = Speed + Accel * dt;
@@ -40,7 +40,7 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 		speed = 0;
 		dt = -Speed / Accel;
 	}
-    float fSpace = Speed * dt + Accel * dt * dt / 2;
+    double fSpace = Speed * dt + Accel * dt * dt / 2;
 
 	Speed = speed;
 	CurrentPos = CurrentPos + fSpace;

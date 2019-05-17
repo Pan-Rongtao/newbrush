@@ -31,7 +31,7 @@ void SourceDecoder::decodeOne(const std::string &s)
 	if (mainP != std::string::npos)
 	{
 		std::string sCutMain = s.substr(0, mainP);
-		for (auto i = 0; i <= sCutMain.size() - sizeof(KEYWORD_UNIFORM);)
+		for (unsigned int i = 0; i <= sCutMain.size() - sizeof(KEYWORD_UNIFORM);)
 		{
 			std::string s = sCutMain.substr(i, sizeof(KEYWORD_UNIFORM));
 			if (toLower(s) == KEYWORD_UNIFORM)

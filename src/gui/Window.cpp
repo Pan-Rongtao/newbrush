@@ -12,7 +12,7 @@ using namespace nb::gui;
 
 auto lookat = [](double width, double height) 
 {
-	Projection::instance()->perspective(45.0f, width / height, 0.1f, 10000.0f);
+	Projection::instance()->perspective(45.0f, (float)(width / height), 0.1f, 10000.0f);
 	float z = (float)height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
 	Vec3 position((float)width / 2.0f, height / 2.0f, -z);
 	Vec3 target((float)width / 2.0f, height / 2.0f, 0.0f);
@@ -88,14 +88,14 @@ void nb::gui::Window::onTopChanged(const double & _old, const double & _new)
 void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setWidth((int)_new);
-	nb::gl::Viewport(0, 0, Width, Height);
+	nb::gl::Viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
 	lookat(Width, Height);
 }
 
 void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setHeight((int)_new);
-	nb::gl::Viewport(0, 0, Width, Height);
+	nb::gl::Viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
 	lookat(Width, Height);
 }
 

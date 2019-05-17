@@ -65,21 +65,22 @@
 
 //定义API导出宏
 #if NB_OS_FAMILY_WINDOWS
-	#define NB_API					__declspec(dllexport)
+	#define NB_API						__declspec(dllexport)
 #else
 	#define NB_API
 #endif
 
-#define NB_THROW_EXCEPTION(content) throw nb::core::Exception(content, __FILE__, __LINE__);
-#define NB_PI						3.14159265358979323
-#define NB_2PI						6.28318530717958647
-#define NB_HALF_PI					1.57079632679489661
-#define NB_ANG2RAD(angle)			(0.01745329251994329 * angle)
-#define NB_RAD2ANG(radian)			(57.2957795130823208 * radian)
-#define NB_DOUBLE_MAX				std::numeric_limits<double>::max()
-#define NB_DOUBLE_NAN				DBL_EPSILON
-#define NB_PID						nb::getPid()
-#define NB_GET_TICK_COUT			nb::getTickCount()
+#define NB_THROW_EXCEPTION(content)		throw nb::core::Exception(content, __FILE__, __LINE__);
+#define NB_PI							3.14159265358979323
+#define NB_2PI							6.28318530717958647
+#define NB_HALF_PI						1.57079632679489661
+#define NB_ANG2RAD(angle)				(0.01745329251994329 * angle)
+#define NB_RAD2ANG(radian)				(57.2957795130823208 * radian)
+#define NB_INT_MAX						std::numeric_limits<int>::max()
+#define NB_DOUBLE_MAX					std::numeric_limits<double>::max()
+#define NB_DOUBLE_NAN					DBL_EPSILON
+#define NB_PID							nb::getPid()
+#define NB_TICK_COUT					nb::getTickCount()
 
 namespace nb 
 {

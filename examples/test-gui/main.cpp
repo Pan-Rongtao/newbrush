@@ -8,7 +8,7 @@ using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestEasingFunction> test;
+		TestHandle<TestApp> test;
 		test->test();
 	}
 	catch (Exception &e)

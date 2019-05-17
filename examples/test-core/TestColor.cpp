@@ -72,7 +72,7 @@ void TestColor::test()
 	std::string s = c21.toString();
 
 	return;
-	uint64_t n = NB_GET_TICK_COUT;
+	uint64_t n = NB_TICK_COUT;
 	for(float h = 0.0; h <= 360.0f; h += 1)
 	{
 		for(float s = 0.0f; s <= 1.0; s += 0.01f)
@@ -88,7 +88,7 @@ void TestColor::test()
 			}
 		}
 	}
-	uint64_t nn = NB_GET_TICK_COUT - n;
+	uint64_t nn = NB_TICK_COUT - n;
 	printf("%lld\n", nn);
 
 	Color c = Colors::aliceBlue();

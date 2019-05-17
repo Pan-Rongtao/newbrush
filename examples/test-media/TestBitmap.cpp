@@ -196,28 +196,28 @@ void TestBitmap::test()
 	int s37 = bm37.bytes();
 
 
-	uint64_t k = NB_GET_TICK_COUT;
+	uint64_t k = NB_TICK_COUT;
 	Bitmap bm41("f:/4.jpg");
 	bm41.scale(160, 160);
-//	printf("cost [%d]\r\n", NB_GET_TICK_COUT - k);
+//	printf("cost [%d]\r\n", NB_TICK_COUT - k);
 
-	uint64_t kkk = NB_GET_TICK_COUT;
-	k = NB_GET_TICK_COUT;
+	uint64_t kkk = NB_TICK_COUT;
+	k = NB_TICK_COUT;
 	Bitmap bm43;
 	//bm43.LoadFile("f:/21.jpg");
 	bm43.load("f:/21.jpg", 8);
-	printf("load cost [%lld]\r\n", NB_GET_TICK_COUT - k);
+	printf("load cost [%lld]\r\n", NB_TICK_COUT - k);
 //	bm43.save("f:/21_s.jpg");
-	k = NB_GET_TICK_COUT;
+	k = NB_TICK_COUT;
 	bm43 = bm43.scale(160, 160);
-	printf("scale cost [%lld]\r\n", NB_GET_TICK_COUT - k);
-	printf("all cost [%lld]\r\n", NB_GET_TICK_COUT - kkk);
+	printf("scale cost [%lld]\r\n", NB_TICK_COUT - k);
+	printf("all cost [%lld]\r\n", NB_TICK_COUT - kkk);
 	bm43.save("f:/21_160.jpg");
 
-	k = NB_GET_TICK_COUT;
+	k = NB_TICK_COUT;
 	Bitmap bm44("f:/01.jpg");
 	bm44.scale(160, 160);
-//	printf("cost [%d]\r\n", NB_GET_TICK_COUT - k);
+//	printf("cost [%d]\r\n", NB_TICK_COUT - k);
 
 	Bitmap bm45("f:/pics/pic_8bit/0.jpg");
 	int bpp45 = bm45.bpp();
