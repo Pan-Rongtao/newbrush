@@ -42,6 +42,7 @@ inline void gui::PropertyAnimation<T>::onProgress(const Timeline::ProgressArgs &
 {
 	auto t = args.progress;
 	auto ft = Easing()->easeInCore(t);
+	T c = To - From;
 	*TargetProperty = From + ft * (To - From);
 }
 

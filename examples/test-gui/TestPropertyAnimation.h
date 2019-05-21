@@ -1,5 +1,6 @@
 #pragma once
 #include "../TestBase.h"
+#include "core/Color.h"
 #include "gui/PropertyAnimation.h"
 
 using namespace nb::core;
@@ -12,6 +13,9 @@ public:
 
 	Property_rw<double>			Width;
 	PropertyAnimation<double>	doubleAni;
+
+	Property_rw<Color>			Background;
+	PropertyAnimation<Color>	colorAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);

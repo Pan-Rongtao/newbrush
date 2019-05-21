@@ -37,7 +37,6 @@ public:
 	void operator =(const Color &other);
 	bool operator ==(const Color &other) const;
 	bool operator !=(const Color &other) const;
-	Color operator * (float f) const;
 
 	//argb/rgb组成的32位整形数，格式化为0xAARRGGBB/0xRRGGBB
 	static Color fromIntegerArgb(uint32_t argb);
@@ -175,6 +174,27 @@ private:
 	uint8_t		m_blue;
 };
 
+static Color operator * (const Color &c, float f)
+{
+	return Color(c.alpha(), (uint8_t)(c.red() * f), (uint8_t)(c.green() * f), (uint8_t)(c.blue() * f));
+}
+
+static Color operator * (float f, const Color &c)
+{
+	return operator *(c, f);
+}
+
+static Color operator + (const Color &c0, const Color &c1)
+{
+	return Color(c0.alpha(), c0.red() + c1.red(), c0.green() + c1.green(), c0.blue() + c1.blue());
+}
+
+static Color operator - (const Color &c0, const Color &c1)
+{
+	return Color(c0.alpha(), c0.red() - c1.red(), c0.green() - c1.green(), c0.blue() - c1.blue());
+}
+
+///////////////////////
 class NB_API Colors
 {
 public:

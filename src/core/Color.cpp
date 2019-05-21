@@ -41,11 +41,6 @@ bool Color::operator !=(const Color &other) const
 	return (alpha() != other.alpha()) || (red() != other.red() || green() != other.green()) || (blue() != other.blue());
 }
 
-Color Color::operator * (float f) const
-{
-	return Color(alpha(), red() * f, green() * f, blue() * f);
-}
-
 uint8_t &Color::alpha()
 {
 	return m_alpha;
