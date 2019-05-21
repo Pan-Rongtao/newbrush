@@ -19,6 +19,9 @@ public:
 	//运行
 	int run();
 
+protected:
+	virtual void PreRenderOverride() override;
+
 };
 
 }}

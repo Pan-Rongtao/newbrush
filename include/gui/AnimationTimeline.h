@@ -6,11 +6,8 @@ namespace nb { namespace gui {
 class NB_API AnimationTimeline : public Timeline
 {
 public:
+public:
 	virtual ~AnimationTimeline();
-
-	virtual float getCurrentValue(const nb::core::TimeSpan &frame);
-
-	virtual void AnimateTo(int frame){}
 
 protected:
 	AnimationTimeline();

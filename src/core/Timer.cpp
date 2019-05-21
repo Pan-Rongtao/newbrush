@@ -11,6 +11,7 @@ Timer::Timer()
 Timer::Timer(uint64_t ms, bool singleShot)
 	: m_interval(ms)
 	, m_singleShot(singleShot)
+	, m_stopFlag(false)
 {
 }
 

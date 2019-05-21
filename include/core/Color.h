@@ -37,6 +37,7 @@ public:
 	void operator =(const Color &other);
 	bool operator ==(const Color &other) const;
 	bool operator !=(const Color &other) const;
+	Color operator * (float f) const;
 
 	//argb/rgb组成的32位整形数，格式化为0xAARRGGBB/0xRRGGBB
 	static Color fromIntegerArgb(uint32_t argb);

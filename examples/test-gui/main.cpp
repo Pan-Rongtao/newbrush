@@ -1,14 +1,16 @@
 #include "../TestBase.h"
+#include "core/Exception.h"
 #include "TestWindow.h"
 #include "TestApp.h"
 #include "TestEasingFunction.h"
-#include "core/Exception.h"
+#include "TestTimeline.h"
+#include "TestPropertyAnimation.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestApp> test;
+		TestHandle<TestPropertyAnimation> test;
 		test->test();
 	}
 	catch (Exception &e)

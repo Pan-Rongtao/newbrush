@@ -1,5 +1,6 @@
 #include "gui/Application.h"
 #include "core/Exception.h"
+#include "core/Timer.h"
 #include "gui/Window.h"
 #include "WindowCollections.h"
 
@@ -20,6 +21,11 @@ Application::~Application()
 std::shared_ptr<Application> Application::current()
 {
 	return g_app;
+}
+
+void Application::PreRenderOverride()
+{
+	Timer::drive();
 }
 
 int Application::run()

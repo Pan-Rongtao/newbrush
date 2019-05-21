@@ -5,6 +5,7 @@
 #include "../core/Rect.h"
 #include "../gui/Thickness.h"
 #include "../gles/RenderObject.h"
+#include "../gui/AnimationTimeline.h"
 
 namespace nb{ namespace gl{
 	class Context;
@@ -96,4 +97,6 @@ private:
 	std::shared_ptr<gl::RenderObject>						m_renderer;
 };
 
-}}
+}
+
+}

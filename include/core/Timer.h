@@ -40,8 +40,10 @@ public:
 	nb::core::Event<TickArgs> TickEvent;
 
 private:
-	uint64_t	m_interval;
-	bool		m_singleShot;
+	uint64_t		m_interval;
+	bool			m_singleShot;
+	bool			m_stopFlag;
+	friend class	TimersDriver;
 };
 
 }}

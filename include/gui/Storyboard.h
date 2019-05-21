@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../gui/Timeline.h"
+#include "../core/Property.h"
 
 namespace nb { namespace gui {
 
@@ -11,20 +12,13 @@ public:
 	Storyboard();
 	virtual ~Storyboard();
 
-	void AddChild(Timeline *timeline);
+	void begin();
 
-	static void SetTarget(Timeline *timeline, gui::UIElement *element);
+	//target附件属性
+	void setTarget(std::shared_ptr<Timeline> timeline, std::shared_ptr<UIElement> element);
+	std::shared_ptr<UIElement> getTarget(std::shared_ptr<Timeline> timeline) const;
 
-	static gui::UIElement * GetTarget(Timeline *timeline);
-	//TimelineCollection *Children();
-
-//	nb::core::Property_rw<>			Target;
-//	nb::core::Property_rw<>(TargetName, nb::System::String);
-//	NB_OBJECT_EXTERNAL_PROPERTY_DECLARE(TargetProperty, nb::core::DependencyProperty);
-
-protected:
-	virtual void OnFrameChanged(const nb::core::TimeSpan &frame) {}
-	virtual void BeginOverride() {}
+	core::Property_rw<std::shared_ptr<Timeline>>		Animations;
 
 };
 

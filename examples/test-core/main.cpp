@@ -1,4 +1,5 @@
 #include "../TestBase.h"
+#include "core/Exception.h"
 #include "TestVec.h"
 #include "TestVecB.h"
 #include "TestVecI.h"
@@ -6,12 +7,12 @@
 #include "TestProperty.h"
 #include "TestColor.h"
 #include "TestDateTime.h"
-#include "core/Exception.h"
+#include "TestTimer.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestProperty> test;
+		TestHandle<TestTimer> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)

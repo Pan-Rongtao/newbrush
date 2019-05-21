@@ -11,8 +11,3 @@ AnimationTimeline::AnimationTimeline()
 AnimationTimeline::~AnimationTimeline()
 {
 }
-
-float AnimationTimeline::getCurrentValue(const TimeSpan &frame)
-{
-	return 0.0;
-}

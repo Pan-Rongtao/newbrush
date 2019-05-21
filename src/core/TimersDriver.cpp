@@ -23,7 +23,9 @@ void TimersDriver::remove(Timer *timer)
 	{
 		if (iter->second == timer)
 		{
-			m_tickSequence.erase(iter);
+			//dispatch给外部，外部可能调用了stop导致timer不存在了，因此需要判断iter后再erase
+		//	m_tickSequence.erase(iter);
+			iter->second->m_stopFlag = true;
 			return;
 		}
 	}
@@ -38,6 +40,11 @@ bool TimersDriver::has(Timer * timer) const
 	return false;
 }
 
+bool TimersDriver::has(uint64_t tick) const
+{
+	return m_tickSequence.find(tick) != m_tickSequence.end();
+}
+
 void TimersDriver::drive()
 {
 	uint64_t currentTick = NB_TICK_COUT;
@@ -47,12 +54,19 @@ void TimersDriver::drive()
 		if (iter->first <= currentTick)
 		{
 			Timer *timer = iter->second;
-			Timer::TickArgs args;
-			timer->TickEvent.dispatch(args);
-			iter = m_tickSequence.erase(iter);
-			// 假如不是单次触发模式，将此timer重新加入到队列中
-			if (!timer->isSingleShot())
-				m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
+			if (timer->m_stopFlag)
+			{
+				iter = m_tickSequence.erase(iter);
+			}
+			else
+			{
+				Timer::TickArgs args;
+				timer->TickEvent.dispatch(args);
+				iter = m_tickSequence.erase(iter);
+				// 假如不是单次触发模式，将此timer重新加入到队列中
+				if (!timer->isSingleShot())
+					m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
+			}
 		}
 		else
 		{
