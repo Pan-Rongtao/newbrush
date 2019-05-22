@@ -5,12 +5,13 @@
 #include "TestEasingFunction.h"
 #include "TestTimeline.h"
 #include "TestPropertyAnimation.h"
+#include "TestPropertyAnimationUsingKeyFrames.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestPropertyAnimation> test;
+		TestHandle<TestPropertyAnimationUsingKeyFrames> test;
 		test->test();
 	}
 	catch (Exception &e)

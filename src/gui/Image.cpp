@@ -29,7 +29,7 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	case Stretch::Fill:		rc.setSize(ActualSize);											break;
 	case Stretch::Uniform:	
 	{
-		float pixelRatio = Source()->width() / Source()->heigth();
+		float pixelRatio = (float)(Source()->width() / Source()->heigth());
 		float containerRatio = ActualSize().width() / ActualSize().height();
 		if (pixelRatio < containerRatio)
 		{
@@ -49,11 +49,11 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		auto containerRatio = ActualSize().width() / ActualSize().height();
 		if (pixelRatio < containerRatio)
 		{
-			rc.setSize(ActualSize().width(), ActualSize().width() / pixelRatio);
+			rc.setSize((float)ActualSize().width(), (float)(ActualSize().width() / pixelRatio));
 		}
 		else
 		{
-			rc.setSize(ActualSize().height() * pixelRatio, ActualSize().height());
+			rc.setSize((float)(ActualSize().height() * pixelRatio), (float)ActualSize().height());
 		}
 	}
 	break;
@@ -71,7 +71,7 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 Size Image::measureOverride(const Size & availableSize)
 {
 	if (Source())
-		return Size(Source()->width(), Source()->heigth());
+		return Size((float)Source()->width(), (float)Source()->heigth());
 	else
 		return Size();
 }

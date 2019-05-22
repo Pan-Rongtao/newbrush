@@ -8,16 +8,15 @@ namespace nb { namespace gui {
 
 //平凡动画
 template<class T>
-class NB_API TrivialAnimation : public AnimationTimeline
+class NB_API PropertyAnimation : public AnimationTimeline
 {
 public:
-	TrivialAnimation() : TargetProperty(nullptr) , Easing(std::make_shared<LinearEase>())
-	{
 	//限制类型为基础类型（不限制，否则Point这些无法编译通过）
-	//	static_assert(std::is_trivial<T>::value, "TrivialAnimation<T> only surpport trivial(basic) type");
-		ProgressEvent += std::bind(&TrivialAnimation::onProgress, this, std::placeholders::_1);
+	PropertyAnimation() : TargetProperty(nullptr) , Easing(std::make_shared<LinearEase>())
+	{
+	//	static_assert(std::is_trivial<T>::value, "PropertyAnimation<T> only surpport trivial(basic) type");
 	}
-	virtual ~TrivialAnimation() = default;
+	virtual ~PropertyAnimation() = default;
 
 	template<class T>
 	void beginAinimation(core::Property_rw<T> *property)
@@ -32,12 +31,11 @@ public:
 	core::Property_rw<T>							*TargetProperty;
 	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
-private:
+protected:
 	//要求属性必须实现了operator +, operator -, operator *
-	void onProgress(const Timeline::ProgressArgs &args)
+	virtual void progressing(double progress) override
 	{
-		auto t = args.progress;
-		auto ft = Easing()->easeInCore(t);
+		auto ft = Easing()->easeInCore(progress);
 		*TargetProperty = From() + (To() - From()) * ft;
 	}
 };
@@ -57,6 +55,8 @@ public:
 	core::Property_rw<core::Color>					*TargetProperty;
 	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
+protected:
+	virtual void progressing(double progress) override;
 };
 
 }}

@@ -6,11 +6,12 @@ namespace nb { namespace gui {
 class NB_API AnimationTimeline : public Timeline
 {
 public:
-public:
 	virtual ~AnimationTimeline();
 
 protected:
 	AnimationTimeline();
+
+	virtual void progressing(double progress) = 0;
 };
 
 }}

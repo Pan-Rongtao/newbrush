@@ -13,10 +13,10 @@ public:
 	void test();
 
 	Property_rw<double>			Width;
-	TrivialAnimation<double>	doubleAni;
+	PropertyAnimation<double>	doubleAni;
 
 	Property_rw<Point>			Position;
-	TrivialAnimation<Point>		piontAni;
+	PropertyAnimation<Point>		piontAni;
 
 	Property_rw<Color>			Background;
 	ColorAnimation				colorAni;
