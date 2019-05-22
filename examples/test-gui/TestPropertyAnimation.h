@@ -1,5 +1,6 @@
 #pragma once
 #include "../TestBase.h"
+#include "core/Point.h"
 #include "core/Color.h"
 #include "gui/PropertyAnimation.h"
 
@@ -12,10 +13,13 @@ public:
 	void test();
 
 	Property_rw<double>			Width;
-	PropertyAnimation<double>	doubleAni;
+	TrivialAnimation<double>	doubleAni;
+
+	Property_rw<Point>			Position;
+	TrivialAnimation<Point>		piontAni;
 
 	Property_rw<Color>			Background;
-	PropertyAnimation<Color>	colorAni;
+	ColorAnimation				colorAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
