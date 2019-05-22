@@ -36,7 +36,7 @@ public:
 	Timeline(const core::TimeSpan &beginTime, const core::TimeSpan &duration, const RepeatBehavior &repeatBehavior);
 	virtual ~Timeline() = default;
 
-	void start();
+	void begin();
 
 	core::Property_rw<core::TimeSpan>				BeginTime;
 	core::Property_rw<core::TimeSpan>				Duration;

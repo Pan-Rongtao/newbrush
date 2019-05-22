@@ -10,7 +10,8 @@ void TestPropertyAnimationUsingKeyFrames::test()
 	doubleAni.KeyFrames().insert(KeyFrame<double>(20, TimeSpan(0, 0, 1)));
 	doubleAni.KeyFrames().insert(KeyFrame<double>(80, TimeSpan(0, 0, 2)));
 	doubleAni.KeyFrames().insert(KeyFrame<double>(-20, TimeSpan(0, 0, 5)));
-	doubleAni.beginAnimation(&Width);
+	doubleAni.TargetProperty = &Width;
+	doubleAni.begin();
 
 	while (true)
 	{

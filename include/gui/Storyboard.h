@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../gui/Timeline.h"
+#include "../gui/AnimationTimeline.h"
 #include "../core/Property.h"
 
 namespace nb { namespace gui {
@@ -15,11 +16,17 @@ public:
 	void begin();
 
 	//target附件属性
-	void setTarget(std::shared_ptr<Timeline> timeline, std::shared_ptr<UIElement> element);
-	std::shared_ptr<UIElement> getTarget(std::shared_ptr<Timeline> timeline) const;
+	template<class T>
+	void setTargetProperty(std::shared_ptr<Timeline> animation, nb::core::Property_rw<T> *property)
+	{
+		if (std::find(Animations().begin(), Animations().end(), animation) != Animations().end())
+			;// animation->
+	}
+	std::shared_ptr<UIElement> getTarget(std::shared_ptr<Timeline> animation) const;
 
-	core::Property_rw<std::shared_ptr<Timeline>>		Animations;
+	core::Property_rw<std::vector<std::shared_ptr<Timeline>>>		Animations;
 
 };
 
 }}
+ 

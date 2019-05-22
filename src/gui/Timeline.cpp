@@ -29,7 +29,7 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const 
 	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);
 }
 
-void Timeline::start()
+void Timeline::begin()
 {
 	m_begTick = NB_TICK_COUT + BeginTime().totalMilliseconds();
 	m_state = StateE::Active;

@@ -8,7 +8,7 @@ void TestTimeline::test()
 	tl.StateChangedEvent += std::bind(&TestTimeline::onStateChanged, this, std::placeholders::_1);
 	tl.ProgressEvent += std::bind(&TestTimeline::onProgress, this, std::placeholders::_1);
 	tl.CompleteEvent += std::bind(&TestTimeline::onCompleted, this, std::placeholders::_1);
-	tl.start();
+	tl.begin();
 
 	while (true)
 	{

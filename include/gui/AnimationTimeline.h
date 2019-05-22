@@ -3,15 +3,21 @@
 
 namespace nb { namespace gui {
 
+template<class T>
 class NB_API AnimationTimeline : public Timeline
 {
 public:
-	virtual ~AnimationTimeline();
+	virtual ~AnimationTimeline() = default;
+
+	core::Property_rw<T>	*TargetProperty;
 
 protected:
-	AnimationTimeline();
-
 	virtual void progressing(double progress) = 0;
+	AnimationTimeline() : TargetProperty(nullptr)
+	{
+		ProgressEvent += [&](const Timeline::ProgressArgs &args) {	progressing(args.progress);	};
+	}
+
 };
 
 }}

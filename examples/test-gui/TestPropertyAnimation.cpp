@@ -10,17 +10,19 @@ void TestPropertyAnimation::test()
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-//	doubleAni.beginAinimation(&Width);
+	doubleAni.TargetProperty = &Width;
+	doubleAni.begin();
 
-	piontAni.From = Point(100, 100);
-	piontAni.To = Point(200, 500);
-	piontAni.Easing = std::make_shared<LinearEase>();
-	piontAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	piontAni.Duration = nb::core::TimeSpan::fromSeconds(1);
-	piontAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
-	piontAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
-	piontAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-	piontAni.beginAinimation(&Position);
+	pointAni.From = Point(100, 100);
+	pointAni.To = Point(200, 500);
+	pointAni.Easing = std::make_shared<LinearEase>();
+	pointAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
+	pointAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	pointAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
+	pointAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
+	pointAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
+	pointAni.TargetProperty = &Position;
+//	pointAni.begin();
 	
 	colorAni.From = Color(220, 100, 40);
 	colorAni.To = Color(80, 200, 10);
@@ -29,7 +31,8 @@ void TestPropertyAnimation::test()
 	colorAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	colorAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-//	colorAni.beginAinimation(&Background);
+	colorAni.TargetProperty = &Background;
+	colorAni.begin();
 	
 	while (true)
 	{
