@@ -6,12 +6,13 @@
 #include "TestTimeline.h"
 #include "TestPropertyAnimation.h"
 #include "TestPropertyAnimationUsingKeyFrames.h"
+#include "TestStoryboard.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestPropertyAnimationUsingKeyFrames> test;
+		TestHandle<TestStoryboard> test;
 		test->test();
 	}
 	catch (Exception &e)
