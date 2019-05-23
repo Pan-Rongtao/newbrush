@@ -1,25 +1,10 @@
 ﻿#include "core/DateTime.h"
 #include <time.h>
 #include <algorithm>
-#ifdef NB_OS_FAMILY_WINDOWS
-#include <sys/timeb.h>
-#elif defined NB_OS_FAMILY_UNIX
-#include <sys/time.h>
-#endif
+#include <chrono>
+#include <ctime>
 
 using namespace nb::core;
-#define MaxYear					9999
-#define MinYear					1
-#define MaxMonth				12
-#define MinMonth				1
-#define MaxHour					23
-#define MaxMinute				59
-#define MaxSecond				59
-#define MaxMilliSecond			999
-#define MillisecondsPerDay		(int64_t)86400000
-#define MillisecondsPerHour		(int64_t)3600000
-#define MillisecondsPerMinute	(int64_t)60000
-#define MillisecondsPerSecond	(int64_t)1000
 
 ////////////////////////////////////class Date
 Date::Date()
@@ -41,31 +26,24 @@ Date::Date(const Date &other)
 
 Date Date::maxValue()
 {
-	return Date(MaxYear, MaxMonth, 31);
+	return Date(NB_YEAR_MAX, NB_MONTH_MAX, 31);
 }
 
 Date Date::minValue()
 {
-	return Date(MinYear, MinMonth, 1);
+	return Date(NB_YEAR_MIN, NB_MONTH_MIN, 1);
 }
 
 Date Date::today()
 {
-	const time_t t = time(nullptr);
-	tm Tm;
-#ifdef NB_OS_FAMILY_WINDOWS
-	errno_t ret = localtime_s(&Tm, &t);
-#elif defined NB_OS_FAMILY_UNIX
-	localtime_r(&t, &Tm);
-#else
-	#error "not Date::today() on this platform"
-#endif
-	return Date(Tm.tm_year + 1900, Tm.tm_mon + 1, Tm.tm_mday);
+	auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	auto Tm = std::localtime(&t);
+	return Date(Tm->tm_year + 1900, Tm->tm_mon + 1, Tm->tm_mday);
 }
 
 bool Date::isValid(int year, int month, int day)
 {
-	return !(year < MinYear || year > MaxYear || month < MinMonth || month > MaxMonth || day < 1 || day > daysInMonth(year, month));
+	return !(year < NB_YEAR_MIN || year > NB_YEAR_MAX || month < NB_MONTH_MIN || month > NB_MONTH_MAX || day < 1 || day > daysInMonth(year, month));
 }
 
 bool Date::isLeapYear(int year)
@@ -209,11 +187,11 @@ Date Date::addYears(int years) const
 
 Date Date::addMonths(int months) const
 {
-	int nNewYear = m_year + (m_month + months) / MaxMonth;
-	int nNewMonth = (m_month + months) % MaxMonth;
+	int nNewYear = m_year + (m_month + months) / NB_MONTH_MAX;
+	int nNewMonth = (m_month + months) % NB_MONTH_MAX;
 	if (nNewMonth <= 0)
 	{
-		nNewMonth += MaxMonth;
+		nNewMonth += NB_MONTH_MAX;
 		--nNewYear;
 	}
 	int nDaysInMonth = daysInMonth(nNewYear, nNewMonth);
@@ -256,7 +234,7 @@ Date Date::addDays(int nDays) const
 	while (nDaysRemain >= 31)
 	{
 		int nCurMonthDayCount = daysInMonth(nCurYear, nCurMonth);
-		int nNearbyMonth = bForward ? (nCurMonth + 1 > MaxMonth ? MinMonth : nCurMonth + 1) : (nCurMonth - 1 < MinMonth ? MaxMonth : nCurMonth - 1);
+		int nNearbyMonth = bForward ? (nCurMonth + 1 > NB_MONTH_MAX ? NB_MONTH_MIN : nCurMonth + 1) : (nCurMonth - 1 < NB_MONTH_MIN ? NB_MONTH_MAX : nCurMonth - 1);
 		int nNearbyMonthDayCount = daysInMonth(nCurYear, nNearbyMonth);
 		if (bForward)
 		{
@@ -297,9 +275,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay > daysInMonth(nCurYear, nCurMonth))
 			{
 				++nCurMonth;
-				if (nCurMonth > MaxMonth)
+				if (nCurMonth > NB_MONTH_MAX)
 				{
-					nCurMonth = MinMonth;
+					nCurMonth = NB_MONTH_MIN;
 					++nCurYear;
 				}
 				nCurDay = 1;
@@ -311,9 +289,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay < 1)
 			{
 				--nCurMonth;
-				if (nCurMonth < MinMonth)
+				if (nCurMonth < NB_MONTH_MIN)
 				{
-					nCurMonth = MaxMonth;
+					nCurMonth = NB_MONTH_MAX;
 					--nCurYear;
 				}
 				nCurDay = daysInMonth(nCurYear, nCurMonth);
@@ -331,6 +309,11 @@ int Date::compare(const Date &other) const
 bool Date::equals(const Date &other) const
 {
 	return *this == other;
+}
+
+std::string Date::toString(const std::string & format) const
+{
+	return std::string();
 }
 
 int Date::dayOfOrigin() const
@@ -369,7 +352,7 @@ Time::Time(const Time &other)
 
 Time Time::maxValue()
 {
-	return Time(MaxHour, MaxMinute, MaxSecond, MaxMilliSecond);
+	return Time(NB_HOUR_MAX, NB_MINUTE_MAX, NB_SECOND_MAX, NB_MILLISECOND_MAX);
 }
 
 Time Time::minValue()
@@ -379,7 +362,7 @@ Time Time::minValue()
 
 bool Time::isValid(int h, int m, int s, int ms)
 {
-	return !(h < 0 || h > MaxHour || m < 0 || m > MaxMinute || s < 0 || s > MaxSecond || ms < 0 || ms > MaxMilliSecond);
+	return !(h < 0 || h > NB_HOUR_MAX || m < 0 || m > NB_MINUTE_MAX || s < 0 || s > NB_SECOND_MAX || ms < 0 || ms > NB_MILLISECOND_MAX);
 }
 
 Time Time::midnight()
@@ -389,24 +372,12 @@ Time Time::midnight()
 
 Time Time::now()
 {
-#ifdef NB_OS_FAMILY_WINDOWS
-	_timeb tb;
-	tm Tm;
-	errno_t ret = _ftime_s(&tb);
-	ret = localtime_s(&Tm, &tb.time);
-	unsigned short ms = tb.millitm;
-	return Time(Tm.tm_hour, Tm.tm_min, Tm.tm_sec, ms);
-#elif defined NB_OS_FAMILY_UNIX
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-
-	struct tm res;
-	struct tm *t = localtime_r(&(tv.tv_sec), &res);
-
-	return Time(t->tm_hour, t->tm_min, t->tm_sec, tv.tv_usec / 1000);
-#else
-	#error "Time::now() not define on this platform."
-#endif
+	auto now = std::chrono::system_clock::now();
+	auto diff = std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
+	auto t = std::chrono::system_clock::to_time_t(now);
+	auto nanos = diff - t * 1000 * 1000 * 1000;
+	auto tm = std::localtime(&t);
+	return Time(tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(nanos / 1000000));
 }
 
 void Time::operator =(const Time &other)
@@ -464,7 +435,7 @@ bool Time::isMidnight() const
 
 TimeSpan Time::timeOfDay() const
 {
-	return TimeSpan::fromMilliseconds(m_hour * MillisecondsPerHour + m_minute * MillisecondsPerMinute + m_second * MillisecondsPerSecond + m_millisecond);
+	return TimeSpan::fromMilliseconds(m_hour * NB_MILLISECONDS_PER_HOUR + m_minute * NB_MILLISECONDS_PER_MINUTE + m_second * NB_MILLISECONDS_PER_SECOND + m_millisecond);
 }
 
 Time &Time::add(const TimeSpan &value)

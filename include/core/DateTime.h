@@ -130,13 +130,10 @@ public:
 	//是否相等
 	bool equals(const Date &other) const;
 
-	//DateFormat GetFormat() const;
-	//String GetFormatString() const;
-	//String ToString(DateFormat format) const;
-	//String ToString(const String &sFormat) const;
+	std::string toString(const std::string &format) const;
 
 private:
-	//自最小
+	//距离最小日期天数
 	int dayOfOrigin() const;
 
 	int		m_year;

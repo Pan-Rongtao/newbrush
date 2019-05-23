@@ -71,7 +71,7 @@ public:
 	}
 
 	~Any() 
-	{ 
+	{
 		delete m_holder;
 	}
 
@@ -93,7 +93,6 @@ public:
 
 private:
 	Holder	*m_holder;
-
 	template<typename T> friend T any_cast(const Any &any);
 };
 

@@ -6,10 +6,6 @@ using namespace nb::core;
 
 #define MaxDays					3650000
 #define	MinDays					-3650000
-#define	MilliSecondsPerDay		(int64_t)86400000
-#define	MilliSecondsPerHour		(int64_t)3600000
-#define	MilliSecondsPerMinute	(int64_t)60000
-#define	MilliSecondsPerSecond	(int64_t)1000
 
 TimeSpan::TimeSpan()
 	: m_milliseconds(0)
@@ -53,8 +49,8 @@ TimeSpan TimeSpan::zero()
 
 bool TimeSpan::isValid(int days, int hours, int minutes, int seconds, int milliseconds)
 {
-	int64_t nMinScales = days * MilliSecondsPerDay + hours * MilliSecondsPerHour + minutes * MilliSecondsPerMinute + seconds * MilliSecondsPerSecond + milliseconds;
-	return (nMinScales >= MinDays * MilliSecondsPerDay && nMinScales <= MaxDays * MilliSecondsPerDay);
+	int64_t nMinScales = days * NB_MILLISECONDS_PER_DAY + hours * NB_MILLISECONDS_PER_HOUR + minutes * NB_MILLISECONDS_PER_MINUTE + seconds * NB_MILLISECONDS_PER_SECOND + milliseconds;
+	return (nMinScales >= MinDays * NB_MILLISECONDS_PER_DAY && nMinScales <= MaxDays * NB_MILLISECONDS_PER_DAY);
 }
 
 void TimeSpan::operator =(const TimeSpan &other)
@@ -79,27 +75,27 @@ TimeSpan TimeSpan::operator+(const TimeSpan & other) const
 
 int TimeSpan::days() const
 {
-	return (int)(totalMilliseconds() / MilliSecondsPerDay);
+	return (int)(totalMilliseconds() / NB_MILLISECONDS_PER_DAY);
 }
 
 int TimeSpan::hours() const
 {
-	return (int)(totalMilliseconds() % MilliSecondsPerDay / MilliSecondsPerHour);
+	return (int)(totalMilliseconds() % NB_MILLISECONDS_PER_DAY / NB_MILLISECONDS_PER_HOUR);
 }
 
 int TimeSpan::minutes() const
 {
-	return (int)(totalMilliseconds() % MilliSecondsPerDay % MilliSecondsPerHour / MilliSecondsPerMinute);
+	return (int)(totalMilliseconds() % NB_MILLISECONDS_PER_DAY % NB_MILLISECONDS_PER_HOUR / NB_MILLISECONDS_PER_MINUTE);
 }
 
 int TimeSpan::seconds() const
 {
-	return (int)(totalMilliseconds() % MilliSecondsPerDay % MilliSecondsPerHour % MilliSecondsPerMinute / MilliSecondsPerSecond);
+	return (int)(totalMilliseconds() % NB_MILLISECONDS_PER_DAY % NB_MILLISECONDS_PER_HOUR % NB_MILLISECONDS_PER_MINUTE / NB_MILLISECONDS_PER_SECOND);
 }
 
 int TimeSpan::milliseconds() const
 {
-	return (int)(totalMilliseconds() % MilliSecondsPerDay % MilliSecondsPerHour % MilliSecondsPerMinute % MilliSecondsPerSecond);
+	return (int)(totalMilliseconds() % NB_MILLISECONDS_PER_DAY % NB_MILLISECONDS_PER_HOUR % NB_MILLISECONDS_PER_MINUTE % NB_MILLISECONDS_PER_SECOND);
 }
 
 TimeSpan TimeSpan::negate() const
@@ -114,22 +110,22 @@ TimeSpan TimeSpan::abs() const
 
 double TimeSpan::totalDays() const
 {
-	return (double)totalMilliseconds() / MilliSecondsPerDay;
+	return (double)totalMilliseconds() / NB_MILLISECONDS_PER_DAY;
 }
 
 double TimeSpan::totalHours() const
 {
-	return (double)totalMilliseconds() / MilliSecondsPerHour;
+	return (double)totalMilliseconds() / NB_MILLISECONDS_PER_HOUR;
 }
 
 double TimeSpan::totalMinutes() const
 {
-	return (double)totalMilliseconds() / MilliSecondsPerMinute;
+	return (double)totalMilliseconds() / NB_MILLISECONDS_PER_MINUTE;
 }
 
 double TimeSpan::totalSeconds() const
 {
-	return (double)totalMilliseconds() / MilliSecondsPerSecond;
+	return (double)totalMilliseconds() / NB_MILLISECONDS_PER_SECOND;
 }
 
 int64_t TimeSpan::totalMilliseconds() const
@@ -160,7 +156,7 @@ bool TimeSpan::equals(const TimeSpan &other) const
 
 int64_t TimeSpan::dhmsmToMillisecond(int days, int hours, int minutes, int seconds, int64_t milliseconds) const
 {
-	return days * MilliSecondsPerDay + hours * MilliSecondsPerHour + minutes * MilliSecondsPerMinute + seconds * MilliSecondsPerSecond + milliseconds;
+	return days * NB_MILLISECONDS_PER_DAY + hours * NB_MILLISECONDS_PER_HOUR + minutes * NB_MILLISECONDS_PER_MINUTE + seconds * NB_MILLISECONDS_PER_SECOND + milliseconds;
 }
 
 TimeSpan TimeSpan::fromDays(int days)

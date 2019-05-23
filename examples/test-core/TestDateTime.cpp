@@ -1,9 +1,18 @@
 #include "TestDateTime.h"
 #include "core/DateTime.h"
+#include <thread>
 
 using namespace nb::core;
 void TestDateTime::test()
 {
+	while (true)
+	{
+		DateTime current = DateTime::current();
+		printf("%4d-%02d-%02d %02d:%02d:%02d.%03d\n", current.year(), current.month(), current.day(), current.hour(), current.minute(), current.second(), current.millisecond());
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	}
+
+
 	//////////////Date
 	Date d1;
 	Date d2(2015, 1, 10);

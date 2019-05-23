@@ -12,7 +12,7 @@
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestTimer> test;
+		TestHandle<TestDateTime> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)
