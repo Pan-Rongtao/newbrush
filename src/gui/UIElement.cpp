@@ -50,7 +50,7 @@ void UIElement::measure(const Size & availabelSize)
 	auto desiredSizeTemp = measureOverride(constrainedSize);
 	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : desiredSizeTemp.width());
 	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : desiredSizeTemp.height());
-	desiredSizeTemp.reset(Width, Height);
+	desiredSizeTemp.reset((float)Width, (float)Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
 	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
@@ -82,7 +82,7 @@ void UIElement::arrage(const Rect & finalRect)
 	//同样的规则应用于Height
 	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : arrangeSize.width());
 	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : arrangeSize.height());
-	arrangeSize.reset((float)Width, (float)Height);
+	arrangeSize.reset((float)Width(), (float)Height());
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
@@ -92,7 +92,7 @@ void UIElement::arrage(const Rect & finalRect)
 		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = (float)MaxWidth;
 	if (Height == NB_DOUBLE_NAN)
 		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = (float)MaxHeight;
-	Size clipInkSize(std::min((double)innerInkSize.width(), Width()), std::min((double)innerInkSize.height(), Height()));
+	Size clipInkSize(std::min(innerInkSize.width(), (float)Width()), std::min(innerInkSize.height(), (float)Height()));
 
 	switch (HorizontalAlignment)
 	{

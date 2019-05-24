@@ -8,18 +8,24 @@ void TestTimeSpan::test()
 {
 	TimeSpan tsMax = TimeSpan::maxValue();
 	TimeSpan tsMin = TimeSpan::minValue();
+	auto d = tsMax.days();
+	auto h = tsMax.hours();
+	auto m = tsMax.minutes();
+	auto s = tsMax.seconds();
+	auto ms = tsMax.milliseconds();
+	auto mis = tsMax.microseconds();
 
 	TimeSpan tsZero = TimeSpan::zero();
 
 	int xx = 0;
-	bool b = TimeSpan::isValid(-10000, 0, 0, 0, -1);
+	bool b = TimeSpan::isValid(-10000, 0, 0, 0, -1, 0);
 
 	TimeSpan ts1 = TimeSpan::fromDays(10000);
 	TimeSpan ts2 = TimeSpan::fromHours(24 * tsMax.days());
 	TimeSpan ts3 = TimeSpan::fromMinutes(24 * 60 * tsMax.days());
 	TimeSpan ts4 = TimeSpan::fromSeconds(24 * 60 * 60 * tsMax.days());
 	long long xxx = (24LL * 60 * 60 * 1000 * 10000);
-	TimeSpan ts5 = TimeSpan::fromMilliseconds(xxx);
+	TimeSpan ts5 = TimeSpan::fromMicroseconds(xxx);
 
 
 	TimeSpan ts6;
@@ -31,7 +37,8 @@ void TestTimeSpan::test()
 	double hours = ts7->totalHours();
 	double minutes = ts7->totalMinutes();
 	double seconds = ts7->totalSeconds();
-	int64_t millseconds = ts7->totalMilliseconds();
+	auto millseconds = ts7->totalMilliseconds();
+	auto microseconds = ts7->totalMicroseconds();
 
 	TimeSpan ts10 = ts9->negate();
 	TimeSpan ts11 = -(*ts9);
@@ -62,13 +69,13 @@ void TestTimeSpan::test()
 
 
 	std::ofstream f1("F:\\download\\all valid timespan.txt");
-	for(TimeSpan ts = tsMin; ts <= tsMax - TimeSpan::fromHours(1); ts += TimeSpan::fromHours(1))
+/*	for(TimeSpan ts = tsMin; ts <= tsMax - TimeSpan::fromHours(1); ts += TimeSpan::fromHours(1))
 	{
 		++xx;
 		f1 << ts.days() << "£¬" << ts.hours() << "£º" << ts.minutes() << "£º" << ts.seconds() << "£º" << ts.milliseconds() << "\r\n";
 	}
 	f1.close();
-
+	*/
 
 	delete ts7;
 	delete ts8;

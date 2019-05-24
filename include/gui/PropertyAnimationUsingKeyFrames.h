@@ -64,8 +64,8 @@ protected:
 			auto prevFrameIter = (curFrameIter == KeyFrames().begin()) ? KeyFrames().end() : --curFrameIter;
 			T fromValue = (prevFrameIter == KeyFrames().end()) ? curFrame.Value : (*prevFrameIter).Value();
 			T toValue = curFrame.Value();
-			int64_t frmeBegTick = (prevFrameIter == KeyFrames().end() ? 0 : (*prevFrameIter).KeyTime().totalMilliseconds());
-			int64_t frameEndTick = curFrame.KeyTime().totalMilliseconds();
+			int64_t frmeBegTick = (prevFrameIter == KeyFrames().end() ? 0 : (int64_t)(*prevFrameIter).KeyTime().totalMilliseconds());
+			int64_t frameEndTick = (int64_t)curFrame.KeyTime().totalMilliseconds();
 			double t = (double)(ticks - frmeBegTick) / (double)(frameEndTick - frmeBegTick);
 			auto ft = curFrame.Easing()->easeInCore(t);
 			*TargetProperty = fromValue + (toValue - fromValue) * ft;

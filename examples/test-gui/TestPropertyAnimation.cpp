@@ -11,7 +11,7 @@ void TestPropertyAnimation::test()
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	doubleAni.TargetProperty = &Width;
-	doubleAni.begin();
+//	doubleAni.begin();
 
 	pointAni.From = Point(100, 100);
 	pointAni.To = Point(200, 500);
@@ -22,7 +22,7 @@ void TestPropertyAnimation::test()
 	pointAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	pointAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	pointAni.TargetProperty = &Position;
-//	pointAni.begin();
+	pointAni.begin();
 	
 	colorAni.From = Color(220, 100, 40);
 	colorAni.To = Color(80, 200, 10);
@@ -32,7 +32,7 @@ void TestPropertyAnimation::test()
 	colorAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	colorAni.TargetProperty = &Background;
-	colorAni.begin();
+//	colorAni.begin();
 	
 	while (true)
 	{

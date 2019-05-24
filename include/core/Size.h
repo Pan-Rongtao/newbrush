@@ -170,7 +170,6 @@ public:
 private:
 	int		m_width;
 	int		m_height;
-
 };
 
 static bool equals(const Size &s0, const Size &s1)

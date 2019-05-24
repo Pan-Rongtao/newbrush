@@ -9,7 +9,7 @@ void TestModel::test()
 {
 	Model *model = new Model();
 	int k = NB_TICK_COUT;
-	printf("cost=%d\r\n", NB_TICK_COUT - k);
+	printf("cost=%d\r\n", (int)(NB_TICK_COUT - k));
 
 	while(1) {}
 }

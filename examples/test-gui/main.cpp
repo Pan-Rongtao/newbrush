@@ -12,7 +12,7 @@ using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestStoryboard> test;
+		TestHandle<TestPropertyAnimation> test;
 		test->test();
 	}
 	catch (Exception &e)

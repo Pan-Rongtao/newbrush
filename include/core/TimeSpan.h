@@ -27,30 +27,34 @@ public:
 	//以时、分、秒、毫秒的方式构建一个TimeStan
 	TimeSpan(int hours, int minutes, int seconds, int milliseconds);
 
-	//以天、时、分、秒、毫秒的方式构建一个TimeStan
-	TimeSpan(int days, int hours, int minutes, int seconds, int milliseconds);
+	//以时、分、秒、毫秒、微秒的方式构建一个TimeStan
+	TimeSpan(int hours, int minutes, int seconds, int milliseconds, int64_t microseconds);
+
+	//以天、时、分、秒、毫秒、微秒的方式构建一个TimeStan
+	TimeSpan(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds);
 
 	//从其他TimeSpan构建一个TimeSpan
 	TimeSpan(const TimeSpan &other);
 
-	//365 * 10000-00:00:00.000 3650000天0小时0分0秒0毫秒
+	//365 * 10000-00:00:00.000.000 3650000天0小时0分0秒0毫秒0微秒
 	static TimeSpan maxValue();
 
-	//-365 * 10000-00:00:00.000 -3650000天0小时0分0秒0毫秒
+	//-365 * 10000-00:00:00.000.000 -3650000天0小时0分0秒0毫秒0微秒
 	static TimeSpan minValue();
 
-	//0-00:00:00.000 0天0小时0分0秒0毫秒
+	//0-00:00:00.000.000.000 0天0小时0分0秒0毫秒0微秒
 	static TimeSpan zero();
 
 	//是否是合法的
-	static bool isValid(int days, int hours, int minutes, int seconds, int milliseconds);
+	static bool isValid(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds);
 
 	//从天、时、分、秒、毫秒构建TimeSpan
 	static TimeSpan fromDays(int days);
 	static TimeSpan fromHours(int hours);
 	static TimeSpan fromMinutes(int minutes);
 	static TimeSpan fromSeconds(int seconds);
-	static TimeSpan fromMilliseconds(int64_t milliseconds);
+	static TimeSpan fromMilliseconds(int milliseconds);
+	static TimeSpan fromMicroseconds(int64_t microseconds);
 
 	void operator =(const TimeSpan &other);
 	TimeSpan operator -() const { return negate(); }
@@ -81,12 +85,16 @@ public:
 	//毫秒数（-999到999）
 	int milliseconds() const;
 
-	//转换成相应的天数、时数、分数、秒数、毫秒数
+	//微秒数（-999到999）
+	int microseconds() const;
+	
+	//转换成相应的天数、时数、分数、秒数、毫秒数、微秒数
 	double totalDays() const;
 	double totalHours() const;
 	double totalMinutes() const;
 	double totalSeconds() const;
-	int64_t totalMilliseconds() const;
+	double totalMilliseconds() const;
+	int64_t totalMicroseconds() const;
 
 	//符号相反，数值相同的TimeSpan，[200-10:11:10]->[-200--10:-11:-10]
 	TimeSpan negate() const;
@@ -104,9 +112,9 @@ public:
 
 private:
 	//最小刻度ms与单位(d, h, m, s, ms)的转换
-	int64_t dhmsmToMillisecond(int days, int hours, int minutes, int seconds, int64_t milliseconds) const;
+	int64_t unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const;
 
-	int64_t		m_milliseconds;
+	int64_t		m_micros;
 };
 
 }}

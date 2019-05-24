@@ -31,7 +31,7 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const 
 
 void Timeline::begin()
 {
-	m_begTick = NB_TICK_COUT + BeginTime().totalMilliseconds();
+	m_begTick = (uint64_t)(NB_TICK_COUT + BeginTime().totalMilliseconds());
 	m_state = StateE::Active;
 	StateChangedEvent.dispatch({ m_state });
 	m_timer.start();

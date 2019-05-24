@@ -94,6 +94,12 @@
 #define NB_MILLISECONDS_PER_MINUTE		((int64_t)60000)
 #define NB_MILLISECONDS_PER_SECOND		((int64_t)1000)
 
+constexpr int64_t MicrosecondsPerDay			= 86400000000;
+constexpr int64_t MicrosecondsPerHour			= 3600000000;
+constexpr int64_t MicrosecondsPerMinute			= 60000000;
+constexpr int64_t MicrosecondsPerSecond			= 1000000;
+constexpr int64_t MicrosecondsPerMillisecond	= 1000;
+
 namespace nb 
 {
 	//获取开机以来的时钟滴答数（毫秒数）

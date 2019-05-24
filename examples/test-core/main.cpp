@@ -8,11 +8,12 @@
 #include "TestColor.h"
 #include "TestDateTime.h"
 #include "TestTimer.h"
+#include "TestTimeSpan.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestDateTime> test;
+		TestHandle<TestTimeSpan> test;
 		test->test();
 	}
 	catch (nb::core::Exception &e)

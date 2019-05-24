@@ -59,7 +59,6 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 	MoveDistanceArgs pmd;
 	pmd.m_nSpace = nPos;
 	MoveDistanceEvent.dispatch(pmd);
-	float fCurPos = CurrentPos;
 
 	if(bEnd)
 	{
@@ -75,7 +74,6 @@ void KineticMove::Start(float fAccel, float fStartSpeed, float fStartPos)
 	Speed = fStartSpeed;
 	StartPos = fStartPos;
 	CurrentPos = fStartPos;
-	float fCurPos = CurrentPos;
 	m_timer.start(15);
 
 	TimeStart = Time::now();
@@ -103,7 +101,7 @@ void KineticMove::Stop()
 float KineticMove::GetSpeed() /*const*/
 {
 	//return (Float)const_cast<KineticMove *>(this)->Speed();
-	return Speed;
+	return (float)Speed;
 }
 
 /******************************************************************************

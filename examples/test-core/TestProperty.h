@@ -25,7 +25,7 @@ private:
 	void notifyIsBool(bool _old, bool _new);
 
 	Size	m_range1{Size(11,22)};
-	Size	m_szGetter{ Size(1.11, 2.22) };
+	Size	m_szGetter{ Size(1.11f, 2.22f) };
 	bool	m_b{false};
 };
 

@@ -13,9 +13,9 @@ using namespace nb::gui;
 auto lookat = [](double width, double height) 
 {
 	Projection::instance()->perspective(45.0f, (float)(width / height), 0.1f, 10000.0f);
-	float z = (float)height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)width / 2.0f, height / 2.0f, -z);
-	Vec3 target((float)width / 2.0f, height / 2.0f, 0.0f);
+	auto z = height / (2 * tanf((22.5f * 3.1415926f) / 180.0f));
+	Vec3 position((float)(width / 2.0f), (float)(height / 2.0f), (float)(-z));
+	Vec3 target((float)(width / 2.0f), (float)(height / 2.0f), 0.0f);
 	Vec3 upVec(0.0f, -1.0f, 0.0f);
 	Camera::instance()->lookat(position, target, upVec);
 };

@@ -82,7 +82,7 @@ VertexShader::VertexShader(const std::string &source)
 	if(m_shaderHandle == 0)
 	{
 		char info[100] = {0};
-		sprintf(info, "create vertex shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
+		snprintf(info, sizeof(info), "create vertex shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
 		throw nb::core::LogicException(__FILE__, __LINE__);
 	}
 }
@@ -100,7 +100,7 @@ FragmentShader::FragmentShader(const std::string &source)
 	if(m_shaderHandle == 0)
 	{
 		char info[100] = {0};
-		sprintf(info, "create fragment shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
+		snprintf(info, sizeof(info), "create fragment shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
 		NB_THROW_EXCEPTION(info);
 	}
 }
