@@ -5,20 +5,15 @@
 using namespace nb::core;
 void TestDateTime::test()
 {
-#if 0
-	while (true)
-	{
-		DateTime current = DateTime::current();
-		printf("%4d-%02d-%02d %02d:%02d:%02d.%03d\n", current.year(), current.month(), current.day(), current.hour(), current.minute(), current.second(), current.millisecond());
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-	}
-#endif
-#if 0
+#if 1
 	//////////////Date
 	Date d1;
 	Date d2(2015, 1, 10);
 	Date minDate = Date::minValue();
 	Date maxDate = Date::maxValue();
+
+	std::string s = minDate.toString();
+	std::string ss = maxDate.toString("[yyyy]-M(MM)-dd(ddd): w&*)*()");
 
 	Date d3(minDate);
 	d3 = d2;
@@ -108,7 +103,7 @@ void TestDateTime::test()
 	TimeSpan ts2 = TimeSpan(-999, -2, -1, -12, -999).abs();
 #endif
 
-#if 1
+#if 0
 	/////////////////DateTime
 	DateTime current = DateTime::current();
 

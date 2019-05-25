@@ -63,7 +63,7 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 	if(bEnd)
 	{
 		MoveEndArgs pme;
-		pme.m_fSpace = CurrentPos;
+		pme.m_fSpace = (float)CurrentPos;
 		MoveEndEvent.dispatch(pme);
 	}
 }

@@ -313,9 +313,20 @@ bool Date::equals(const Date &other) const
 	return *this == other;
 }
 
+std::string Date::toString() const
+{
+	return toString("yyyy/MM/dd");
+}
+
 std::string Date::toString(const std::string & format) const
 {
-	return std::string();
+	std::map<char, int> char_v = {
+		{ 'y', year() },
+		{ 'M', month() },
+		{ 'd', day() },
+		{ 'w', static_cast<int>(week()) },
+	};
+	return nb::simpleFormatting(format, char_v);
 }
 
 int Date::dayOfOrigin() const

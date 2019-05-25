@@ -11,7 +11,7 @@ void TestTiffReader::test()
 	{
 		Bitmap bm = TiffR.frame(i);
 		char arr[20] = {0};
-		sprintf(arr, "d:/%d.jpg", i);
+		snprintf(arr, sizeof(arr), "d:/%d.jpg", i);
 		bm.save(arr);
 	}
 

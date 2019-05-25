@@ -46,8 +46,8 @@ void TestPoint::test()
 	pi3.setY(88);
 	pi3.reset(-3, 33);
 
-	x = pi3.x();
-	y = pi3.y();
+	auto xi = pi3.x();
+	auto yi = pi3.y();
 	pi3.x() += 3;
 	pi3.y() += 8;
 
@@ -146,8 +146,8 @@ void TestPoint::test()
 	cdi6.setXY(1, 3);
 	cdi6.reset(-8, -4, -2);
 
-	int xi = cdi6.x();
-	int yi = cdi6.y();
+	xi = cdi6.x();
+	yi = cdi6.y();
 	int zi = cdi6.z();
 	PointI pii = cdi6.xy();
 

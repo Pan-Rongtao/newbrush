@@ -130,6 +130,13 @@ public:
 	//是否相等
 	bool equals(const Date &other) const;
 
+	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
+	//y|yy|yyy|yyyy：年字段
+	//M|MM：月字段
+	//d|dd：天字段
+	//w：星期字段
+	//示例：yyyy/MM/dd w
+	std::string toString() const;
 	std::string toString(const std::string &format) const;
 
 private:
@@ -369,8 +376,6 @@ public:
 	//是否相等
 	bool equals(const DateTime &other) const;
 
-	//DateFormat GetFormat() const;
-	//String GetFormatString() const;
 	//String ToString(DateFormat format) const;
 	//String ToString(const String &sFormat) const;
 

@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <memory>
 #include <algorithm>
+#include <map>
 
 //要求c++11
 //#if __cplusplus < 201103L
@@ -100,4 +101,9 @@ namespace nb
 	{
 		return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
 	}
+
+	//按照给定的字符数据集，格式化为字符串的过程，连续的命中字符，将取尽相同的部分为止
+	//char_v：需格式化的字符，对应的值
+	std::string simpleFormatting(const std::string &str, const std::map<char, int> &char_v);
+
 }
