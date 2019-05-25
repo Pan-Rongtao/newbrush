@@ -81,18 +81,6 @@
 #define NB_DOUBLE_NAN					(DBL_EPSILON)
 #define NB_PID							(nb::getPid())
 #define NB_TICK_COUT					(nb::getTickCount())
-#define NB_YEAR_MAX						(9999)
-#define NB_YEAR_MIN						(1)
-#define NB_MONTH_MAX					(12)
-#define NB_MONTH_MIN					(1)
-#define NB_HOUR_MAX						(23)
-#define NB_MINUTE_MAX					(59)
-#define NB_SECOND_MAX					(59)
-#define NB_MILLISECOND_MAX				(999)
-#define NB_MILLISECONDS_PER_DAY			((int64_t)86400000)
-#define NB_MILLISECONDS_PER_HOUR		((int64_t)3600000)
-#define NB_MILLISECONDS_PER_MINUTE		((int64_t)60000)
-#define NB_MILLISECONDS_PER_SECOND		((int64_t)1000)
 
 constexpr int64_t MicrosecondsPerDay			= 86400000000;
 constexpr int64_t MicrosecondsPerHour			= 3600000000;

@@ -26,7 +26,7 @@ TimeSpan::TimeSpan(int hours, int minutes, int seconds, int milliseconds)
 }
 
 TimeSpan::TimeSpan(int hours, int minutes, int seconds, int milliseconds, int64_t microseconds)
-	: TimeSpan(0, hours, minutes, seconds, milliseconds, 0)
+	: TimeSpan(0, hours, minutes, seconds, milliseconds, microseconds)
 {
 }
 
@@ -175,19 +175,14 @@ std::string TimeSpan::toString()
 static const std::set<char> flags = { 'd', 'H', 'm', 's', 'f', 'g' };
 std::string TimeSpan::toString(const std::string & format)
 {
-	auto hasFlag = [&](char c)
-	{
-		return flags.find(c) != flags.end();
-	};
 	auto getLastSameFlag = [&](char c, size_t beg)->size_t
 	{
 		if (beg == format.size())	beg -= 1;
 		for (int i = beg; i != format.size(); ++i)
-			if (c != format[i])
-				return i - 1;
-			else
-				if (i == format.size() - 1)
-					return i;
+		{
+			if (c != format[i])					return i - 1;
+			else if (i == format.size() - 1)	return i;
+		}
 		return std::string::npos;	//never go this
 	};
 
@@ -195,9 +190,10 @@ std::string TimeSpan::toString(const std::string & format)
 	for (int i = 0; i != format.size();)
 	{
 		auto ch = format[i];
-		if (hasFlag(ch))
+		size_t len = 1;
+		if (flags.find(ch) != flags.end())
 		{
-			auto len = getLastSameFlag(ch, i + 1) - i + 1;
+			len = getLastSameFlag(ch, i + 1) - i + 1;
 			char arr[80] = { 0 };
 			switch (ch)
 			{
@@ -207,13 +203,12 @@ std::string TimeSpan::toString(const std::string & format)
 			default:																																										break;
 			}
 			ret += arr;
-			i += len;
 		}
 		else
 		{
 			ret += ch;
-			++i;
 		}
+		i += len;
 	}
 	return ret;
 }

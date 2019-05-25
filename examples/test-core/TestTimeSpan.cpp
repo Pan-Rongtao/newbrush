@@ -50,10 +50,10 @@ void TestTimeSpan::test()
 	bool e = ts10 == ts11;
 
 	bool e1 = ts10 != TimeSpan::zero();
-	bool e2 = ts6 < TimeSpan::zero() + TimeSpan::fromMilliseconds(-1);
-	bool e3 = ts6 <= TimeSpan::zero() + TimeSpan::fromMilliseconds(-1);
-	bool e4 = ts6 > TimeSpan::zero() + TimeSpan::fromMilliseconds(-1);
-	bool e5 = ts6 >= TimeSpan::zero() + TimeSpan::fromMilliseconds(1);
+	bool e2 = ts6 < TimeSpan::zero() + TimeSpan::fromMicroseconds(-1);
+	bool e3 = ts6 <= TimeSpan::zero() + TimeSpan::fromMicroseconds(-1);
+	bool e4 = ts6 > TimeSpan::zero() + TimeSpan::fromMicroseconds(-1);
+	bool e5 = ts6 >= TimeSpan::zero() + TimeSpan::fromMicroseconds(1);
 	
 
 	ts11 = *ts7;

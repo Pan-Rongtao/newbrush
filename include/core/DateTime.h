@@ -151,8 +151,11 @@ public:
 	//构建一个Time，hour:minute:second.0.0
 	Time(int hour, int minute, int second);
 
-	//构建一个Time，hour:minute:second.millisecond.0
+	//构建一个Time，hour:minute:second.millisecond
 	Time(int hour, int minute, int second, int millisecond);
+
+	//构建一个Time，hour:minute:second.millisecond.0
+	Time(int hour, int minute, int second, int millisecond, int microsecond);
 
 	//从其他时间构建一个新的Time
 	Time(const Time &other);
@@ -164,7 +167,7 @@ public:
 	static Time minValue();
 
 	//是否是有效的时间
-	static bool isValid(int h, int m, int s, int ms = 0);
+	static bool isValid(int h, int m, int s, int ms = 0, int mis = 0);
 
 	//午夜时间
 	static Time midnight();
@@ -202,6 +205,9 @@ public:
 	//毫秒
 	int millisecond() const;
 
+	//微秒
+	int microsecond() const;
+
 	//是否是午夜时间
 	bool isMidnight() const;
 
@@ -220,6 +226,7 @@ public:
 	Time &addMinutes(int minutes);
 	Time &addSeconds(int seconds);
 	Time &addMilliseconds(int milliseconds);
+	Time &addMicroseconds(int microseconds);
 
 	//比较两个Time，小于返回-1，大于返回1，等于返回0
 	int compare(const Time &other) const;
@@ -236,6 +243,7 @@ private:
 	uint8_t		m_minute;
 	uint8_t		m_second;
 	uint16_t	m_millisecond;
+	uint16_t	m_microsecond;
 };
 
 //class DateTime
@@ -247,8 +255,10 @@ public:
 	DateTime(int year, int month, int day);
 	DateTime(int year, int month, int day, int hour, int minute, int second);
 	DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond);
+	DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond);
 	DateTime(const Date &date, const Time &time);
 	DateTime(const Date &date, int hour, int minute, int second, int millisecond);
+	DateTime(const Date &date, int hour, int minute, int second, int millisecond, int microsecond);
 	DateTime(int year, int month, int day, const Time &time);
 	DateTime(const DateTime &other);
 
@@ -259,7 +269,7 @@ public:
 	static DateTime minValue();
 
 	//是否是真实存在的日期
-	static bool isValid(int year, int month, int day, int hour, int minute, int second, int millisecond);
+	static bool isValid(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond);
 
 	//当前日期和时间
 	static DateTime current();
@@ -319,6 +329,9 @@ public:
 	//毫秒
 	int millisecond() const;
 
+	//微秒
+	int microsecond() const;
+
 	//自1月1日经过的天数，包括当天
 	int dayOfYear() const;
 
@@ -348,6 +361,7 @@ public:
 	DateTime &addMinutes(int minutes);
 	DateTime &addSeconds(int seconds);
 	DateTime &addMilliseconds(int milliseconds);
+	DateTime &addMicroseconds(int microseconds);
 
 	//比较
 	int compare(const DateTime &other) const;

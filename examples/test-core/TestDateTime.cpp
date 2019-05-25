@@ -5,14 +5,15 @@
 using namespace nb::core;
 void TestDateTime::test()
 {
+#if 0
 	while (true)
 	{
 		DateTime current = DateTime::current();
 		printf("%4d-%02d-%02d %02d:%02d:%02d.%03d\n", current.year(), current.month(), current.day(), current.hour(), current.minute(), current.second(), current.millisecond());
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
-
-
+#endif
+#if 0
 	//////////////Date
 	Date d1;
 	Date d2(2015, 1, 10);
@@ -51,7 +52,9 @@ void TestDateTime::test()
 	d8 += (TimeSpan(102530, 0, 0, 0, 0));
 	Date dxx = Date(2000, 2, 23) - TimeSpan::fromDays(366);
 	TimeSpan ts = Date(125, 2, 28) - Date(5621, 12, 3);
+#endif
 
+#if 0
 	/////////////////////Time
 	Time t1;
 	Time t2(23, 23, 16);
@@ -69,10 +72,12 @@ void TestDateTime::test()
 	int mimute = t2.minute();
 	int second = t2.second();
 	int ms = t2.millisecond();
+	int mis = t2.millisecond();
 
 	int pm = Time(6, 34, 22, 5).timeOfDay().minutes();
 	int ps = Time(12, 33, 2, 897).timeOfDay().seconds();
 	int pms = Time(9, 11, 32, 909).timeOfDay().milliseconds();
+	int pmis = Time(9, 11, 32, 909, 10).timeOfDay().microseconds();
 
 	int xx = compare(t1, Time::midnight());
 	bool b12 = Time(0, 0, 0, 0).isMidnight();
@@ -97,11 +102,13 @@ void TestDateTime::test()
 
 	t7 -= TimeSpan(-123, -5, 3, -4 * 60, 1004);
 
-	ts = (Time(1, 3, 46, 998) - Time(23, 11, 34, 9)).abs();
+	TimeSpan ts0 = (Time(1, 3, 46, 998) - Time(23, 11, 34, 9)).abs();
 	TimeSpan ts1 = Time(23, 11, 34, 9) - Time(1, 3, 46, 998);
 
 	TimeSpan ts2 = TimeSpan(-999, -2, -1, -12, -999).abs();
+#endif
 
+#if 1
 	/////////////////DateTime
 	DateTime current = DateTime::current();
 
@@ -126,7 +133,7 @@ void TestDateTime::test()
 	bool b22 = dt8 != dt3;
 	bool b23 = DateTime(2017, 2, 28, 23, 59, 59, 997) <= DateTime(2016, 2, 29, 23, 59, 59, 997);
 
-	x = dt8.compare(dt1);
+	auto xd = dt8.compare(dt1);
 
 	Date dt = dt8.date() + TimeSpan::fromDays(1);
 	Time t = dt8.time().addMilliseconds(1);
@@ -138,14 +145,18 @@ void TestDateTime::test()
 	bool b24 = DateTime::isLeapYear(dt9.year());
 	dt9.addDays(365);
 	dt9.addHours(36);
-//	while(1)
-//	{
-//		DateTime curDT = DateTime::CurrentDateTime();
-//		printf("%04d-%02d-%02d %02d:%02d:%02d.%03d\n", curDT.GetYear(), curDT.GetMonth(), curDT.GetDay(), curDT.GetHour(), curDT.GetMinute(), curDT.GetSecond(), curDT.GetMilliSecond());
-//	}
-
 	TimeSpan tss(-123313, 1233345, -231232, -92, 232344);
 	DateTime dtt(1, 12, 29, 21, 11, 32, 2);
 	dt9 = dtt.sub(tss);
 	TimeSpan tsSub = dtt.sub(DateTime(1543, 2, 2, 10, 34, 33, 333));
+
+	DateTime curDT = DateTime::current();
+	while(1)
+	{
+		curDT += TimeSpan::fromMicroseconds(1);
+		printf("%04d-%02d-%02d %02d:%02d:%02d.%03d.%3d\n", curDT.year(), curDT.month(), curDT.day(), curDT.hour(), curDT.minute(), curDT.second(), curDT.millisecond(), curDT.microsecond());
+	//	std::this_thread::sleep_for(std::chrono::microseconds(1));
+	}
+
+#endif
 }

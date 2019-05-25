@@ -3,6 +3,10 @@
 #include <ctime>
 
 using namespace nb::core;
+#define MaxYear					9999
+#define MinYear					1
+#define MaxMonth				12
+#define MinMonth				1
 
 ////////////////////////////////////class Date
 Date::Date()
@@ -24,12 +28,12 @@ Date::Date(const Date &other)
 
 Date Date::maxValue()
 {
-	return Date(NB_YEAR_MAX, NB_MONTH_MAX, 31);
+	return Date(MaxYear, MaxMonth, 31);
 }
 
 Date Date::minValue()
 {
-	return Date(NB_YEAR_MIN, NB_MONTH_MIN, 1);
+	return Date(MinYear, MinMonth, 1);
 }
 
 Date Date::today()
@@ -41,7 +45,7 @@ Date Date::today()
 
 bool Date::isValid(int year, int month, int day)
 {
-	return !(year < NB_YEAR_MIN || year > NB_YEAR_MAX || month < NB_MONTH_MIN || month > NB_MONTH_MAX || day < 1 || day > daysInMonth(year, month));
+	return !(year < MinYear || year > MaxYear || month < MinMonth || month > MaxMonth || day < 1 || day > daysInMonth(year, month));
 }
 
 bool Date::isLeapYear(int year)
@@ -185,11 +189,11 @@ Date Date::addYears(int years) const
 
 Date Date::addMonths(int months) const
 {
-	int nNewYear = m_year + (m_month + months) / NB_MONTH_MAX;
-	int nNewMonth = (m_month + months) % NB_MONTH_MAX;
+	int nNewYear = m_year + (m_month + months) / MaxMonth;
+	int nNewMonth = (m_month + months) % MaxMonth;
 	if (nNewMonth <= 0)
 	{
-		nNewMonth += NB_MONTH_MAX;
+		nNewMonth += MaxMonth;
 		--nNewYear;
 	}
 	int nDaysInMonth = daysInMonth(nNewYear, nNewMonth);
@@ -232,7 +236,7 @@ Date Date::addDays(int nDays) const
 	while (nDaysRemain >= 31)
 	{
 		int nCurMonthDayCount = daysInMonth(nCurYear, nCurMonth);
-		int nNearbyMonth = bForward ? (nCurMonth + 1 > NB_MONTH_MAX ? NB_MONTH_MIN : nCurMonth + 1) : (nCurMonth - 1 < NB_MONTH_MIN ? NB_MONTH_MAX : nCurMonth - 1);
+		int nNearbyMonth = bForward ? (nCurMonth + 1 > MaxMonth ? MinMonth : nCurMonth + 1) : (nCurMonth - 1 < MinMonth ? MaxMonth : nCurMonth - 1);
 		int nNearbyMonthDayCount = daysInMonth(nCurYear, nNearbyMonth);
 		if (bForward)
 		{
@@ -273,9 +277,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay > daysInMonth(nCurYear, nCurMonth))
 			{
 				++nCurMonth;
-				if (nCurMonth > NB_MONTH_MAX)
+				if (nCurMonth > MaxMonth)
 				{
-					nCurMonth = NB_MONTH_MIN;
+					nCurMonth = MinMonth;
 					++nCurYear;
 				}
 				nCurDay = 1;
@@ -287,9 +291,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay < 1)
 			{
 				--nCurMonth;
-				if (nCurMonth < NB_MONTH_MIN)
+				if (nCurMonth < MinMonth)
 				{
-					nCurMonth = NB_MONTH_MAX;
+					nCurMonth = MaxMonth;
 					--nCurYear;
 				}
 				nCurDay = daysInMonth(nCurYear, nCurMonth);
@@ -326,46 +330,52 @@ int Date::dayOfOrigin() const
 
 //////////////////////////////////class Time
 Time::Time()
-	: Time(0, 0, 0, 0)
+	: Time(0, 0, 0, 0, 0)
 {
 }
 
 Time::Time(int hour, int minute, int second)
-	: Time(hour, minute, second, 0)
+	: Time(hour, minute, second, 0, 0)
 {
 }
 
 Time::Time(int hour, int minute, int second, int millisecond)
+	: Time(hour, minute, second, millisecond, 0)
+{
+}
+
+Time::Time(int hour, int minute, int second, int millisecond, int microsecond)
 	: m_hour(hour)
 	, m_minute(minute)
 	, m_second(second)
 	, m_millisecond(millisecond)
+	, m_microsecond(microsecond)
 {
 }
 
 Time::Time(const Time &other)
-	: Time(other.hour(), other.minute(), other.second(), other.millisecond())
+	: Time(other.hour(), other.minute(), other.second(), other.millisecond(), other.microsecond())
 {
 }
 
 Time Time::maxValue()
 {
-	return Time(NB_HOUR_MAX, NB_MINUTE_MAX, NB_SECOND_MAX, NB_MILLISECOND_MAX);
+	return Time(23, 59, 59, 999, 999);
 }
 
 Time Time::minValue()
 {
-	return Time(0, 0, 0, 0);
+	return Time(0, 0, 0, 0, 0);
 }
 
-bool Time::isValid(int h, int m, int s, int ms)
+bool Time::isValid(int h, int m, int s, int ms, int mis)
 {
-	return !(h < 0 || h > NB_HOUR_MAX || m < 0 || m > NB_MINUTE_MAX || s < 0 || s > NB_SECOND_MAX || ms < 0 || ms > NB_MILLISECOND_MAX);
+	return !(h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59 || ms < 0 || ms > 999 || mis < 0 || mis > 999);
 }
 
 Time Time::midnight()
 {
-	return Time(0, 0, 0, 0);
+	return Time(0, 0, 0, 0, 0);
 }
 
 Time Time::now()
@@ -375,7 +385,7 @@ Time Time::now()
 	auto t = std::chrono::system_clock::to_time_t(now);
 	auto nanos = diff - t * 1000 * 1000 * 1000;
 	auto tm = std::localtime(&t);
-	return Time(tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(nanos / 1000000));
+	return Time(tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(nanos / 1000000), (int)(nanos / 1000 % 1000));
 }
 
 void Time::operator =(const Time &other)
@@ -384,6 +394,7 @@ void Time::operator =(const Time &other)
 	m_minute = other.minute();
 	m_second = other.second();
 	m_millisecond = other.millisecond();
+	m_microsecond = other.microsecond();
 }
 
 bool Time::operator !=(const Time &right) const
@@ -399,11 +410,13 @@ bool Time::operator <(const Time &right) const
 Time Time::operator+(const TimeSpan & value) const
 {
 	TimeSpan ts = timeOfDay() + value;
-	int hour = ts.hours() < 0 ? (ts.hours() - 1) + 24 : ts.hours();
-	int minute = ts.minutes() < 0 ? (ts.minutes() - 1) + 60 : ts.minutes();
-	int second = ts.seconds() < 0 ? (ts.seconds() - 1) + 60 : ts.seconds();
-	int millisecond = ts.milliseconds() < 0 ? ts.milliseconds() + 1000 : ts.milliseconds();
-	return Time(hour, minute, second, millisecond);
+	auto tsHour = ts.hours(), tsMinute = ts.minutes(), tsSecond = ts.seconds(), tsMillisecond = ts.milliseconds(), tsMicrosecond = ts.microseconds();
+	int hour = tsHour < 0 ? (tsHour - 1) + 24 : tsHour;
+	int minute = tsMinute < 0 ? (tsMinute - 1) + 60 : tsMinute;
+	int second = tsSecond < 0 ? (tsSecond - 1) + 60 : tsSecond;
+	int millisecond = tsMillisecond < 0 ? tsMillisecond + 1000 : tsMillisecond;
+	int microsecond = tsMicrosecond < 0 ? tsMicrosecond + 1000 : tsMicrosecond;
+	return Time(hour, minute, second, millisecond, microsecond);
 }
 
 int Time::hour() const
@@ -426,6 +439,11 @@ int Time::millisecond() const
 	return m_millisecond;
 }
 
+int Time::microsecond() const
+{
+	return m_microsecond;
+}
+
 bool Time::isMidnight() const
 {
 	return *this == midnight();
@@ -433,7 +451,7 @@ bool Time::isMidnight() const
 
 TimeSpan Time::timeOfDay() const
 {
-	return TimeSpan::fromMilliseconds(m_hour * NB_MILLISECONDS_PER_HOUR + m_minute * NB_MILLISECONDS_PER_MINUTE + m_second * NB_MILLISECONDS_PER_SECOND + m_millisecond);
+	return TimeSpan::fromMicroseconds(m_hour * MicrosecondsPerHour + m_minute * MicrosecondsPerMinute + m_second * MicrosecondsPerSecond + m_millisecond * MicrosecondsPerMillisecond + m_microsecond);
 }
 
 Time &Time::add(const TimeSpan &value)
@@ -472,6 +490,11 @@ Time &Time::addMilliseconds(int milliseconds)
 	return add(TimeSpan::fromMilliseconds(milliseconds));
 }
 
+Time & nb::core::Time::addMicroseconds(int microseconds)
+{
+	return add(TimeSpan::fromMicroseconds(microseconds));
+}
+
 int Time::compare(const Time &other) const
 {
 	return (*this) > other ? 1 : (*this < other ? -1 : 0);
@@ -505,6 +528,12 @@ DateTime::DateTime(int year, int month, int day, int hour, int minute, int secon
 {
 }
 
+DateTime::DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond)
+	: m_date(year, month, day)
+	, m_time(hour, minute, second, millisecond, microsecond)
+{
+}
+
 DateTime::DateTime(const Date &date, const Time &time)
 	: m_date(date)
 	, m_time(time)
@@ -514,6 +543,12 @@ DateTime::DateTime(const Date &date, const Time &time)
 DateTime::DateTime(const Date &date, int hour, int minute, int second, int millisecond)
 	: m_date(date)
 	, m_time(hour, minute, second, millisecond)
+{
+}
+
+DateTime::DateTime(const Date & date, int hour, int minute, int second, int millisecond, int microsecond)
+	: m_date(date)
+	, m_time(hour, minute, second, millisecond, microsecond)
 {
 }
 
@@ -539,9 +574,9 @@ DateTime DateTime::minValue()
 	return DateTime(Date::minValue(), Time::minValue());
 }
 
-bool DateTime::isValid(int year, int month, int day, int hour, int minute, int second, int millisecond)
+bool DateTime::isValid(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond)
 {
-	return Date::isValid(year, month, day) && Time::isValid(hour, minute, second, millisecond);
+	return Date::isValid(year, month, day) && Time::isValid(hour, minute, second, millisecond, microsecond);
 }
 
 DateTime DateTime::current()
@@ -583,10 +618,10 @@ bool DateTime::operator <(const DateTime &other) const
 DateTime DateTime::operator+(const TimeSpan & value) const
 {
 	//构建新的ts，先自动计算出自身time与value的time合并后的day
-	TimeSpan ts(hour() + value.hours(), minute() + value.minutes(), second() + value.seconds(), millisecond() + value.milliseconds());
+	TimeSpan ts(hour() + value.hours(), minute() + value.minutes(), second() + value.seconds(), millisecond() + value.milliseconds(), microsecond() + value.microseconds());
 	//value原day数与合并ts的day的和
 	int nDaysAdd = value.days() + ts.days();
-	TimeSpan tsTime(ts.hours(), ts.minutes(), ts.seconds(), ts.milliseconds());
+	TimeSpan tsTime(ts.hours(), ts.minutes(), ts.seconds(), ts.milliseconds(), ts.microseconds());
 	//如果tsTime是负值，天数-1，时间置为正值
 	if (tsTime < TimeSpan::zero())
 	{
@@ -594,7 +629,7 @@ DateTime DateTime::operator+(const TimeSpan & value) const
 		tsTime += TimeSpan::fromDays(1);
 	}
 	Date d = date().addDays(nDaysAdd);
-	return DateTime(d, tsTime.hours(), tsTime.minutes(), tsTime.seconds(), tsTime.milliseconds());
+	return DateTime(d, tsTime.hours(), tsTime.minutes(), tsTime.seconds(), tsTime.milliseconds(), tsTime.microseconds());
 }
 
 int DateTime::year() const
@@ -635,6 +670,11 @@ int DateTime::second() const
 int DateTime::millisecond() const
 {
 	return m_time.millisecond();
+}
+
+int DateTime::microsecond() const
+{
+	return m_time.microsecond();
 }
 
 int DateTime::dayOfYear() const
@@ -714,6 +754,11 @@ DateTime &DateTime::addSeconds(int seconds)
 DateTime &DateTime::addMilliseconds(int milliseconds)
 {
 	return add(TimeSpan::fromMilliseconds(milliseconds));
+}
+
+DateTime & DateTime::addMicroseconds(int microseconds)
+{
+	return add(TimeSpan::fromMicroseconds(microseconds));
 }
 
 int DateTime::compare(const DateTime &other) const
