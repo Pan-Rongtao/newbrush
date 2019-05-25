@@ -239,11 +239,15 @@ public:
 	int compare(const Time &other) const;
 	bool equals(const Time &other) const;
 
-	//TimeFormat GetFormat() const;
-	//String GetFormatString() const;
-	//String ToString(TimeFormat format) const;
-	//String ToString(const String &sFormat) const;
-	//
+	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
+	//h|hh：时字段
+	//m|mm：分字段
+	//s|ss：秒字段
+	//f|ff|fff：毫秒字段
+	//g|gg|ggg：微秒字段
+	//示例：hh/mm/ss/fff/ggg
+	std::string toString() const;
+	std::string toString(const std::string &format) const;
 
 private:
 	uint8_t		m_hour;
@@ -306,11 +310,7 @@ public:
 	//从字符串转换
 	//static Time FromString(const String &sDateString, TimeFormat format);
 	//static Time FromString(const String &sDateString, const String &sFormat);
-
-	//放在DateTime中写
-	//from filetime 
-	//to filetime
-
+	
 public:
 	//年
 	int year() const;
@@ -376,11 +376,19 @@ public:
 	//是否相等
 	bool equals(const DateTime &other) const;
 
-	//String ToString(DateFormat format) const;
-	//String ToString(const String &sFormat) const;
-
-	//Date ToLocalDate() const;
-	//Date ToUTCDate() const;
+	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
+	//y|yy|yyy|yyyy：年字段
+	//M|MM：月字段
+	//d|dd：天字段
+	//w：星期字段
+	//h|hh：时字段
+	//m|mm：分字段
+	//s|ss：秒字段
+	//f|ff|fff：毫秒字段
+	//g|gg|ggg：微秒字段
+	//示例：hh/mm/ss/fff/ggg
+	std::string toString() const;
+	std::string toString(const std::string &format) const;
 
 private:
 	Date	m_date;

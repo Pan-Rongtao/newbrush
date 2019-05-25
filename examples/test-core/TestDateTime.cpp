@@ -5,7 +5,7 @@
 using namespace nb::core;
 void TestDateTime::test()
 {
-#if 1
+#if 0
 	//////////////Date
 	Date d1;
 	Date d2(2015, 1, 10);
@@ -57,6 +57,8 @@ void TestDateTime::test()
 
 	Time tMin = Time::minValue();
 	Time tMax = Time::maxValue();
+	std::string st = tMin.toString("[hhh]-m(mm)-ss(s).ff.g(ggg)w&*)*()");
+	std::string sst = tMax.toString();
 
 	Time t4(Time::midnight());
 	t4 = t2;
@@ -103,12 +105,14 @@ void TestDateTime::test()
 	TimeSpan ts2 = TimeSpan(-999, -2, -1, -12, -999).abs();
 #endif
 
-#if 0
+#if 1
 	/////////////////DateTime
 	DateTime current = DateTime::current();
 
 	DateTime dtMin = DateTime::minValue();
 	DateTime dtMax = DateTime::maxValue();
+	std::string dtst = dtMin.toString("yy(yyyy)/M(MM)/d(dd) [hhh]-m(mm)-ss(s).ff.g(ggg)w&*)*()");
+	std::string dtsst = dtMax.toString();
 	
 	DateTime dt1;
 	DateTime dt2(1929, 12, 31);
@@ -148,9 +152,8 @@ void TestDateTime::test()
 	DateTime curDT = DateTime::current();
 	while(1)
 	{
-		curDT += TimeSpan::fromMicroseconds(1);
-		printf("%04d-%02d-%02d %02d:%02d:%02d.%03d.%3d\n", curDT.year(), curDT.month(), curDT.day(), curDT.hour(), curDT.minute(), curDT.second(), curDT.millisecond(), curDT.microsecond());
-	//	std::this_thread::sleep_for(std::chrono::microseconds(1));
+		printf("%s\n", DateTime::current().toString().data());
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
 #endif

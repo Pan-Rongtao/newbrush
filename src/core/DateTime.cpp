@@ -516,6 +516,23 @@ bool Time::equals(const Time &other) const
 	return *this == other;
 }
 
+std::string Time::toString() const
+{
+	return toString("hh:mm:ss.fff.ggg");
+}
+
+std::string Time::toString(const std::string & format) const
+{
+	std::map<char, int> char_v = {
+		{ 'h', hour() },
+		{ 'm', minute() },
+		{ 's', second() },
+		{ 'f', millisecond() },
+		{ 'g', microsecond() },
+	};
+	return nb::simpleFormatting(format, char_v);
+}
+
 
 //////////////////////////////class DateTime
 DateTime::DateTime()
@@ -780,4 +797,25 @@ int DateTime::compare(const DateTime &other) const
 bool DateTime::equals(const DateTime &other) const
 {
 	return *this == other;
+}
+
+std::string DateTime::toString() const
+{
+	return toString("yyyy/MM/dd hh:mm::ss.fff.ggg");
+}
+
+std::string DateTime::toString(const std::string & format) const
+{
+	std::map<char, int> char_v = {
+		{ 'y', year() },
+		{ 'M', month() },
+		{ 'd', day() },
+		{ 'w', static_cast<int>(week()) },
+		{ 'h', hour() },
+		{ 'm', minute() },
+		{ 's', second() },
+		{ 'f', millisecond() },
+		{ 'g', microsecond() },
+	};
+	return nb::simpleFormatting(format, char_v);
 }
