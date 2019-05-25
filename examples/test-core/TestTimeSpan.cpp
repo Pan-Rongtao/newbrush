@@ -8,6 +8,10 @@ void TestTimeSpan::test()
 {
 	TimeSpan tsMax = TimeSpan::maxValue();
 	TimeSpan tsMin = TimeSpan::minValue();
+
+	std::string ss = tsMax.toString("dddd Hh:m:ss:ff:[ggg],mm,s ^&*");
+	std::string sss = tsMin.toString();
+
 	auto d = tsMax.days();
 	auto h = tsMax.hours();
 	auto m = tsMax.minutes();

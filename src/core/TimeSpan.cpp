@@ -1,6 +1,7 @@
-﻿#include <assert.h>
+﻿#include "core/TimeSpan.h"
 #include <math.h>
-#include "core/TimeSpan.h"
+#include <set>
+#include <algorithm>
 
 using namespace nb::core;
 
@@ -164,6 +165,57 @@ int TimeSpan::compare(const TimeSpan &other) const
 bool TimeSpan::equals(const TimeSpan &other) const
 {
 	return *this == other;
+}
+
+std::string TimeSpan::toString()
+{
+	return toString("d.HH:mm:ss.fff.ggg");
+}
+
+static const std::set<char> flags = { 'd', 'H', 'm', 's', 'f', 'g' };
+std::string TimeSpan::toString(const std::string & format)
+{
+	auto hasFlag = [&](char c)
+	{
+		return flags.find(c) != flags.end();
+	};
+	auto getLastSameFlag = [&](char c, size_t beg)->size_t
+	{
+		if (beg == format.size())	beg -= 1;
+		for (int i = beg; i != format.size(); ++i)
+			if (c != format[i])
+				return i - 1;
+			else
+				if (i == format.size() - 1)
+					return i;
+		return std::string::npos;	//never go this
+	};
+
+	std::string ret = *this < TimeSpan::zero() ? "-" : "";
+	for (int i = 0; i != format.size();)
+	{
+		auto ch = format[i];
+		if (hasFlag(ch))
+		{
+			auto len = getLastSameFlag(ch, i + 1) - i + 1;
+			char arr[80] = { 0 };
+			switch (ch)
+			{
+			case 'd':						snprintf(arr, sizeof(arr), "%d", std::abs(days()));																								break;
+			case 'H':case 'm': case 's':	snprintf(arr, sizeof(arr), (len == 1 ? "%d" : "%02d"), ch == 'H' ? std::abs(hours()) : ch == 'm' ? std::abs(minutes()) : std::abs(seconds()));	break;
+			case 'f':case 'g':				snprintf(arr, sizeof(arr), (len == 1 ? "%d" : len == 2 ? "%02d" : "%03d"), ch == 'f' ? std::abs(milliseconds()) : std::abs(microseconds()));	break;
+			default:																																										break;
+			}
+			ret += arr;
+			i += len;
+		}
+		else
+		{
+			ret += ch;
+			++i;
+		}
+	}
+	return ret;
 }
 
 int64_t TimeSpan::unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const

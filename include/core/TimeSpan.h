@@ -2,7 +2,7 @@
 **
 **	时间间隔类型
 **
-**		日- 时:分:秒:毫秒
+**		日- 时:分:秒.毫秒.微秒
 **
 **	由于年/月都有不确定的天数，所以不支持（从）年/月的构造形式
 **
@@ -36,13 +36,13 @@ public:
 	//从其他TimeSpan构建一个TimeSpan
 	TimeSpan(const TimeSpan &other);
 
-	//365 * 10000-00:00:00.000.000 3650000天0小时0分0秒0毫秒0微秒
+	//最大值，由int64_t 最大值微秒数构成
 	static TimeSpan maxValue();
 
-	//-365 * 10000-00:00:00.000.000 -3650000天0小时0分0秒0毫秒0微秒
+	//最小值，由int64_t 最小值微秒数构成
 	static TimeSpan minValue();
 
-	//0-00:00:00.000.000.000 0天0小时0分0秒0毫秒0微秒
+	//0-00:00:00.000.000 0天0小时0分0秒0毫秒0微秒
 	static TimeSpan zero();
 
 	//是否是合法的
@@ -110,8 +110,19 @@ public:
 	int compare(const TimeSpan &other) const;
 	bool equals(const TimeSpan &other) const;
 
+	//转换为字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
+	//d：天数字段
+	//H|HH:小时数字段
+	//m|mm：分钟的字段
+	//s|ss：秒的字段
+	//f|ff|fff：毫秒的字段
+	//g|gg|ggg：微秒的字段
+	//示例：d-H:m:ss.fff.g
+	std::string toString();
+	std::string toString(const std::string &format);
+
 private:
-	//最小刻度ms与单位(d, h, m, s, ms)的转换
+	//最小刻度ms与单位(d, h, m, s, ms, mis)的转换
 	int64_t unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const;
 
 	int64_t		m_micros;

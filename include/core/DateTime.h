@@ -145,13 +145,13 @@ private:
 class NB_API Time
 {
 public:
-	//构建一个Time，00:00:00.0
+	//构建一个Time，00:00:00.0.0
 	Time();
 
-	//构建一个Time，hour:minute:second.0
+	//构建一个Time，hour:minute:second.0.0
 	Time(int hour, int minute, int second);
 
-	//构建一个Time，hour:minute:second.millisecond
+	//构建一个Time，hour:minute:second.millisecond.0
 	Time(int hour, int minute, int second, int millisecond);
 
 	//从其他时间构建一个新的Time

@@ -46,7 +46,7 @@ public:
 	static Color fromRgbF(float r, float g, float b);
 	static Color fromArgbF(float a, float r, float g, float b);
 
-	//#AARRGGBB argb字符串
+	//#AARRGGBB argb字符串，如果不符合将抛出ArgumentException异常
 	static Color fromString(const std::string &sHex);
 
 	//HSV（色调、饱和度、亮度）格式的数据读入，h：[0.0~360.0]	s：[0.0~1.0]	v：[0.0~1.0]
