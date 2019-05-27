@@ -12,6 +12,17 @@ void TestTimeSpan::test()
 	std::string ss = tsMax.toString("dddd Hh:m:ssss:ff:[ggg],mm,s ^&*");
 	std::string sss = tsMin.toString();
 
+	{
+		TimeSpan tsFromS = TimeSpan::fromString("1|2|3|4|5|6", "s|ff|gggg|d|HHH|mmm");
+		auto d = tsFromS.days();
+		auto h = tsFromS.hours();
+		auto m = tsFromS.minutes();
+		auto s = tsFromS.seconds();
+		auto ms = tsFromS.milliseconds();
+		auto mis = tsFromS.microseconds();
+		bool b = false;
+	}
+
 	auto d = tsMax.days();
 	auto h = tsMax.hours();
 	auto m = tsMax.minutes();

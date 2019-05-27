@@ -1,6 +1,7 @@
 ﻿#include "core/DateTime.h"
 #include <chrono>
 #include <ctime>
+#include "core/Exception.h"
 
 using namespace nb::core;
 #define MaxYear					9999
@@ -15,15 +16,24 @@ Date::Date()
 }
 
 Date::Date(int y, int m, int d)
-	: m_year(y)
-	, m_month(m)
-	, m_day(d)
 {
+	if (!isValid(y, m, d))
+		throw ArgumentOutOfRangeException("y|m|d", 0, 0, 0, __FILE__, __LINE__);
+
+	m_year = y;
+	m_month = m;
+	m_day = d;
 }
 
 Date::Date(const Date &other)
 	: Date(other.year(), other.month(), other.day())
 {
+}
+
+Date Date::fromString(const std::string & date, const std::string & format)
+{
+	auto args = TimeSpan::simpleFromString(date, format, "yMd");
+	return Date((int)args[0], (int)args[1], (int)args[2]);
 }
 
 Date Date::maxValue()
@@ -326,7 +336,7 @@ std::string Date::toString(const std::string & format) const
 		{ 'd', day() },
 		{ 'w', static_cast<int>(week()) },
 	};
-	return nb::simpleFormatting(format, char_v);
+	return TimeSpan::simpleToString(format, char_v);
 }
 
 int Date::dayOfOrigin() const
@@ -356,17 +366,26 @@ Time::Time(int hour, int minute, int second, int millisecond)
 }
 
 Time::Time(int hour, int minute, int second, int millisecond, int microsecond)
-	: m_hour(hour)
-	, m_minute(minute)
-	, m_second(second)
-	, m_millisecond(millisecond)
-	, m_microsecond(microsecond)
 {
+	if (!isValid(hour, minute, second, millisecond, microsecond))
+		throw ArgumentOutOfRangeException("h|m|s|ms|mis", 0, 0, 0, __FILE__, __LINE__);
+
+	m_hour = hour;
+	m_minute = minute;
+	m_second = second;
+	m_millisecond = millisecond;
+	m_microsecond = microsecond;
 }
 
 Time::Time(const Time &other)
 	: Time(other.hour(), other.minute(), other.second(), other.millisecond(), other.microsecond())
 {
+}
+
+Time Time::fromString(const std::string & time, const std::string & format)
+{
+	auto args = TimeSpan::simpleFromString(time, format, "Hmsfg");
+	return Time((int)args[0], (int)args[1], (int)args[2], (int)args[3], (int)args[4]);
 }
 
 Time Time::maxValue()
@@ -525,12 +544,13 @@ std::string Time::toString(const std::string & format) const
 {
 	std::map<char, int> char_v = {
 		{ 'h', hour() },
+		{'H', hour() % 12},
 		{ 'm', minute() },
 		{ 's', second() },
 		{ 'f', millisecond() },
 		{ 'g', microsecond() },
 	};
-	return nb::simpleFormatting(format, char_v);
+	return TimeSpan::simpleToString(format, char_v);
 }
 
 
@@ -590,6 +610,12 @@ DateTime::DateTime(const DateTime &other)
 	: m_date(other.date())
 	, m_time(other.time())
 {
+}
+
+DateTime DateTime::fromString(const std::string & dateTime, const std::string & format)
+{
+	auto args = TimeSpan::simpleFromString(dateTime, format, "yMdhmsfg");
+	return DateTime((int)args[0], (int)args[1], (int)args[2], (int)args[3], (int)args[4], (int)args[5], (int)args[6], (int)args[7]);
 }
 
 DateTime DateTime::maxValue()
@@ -812,10 +838,11 @@ std::string DateTime::toString(const std::string & format) const
 		{ 'd', day() },
 		{ 'w', static_cast<int>(week()) },
 		{ 'h', hour() },
+		{ 'H', hour() % 12 },
 		{ 'm', minute() },
 		{ 's', second() },
 		{ 'f', millisecond() },
 		{ 'g', microsecond() },
 	};
-	return nb::simpleFormatting(format, char_v);
+	return TimeSpan::simpleToString(format, char_v);
 }

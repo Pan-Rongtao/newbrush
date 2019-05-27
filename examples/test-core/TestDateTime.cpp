@@ -5,7 +5,7 @@
 using namespace nb::core;
 void TestDateTime::test()
 {
-#if 0
+#if 1
 	//////////////Date
 	Date d1;
 	Date d2(2015, 1, 10);
@@ -14,6 +14,14 @@ void TestDateTime::test()
 
 	std::string s = minDate.toString();
 	std::string ss = maxDate.toString("[yyyy]-M(MM)-dd(ddd): w&*)*()");
+
+	{
+		auto date = Date::fromString("1|2|3|4|5", "yyyy|MM|dd");
+		auto y = date.year();
+		auto m = date.month();
+		auto d = date.day();
+		bool b = false;
+	}
 
 	Date d3(minDate);
 	d3 = d2;
@@ -60,6 +68,17 @@ void TestDateTime::test()
 	std::string st = tMin.toString("[hhh]-m(mm)-ss(s).ff.g(ggg)w&*)*()");
 	std::string sst = tMax.toString();
 
+
+	{
+		auto time = Time::fromString("1|2|3|4|5", "s|ff|gggg|HHH|mmm");
+		auto h = time.hour();
+		auto m = time.minute();
+		auto s = time.second();
+		auto ms = time.millisecond();
+		auto mis = time.microsecond();
+		bool b = false;
+	}
+
 	Time t4(Time::midnight());
 	t4 = t2;
 
@@ -105,7 +124,7 @@ void TestDateTime::test()
 	TimeSpan ts2 = TimeSpan(-999, -2, -1, -12, -999).abs();
 #endif
 
-#if 1
+#if 0
 	/////////////////DateTime
 	DateTime current = DateTime::current();
 
@@ -125,7 +144,8 @@ void TestDateTime::test()
 	DateTime dt8(dtMax);
 	dt8 = dt3;
 
-	DateTime(1, 2, 28, 0, 1, 0, 1);
+	DateTime dddd(1, 2, 28, 14, 1, 0, 1);
+	auto sssss = dddd.time().toString("HH:mm:ss");
 
 	bool b21 = DateTime(1, 1, 1, 0, 0, 0, 0) == DateTime::minValue();
 

@@ -11,6 +11,7 @@
 ************************************************/
 
 #pragma once
+#include <vector>
 #include "../core/Def.h"
 
 namespace nb{ namespace core {
@@ -55,6 +56,10 @@ public:
 	static TimeSpan fromSeconds(int seconds);
 	static TimeSpan fromMilliseconds(int milliseconds);
 	static TimeSpan fromMicroseconds(int64_t microseconds);
+	//format必须仅由转义字符d,H,m,s,f,g和|构成，由转义字符开头和结尾，且字段不可重复如：d|HH|mm|ss|fff|ggg
+	//ts必须仅由数字和|来构成，由数字开头和结尾，如：1|12|15|45|777|888
+	//格式错误将抛出
+	static TimeSpan fromString(const std::string &ts, const std::string &format);
 
 	void operator =(const TimeSpan &other);
 	TimeSpan operator -() const { return negate(); }
@@ -125,7 +130,15 @@ private:
 	//最小刻度ms与单位(d, h, m, s, ms, mis)的转换
 	int64_t unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const;
 
+	//按照给定的字符数据集，格式化为字符串的过程，连续的命中字符，将取尽相同的部分为止
+	//char_v：需格式化的字符，对应的值
+	static std::string simpleToString(const std::string &format, const std::map<char, int> &char_v);
+	static std::vector<int64_t> simpleFromString(const std::string & s, const std::string & format, const std::string &flags);
+
 	int64_t		m_micros;
+	friend class Time;
+	friend class Date;
+	friend class DateTime;
 };
 
 }}

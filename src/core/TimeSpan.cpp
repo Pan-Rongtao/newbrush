@@ -1,7 +1,10 @@
 ﻿#include "core/TimeSpan.h"
 #include <math.h>
 #include <map>
+#include <set>
+#include <regex>
 #include <algorithm>
+#include "core/Exception.h"
 
 using namespace nb::core;
 
@@ -54,6 +57,42 @@ bool TimeSpan::isValid(int days, int hours, int minutes, int seconds, int millis
 {
 	auto ts = TimeSpan(days, hours, minutes, seconds, milliseconds, microseconds);
 	return ts >= TimeSpan::minValue() && ts <= TimeSpan::maxValue();
+}
+
+TimeSpan TimeSpan::fromDays(int days)
+{
+	return TimeSpan(days, 0, 0, 0, 0, 0);
+}
+
+TimeSpan TimeSpan::fromHours(int hours)
+{
+	return TimeSpan(0, hours, 0, 0, 0, 0);
+}
+
+TimeSpan TimeSpan::fromMinutes(int minutes)
+{
+	return TimeSpan(0, 0, minutes, 0, 0, 0);
+}
+
+TimeSpan TimeSpan::fromSeconds(int seconds)
+{
+	return TimeSpan(0, 0, 0, seconds, 0, 0);
+}
+
+TimeSpan TimeSpan::fromMilliseconds(int milliseconds)
+{
+	return TimeSpan(0, 0, 0, 0, milliseconds, 0);
+}
+
+TimeSpan TimeSpan::fromMicroseconds(int64_t microseconds)
+{
+	return TimeSpan(0, 0, 0, 0, 0, microseconds);
+}
+
+TimeSpan TimeSpan::fromString(const std::string & ts, const std::string & format)
+{
+	auto args = simpleFromString(ts, format, "dHmsfg");
+	return TimeSpan((int)args[0], (int)args[1], (int)args[2], (int)args[3], (int)args[4], args[5]);
 }
 
 void TimeSpan::operator =(const TimeSpan &other)
@@ -183,7 +222,7 @@ std::string TimeSpan::toString(const std::string & format)
 		{ 'g', std::abs(microseconds()) },
 	};
 	std::string head = *this < TimeSpan::zero() ? "-" : "";
-	return head + nb::simpleFormatting(format, char_v);
+	return head + simpleToString(format, char_v);
 }
 
 int64_t TimeSpan::unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const
@@ -191,32 +230,114 @@ int64_t TimeSpan::unitsToMicros(int days, int hours, int minutes, int seconds, i
 	return days * MicrosecondsPerDay + hours * MicrosecondsPerHour + minutes * MicrosecondsPerMinute + seconds * MicrosecondsPerSecond + milliseconds * MicrosecondsPerMillisecond + microseconds;
 }
 
-TimeSpan TimeSpan::fromDays(int days)
+std::string TimeSpan::simpleToString(const std::string & format, const std::map<char, int>& char_v)
 {
-	return TimeSpan(days, 0, 0, 0, 0, 0);
+	auto getLastSameFlag = [&](char c, size_t beg)->size_t
+	{
+		if (beg == format.size())	beg -= 1;
+		for (int i = beg; i != format.size(); ++i)
+		{
+			if (c != format[i])					return i - 1;
+			else if (i == format.size() - 1)	return i;
+		}
+		return std::string::npos;	//never go this
+	};
+
+	std::string ret;
+	for (int i = 0; i != format.size();)
+	{
+		auto ch = format[i];
+		size_t len = 1;
+		auto iter = char_v.find(ch);
+		if (iter != char_v.end())
+		{
+			len = getLastSameFlag(ch, i + 1) - i + 1;
+			char f[10] = { 0 }, arr[80] = { 0 };
+			snprintf(f, sizeof(f), "%%0%dd", len);
+			snprintf(arr, sizeof(arr), f, iter->second);
+			ret += arr;
+		}
+		else
+		{
+			ret += ch;
+		}
+		i += len;
+	}
+	return ret;
 }
 
-TimeSpan TimeSpan::fromHours(int hours)
+void split(const std::string &sSource, const std::string &sSymbol, std::vector<std::string> &ret, bool bSkipEmptyString)
 {
-	return TimeSpan(0, hours, 0, 0, 0, 0);
+	if (sSource.empty() || sSymbol.empty())
+		return;
+
+	std::string sCurString = sSource;
+	int nSymbolSize = sSymbol.size();
+
+	int nPos = sCurString.find_first_of(sSymbol);
+	do
+	{
+		if (nPos == std::string::npos)
+		{
+			ret.push_back(sCurString);
+			break;
+		}
+		else
+		{
+			std::string sInsert = sCurString.substr(0, nPos);
+			if (!(sInsert.empty() && bSkipEmptyString))
+			{
+				ret.push_back(sInsert);
+			}
+
+			if (nPos + nSymbolSize == sCurString.size() && !bSkipEmptyString)
+			{
+				ret.push_back("");
+				break;
+			}
+			else
+			{
+				sCurString = sCurString.substr(nPos + nSymbolSize);
+			}
+		}
+		nPos = sCurString.find_first_of(sSymbol);
+	} while (!sCurString.empty());
 }
 
-TimeSpan TimeSpan::fromMinutes(int minutes)
+std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std::string & format, const std::string & flags)
 {
-	return TimeSpan(0, 0, minutes, 0, 0, 0);
-}
+	if(!format.empty() && (format[0] == '|' || format[format.size() - 1] == '|'))
+		throw ArgumentException("s", __FILE__, __LINE__);
+	if (!std::regex_match(s, std::regex("^[0-9]+[0-9|]+[0-9]+$")))
+		throw ArgumentException("s", __FILE__, __LINE__);
 
-TimeSpan TimeSpan::fromSeconds(int seconds)
-{
-	return TimeSpan(0, 0, 0, seconds, 0, 0);
-}
+	std::vector<std::string> formatSegments;
+	std::vector<std::string> SSegments;
+	split(format, "|", formatSegments, true);
+	split(s, "|", SSegments, true);
+	//if(formatSegments.size() != SSegments.size())
+	//	throw ArgumentException("format", __FILE__, __LINE__);
 
-TimeSpan TimeSpan::fromMilliseconds(int milliseconds)
-{
-	return TimeSpan(0, 0, 0, 0, milliseconds, 0);
-}
+	//检查formatSegments每段内字符完全一致
+	std::string temp;
+	for (auto one : formatSegments)
+	{
+		char ch = one[0];
+		if (flags.find(ch) == std::string::npos || one.find_first_not_of(ch, 0) != std::string::npos)
+			throw ArgumentException("format", __FILE__, __LINE__);
+		else
+			temp += ch;
+	}
+	//formatSegments不可重复
+	if (std::set<char>(temp.begin(), temp.end()).size() != temp.size())
+		throw ArgumentException("format", __FILE__, __LINE__);
 
-TimeSpan TimeSpan::fromMicroseconds(int64_t microseconds)
-{
-	return TimeSpan(0, 0, 0, 0, 0, microseconds);
+	std::vector<int64_t> args;
+	args.resize(flags.size(), 0);
+	for (int i = 0; i != formatSegments.size(); ++i)
+	{
+		int index = flags.find(formatSegments[i][0]);
+		args[index] = std::atoi(SSegments[i].data());
+	}
+	return args;
 }

@@ -55,6 +55,12 @@ public:
 	//从其他的Date构建一个Date
 	Date(const Date &other);
 
+	//从字符串转换
+	//format必须仅由转义字符y,M,d和|构成，由转义字符开头和结尾，且字段不可重复如：yyyy|MM|dd
+	//date必须仅由数字和|来构成，由数字开头和结尾，如：1|2|3
+	//格式错误将抛出
+	static Date fromString(const std::string &date, const std::string &format);
+
 	//最大值 9999/12/31
 	static Date maxValue();
 
@@ -167,6 +173,12 @@ public:
 	//从其他时间构建一个新的Time
 	Time(const Time &other);
 
+	//从字符串转换
+	//format必须仅由转义字符H,m,s,f,g和|构成，由转义字符开头和结尾，且字段不可重复如：HH|mm|ss|fff|ggg
+	//time必须仅由数字和|来构成，由数字开头和结尾，如：1|12|15|45|777|888
+	//格式错误将抛出
+	static Time fromString(const std::string &time, const std::string &format);
+
 	//最大时间23:59:59.999
 	static Time maxValue();
 
@@ -194,10 +206,6 @@ public:
 	inline Time operator -(const TimeSpan &value) const { return operator +(-value); }
 	inline void operator -=(const TimeSpan &value) { operator =(operator +(value)); }
 	inline TimeSpan operator -(const Time &value) const { return sub(value); }
-
-	//从字符串转换
-	//static Time FromString(const String &sDateString, TimeFormat format);
-	//static Time FromString(const String &sDateString, const String &sFormat);
 
 public:
 	//时
@@ -240,7 +248,7 @@ public:
 	bool equals(const Time &other) const;
 
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
-	//h|hh：时字段
+	//h|hh|H|HH：时字段,H|HH位24进制
 	//m|mm：分字段
 	//s|ss：秒字段
 	//f|ff|fff：毫秒字段
@@ -272,6 +280,12 @@ public:
 	DateTime(const Date &date, int hour, int minute, int second, int millisecond, int microsecond);
 	DateTime(int year, int month, int day, const Time &time);
 	DateTime(const DateTime &other);
+
+	//从字符串转换
+	//format必须仅由转义字符y,M,d,h,m,s,f,g和|构成，由转义字符开头和结尾，且字段不可重复如：yyyy|MM|dd|hh|mm|ss|fff|ggg
+	//dateTime必须仅由数字和|来构成，由数字开头和结尾，如：1|2|3|4|5|6|7|8
+	//格式错误将抛出
+	static DateTime fromString(const std::string &dateTime, const std::string &format);
 
 	//最大有效日期9999/12/31 23:59:59:999
 	static DateTime maxValue();
@@ -307,10 +321,6 @@ public:
 	void operator -=(const TimeSpan &value) { operator = (operator -(value)); }
 	TimeSpan operator -(const DateTime &other) const { return sub(other); }
 
-	//从字符串转换
-	//static Time FromString(const String &sDateString, TimeFormat format);
-	//static Time FromString(const String &sDateString, const String &sFormat);
-	
 public:
 	//年
 	int year() const;
@@ -381,7 +391,7 @@ public:
 	//M|MM：月字段
 	//d|dd：天字段
 	//w：星期字段
-	//h|hh：时字段
+	//h|hh|H|HH：时字段,H|HH位24进制
 	//m|mm：分字段
 	//s|ss：秒字段
 	//f|ff|fff：毫秒字段
