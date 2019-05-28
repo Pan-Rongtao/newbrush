@@ -7,18 +7,18 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-static std::shared_ptr<Application> g_app;
+Application *g_app = nullptr;
 Application::Application()
 {
 	if (g_app)	throw std::logic_error("create tow application");
-	g_app = std::shared_ptr<Application>(this);
+	g_app = this;
 }
 
 Application::~Application()
 {
 }
 
-std::shared_ptr<Application> Application::current()
+Application *Application::current()
 {
 	return g_app;
 }

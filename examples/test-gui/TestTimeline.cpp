@@ -2,18 +2,13 @@
 
 void TestTimeline::test()
 {
-	Timeline tl;
-	tl.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	tl.Duration = nb::core::TimeSpan::fromSeconds(1);
-	tl.StateChangedEvent += std::bind(&TestTimeline::onStateChanged, this, std::placeholders::_1);
-	tl.ProgressEvent += std::bind(&TestTimeline::onProgress, this, std::placeholders::_1);
-	tl.CompleteEvent += std::bind(&TestTimeline::onCompleted, this, std::placeholders::_1);
-	tl.begin();
+	m_tl.BeginTime = nb::core::TimeSpan::fromSeconds(1);
+	m_tl.Duration = nb::core::TimeSpan::fromSeconds(1);
+	m_tl.StateChangedEvent += std::bind(&TestTimeline::onStateChanged, this, std::placeholders::_1);
+	m_tl.ProgressEvent += std::bind(&TestTimeline::onProgress, this, std::placeholders::_1);
+	m_tl.CompleteEvent += std::bind(&TestTimeline::onCompleted, this, std::placeholders::_1);
+	m_tl.begin();
 
-	while (true)
-	{
-		Timer::drive();
-	}
 }
 
 void TestTimeline::onStateChanged(const Timeline::StateChangedArgs & args)

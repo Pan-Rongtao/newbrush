@@ -16,7 +16,7 @@ public:
 	PropertyAnimation<double>	doubleAni;
 
 	Property_rw<Point>			Position;
-	PropertyAnimation<Point>		pointAni;
+	PropertyAnimation<Point>	pointAni;
 
 	Property_rw<Color>			Background;
 	ColorAnimation				colorAni;

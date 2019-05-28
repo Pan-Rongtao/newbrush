@@ -22,18 +22,18 @@ enum class VisibilityE
 
 enum class HorizontalAlignmentE
 {
-	HorizontalAlignmentLeft = 0,
-	HorizontalAlignmentCenter = 1,
-	HorizontalAlignmentRight = 2,
-	HorizontalAlignmentStretch = 3
+	Left = 0,
+	Center = 1,
+	Right = 2,
+	Stretch = 3
 };
 
 enum class VerticalAlignmentE
 {
-	VerticalAlignmentTop = 0,
-	VerticalAlignmentCenter = 1,
-	VerticalAlignmentBottom = 2,
-	VerticalAlignmentStretch = 3
+	Top = 0,
+	Center = 1,
+	Bottom = 2,
+	Stretch = 3
 };
 
 enum class FlowDirectionE

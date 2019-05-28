@@ -23,8 +23,4 @@ void TestStoryboard::test()
 		printf("onProgress1:%f, width=%f\n", args.progress, Width());
 	};
 	
-	while (true)
-	{
-		Timer::drive();
-	}
 }

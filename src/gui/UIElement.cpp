@@ -11,8 +11,8 @@ UIElement::UIElement()
 	, Height(NB_DOUBLE_NAN)
 	, MaxWidth(NB_DOUBLE_MAX)
 	, MaxHeight(NB_DOUBLE_MAX)
-	, HorizontalAlignment(HorizontalAlignmentE::HorizontalAlignmentStretch)
-	, VerticalAlignment(VerticalAlignmentE::VerticalAlignmentStretch)
+	, HorizontalAlignment(HorizontalAlignmentE::Stretch)
+	, VerticalAlignment(VerticalAlignmentE::Stretch)
 	, FlowDirection(FlowDirectionE::LeftToRight)
 	, Renderer(std::make_shared<nb::gl::RenderObject>())
 {
@@ -39,9 +39,9 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
-	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
-	constrainedSize.reset((float)Width, (float)Height);
+	double Widthx = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
+	double Heightx = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
+	constrainedSize.reset((float)Widthx, (float)Heightx);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
 	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
@@ -72,9 +72,9 @@ void UIElement::arrage(const Rect & finalRect)
 	//调整arrange大于DesiredSize
 	arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignmentE::HorizontalAlignmentStretch)
+	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)
 		arrangeSize.setWidth(DesiredSize().width());
-	if (VerticalAlignment != VerticalAlignmentE::VerticalAlignmentStretch)
+	if (VerticalAlignment != VerticalAlignmentE::Stretch)
 		arrangeSize.setHeight(DesiredSize().height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
@@ -96,9 +96,9 @@ void UIElement::arrage(const Rect & finalRect)
 
 	switch (HorizontalAlignment)
 	{
-	case HorizontalAlignmentE::HorizontalAlignmentLeft:		Offset().x() = finalRect.x() + Margin().left();														break;
-	case HorizontalAlignmentE::HorizontalAlignmentCenter:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
-	case HorizontalAlignmentE::HorizontalAlignmentRight:	Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
+	case HorizontalAlignmentE::Left:	Offset().x() = finalRect.x() + Margin().left();														break;
+	case HorizontalAlignmentE::Center:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	case HorizontalAlignmentE::Right:	Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
 	default:
 	{
 		if (RenderSize().width() >= clientSize.width())
@@ -115,9 +115,9 @@ void UIElement::arrage(const Rect & finalRect)
 
 	switch (VerticalAlignment)
 	{
-	case VerticalAlignmentE::VerticalAlignmentTop:		Offset().y() = finalRect.top() + Margin().top();														break;
-	case VerticalAlignmentE::VerticalAlignmentCenter:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
-	case VerticalAlignmentE::VerticalAlignmentBottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
+	case VerticalAlignmentE::Top:		Offset().y() = finalRect.top() + Margin().top();														break;
+	case VerticalAlignmentE::Center:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
+	case VerticalAlignmentE::Bottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
 	default:
 	{
 		if (RenderSize().height() >= clientSize.height())
@@ -126,12 +126,15 @@ void UIElement::arrage(const Rect & finalRect)
 		}
 		else
 		{
-			Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;
+			Offset().y() = finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;
 		}
 	}
 		break;
 	}
 	m_actualSize = RenderSize;
+	//裁剪
+	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
+	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
 }
 
 Size UIElement::measureOverride(const Size & availableSize)

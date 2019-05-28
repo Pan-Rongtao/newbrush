@@ -17,8 +17,8 @@ StackPanel::~StackPanel()
 {
 }
 
-//如果是Horizontal，水平方向是无限的，垂直方向取子元素最高的一个
-//否则如果是Vertical，垂直方向是无限的，水平方向取子元素最宽的一个
+//如果是Horizontal，水平方向是无限的，垂直方向availableSize.height
+//否则如果是Vertical，垂直方向是无限的，水平方向取availableSize.width
 Size StackPanel::measureOverride(const Size & availableSize)
 {
 	Size ret;
@@ -28,12 +28,12 @@ Size StackPanel::measureOverride(const Size & availableSize)
 		{
 			child->measure(Size((float)NB_DOUBLE_MAX, availableSize.height()));
 			ret.width() += child->DesiredSize().width();
-			ret.height() = std::max(ret.height(), child->DesiredSize().height());
+			ret.height() = availableSize.height();
 		}
 		else
 		{
 			child->measure(Size(availableSize.width(), (float)NB_DOUBLE_MAX));
-			ret.width() = std::max(ret.width(), child->DesiredSize().width());
+			ret.width() = availableSize.width();
 			ret.height() += child->DesiredSize().height();
 		}
 	}
@@ -46,15 +46,16 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 	float xOffset = 0.0f, yOffset = 0.0f;
 	for (auto child : Children())
 	{
-		child->arrage(Rect(xOffset, yOffset, child->DesiredSize()));
 		if (Orientation == OrientationE::Horizontal)
 		{
+			child->arrage(Rect(xOffset, yOffset, child->DesiredSize().width(), DesiredSize().height()));
 			xOffset += child->DesiredSize().width();
 			ret.width() += child->DesiredSize().width();
 			ret.height() = std::max(ret.height(), child->DesiredSize().height());
 		}
 		else
 		{
+			child->arrage(Rect(xOffset, yOffset, DesiredSize().width(), child->DesiredSize().height()));
 			yOffset += child->DesiredSize().height();
 			ret.width() = std::max(ret.width(), child->DesiredSize().width()); 
 			ret.height() += child->DesiredSize().height();

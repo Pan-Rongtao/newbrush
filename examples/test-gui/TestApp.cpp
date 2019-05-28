@@ -1,5 +1,4 @@
 #include "TestApp.h"
-#include "TestRectanglePage.h"
 #include "gui/Image.h"
 #include "gui/Rectangle.h"
 #include "gui/Ellipse.h"
@@ -30,5 +29,5 @@ void TestApp::test()
 	w.Content = ellipse;*/
 
 //	w.Content()->Margin = Thickness(300, 200, 300, 200);
-	this->run();
+
 }

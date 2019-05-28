@@ -13,8 +13,8 @@ public:
 	Application();
 	virtual ~Application();
 
-	//获取实例，如果为创建，将返回空
-	static std::shared_ptr<Application> current();
+	//获取实例，如果未创建，将返回空
+	static Application *current();
 
 	//运行
 	int run();

@@ -1,7 +1,11 @@
 #include "../TestBase.h"
 #include "core/Exception.h"
+#include "gui/Application.h"
 #include "TestWindow.h"
 #include "TestApp.h"
+#include "TestCanvas.h"
+#include "TestStackPanel.h"
+#include "TestWrapPanel.h"
 #include "TestEasingFunction.h"
 #include "TestTimeline.h"
 #include "TestPropertyAnimation.h"
@@ -12,8 +16,10 @@ using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestPropertyAnimation> test;
+		Application app;
+		TestHandle<TestWrapPanel> test;
 		test->test();
+		return app.run();
 	}
 	catch (Exception &e)
 	{

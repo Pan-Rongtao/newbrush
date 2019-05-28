@@ -13,7 +13,6 @@ public:
 	void add(Timer *timer);
 	void remove(Timer *timer);
 	bool has(Timer *timer) const;
-	bool has(uint64_t tick) const;
 
 	void drive();
 

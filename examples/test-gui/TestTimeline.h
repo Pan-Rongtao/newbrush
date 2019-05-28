@@ -12,4 +12,6 @@ public:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
 	void onProgress(const Timeline::ProgressArgs &args);
 	void onCompleted(const Timeline::CompleteArgs &args);
+
+	Timeline m_tl;
 };

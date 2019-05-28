@@ -73,11 +73,12 @@ double Canvas::getBottom(std::shared_ptr<UIElement> element)
 	return v.empty() ? NB_DOUBLE_NAN : any_cast<double>(v);
 }
 
+//位设置宽高则默认为0
 Size Canvas::measureOverride(const Size & availableSize)
 {
 	for (auto child : Children())
 	{
-		child->measure(availableSize);
+		child->measure(Size(Width == NB_DOUBLE_NAN ? 0.0 : Width, Height == NB_DOUBLE_NAN ? 0.0 : Height));
 	}
 	return availableSize;
 }
@@ -86,8 +87,14 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : Children())
 	{
-		Rect rc((float)getLeft(child), (float)getTop(child), child->DesiredSize);
-		child->arrage(rc);
+		double x = (float)getLeft(child);
+		double y = (float)getTop(child);
+		if (x == NB_DOUBLE_NAN)	x = 0.0;
+		if (y == NB_DOUBLE_NAN)	y = 0.0;
+		double w = child->DesiredSize().width();
+		double h = child->DesiredSize().height();
+				
+		child->arrage(Rect(x, y, w, h));
 	}
 	return finalSize;
 }

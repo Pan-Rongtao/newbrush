@@ -40,11 +40,6 @@ bool TimersDriver::has(Timer * timer) const
 	return false;
 }
 
-bool TimersDriver::has(uint64_t tick) const
-{
-	return m_tickSequence.find(tick) != m_tickSequence.end();
-}
-
 void TimersDriver::drive()
 {
 	uint64_t currentTick = NB_TICK_COUT;

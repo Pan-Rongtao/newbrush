@@ -8,8 +8,9 @@
 using namespace nb::gui;
 void TestWindow::test()
 {
-//	nb::gl::Gles::Application app;
-//	nb::gui::Window w;
-//	app.Run();
-
+	auto rc0 = std::make_shared<Rectangle>();
+	rc0->Width = 100;
+	rc0->Height = 100;
+	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
+	this->Content = rc0;
 }

@@ -3,7 +3,7 @@
 #include "gui/Application.h"
 #include "TestWindow.h"
 
-class TestApp : public nb::gui::Application, public TestBase
+class TestApp : public TestBase
 {
 public:
 	virtual void test();
