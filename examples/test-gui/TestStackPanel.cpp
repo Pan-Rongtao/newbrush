@@ -3,14 +3,14 @@
 void TestStackPanel::test()
 {
 	auto sp = std::make_shared<StackPanel>();
-	sp->Orientation = OrientationE::Vertical;
+//	sp->Orientation = OrientationE::Vertical;
 
 	auto rc0 = std::make_shared<Rectangle>();
 	rc0->Fill = std::make_shared<SolidColorBrush>(Colors::red());
 	rc0->Width = 100;
 	rc0->Height = 100;
-	rc0->VerticalAlignment = VerticalAlignmentE::Top;
-	rc0->HorizontalAlignment = HorizontalAlignmentE::Right;
+//	rc0->VerticalAlignment = VerticalAlignmentE::Top;
+//	rc0->HorizontalAlignment = HorizontalAlignmentE::Right;
 
 	auto rc1 = std::make_shared<Rectangle>();
 	rc1->Fill = std::make_shared<SolidColorBrush>(Colors::green());

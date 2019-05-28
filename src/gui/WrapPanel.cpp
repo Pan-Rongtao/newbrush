@@ -35,9 +35,12 @@ auto assignDouble(const nb::core::Property_rw<double> &p)
 	return p != NB_DOUBLE_NAN;
 }
 
+//arrange两个方向维度进行：
+//当Orientation == OrientationE::Horizontal时，分两种情况：1、指定了ItemHeight，则每一行高度为ItemHeight，累加每个item，当累加宽度超过finnalSize.width时，换行；2、未指定ItemHeight，先遍历items，确定行信息（每一行的开头下标，以及最高项作为该行的高）
+//当Orientation == OrientationE::Vertical时，分两种情况：1、指定了ItemWdith，则每一行高度为ItemWidth，累加每个item，当累加高度超过finalSize.height时，换列；2、未指定ItemWidth，先遍历items，确定列信息（每一列的开头下标，以及最宽项作为该列的宽）
 Size WrapPanel::arrangeOverride(const Size & finalSize)
 {
-	//计算每行（列）的起始index和高（宽）
+	//计算行（列）信息，返回没行（列）的起始index和高（宽）std::queue<std::pair<int, double>>
 	auto calcLinesInfo = [&]()->std::queue<std::pair<int, double>>
 	{
 		std::queue<std::pair<int, double>> ret;
@@ -76,13 +79,13 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 		return ret;
 	};
 
-	//水平方向
 	double x = 0.0;
 	double y = 0.0;
 	Rect arrangeRect;
+	//水平方向
 	if (Orientation == OrientationE::Horizontal)
 	{
-		//指定了ItemHeight，则每一行高度为ItemHeight
+		//指定了ItemHeight，每个item的高度都为iItemHeight
 		if (ItemHeight != NB_DOUBLE_NAN)
 		{
 			for (auto const &child : Children())
