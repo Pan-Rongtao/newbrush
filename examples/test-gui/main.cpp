@@ -6,6 +6,7 @@
 #include "TestCanvas.h"
 #include "TestStackPanel.h"
 #include "TestWrapPanel.h"
+#include "TestDockPanel.h"
 #include "TestEasingFunction.h"
 #include "TestTimeline.h"
 #include "TestPropertyAnimation.h"
@@ -17,7 +18,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestWrapPanel> test;
+		TestHandle<TestDockPanel> test;
 		test->test();
 		return app.run();
 	}

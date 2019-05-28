@@ -102,6 +102,7 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 				break;
 			}
 		}
+		child->arrage(childArrageRect);
 	}
 	return finalSize;
 }

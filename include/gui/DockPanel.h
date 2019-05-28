@@ -11,7 +11,7 @@ enum class DockE
 	Bottom,
 };
 
-class DockPanel : public Panel
+class NB_API DockPanel : public Panel
 {
 public:
 	DockPanel();
