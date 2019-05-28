@@ -24,8 +24,6 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 		childMeasureSize.width() = ItemWidth != NB_DOUBLE_NAN ? ItemWidth : child->Width != NB_DOUBLE_NAN ? child->Width : 0.0;
 		childMeasureSize.height() = ItemHeight != NB_DOUBLE_NAN ? ItemHeight : child->Height != NB_DOUBLE_NAN ? child->Height : 0.0;
 		child->measure(childMeasureSize);
-		auto sz = child->DesiredSize();
-		bool b = false;
 	}
 	return availableSize;
 }
@@ -82,10 +80,10 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	double x = 0.0;
 	double y = 0.0;
 	Rect arrangeRect;
-	//水平方向
 	if (Orientation == OrientationE::Horizontal)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
+		//否则，需要先计算每一行的最高item作为那一行的高度
 		if (ItemHeight != NB_DOUBLE_NAN)
 		{
 			for (auto const &child : Children())
@@ -106,7 +104,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				child->arrage(arrangeRect);
 			}
 		}
-		else	//否则，需要先计算每一行的最高item作为那一行的高度
+		else
 		{
 			auto linesInfo = calcLinesInfo();
 			for (int i = 0; i != Children().size(); ++i)
@@ -129,10 +127,10 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			}
 		}
 	}
-	//垂直方向
-	else
+	else//垂直方向
 	{
 		//指定了ItemWidth，则每一列高度为ItemWidth
+		//否则，需要先计算每一列的最宽item作为那一列的宽度
 		if (ItemWidth != NB_DOUBLE_NAN)
 		{
 			for (auto const &child : Children())
@@ -153,7 +151,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				child->arrage(arrangeRect);
 			}
 		}
-		else	//否则，需要先计算每一列的最宽item作为那一列的宽度
+		else
 		{
 			auto linesInfo = calcLinesInfo();
 			for (int i = 0; i != Children().size(); ++i)
