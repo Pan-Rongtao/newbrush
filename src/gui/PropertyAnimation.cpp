@@ -5,7 +5,6 @@ using namespace nb::core;
 using namespace nb::gui;
 
 ColorAnimation::ColorAnimation()
-	: Easing(std::make_shared<LinearEase>())
 {
 }
 

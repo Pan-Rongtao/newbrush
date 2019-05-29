@@ -28,7 +28,7 @@ class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
 	//限制类型为基础类型（不限制，否则Point这些无法编译通过）
-	PropertyAnimation() : Easing(std::make_shared<LinearEase>())
+	PropertyAnimation()
 	{
 	//	static_assert(std::is_trivial<T>::value, "PropertyAnimation<T> only surpport trivial(basic) type");
 	}
@@ -37,7 +37,6 @@ public:
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;
 	core::Property_rw<T>							By;
-	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
 protected:
 	//要求属性必须实现了operator +, operator -, operator *
@@ -60,7 +59,6 @@ public:
 	core::Property_rw<core::Color>					From;
 	core::Property_rw<core::Color>					To;
 	core::Property_rw<core::Color>					By;
-	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
 protected:
 	virtual void progressing(double progress) override;

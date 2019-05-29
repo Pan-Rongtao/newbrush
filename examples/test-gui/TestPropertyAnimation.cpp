@@ -34,10 +34,6 @@ void TestPropertyAnimation::test()
 	colorAni.TargetProperty = &Background;
 //	colorAni.begin();
 	
-	while (true)
-	{
-		Timer::drive();
-	}
 }
 
 void TestPropertyAnimation::onStateChanged(const Timeline::StateChangedArgs & args)

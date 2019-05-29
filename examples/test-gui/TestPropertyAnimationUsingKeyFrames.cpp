@@ -13,10 +13,6 @@ void TestPropertyAnimationUsingKeyFrames::test()
 	doubleAni.TargetProperty = &Width;
 	doubleAni.begin();
 
-	while (true)
-	{
-		Timer::drive();
-	}
 }
 
 void TestPropertyAnimationUsingKeyFrames::onStateChanged(const Timeline::StateChangedArgs & args)
