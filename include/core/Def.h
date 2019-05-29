@@ -71,17 +71,17 @@
 	#define NB_API
 #endif
 
-#define NB_THROW_EXCEPTION(content)		throw nb::core::Exception(content, __FILE__, __LINE__);
-#define NB_PI							(3.14159265358979323)
-#define NB_2PI							(6.28318530717958647)
-#define NB_HALF_PI						(1.57079632679489661)
-#define NB_ANG2RAD(angle)				(0.01745329251994329 * angle)
-#define NB_RAD2ANG(radian)				(57.2957795130823208 * radian)
-#define NB_INT_MAX						(std::numeric_limits<int>::max())
-#define NB_DOUBLE_MAX					(std::numeric_limits<double>::max())
-#define NB_DOUBLE_NAN					(DBL_EPSILON)
-#define NB_PID							(nb::getPid())
-#define NB_TICK_COUT					(nb::getTickCount())
+#define NB_THROW_EXCEPTION(content)				throw nb::core::Exception(content, __FILE__, __LINE__);
+#define NB_PI									(3.14159265358979323)
+#define NB_2PI									(6.28318530717958647)
+#define NB_HALF_PI								(1.57079632679489661)
+#define NB_ANG2RAD(angle)						(0.01745329251994329 * angle)
+#define NB_RAD2ANG(radian)						(57.2957795130823208 * radian)
+#define NB_INT_MAX								(std::numeric_limits<int>::max())
+#define NB_DOUBLE_MAX							(std::numeric_limits<double>::max())
+#define NB_DOUBLE_NAN							(DBL_EPSILON)
+#define NB_PID									(nb::getPid())
+#define NB_TICK_COUT							(nb::getTickCount())
 
 constexpr int64_t MicrosecondsPerDay			= 86400000000;
 constexpr int64_t MicrosecondsPerHour			= 3600000000;
