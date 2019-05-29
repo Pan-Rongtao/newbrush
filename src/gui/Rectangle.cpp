@@ -1,6 +1,6 @@
 ﻿#include "gui/Rectangle.h"
 #include "gles/Quadrangle.h"
-#include "gles/Programs.h"
+#include "gles/Program.h"
 #include "gles/Context.h"
 #include "gles/Texture2D.h"
 
@@ -21,7 +21,7 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc(Offset().x(), Offset().y(), ActualSize);
 	Renderer()->setModel(std::make_shared<gl::Quadrangle>(Vec2(rc.left(), rc.bottom()),
 		Vec2(rc.right(), rc.bottom()), Vec2(rc.right(), rc.top()), Vec2(rc.left(), rc.top())));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
 	drawContext->queue(Renderer());
 
 	if (!Fill())

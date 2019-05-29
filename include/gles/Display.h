@@ -22,9 +22,6 @@ public:
 	//默认Display
 	static Display defaultx();
 
-	//是否为空
-	bool isNull() const;
-
 	//获取id
 	long id() const;
 

@@ -1,12 +1,12 @@
 /*******************************************************
-**	Program
+**	Program/Programs
 **
-**	程序
+**	Program程序
 **	
 **		程序是是运行于GPU的程序。一般而言，它需要关联上Shader
 **	才有意义，link后程序就可以随时使用
 **
-**	Program（程序）
+**	Programs则提供常用的Program对象，如primitive、phong、cube等
 **
 **		潘荣涛
 **	
@@ -19,7 +19,6 @@
 #include "../core/Matrix2x2.h"
 #include "../core/Matrix3x3.h"
 #include "../core/Matrix4x4.h"
-#include "SourceDecoder.h"
 
 namespace nb{ namespace gl{
 
@@ -116,13 +115,23 @@ public:
 	void uniform(int location, const nb::core::Matrix4x4 &matrix);
 	void uniform(int location, nb::core::Matrix4x4 *matrix, int count);
 
-	//解析并提交所有的uniform变量
-	void uniformDefault();
-
 private:
-	std::shared_ptr<VertexShader>	m_VertexShader;
-	std::shared_ptr<FragmentShader>	m_FragmentShader;
-	unsigned int					m_ProgramHandle;
+	std::shared_ptr<VertexShader>	m_vertexShader;
+	std::shared_ptr<FragmentShader>	m_fragmentShader;
+	unsigned int					m_programHandle;
+};
+
+class NB_API Programs
+{
+public:
+	//简单program
+	static std::shared_ptr<Program> primitive();
+
+	//phong program
+	static std::shared_ptr<Program> phong();
+
+	//cube program
+	static std::shared_ptr<Program> cube();
 };
 
 }}

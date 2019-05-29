@@ -5,6 +5,7 @@
 #include "Surface.h"
 #include "Context.h"
 #include "Camera.h"
+#include "Projection.h"
 
 namespace nb{ namespace gl
 {
@@ -31,6 +32,12 @@ namespace nb{ namespace gl
 
 	//获取摄像机
 	NB_API std::shared_ptr<Camera> getCamera();
+
+	//设置投影
+	NB_API void setProjection(std::shared_ptr<Projection> projection);
+
+	//获取投影
+	NB_API std::shared_ptr<Projection> getProjection();
 
 	//设置当前渲染surface和context
 	NB_API void makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context);

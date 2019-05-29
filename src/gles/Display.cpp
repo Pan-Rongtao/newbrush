@@ -21,11 +21,6 @@ Display::Display(long id)
 	m_id = id;
 }
 
-bool Display::isNull() const
-{
-	return m_handle == nullptr;
-}
-
 long Display::id() const
 {
 	return m_id;

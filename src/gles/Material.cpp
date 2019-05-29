@@ -8,13 +8,13 @@ Material::Material()
 }
 
 Material::Material(std::shared_ptr<Program> program)
-: m_program(program)
+	: m_program(program)
 {
 }
 
 Material::Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures)
-: m_program(program)
-, m_textures(textures)
+	: m_program(program)
+	, m_textures(textures)
 {
 }
 

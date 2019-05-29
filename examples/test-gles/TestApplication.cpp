@@ -4,7 +4,6 @@
 #include "gles/Material.h"
 #include "gles/Texture2D.h"
 #include "gles/Program.h"
-#include "gles/Programs.h"
 #include "gles/Shader.h"
 #include "gles/RenderObject.h"
 #include "gles/Model.h"
@@ -84,7 +83,7 @@ void MyApplication::DrawTriangles(bool bOrigin)
 		tri->mesh(0).setColorAt(0, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		tri->mesh(0).setColorAt(1, Vec4(0.0f, 1.0f, 0.0f, 1.0f));
 		tri->mesh(0).setColorAt(2, Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(PrimitiveProgram::instance()));
+		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
 		ro->storage()->insert("unif_colorMode", 0);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 		m_context->queue(ro);
@@ -116,7 +115,7 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 			p3 = Vec2(-100 + step * i, -100 + step * i);
 		}
 		quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
-		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(PrimitiveProgram::instance()));
+		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
 		m_context->queue(ro);
 		if (i == 0)
 		{
@@ -147,7 +146,7 @@ void MyApplication::DrawEllipses(bool bOrigin)
 	else
 		epse = std::make_shared<Ellipse>(Vec2(100.0f, 400.0f), 50.0f, 50.0f, bOrigin);
 	epse->mesh(0).unifyColor(Vec4(1.0f, 0.0f, 0.0f, 0.0f));
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(PrimitiveProgram::instance()));
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->insert("unif_colorMode", 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 	m_context->queue(ro);
@@ -166,7 +165,7 @@ void MyApplication::DrawCubes(bool bOrigin)
 		float w = 100;
 		cube = std::make_shared<Cube>(Vec3(400.0f, 240.0f, 0.0f), w, w, w);
 	}
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(cube, std::make_shared<Material>(CubeProgram::instance()));
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(cube, std::make_shared<Material>(Programs::cube()));
 
 	m_context->queue(ro);
 	std::shared_ptr<Cubemap> cm = std::make_shared<Cubemap>();
@@ -189,7 +188,7 @@ void MyApplication::DrawSphere(bool bOrigin)
 	else
 		sp = std::make_shared<Sphere>(Vec3(600.0f, 200.0f, 0.0f), 100.0f, bOrigin);
 	sp->mesh(0).unifyColor(Vec4(1.0f, 0.0, 0.0, 1.0));
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(PrimitiveProgram::instance()));
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
 	ro->storage()->insert("unif_colorMode", 0);
 	m_context->queue(ro);
@@ -225,7 +224,7 @@ void MyApplication::drawPhone(bool bOrigin)
 	quad->mesh(0).setNormalAt(6, Vec3(-f, -f, -f));
 	quad->mesh(0).setNormalAt(7, Vec3(f, -f, -f));
 	//	std::shared_ptr<Ellipse> epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25);
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(PhongProgram::instance()));
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::phong()));
 	m_context->queue(ro);
 	ro->storage()->insert("viewPos", cameraPosition);
 	ro->storage()->insert("material.shininess", 32.0);
@@ -264,7 +263,7 @@ void MyApplication::drawPhone(bool bOrigin)
 
 void MyApplication::drawModel(bool bOrigin)
 {
-	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(nullptr, std::make_shared<Material>(PrimitiveProgram::instance()));
+	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(nullptr, std::make_shared<Material>(Programs::primitive()));
 	renderer->loadFromFile("e:/model/nanosuit/nanosuit.obj");
 	if (bOrigin)
 	{
@@ -292,8 +291,7 @@ MyApplication::~MyApplication()
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
-	Projection::instance()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
-
+	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else

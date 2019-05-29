@@ -1,3 +1,12 @@
+/*******************************************************
+**	Projection
+**
+**	投影
+**		投影是描述建立裁剪空间的数据结构
+**
+**		潘荣涛
+**
+********************************************************/
 #pragma once
 #include "../core/Matrix4x4.h"
 
@@ -18,7 +27,7 @@ public:
 
 	static std::shared_ptr<Projection> instance();
 
-protected:
+private:
 	nb::core::Matrix4x4		m_matrix;
 };
 

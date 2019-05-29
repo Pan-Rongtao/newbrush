@@ -33,16 +33,16 @@ class NB_API TextureWrapping
 {
 public:
 	//纹理环绕方式
-	enum WrappingMode
+	enum class WrappingMode
 	{
-		WrappingMode_Repeat,			//重复
-		WrappingMode_Mirrored_Repeat,	//镜像重复
-		WrappingMode_Clamp_To_Edge,		//边缘延伸
-		WrappingMode_Clamp_To_Border,	//用户颜色边缘延伸
+		Repeat,			//重复
+		MirroredRepeat,	//镜像重复
+		ClampToEdge,	//边缘延伸
+		ClampToBorder,	//用户颜色边缘延伸
 	};
 
 public:
-	//构建一个纹理环绕方式，它的S轴和T轴都是WrappingMode_Repeat
+	//构建一个纹理环绕方式，它的S轴和T轴都是Repeat
 	TextureWrapping();
 
 	//构建一个纹理环绕方式，它的S轴为s，它的T轴为t
@@ -63,7 +63,7 @@ public:
 private:
 	WrappingMode	m_s;
 	WrappingMode	m_t;
-	nb::core::Vec4	m_BorderColor;
+	nb::core::Vec4	m_borderColor;
 };
 
 //class TextureFilter
@@ -73,7 +73,7 @@ public:
 	//纹理过滤方式，依次向下，纹理细节表现质量越好，性能要求越大
 	//放大过滤只支持Point和Bilinear
 	//缩小过滤支持所有的过滤方式
-	enum Filter
+	enum class Filter
 	{
 		Point = 0,						//最邻近过滤，指取最接近浮点的整型像素点位置
 		Bilinear,						//双线性过滤，对邻近的四个点进行线性插值算法，两个维度三次运算
@@ -110,14 +110,14 @@ private:
 class NB_API Texture
 {
 public:
-	enum PixelFormat
+	enum class PixelFormat
 	{
-		Format_Bpp8_Alpha = 0,
-		Format_Bpp16_Rgb565,
-		Format_Bpp24_Rgb888,
-		Format_Bpp32_Rgb4444,
-		Format_Bpp32_Rgb5551,
-		Format_Bpp32_Rgba8888,
+		Bpp8_Alpha = 0,
+		Bpp16_Rgb565,
+		Bpp24_Rgb888,
+		Bpp32_Rgb4444,
+		Bpp32_Rgb5551,
+		Bpp32_Rgba8888,
 	};
 
 public:

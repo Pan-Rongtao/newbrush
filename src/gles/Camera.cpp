@@ -36,9 +36,9 @@ void Camera::lookat(const nb::core::Vec3 & position, const nb::core::Vec3 & targ
 
 void Camera::lookat2D(double width, double height)
 {
-	auto z = height / (2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)(width / 2.0f), (float)(height / 2.0f), (float)(-z));
-	Vec3 target((float)(width / 2.0f), (float)(height / 2.0f), 0.0f);
+	auto z = height / (2 * tan((22.5 * NB_PI) / 180.0));
+	Vec3 position((float)(width / 2.0), (float)(height / 2.0), (float)(-z));
+	Vec3 target((float)(width / 2.0), (float)(height / 2.0), 0.0);
 	Vec3 upVec(0.0f, -1.0f, 0.0f);
 	lookat(position, target, upVec);
 }

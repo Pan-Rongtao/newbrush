@@ -10,12 +10,6 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
-auto lookat = [](double width, double height) 
-{
-	Projection::instance()->perspective(45.0f, (float)(width / height), 0.1f, 10000.0f);
-	nb::gl::getCamera()->lookat2D(width, height);
-};
-
 nb::gui::Window::Window()
 {
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -85,14 +79,16 @@ void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setWidth((int)_new);
 	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
-	lookat(Width, Height);
+	nb::gl::getProjection()->perspective(45.0f, (float)(Width / Height), 0.1f, 10000.0f);
+	nb::gl::getCamera()->lookat2D(Width, Height);
 }
 
 void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setHeight((int)_new);
 	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
-	lookat(Width, Height);
+	nb::gl::getProjection()->perspective(45.0f, (float)(Width / Height), 0.1f, 10000.0f);
+	nb::gl::getCamera()->lookat2D(Width, Height);
 }
 
 void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string & _new)

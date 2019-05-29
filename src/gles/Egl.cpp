@@ -9,7 +9,8 @@ using namespace nb::gl;
 static bool g_initialized = false;
 static std::shared_ptr<Display> g_display = nullptr;
 static std::shared_ptr<Configure> g_configure = nullptr;
-static std::shared_ptr<Camera>	g_camera = std::make_shared<Camera>();
+static std::shared_ptr<Camera> g_camera = std::make_shared<Camera>();
+static std::shared_ptr<Projection> g_projection = std::make_shared<Projection>();
 
 std::string nb::gl::getVersion()
 {
@@ -60,6 +61,16 @@ void nb::gl::setCamera(std::shared_ptr<Camera> camera)
 std::shared_ptr<Camera> nb::gl::getCamera()
 {
 	return g_camera;
+}
+
+void nb::gl::setProjection(std::shared_ptr<Projection> projection)
+{
+	g_projection = projection;
+}
+
+std::shared_ptr<Projection> nb::gl::getProjection()
+{
+	return g_projection;
 }
 
 void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)

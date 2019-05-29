@@ -111,12 +111,12 @@ void RenderObject::draw() const
 	//uniform只需更新依次即可，不必每个mesh都更新
 	//计算后的mvp
 	{
-		Matrix4x4 matMvp = Projection::instance()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
+		Matrix4x4 matMvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
 		program->uniform(program->getUniformLocation("nb_Mvp"), matMvp);
 	}
 	//分开的mvp
 	{
-		program->uniform(program->getUniformLocation("nb_P"), Projection::instance()->matrix());
+		program->uniform(program->getUniformLocation("nb_P"), nb::gl::getProjection()->matrix());
 		program->uniform(program->getUniformLocation("nb_V"), nb::gl::getCamera()->matrix());
 		program->uniform(program->getUniformLocation("nb_M"), m_model->getMatrix());
 	}

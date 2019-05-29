@@ -9,20 +9,19 @@ using namespace nb::gl;
 
 //class TexutreWrapping
 TextureWrapping::TextureWrapping()
+	: TextureWrapping(WrappingMode::Repeat, WrappingMode::Repeat, Vec4(0.0f, 0.0f, 0.0f, 1.0f))
 {
 }
 
 TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t)
-	: m_s(s)
-	, m_t(t)
-	, m_BorderColor(0.0f, 0.0f, 0.0f, 1.0f)
+	: TextureWrapping(s, t, Vec4(0.0f, 0.0f, 0.0f, 1.0f))
 {
 }
 
 TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t, const Vec4 &borderColor)
 	: m_s(s)
 	, m_t(t)
-	, m_BorderColor(borderColor)
+	, m_borderColor(borderColor)
 {
 }
 
@@ -41,10 +40,10 @@ int TextureWrapping::glValue(TextureWrapping::WrappingMode wrapping)
 	GLint nGl = GL_REPEAT;
 	switch (wrapping)
 	{
-	case WrappingMode_Repeat:				nGl = GL_REPEAT;							break;
-	case WrappingMode_Mirrored_Repeat:		nGl = GL_MIRRORED_REPEAT;					break;
-	case WrappingMode_Clamp_To_Edge:		nGl = GL_CLAMP_TO_EDGE;						break;
-	case WrappingMode_Clamp_To_Border:		printf("warning, not in opengl es 2.0");	break;
+	case WrappingMode::Repeat:				nGl = GL_REPEAT;							break;
+	case WrappingMode::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;					break;
+	case WrappingMode::ClampToEdge:			nGl = GL_CLAMP_TO_EDGE;						break;
+	case WrappingMode::ClampToBorder:		printf("warning, not in opengl es 2.0");	break;
 	default:																			break;
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
@@ -53,14 +52,12 @@ int TextureWrapping::glValue(TextureWrapping::WrappingMode wrapping)
 
 //class TextureFilter
 TextureFilter::TextureFilter()
-	: m_MagnifyFilter(Point)
-	, m_NarrowFilter(Point)
+	: TextureFilter(Filter::Point, Filter::Point)
 {
 }
 
 TextureFilter::TextureFilter(Filter uniformFilter)
-	: m_MagnifyFilter(uniformFilter)
-	, m_NarrowFilter(uniformFilter)
+	: TextureFilter(uniformFilter, uniformFilter)
 {
 }
 
@@ -90,11 +87,11 @@ int TextureFilter::glValue(TextureFilter::Filter filter)
 	GLint nGl = GL_NEAREST;
 	switch (filter)
 	{
-	case TextureFilter::Point:			nGl = GL_NEAREST;																	break;
-	case TextureFilter::Bilinear:		nGl = GL_LINEAR;																	break;
-	case TextureFilter::Trilinear:		nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
-	case TextureFilter::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
-	default:																												break;
+	case Filter::Point:			nGl = GL_NEAREST;																	break;
+	case Filter::Bilinear:		nGl = GL_LINEAR;																	break;
+	case Filter::Trilinear:		nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
+	case Filter::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
+	default:																										break;
 	}
 	return nGl;
 }

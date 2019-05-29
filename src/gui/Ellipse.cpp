@@ -1,6 +1,6 @@
 #include "gui/Ellipse.h"
 #include "gles/Ellipse.h"
-#include "gles/Programs.h"
+#include "gles/Program.h"
 #include "gles/Context.h"
 #include "gles/Texture2D.h"
 
@@ -14,7 +14,7 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	Rect rc(Offset().x(), Offset().y(), ActualSize);
 	Renderer()->setModel(std::make_shared<gl::Ellipse>(Vec2(rc.center().x(), rc.center().y()), rc.width() / 2, rc.height() / 2, false));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::PrimitiveProgram::instance()));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 	drawContext->queue(Renderer());
 
 	if (!Fill())

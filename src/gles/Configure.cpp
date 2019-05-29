@@ -1,6 +1,7 @@
 #include "gles/Configure.h"
-#include "gles/Egl.h"
 #include "core/Exception.h"
+#include "gles/Egl.h"
+#include "gles/Display.h"
 #include <EGL/egl.h>
 
 using namespace nb::core;
@@ -26,11 +27,6 @@ Configure::Configure(std::shared_ptr<Display> display, int *attributes)
 	if (!display)
 		throw ArgumentNullException("display", __FILE__, __LINE__);
 	m_display = display;
-}
-
-bool Configure::isNull() const
-{
-	return m_handle == nullptr;
 }
 
 int *Configure::attributes() const

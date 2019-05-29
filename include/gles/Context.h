@@ -1,3 +1,13 @@
+/*******************************************************
+**	Context
+**
+**	上下文类
+**		Context是描述OpenGL渲染上下文的数据结构，
+**	可以把它理解为OpenGL渲染指令集合
+**
+**		潘荣涛
+**
+********************************************************/
 #pragma once
 #include "../core/Def.h"
 #include <vector>
@@ -22,7 +32,7 @@ public:
 	//出列一个渲染物
 	void dequeue(std::shared_ptr<nb::gl::RenderObject> renderObject);
 
-	//
+	//渲染物个数
 	int renderObjectCount() const;
 
 	//渲染物
