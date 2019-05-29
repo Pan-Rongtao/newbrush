@@ -1,4 +1,22 @@
-﻿#pragma once
+﻿/******************************************************************************
+
+* Copyright (c) 2016，德赛西威汽车电子有限公司
+
+* All rights reserved
+
+* 编写者: Pan.瞳
+
+* 编写日期: 2019-05
+
+* 简要描述: Easing是描述缓动函数的数据结构，包含了一些常用的缓动类，如：
+			LinearEase, BackEase, BounceEase, CircleEase, CubicEase,
+			ElasticEase, ExponentialEase, PowerEase, QuadraticEase, 
+			QuarticEase, QuinticEase,SineEase。如果要实现自己的缓动类，
+			需要继承EasingBase并重写easeInCore即可
+* 修改记录:
+
+*****************************************************************************/
+#pragma once
 #include "../core/Property.h"
 
 namespace nb { namespace gui {
