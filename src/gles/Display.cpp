@@ -1,7 +1,7 @@
 #include "gles/Display.h"
 #include "core/Def.h"
 #include <EGL/egl.h>
-#if NB_OS == NB_OS_LINUX_ARM
+#if NB_OS == NB_OS_LINUX && NB_ARCH == NB_ARCH_ARM
 	#include <wayland-client.h>
 #endif
 #include "core/Exception.h"
@@ -9,40 +9,31 @@
 using namespace nb::gl;
 using namespace nb::core;
 
-Display::Display()
-: m_Handle(nullptr)
-, m_Id(-1)
-{
-}
-
 Display::Display(long id)
+	: m_handle(nullptr)
+	, m_id(-1)
 {
-	m_Handle = eglGetDisplay((EGLNativeDisplayType)id);
-	if(m_Handle == EGL_NO_DISPLAY || eglGetError() != EGL_SUCCESS)
-		NB_THROW_EXCEPTION("error display with id.");
+	m_handle = eglGetDisplay((EGLNativeDisplayType)id);
+	int major = 0, minor = 0;
+	if(m_handle == EGL_NO_DISPLAY || !eglInitialize(m_handle, &major, &minor))
+		NB_THROW_EXCEPTION("error display with id.", eglGetError);
 
-	int major = 0;
-	int minor = 0;
-	EGLBoolean b = eglInitialize(m_Handle, &major, &minor);
-	if(b == false)
-		NB_THROW_EXCEPTION("display init fail.");
-
-	m_Id = id;
+	m_id = id;
 }
 
 bool Display::isNull() const
 {
-	return m_Handle == nullptr;
+	return m_handle == nullptr;
 }
 
 long Display::id() const
 {
-	return m_Id;
+	return m_id;
 }
 
 void *Display::handle() const
 {
-	return m_Handle;
+	return m_handle;
 }
 
 Display Display::defaultx()

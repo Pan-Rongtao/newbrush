@@ -13,11 +13,7 @@ using namespace nb::gui;
 auto lookat = [](double width, double height) 
 {
 	Projection::instance()->perspective(45.0f, (float)(width / height), 0.1f, 10000.0f);
-	auto z = height / (2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)(width / 2.0f), (float)(height / 2.0f), (float)(-z));
-	Vec3 target((float)(width / 2.0f), (float)(height / 2.0f), 0.0f);
-	Vec3 upVec(0.0f, -1.0f, 0.0f);
-	Camera::instance()->lookat(position, target, upVec);
+	nb::gl::getCamera()->lookat2D(width, height);
 };
 
 nb::gui::Window::Window()
@@ -61,7 +57,7 @@ void nb::gui::Window::init()
 {
 	m_glWindow = std::make_shared<nb::gl::Window>();
 	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
-	DrawContext = std::make_shared<nb::gl::Context>(nb::gl::getCurrentConfigure());
+	DrawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
 	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
 	Width = 800.0;
 	Height = 600.0;
@@ -88,14 +84,14 @@ void nb::gui::Window::onTopChanged(const double & _old, const double & _new)
 void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setWidth((int)_new);
-	nb::gl::Viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
+	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
 	lookat(Width, Height);
 }
 
 void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setHeight((int)_new);
-	nb::gl::Viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
+	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
 	lookat(Width, Height);
 }
 

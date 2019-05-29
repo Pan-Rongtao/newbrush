@@ -6,64 +6,77 @@
 
 using namespace nb::gl;
 
-nb::gl::Display	m_Display;
-nb::gl::Configure	m_Configure;
+static bool g_initialized = false;
+static std::shared_ptr<Display> g_display = nullptr;
+static std::shared_ptr<Configure> g_configure = nullptr;
+static std::shared_ptr<Camera>	g_camera = std::make_shared<Camera>();
 
 std::string nb::gl::getVersion()
 {
-	if(getCurrentDisplay().isNull())
+	if (!hasInitialized())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	return eglQueryString(getCurrentDisplay().handle(), EGL_VERSION);
+	return eglQueryString(getDisplay()->handle(), EGL_VERSION);
 }
 
 std::string nb::gl::getVendor()
 {
-	if(getCurrentDisplay().isNull())
+	if (!hasInitialized())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	return eglQueryString(getCurrentDisplay().handle(), EGL_VENDOR);
+	return eglQueryString(getDisplay()->handle(), EGL_VENDOR);
 }
 
-void nb::gl::initialize(const Display &display)
+void nb::gl::initialize(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure)
 {
-	m_Display = display;
+	if (g_initialized)
+		return;
+
+	g_display = display;
+	g_configure = configure;
+	g_initialized = true;
 }
 
-const nb::gl::Display &nb::gl::getCurrentDisplay()
+bool nb::gl::hasInitialized()
 {
-	return m_Display;
+	return g_initialized;
 }
 
-void nb::gl::setConfigure(const Configure &configure)
+std::shared_ptr<Display> nb::gl::getDisplay()
 {
-	if(getCurrentDisplay().isNull())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
-
-	m_Configure = configure;
+	return g_display;
 }
 
-const Configure &nb::gl::getCurrentConfigure()
+std::shared_ptr<Configure> nb::gl::getConfigure()
 {
-	return m_Configure;
+	return g_configure;
+}
+
+void nb::gl::setCamera(std::shared_ptr<Camera> camera)
+{
+	g_camera = camera;
+}
+
+std::shared_ptr<Camera> nb::gl::getCamera()
+{
+	return g_camera;
 }
 
 void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)
 {
-	if(onScreen == nullptr || offScreen == nullptr || context == nullptr)	NB_THROW_EXCEPTION("null param");
-	if(getCurrentDisplay().isNull())	NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
+	if(!hasInitialized())
+		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	EGLBoolean b = eglMakeCurrent(getCurrentDisplay().handle(), onScreen->handle(), offScreen->handle(), context->handle());
-	if(!b)
+	if(!eglMakeCurrent(getDisplay()->handle(), onScreen->handle(), offScreen->handle(), context->handle()))
 		NB_THROW_EXCEPTION("eglMakeCurrent fail");
 }
 
 void nb::gl::swapBuffers(const Surface *surface)
 {
-	eglSwapBuffers(getCurrentDisplay().handle(), surface->handle());
+	eglSwapBuffers(getDisplay()->handle(), surface->handle());
 }
 
-void nb::gl::Viewport(int x, int y, unsigned int width, unsigned height)
+void nb::gl::viewport(int x, int y, unsigned int width, unsigned height)
 {
 	glViewport(x, y, width, height);
 }

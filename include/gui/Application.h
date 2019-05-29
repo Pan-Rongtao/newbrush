@@ -20,7 +20,7 @@ public:
 	int run();
 
 protected:
-	virtual void PreRenderOverride() override;
+	virtual void preRender() override;
 
 };
 

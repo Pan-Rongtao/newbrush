@@ -19,14 +19,6 @@ const Matrix4x4 &Camera::matrix() const
 	return m_matrix;
 }
 
-std::shared_ptr<Camera> Camera::instance()
-{
-	static std::shared_ptr<Camera> p = nullptr;
-	if (!p)
-		p = std::make_shared<Camera>();
-	return p;
-}
-
 void Camera::lookat(const nb::core::Vec3 & position, const nb::core::Vec3 & target, const nb::core::Vec3 & upVec)
 {
 	//计算方向向量，右向量，上向量
@@ -40,4 +32,13 @@ void Camera::lookat(const nb::core::Vec3 & position, const nb::core::Vec3 & targ
 	m_matrix[3][0] = -rightVec.dotProduct(position);
 	m_matrix[3][1] = -upVec.dotProduct(position);
 	m_matrix[3][2] = directionVec.dotProduct(position);
+}
+
+void Camera::lookat2D(double width, double height)
+{
+	auto z = height / (2 * tanf((22.5f * 3.1415926f) / 180.0f));
+	Vec3 position((float)(width / 2.0f), (float)(height / 2.0f), (float)(-z));
+	Vec3 target((float)(width / 2.0f), (float)(height / 2.0f), 0.0f);
+	Vec3 upVec(0.0f, -1.0f, 0.0f);
+	lookat(position, target, upVec);
 }

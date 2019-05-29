@@ -15,6 +15,7 @@
 **	
 ********************************************************/
 #pragma once
+#include <string>
 #include "../core/Def.h"
 
 namespace nb{ namespace core{

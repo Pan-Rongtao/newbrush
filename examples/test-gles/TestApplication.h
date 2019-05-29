@@ -7,6 +7,9 @@
 #include "gles/Camera.h"
 #include "gles/Surface.h"
 #include "gles/Window.h"
+#include "gles/Display.h"
+
+using namespace nb::gl;
 
 class MyApplication : public nb::gl::Application
 {
@@ -23,9 +26,7 @@ public:
 	void drawModel(bool bOrigin);
 
 protected:
-	virtual void InitializeOverride();
-	virtual void PreRenderOverride();
-	virtual void OnIdledOverride();
+	virtual void preRender() override;
 
 private:
 	void OnResize(const nb::core::Window::ResizeArgs &args);

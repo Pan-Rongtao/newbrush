@@ -86,7 +86,7 @@ Window_Internal::~Window_Internal()
 #ifdef NB_OS_FAMILY_WINDOWS
 	if (::DestroyWindow(m_hwnd) || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
 	{
-		printf("DestroyWindow or UnregisterClass window class fail. error code[%d]", GetLastError());
+		printf("DestroyWindow or UnregisterClass window class fail. error code[%d]\n", GetLastError());
 	}
 #elif defined NB_OS_FAMILY_UNIX
 	XCloseDisplay(m_X11Display);

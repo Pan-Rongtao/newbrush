@@ -36,6 +36,30 @@ MyApplication::MyApplication()
 	m_timer.setInterval(20);
 	m_timer.TickEvent.addHandler(std::bind(&MyApplication::OnTick, this, std::placeholders::_1));
 //	m_timer.start();
+
+//objs
+	m_context = std::make_shared<Context>(nb::gl::getConfigure());
+	m_window = std::make_shared<nb::gl::Window>();
+	m_window->setWidth(800);
+	m_window->setHeight(480);
+	m_window->setTitle("Direction Light");
+	m_window->ResizeEvent.addHandler(std::bind(&MyApplication::OnResize, this, std::placeholders::_1));
+	m_window->PointerEvent.addHandler(std::bind(&MyApplication::OnPointerAction, this, std::placeholders::_1));
+	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));
+	m_surface = std::make_shared<WindowSurface>(m_window->width(), m_window->height(), m_window->handle());
+
+	nb::gl::Window::ResizeArgs args;
+	args.width = m_window->width();
+	args.height = m_window->height();
+	OnResize(args);
+
+	DrawTriangles(g_Original);
+	DrawQuadrangles(g_Original);
+	DrawEllipses(g_Original);
+	DrawCubes(g_Original);
+	DrawSphere(g_Original);
+	drawPhone(g_Original);
+	//	drawModel(g_Original);
 }
 
 void MyApplication::DrawTriangles(bool bOrigin)
@@ -119,9 +143,9 @@ void MyApplication::DrawEllipses(bool bOrigin)
 {
 	std::shared_ptr<Ellipse> epse;
 	if(bOrigin)
-		epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25, bOrigin);
+		epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25f, 0.25f, bOrigin);
 	else
-		epse = std::make_shared<Ellipse>(Vec2(100, 400), 50, 50, bOrigin);
+		epse = std::make_shared<Ellipse>(Vec2(100.0f, 400.0f), 50.0f, 50.0f, bOrigin);
 	epse->mesh(0).unifyColor(Vec4(1.0f, 0.0f, 0.0f, 0.0f));
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(PrimitiveProgram::instance()));
 	ro->storage()->insert("unif_colorMode", 0);
@@ -161,9 +185,9 @@ void MyApplication::DrawSphere(bool bOrigin)
 {
 	std::shared_ptr<Sphere> sp;
 	if(bOrigin)
-		sp = std::make_shared<Sphere>(Vec3(0.5, 0.5, 0.5), 0.5, bOrigin);
+		sp = std::make_shared<Sphere>(Vec3(0.5f, 0.5f, 0.5f), 0.5f, bOrigin);
 	else
-		sp = std::make_shared<Sphere>(Vec3(600, 200, 0), 100, bOrigin);
+		sp = std::make_shared<Sphere>(Vec3(600.0f, 200.0f, 0.0f), 100.0f, bOrigin);
 	sp->mesh(0).unifyColor(Vec4(1.0f, 0.0, 0.0, 1.0));
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(PrimitiveProgram::instance()));
 
@@ -255,33 +279,7 @@ void MyApplication::drawModel(bool bOrigin)
 	m_context->queue(renderer);
 }
 
-void MyApplication::InitializeOverride()
-{
-	m_context = std::make_shared<Context>(nb::gl::getCurrentConfigure());
-	m_window = std::make_shared<nb::gl::Window>();
-	m_window->setWidth(800);
-	m_window->setHeight(480);
-	m_window->setTitle("Direction Light");
-	m_window->ResizeEvent.addHandler(std::bind(&MyApplication::OnResize, this, std::placeholders::_1));
-	m_window->PointerEvent.addHandler(std::bind(&MyApplication::OnPointerAction, this, std::placeholders::_1));
-	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));
-	m_surface = std::make_shared<WindowSurface>(m_window->width(), m_window->height(), m_window->handle());
-
-	nb::gl::Window::ResizeArgs args;
-	args.width = m_window->width();
-	args.height = m_window->height();
-	OnResize(args);
-	
-	DrawTriangles(g_Original);
-	DrawQuadrangles(g_Original);
-	DrawEllipses(g_Original);
-	DrawCubes(g_Original);
-	DrawSphere(g_Original);
-	drawPhone(g_Original);
-//	drawModel(g_Original);
-}
-
-void MyApplication::PreRenderOverride()
+void MyApplication::preRender()
 {
 //	changeColor();
 	m_timer.drive();
@@ -291,25 +289,17 @@ MyApplication::~MyApplication()
 {
 }
 
-void MyApplication::OnIdledOverride()
-{
-}
-
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 	Projection::instance()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
 
-	float z = (float)args.height / (float)(2 * tanf((22.5f * 3.1415926f) / 180.0f));
-	Vec3 position((float)args.width / 2.0f, (float)args.height / 2.0f, -z);
-	Vec3 target((float)args.width / 2.0f, (float)args.height / 2.0f, 0.0f);
-	Vec3 upVec(0.0f, -1.0f, 0.0f);
 	if (g_Original)
-		Camera::instance()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else
-		Camera::instance()->lookat(position, target, upVec);
+		nb::gl::getCamera()->lookat2D(args.width, args.height);
 
-	nb::gl::Viewport(0, 0, args.width, args.height);
+	nb::gl::viewport(0, 0, args.width, args.height);
 	nb::gl::makeCurrent(m_surface, m_surface, m_context);
 }
 
@@ -418,29 +408,29 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		case nb::gl::Window::VKey_I:
 		{
 			cameraPosition += 0.1f * cameraFront;
-			Camera::instance()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 			printf("z=%.1f\r\n", cameraPosition.z());
 		}
 			break;
 		case nb::gl::Window::VKey_J:
 		{
-			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1;
+			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1f;
 			cameraPosition -= x;
-			Camera::instance()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}
 			break;
 		case nb::gl::Window::VKey_K:
 		{
-			cameraPosition -= 0.1 * cameraFront;
-			Camera::instance()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+			cameraPosition -= 0.1f * cameraFront;
+			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 			printf("z=%.1f\r\n", cameraPosition.z());
 		}
 			break;
 		case nb::gl::Window::VKey_L:
 		{
-			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1;
+			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1f;
 			cameraPosition += x;
-			Camera::instance()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}
 			break;
 		case nb::gl::Window::VKey_M:
@@ -470,16 +460,16 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		case nb::gl::Window::VKey_Z:
 			break;
 		case nb::gl::Window::VKey_Left:
-			m_context->renderObject(0)->model()->translate(-0.01, 0, 0);
+			m_context->renderObject(0)->model()->translate(-0.01f, 0, 0);
 			break;
 		case nb::gl::Window::VKey_Up:
-			m_context->renderObject(0)->model()->translate(0, 0.01, 0);
+			m_context->renderObject(0)->model()->translate(0, 0.01f, 0);
 			break;
 		case nb::gl::Window::VKey_Right:
-			m_context->renderObject(0)->model()->translate(0.01, 0, 0);
+			m_context->renderObject(0)->model()->translate(0.01f, 0, 0);
 			break;
 		case nb::gl::Window::VKey_Down:
-			m_context->renderObject(0)->model()->translate(0, -0.01, 0);
+			m_context->renderObject(0)->model()->translate(0, -0.01f, 0);
 			break;
 		case nb::gl::Window::VKey_Add:
 			m_context->renderObject(0)->model()->scale(2, 2, 2);

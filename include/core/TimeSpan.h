@@ -12,6 +12,7 @@
 
 #pragma once
 #include <vector>
+#include <map>
 #include "../core/Def.h"
 
 namespace nb{ namespace core {

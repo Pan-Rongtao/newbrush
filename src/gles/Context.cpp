@@ -9,19 +9,23 @@
 using namespace nb::core;
 using namespace nb::gl;
 
-Context::Context(const Configure &configure)
+Context::Context(std::shared_ptr<Configure> configure)
 {
-	if(nb::gl::getCurrentDisplay().isNull())	throw SystemException();
+	if (!nb::gl::getDisplay())
+		throw SystemException();
 
 	EGLint contextAttr[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-	m_handle = eglCreateContext(nb::gl::getCurrentDisplay().handle(), configure.handle(), 0, contextAttr);
-	nb::gl::ContextMaster::push(this);
+	m_handle = eglCreateContext(nb::gl::getDisplay()->handle(), configure->handle(), 0, contextAttr);
+	EglMaster::contexts().push_back(this);
 }
 
 Context::~Context()
 {
-	eglDestroyContext(nb::gl::getCurrentDisplay().handle(), m_handle);
-	nb::gl::ContextMaster::erease(this);
+	eglDestroyContext(nb::gl::getDisplay()->handle(), m_handle);
+	auto &contexts = EglMaster::contexts();
+	auto iter = std::find(contexts.begin(), contexts.end(), this);
+	if (iter != contexts.end())
+		contexts.erase(iter);
 }
 
 void *Context::handle() const

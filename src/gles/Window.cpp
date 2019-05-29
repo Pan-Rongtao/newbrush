@@ -5,10 +5,13 @@ using namespace nb::gl;
 
 Window::Window()
 {
-	WindowMaster::push(this);
+	EglMaster::windows().push_back(this);
 }
 
 Window::~Window()
 {
-	WindowMaster::erease(this);
+	auto &windows = EglMaster::windows();
+	auto iter = std::find(windows.begin(), windows.end(), this);
+	if (iter != windows.end())
+		windows.erase(iter);
 }

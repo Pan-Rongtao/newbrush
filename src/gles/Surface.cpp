@@ -14,68 +14,70 @@ Surface::Surface()
 
 Surface::~Surface()
 {
-	eglDestroySurface(nb::gl::getCurrentDisplay().handle(), m_Handle);
+	eglDestroySurface(nb::gl::getDisplay()->handle(), m_handle);
 }
 
 void Surface::setWidth(int width)
 {
-	eglSurfaceAttrib(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, width);
-//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, &width);
+	eglSurfaceAttrib(nb::gl::getDisplay()->handle(), m_handle, EGL_WIDTH, width);
+//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_handle, EGL_WIDTH, &width);
 }
 
 void Surface::setHeight(int height)
 {
-	eglSurfaceAttrib(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, height);
-//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, &height);
+	eglSurfaceAttrib(nb::gl::getDisplay()->handle(), m_handle, EGL_HEIGHT, height);
+//	eglQuerySurface(nb::gl::egl::getCurrentDisplay().handle(), m_handle, EGL_HEIGHT, &height);
 }
 
 int Surface::width() const
 {
-	if(nb::gl::getCurrentDisplay().isNull())
+	if (!nb::gl::getDisplay())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	const char *p = eglQueryString(nb::gl::getCurrentDisplay().handle(), EGL_WIDTH);
+	const char *p = eglQueryString(nb::gl::getDisplay()->handle(), EGL_WIDTH);
 	return atoi(p);
 }
 
 int Surface::height() const
 {
-	if(nb::gl::getCurrentDisplay().isNull())
+	if (!nb::gl::getDisplay())
 		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
 
-	const char *p = eglQueryString(nb::gl::getCurrentDisplay().handle(), EGL_HEIGHT);
+	const char *p = eglQueryString(nb::gl::getDisplay()->handle(), EGL_HEIGHT);
 	return atoi(p);
 }
 
 void *Surface::handle() const
 {
-	return m_Handle;
+	return m_handle;
 }
 
 ///////////////////////////////////
 WindowSurface::WindowSurface(int width, int height, long windowHandle)
-: m_WindowHandle(windowHandle)
+	: m_windowHandle(windowHandle)
 {
-	if(nb::gl::getCurrentDisplay().isNull())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
-	if(nb::gl::getCurrentConfigure().isNull())
-		NB_THROW_EXCEPTION("none configure set, use egl::setconfigure to set one configure.");
+	if (!nb::gl::getDisplay() || !nb::gl::getConfigure())
+		throw LogicException(__FILE__, __LINE__);
 
-	m_Handle = eglCreateWindowSurface(nb::gl::getCurrentDisplay().handle(), nb::gl::getCurrentConfigure().handle(), (EGLNativeWindowType)windowHandle, nullptr);
-	eglQuerySurface(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_WIDTH, &width);
-	eglQuerySurface(nb::gl::getCurrentDisplay().handle(), m_Handle, EGL_HEIGHT, &height);
+	m_handle = eglCreateWindowSurface(nb::gl::getDisplay()->handle(), nb::gl::getConfigure()->handle(), (EGLNativeWindowType)windowHandle, nullptr);
+	if (!eglQuerySurface(nb::gl::getDisplay()->handle(), m_handle, EGL_WIDTH, &width)
+		|| !eglQuerySurface(nb::gl::getDisplay()->handle(), m_handle, EGL_HEIGHT, &height))
+		throw SystemException(__FILE__, __LINE__);
 
-	nb::gl::SurfacesMaster::push(this);
+	EglMaster::windowSurfaces().push_back(this);
 }
 
 WindowSurface::~WindowSurface()
 {
-	nb::gl::SurfacesMaster::erease(this);
+	auto &wses = EglMaster::windowSurfaces();
+	auto iter = std::find(wses.begin(), wses.end(), this);
+	if (iter != wses.end())
+		wses.erase(iter);
 }
 
 long WindowSurface::windowHandle()
 {
-	return m_WindowHandle;
+	return m_windowHandle;
 }
 
 ///////////////////////
@@ -85,16 +87,16 @@ PbufferSurface::PbufferSurface(int width, int height)
 
 ///////////////////////
 PixmapSurface::PixmapSurface(int width, int height, void *pixmapHandle)
-: m_PixmapHandle(pixmapHandle)
+	: m_pixmapHandle(pixmapHandle)
 {
 }
 
 void *PixmapSurface::pixmapHandle()
 {
-	return m_PixmapHandle;
+	return m_pixmapHandle;
 }
 
 const void *PixmapSurface::pixmapHandle() const
 {
-	return m_PixmapHandle;
+	return m_pixmapHandle;
 }

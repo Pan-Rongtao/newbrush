@@ -3,6 +3,7 @@
 #include "core/Matrix4x4.h"
 #include "gles/Camera.h"
 #include "gles/Projection.h"
+#include "gles/Egl.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -13,31 +14,26 @@ using namespace nb::core;
 using namespace nb::gl;
 
 RenderObject::RenderObject()
-: m_renderable(true)
-, m_storage(std::make_shared<Storage>())
+	: RenderObject(nullptr, nullptr, true)
 {
 }
 
 RenderObject::RenderObject(bool bRenderable)
-: m_renderable(bRenderable)
-, m_storage(std::make_shared<Storage>())
+	: RenderObject(nullptr, nullptr, bRenderable)
 {
 }
 
 RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material)
-: m_renderable(true)
-, m_model(model)
-, m_material(material)
-, m_storage(std::make_shared<Storage>())
+	: RenderObject(model, material, true)
 {
 }
 
 RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material, bool bRenderable)
-: m_renderable(bRenderable)
-, m_model(model)
-, m_material(material)
-, m_storage(std::make_shared<Storage>())
+	: m_renderable(bRenderable)
+	, m_model(model)
+	, m_material(material)
 {
+	m_storage = std::make_shared<Storage>();
 }
 
 void RenderObject::loadFromFile(const std::string & path)
@@ -115,13 +111,13 @@ void RenderObject::draw() const
 	//uniform只需更新依次即可，不必每个mesh都更新
 	//计算后的mvp
 	{
-		Matrix4x4 matMvp = Projection::instance()->matrix() * Camera::instance()->matrix() * m_model->getMatrix();
+		Matrix4x4 matMvp = Projection::instance()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
 		program->uniform(program->getUniformLocation("nb_Mvp"), matMvp);
 	}
 	//分开的mvp
 	{
 		program->uniform(program->getUniformLocation("nb_P"), Projection::instance()->matrix());
-		program->uniform(program->getUniformLocation("nb_V"), Camera::instance()->matrix());
+		program->uniform(program->getUniformLocation("nb_V"), nb::gl::getCamera()->matrix());
 		program->uniform(program->getUniformLocation("nb_M"), m_model->getMatrix());
 	}
 	//storage中的uniform

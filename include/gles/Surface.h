@@ -25,7 +25,7 @@ public:
 	
 protected:
 	Surface();
-	void		*m_Handle;
+	void		*m_handle;
 };
 
 class NB_API WindowSurface : public Surface
@@ -37,7 +37,7 @@ public:
 	long windowHandle();
 
 private:
-	long		m_WindowHandle;
+	long		m_windowHandle;
 };
 
 class NB_API PbufferSurface : public Surface
@@ -56,7 +56,7 @@ public:
 	const void *pixmapHandle() const;
 
 private:
-	void		*m_PixmapHandle;
+	void		*m_pixmapHandle;
 };
 
 }}

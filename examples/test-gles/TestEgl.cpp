@@ -4,16 +4,18 @@
 using namespace nb::gl;
 void TestEgl::test()
 {
-	Display display = nb::gl::getCurrentDisplay();
+	auto display = nb::gl::getDisplay();
 
-	nb::gl::initialize(Display::defaultx());
+	display = std::make_shared<Display>(Display::defaultx());
+	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0))/*Configure((int *)NULL)*/;
+	nb::gl::initialize(display, configure);
 
-	Display display1 = nb::gl::getCurrentDisplay();
+	auto display1 = nb::gl::getDisplay();
 
 	std::string sVersion = nb::gl::getVersion();
 
-	int x = Configure::systemRecommendMaxSupportCount();
-	Configure cfg = Configure::fromSystemRecommend(0);
+	int x = Configure::systemRecommendMaxSupportCount(display);
+	Configure cfg = Configure::fromSystemRecommend(display, 0);
 
 	std::string sVendor = nb::gl::getVendor();
 	

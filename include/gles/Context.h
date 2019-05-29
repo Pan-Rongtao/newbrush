@@ -10,7 +10,7 @@ class NB_API Context
 {
 public:
 	//构建一个Context，使用配置configure
-	Context(const Configure &configure);
+	Context(std::shared_ptr<Configure> configure);
 	~Context();
 
 	//gl句柄

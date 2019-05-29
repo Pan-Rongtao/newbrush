@@ -23,7 +23,7 @@ Application *Application::current()
 	return g_app;
 }
 
-void Application::PreRenderOverride()
+void Application::preRender()
 {
 	Timer::drive();
 }
