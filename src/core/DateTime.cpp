@@ -1,7 +1,6 @@
 ﻿#include "core/DateTime.h"
 #include <chrono>
 #include <ctime>
-#include "core/Exception.h"
 
 using namespace nb::core;
 #define MaxYear					9999
@@ -18,7 +17,7 @@ Date::Date()
 Date::Date(int y, int m, int d)
 {
 	if (!isValid(y, m, d))
-		throw ArgumentOutOfRangeException("y|m|d", 0, 0, 0, __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "y(%d) or m(%d) or d(%d) is out of range", y, m, d);
 
 	m_year = y;
 	m_month = m;
@@ -368,7 +367,7 @@ Time::Time(int hour, int minute, int second, int millisecond)
 Time::Time(int hour, int minute, int second, int millisecond, int microsecond)
 {
 	if (!isValid(hour, minute, second, millisecond, microsecond))
-		throw ArgumentOutOfRangeException("h|m|s|ms|mis", 0, 0, 0, __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "hour(%d) or minute(%d) or second(%d) or millisecond(%d) or microsecond(%d) is out of range", hour, minute, second, millisecond, microsecond);
 
 	m_hour = hour;
 	m_minute = minute;

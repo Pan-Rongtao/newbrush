@@ -1,21 +1,20 @@
 #include "media/ImageReader.h"
-#include "core/Exception.h"
 #include "media/ExifReader.h"
 
 using namespace nb::core;
 using namespace nb::media;
 
 ImageReader::ImageReader()
-: m_ScaleSize(160, 160)
+	: m_ScaleSize(160, 160)
 {
 
 }
 
 ImageReader::ImageReader(const SizeI &size)
-: m_ScaleSize(size)
+	: m_ScaleSize(size)
 {
 	if(size.width() < 0 || size.height() < 0)
-		NB_THROW_EXCEPTION("size illegal.");
+		NB_THROW_EXCEPTION(std::invalid_argument, "size illegal.");
 }
 
 ImageReader::~ImageReader()
@@ -39,8 +38,7 @@ void ImageReader::read(const std::string &path, Bitmap *pBm)
 	try{
 		exif.open(path.data());
 	}
-	catch(Exception &e){
-		(void)e;
+	catch(...){
 	}
 	std::vector<ExifReader::ThumbnailProperties> thumbsProperties;
 	exif.getThumbnailsProperties(thumbsProperties);
@@ -73,8 +71,7 @@ void ImageReader::readUniform(const std::string &path, Bitmap *pBm, SizeI &Origi
 	try{
 		exif.open(path.data());
 	}
-	catch(Exception &e){
-		(void)e;
+	catch(...){
 	}
 	OriginalSize = SizeI(exif.width(), exif.height());
 	std::vector<ExifReader::ThumbnailProperties> thumbsProperties;

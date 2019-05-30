@@ -1,5 +1,4 @@
 #include "gles/Program.h"
-#include "core/Exception.h"
 #include "gles/Shader.h"
 #include <GLES2/gl2.h>
 #include <cstring>
@@ -8,21 +7,18 @@ using namespace nb::core;
 using namespace nb::gl;
 
 Program::Program()
-: m_programHandle(0)
+	: Program(nullptr, nullptr)
 {
-	m_programHandle = glCreateProgram();
-	if(m_programHandle == 0)
-		NB_THROW_EXCEPTION("create shader program fail.");
 }
 
 Program::Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader)
-: m_vertexShader(verShader)
-, m_fragmentShader(fragShader)
-, m_programHandle(0)
+	: m_vertexShader(verShader)
+	, m_fragmentShader(fragShader)
+	, m_programHandle(0)
 {
 	m_programHandle = glCreateProgram();
-	if(m_programHandle == 0)
-		NB_THROW_EXCEPTION("create shader program fail.");
+	if (m_programHandle == 0)
+		NB_THROW_EXCEPTION(std::runtime_error, "glCreateProgram fail, glGetError[%d]", glGetError());
 }
 
 Program::~Program()
@@ -63,14 +59,14 @@ void Program::link()
 	glGetProgramiv(m_programHandle, GL_LINK_STATUS, &nLinkStatus);
 	if(nLinkStatus == 0)
 	{
-		GLint nLogLeng;
-		glGetProgramiv(m_programHandle, GL_INFO_LOG_LENGTH, &nLogLeng);
+		GLint nLogLen;
+		glGetProgramiv(m_programHandle, GL_INFO_LOG_LENGTH, &nLogLen);
 
-		char *pLog = new char[nLogLeng];
-		glGetProgramInfoLog(m_programHandle, nLogLeng, nullptr, pLog);
+		char *pLog = new char[nLogLen];
+		glGetProgramInfoLog(m_programHandle, nLogLen, nullptr, pLog);
 		std::string sLog = pLog;
 		delete []pLog;
-		NB_THROW_EXCEPTION((std::string("program::link fail, reason:") + sLog).data());
+		NB_THROW_EXCEPTION(std::runtime_error, "program link fail, reason: %s", sLog.data());
 	}
 }
 

@@ -19,7 +19,7 @@ class NB_API Configure
 {
 public:
 	//构建一个配置，它基于display，属性为attributes
-	Configure(std::shared_ptr<Display> display, int *attributes);
+	Configure(std::shared_ptr<Display> display, const int *attributes);
 
 	//获取属性
 	int *attributes() const;
@@ -29,10 +29,10 @@ public:
 
 public:
 	//系统推荐的配置最大数
-	static int systemRecommendMaxSupportCount(std::shared_ptr<Display> display);
+	static uint32_t systemRecommendMaxSupportCount(std::shared_ptr<Display> display);
 
 	//从系统推荐中构建
-	static Configure fromSystemRecommend(std::shared_ptr<Display> display, int index);
+	static Configure fromSystemRecommend(std::shared_ptr<Display> display, uint32_t index);
 
 private:
 	Configure();

@@ -1,5 +1,4 @@
 #include "core/Matrix4x4.h"
-#include "core/Exception.h"
 #include <cstring>
 #include <math.h>
 
@@ -91,7 +90,9 @@ bool Matrix4x4::operator!=(const Matrix4x4 & other) const
 
 Vec4 & Matrix4x4::operator[](uint32_t row)
 {
-	if (row >= this->row())	throw ArrayIndexOutOfRangeException(row, this->row());
+	if (row >= this->row())
+		NB_THROW_EXCEPTION(std::out_of_range, "row[%d] is out of range [%d, %d)", row, 0, this->row());
+
 	return m_d[row];
 }
 

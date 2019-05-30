@@ -1,7 +1,6 @@
 ﻿#include <algorithm>
 #include <math.h>
 #include "core/Color.h"
-#include "core/Exception.h"
 #include <regex>
 
 using namespace nb::core;
@@ -162,7 +161,7 @@ void Color::setRgbF(float r, float g, float b)
 void Color::setArgbF(float a, float r, float g, float b)
 {
 	if (!isValidArgbF(a, r, g, b))
-		throw ArgumentException("argb", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "a[%.2f] or r[%.2f] or g[%.2f] or b[%.2f] is out of range [0.0, 1.0]", a, r, g, b);
 
 	setAlpha(argbF2Argb(a));
 	setRed(argbF2Argb(r));
@@ -209,7 +208,7 @@ void Color::setValue(float v)
 void Color::setHsv(float h, float s, float v)
 {
 	if (!isValidHsv(h, s, v))
-		throw ArgumentException("hsv", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "h or s or v is out of range");
 
 	float r, g, b;
 	hsv2RgbF(h, s, v, r, g, b);
@@ -278,8 +277,8 @@ Color Color::fromArgbF(float a, float r, float g, float b)
 Color Color::fromString(const std::string &sHex)
 {
 	std::regex reg("^#[0-9A-Za-z]{6}$");
-	if(!std::regex_match(sHex, reg))
-		throw ArgumentException("sHex", __FILE__, __LINE__);
+	if (!std::regex_match(sHex, reg))
+		NB_THROW_EXCEPTION(std::invalid_argument, "sHex[%s] is not match color format string", sHex.data());
 
 	try {
 		auto x = std::stoi("0x" + sHex.substr(1), 0, 16);
@@ -287,7 +286,7 @@ Color Color::fromString(const std::string &sHex)
 	}
 	catch (...)
 	{
-		throw ArgumentException("sHex", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::invalid_argument, "sHex[%s] is not match color format string", sHex.data());
 	}
 }
 
@@ -311,7 +310,7 @@ bool Color::isValidHsv(float h, float s, float v)
 uint8_t Color::argbF2Argb(float f)
 {
 	if (f < 0.0 || f > 1.0)
-		throw ArgumentOutOfRangeException("f", 0.0, 1.0, f, __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "f[%.2f] is out of range [0.0, 1.0]", f);
 
 	return (uint8_t)std::round(f * 255);
 }
@@ -324,7 +323,7 @@ float Color::argb2ArgbF(uint8_t n)
 void Color::rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v)
 {
 	if (!isValidArgbF(1.0, r, g, b))
-		throw ArgumentException("rgb", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "r[%.2f] or g[%.2f] or b[%.2f] is out of range [0.0, 1.0]", r, g, b);
 
 	float fMax = std::max({ r, g, b });
 	float fMin = std::min({ r, g, b });
@@ -357,7 +356,7 @@ void Color::rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v)
 void Color::hsv2RgbF(float h, float s, float v, float &r, float &g, float &b)
 {
 	if (!isValidHsv(h, s, v))
-		throw ArgumentException("hsv", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::out_of_range, "h or s or v is out of range");
 
 	if(s == 0.0)
 	{

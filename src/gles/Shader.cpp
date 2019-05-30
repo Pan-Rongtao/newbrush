@@ -1,5 +1,4 @@
 #include "gles/Shader.h"
-#include "core/Exception.h"
 #include <GLES2/gl2.h>
 
 using namespace nb::gl;
@@ -45,15 +44,15 @@ void Shader::compile()
 	glGetShaderiv(m_shaderHandle, GL_COMPILE_STATUS, &nShaderStatus);
 	if(!nShaderStatus)
 	{
-		GLint nLogLeng;
-		glGetShaderiv(m_shaderHandle, GL_INFO_LOG_LENGTH, &nLogLeng);
+		GLint nLogLen;
+		glGetShaderiv(m_shaderHandle, GL_INFO_LOG_LENGTH, &nLogLen);
 
-		char *pLog = new char[nLogLeng];
-		glGetShaderInfoLog(m_shaderHandle, nLogLeng, nullptr, pLog);
+		char *pLog = new char[nLogLen];
+		glGetShaderInfoLog(m_shaderHandle, nLogLen, nullptr, pLog);
 		std::string sLog = pLog;
 		delete []pLog;
 
-		NB_THROW_EXCEPTION((std::string("shader::compile fail, reason:") + sLog).data());
+		NB_THROW_EXCEPTION(std::runtime_error, "shader::compile fail, reason: %s", sLog.data());
 	}
 }
 
@@ -79,12 +78,8 @@ VertexShader::VertexShader(const std::string &source)
 	: Shader(source)
 {
 	m_shaderHandle = glCreateShader(GL_VERTEX_SHADER);
-	if(m_shaderHandle == 0)
-	{
-		char info[100] = {0};
-		snprintf(info, sizeof(info), "create vertex shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
-		throw nb::core::LogicException(__FILE__, __LINE__);
-	}
+	if (m_shaderHandle == 0)
+		NB_THROW_EXCEPTION(std::logic_error, "glCreateShader fail, make sure has call gl::makeCurrent. glGetError[%d]", glGetError());
 }
 
 /////
@@ -98,9 +93,5 @@ FragmentShader::FragmentShader(const std::string &source)
 {
 	m_shaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
 	if(m_shaderHandle == 0)
-	{
-		char info[100] = {0};
-		snprintf(info, sizeof(info), "create fragment shader fail, gl error code[%d], do you forget to call MakeCurrent pre?", glGetError());
-		NB_THROW_EXCEPTION(info);
-	}
+		NB_THROW_EXCEPTION(std::runtime_error, "glCreateShader fail, glGetError[%d]", glGetError());
 }

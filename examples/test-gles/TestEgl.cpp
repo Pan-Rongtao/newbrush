@@ -14,7 +14,7 @@ void TestEgl::test()
 
 	std::string sVersion = nb::gl::getVersion();
 
-	int x = Configure::systemRecommendMaxSupportCount(display);
+	auto x = Configure::systemRecommendMaxSupportCount(display);
 	Configure cfg = Configure::fromSystemRecommend(display, 0);
 
 	std::string sVendor = nb::gl::getVendor();

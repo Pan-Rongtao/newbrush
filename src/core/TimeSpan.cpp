@@ -4,7 +4,6 @@
 #include <set>
 #include <regex>
 #include <algorithm>
-#include "core/Exception.h"
 
 using namespace nb::core;
 
@@ -306,17 +305,16 @@ void split(const std::string &sSource, const std::string &sSymbol, std::vector<s
 
 std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std::string & format, const std::string & flags)
 {
-	if(!format.empty() && (format[0] == '|' || format[format.size() - 1] == '|'))
-		throw ArgumentException("s", __FILE__, __LINE__);
+	if (!format.empty() && (format[0] == '|' || format[format.size() - 1] == '|'))
+		NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
+
 	if (!std::regex_match(s, std::regex("^[0-9]+[0-9|]+[0-9]+$")))
-		throw ArgumentException("s", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::invalid_argument, "s string is invalid");
 
 	std::vector<std::string> formatSegments;
 	std::vector<std::string> SSegments;
 	split(format, "|", formatSegments, true);
 	split(s, "|", SSegments, true);
-	//if(formatSegments.size() != SSegments.size())
-	//	throw ArgumentException("format", __FILE__, __LINE__);
 
 	//检查formatSegments每段内字符完全一致
 	std::string temp;
@@ -324,20 +322,20 @@ std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std
 	{
 		char ch = one[0];
 		if (flags.find(ch) == std::string::npos || one.find_first_not_of(ch, 0) != std::string::npos)
-			throw ArgumentException("format", __FILE__, __LINE__);
+			NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
 		else
 			temp += ch;
 	}
 	//formatSegments不可重复
 	if (std::set<char>(temp.begin(), temp.end()).size() != temp.size())
-		throw ArgumentException("format", __FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
 
 	std::vector<int64_t> args;
 	args.resize(flags.size(), 0);
-	for (int i = 0; i != formatSegments.size(); ++i)
+	for (size_t i = 0; i != formatSegments.size(); ++i)
 	{
-		int index = flags.find(formatSegments[i][0]);
-		args[index] = std::atoi(SSegments[i].data());
+		auto index = flags.find(formatSegments[i][0]);
+		args[index] = i < SSegments.size() ? std::atoi(SSegments[i].data()) : 0;
 	}
 	return args;
 }

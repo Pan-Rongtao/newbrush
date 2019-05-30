@@ -1,6 +1,5 @@
 #include "gles/Application.h"
 #include <GLES2/gl2.h>
-#include "core/Exception.h"
 #include "gles/Egl.h"
 #include "gles/Window.h"
 #include "gles/Display.h"
@@ -15,7 +14,7 @@ static bool g_hasInstanced = false;
 Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure)
 {
 	if (g_hasInstanced)
-		throw LogicException(__FILE__, __LINE__);
+		NB_THROW_EXCEPTION(std::runtime_error, "create more than one application object");
 
 	//初始化GL，注意，使用Configure((int *)NULL)开启深度帧率降低很多
 	if(!display)

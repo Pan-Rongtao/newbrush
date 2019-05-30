@@ -1,5 +1,4 @@
 #include "core/Vec3.h"
-#include "core/Exception.h"
 #include <math.h>
 
 using namespace nb::core;
@@ -194,7 +193,9 @@ Vec2 Vec3::yz() const
 
 float & Vec3::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 
@@ -421,7 +422,9 @@ Vec2I Vec3I::yz() const
 
 int & Vec3I::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 
@@ -570,7 +573,9 @@ Vec2B Vec3B::yz() const
 
 bool & Vec3B::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 

@@ -1,5 +1,4 @@
 #include "ExifReader_Internal.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -17,7 +16,7 @@ void ExifReader_Internal::open(const std::string &path)
 	}
 	catch(Exiv2::Error e)
 	{
-		NB_THROW_EXCEPTION(e.what());
+		NB_THROW_EXCEPTION(std::runtime_error, "Exiv2::ImageFactory::open fail.");
 	}
 }
 

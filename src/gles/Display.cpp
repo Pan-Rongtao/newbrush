@@ -4,19 +4,20 @@
 #if NB_OS == NB_OS_LINUX && NB_ARCH == NB_ARCH_ARM
 	#include <wayland-client.h>
 #endif
-#include "core/Exception.h"
 
 using namespace nb::gl;
-using namespace nb::core;
 
 Display::Display(long id)
 	: m_handle(nullptr)
 	, m_id(-1)
 {
 	m_handle = eglGetDisplay((EGLNativeDisplayType)id);
+	if(m_handle == EGL_NO_DISPLAY)
+		NB_THROW_EXCEPTION(std::runtime_error, "eglGetDisplay fail, eglGetError[%d].", eglGetError());
+
 	int major = 0, minor = 0;
-	if(m_handle == EGL_NO_DISPLAY || !eglInitialize(m_handle, &major, &minor))
-		NB_THROW_EXCEPTION("error display with id.", eglGetError);
+	if(!eglInitialize(m_handle, &major, &minor))
+		NB_THROW_EXCEPTION(std::runtime_error, "eglInitialize fail, eglGetError[%d].", eglGetError());
 
 	m_id = id;
 }

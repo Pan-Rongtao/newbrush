@@ -1,6 +1,5 @@
 #include "gles/Egl.h"
 #include "gles/Display.h"
-#include "core/Exception.h"
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
 
@@ -15,7 +14,7 @@ static std::shared_ptr<Projection> g_projection = std::make_shared<Projection>()
 std::string nb::gl::getVersion()
 {
 	if (!hasInitialized())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VERSION);
 }
@@ -23,7 +22,7 @@ std::string nb::gl::getVersion()
 std::string nb::gl::getVendor()
 {
 	if (!hasInitialized())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VENDOR);
 }
@@ -75,11 +74,11 @@ std::shared_ptr<Projection> nb::gl::getProjection()
 
 void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)
 {
-	if(!hasInitialized())
-		NB_THROW_EXCEPTION("none display init, use egl::init to init display.");
+	if (!hasInitialized())
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	if(!eglMakeCurrent(getDisplay()->handle(), onScreen->handle(), offScreen->handle(), context->handle()))
-		NB_THROW_EXCEPTION("eglMakeCurrent fail");
+		NB_THROW_EXCEPTION(std::runtime_error, "eglMakeCurrent fail, glGetError[%d]", glGetError());
 }
 
 void nb::gl::swapBuffers(const Surface *surface)

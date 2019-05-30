@@ -1,6 +1,5 @@
 #include "TiffReader_Internal.h"
 #include "Bitmap_Internal.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -40,7 +39,7 @@ int TiffReader_Internal::frameCount() const
 Bitmap TiffReader_Internal::frame(int index) const
 {
 	if(index <0 || index >= frameCount())
-		NB_THROW_EXCEPTION("out of range.");
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d).", index, 0, frameCount());
 
 	if(m_pFreeImage == NULL)
 		return Bitmap();

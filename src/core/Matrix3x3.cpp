@@ -1,5 +1,4 @@
 #include "core/Matrix3x3.h"
-#include "core/Exception.h"
 #include <cstring>
 
 using namespace nb::core;
@@ -67,7 +66,9 @@ bool Matrix3x3::operator!=(const Matrix3x3 & other) const
 
 Vec3 & Matrix3x3::operator[](uint32_t row)
 {
-	if (row >= this->row())	throw ArrayIndexOutOfRangeException(row, this->row());
+	if (row >= this->row())
+		NB_THROW_EXCEPTION(std::out_of_range, "row[%d] is out of range [%d, %d)", row, 0, this->row());
+
 	return m_d[row];
 }
 

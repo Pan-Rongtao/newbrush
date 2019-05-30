@@ -1,6 +1,5 @@
 ﻿#include <assert.h>
 #include "Bitmap_Internal.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -23,7 +22,7 @@ Bitmap_Internal::Bitmap_Internal(int width, int height, Bitmap::PixelFormat form
 {
 	initFreeeImage();
 	if(width < 0 || height < 0 || format == Bitmap::Format_Invalid)
-		throw std::invalid_argument("width < 0 or height < 0 or format == invalid");
+		NB_THROW_EXCEPTION(std::invalid_argument, "invalid param");
 
 	int bpp = 0, rMask = 0, gMask = 0, bMask = 0, pitch = 0;
 	calcParam(width, height, format, bpp, rMask, gMask, bMask, pitch);
@@ -35,7 +34,7 @@ Bitmap_Internal::Bitmap_Internal(const char *buffer, int width, int height, Bitm
 {
 	initFreeeImage();
 	if(!buffer || format == Bitmap::Format_Invalid || width < 0 || height < 0)
-		NB_THROW_EXCEPTION("invalid param");
+		NB_THROW_EXCEPTION(std::invalid_argument, "invalid param");
 
 	int bpp = 0, rMask = 0, gMask = 0, bMask = 0, pitch = 0;
 	calcParam(width, height, format, bpp, rMask, gMask, bMask, pitch);
@@ -70,7 +69,7 @@ void Bitmap_Internal::load(const std::string &path, int jpegNarrow)
 void Bitmap_Internal::load(const char *data, int bytes)
 {
 	if (bytes < 0)
-		throw std::invalid_argument("bytes < 0");
+		NB_THROW_EXCEPTION(std::invalid_argument, "bytes < 0");
 
 	FreeImage_Unload(m_pFreeImage);
 	FIMEMORY *memory = FreeImage_OpenMemory((BYTE *)data, bytes);
@@ -204,7 +203,7 @@ Bitmap_Internal Bitmap_Internal::gray() const
 Bitmap_Internal Bitmap_Internal::convert(Bitmap::PixelFormat toFormat)
 {
 	if(toFormat == Bitmap::Format_Invalid)
-		NB_THROW_EXCEPTION("invalid param");
+		NB_THROW_EXCEPTION(std::invalid_argument, "invalid param");
 
 	if (!m_pFreeImage)
 		return Bitmap_Internal();

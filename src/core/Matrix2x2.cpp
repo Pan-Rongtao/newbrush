@@ -1,5 +1,5 @@
 #include "core/Matrix2x2.h"
-#include "core/Exception.h"
+#include <exception>
 #include <cstring>
 
 using namespace nb::core;
@@ -60,7 +60,9 @@ bool Matrix2x2::operator!=(const Matrix2x2 & other) const
 
 Vec2 & Matrix2x2::operator[](uint32_t row)
 {
-	if (row >= this->row())	throw ArrayIndexOutOfRangeException(row, this->row());
+	if (row >= this->row())
+		NB_THROW_EXCEPTION(std::out_of_range, "row[%d] is out of range [0, %d)", row, this->row());
+
 	return m_d[row];
 }
 

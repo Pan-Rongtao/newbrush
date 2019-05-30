@@ -2,7 +2,6 @@
 #include <EGL/egl.h>
 #include <algorithm>
 #include "gles/Egl.h"
-#include "core/Exception.h"
 #include "gles/RenderObject.h"
 #include "EglMaster.h"
 
@@ -12,7 +11,7 @@ using namespace nb::gl;
 Context::Context(std::shared_ptr<Configure> configure)
 {
 	if (!nb::gl::getDisplay())
-		throw SystemException();
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	EGLint contextAttr[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 	m_handle = eglCreateContext(nb::gl::getDisplay()->handle(), configure->handle(), 0, contextAttr);
@@ -53,7 +52,9 @@ int Context::renderObjectCount() const
 
 std::shared_ptr<nb::gl::RenderObject> Context::renderObject(uint32_t index)
 {
-	if (index >= m_renderObjects.size())	throw ArrayIndexOutOfRangeException(m_renderObjects.size(), index);
+	if (index >= m_renderObjects.size())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, m_renderObjects.size());
+
 	return m_renderObjects[index];
 }
 

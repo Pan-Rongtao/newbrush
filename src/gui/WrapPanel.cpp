@@ -21,8 +21,8 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 	Size childMeasureSize;
 	for (auto const &child : Children())
 	{
-		childMeasureSize.width() = ItemWidth != NB_DOUBLE_NAN ? ItemWidth : child->Width != NB_DOUBLE_NAN ? child->Width : 0.0;
-		childMeasureSize.height() = ItemHeight != NB_DOUBLE_NAN ? ItemHeight : child->Height != NB_DOUBLE_NAN ? child->Height : 0.0;
+		childMeasureSize.width() = (float)(ItemWidth != NB_DOUBLE_NAN ? ItemWidth : child->Width != NB_DOUBLE_NAN ? child->Width : 0.0);
+		childMeasureSize.height() = (float)(ItemHeight != NB_DOUBLE_NAN ? ItemHeight : child->Height != NB_DOUBLE_NAN ? child->Height : 0.0);
 		child->measure(childMeasureSize);
 	}
 	return availableSize;
@@ -92,13 +92,13 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
 				{
-					arrangeRect.reset(x, y, w, ItemHeight);
+					arrangeRect.reset((float)x, (float)y, (float)w, (float)ItemHeight);
 					x += w;
 				}
 				else
 				{
 					y += ItemHeight;
-					arrangeRect.reset(0.0, y, w, ItemHeight);
+					arrangeRect.reset(0.0f, (float)y, (float)w, (float)ItemHeight);
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -113,14 +113,14 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				double w = ItemWidth != NB_DOUBLE_NAN ? ItemWidth : child->DesiredSize().width();
 				if (i <= linesInfo.front().first)
 				{
-					arrangeRect.reset(x, y, w, linesInfo.front().second);
+					arrangeRect.reset((float)x, (float)y, (float)w, (float)linesInfo.front().second);
 					x += w;
 				}
 				else
 				{
 					y += linesInfo.front().second;
 					linesInfo.pop();
-					arrangeRect.reset(0.0, y, w, linesInfo.front().second);
+					arrangeRect.reset(0.0f, (float)y, (float)w, (float)linesInfo.front().second);
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -139,13 +139,13 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
 				{
-					arrangeRect.reset(x, y, ItemWidth, h);
+					arrangeRect.reset((float)x, (float)y, (float)ItemWidth, (float)h);
 					y += h;
 				}
 				else
 				{
 					x += ItemWidth;
-					arrangeRect.reset(x, 0.0, ItemWidth, h);
+					arrangeRect.reset((float)x, 0.0f, (float)ItemWidth, (float)h);
 					y = h;
 				}
 				child->arrage(arrangeRect);
@@ -160,14 +160,14 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				double h = ItemHeight != NB_DOUBLE_NAN ? ItemHeight : child->DesiredSize().height();
 				if (i <= linesInfo.front().first)
 				{
-					arrangeRect.reset(x, y, linesInfo.front().second, h);
+					arrangeRect.reset((float)x, (float)y, (float)linesInfo.front().second, (float)h);
 					y += h;
 				}
 				else
 				{
 					x += linesInfo.front().second;
 					linesInfo.pop();
-					arrangeRect.reset(x, 0.0, linesInfo.front().second, h);
+					arrangeRect.reset((float)x, 0.0f, (float)linesInfo.front().second, (float)h);
 					y = h;
 				}
 				child->arrage(arrangeRect);

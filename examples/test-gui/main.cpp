@@ -1,5 +1,4 @@
 #include "../TestBase.h"
-#include "core/Exception.h"
 #include "gui/Application.h"
 #include "TestWindow.h"
 #include "TestApp.h"
@@ -22,9 +21,9 @@ int main(int argc, char *argv[])
 		test->test();
 		return app.run();
 	}
-	catch (Exception &e)
+	catch (std::exception &e)
 	{
-		printf("exception: %s\r\n", e.what().data());
+		printf("exception: %s\r\n", e.what());
 	}
 	catch (...)
 	{

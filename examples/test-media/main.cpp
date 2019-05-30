@@ -1,11 +1,8 @@
 #include "../TestBase.h"
-#include "core/Exception.h"
 #include "TestBitmap.h"
 #include "TestExifReader.h"
 #include "TestGifReader.h"
 #include "TestTiffReader.h"
-
-using namespace nb::core;
 
 int main(int argc, char *argv[])
 {
@@ -16,9 +13,9 @@ int main(int argc, char *argv[])
 		{
 		}
 	}
-	catch (Exception &e)
+	catch (std::exception &e)
 	{
-		printf("exception: %s\r\n", e.what().data());
+		printf("exception: %s\r\n", e.what());
 	}
 	catch (...)
 	{

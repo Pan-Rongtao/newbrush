@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <memory>
 #include <algorithm>
+#include <string>
 
 //ÒªÇóc++11
 //#if __cplusplus < 201103L
@@ -69,7 +70,17 @@
 	#define NB_API
 #endif
 
-#define NB_THROW_EXCEPTION(content)				throw nb::core::Exception(content, __FILE__, __LINE__);
+#define NB_THROW_EXCEPTION(exception, argfmt, ...) \
+do{\
+	char buffer[256] = {0}; \
+	std::string file = __FILE__;\
+	size_t n = std::string::npos;\
+	if (((n = file.rfind('/')) != std::string::npos) || ((n = file.rfind('\\')) != std::string::npos))\
+		file = file.substr(n + 1);\
+	snprintf(buffer, sizeof(buffer), "(%s)(%s line %d) throw an [%s].\r\n\twhat: " argfmt "\r\n", __FUNCTION__, file.data(), __LINE__, typeid(exception).name(), ##__VA_ARGS__); \
+	throw exception(buffer);\
+}while(0)
+
 #define NB_PI									(3.14159265358979323)
 #define NB_2PI									(6.28318530717958647)
 #define NB_HALF_PI								(1.57079632679489661)
@@ -99,5 +110,6 @@ namespace nb
 	{
 		return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
 	}
+
 
 }

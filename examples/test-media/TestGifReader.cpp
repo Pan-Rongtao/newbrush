@@ -11,7 +11,7 @@ void TestGifReader::test()
 	{
 		Bitmap bm = gifR.frame(i);
 		char arr[20] = {0};
-		sprintf(arr, "f:/pics/gif/%d.jpg", i);
+		snprintf(arr, sizeof(arr), "f:/pics/gif/%d.jpg", i);
 		bm.save(arr);
 	}
 

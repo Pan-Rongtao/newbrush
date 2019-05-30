@@ -1,7 +1,6 @@
 #include "TestExifReader.h"
 #include "media/Bitmap.h"
 #include "media/ExifReader.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -19,7 +18,7 @@ void TestExifReader::test()
 		try{
 			reader.open(sFile);
 		}
-		catch(Exception &e) {
+		catch(...) {
 
 		}
 		std::vector<Bitmap> thumbs;
@@ -46,7 +45,7 @@ void TestExifReader::test()
 		{
 			int k = NB_TICK_COUT;
 			char arr[100] = {0};
-			sprintf(arr, "d:/%d.jpg", i);
+			snprintf(arr, sizeof(arr), "d:/%d.jpg", i);
 			thumbs[0].save(arr);
 			int kk = NB_TICK_COUT;
 		//	printf("[%d]thumb [%s] [%d]\r\n", i, sFile, kk - k);

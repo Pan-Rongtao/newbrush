@@ -1,5 +1,4 @@
 ﻿#include "core/Point.h"
-#include "core/Exception.h"
 #include <math.h>
 
 using namespace nb::core;
@@ -69,7 +68,9 @@ Point Point::operator * (float f) const
 
 Point Point::operator / (float f) const
 {
-	if (f == 0.0f)	throw ArithmeticException();
+	if (f == 0.0f)
+		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+
 	return Point(x() / f, y() / f);
 }
 
@@ -240,13 +241,14 @@ PointI PointI::operator * (float f) const
 
 PointI PointI::operator / (int n) const
 {
-	if (n == 0)	throw ArithmeticException();
-	return PointI(x() / n, y() / n);
+	return operator /((float)n);
 }
 
 PointI PointI::operator / (float f) const
 {
-	if (f == 0.0f)	throw ArithmeticException();
+	if (f == 0.0f)
+		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+
 	return PointI((int)(x() / f), (int)(y() / f));
 }
 
@@ -439,7 +441,9 @@ Point3D Point3D::operator * (float f) const
 
 Point3D Point3D::operator / (float f) const
 {
-	if (f == 0.0f)	throw ArithmeticException();
+	if (f == 0.0f)
+		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+
 	return Point3D(x() / f, y() / f, z() / f);
 }
 
@@ -628,13 +632,14 @@ Point3DI Point3DI::operator * (float f) const
 
 Point3DI Point3DI::operator / (int n) const
 {
-	if (n == 0)	throw ArithmeticException();
-	return Point3DI(x() / n, y() / n, z() / n);
+	return operator /((float)n);
 }
 
 Point3DI Point3DI::operator / (float f) const
 {
-	if (f == 0.0f)	throw ArithmeticException();
+	if (f == 0.0f)
+		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+
 	return Point3DI((int)(x() / f), (int)(y() / f), (int)(z() / f));
 }
 

@@ -1,5 +1,4 @@
 #include "gles/Model.h"
-#include "core/Exception.h"
 #include <GLES2/gl2.h>
 
 using namespace nb::core;
@@ -118,7 +117,9 @@ uint32_t Mesh::vertexCount() const
 
 void Mesh::setPositionAt(uint32_t vertexIndex, const Vec3 &position)
 {
-	if (positionData() == nullptr)	throw ArgumentException("vertexIndex");
+	if (positionData() == nullptr)
+		NB_THROW_EXCEPTION(std::logic_error, "no position attribute");
+
 	m_vertexs[vertexIndex].position() = position;
 }
 
@@ -134,13 +135,17 @@ const float *Mesh::positionData() const
 
 Vec3 Mesh::positionAt(uint32_t vertexIndex) const
 {
-	if (!hasAttribute(Vertex::positionAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	if (!hasAttribute(Vertex::positionAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no position attribute");
+
 	return m_vertexs[vertexIndex].position();
 }
 
 void Mesh::setColorAt(uint32_t vertexIndex, const Vec4 &color)
 {
-	if (!hasAttribute(Vertex::colorAttribute))	throw ArgumentException("vertexIndex");
+	if (!hasAttribute(Vertex::colorAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no color attribute");
+
 	m_vertexs[vertexIndex].color() = color;
 }
 
@@ -156,13 +161,17 @@ const float *Mesh::colorData() const
 
 Vec4 Mesh::colorAt(uint32_t vertexIndex) const
 {
-	if (!hasAttribute(Vertex::colorAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	if (!hasAttribute(Vertex::colorAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no color attribute");
+
 	return m_vertexs[vertexIndex].color();
 }
 
 void Mesh::setTextureCoordinateAt(uint32_t vertexIndex, const Vec2 &texCoord)
 {
-	if (!hasAttribute(Vertex::textureCoordinateAttribute))	throw ArgumentException("vertexIndex");
+	if (!hasAttribute(Vertex::textureCoordinateAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no textureCoord attribute");
+
 	m_vertexs[vertexIndex].texCoord() = texCoord;
 }
 
@@ -178,13 +187,17 @@ const float *Mesh::textureCoordinateData() const
 
 Vec2 Mesh::textureCoordinateAt(uint32_t vertexIndex) const
 {
-	if (!hasAttribute(Vertex::textureCoordinateAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	if (!hasAttribute(Vertex::textureCoordinateAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no textureCoord attribute");
+
 	return m_vertexs[vertexIndex].texCoord();
 }
 
 void Mesh::setNormalAt(uint32_t vertexIndex, const Vec3 &normal)
 {
-	if (!hasAttribute(Vertex::normalAttribute))	throw ArgumentException("vertexIndex");
+	if (!hasAttribute(Vertex::normalAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no normal attribute");
+
 	m_vertexs[vertexIndex].normal() = normal;
 }
 
@@ -200,7 +213,9 @@ const float *Mesh::normalData() const
 
 Vec3 Mesh::normalAt(uint32_t vertexIndex) const
 {
-	if (!hasAttribute(Vertex::normalAttribute))	NB_THROW_EXCEPTION("no such attribute");
+	if (!hasAttribute(Vertex::normalAttribute))
+		NB_THROW_EXCEPTION(std::logic_error, "no normal attribute");
+
 	return m_vertexs[vertexIndex].normal();
 }
 
@@ -236,13 +251,17 @@ uint32_t Model::meshCount() const
 
 Mesh & Model::mesh(uint32_t index)
 {
-	if (index >= meshCount())	throw ArgumentException("mesh");
+	if (index >= meshCount())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, meshCount());
+
 	return m_meshs[index];
 }
 
 const Mesh & Model::mesh(uint32_t index) const
 {
-	if (index >= meshCount())	throw ArgumentException("mesh");
+	if (index >= meshCount())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, meshCount());
+
 	return m_meshs[index];
 }
 

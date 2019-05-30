@@ -1,5 +1,4 @@
 #include "Window_Internal.h"
-#include "core/Exception.h"
 #include "core/Window.h"
 #include <cstring>
 
@@ -18,8 +17,7 @@ Window_Internal::Window_Internal(Window *p)
 	: m_pW(p)
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	m_instance = ::GetModuleHandle(NULL);
-
+	m_instance = ::GetModuleHandle(nullptr);
 	WNDCLASSA windowClass = { 0 };
 	windowClass.style = 0;
 	windowClass.cbClsExtra = 0;
@@ -29,8 +27,8 @@ Window_Internal::Window_Internal(Window *p)
 	windowClass.lpszClassName = WINDOW_CLASS_NAME;
 	windowClass.lpfnWndProc = Window_Internal::wndProc;
 	windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	windowClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	//	windowClass.hIconSm			= 0;
 	if (::RegisterClassA(&windowClass) == 0)
 	{
@@ -49,16 +47,16 @@ Window_Internal::Window_Internal(Window *p)
 #elif defined NB_OS_FAMILY_UNIX
 	m_X11Display = XOpenDisplay(nullptr);
 	if (m_X11Display == nullptr)
-		throw SystemException("XOpenDiplay return nullptr");
+		NB_THROW_EXCEPTION(std::runtime_error, "XOpenDisplay fail.");
 	int screen = DefaultScreen(m_X11Display);	//这是个宏
 	//m_X11WindowID从服务端获取，不用释放
 	m_X11WindowID = XCreateSimpleWindow(m_X11Display, RootWindow(m_X11Display, screen), 0, 0, 800, 480, 1, BlackPixel(m_X11Display, screen), WhitePixel(m_X11Display, screen));
 	XSelectInput(m_X11Display, m_X11WindowID, StructureNotifyMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask);
 	XMapWindow(m_X11Display, m_X11WindowID);
 #elif NB_OS == NB_OS_LINUX_ARM
-	m_wlDisplay = wl_display_connect(NULL);
-	if (m_wlDisplay == NULL)
-		throw SystemException("create window fail.");
+	m_wlDisplay = wl_display_connect(nullptr);
+	if (m_wlDisplay == nullptr)
+		NB_THROW_EXCEPTION(std::runtime_error, "wl_display_connect fail.");
 
 	m_wlRegistry = wl_display_get_registry(m_wlDisplay);
 	m_UserData.wlListeners.wlRegistryListener.global = Window_Internal::onWaylandRegistryGlobal;
@@ -68,16 +66,16 @@ Window_Internal::Window_Internal(Window *p)
 	wl_display_roundtrip(m_wlDisplay);
 
 	m_wlSurface = wl_compositor_create_surface(m_UserData.wlGlobals.wlCompositor);
-	if (m_wlSurface == NULL)
-		throw SystemException("create surface fail.");
+	if (m_wlSurface == nullptr)
+		NB_THROW_EXCEPTION(std::runtime_error, "wl_compositor_create_surface fail.");
 
 	m_wlShellSurface = wl_shell_get_shell_surface(m_UserData.wlGlobals.wlShell, m_wlSurface);
-	if (m_wlShellSurface == NULL)
-		throw SystemException("get shell surface fail.");
+	if (m_wlShellSurface == nullptr)
+		NB_THROW_EXCEPTION(std::runtime_error, "wl_shell_get_shell_surface fail.");
 
 	m_wlWindow = wl_egl_window_create(m_wlSurface, 1920, 1080);
-	if (m_wlWindow == NULL)
-		throw SystemException("create window fail.");
+	if (m_wlWindow == nullptr)
+		NB_THROW_EXCEPTION(std::runtime_error, "wl_egl_window_create fail.");
 #endif
 }
 

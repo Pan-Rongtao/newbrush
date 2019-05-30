@@ -1,5 +1,4 @@
 #include "../TestBase.h"
-#include "core/Exception.h"
 #include "TestVec.h"
 #include "TestVecB.h"
 #include "TestVecI.h"
@@ -16,9 +15,9 @@ int main(int argc, char *argv[])
 		TestHandle<TestDateTime> test;
 		test->test();
 	}
-	catch (nb::core::Exception &e)
+	catch (std::exception &e)
 	{
-		printf("%s\r\n", e.what().data());
+		printf("%s\r\n", e.what());
 	}
 	catch (...)
 	{

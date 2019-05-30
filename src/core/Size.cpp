@@ -1,5 +1,4 @@
 ﻿#include "core/Size.h"
-#include "core/Exception.h"
 #include <algorithm>
 #include <math.h>
 
@@ -240,13 +239,14 @@ SizeI SizeI::operator * (float n) const
 
 SizeI SizeI::operator / (int n) const
 {
-	if (n == 0)	throw DivideByZeroException();
-	return SizeI(width() / n, height() / n);
+	return operator /((float)n);
 }
 
 SizeI SizeI::operator / (float d) const
 {
-	if (d == 0.0f)	throw DivideByZeroException();
+	if (d == 0.0f)
+		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+
 	return SizeI((int)(width() / d), (int)(height() / d));
 }
 

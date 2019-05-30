@@ -17,9 +17,9 @@ public:
 
 	bool hasData() const;
 
-	int frameCount() const;
+	uint32_t frameCount() const;
 
-	Bitmap frame(int index) const;
+	Bitmap frame(uint32_t index) const;
 
 
 private:

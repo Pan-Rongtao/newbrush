@@ -2,8 +2,6 @@
 #include "gles/Display.h"
 #include "gles/Egl.h"
 
-#include "core/Exception.h"
-
 using namespace nb::core;
 using namespace nb::gl;
 

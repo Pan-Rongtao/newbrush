@@ -1,5 +1,4 @@
 #include "gui/RepeatBehavior.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -10,8 +9,8 @@ RepeatBehavior::RepeatBehavior()
 	, m_hasCount(true)
 	, m_hasDuration(false)
 {
-	Count.getter([&]()->int& { if (!m_hasCount)	throw LogicException(__FILE__, __LINE__);	return m_count; });
-	Duration.getter([&]()->TimeSpan& { if (!m_hasDuration)	throw LogicException(__FILE__, __LINE__);	return m_duration; });
+	Count.getter([&]()->int& { if (!m_hasCount)	NB_THROW_EXCEPTION(std::logic_error, "not a 'Count assigned' RepeatBehavior");	return m_count; });
+	Duration.getter([&]()->TimeSpan& { if (!m_hasDuration)	NB_THROW_EXCEPTION(std::logic_error, "not a 'Duration assigned' RepeatBehavior");	return m_duration; });
 }
 
 RepeatBehavior::RepeatBehavior(int count)

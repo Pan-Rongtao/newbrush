@@ -1,5 +1,4 @@
 ﻿#include "core/Random.h"
-#include "core/Exception.h"
 #include <algorithm>
 #include <time.h>
 #include <float.h>
@@ -134,7 +133,7 @@ std::vector<int> Random::groupNonRepeat(int count) const
 				}
 				else			//此分支，千万级以上，不能使用洗牌算法（内存太高），不能遍历插入（效率太低），所有直接抛异常
 				{
-					throw ArgumentException("count");
+					NB_THROW_EXCEPTION(std::invalid_argument, "random range size[%d], count[%d] are refused", n, count);
 				}
 			}
 		}

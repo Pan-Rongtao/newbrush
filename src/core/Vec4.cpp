@@ -1,5 +1,4 @@
 #include "core/Vec4.h"
-#include "core/Exception.h"
 #include <cstring>
 #include <math.h>
 
@@ -254,7 +253,9 @@ Vec3 Vec4::yzw() const
 
 float & Vec4::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 
@@ -528,7 +529,9 @@ Vec3I Vec4I::yzw() const
 
 int & Vec4I::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 
@@ -725,7 +728,9 @@ Vec3B Vec4B::yzw() const
 
 bool & Vec4B::at(uint32_t index)
 {
-	if (index >= dimension())	throw ArrayIndexOutOfRangeException(dimension(), index);
+	if (index >= dimension())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, dimension());
+
 	return m_d[index];
 }
 

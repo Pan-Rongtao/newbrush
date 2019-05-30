@@ -1,5 +1,4 @@
 ﻿#include "gui/Easing.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -27,7 +26,11 @@ double LinearEase::easeInCore(double t)
 BackEase::BackEase()
 	: Amplitude(1.0)
 {
-	Amplitude.notify([](const double &_old, const double &_new) {if (_new < 0.0) throw ArgumentOutOfRangeException("Amplitude", 0.0, NB_DOUBLE_MAX, _new, __FILE__, __LINE__); });
+	Amplitude.notify([](const double &_old, const double &_new) 
+	{
+		if (_new < 0.0)
+			NB_THROW_EXCEPTION(std::underflow_error, "Amplitude[%.f] < 0.0", _new);
+	});
 }
 
 double BackEase::easeInCore(double t)
@@ -121,8 +124,14 @@ ElasticEase::ElasticEase()
 	: Oscillations(3)
 	, Springiness(3.0)
 {
-	Oscillations.notify([](const int &_old, const int &_new) {if (_new < 0) throw ArgumentOutOfRangeException("Oscillations", 0, NB_INT_MAX, _new, __FILE__, __LINE__); });
-	Springiness.notify([](const double &_old, const double &_new) {if (_new < 0.0) throw ArgumentOutOfRangeException("Springiness", 0.0, NB_DOUBLE_MAX, _new, __FILE__, __LINE__); });
+	Oscillations.notify([](const int &_old, const int &_new) {
+		if (_new < 0)
+			NB_THROW_EXCEPTION(std::underflow_error, "Oscillations[%d] < 0", _new);
+	});
+	Springiness.notify([](const double &_old, const double &_new) {
+		if (_new < 0.0) 
+			NB_THROW_EXCEPTION(std::underflow_error, "Springiness[%f] < 0.0", _new);
+	});
 }
 
 double ElasticEase::easeInCore(double t)

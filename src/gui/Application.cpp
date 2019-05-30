@@ -1,5 +1,4 @@
 #include "gui/Application.h"
-#include "core/Exception.h"
 #include "core/Timer.h"
 #include "gui/Window.h"
 #include "WindowCollections.h"
@@ -10,7 +9,9 @@ using namespace nb::gui;
 Application *g_app = nullptr;
 Application::Application()
 {
-	if (g_app)	throw std::logic_error("create tow application");
+	if (g_app)
+		NB_THROW_EXCEPTION(std::logic_error, "create tow application");
+
 	g_app = this;
 }
 
@@ -40,10 +41,6 @@ int Application::run()
 			w->onRender(w->DrawContext());
 		}
 		return nb::gl::Application::run();
-	}
-	catch(Exception &e)
-	{
-		printf("exception: %s\r\n", e.what().data());
 	}
 	catch (std::exception &e)
 	{

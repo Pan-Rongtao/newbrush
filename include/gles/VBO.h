@@ -29,19 +29,17 @@ public:
 	void deactive();
 
 	//缓存一块数据至Gpu，缓冲区将拥有空间bytes大小；如果原来已经有缓存，将先清除掉原来的空间
-	//异常：bytes < 0
-	void cacheDataToGpu(const float *data, int bytes);
+	void cacheDataToGpu(const float *data, uint32_t bytes);
 
 	//获取缓存空间大小
-	int bytes() const;
+	uint32_t bytes() const;
 
 	//更新/提交新数据到缓冲区
-	//异常：size小于0或者size+cacheOffset大于缓冲区对象创建时所指定的大小
-	void updateCacheData(const float *data, int cacheOffset, int size);
+	void updateCacheData(const float *data, uint32_t cacheOffset, uint32_t size);
 
 private:
 	unsigned int	m_glHandle;
-	int				m_nBytes;
+	uint32_t		m_nBytes;
 };
 
 }}

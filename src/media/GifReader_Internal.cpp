@@ -1,6 +1,5 @@
 #include "GifReader_Internal.h"
 #include "Bitmap_Internal.h"
-#include "core/Exception.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -32,17 +31,17 @@ bool GifReader_Internal::hasData() const
 	return m_pFreeImage == nullptr || frameCount() == 0;
 }
 
-int GifReader_Internal::frameCount() const
+uint32_t GifReader_Internal::frameCount() const
 {
 	return m_pFreeImage ? FreeImage_GetPageCount(m_pFreeImage) : 0;
 }
 
-Bitmap GifReader_Internal::frame(int index) const
+Bitmap GifReader_Internal::frame(uint32_t index) const
 {
-	if(index <0 || index >= frameCount())
-		NB_THROW_EXCEPTION("out of range.");
+	if(index >= frameCount())
+		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d).", index, 0, frameCount());
 
-	if(m_pFreeImage == NULL)
+	if(m_pFreeImage == nullptr)
 		return Bitmap();
 
 	FIBITMAP *p = FreeImage_LockPage(m_pFreeImage, index);
