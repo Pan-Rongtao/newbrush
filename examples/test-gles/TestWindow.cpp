@@ -8,8 +8,9 @@ using namespace nb::gl;
 void TestWindow::test()
 {
 	auto display = std::make_shared<Display>(Display::defaultx());
-	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0))/*Configure((int *)NULL)*/;
-	nb::gl::initialize(display, configure);
+	nb::gl::initialize(display);
+	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0));
+	nb::gl::setConfigure(configure);
 	m_window = new Window(200, 200, 800, 480);
 	m_window1 = new Window(200, 200, 800, 480);
 	m_window->ResizeEvent.addHandler(std::bind(&TestWindow::OnResize, this, std::placeholders::_1));

@@ -14,11 +14,6 @@ Display::Display(long id)
 	m_handle = eglGetDisplay((EGLNativeDisplayType)id);
 	if(m_handle == EGL_NO_DISPLAY)
 		NB_THROW_EXCEPTION(std::runtime_error, "eglGetDisplay fail, eglGetError[%d].", eglGetError());
-
-	int major = 0, minor = 0;
-	if(!eglInitialize(m_handle, &major, &minor))
-		NB_THROW_EXCEPTION(std::runtime_error, "eglInitialize fail, eglGetError[%d].", eglGetError());
-
 	m_id = id;
 }
 

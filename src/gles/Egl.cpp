@@ -5,7 +5,6 @@
 
 using namespace nb::gl;
 
-static bool g_initialized = false;
 static std::shared_ptr<Display> g_display = nullptr;
 static std::shared_ptr<Configure> g_configure = nullptr;
 static std::shared_ptr<Camera> g_camera = std::make_shared<Camera>();
@@ -13,7 +12,7 @@ static std::shared_ptr<Projection> g_projection = std::make_shared<Projection>()
 
 std::string nb::gl::getVersion()
 {
-	if (!hasInitialized())
+	if (!getDisplay())
 		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VERSION);
@@ -21,30 +20,32 @@ std::string nb::gl::getVersion()
 
 std::string nb::gl::getVendor()
 {
-	if (!hasInitialized())
+	if (!getDisplay())
 		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VENDOR);
 }
 
-void nb::gl::initialize(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure)
+void nb::gl::initialize(std::shared_ptr<Display> display)
 {
-	if (g_initialized)
+	if (g_display)
 		return;
 
-	g_display = display;
-	g_configure = configure;
-	g_initialized = true;
-}
+	int major = 0, minor = 0;
+	if (!eglInitialize(display->handle(), &major, &minor))
+		NB_THROW_EXCEPTION(std::runtime_error, "eglInitialize fail, eglGetError[%d].", eglGetError());
 
-bool nb::gl::hasInitialized()
-{
-	return g_initialized;
+	g_display = display;
 }
 
 std::shared_ptr<Display> nb::gl::getDisplay()
 {
 	return g_display;
+}
+
+void nb::gl::setConfigure(std::shared_ptr<Configure> configure)
+{
+	g_configure = configure;
 }
 
 std::shared_ptr<Configure> nb::gl::getConfigure()
@@ -74,7 +75,7 @@ std::shared_ptr<Projection> nb::gl::getProjection()
 
 void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)
 {
-	if (!hasInitialized())
+	if (!getDisplay())
 		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	if(!eglMakeCurrent(getDisplay()->handle(), onScreen->handle(), offScreen->handle(), context->handle()))

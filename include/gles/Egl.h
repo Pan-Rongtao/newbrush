@@ -17,12 +17,13 @@ namespace nb{ namespace gl
 
 	//初始化
 	//dispay：显示对象
-	//configure：egl配置
-	NB_API void initialize(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure);
-	NB_API bool hasInitialized();
+	NB_API void initialize(std::shared_ptr<Display> display);
 
 	//获取当前显示设备
 	NB_API std::shared_ptr<Display> getDisplay();
+
+	//设置配置
+	NB_API void setConfigure(std::shared_ptr<Configure> configure);
 
 	//获取egl设置
 	NB_API std::shared_ptr<Configure> getConfigure();

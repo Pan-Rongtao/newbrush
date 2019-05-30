@@ -41,7 +41,7 @@ MyApplication::MyApplication()
 	m_window = std::make_shared<nb::gl::Window>();
 	m_window->setWidth(800);
 	m_window->setHeight(480);
-	m_window->setTitle("Direction Light");
+	m_window->setTitle("newbrush");
 	m_window->ResizeEvent.addHandler(std::bind(&MyApplication::OnResize, this, std::placeholders::_1));
 	m_window->PointerEvent.addHandler(std::bind(&MyApplication::OnPointerAction, this, std::placeholders::_1));
 	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));

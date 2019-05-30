@@ -19,9 +19,10 @@ Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Confi
 	//初始化GL，注意，使用Configure((int *)NULL)开启深度帧率降低很多
 	if(!display)
 		display = std::make_shared<Display>(Display::defaultx());
+	nb::gl::initialize(display);
 	if(!configure)
 		configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0))/*Configure((int *)nullptr)*/;
-	nb::gl::initialize(display, configure);
+	nb::gl::setConfigure(configure);
 	g_hasInstanced = true;
 }
 
