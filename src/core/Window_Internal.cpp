@@ -82,7 +82,7 @@ Window_Internal::Window_Internal(Window *p)
 Window_Internal::~Window_Internal()
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	if (::DestroyWindow(m_hwnd) || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
+	if (::DestroyWindow(m_hwnd) == 0 || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
 	{
 		printf("DestroyWindow or UnregisterClass window class fail. error code[%d]\n", GetLastError());
 	}

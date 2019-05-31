@@ -1,6 +1,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "gles/Texture.h"
+#include "gles/Egl.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -100,7 +101,12 @@ Texture::Texture()
 {
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+	{
+		if(!getDisplay())
+			NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		else if(!getConfigure())
+			NB_THROW_EXCEPTION(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
+	}
 }
 
 Texture::~Texture()

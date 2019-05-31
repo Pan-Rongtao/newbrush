@@ -53,8 +53,10 @@ void *Surface::handle() const
 WindowSurface::WindowSurface(int width, int height, long windowHandle)
 	: m_windowHandle(windowHandle)
 {
-	if (!nb::gl::getDisplay() || !nb::gl::getConfigure())
+	if (!getDisplay())
 		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+	else if (!getConfigure())
+		NB_THROW_EXCEPTION(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
 
 	m_handle = eglCreateWindowSurface(nb::gl::getDisplay()->handle(), nb::gl::getConfigure()->handle(), (EGLNativeWindowType)windowHandle, nullptr);
 	if (!eglQuerySurface(nb::gl::getDisplay()->handle(), m_handle, EGL_WIDTH, &width)
