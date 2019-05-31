@@ -1,5 +1,6 @@
 #include <GLES2/gl2.h>
 #include "gles/Texture2D.h"
+#include "gles/Egl.h"
 
 using namespace nb::media;
 using namespace nb::gl;
@@ -117,6 +118,9 @@ int Texture2D::pixcelHeight() const
 
 int Texture2D::maxWidthSupported()
 {
+	if (!nb::gl::getContext())
+		NB_THROW_EXCEPTION(std::logic_error, "context not set, use nb::gl::makeCurrent to set Context");
+
 	int nRet = 0;
 	glEnable(GL_TEXTURE_2D);
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &nRet);

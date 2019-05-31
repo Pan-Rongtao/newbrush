@@ -42,6 +42,13 @@ namespace nb{ namespace gl
 
 	//设置当前渲染surface和context
 	NB_API void makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context);
+
+	//获取onScreen/offScreen
+	NB_API std::shared_ptr<Surface> getOnScreenSurface();
+	NB_API std::shared_ptr<Surface> getOffScreenSurface();
+
+	//获取Context
+	NB_API std::shared_ptr<Context> getContext();
 	
 	//执行缓冲
 	NB_API void swapBuffers(const Surface *surface);

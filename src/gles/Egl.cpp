@@ -9,6 +9,9 @@ static std::shared_ptr<Display> g_display = nullptr;
 static std::shared_ptr<Configure> g_configure = nullptr;
 static std::shared_ptr<Camera> g_camera = std::make_shared<Camera>();
 static std::shared_ptr<Projection> g_projection = std::make_shared<Projection>();
+static std::shared_ptr<Surface> g_onScreenSurface = nullptr;
+static std::shared_ptr<Surface> g_offScreenSurface = nullptr;
+static std::shared_ptr<Context> g_context = nullptr;
 
 std::string nb::gl::getVersion()
 {
@@ -80,6 +83,25 @@ void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surf
 
 	if(!eglMakeCurrent(getDisplay()->handle(), onScreen->handle(), offScreen->handle(), context->handle()))
 		NB_THROW_EXCEPTION(std::runtime_error, "eglMakeCurrent fail, glGetError[%d]", glGetError());
+
+	g_onScreenSurface = onScreen;
+	g_offScreenSurface = offScreen;
+	g_context = context;
+}
+
+std::shared_ptr<Surface> nb::gl::getOnScreenSurface()
+{
+	return g_onScreenSurface;
+}
+
+NB_API std::shared_ptr<Surface> nb::gl::getOffScreenSurface()
+{
+	return g_offScreenSurface;
+}
+
+std::shared_ptr<Context> nb::gl::getContext()
+{
+	return g_context;
 }
 
 void nb::gl::swapBuffers(const Surface *surface)
