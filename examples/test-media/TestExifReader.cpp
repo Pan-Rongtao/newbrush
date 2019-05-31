@@ -43,11 +43,11 @@ void TestExifReader::test()
 
 		if(!thumbs.empty())
 		{
-			int k = NB_TICK_COUT;
+			auto k = NB_TICK_COUT;
 			char arr[100] = {0};
 			snprintf(arr, sizeof(arr), "d:/%d.jpg", i);
 			thumbs[0].save(arr);
-			int kk = NB_TICK_COUT;
+			auto kk = NB_TICK_COUT;
 		//	printf("[%d]thumb [%s] [%d]\r\n", i, sFile, kk - k);
 		}
 	}

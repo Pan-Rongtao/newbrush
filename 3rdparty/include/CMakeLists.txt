@@ -9,5 +9,5 @@ project(include)
 
 # 5. Project Install
 if(MSVC)
-	install(DIRECTORY Poco DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+#	install(DIRECTORY Poco DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()

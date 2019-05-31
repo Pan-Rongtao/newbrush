@@ -21,7 +21,7 @@ Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Confi
 		display = std::make_shared<Display>(Display::defaultx());
 	nb::gl::initialize(display);
 	if(!configure)
-		configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0))/*Configure((int *)nullptr)*/;
+		configure = std::make_shared<Configure>(Configure::fromSystemRecommend(0))/*Configure((int *)nullptr)*/;
 	nb::gl::setConfigure(configure);
 	g_hasInstanced = true;
 }

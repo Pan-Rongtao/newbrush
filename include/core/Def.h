@@ -65,11 +65,12 @@
 
 //定义API导出宏
 #if NB_OS_FAMILY_WINDOWS
-	#define NB_API						__declspec(dllexport)
+	#define NB_API								__declspec(dllexport)
 #else
 	#define NB_API
 #endif
 
+//支持构造函数为单字符串参数的exception类型
 #define NB_THROW_EXCEPTION(exception, argfmt, ...) \
 do{\
 	char buffer[256] = {0}; \

@@ -15,5 +15,5 @@ void TestConfigure::test()
 		EGL_NONE
 	};
 
-	Configure c(nullptr, attribs);
+	Configure c(attribs);
 }

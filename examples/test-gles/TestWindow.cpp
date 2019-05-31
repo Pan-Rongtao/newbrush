@@ -9,7 +9,7 @@ void TestWindow::test()
 {
 	auto display = std::make_shared<Display>(Display::defaultx());
 	nb::gl::initialize(display);
-	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(display, 0));
+	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(0));
 	nb::gl::setConfigure(configure);
 	m_window = new Window(200, 200, 800, 480);
 	m_window1 = new Window(200, 200, 800, 480);

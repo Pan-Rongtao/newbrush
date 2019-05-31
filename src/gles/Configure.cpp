@@ -6,23 +6,21 @@
 using namespace nb::core;
 using namespace nb::gl;
 
-Configure::Configure(std::shared_ptr<Display> display, const int *attributes)
+Configure::Configure(const int *attributes)
 	: m_handle(nullptr)
-	, m_display(nullptr)
 {
-	if (!display)
-		NB_THROW_EXCEPTION(std::invalid_argument, "display uses null as param.");
+	if (!gl::getDisplay())
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	EGLint numConfigs(0);
-	if(!eglChooseConfig(display->handle(), attributes, &m_handle, 1, &numConfigs))
+	if(!eglChooseConfig(gl::getDisplay()->handle(), attributes, &m_handle, 1, &numConfigs))
 		NB_THROW_EXCEPTION(std::runtime_error, "eglChooseConfig fail, eglGetError[%d].", eglGetError());
-	m_display = display;
 }
 
 int *Configure::attributes() const
 {
 	int *ret = nullptr;
-	if(!eglGetConfigAttrib(m_display->handle(), m_handle, 0, ret))
+	if(!eglGetConfigAttrib(gl::getDisplay()->handle(), m_handle, 0, ret))
 		NB_THROW_EXCEPTION(std::runtime_error, "eglGetConfigAttrib, eglGetError[%d].", eglGetError());
 
 	return ret;
@@ -33,41 +31,39 @@ void *Configure::handle() const
 	return m_handle;
 }
 
-uint32_t Configure::systemRecommendMaxSupportCount(std::shared_ptr<Display> display)
+uint32_t Configure::systemRecommendMaxSupportCount()
 {
-	if (!display)
-		NB_THROW_EXCEPTION(std::invalid_argument, "display uses null as param.");
+	if (!gl::getDisplay())
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	EGLint count = 0;
-	if(!eglGetConfigs(display->handle(), nullptr, 0, &count))
+	if(!eglGetConfigs(gl::getDisplay()->handle(), nullptr, 0, &count))
 		NB_THROW_EXCEPTION(std::runtime_error, "eglGetConfigs fail, eglGetError[%d].", eglGetError());
 
 	return count;
 }
 
-Configure Configure::fromSystemRecommend(std::shared_ptr<Display> display, uint32_t index)
+Configure Configure::fromSystemRecommend(uint32_t index)
 {
-	if (!display)
-		NB_THROW_EXCEPTION(std::invalid_argument, "display uses null as param.");
+	if (!gl::getDisplay())
+		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
-	auto maxCount = systemRecommendMaxSupportCount(display);
+	auto maxCount = systemRecommendMaxSupportCount();
 	if(index >= maxCount)
 		NB_THROW_EXCEPTION(std::out_of_range, "param index[%d] out of [%d, %d).", index, 0, maxCount);
 
 	EGLConfig *eglHandle = new EGLConfig[maxCount];
 	int count = 0;
-	if(!eglGetConfigs(display->handle(), eglHandle, maxCount, &count))
+	if(!eglGetConfigs(gl::getDisplay()->handle(), eglHandle, maxCount, &count))
 		NB_THROW_EXCEPTION(std::runtime_error, "eglGetConfigs fail, eglGetError[%d].", eglGetError());
 
 	Configure conf;
 	conf.m_handle = eglHandle[index];
-	conf.m_display = display;
 	delete []eglHandle;
 	return conf;
 }
 
 Configure::Configure()
 	: m_handle(nullptr)
-	, m_display(nullptr)
 {
 }
