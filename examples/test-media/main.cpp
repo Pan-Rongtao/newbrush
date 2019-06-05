@@ -3,11 +3,12 @@
 #include "TestExifReader.h"
 #include "TestGifReader.h"
 #include "TestTiffReader.h"
+#include "TestFamilyTypeface.h"
 
 int main(int argc, char *argv[])
 {
 	try{
-		TestHandle<TestBitmap> test;
+		TestHandle<TestFamilyTypeface> test;
 		test->test();
 		while(1)
 		{

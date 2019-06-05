@@ -470,3 +470,49 @@ std::shared_ptr<Program> nb::gl::Programs::cube()
 	p->link();
 	return p;
 }
+
+std::shared_ptr<Program> Programs::glpy()
+{
+	static std::shared_ptr<Program> p;
+	if (p)
+		return p;
+
+	auto verShader = std::make_shared<VertexShader>
+		("\
+		attribute	vec4	nb_Position;\
+		attribute	vec4	nb_Color;\
+		attribute	vec2	nb_TextCoord;\
+		uniform		mat4	nb_Mvp;\
+		varying		vec4	vary_color;\
+		varying		vec2	vary_textureCoord;\
+		\
+		void main()\
+		{\
+			vary_color = nb_Color;\
+			vary_textureCoord = nb_TextCoord;\
+			gl_Position = nb_Mvp * nb_Position;\
+		}\
+	");
+	auto fragShader = std::make_shared<FragmentShader>
+		("\
+		varying		vec4		vary_color;\
+		varying		vec2		vary_textureCoord;\
+		uniform		sampler2D	unif_sampler;\
+		\
+		void main()\
+		{\
+			vec4 color = texture2D(unif_sampler, vary_textureCoord);\
+			gl_FragColor = color.w * vary_color;\
+		}\
+	");
+	verShader->compile();
+	fragShader->compile();
+	p = std::make_shared<Program>(verShader, fragShader);
+	//必须在link之前绑定
+	p->bindAttributeLocation(Program::positionLocation, "nb_Position");
+	p->bindAttributeLocation(Program::colorLocation, "nb_Color");
+	p->bindAttributeLocation(Program::texCoordLocaltion, "nb_TextCoord");
+	p->bindAttributeLocation(Program::normalLocation, "nb_Normal");
+	p->link();
+	return p;
+}

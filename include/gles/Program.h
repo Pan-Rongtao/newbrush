@@ -132,6 +132,9 @@ public:
 
 	//cube program
 	static std::shared_ptr<Program> cube();
+
+	//glyp program
+	static std::shared_ptr<Program> glpy();
 };
 
 }}

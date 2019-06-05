@@ -11,6 +11,11 @@ Texture2D::Texture2D()
 	setFilter(TextureFilter());
 }
 
+Texture2D::Texture2D(unsigned int width, unsigned int height)
+	: Texture(width, height)
+{
+}
+
 Texture2D::Texture2D(const std::string &path)
 	: Texture2D(path, TextureWrapping(), TextureFilter())
 {
@@ -37,8 +42,8 @@ Texture2D::Texture2D(const nb::media::Bitmap &bm)
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
 	unbind();
-	m_nPixcelWidth = bm.width();
-	m_nPixcelHeight = bm.height();
+	m_width = bm.width();
+	m_height = bm.height();
 }
 
 Texture2D::~Texture2D()
@@ -82,8 +87,8 @@ void Texture2D::loadFromPath(const std::string &path)
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
 	unbind();
-	m_nPixcelWidth = bm.width();
-	m_nPixcelHeight = bm.height();
+	m_width = bm.width();
+	m_height = bm.height();
 }
 
 void Texture2D::loadFromData(const char *data, int width, int height, Texture::PixelFormat format)
@@ -102,18 +107,8 @@ void Texture2D::loadFromData(const char *data, int width, int height, Texture::P
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
 	unbind();
-	m_nPixcelWidth = width;
-	m_nPixcelHeight = height;
-}
-
-int Texture2D::pixcelWidth() const
-{
-	return m_nPixcelWidth;
-}
-
-int Texture2D::pixcelHeight() const
-{
-	return m_nPixcelHeight;
+	m_width = width;
+	m_height = height;
 }
 
 int Texture2D::maxWidthSupported()

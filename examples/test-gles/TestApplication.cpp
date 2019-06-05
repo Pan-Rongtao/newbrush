@@ -17,13 +17,16 @@
 #include "gles/Sphere.h"
 #include "gles/Storage.h"
 #include "gles/Projection.h"
+#include "gles/TextureGlyphAtlas.h"
 
 using namespace nb::core;
 using namespace nb::gl;
-/*	float z = 480.0f / (float)(2 * Tan((22.5f * Pi()) / 180.0f));
+/*	
+float z = 480.0f / (float)(2 * Tan((22.5f * Pi()) / 180.0f));
 Vec3 position(800.0f / 2.0f, 480.0f / 2.0f, -z);
 Vec3 target(800.0f / 2.0f, 480.0f / 2.0f, 0.0f);
-Vec3 upVec(0.0f, -1.0f, 0.0f);*/
+Vec3 upVec(0.0f, -1.0f, 0.0f);
+*/
 static Vec3 cameraPosition(0.0, 0.0, 3.0);
 static Vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static Vec3 cameraUp(0.0f, 1.0f, 0.0f);
@@ -115,25 +118,30 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 			p3 = Vec2(-100 + step * i, -100 + step * i);
 		}
 		quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
-		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-		m_context->queue(ro);
+		std::shared_ptr<RenderObject> ro;
 		if (i == 0)
 		{
+			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
 			ro->storage()->insert("unif_colorMode", 1);
 			//ro->setRenderable(false);
 			ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 		}
 		if (i == 1)
 		{
-			ro->storage()->insert("unif_colorMode", 0);
-			ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
+			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
+		//	ro->storage()->insert("unif_colorMode", 0);
+		//	ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+			//ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
+			auto glypTexture = std::make_shared<TextureGlyphAtlas>(512, 512, 200);
+			glypTexture->appendText(L"ABCDEFG");
+			ro->material()->textures().push_back(glypTexture);
 		}
 		if (i == 2)
 		{
 			ro->storage()->insert("unif_colorMode", 1);
 		//	ro->setRenderable(false);
 		}
+		m_context->queue(ro);
 	}
 
 }

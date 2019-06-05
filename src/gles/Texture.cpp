@@ -98,13 +98,20 @@ int TextureFilter::glValue(TextureFilter::Filter filter)
 
 //class Texture
 Texture::Texture()
+	: Texture(0, 0)
+{
+}
+
+Texture::Texture(unsigned int width, unsigned int height)
+	: m_width(width)
+	, m_height(height)
 {
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
 	{
-		if(!getDisplay())
+		if (!getDisplay())
 			NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
-		else if(!getConfigure())
+		else if (!getConfigure())
 			NB_THROW_EXCEPTION(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
 	}
 }
@@ -132,6 +139,16 @@ TextureFilter &Texture::filter()
 const TextureFilter &Texture::filter() const
 {
 	return m_filter;
+}
+
+unsigned int Texture::width() const
+{
+	return m_width;
+}
+
+unsigned int Texture::height() const
+{
+	return m_height;
 }
 
 void Texture::bitmapFormatToGlFormat(nb::media::Bitmap::PixelFormat bmFormat, int &glInteralFormat, int &glPixcelDepth) const
