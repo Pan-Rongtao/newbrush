@@ -1,9 +1,9 @@
 #pragma once
 #include "../TestBase.h"
-#include "media/FamilyTypeface.h"
+#include "media/Font.h"
 
 using namespace nb::media;
-class TestFamilyTypeface : public TestBase
+class TestFont : public TestBase
 {
 public:
 	void test();

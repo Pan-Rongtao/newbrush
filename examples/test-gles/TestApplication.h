@@ -1,14 +1,16 @@
 #pragma once
 #include "../TestBase.h"
-#include "gles/Application.h"
 #include "core/Window.h"
-#include "gles/Context.h"
 #include "core/Timer.h"
+#include "media/Font.h"
+#include "gles/Application.h"
+#include "gles/Context.h"
 #include "gles/Camera.h"
 #include "gles/Surface.h"
 #include "gles/Window.h"
 #include "gles/Display.h"
 
+using namespace nb::media;
 using namespace nb::gl;
 
 class MyApplication : public nb::gl::Application
@@ -38,7 +40,8 @@ private:
 	std::shared_ptr<nb::gl::Context>					m_context;
 	std::shared_ptr<nb::gl::Surface>					m_surface;
 	std::shared_ptr<nb::gl::Window>						m_window;
-	nb::core::Timer									m_timer;
+	nb::core::Timer										m_timer;
+	std::shared_ptr<Font>								m_font;
 };
 
 class TestApplication : public TestBase

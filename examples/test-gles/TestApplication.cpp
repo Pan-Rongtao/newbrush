@@ -35,6 +35,7 @@ bool g_Original = false;
 
 MyApplication::MyApplication()
 {
+	m_font = std::make_shared<Font>("../../../resource/STKAITI.TTF", 130);
 	m_timer.setInterval(20);
 	m_timer.TickEvent.addHandler(std::bind(&MyApplication::OnTick, this, std::placeholders::_1));
 //	m_timer.start();
@@ -132,8 +133,11 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 		//	ro->storage()->insert("unif_colorMode", 0);
 		//	ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			//ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
-			auto glypTexture = std::make_shared<TextureGlyphAtlas>(512, 512, 200);
-			glypTexture->appendText(L"ABCDEFG");
+		//	ro->model()->mesh(0).setPositionAt(0, Vec3(0, m_window->height(), 0));
+		//	ro->model()->mesh(0).setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
+		//	ro->model()->mesh(0).setPositionAt(2, Vec3(m_window->width(), 0, 0));
+		//	ro->model()->mesh(0).setPositionAt(3, Vec3(0, 0, 0));
+			auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
 			ro->material()->textures().push_back(glypTexture);
 		}
 		if (i == 2)

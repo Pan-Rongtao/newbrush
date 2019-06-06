@@ -1,4 +1,4 @@
-#include "media/FamilyTypeface.h"
+#include "media/Font.h"
 #include "freetype/ft2build.h"
 #include "freetype/ftglyph.h"
 #include <freetype/ftbitmap.h>
@@ -7,27 +7,32 @@
 
 using namespace nb::media;
 
-FamilyTypeface::FamilyTypeface(const std::string &fontPath)
-	: m_fontSize(0)
-	, m_face(nullptr)
+Font::Font(const std::string &fontPath)
+	: Font(fontPath, 30)
 {
-	auto ft = FontFamily::getFT();
-	auto x = FT_New_Face(ft, fontPath.data(), 0, &m_face);
-	if (x != 0)
-		NB_THROW_EXCEPTION(std::runtime_error, "FT_New_Face fail[%d]", x);
 }
 
-FamilyTypeface::~FamilyTypeface()
+Font::Font(const std::string &fontPath, uint32_t fontSize)
+	: m_fontSize(fontSize)
+	, m_face(nullptr)
+{
+	auto x = FT_New_Face(FontFamily::getFT(), fontPath.data(), 0, &m_face);
+	if (x != 0)
+		NB_THROW_EXCEPTION(std::runtime_error, "FT_New_Face fail[%d]", x);
+	setSize(fontSize);
+}
+
+Font::~Font()
 {
 	FT_Done_Face(m_face);
 }
 
-std::string FamilyTypeface::getFontName() const
+std::string Font::name() const
 {
 	return m_face->family_name;
 }
 
-void FamilyTypeface::setFontSize(uint32_t fontSize)
+void Font::setSize(uint32_t fontSize)
 {
 	if (fontSize < 8)
 		NB_THROW_EXCEPTION(std::out_of_range, "fontSize[%d] is out of range[8, 72]", fontSize);
@@ -36,17 +41,17 @@ void FamilyTypeface::setFontSize(uint32_t fontSize)
 	m_fontSize = fontSize;
 }
 
-int FamilyTypeface::getFontSize() const
+uint32_t Font::size() const
 {
 	return m_fontSize;
 }
 
-FT_BitmapGlyphRec_ *FamilyTypeface::loadChar(wchar_t unicode)
+GlyphInfo Font::getGlyphInfo(wchar_t unicode)
 {
 	auto x = FT_Load_Char(m_face, unicode, FT_LOAD_DEFAULT);
 	FT_Glyph glyph;
 	FT_Get_Glyph(m_face->glyph, &glyph);
-	FT_Glyph_To_Bitmap(&glyph, getFontSize() >= 16 ? FT_RENDER_MODE_NORMAL : FT_RENDER_MODE_MONO, 0, 1);
+	FT_Glyph_To_Bitmap(&glyph, size() >= 16 ? FT_RENDER_MODE_NORMAL : FT_RENDER_MODE_MONO, 0, 1);
 
 	FT_BitmapGlyph bmGlyph = (FT_BitmapGlyph)glyph;
 	FT_Bitmap bm;
@@ -62,10 +67,5 @@ FT_BitmapGlyphRec_ *FamilyTypeface::loadChar(wchar_t unicode)
 		}
 	}
 	FT_Bitmap_Done(media::FontFamily::getFT(), &bm);
-	return bmGlyph;
-}
-
-FT_FaceRec_ *FamilyTypeface::get()
-{
-	return m_face;
+	return GlyphInfo{ m_face->glyph->bitmap_left, m_face->glyph->bitmap_top, bmGlyph->root.advance.x, bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
 }
