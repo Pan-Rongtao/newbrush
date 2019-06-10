@@ -12,6 +12,8 @@ using namespace nb::media;
 #define GLYPHATLAS_WIDTH	512
 #define GLYPHATLAS_HEIGHT	512
 
+std::vector<TextureGlyphAtlas *>	GlyphFactory::m_glyphAtlas;
+
 TextureGlyphAtlas::TextureGlyphAtlas(std::shared_ptr<Font> font, const std::wstring &unicodeStr)
 	: Texture2D(GLYPHATLAS_WIDTH, GLYPHATLAS_HEIGHT)
 	, m_x(0)
@@ -28,6 +30,14 @@ TextureGlyphAtlas::TextureGlyphAtlas(std::shared_ptr<Font> font, const std::wstr
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, m_width, m_height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
 	unbind();
 	appendText(unicodeStr);
+	GlyphFactory::m_glyphAtlas.push_back(this);
+}
+
+TextureGlyphAtlas::~TextureGlyphAtlas()
+{
+	auto iter = std::find(GlyphFactory::m_glyphAtlas.begin(), GlyphFactory::m_glyphAtlas.end(), this);
+	if(iter != GlyphFactory::m_glyphAtlas.end())
+		GlyphFactory::m_glyphAtlas.erase(iter);
 }
 
 std::shared_ptr<Font> TextureGlyphAtlas::font()
@@ -66,14 +76,16 @@ Glyph TextureGlyphAtlas::appendChar(wchar_t ch)
 			m_y += m_font->size();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
 			uv[0] = { (float)glyph.bm_width / width(), (float)(m_y + glyph.bm_height) / height() };
-			uv[1] = { 0.0, (float)glyph.bm_height / height() };
-			uv[2] = { 0.0, 0.0 };
-			uv[3] = { (float)glyph.bm_width / width(), 0.0 };
+			uv[1] = { 0.0, (float)(m_y + glyph.bm_height) / height() };
+			uv[2] = { 0.0, (float)m_y / height() };
+			uv[3] = { (float)glyph.bm_width / width(), (float)m_y / height() };
 		}
 	}
 	unbind();
 
-	return{ (int)m_handle, { uv[0], uv[1], uv[2], uv[3] }, glyph };
+	Glyph ret = { (int)m_handle,{ uv[0], uv[1], uv[2], uv[3] }, glyph };
+	m_glyphs.insert({ ch, ret });
+	return ret ;
 }
 
 void TextureGlyphAtlas::appendText(const std::wstring & unicodeStr)
@@ -95,17 +107,16 @@ Glyph TextureGlyphAtlas::getGlyph(wchar_t ch)
 	}
 }
 
-std::vector<TextureGlyphAtlas>	GlyphFactory::m_glyphAtlas;
 Glyph GlyphFactory::getGlyph(wchar_t ch)
 {
 	Glyph ret;
 	for (auto &atlas : m_glyphAtlas)
 	{
-		ret = atlas.getGlyph(ch);
+		ret = atlas->getGlyph(ch);
 		if (ret.texureId != -1)
 			return ret;
 	}
 
-	auto newAtlas = std::make_shared<TextureGlyphAtlas>(m_glyphAtlas[0].font(), L"");
+	auto newAtlas = std::make_shared<TextureGlyphAtlas>(m_glyphAtlas[0]->font(), L"");
 	return newAtlas->getGlyph(ch);
 }

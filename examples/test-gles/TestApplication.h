@@ -26,6 +26,7 @@ public:
 	void DrawSphere(bool bOrigin);
 	void drawPhone(bool bOrigin);
 	void drawModel(bool bOrigin);
+	void drawGlyph(bool bOrigin);
 
 protected:
 	virtual void preRender() override;

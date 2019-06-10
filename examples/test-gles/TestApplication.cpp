@@ -63,6 +63,7 @@ MyApplication::MyApplication()
 	DrawSphere(g_Original);
 	drawPhone(g_Original);
 	//	drawModel(g_Original);
+	drawGlyph(g_Original);
 }
 
 void MyApplication::DrawTriangles(bool bOrigin)
@@ -137,8 +138,8 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 		//	ro->model()->mesh(0).setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
 		//	ro->model()->mesh(0).setPositionAt(2, Vec3(m_window->width(), 0, 0));
 		//	ro->model()->mesh(0).setPositionAt(3, Vec3(0, 0, 0));
-			auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
-			ro->material()->textures().push_back(glypTexture);
+		//	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
+		//	ro->material()->textures().push_back(glypTexture);
 		}
 		if (i == 2)
 		{
@@ -287,6 +288,37 @@ void MyApplication::drawModel(bool bOrigin)
 		renderer->model()->translate(200, 200, 0);
 	}
 	//model->load("e:/model/test/spider.obj");
+	m_context->queue(renderer);
+}
+
+void MyApplication::drawGlyph(bool bOrigin)
+{
+	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijkqrstx");
+	Glyph glyph = GlyphFactory::getGlyph('z');
+	auto w = glyph.info.bm_width;
+	auto h = glyph.info.bm_height;
+	Vec2 p0, p1, p2, p3;
+	if (bOrigin)
+	{
+		p0 = Vec2(-0.5f, -0.5f);
+		p1 = Vec2(0.5f, -0.5f);
+		p2 = Vec2(0.5f, 0.5f);
+		p3 = Vec2(-0.5f, 0.5f);
+	}
+	else
+	{
+		p0 = Vec2(300, h);
+		p1 = Vec2(300 + w, h);
+		p2 = Vec2(300 + w, 0);
+		p3 = Vec2(300, 0);
+	}
+	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
+	quad->mesh(0).setTextureCoordinateAt(0, glyph.uv[0]);
+	quad->mesh(0).setTextureCoordinateAt(1, glyph.uv[1]);
+	quad->mesh(0).setTextureCoordinateAt(2, glyph.uv[2]);
+	quad->mesh(0).setTextureCoordinateAt(3, glyph.uv[3]);
+	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
+	renderer->material()->textures().push_back(glypTexture);
 	m_context->queue(renderer);
 }
 

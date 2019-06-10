@@ -12,7 +12,7 @@ namespace nb{ namespace gl{
 struct Glyph
 {
 	int					texureId;	//字形所在纹理
-	core::Vec2			uv[4];			//纹理坐标
+	core::Vec2			uv[4];		//纹理坐标
 	media::GlyphInfo	info;		//字形信息
 };
 
@@ -21,6 +21,7 @@ class NB_API TextureGlyphAtlas : public Texture2D
 public:
 	//构建一个字形图集纹理，宽高为width, height，字形的尺寸为glypSize
 	TextureGlyphAtlas(std::shared_ptr<nb::media::Font> font, const std::wstring &unicodeStr);
+	~TextureGlyphAtlas();
 
 	//font
 	std::shared_ptr<media::Font> font();
@@ -34,9 +35,8 @@ public:
 	Glyph getGlyph(wchar_t ch);
 	
 private:
-
-	uint32_t					m_x;
-	uint32_t					m_y;
+	float						m_x;
+	float						m_y;
 	std::map<wchar_t, Glyph>	m_glyphs;
 	bool						m_full;
 	std::shared_ptr<media::Font>m_font;
@@ -48,7 +48,8 @@ public:
 	static Glyph getGlyph(wchar_t ch);
 
 private:
-	static std::vector<TextureGlyphAtlas>	m_glyphAtlas;
+	static std::vector<TextureGlyphAtlas *>	m_glyphAtlas;
+	friend class TextureGlyphAtlas;
 };
 
 }}
