@@ -32,9 +32,8 @@ public:
 	Random(int min, int max);
 
 	//获取一个随机整数值，包含min和max，min可以大于max
-	static int generateOne(int min, int max);
+	static int get(int min, int max);
 
-public:
 	//设置随机范围，min可以大于max
 	void setRange(int min, int max);
 
@@ -42,7 +41,7 @@ public:
 	void range(int &min, int &max) const;
 
 	//获取一个随机值
-	int one() const;
+	int get() const;
 
 	//获取一组随机值，nCount需要在0~10e6（百万个）之间，不然将产生异常
 	std::vector<int> group(int count) const;
@@ -65,9 +64,8 @@ public:
 	RandomF(double min, double max);
 
 	//获取一个随机浮点值，否则异常；min可以大于max
-	static double generateOne(double min, double max);
+	static double get(double min, double max);
 	
-public:
 	//设置随机范围，包含fMin和fMax；Abs(Max-Min)必须在MaxRange()之内，否则异常；fMin可以大于fMax
 	void setRange(double min, double max);
 
@@ -75,7 +73,7 @@ public:
 	void range(double &min, double &max) const;
 
 	//获取一个随机值
-	double one() const;
+	double get() const;
 
 	//获取一组随机值，nCount需要在0~10e6（百万个）之间，不然将产生异常
 	std::vector<double> group(int count) const;

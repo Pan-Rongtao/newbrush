@@ -11,8 +11,8 @@ void TestRandom::test()
 	rd1 = Random(-100, -44);
 
 
-	int x = rd.one();
-	int x1 = rd.one();
+	int x = rd.get();
+	int x1 = rd.get();
 	rd.setRange(0, -1);
 
 	uint64_t n = NB_TICK_COUT;
@@ -26,8 +26,8 @@ void TestRandom::test()
 
 	RandomF rf(-0, 32654);
 
-	double fone = rf.one();
-	double fone1 = rf.one();
+	double fget = rf.get();
+	double fget1 = rf.get();
 
 	uint64_t n4 = NB_TICK_COUT;
 	std::vector<double> vtf = rf.group(10000);

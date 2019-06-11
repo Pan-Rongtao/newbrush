@@ -27,7 +27,7 @@ void Random::setRange(int min, int max)
 	m_dis.param(decltype(m_dis)::param_type(std::min(min, max), std::max(min, max)));
 }
 
-int Random::one() const
+int Random::get() const
 {
 	return const_cast<Random *>(this)->m_dis(g_randomEngine);
 }
@@ -36,7 +36,7 @@ std::vector<int> Random::group(int count) const
 {
 	std::vector<int> ret;
 	for(int i = 0;i != count; ++i)
-		ret.push_back(one());
+		ret.push_back(get());
 	return ret;
 }
 
@@ -46,7 +46,7 @@ void shuffle(int a[], int n)
 	int index, tmp, i;
 	for(i = n - 1; i > 0; i--)  
 	{  
-		index = Random::generateOne(0, i);// rand() % (n - i) + i;
+		index = Random::get(0, i);// rand() % (n - i) + i;
 		if(index != i)  
 		{  
 			tmp = a[i];  
@@ -97,7 +97,7 @@ std::vector<int> Random::groupNonRepeat(int count) const
 		{
 			while(ret.size() < (unsigned int)count)
 			{
-				int nOne = one();
+				int nOne = get();
 				if(ret.size() >= n || std::find(ret.begin(), ret.end(), nOne) == ret.end())
 					ret.push_back(nOne);
 			}
@@ -126,7 +126,7 @@ std::vector<int> Random::groupNonRepeat(int count) const
 				{
 					while(ret.size() < (unsigned int)count)
 					{
-						int nOne = one();
+						int nOne = get();
 						if(ret.size() >= n || std::find(ret.begin(), ret.end(), nOne) == ret.end())
 							ret.push_back(nOne);
 					}
@@ -142,9 +142,9 @@ std::vector<int> Random::groupNonRepeat(int count) const
 	return ret;
 }
 
-int Random::generateOne(int min, int max)
+int Random::get(int min, int max)
 {
-	return Random(min, max).one();
+	return Random(min, max).get();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -172,7 +172,7 @@ void RandomF::range(double &min, double &max) const
 	max = m_dis.max();
 }
 
-double RandomF::one() const
+double RandomF::get() const
 {
 	return const_cast<RandomF *>(this)->m_dis(g_randomEngine);
 }
@@ -181,7 +181,7 @@ std::vector<double> RandomF::group(int count) const
 {
 	std::vector<double> ret;
 	for(int i = 0; i != count; ++i)
-		ret.push_back(one());
+		ret.push_back(get());
 	return ret;
 }
 
@@ -195,14 +195,14 @@ std::vector<double> RandomF::groupNonRepeat(int count) const
 	std::vector<double> ret;
 	while(ret.size() < (unsigned int)count)
 	{
-		double fOne = one();
+		double fOne = get();
 		if(ret.size() >= n || std::find(ret.begin(), ret.end(), fOne) == ret.end())
 			ret.push_back(fOne);
 	}
 	return ret;
 }
 
-double RandomF::generateOne(double min, double max)
+double RandomF::get(double min, double max)
 {
-	return RandomF(min, max).one();
+	return RandomF(min, max).get();
 }
