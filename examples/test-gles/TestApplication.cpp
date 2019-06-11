@@ -155,9 +155,9 @@ void MyApplication::DrawEllipses(bool bOrigin)
 {
 	std::shared_ptr<Ellipse> epse;
 	if(bOrigin)
-		epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25f, 0.25f, bOrigin);
+		epse = std::make_shared<Ellipse>(-0.5f, -.5f, 0.25f, 0.25f, bOrigin);
 	else
-		epse = std::make_shared<Ellipse>(Vec2(100.0f, 400.0f), 50.0f, 50.0f, bOrigin);
+		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, bOrigin);
 	epse->mesh(0).unifyColor(Vec4(1.0f, 0.0f, 0.0f, 0.0f));
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->insert("unif_colorMode", 0);

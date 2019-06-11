@@ -8,7 +8,7 @@ using namespace nb::core;
 //顶点越多越圆滑
 #define ELLIPSE_VERTEX_COUNT	50
 #define ELLIPSE_INDICES_SIZE	3 * (ELLIPSE_VERTEX_COUNT - 1)
-Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
+Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 {
 	std::vector<Vertex> vertexs;
 	//中心点
@@ -34,7 +34,7 @@ Ellipse::Ellipse(const Vec2 &center, float a, float b, bool cartesian)
 		}
 	}
 	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
-	translate(center.x(), center.y(), 0.0f);
+	translate(x, y, 0.0f);
 }
 
 std::vector<uint16_t> Ellipse::getIndices() const
