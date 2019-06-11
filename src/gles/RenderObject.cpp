@@ -1,6 +1,5 @@
 #include "gles/RenderObject.h"
 #include <GLES2/gl2.h>
-#include "core/Matrix4x4.h"
 #include "gles/Camera.h"
 #include "gles/Projection.h"
 #include "gles/Egl.h"
@@ -111,8 +110,8 @@ void RenderObject::draw() const
 	//uniform只需更新依次即可，不必每个mesh都更新
 	//计算后的mvp
 	{
-		Matrix4x4 matMvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
-		program->uniform(program->getUniformLocation("nb_Mvp"), matMvp);
+		auto mvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
+		program->uniform(program->getUniformLocation("nb_Mvp"), mvp);
 	}
 	//分开的mvp
 	{
@@ -125,16 +124,16 @@ void RenderObject::draw() const
 	{
 		int location = program->getUniformLocation(iter->first.data());
 		const Any &v = iter->second;
-		if (v.type() == typeid(bool))			program->uniform(location, any_cast<bool>(v));
-		else if (v.type() == typeid(int))		program->uniform(location, any_cast<int>(v));
-		else if (v.type() == typeid(float))		program->uniform(location, any_cast<float>(v));
-		else if (v.type() == typeid(double))	program->uniform(location, (float)any_cast<double>(v));
-		else if (v.type() == typeid(Vec2))		program->uniform(location, any_cast<Vec2>(v));
-		else if (v.type() == typeid(Vec3))		program->uniform(location, any_cast<Vec3>(v));
-		else if (v.type() == typeid(Vec4))		program->uniform(location, any_cast<Vec4>(v));
-		else if (v.type() == typeid(Matrix2x2))	program->uniform(location, any_cast<Matrix2x2>(v));
-		else if (v.type() == typeid(Matrix3x3))	program->uniform(location, any_cast<Matrix3x3>(v));
-		else if (v.type() == typeid(Matrix4x4))	program->uniform(location, any_cast<Matrix4x4>(v));
+		if (v.type() == typeid(bool))				program->uniform(location, any_cast<bool>(v));
+		else if (v.type() == typeid(int))			program->uniform(location, any_cast<int>(v));
+		else if (v.type() == typeid(float))			program->uniform(location, any_cast<float>(v));
+		else if (v.type() == typeid(double))		program->uniform(location, (float)any_cast<double>(v));
+		else if (v.type() == typeid(glm::vec2))		program->uniform(location, any_cast<glm::vec2>(v));
+		else if (v.type() == typeid(glm::vec3))		program->uniform(location, any_cast<glm::vec3>(v));
+		else if (v.type() == typeid(glm::vec4))		program->uniform(location, any_cast<glm::vec4>(v));
+		else if (v.type() == typeid(glm::mat2x2))	program->uniform(location, any_cast<glm::mat2x2>(v));
+		else if (v.type() == typeid(glm::mat3x3))	program->uniform(location, any_cast<glm::mat3x3>(v));
+		else if (v.type() == typeid(glm::mat4x4))	program->uniform(location, any_cast<glm::mat4x4>(v));
 	}
 
 	//依次绘制meshs
@@ -143,19 +142,19 @@ void RenderObject::draw() const
 		const Mesh &mesh = m_model->mesh(i);
 		//检查各个顶点位置、颜色、向量、纹理坐标属性，如果有则传到gpu
 		if (mesh.hasAttribute(Vertex::positionAttribute))
-			program->vertexAttributePointer(Program::positionLocation, Vertex::positionDimension(), 12 * sizeof(float), mesh.positionData());
+			program->vertexAttributePointer(Program::positionLocation, Vertex::positionDimension, 12 * sizeof(float), mesh.positionData());
 
 		if (mesh.hasAttribute(Vertex::colorAttribute))
-			program->vertexAttributePointer(Program::colorLocation, Vertex::colorDimension(), 12 * sizeof(float), mesh.colorData());
+			program->vertexAttributePointer(Program::colorLocation, Vertex::colorDimension, 12 * sizeof(float), mesh.colorData());
 
 		if (mesh.hasAttribute(Vertex::normalAttribute))
-			program->vertexAttributePointer(Program::normalLocation, Vertex::normalDimension(), 12 * sizeof(float), mesh.normalData());
+			program->vertexAttributePointer(Program::normalLocation, Vertex::normalDimension, 12 * sizeof(float), mesh.normalData());
 
 		if (mesh.hasAttribute(Vertex::textureCoordinateAttribute) && !textures.empty())
 		{
 			int nTexCoord = Program::texCoordLocaltion;
 			textures[0]->bind();
-			program->vertexAttributePointer(nTexCoord, Vertex::textureCoordinateDimension(), 12 * sizeof(float), mesh.textureCoordinateData());
+			program->vertexAttributePointer(nTexCoord, Vertex::textureCoordinateDimension, 12 * sizeof(float), mesh.textureCoordinateData());
 		}
 
 		glDrawElements(GL_TRIANGLES, (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());
@@ -187,10 +186,10 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 	for (int i = 0; i != mesh->mNumVertices; ++i)
 	{
 		Vertex ver;
-		if (mesh->HasPositions())		ver.position() = Vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-		if (mesh->mColors[0])			ver.color() = Vec4(mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a);
-		if (mesh->mTextureCoords[0])	ver.texCoord() = nb::core::Vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		if (mesh->HasNormals())			ver.normal() = nb::core::Vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		if (mesh->HasPositions())		ver.position() = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+		if (mesh->mColors[0])			ver.color() = { mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a };
+		if (mesh->mTextureCoords[0])	ver.texCoord() = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+		if (mesh->HasNormals())			ver.normal() = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 		vertexs.push_back(ver);
 	}
 

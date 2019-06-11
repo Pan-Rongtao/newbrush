@@ -16,12 +16,12 @@
 
 namespace nb{ namespace gl{
 
-class NB_API Cubemap : public Texture
+class NB_API TextureCubemap : public Texture
 {
 public:
 	//构建一个空的Cubmap
-	Cubemap();
-	~Cubemap() = default;
+	TextureCubemap();
+	~TextureCubemap() = default;
 
 	//重写bind/unbind
 	virtual void bind() override;

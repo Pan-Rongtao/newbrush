@@ -9,13 +9,14 @@
 using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::media;
-#define GLYPHATLAS_WIDTH	512
-#define GLYPHATLAS_HEIGHT	512
+
+constexpr int GlyphAltasWidth = 512;
+constexpr int GlyphAltasHeight = 512;
 
 std::vector<TextureGlyphAtlas *>	GlyphFactory::m_glyphAtlas;
 
 TextureGlyphAtlas::TextureGlyphAtlas(std::shared_ptr<Font> font, const std::wstring &unicodeStr)
-	: Texture2D(GLYPHATLAS_WIDTH, GLYPHATLAS_HEIGHT)
+	: Texture2D(GlyphAltasWidth, GlyphAltasHeight)
 	, m_x(0)
 	, m_y(0)
 	, m_font(font)
@@ -55,13 +56,13 @@ Glyph TextureGlyphAtlas::appendChar(wchar_t ch)
 	if(m_x + glyph.bm_width > m_width && m_y + m_font->size() > m_height)
 		return{ -1 };
 
-	core::Vec2 uv[4];
+	glm::vec2 uv[4];
 
 	bind();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	if (m_x + glyph.bm_width <= m_width)
 	{
-		glTexSubImage2D(GL_TEXTURE_2D, 0, m_x, m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, (int)m_x, (int)m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
 		uv[0] = { (float)(m_x + glyph.bm_width) / width(), (float)(m_y + glyph.bm_height) / height() };
 		uv[1] = { (float)(m_x / width()), (float)(m_y + glyph.bm_height) / height() };
 		uv[2] = { (float)m_x / width(), (float)m_y / height() };
@@ -72,9 +73,9 @@ Glyph TextureGlyphAtlas::appendChar(wchar_t ch)
 	{
 		if (m_y + m_font->size() <= m_height)
 		{
-			m_x = glyph.bm_width;
+			m_x = (float)glyph.bm_width;
 			m_y += m_font->size();
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (int)m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
 			uv[0] = { (float)glyph.bm_width / width(), (float)(m_y + glyph.bm_height) / height() };
 			uv[1] = { 0.0, (float)(m_y + glyph.bm_height) / height() };
 			uv[2] = { 0.0, (float)m_y / height() };

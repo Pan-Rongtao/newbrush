@@ -1,7 +1,4 @@
 #include "../TestBase.h"
-#include "TestVec.h"
-#include "TestVecB.h"
-#include "TestVecI.h"
 #include "TestException.h"
 #include "TestProperty.h"
 #include "TestColor.h"

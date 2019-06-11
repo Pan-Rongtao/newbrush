@@ -20,8 +20,8 @@ public:
 	//构建一个立方体，它的中心是(0.0, 0.0, 0.0)，它的长宽高都是0.0
 	Cube();
 
-	//构建一个立方体，它的中心点是centerPosition，它的长宽高是lenght, wide, height
-	Cube(const nb::core::Vec3 &centerPosition, float lenght, float width, float height);
+	//构建一个立方体，它的中心点是x, y, z，它的长宽高是lenght, wide, height
+	Cube(float x, float y, float z, float lenght, float width, float height);
 
 private:
 	virtual void cullFace() override;

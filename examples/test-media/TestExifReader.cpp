@@ -14,7 +14,7 @@ void TestExifReader::test()
 	for(int i = 0; i != FILE_COUNT; ++i)
 	{
 		char sFile[100] = {0};
-		sprintf(sFile, "e:/Pics/%d.jpg", i);
+		snprintf(sFile, sizeof(sFile), "e:/Pics/%d.jpg", i);
 		try{
 			reader.open(sFile);
 		}

@@ -1,6 +1,7 @@
 #include "TestApplication.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "gles/Egl.h"
-#include "core/Vec4.h"
 #include "gles/Material.h"
 #include "gles/Texture2D.h"
 #include "gles/Program.h"
@@ -12,7 +13,7 @@
 #include "gles/Ellipse.h"
 #include "gles/Cube.h"
 #include "gles/Sphere.h"
-#include "gles/Cubemap.h"
+#include "gles/TextureCubemap.h"
 #include "core/Random.h"
 #include "gles/Sphere.h"
 #include "gles/Storage.h"
@@ -27,9 +28,9 @@ Vec3 position(800.0f / 2.0f, 480.0f / 2.0f, -z);
 Vec3 target(800.0f / 2.0f, 480.0f / 2.0f, 0.0f);
 Vec3 upVec(0.0f, -1.0f, 0.0f);
 */
-static Vec3 cameraPosition(0.0, 0.0, 3.0);
-static Vec3 cameraFront(0.0f, 0.0f, -1.0f);
-static Vec3 cameraUp(0.0f, 1.0f, 0.0f);
+static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
+static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
+static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
 bool g_Original = false;
 
@@ -75,19 +76,19 @@ void MyApplication::DrawTriangles(bool bOrigin)
 		if (bOrigin)
 		{
 			float step = 0.3f;
-			tri = std::make_shared<Triangle>(Vec2(-1.5f + step * i, 1.5f), Vec2(-1.7f + step * i, -0.3f), Vec2(0.4f + step * i, -0.3f), Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+			tri = std::make_shared<Triangle>(glm::vec2(-1.5f + step * i, 1.5f), glm::vec2(-1.7f + step * i, -0.3f), glm::vec2(0.4f + step * i, -0.3f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		}
 		else
 		{
 			float step = 50.0f;
-			tri = std::make_shared<Triangle>(Vec2(200.0f + step * i, 50.0f), Vec2(100 + step * i, 200.0f), Vec2(300.0f + step * i, 200.0f), Vec4(1.0f, 0.0f, 1.0f, 1.0f));
+			tri = std::make_shared<Triangle>(glm::vec2(200.0f + step * i, 50.0f), glm::vec2(100 + step * i, 200.0f), glm::vec2(300.0f + step * i, 200.0f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		}
-		tri->mesh(0).setTextureCoordinateAt(0, Vec2(0.5f, 1.0f));
-		tri->mesh(0).setTextureCoordinateAt(1, Vec2(0.0f, 0.0f));
-		tri->mesh(0).setTextureCoordinateAt(2, Vec2(1.0f, 0.0f));
-		tri->mesh(0).setColorAt(0, Vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		tri->mesh(0).setColorAt(1, Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-		tri->mesh(0).setColorAt(2, Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		tri->mesh(0).setTextureCoordinateAt(0, { 0.5f, 1.0f });
+		tri->mesh(0).setTextureCoordinateAt(1, { 0.0f, 0.0f });
+		tri->mesh(0).setTextureCoordinateAt(2, { 1.0f, 0.0f });
+		tri->mesh(0).setColorAt(0, { 1.0f, 0.0f, 0.0f, 1.0f });
+		tri->mesh(0).setColorAt(1, { 0.0f, 1.0f, 0.0f, 1.0f });
+		tri->mesh(0).setColorAt(2, { 0.0f, 0.0f, 1.0f, 1.0f });
 		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
 		ro->storage()->insert("unif_colorMode", 0);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
@@ -102,22 +103,22 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 	for(int i = 0; i != objectCount; ++i)
 	{
 		std::shared_ptr<Quadrangle> quad;
-		Vec2 p0, p1, p2, p3;
+		glm::vec2 p0, p1, p2, p3;
 		if (bOrigin)
 		{
 			step = 0.3f;
-			p0 = Vec2(-0.5f + step * i, -0.5f + step * i);
-			p1 = Vec2(0.5f + step * i, -0.5f + step * i);
-			p2 = Vec2(0.5f + step * i, 0.5f + step * i);
-			p3 = Vec2(-0.5f + step * i, 0.5f + step * i);
+			p0 = { -0.5f + step * i, -0.5f + step * i };
+			p1 = { 0.5f + step * i, -0.5f + step * i };
+			p2 = { 0.5f + step * i, 0.5f + step * i };
+			p3 = { -0.5f + step * i, 0.5f + step * i };
 		}
 		else
 		{
 			step = 100;
-			p0 = Vec2(-100 + step * i, 100 + step * i);
-			p1 = Vec2(100 + step * i, 100 + step * i);
-			p2 = Vec2(100 + step * i, -100 + step * i);
-			p3 = Vec2(-100 + step * i, -100 + step * i);
+			p0 = { -100 + step * i, 100 + step * i };
+			p1 = { 100 + step * i, 100 + step * i };
+			p2 = { 100 + step * i, -100 + step * i };
+			p3 = { -100 + step * i, -100 + step * i };
 		}
 		quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
 		std::shared_ptr<RenderObject> ro;
@@ -126,7 +127,7 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
 			ro->storage()->insert("unif_colorMode", 1);
 			//ro->setRenderable(false);
-			ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+			ro->model()->mesh(0).unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 		}
 		if (i == 1)
 		{
@@ -158,7 +159,7 @@ void MyApplication::DrawEllipses(bool bOrigin)
 		epse = std::make_shared<Ellipse>(-0.5f, -.5f, 0.25f, 0.25f, bOrigin);
 	else
 		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, bOrigin);
-	epse->mesh(0).unifyColor(Vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	epse->mesh(0).unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->insert("unif_colorMode", 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
@@ -171,17 +172,17 @@ void MyApplication::DrawCubes(bool bOrigin)
 	if (bOrigin)
 	{
 		float w = 0.7f;
-		cube = std::make_shared<Cube>(Vec3(0.0f, 0.0f, 0.0f), w, w, w);
+		cube = std::make_shared<Cube>(0.0f, 0.0f, 0.0f, w, w, w);
 	}
 	else
 	{
 		float w = 100;
-		cube = std::make_shared<Cube>(Vec3(400.0f, 240.0f, 0.0f), w, w, w);
+		cube = std::make_shared<Cube>(400.0f, 240.0f, 0.0f, w, w, w);
 	}
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(cube, std::make_shared<Material>(Programs::cube()));
 
 	m_context->queue(ro);
-	std::shared_ptr<Cubemap> cm = std::make_shared<Cubemap>();
+	std::shared_ptr<TextureCubemap> cm = std::make_shared<TextureCubemap>();
 	std::vector<std::string> paths;
 	paths.push_back("e:/pics/cubemap/2/right.jpg");
 	paths.push_back("e:/pics/cubemap/2/left.jpg");
@@ -197,10 +198,10 @@ void MyApplication::DrawSphere(bool bOrigin)
 {
 	std::shared_ptr<Sphere> sp;
 	if(bOrigin)
-		sp = std::make_shared<Sphere>(Vec3(0.5f, 0.5f, 0.5f), 0.5f, bOrigin);
+		sp = std::make_shared<Sphere>(0.5f, 0.5f, 0.5f, 0.5f, bOrigin);
 	else
-		sp = std::make_shared<Sphere>(Vec3(600.0f, 200.0f, 0.0f), 100.0f, bOrigin);
-	sp->mesh(0).unifyColor(Vec4(1.0f, 0.0, 0.0, 1.0));
+		sp = std::make_shared<Sphere>(600.0f, 200.0f, 0.0f, 100.0f, bOrigin);
+	sp->mesh(0).unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
 	ro->storage()->insert("unif_colorMode", 0);
@@ -215,12 +216,12 @@ void MyApplication::drawPhone(bool bOrigin)
 	if (bOrigin)
 	{
 		float w = 0.5f;
-		quad = std::make_shared<Cube>(Vec3(-1.0f, -0.0f, 0.0f), w, w, w);
+		quad = std::make_shared<Cube>(-1.0f, -0.0f, 0.0f, w, w, w);
 	}
 	else
 	{
 		float w = 80;
-		quad = std::make_shared<Cube>(Vec3(600, 350, 0.0f), w, w, w);
+		quad = std::make_shared<Cube>(600.0f, 350.0f, 0.0f, w, w, w);
 	}
 	//	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(Vec2(-0.0f, 0.0f), 2.0, 2.0);
 	//quad->setTextureCoordinateAt(0, Vec2(0.0, 1.0));
@@ -228,29 +229,29 @@ void MyApplication::drawPhone(bool bOrigin)
 	//quad->setTextureCoordinateAt(2, Vec2(1.0, 0.0));
 	//quad->setTextureCoordinateAt(3, Vec2(0.0, 0.0));
 	float f = 0.5773502691896258f;
-	quad->mesh(0).setNormalAt(0, Vec3(-f, f, f));
-	quad->mesh(0).setNormalAt(1, Vec3(f, f, f));
-	quad->mesh(0).setNormalAt(2, Vec3(f, -f, f));
-	quad->mesh(0).setNormalAt(3, Vec3(-f, -f, f));
-	quad->mesh(0).setNormalAt(4, Vec3(f, f, -f));
-	quad->mesh(0).setNormalAt(5, Vec3(-f, f, -f));
-	quad->mesh(0).setNormalAt(6, Vec3(-f, -f, -f));
-	quad->mesh(0).setNormalAt(7, Vec3(f, -f, -f));
+	quad->mesh(0).setNormalAt(0, { -f, f, f });
+	quad->mesh(0).setNormalAt(1, { f, f, f });
+	quad->mesh(0).setNormalAt(2, {f, -f, f});
+	quad->mesh(0).setNormalAt(3, { -f, -f, f });
+	quad->mesh(0).setNormalAt(4, { f, f, -f });
+	quad->mesh(0).setNormalAt(5, { -f, f, -f });
+	quad->mesh(0).setNormalAt(6, { -f, -f, -f });
+	quad->mesh(0).setNormalAt(7, { f, -f, -f });
 	//	std::shared_ptr<Ellipse> epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::phong()));
 	m_context->queue(ro);
 	ro->storage()->insert("viewPos", cameraPosition);
 	ro->storage()->insert("material.shininess", 32.0);
 	if(bOrigin)
-		ro->storage()->insert("light.direction", Vec3(1.0f, -0.0f, 3.0f));
+		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, 3.0f));
 	else
-		ro->storage()->insert("light.direction", Vec3(1.0f, -0.0f, -3.0f));
-	ro->storage()->insert("light.ambient", Vec3(0.5f, 0.5f, 0.5f));
-	ro->storage()->insert("light.diffuse", Vec3(0.4f, 0.4f, 0.4f));
-	ro->storage()->insert("light.specular", Vec3(0.5f, 0.5f, 0.5f));
+		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, -3.0f));
+	ro->storage()->insert("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+	ro->storage()->insert("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+	ro->storage()->insert("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
 	//	ro->material()->setTexture(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 
-	std::shared_ptr<Cubemap> cm = std::make_shared<Cubemap>();
+	std::shared_ptr<TextureCubemap> cm = std::make_shared<TextureCubemap>();
 	std::vector<std::string> paths;
 	/*	paths.push_back("e:/pics/cubemap/1/left.png");
 	paths.push_back("e:/pics/cubemap/1/right.png");
@@ -297,20 +298,20 @@ void MyApplication::drawGlyph(bool bOrigin)
 	Glyph glyph = GlyphFactory::getGlyph('z');
 	auto w = glyph.info.bm_width;
 	auto h = glyph.info.bm_height;
-	Vec2 p0, p1, p2, p3;
+	glm::vec2 p0, p1, p2, p3;
 	if (bOrigin)
 	{
-		p0 = Vec2(-0.5f, -0.5f);
-		p1 = Vec2(0.5f, -0.5f);
-		p2 = Vec2(0.5f, 0.5f);
-		p3 = Vec2(-0.5f, 0.5f);
+		p0 = { -0.5f, -0.5f };
+		p1 = { 0.5f, -0.5f };
+		p2 = { 0.5f, 0.5f };
+		p3 = { -0.5f, 0.5f };
 	}
 	else
 	{
-		p0 = Vec2(300, h);
-		p1 = Vec2(300 + w, h);
-		p2 = Vec2(300 + w, 0);
-		p3 = Vec2(300, 0);
+		p0 = { 300, h };
+		p1 = { 300 + w, h };
+		p2 = { 300 + w, 0 };
+		p3 = { 300, 0 };
 	}
 	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
 	quad->mesh(0).setTextureCoordinateAt(0, glyph.uv[0]);
@@ -388,15 +389,15 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 			break;
 		case nb::gl::Window::VKey_Esc:
 			for (int i = 0; i != m_context->renderObjectCount(); ++i)
-				m_context->renderObject(i)->model()->setMatrix(Matrix4x4::identity());
+				m_context->renderObject(i)->model()->setMatrix(glm::identity<glm::mat4x4>());
 			break;
 		case nb::gl::Window::VKey_F1:
 		{
-			Matrix4x4 mat = Matrix4x4::identity();
+		/*	Matrix4x4 mat = Matrix4x4::identity();
 			mat.rotateAngleY(60.0);
 			mat.scaleX(2);
 			mat.translate(0.5, 0, 0);
-			m_context->renderObject(0)->model()->setMatrix(mat);
+			m_context->renderObject(0)->model()->setMatrix(mat);*/
 		}
 			break;
 		case nb::gl::Window::VKey_F2:
@@ -451,12 +452,12 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		{
 			cameraPosition += 0.1f * cameraFront;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
-			printf("z=%.1f\r\n", cameraPosition.z());
+			printf("z=%.1f\r\n", cameraPosition.z);
 		}
 			break;
 		case nb::gl::Window::VKey_J:
 		{
-			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1f;
+			auto x = glm::cross(cameraFront, cameraUp) * 0.1f;
 			cameraPosition -= x;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}
@@ -465,12 +466,12 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		{
 			cameraPosition -= 0.1f * cameraFront;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
-			printf("z=%.1f\r\n", cameraPosition.z());
+			printf("z=%.1f\r\n", cameraPosition.z);
 		}
 			break;
 		case nb::gl::Window::VKey_L:
 		{
-			Vec3 x = cameraFront.crossProduct(cameraUp) * 0.1f;
+			auto x = glm::cross(cameraFront, cameraUp) * 0.1f;
 			cameraPosition += x;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}

@@ -23,7 +23,8 @@
 **	
 ********************************************************/
 #pragma once
-#include "../core/Vec4.h"
+#include "../core/Def.h"
+#include "glm/glm.hpp"
 #include "../media/Bitmap.h"
 
 namespace nb{ namespace gl{
@@ -49,7 +50,7 @@ public:
 	TextureWrapping(WrappingMode s, WrappingMode t);
 
 	//构建一个纹理环绕方式，它的S轴是s，它的T轴是t，它的用户颜色边缘延伸是borderColor
-	TextureWrapping(WrappingMode s, WrappingMode t, const nb::core::Vec4 &borderColor);
+	TextureWrapping(WrappingMode s, WrappingMode t, const glm::vec4 &borderColor);
 
 	//转到gl的值
 	static int glValue(WrappingMode wrapping);
@@ -63,7 +64,7 @@ public:
 private:
 	WrappingMode	m_s;
 	WrappingMode	m_t;
-	nb::core::Vec4	m_borderColor;
+	glm::vec4		m_borderColor;
 };
 
 //class TextureFilter

@@ -9,7 +9,8 @@
 **
 ********************************************************/
 #pragma once
-#include "../core/Matrix4x4.h"
+#include "../core/Def.h"
+#include "glm/glm.hpp"
 
 namespace nb{ namespace gl{
 
@@ -20,15 +21,15 @@ public:
 	Camera();
 
 	//ªÒ»°π€≤Ïæÿ’Û
-	nb::core::Matrix4x4 &matrix();
-	const nb::core::Matrix4x4 &matrix() const;
+	glm::mat4x4 &matrix();
+	const glm::mat4x4 &matrix() const;
 
 	//lookup
-	void lookat(const nb::core::Vec3 &position, const nb::core::Vec3 &target, const nb::core::Vec3 &upVec);
+	void lookat(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &upVec);
 	void lookat2D(double width, double height);
 
 private:
-	nb::core::Matrix4x4		m_matrix;
+	glm::mat4x4		m_matrix;
 };
 
 }}

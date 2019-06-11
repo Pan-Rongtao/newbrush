@@ -1,8 +1,5 @@
 #include "gles/SourceDecoder.h"
-#include "core/Vec4.h"
-#include "core/Matrix2x2.h"
-#include "core/Matrix3x3.h"
-#include "core/Matrix4x4.h"
+#include "glm/glm.hpp"
 
 using namespace nb::gl;
 
@@ -106,27 +103,27 @@ void SourceDecoder::extractLine(const std::string &sLine, size_t &hash, std::str
 	}
 	else if (sType == "vec2")
 	{
-		hash = typeid(nb::core::Vec2).hash_code();
+		hash = typeid(glm::vec2).hash_code();
 	}
 	else if (sType == "vec3")
 	{
-		hash = typeid(nb::core::Vec3).hash_code();
+		hash = typeid(glm::vec3).hash_code();
 	}
 	else if (sType == "vec4")
 	{
-		hash = typeid(nb::core::Vec4).hash_code();
+		hash = typeid(glm::vec4).hash_code();
 	}
 	else if (sType == "mat2")
 	{
-		hash = typeid(nb::core::Matrix2x2).hash_code();
+		hash = typeid(glm::mat2x2).hash_code();
 	}
 	else if (sType == "mat3")
 	{
-		hash = typeid(nb::core::Matrix3x3).hash_code();
+		hash = typeid(glm::mat3x3).hash_code();
 	}
 	else if (sType == "mat4")
 	{
-		hash = typeid(nb::core::Matrix4x4).hash_code();
+		hash = typeid(glm::mat4x4).hash_code();
 	}
 	else
 	{

@@ -13,12 +13,7 @@
 ********************************************************/
 #pragma once
 #include "../core/Def.h"
-#include "../core/Vec2.h"
-#include "../core/Vec3.h"
-#include "../core/Vec4.h"
-#include "../core/Matrix2x2.h"
-#include "../core/Matrix3x3.h"
-#include "../core/Matrix4x4.h"
+#include "glm/glm.hpp"
 
 namespace nb{ namespace gl{
 
@@ -81,39 +76,39 @@ public:
 
 	//更新位置为location的attribute
 	void vertexAttribute(int location, float v);
-	void vertexAttribute(int location, const nb::core::Vec2 &vec);
-	void vertexAttribute(int location, const nb::core::Vec3 &vec);
-	void vertexAttribute(int location, const nb::core::Vec4 &vec);
-	void vertexAttribute(int location, nb::core::Vec2 *vec);
-	void vertexAttribute(int location, nb::core::Vec3 *vec);
-	void vertexAttribute(int location, nb::core::Vec4 *vec);
+	void vertexAttribute(int location, const glm::vec2 &vec);
+	void vertexAttribute(int location, const glm::vec3 &vec);
+	void vertexAttribute(int location, const glm::vec4 &vec);
+	void vertexAttribute(int location, glm::vec2 *vec);
+	void vertexAttribute(int location, glm::vec3 *vec);
+	void vertexAttribute(int location, glm::vec4 *vec);
 	void vertexAttributePointer(int location, int dimension, int stride, const void *data);
 
 	//更新位置为location的unform
 	void uniform(int location, float v);
 	void uniform(int location, float *v, int count);
-	void uniform(int location, const nb::core::Vec2 &vec);
-	void uniform(int location, nb::core::Vec2 *vec, int count);
-	void uniform(int location, const nb::core::Vec3 &vec);
-	void uniform(int location, nb::core::Vec3 *vec, int count);
-	void uniform(int location, const nb::core::Vec4 &vec);
-	void uniform(int location, nb::core::Vec4 *vec, int count);
+	void uniform(int location, const glm::vec2 &vec);
+	void uniform(int location, glm::vec2 *vec, int count);
+	void uniform(int location, const glm::vec3 &vec);
+	void uniform(int location, glm::vec3 *vec, int count);
+	void uniform(int location, const glm::vec4 &vec);
+	void uniform(int location, glm::vec4 *vec, int count);
 
 	void uniform(int location, int v);
 	void uniform(int location, int *v, int count);
-	void uniform(int location, const nb::core::Vec2I &vec);
-	void uniform(int location, nb::core::Vec2I *vec, int count);
-	void uniform(int location, const nb::core::Vec3I &vec);
-	void uniform(int location, nb::core::Vec3I *vec, int count);
-	void uniform(int location, const nb::core::Vec4I &vec);
-	void uniform(int location, nb::core::Vec4I *vec, int count);
+	void uniform(int location, const glm::ivec2 &vec);
+	void uniform(int location, glm::ivec2 *vec, int count);
+	void uniform(int location, const glm::ivec3 &vec);
+	void uniform(int location, glm::ivec3 *vec, int count);
+	void uniform(int location, const glm::ivec4 &vec);
+	void uniform(int location, glm::ivec4 *vec, int count);
 
-	void uniform(int location, const nb::core::Matrix2x2 &matrix);
-	void uniform(int location, nb::core::Matrix2x2 *matrix, int count);
-	void uniform(int location, const nb::core::Matrix3x3 &matrix);
-	void uniform(int location, nb::core::Matrix3x3 *matrix, int count);
-	void uniform(int location, const nb::core::Matrix4x4 &matrix);
-	void uniform(int location, nb::core::Matrix4x4 *matrix, int count);
+	void uniform(int location, const glm::mat2x2 &matrix);
+	void uniform(int location, glm::mat2x2 *matrix, int count);
+	void uniform(int location, const glm::mat3x3 &matrix);
+	void uniform(int location, glm::mat3x3 *matrix, int count);
+	void uniform(int location, const glm::mat4x4 &matrix);
+	void uniform(int location, glm::mat4x4 *matrix, int count);
 
 private:
 	std::shared_ptr<VertexShader>	m_vertexShader;

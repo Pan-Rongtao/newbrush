@@ -78,7 +78,7 @@ Size Canvas::measureOverride(const Size & availableSize)
 {
 	for (auto child : Children())
 	{
-		child->measure(Size(Width == NB_DOUBLE_NAN ? 0.0 : Width, Height == NB_DOUBLE_NAN ? 0.0 : Height));
+		child->measure(Size((float)(Width == NB_DOUBLE_NAN ? 0.0 : Width), (float)(Height == NB_DOUBLE_NAN ? 0.0 : Height)));
 	}
 	return availableSize;
 }
@@ -87,14 +87,14 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : Children())
 	{
-		double x = (float)getLeft(child);
-		double y = (float)getTop(child);
+		double x = getLeft(child);
+		double y = getTop(child);
 		if (x == NB_DOUBLE_NAN)	x = 0.0;
 		if (y == NB_DOUBLE_NAN)	y = 0.0;
 		double w = child->DesiredSize().width();
 		double h = child->DesiredSize().height();
 				
-		child->arrage(Rect(x, y, w, h));
+		child->arrage(Rect((float)x, (float)y, (float)w, (float)h));
 	}
 	return finalSize;
 }

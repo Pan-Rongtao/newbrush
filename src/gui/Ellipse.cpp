@@ -32,7 +32,7 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
 		auto color = solidbrush->Color();
 		Renderer()->storage()->insert("unif_colorMode", 1);
-		Renderer()->model()->mesh(0).unifyColor(Vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
+		Renderer()->model()->mesh(0).unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 	}
 }
 

@@ -4,57 +4,40 @@ using namespace nb::core;
 using namespace nb::gl;
 
 Quadrangle::Quadrangle()
+	: Quadrangle(glm::vec2(), glm::vec2(), glm::vec2(), glm::vec2(), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 {
-	std::vector<Vertex> vertexs;
-	for (int i = 0; i != 4; ++i)
-		vertexs.push_back(Vertex());
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 }
 
-Quadrangle::Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3)
+Quadrangle::Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3)
+	: Quadrangle(p0, p1, p2, p3, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))
 {
-	std::vector<Vertex> vertexs;
-	Vec3 center = getCenter(p0, p1, p2, p3);
-	vertexs.push_back(Vertex(Vec3(p0, 0.0f) - center, Vec4(0.0f, 0.0f, 0.0f, 1.0f), Vec2(0.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p1, 0.0f) - center, Vec4(0.0f, 0.0f, 0.0f, 1.0f), Vec2(1.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p2, 0.0f) - center, Vec4(0.0f, 0.0f, 0.0f, 1.0f), Vec2(1.0, 1.0)));
-	vertexs.push_back(Vertex(Vec3(p3, 0.0f) - center, Vec4(0.0f, 0.0f, 0.0f, 1.0f), Vec2(0.0, 1.0)));
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
-	translate(center.x(), center.y(), center.z());
 }
 
-Quadrangle::Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const Vec4 &color)
+Quadrangle::Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3, const glm::vec4 &color)
+	: Quadrangle(p0, p1, p2, p3, color, color, color, color)
 {
-	std::vector<Vertex> vertexs;
-	Vec3 center = getCenter(p0, p1, p2, p3);
-	vertexs.push_back(Vertex(Vec3(p0, 0.0f) - center, color, Vec2(0.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p1, 0.0f) - center, color, Vec2(1.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p2, 0.0f) - center, color, Vec2(1.0, 1.0)));
-	vertexs.push_back(Vertex(Vec3(p3, 0.0f) - center, color, Vec2(0.0, 1.0)));
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
-	translate(center.x(), center.y(), center.z());
 }
 
-Quadrangle::Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const Vec4 &color0, const Vec4 &color1, const Vec4 &color2, const Vec4 &color3)
+Quadrangle::Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3, const glm::vec4 &color0, const glm::vec4 &color1, const glm::vec4 &color2, const glm::vec4 &color3)
 {
-	std::vector<Vertex> vertexs;
-	Vec3 center = getCenter(p0, p1, p2, p3);
-	vertexs.push_back(Vertex(Vec3(p0, 0.0f) - center, color0, Vec2(0.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p1, 0.0f) - center, color1, Vec2(1.0, 0.0)));
-	vertexs.push_back(Vertex(Vec3(p2, 0.0f) - center, color2, Vec2(1.0, 1.0)));
-	vertexs.push_back(Vertex(Vec3(p3, 0.0f) - center, color3, Vec2(0.0, 1.0)));
+	auto center = getCenter(p0, p1, p2, p3);
+	std::vector<Vertex> vertexs{
+		Vertex(glm::vec3(p0, 0.0f) - center, color0, glm::vec2(0.0, 0.0)),
+		Vertex(glm::vec3(p1, 0.0f) - center, color1, glm::vec2(1.0, 0.0)),
+		Vertex(glm::vec3(p2, 0.0f) - center, color2, glm::vec2(1.0, 1.0)),
+		Vertex(glm::vec3(p3, 0.0f) - center, color3, glm::vec2(0.0, 1.0))
+	};
 	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
-	translate(center.x(), center.y(), center.z());
+	translate(center.x, center.y, center.z);
 }
 
 std::vector<uint16_t> Quadrangle::getIndices() const
 {
 	//ÄæÊ±Õë£¬ÇÒÒþ²Ø±³Ãæ
-	unsigned short arr[6] = { 0,1,2, 0,2,3 };
-	return std::vector<uint16_t>(arr, arr + 6);
+	return std::vector<uint16_t>{ 0, 1, 2, 0, 2, 3 };
 }
 
-Vec3 Quadrangle::getCenter(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3) const
+glm::vec3 Quadrangle::getCenter(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3) const
 {
-	return Vec3((p0 + p1 + p2 + p3) / 4, 0.0f);
+	return glm::vec3((p0 + p1 + p2 + p3) / 4.0f, 0.0f);
 }

@@ -9,16 +9,16 @@ using namespace nb::gl;
 
 //class TexutreWrapping
 TextureWrapping::TextureWrapping()
-	: TextureWrapping(WrappingMode::Repeat, WrappingMode::Repeat, Vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	: TextureWrapping(WrappingMode::Repeat, WrappingMode::Repeat, { 0.0f, 0.0f, 0.0f, 1.0f })
 {
 }
 
 TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t)
-	: TextureWrapping(s, t, Vec4(0.0f, 0.0f, 0.0f, 1.0f))
+	: TextureWrapping(s, t, { 0.0f, 0.0f, 0.0f, 1.0f })
 {
 }
 
-TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t, const Vec4 &borderColor)
+TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t, const glm::vec4 &borderColor)
 	: m_s(s)
 	, m_t(t)
 	, m_borderColor(borderColor)

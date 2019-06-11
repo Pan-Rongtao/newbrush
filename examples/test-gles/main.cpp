@@ -3,8 +3,6 @@
 #include "TestWindow.h"
 #include "TestConfigure.h"
 #include "TestModel.h"
-#include "core/Vec2.h"
-#include "core/Matrix4x4.h"
 #include "core/Any.h"
 #include "TestTexture2D.h"
 

@@ -90,7 +90,7 @@ void Bitmap_Internal::fill(unsigned int rgba)
 
 bool Bitmap_Internal::hasPixelData() const
 {
-	return m_pFreeImage && (bool)FreeImage_HasPixels(m_pFreeImage);
+	return m_pFreeImage && FreeImage_HasPixels(m_pFreeImage) != 0;
 }
 
 Bitmap::PixelFormat Bitmap_Internal::pixelFormat() const
@@ -232,7 +232,7 @@ void Bitmap_Internal::save(const std::string &path) const
 	FREE_IMAGE_FORMAT format = FreeImage_GetFIFFromFilename(path.data());
 	if(format == FIF_UNKNOWN)
 		format = FIF_BMP;
-	bool b = FreeImage_Save(format, m_pFreeImage, path.data());
+	bool b = FreeImage_Save(format, m_pFreeImage, path.data()) != 0;
 }
 
 //注意，此函数必须保证第一次在主线程中调用，也就是FreeImage_Initialise();必须在主线程中第一次被执行，否则只会FreeImage的加载都将失败

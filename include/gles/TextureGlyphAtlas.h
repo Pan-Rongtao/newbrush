@@ -1,6 +1,6 @@
 #pragma once
 #include "../core/Def.h"
-#include "../core/Vec2.h"
+#include "glm/glm.hpp"
 #include <map>
 #include <vector>
 #include <string>
@@ -12,7 +12,7 @@ namespace nb{ namespace gl{
 struct Glyph
 {
 	int					texureId;	//字形所在纹理
-	core::Vec2			uv[4];		//纹理坐标
+	glm::vec2			uv[4];		//纹理坐标
 	media::GlyphInfo	info;		//字形信息
 };
 

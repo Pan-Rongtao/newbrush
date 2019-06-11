@@ -3,10 +3,11 @@
 #include <ctime>
 
 using namespace nb::core;
-#define MaxYear					9999
-#define MinYear					1
-#define MaxMonth				12
-#define MinMonth				1
+
+constexpr int MaxYear = 9999;
+constexpr int MinYear = 1;
+constexpr int MaxMonth = 12;
+constexpr int MinMonth = 1;
 
 ////////////////////////////////////class Date
 Date::Date()

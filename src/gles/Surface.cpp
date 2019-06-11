@@ -4,7 +4,6 @@
 #include "gles/Egl.h"
 #include "EglMaster.h"
 
-using namespace nb::core;
 using namespace nb::gl;
 
 Surface::Surface()

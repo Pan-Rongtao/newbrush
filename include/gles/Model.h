@@ -17,9 +17,8 @@
 **	
 ********************************************************/
 #pragma once
-#include "../core/Vec3.h"
-#include "../core/Matrix4x4.h"
 #include "../core/EnumFlags.h"
+#include "glm/glm.hpp"
 #include <vector>
 
 namespace nb{ namespace gl{
@@ -38,45 +37,45 @@ public:
 
 public:
 	Vertex();
-	explicit Vertex(const nb::core::Vec3 &position);
-	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color);
-	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color, const nb::core::Vec2 &texCoord);
-	Vertex(const nb::core::Vec3 &position, const nb::core::Vec4 &color, const nb::core::Vec2 &texCoord, const nb::core::Vec3 &normal);
+	explicit Vertex(const glm::vec3 &position);
+	Vertex(const glm::vec3 &position, const glm::vec4 &color);
+	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord);
+	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord, const glm::vec3 &normal);
 
 	//位置
-	nb::core::Vec3 &position();
-	const nb::core::Vec3 &position() const;
+	glm::vec3 &position();
+	const glm::vec3 &position() const;
 
 	//颜色
-	nb::core::Vec4 &color();
-	const nb::core::Vec4 &color() const;
+	glm::vec4 &color();
+	const glm::vec4 &color() const;
 
 	//纹理坐标
-	nb::core::Vec2 &texCoord();
-	const nb::core::Vec2 &texCoord() const;
+	glm::vec2 &texCoord();
+	const glm::vec2 &texCoord() const;
 
 	//法向量
-	nb::core::Vec3 &normal();
-	const nb::core::Vec3 &normal() const;
+	glm::vec3 &normal();
+	const glm::vec3 &normal() const;
 
 public:
 	//获取位置数据组件数
-	static int positionDimension();
+	static constexpr int positionDimension = 3;
 
 	//获取颜色数据组件数
-	static int colorDimension();
+	static constexpr int colorDimension = 4;
 
 	//获取纹理坐标数据组件数
-	static int textureCoordinateDimension();
+	static constexpr int textureCoordinateDimension = 2;
 
 	//获取法线数据组件数
-	static int normalDimension();
+	static constexpr int normalDimension = 3;
 
 private:
-	nb::core::Vec3	m_position;
-	nb::core::Vec4	m_color;
-	nb::core::Vec2	m_texCoord;
-	nb::core::Vec3	m_normal;
+	glm::vec3	m_position;
+	glm::vec4	m_color;
+	glm::vec2	m_texCoord;
+	glm::vec3	m_normal;
 };
 
 class NB_API Mesh
@@ -96,43 +95,43 @@ public:
 	const float *positionData() const;
 
 	//设置第vertexIndex个顶点的位置为position
-	void setPositionAt(uint32_t vertexIndex, const nb::core::Vec3 &position);
+	void setPositionAt(uint32_t vertexIndex, const glm::vec3 &position);
 
 	//获取第vertexIndex个顶点的位置数据
-	nb::core::Vec3 positionAt(uint32_t vertexIndex) const;
+	glm::vec3 positionAt(uint32_t vertexIndex) const;
 
 	//获取颜色数据
 	float *colorData();
 	const float *colorData() const;
 
 	//设置第vertexIndex个顶点的颜色为color
-	void setColorAt(uint32_t vertexIndex, const nb::core::Vec4 &color);
+	void setColorAt(uint32_t vertexIndex, const glm::vec4 &color);
 
 	//获取第vertexIndex个顶点的颜色
-	nb::core::Vec4 colorAt(uint32_t vertexIndex) const;
+	glm::vec4 colorAt(uint32_t vertexIndex) const;
 
 	//获取纹理坐标数据
 	float *textureCoordinateData();
 	const float *textureCoordinateData() const;
 
 	//设置第vertexIndex个顶点的纹理坐标为texCoord
-	void setTextureCoordinateAt(uint32_t vertexIndex, const nb::core::Vec2 &texCoord);
+	void setTextureCoordinateAt(uint32_t vertexIndex, const glm::vec2 &texCoord);
 
 	//获取第vertexIndex个顶点的纹理坐标
-	nb::core::Vec2 textureCoordinateAt(uint32_t vertexIndex) const;
+	glm::vec2 textureCoordinateAt(uint32_t vertexIndex) const;
 
 	//获取法线数据
 	float *normalData();
 	const float *normalData() const;
 
 	//设置第vertexIndex个顶点的法线为texCoord
-	void setNormalAt(uint32_t vertexIndex, const nb::core::Vec3 &normal);
+	void setNormalAt(uint32_t vertexIndex, const glm::vec3 &normal);
 
 	//获取第vertexIndex个顶点的法线
-	nb::core::Vec3 normalAt(uint32_t vertexIndex) const;
+	glm::vec3 normalAt(uint32_t vertexIndex) const;
 
 	//将所有顶点颜色统一
-	void unifyColor(const nb::core::Vec4 &color);
+	void unifyColor(const glm::vec4 &color);
 
 	//顶点序列(逆时针)
 	const std::vector<uint16_t> &indices() const;
@@ -163,10 +162,10 @@ public:
 	const std::vector<Mesh> &meshs() const;
 
 	//设置模型矩阵(经过了平移、旋转、缩放）
-	void setMatrix(const nb::core::Matrix4x4 &matrix);
+	void setMatrix(const glm::mat4x4 &matrix);
 
 	//获取模型矩阵(经过了平移、旋转、缩放）
-	const nb::core::Matrix4x4 &getMatrix() const;
+	const glm::mat4x4 &getMatrix() const;
 
 	//平移
 	void translate(float x, float y, float z);
@@ -180,18 +179,18 @@ public:
 	//命中测试
 	virtual bool hitTest(int x, int y) const;
 
-	bool triangleTest(const nb::core::Vec3 & a, const nb::core::Vec3 &b, const nb::core::Vec3 &c, int x, int y) const;
+	bool triangleTest(const glm::vec3 & a, const glm::vec3 &b, const glm::vec3 &c, int x, int y) const;
 
 	virtual void cullFace();
 
 protected:
-	std::vector<Mesh>								m_meshs;
+	std::vector<Mesh>						m_meshs;
 
 private:
-	nb::core::Matrix4x4								m_matrix;
-	nb::core::Matrix4x4								m_TranslateMatrix;
-	nb::core::Matrix4x4								m_RotateMatrix;
-	nb::core::Matrix4x4								m_ScaleMatrix;
+	glm::mat4x4								m_matrix;
+	glm::mat4x4								m_translateMatrix;
+	glm::mat4x4								m_rotateMatrix;
+	glm::mat4x4								m_scaleMatrix;
 };
 
 }}

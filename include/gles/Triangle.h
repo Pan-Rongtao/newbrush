@@ -20,20 +20,20 @@ public:
 	Triangle();
 
 	//构建一个三角形，它的三个顶点坐标是(p0, p1, p2)，它的颜色是0.0
-	Triangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2);
+	Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2);
 
 	//构建一个三角形，它的三个顶点坐标是(p0, p1, p2)，
 	//它的三个顶点的颜色都是color
-	Triangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec4 &color);
+	Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec4 &color);
 
 	//构建一个三角形，它的三个顶点坐标是(p0, p1, p2)，它的三个顶点的颜色都是(color0, color1, color2)
-	Triangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec4 &color0, const nb::core::Vec4 &color1, const nb::core::Vec4 &color2);
+	Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec4 &color0, const glm::vec4 &color1, const glm::vec4 &color2);
 
 private:
 	std::vector<uint16_t> getIndices() const;
-	double distance(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1) const;
+	double distance(const glm::vec2 &p0, const glm::vec2 &p1) const;
 	//内心
-	nb::core::Vec2 center(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2) const;
+	glm::vec2 center(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2) const;
 };
 
 }}

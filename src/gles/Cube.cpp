@@ -12,19 +12,19 @@ Cube::Cube()
 	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 }
 
-Cube::Cube(const Vec3 &centerPosition, float lenght, float width, float height)
+Cube::Cube(float x, float y, float z, float lenght, float width, float height)
 {
 	std::vector<Vertex> vertexs;
-	vertexs.push_back(Vertex(Vec3(-lenght / 2, height / 2, width / 2)));
-	vertexs.push_back(Vertex(Vec3(lenght / 2, height / 2, width / 2)));
-	vertexs.push_back(Vertex(Vec3(lenght / 2, -height / 2, width / 2)));
-	vertexs.push_back(Vertex(Vec3(-lenght / 2, -height / 2, width / 2)));
-	vertexs.push_back(Vertex(Vec3(lenght / 2, height / 2, -width / 2)));
-	vertexs.push_back(Vertex(Vec3(-lenght / 2, height / 2, -width / 2)));
-	vertexs.push_back(Vertex(Vec3(-lenght / 2, -height / 2, -width / 2)));
-	vertexs.push_back(Vertex(Vec3(lenght / 2, -height / 2, -width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, height / 2, width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(lenght / 2, height / 2, width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(lenght / 2, -height / 2, width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, -height / 2, width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(lenght / 2, height / 2, -width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, height / 2, -width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, -height / 2, -width / 2)));
+	vertexs.push_back(Vertex(glm::vec3(lenght / 2, -height / 2, -width / 2)));
 	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
-	translate(centerPosition.x(), centerPosition.y(), centerPosition.z());
+	translate(x, y, z);
 }
 
 void Cube::cullFace()

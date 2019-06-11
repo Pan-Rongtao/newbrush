@@ -3,7 +3,6 @@
 #include "gles/Display.h"
 #include <EGL/egl.h>
 
-using namespace nb::core;
 using namespace nb::gl;
 
 Configure::Configure(const int *attributes)

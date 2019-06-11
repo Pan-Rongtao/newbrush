@@ -8,16 +8,19 @@
 **
 ********************************************************/
 #pragma once
-#include "../core/Matrix4x4.h"
+#include "../core/Def.h"
+#include "glm/glm.hpp"
 
 namespace nb{ namespace gl{
 
 class NB_API Projection
 {
 public:
+	Projection();
+
 	//æÿ’Û
-	nb::core::Matrix4x4 &matrix();
-	const nb::core::Matrix4x4 &matrix() const;
+	glm::mat4x4 &matrix();
+	const glm::mat4x4 &matrix() const;
 
 	//’˝…‰Õ∂”∞
 	void ortho(float left, float right, float bottom, float top, float near, float far);
@@ -28,7 +31,7 @@ public:
 	static std::shared_ptr<Projection> instance();
 
 private:
-	nb::core::Matrix4x4		m_matrix;
+	glm::mat4x4		m_matrix;
 };
 
 }}

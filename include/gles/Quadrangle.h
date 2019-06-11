@@ -9,8 +9,8 @@
 **
 ********************************************************/
 #pragma once
-#include "../core/Vec2.h"
 #include "Model.h"
+#include "glm/glm.hpp"
 
 namespace nb{ namespace gl{
 
@@ -22,19 +22,19 @@ public:
 
 	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
 	//它的四个顶点颜色都为0.0
-	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3);
+	Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3);
 
 	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
 	//它的四个顶点颜色都为unifyColor
-	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const nb::core::Vec4 &color);
+	Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3, const glm::vec4 &color);
 
 	//构建一个矩形，它的中心点是centerPoint，宽高为width, height
 	//它的四个顶点颜色为(color0, color1, color2, color3)
-	Quadrangle(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3, const nb::core::Vec4 &color0, const nb::core::Vec4 &color1, const nb::core::Vec4 &color2, const nb::core::Vec4 &color3);
+	Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3, const glm::vec4 &color0, const glm::vec4 &color1, const glm::vec4 &color2, const glm::vec4 &color3);
 
 private:
 	std::vector<uint16_t> getIndices() const;
-	nb::core::Vec3 getCenter(const nb::core::Vec2 &p0, const nb::core::Vec2 &p1, const nb::core::Vec2 &p2, const nb::core::Vec2 &p3) const;
+	glm::vec3 getCenter(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3) const;
 };
 
 }}

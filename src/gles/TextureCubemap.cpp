@@ -1,27 +1,27 @@
-﻿#include "gles/Cubemap.h"
+﻿#include "gles/TextureCubemap.h"
 #include <GLES2/gl2.h>
 #include "media/Bitmap.h"
 
 using namespace nb::gl;
 using namespace nb::media;
 
-Cubemap::Cubemap()
+TextureCubemap::TextureCubemap()
 {
 	setWrapping(TextureWrapping());
 	setFilter(TextureFilter());
 }
 
-void Cubemap::bind()
+void TextureCubemap::bind()
 {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_handle);
 }
 
-void Cubemap::unbind()
+void TextureCubemap::unbind()
 {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void Cubemap::setWrapping(const TextureWrapping &wrapping)
+void TextureCubemap::setWrapping(const TextureWrapping &wrapping)
 {
 	bind();
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, TextureWrapping::glValue(wrapping.s()));
@@ -31,7 +31,7 @@ void Cubemap::setWrapping(const TextureWrapping &wrapping)
 	m_wrapping = wrapping;
 }
 
-void Cubemap::setFilter(const TextureFilter &filter)
+void TextureCubemap::setFilter(const TextureFilter &filter)
 {
 	bind();
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, TextureFilter::glValue(filter.magnifyFilter()));
@@ -40,7 +40,7 @@ void Cubemap::setFilter(const TextureFilter &filter)
 	m_filter = filter;
 }
 
-void Cubemap::load(const std::vector<std::string> &paths)
+void TextureCubemap::load(const std::vector<std::string> &paths)
 {
 	Bitmap bms[6];
 	int glFormat[6] = { 0 };
