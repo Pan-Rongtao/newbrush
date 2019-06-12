@@ -10,7 +10,7 @@ Application *g_app = nullptr;
 Application::Application()
 {
 	if (g_app)
-		NB_THROW_EXCEPTION(std::logic_error, "create tow application");
+		nbThrowException(std::logic_error, "create tow application");
 
 	g_app = this;
 }

@@ -11,66 +11,26 @@ Vertex::Vertex()
 }
 
 Vertex::Vertex(const glm::vec3 & position)
-	: m_position(position)
+	: Vertex(position, glm::vec4(), glm::vec2(), glm::vec3())
 {
 }
 
 Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color)
-	: m_position(position), m_color(color)
+	: Vertex(position, color, glm::vec2(), glm::vec3())
 {
 }
 
 Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color, const glm::vec2 & texCoord)
-	: m_position(position), m_color(color), m_texCoord(texCoord)
+	: Vertex(position, color, texCoord, glm::vec3())
 {
 }
 
 Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color, const glm::vec2 & texCoord, const glm::vec3 & normal)
-	: m_position(position)
-	, m_color(color)
-	, m_texCoord(texCoord)
-	, m_normal(normal)
+	: position(position)
+	, color(color)
+	, texCoord(texCoord)
+	, normal(normal)
 {
-}
-
-glm::vec3 &Vertex::position()
-{
-	return m_position;
-}
-
-const glm::vec3 &Vertex::position() const
-{
-	return m_position;
-}
-
-glm::vec4 &Vertex::color()
-{
-	return m_color;
-}
-
-const glm::vec4 &Vertex::color() const
-{
-	return m_color;
-}
-
-glm::vec2 &Vertex::texCoord()
-{
-	return m_texCoord;
-}
-
-const glm::vec2 &Vertex::texCoord() const
-{
-	return m_texCoord;
-}
-
-glm::vec3 &Vertex::normal()
-{
-	return m_normal;
-}
-
-const glm::vec3 &Vertex::normal() const
-{
-	return m_normal;
 }
 
 //class Mesh
@@ -91,120 +51,61 @@ bool Mesh::hasAttribute(Vertex::VertexAttribute attr) const
 	return m_attributes.testFlag(attr);
 }
 
-uint32_t Mesh::vertexCount() const
-{
-	return m_vertexs.size();
-}
-
-void Mesh::setPositionAt(uint32_t vertexIndex, const glm::vec3 &position)
-{
-	if (positionData() == nullptr)
-		NB_THROW_EXCEPTION(std::logic_error, "no position attribute");
-
-	m_vertexs[vertexIndex].position() = position;
-}
-
 float *Mesh::positionData()
 {
-	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position()[0]) : nullptr;
+	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position[0]) : nullptr;
 }
 
 const float *Mesh::positionData() const
 {
-	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position()[0]) : nullptr;
-}
-
-glm::vec3 Mesh::positionAt(uint32_t vertexIndex) const
-{
-	if (!hasAttribute(Vertex::positionAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no position attribute");
-
-	return m_vertexs[vertexIndex].position();
-}
-
-void Mesh::setColorAt(uint32_t vertexIndex, const glm::vec4 &color)
-{
-	if (!hasAttribute(Vertex::colorAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no color attribute");
-
-	m_vertexs[vertexIndex].color() = color;
+	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position[0]) : nullptr;
 }
 
 float *Mesh::colorData()
 {
-	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color()[0]) : nullptr;
+	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color[0]) : nullptr;
 }
 
 const float *Mesh::colorData() const
 {
-	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color()[0]) : nullptr;
-}
-
-glm::vec4 Mesh::colorAt(uint32_t vertexIndex) const
-{
-	if (!hasAttribute(Vertex::colorAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no color attribute");
-
-	return m_vertexs[vertexIndex].color();
-}
-
-void Mesh::setTextureCoordinateAt(uint32_t vertexIndex, const glm::vec2 &texCoord)
-{
-	if (!hasAttribute(Vertex::textureCoordinateAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no textureCoord attribute");
-
-	m_vertexs[vertexIndex].texCoord() = texCoord;
+	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color[0]) : nullptr;
 }
 
 float *Mesh::textureCoordinateData()
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord()[0]) : nullptr;
+	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord[0]) : nullptr;
 }
 
 const float *Mesh::textureCoordinateData() const
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord()[0]) : nullptr;
-}
-
-glm::vec2 Mesh::textureCoordinateAt(uint32_t vertexIndex) const
-{
-	if (!hasAttribute(Vertex::textureCoordinateAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no textureCoord attribute");
-
-	return m_vertexs[vertexIndex].texCoord();
-}
-
-void Mesh::setNormalAt(uint32_t vertexIndex, const glm::vec3 &normal)
-{
-	if (!hasAttribute(Vertex::normalAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no normal attribute");
-
-	m_vertexs[vertexIndex].normal() = normal;
+	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord[0]) : nullptr;
 }
 
 float *Mesh::normalData()
 {
-	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal()[0]) : nullptr;
+	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal[0]) : nullptr;
 }
 
 const float *Mesh::normalData() const
 {
-	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal()[0]) : nullptr;
+	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal[0]) : nullptr;
 }
 
-glm::vec3 Mesh::normalAt(uint32_t vertexIndex) const
+std::vector<Vertex> &Mesh::vertexs()
 {
-	if (!hasAttribute(Vertex::normalAttribute))
-		NB_THROW_EXCEPTION(std::logic_error, "no normal attribute");
+	return m_vertexs;
+}
 
-	return m_vertexs[vertexIndex].normal();
+const std::vector<Vertex> &Mesh::vertexs() const
+{
+	return m_vertexs;
 }
 
 void Mesh::unifyColor(const glm::vec4 &color)
 {
 	if (!hasAttribute(Vertex::colorAttribute))	return;
-	for (int i = 0; i != vertexCount(); ++i)
-		setColorAt(i, color);
+	for (int i = 0; i != m_vertexs.size(); ++i)
+		m_vertexs[i].color = color;
 }
 
 const std::vector<uint16_t> &Mesh::indices() const
@@ -221,39 +122,14 @@ Model::Model()
 {
 }
 
-Model::~Model()
+std::vector<Mesh>& Model::meshes()
 {
+	return m_meshes;
 }
 
-uint32_t Model::meshCount() const
+const std::vector<Mesh>& Model::meshes() const
 {
-	return m_meshs.size();
-}
-
-Mesh & Model::mesh(uint32_t index)
-{
-	if (index >= meshCount())
-		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, meshCount());
-
-	return m_meshs[index];
-}
-
-const Mesh & Model::mesh(uint32_t index) const
-{
-	if (index >= meshCount())
-		NB_THROW_EXCEPTION(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, meshCount());
-
-	return m_meshs[index];
-}
-
-std::vector<Mesh>& Model::meshs()
-{
-	return m_meshs;
-}
-
-const std::vector<Mesh>& Model::meshs() const
-{
-	return m_meshs;
+	return m_meshes;
 }
 
 void Model::setMatrix(const glm::mat4x4 &matrix)

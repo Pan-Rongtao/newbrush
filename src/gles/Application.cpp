@@ -14,7 +14,7 @@ static bool g_hasInstanced = false;
 Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure)
 {
 	if (g_hasInstanced)
-		NB_THROW_EXCEPTION(std::runtime_error, "create more than one application object");
+		nbThrowException(std::runtime_error, "create more than one application object");
 
 	//初始化GL，注意，使用Configure((int *)NULL)开启深度帧率降低很多
 	if(!display)

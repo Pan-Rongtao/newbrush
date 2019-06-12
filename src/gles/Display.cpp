@@ -13,7 +13,7 @@ Display::Display(long id)
 {
 	m_handle = eglGetDisplay((EGLNativeDisplayType)id);
 	if(m_handle == EGL_NO_DISPLAY)
-		NB_THROW_EXCEPTION(std::runtime_error, "eglGetDisplay fail, eglGetError[%d].", eglGetError());
+		nbThrowException(std::runtime_error, "eglGetDisplay fail, eglGetError[%d].", eglGetError());
 	m_id = id;
 }
 

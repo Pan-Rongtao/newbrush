@@ -47,7 +47,7 @@ Window_Internal::Window_Internal(Window *p)
 #elif defined NB_OS_FAMILY_UNIX
 	m_X11Display = XOpenDisplay(nullptr);
 	if (m_X11Display == nullptr)
-		NB_THROW_EXCEPTION(std::runtime_error, "XOpenDisplay fail.");
+		nbThrowException(std::runtime_error, "XOpenDisplay fail.");
 	int screen = DefaultScreen(m_X11Display);	//这是个宏
 	//m_X11WindowID从服务端获取，不用释放
 	m_X11WindowID = XCreateSimpleWindow(m_X11Display, RootWindow(m_X11Display, screen), 0, 0, 800, 480, 1, BlackPixel(m_X11Display, screen), WhitePixel(m_X11Display, screen));
@@ -56,7 +56,7 @@ Window_Internal::Window_Internal(Window *p)
 #elif NB_OS == NB_OS_LINUX_ARM
 	m_wlDisplay = wl_display_connect(nullptr);
 	if (m_wlDisplay == nullptr)
-		NB_THROW_EXCEPTION(std::runtime_error, "wl_display_connect fail.");
+		nbThrowException(std::runtime_error, "wl_display_connect fail.");
 
 	m_wlRegistry = wl_display_get_registry(m_wlDisplay);
 	m_UserData.wlListeners.wlRegistryListener.global = Window_Internal::onWaylandRegistryGlobal;
@@ -67,15 +67,15 @@ Window_Internal::Window_Internal(Window *p)
 
 	m_wlSurface = wl_compositor_create_surface(m_UserData.wlGlobals.wlCompositor);
 	if (m_wlSurface == nullptr)
-		NB_THROW_EXCEPTION(std::runtime_error, "wl_compositor_create_surface fail.");
+		nbThrowException(std::runtime_error, "wl_compositor_create_surface fail.");
 
 	m_wlShellSurface = wl_shell_get_shell_surface(m_UserData.wlGlobals.wlShell, m_wlSurface);
 	if (m_wlShellSurface == nullptr)
-		NB_THROW_EXCEPTION(std::runtime_error, "wl_shell_get_shell_surface fail.");
+		nbThrowException(std::runtime_error, "wl_shell_get_shell_surface fail.");
 
 	m_wlWindow = wl_egl_window_create(m_wlSurface, 1920, 1080);
 	if (m_wlWindow == nullptr)
-		NB_THROW_EXCEPTION(std::runtime_error, "wl_egl_window_create fail.");
+		nbThrowException(std::runtime_error, "wl_egl_window_create fail.");
 #endif
 }
 

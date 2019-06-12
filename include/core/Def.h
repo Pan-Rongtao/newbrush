@@ -71,7 +71,7 @@
 #endif
 
 //支持构造函数为单字符串参数的exception类型
-#define NB_THROW_EXCEPTION(exception, argfmt, ...) \
+#define nbThrowException(exception, argfmt, ...) \
 do{\
 	char buffer[256] = {0}; \
 	std::string file = __FILE__;\

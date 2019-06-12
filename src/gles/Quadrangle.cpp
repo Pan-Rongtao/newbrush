@@ -27,7 +27,7 @@ Quadrangle::Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2
 		Vertex(glm::vec3(p2, 0.0f) - center, color2, glm::vec2(1.0, 1.0)),
 		Vertex(glm::vec3(p3, 0.0f) - center, color3, glm::vec2(0.0, 1.0))
 	};
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 	translate(center.x, center.y, center.z);
 }
 

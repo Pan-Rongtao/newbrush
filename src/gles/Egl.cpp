@@ -16,7 +16,7 @@ static std::shared_ptr<Context> g_context = nullptr;
 std::string nb::gl::getVersion()
 {
 	if (!getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VERSION);
 }
@@ -24,7 +24,7 @@ std::string nb::gl::getVersion()
 std::string nb::gl::getVendor()
 {
 	if (!getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	return eglQueryString(getDisplay()->handle(), EGL_VENDOR);
 }
@@ -36,7 +36,7 @@ void nb::gl::initialize(std::shared_ptr<Display> display)
 
 	int major = 0, minor = 0;
 	if (!eglInitialize(display->handle(), &major, &minor))
-		NB_THROW_EXCEPTION(std::runtime_error, "eglInitialize fail, eglGetError[%d].", eglGetError());
+		nbThrowException(std::runtime_error, "eglInitialize fail, eglGetError[%d].", eglGetError());
 
 	g_display = display;
 }
@@ -79,10 +79,10 @@ std::shared_ptr<Projection> nb::gl::getProjection()
 void nb::gl::makeCurrent(std::shared_ptr<Surface> onScreen, std::shared_ptr<Surface> offScreen, std::shared_ptr<Context> context)
 {
 	if (!getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	if(!eglMakeCurrent(getDisplay()->handle(), onScreen->handle(), offScreen->handle(), context->handle()))
-		NB_THROW_EXCEPTION(std::runtime_error, "eglMakeCurrent fail, glGetError[%d]", glGetError());
+		nbThrowException(std::runtime_error, "eglMakeCurrent fail, glGetError[%d]", glGetError());
 
 	g_onScreenSurface = onScreen;
 	g_offScreenSurface = offScreen;

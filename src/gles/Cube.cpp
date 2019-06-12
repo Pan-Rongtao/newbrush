@@ -9,7 +9,7 @@ Cube::Cube()
 	std::vector<Vertex> vertexs;
 	for (int i = 0; i != 8; ++i)
 		vertexs.push_back(Vertex());
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 }
 
 Cube::Cube(float x, float y, float z, float lenght, float width, float height)
@@ -23,7 +23,7 @@ Cube::Cube(float x, float y, float z, float lenght, float width, float height)
 	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, height / 2, -width / 2)));
 	vertexs.push_back(Vertex(glm::vec3(-lenght / 2, -height / 2, -width / 2)));
 	vertexs.push_back(Vertex(glm::vec3(lenght / 2, -height / 2, -width / 2)));
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 	translate(x, y, z);
 }
 

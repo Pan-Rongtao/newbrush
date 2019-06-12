@@ -306,10 +306,10 @@ void split(const std::string &sSource, const std::string &sSymbol, std::vector<s
 std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std::string & format, const std::string & flags)
 {
 	if (!format.empty() && (format[0] == '|' || format[format.size() - 1] == '|'))
-		NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
+		nbThrowException(std::invalid_argument, "format string is invalid");
 
 	if (!std::regex_match(s, std::regex("^[0-9]+[0-9|]+[0-9]+$")))
-		NB_THROW_EXCEPTION(std::invalid_argument, "s string is invalid");
+		nbThrowException(std::invalid_argument, "s string is invalid");
 
 	std::vector<std::string> formatSegments;
 	std::vector<std::string> SSegments;
@@ -322,13 +322,13 @@ std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std
 	{
 		char ch = one[0];
 		if (flags.find(ch) == std::string::npos || one.find_first_not_of(ch, 0) != std::string::npos)
-			NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
+			nbThrowException(std::invalid_argument, "format string is invalid");
 		else
 			temp += ch;
 	}
 	//formatSegments不可重复
 	if (std::set<char>(temp.begin(), temp.end()).size() != temp.size())
-		NB_THROW_EXCEPTION(std::invalid_argument, "format string is invalid");
+		nbThrowException(std::invalid_argument, "format string is invalid");
 
 	std::vector<int64_t> args;
 	args.resize(flags.size(), 0);

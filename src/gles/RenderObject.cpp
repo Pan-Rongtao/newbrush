@@ -86,11 +86,6 @@ std::shared_ptr<Material> nb::gl::RenderObject::material() const
 	return m_material;
 }
 
-void RenderObject::setStorage(std::shared_ptr<Storage> storage)
-{
-	m_storage = storage;
-}
-
 std::shared_ptr<Storage> RenderObject::storage()
 {
 	return m_storage;
@@ -102,7 +97,7 @@ void RenderObject::draw() const
 		return;
 	auto program = m_material->program();
 	auto textures = m_material->textures();
-	if (!m_renderable || !m_model || m_model->meshCount() == 0 || !m_material || !program)
+	if (!m_renderable || !m_model || m_model->meshes().empty() || !m_material || !program)
 		return;
 
 	program->use();
@@ -137,9 +132,9 @@ void RenderObject::draw() const
 	}
 
 	//依次绘制meshs
-	for (int i = 0; i != m_model->meshCount(); ++i)
+	for (int i = 0; i != m_model->meshes().size(); ++i)
 	{
-		const Mesh &mesh = m_model->mesh(i);
+		auto const &mesh = m_model->meshes()[i];
 		//检查各个顶点位置、颜色、向量、纹理坐标属性，如果有则传到gpu
 		if (mesh.hasAttribute(Vertex::positionAttribute))
 			program->vertexAttributePointer(Program::positionLocation, Vertex::positionDimension, 12 * sizeof(float), mesh.positionData());
@@ -171,7 +166,7 @@ void RenderObject::loopNode(aiNode * node, const aiScene * scene)
 	for (int i = 0; i != node->mNumMeshes; ++i)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		m_model->meshs().push_back(processMesh(mesh, scene));
+		m_model->meshes().push_back(processMesh(mesh, scene));
 	}
 	for (int i = 0; i != node->mNumChildren; ++i)
 		loopNode(node->mChildren[i], scene);
@@ -186,10 +181,10 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 	for (int i = 0; i != mesh->mNumVertices; ++i)
 	{
 		Vertex ver;
-		if (mesh->HasPositions())		ver.position() = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-		if (mesh->mColors[0])			ver.color() = { mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a };
-		if (mesh->mTextureCoords[0])	ver.texCoord() = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
-		if (mesh->HasNormals())			ver.normal() = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+		if (mesh->HasPositions())		ver.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+		if (mesh->mColors[0])			ver.color = { mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a };
+		if (mesh->mTextureCoords[0])	ver.texCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+		if (mesh->HasNormals())			ver.normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 		vertexs.push_back(ver);
 	}
 

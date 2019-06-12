@@ -35,7 +35,7 @@ FT_LibraryRec_ *FontFamily::getFT()
 	{
 		auto x = FT_Init_FreeType(&ft);
 		if (x != 0)
-			NB_THROW_EXCEPTION(std::runtime_error, "FT_Init_FreeType fail[%d]", x);
+			nbThrowException(std::runtime_error, "FT_Init_FreeType fail[%d]", x);
 	}
 	return ft;
 }

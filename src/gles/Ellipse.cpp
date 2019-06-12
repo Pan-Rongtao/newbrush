@@ -34,7 +34,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 			vertexs.push_back(Vertex(glm::vec3((float)(a * cos(radian)), (float)(b * sin(radian)), 0.0f), glm::vec4(), texCoord));
 		}
 	}
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 	translate(x, y, 0.0f);
 }
 

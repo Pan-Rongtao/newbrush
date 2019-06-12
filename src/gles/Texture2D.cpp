@@ -114,7 +114,7 @@ void Texture2D::loadFromData(const char *data, int width, int height, Texture::P
 int Texture2D::maxWidthSupported()
 {
 	if (!nb::gl::getContext())
-		NB_THROW_EXCEPTION(std::logic_error, "context not set, use nb::gl::makeCurrent to set Context");
+		nbThrowException(std::logic_error, "context not set, use nb::gl::makeCurrent to set Context");
 
 	int nRet = 0;
 	glEnable(GL_TEXTURE_2D);

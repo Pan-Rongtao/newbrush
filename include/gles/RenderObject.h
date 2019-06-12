@@ -61,9 +61,6 @@ public:
 	std::shared_ptr<Material> material();
 	std::shared_ptr<Material> material() const;
 
-	//…Ë÷√¥Ê¥¢
-	void setStorage(std::shared_ptr<Storage> storage);
-
 	//ªÒ»°¥Ê¥¢
 	std::shared_ptr<Storage> storage();
 

@@ -17,7 +17,7 @@ Program::Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<Fragme
 {
 	m_programHandle = glCreateProgram();
 	if (m_programHandle == 0)
-		NB_THROW_EXCEPTION(std::runtime_error, "glCreateProgram fail, glGetError[%d]", glGetError());
+		nbThrowException(std::runtime_error, "glCreateProgram fail, glGetError[%d]", glGetError());
 }
 
 Program::~Program()
@@ -65,7 +65,7 @@ void Program::link()
 		glGetProgramInfoLog(m_programHandle, nLogLen, nullptr, pLog);
 		std::string sLog = pLog;
 		delete []pLog;
-		NB_THROW_EXCEPTION(std::runtime_error, "program link fail, reason: %s", sLog.data());
+		nbThrowException(std::runtime_error, "program link fail, reason: %s", sLog.data());
 	}
 }
 

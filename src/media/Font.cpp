@@ -18,7 +18,7 @@ Font::Font(const std::string &fontPath, uint32_t fontSize)
 {
 	auto x = FT_New_Face(FontFamily::getFT(), fontPath.data(), 0, &m_face);
 	if (x != 0)
-		NB_THROW_EXCEPTION(std::runtime_error, "FT_New_Face fail[%d]", x);
+		nbThrowException(std::runtime_error, "FT_New_Face fail[%d]", x);
 	setSize(fontSize);
 }
 
@@ -35,7 +35,7 @@ std::string Font::name() const
 void Font::setSize(uint32_t fontSize)
 {
 	if (fontSize < 8)
-		NB_THROW_EXCEPTION(std::out_of_range, "fontSize[%d] is out of range[8, 72]", fontSize);
+		nbThrowException(std::out_of_range, "fontSize[%d] is out of range[8, 72]", fontSize);
 
 	auto x = FT_Set_Pixel_Sizes(m_face, 0, fontSize);	//0表示与另一个尺寸值相等
 	m_fontSize = fontSize;

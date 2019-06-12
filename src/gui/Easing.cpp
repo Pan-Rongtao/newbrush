@@ -29,7 +29,7 @@ BackEase::BackEase()
 	Amplitude.notify([](const double &_old, const double &_new) 
 	{
 		if (_new < 0.0)
-			NB_THROW_EXCEPTION(std::underflow_error, "Amplitude[%.f] < 0.0", _new);
+			nbThrowException(std::underflow_error, "Amplitude[%.f] < 0.0", _new);
 	});
 }
 
@@ -126,11 +126,11 @@ ElasticEase::ElasticEase()
 {
 	Oscillations.notify([](const int &_old, const int &_new) {
 		if (_new < 0)
-			NB_THROW_EXCEPTION(std::underflow_error, "Oscillations[%d] < 0", _new);
+			nbThrowException(std::underflow_error, "Oscillations[%d] < 0", _new);
 	});
 	Springiness.notify([](const double &_old, const double &_new) {
 		if (_new < 0.0) 
-			NB_THROW_EXCEPTION(std::underflow_error, "Springiness[%f] < 0.0", _new);
+			nbThrowException(std::underflow_error, "Springiness[%f] < 0.0", _new);
 	});
 }
 

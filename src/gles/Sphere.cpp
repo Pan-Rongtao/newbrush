@@ -46,7 +46,7 @@ Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 			}
 		}
 	}
-	m_meshs.push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
 	translate(x, y, z);
 }
 

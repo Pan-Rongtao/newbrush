@@ -9,8 +9,8 @@ RepeatBehavior::RepeatBehavior()
 	, m_hasCount(true)
 	, m_hasDuration(false)
 {
-	Count.getter([&]()->int& { if (!m_hasCount)	NB_THROW_EXCEPTION(std::logic_error, "not a 'Count assigned' RepeatBehavior");	return m_count; });
-	Duration.getter([&]()->TimeSpan& { if (!m_hasDuration)	NB_THROW_EXCEPTION(std::logic_error, "not a 'Duration assigned' RepeatBehavior");	return m_duration; });
+	Count.getter([&]()->int& { if (!m_hasCount)	nbThrowException(std::logic_error, "not a 'Count assigned' RepeatBehavior");	return m_count; });
+	Duration.getter([&]()->TimeSpan& { if (!m_hasDuration)	nbThrowException(std::logic_error, "not a 'Duration assigned' RepeatBehavior");	return m_duration; });
 }
 
 RepeatBehavior::RepeatBehavior(int count)

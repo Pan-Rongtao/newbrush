@@ -28,7 +28,7 @@ void Surface::setHeight(int height)
 int Surface::width() const
 {
 	if (!nb::gl::getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	const char *p = eglQueryString(nb::gl::getDisplay()->handle(), EGL_WIDTH);
 	return atoi(p);
@@ -37,7 +37,7 @@ int Surface::width() const
 int Surface::height() const
 {
 	if (!nb::gl::getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	const char *p = eglQueryString(nb::gl::getDisplay()->handle(), EGL_HEIGHT);
 	return atoi(p);
@@ -53,14 +53,14 @@ WindowSurface::WindowSurface(int width, int height, long windowHandle)
 	: m_windowHandle(windowHandle)
 {
 	if (!getDisplay())
-		NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 	else if (!getConfigure())
-		NB_THROW_EXCEPTION(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
+		nbThrowException(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
 
 	m_handle = eglCreateWindowSurface(nb::gl::getDisplay()->handle(), nb::gl::getConfigure()->handle(), (EGLNativeWindowType)windowHandle, nullptr);
 	if (!eglQuerySurface(nb::gl::getDisplay()->handle(), m_handle, EGL_WIDTH, &width)
 		|| !eglQuerySurface(nb::gl::getDisplay()->handle(), m_handle, EGL_HEIGHT, &height))
-		NB_THROW_EXCEPTION(std::runtime_error, "eglQuerySurface fail, eglGetError[%d]", eglGetError());
+		nbThrowException(std::runtime_error, "eglQuerySurface fail, eglGetError[%d]", eglGetError());
 
 	EglMaster::windowSurfaces().push_back(this);
 }

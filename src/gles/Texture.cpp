@@ -110,9 +110,9 @@ Texture::Texture(unsigned int width, unsigned int height)
 	if (glGetError() == GL_INVALID_OPERATION)
 	{
 		if (!getDisplay())
-			NB_THROW_EXCEPTION(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
+			nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 		else if (!getConfigure())
-			NB_THROW_EXCEPTION(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
+			nbThrowException(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
 	}
 }
 
@@ -161,6 +161,6 @@ void Texture::bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &
 //	case Bitmap::Format_Bpp16_Argb4444:	glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_SHORT_4_4_4_4;	break;
 //	case Bitmap::Format_Bpp1_Mono:		glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_SHORT_5_5_5_1;	break;
 	case 4:	glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_BYTE;			break;
-	default: NB_THROW_EXCEPTION(std::invalid_argument, "bmChannels[%d] is invalid", bmChannels);	break;
+	default: nbThrowException(std::invalid_argument, "bmChannels[%d] is invalid", bmChannels);	break;
 	}
 }

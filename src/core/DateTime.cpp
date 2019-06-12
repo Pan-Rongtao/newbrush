@@ -18,7 +18,7 @@ Date::Date()
 Date::Date(int y, int m, int d)
 {
 	if (!isValid(y, m, d))
-		NB_THROW_EXCEPTION(std::out_of_range, "y(%d) or m(%d) or d(%d) is out of range", y, m, d);
+		nbThrowException(std::out_of_range, "y(%d) or m(%d) or d(%d) is out of range", y, m, d);
 
 	m_year = y;
 	m_month = m;
@@ -368,7 +368,7 @@ Time::Time(int hour, int minute, int second, int millisecond)
 Time::Time(int hour, int minute, int second, int millisecond, int microsecond)
 {
 	if (!isValid(hour, minute, second, millisecond, microsecond))
-		NB_THROW_EXCEPTION(std::out_of_range, "hour(%d) or minute(%d) or second(%d) or millisecond(%d) or microsecond(%d) is out of range", hour, minute, second, millisecond, microsecond);
+		nbThrowException(std::out_of_range, "hour(%d) or minute(%d) or second(%d) or millisecond(%d) or microsecond(%d) is out of range", hour, minute, second, millisecond, microsecond);
 
 	m_hour = hour;
 	m_minute = minute;

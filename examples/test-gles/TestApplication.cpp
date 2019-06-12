@@ -83,14 +83,14 @@ void MyApplication::DrawTriangles()
 			float step = 50.0f;
 			tri = std::make_shared<Triangle>(glm::vec2(200.0f + step * i, 50.0f), glm::vec2(100 + step * i, 200.0f), glm::vec2(300.0f + step * i, 200.0f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		}
-		tri->mesh(0).setTextureCoordinateAt(0, { 0.5f, 1.0f });
-		tri->mesh(0).setTextureCoordinateAt(1, { 0.0f, 0.0f });
-		tri->mesh(0).setTextureCoordinateAt(2, { 1.0f, 0.0f });
-		tri->mesh(0).setColorAt(0, { 1.0f, 0.0f, 0.0f, 1.0f });
-		tri->mesh(0).setColorAt(1, { 0.0f, 1.0f, 0.0f, 1.0f });
-		tri->mesh(0).setColorAt(2, { 0.0f, 0.0f, 1.0f, 1.0f });
+		tri->meshes()[0].vertexs()[0].texCoord = { 0.5f, 1.0f };
+		tri->meshes()[0].vertexs()[1].texCoord = { 0.0f, 0.0f };
+		tri->meshes()[0].vertexs()[2].texCoord = { 1.0f, 0.0f };
+		tri->meshes()[0].vertexs()[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+		tri->meshes()[0].vertexs()[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
+		tri->meshes()[0].vertexs()[2].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
-		ro->storage()->insert("unif_colorMode", 0);
+		ro->storage()->insert("unif_colorMode", 1);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 		m_context->queue(ro);
 	}
@@ -127,18 +127,18 @@ void MyApplication::DrawQuadrangles()
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
 			ro->storage()->insert("unif_colorMode", 1);
 			//ro->setRenderable(false);
-			ro->model()->mesh(0).unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
+			ro->model()->meshes()[0].unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 		}
 		if (i == 1)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
 		//	ro->storage()->insert("unif_colorMode", 0);
-		//	ro->model()->mesh(0).unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			//ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
-		//	ro->model()->mesh(0).setPositionAt(0, Vec3(0, m_window->height(), 0));
-		//	ro->model()->mesh(0).setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
-		//	ro->model()->mesh(0).setPositionAt(2, Vec3(m_window->width(), 0, 0));
-		//	ro->model()->mesh(0).setPositionAt(3, Vec3(0, 0, 0));
+		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));
+		//	ro->model()->meshes()[0].setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
+		//	ro->model()->meshes()[0].setPositionAt(2, Vec3(m_window->width(), 0, 0));
+		//	ro->model()->meshes()[0].setPositionAt(3, Vec3(0, 0, 0));
 		//	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
 		//	ro->material()->textures().push_back(glypTexture);
 		}
@@ -159,7 +159,7 @@ void MyApplication::DrawEllipses()
 		epse = std::make_shared<Ellipse>(-0.5f, -.5f, 0.25f, 0.25f, g_Original);
 	else
 		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
-	epse->mesh(0).unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
+	epse->meshes()[0].unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->insert("unif_colorMode", 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
@@ -201,7 +201,7 @@ void MyApplication::DrawSphere()
 		sp = std::make_shared<Sphere>(0.5f, 0.5f, 0.5f, 0.5f, g_Original);
 	else
 		sp = std::make_shared<Sphere>(600.0f, 200.0f, 0.0f, 100.0f, g_Original);
-	sp->mesh(0).unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
+	sp->meshes()[0].unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
 	ro->storage()->insert("unif_colorMode", 0);
@@ -229,14 +229,14 @@ void MyApplication::drawPhone()
 	//quad->setTextureCoordinateAt(2, Vec2(1.0, 0.0));
 	//quad->setTextureCoordinateAt(3, Vec2(0.0, 0.0));
 	float f = 0.5773502691896258f;
-	quad->mesh(0).setNormalAt(0, { -f, f, f });
-	quad->mesh(0).setNormalAt(1, { f, f, f });
-	quad->mesh(0).setNormalAt(2, {f, -f, f});
-	quad->mesh(0).setNormalAt(3, { -f, -f, f });
-	quad->mesh(0).setNormalAt(4, { f, f, -f });
-	quad->mesh(0).setNormalAt(5, { -f, f, -f });
-	quad->mesh(0).setNormalAt(6, { -f, -f, -f });
-	quad->mesh(0).setNormalAt(7, { f, -f, -f });
+	quad->meshes()[0].vertexs()[0].normal = { -f, f, f };
+	quad->meshes()[0].vertexs()[1].normal = { f, f, f };
+	quad->meshes()[0].vertexs()[2].normal = { f, -f, f };
+	quad->meshes()[0].vertexs()[3].normal = { -f, -f, f };
+	quad->meshes()[0].vertexs()[4].normal = { f, f, -f };
+	quad->meshes()[0].vertexs()[5].normal = { -f, f, -f };
+	quad->meshes()[0].vertexs()[6].normal = { -f, -f, -f };
+	quad->meshes()[0].vertexs()[7].normal = { f, -f, -f };
 	//	std::shared_ptr<Ellipse> epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::phong()));
 	m_context->queue(ro);
@@ -314,10 +314,10 @@ void MyApplication::drawGlyph()
 		p3 = { 300, 0 };
 	}
 	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
-	quad->mesh(0).setTextureCoordinateAt(0, glyph.uv[0]);
-	quad->mesh(0).setTextureCoordinateAt(1, glyph.uv[1]);
-	quad->mesh(0).setTextureCoordinateAt(2, glyph.uv[2]);
-	quad->mesh(0).setTextureCoordinateAt(3, glyph.uv[3]);
+	quad->meshes()[0].vertexs()[0].texCoord = glyph.uv[0];
+	quad->meshes()[0].vertexs()[1].texCoord = glyph.uv[1];
+	quad->meshes()[0].vertexs()[2].texCoord = glyph.uv[2];
+	quad->meshes()[0].vertexs()[3].texCoord = glyph.uv[3];
 	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
 	renderer->material()->textures().push_back(glypTexture);
 	m_context->queue(renderer);
@@ -504,16 +504,16 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		case nb::gl::Window::VKey_Z:
 			break;
 		case nb::gl::Window::VKey_Left:
-			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0, 0, 0);
+			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0f, 0.0f, 0.0f);
 			break;
 		case nb::gl::Window::VKey_Up:
-			m_context->renderObject(0)->model()->translate(0, g_Original ? 0.01f : 10.0, 0);
+			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? 0.01f : 10.0f, 0.0f);
 			break;
 		case nb::gl::Window::VKey_Right:
-			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0, 0, 0);
+			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0f, 0.0f, 0.0f);
 			break;
 		case nb::gl::Window::VKey_Down:
-			m_context->renderObject(0)->model()->translate(0, g_Original ? -0.01f : -10.0, 0);
+			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? -0.01f : -10.0f, 0.0f);
 			break;
 		case nb::gl::Window::VKey_Add:
 			m_context->renderObject(0)->model()->scale(2, 2, 2);

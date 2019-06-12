@@ -42,40 +42,16 @@ public:
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord, const glm::vec3 &normal);
 
-	//位置
-	glm::vec3 &position();
-	const glm::vec3 &position() const;
-
-	//颜色
-	glm::vec4 &color();
-	const glm::vec4 &color() const;
-
-	//纹理坐标
-	glm::vec2 &texCoord();
-	const glm::vec2 &texCoord() const;
-
-	//法向量
-	glm::vec3 &normal();
-	const glm::vec3 &normal() const;
-
-public:
-	//获取位置数据组件数
-	static constexpr int positionDimension = 3;
-
-	//获取颜色数据组件数
-	static constexpr int colorDimension = 4;
-
-	//获取纹理坐标数据组件数
+	//获取位置数据|颜色数据|颜色数据|法线数据的组件数
+	static constexpr int positionDimension			= 3;
+	static constexpr int colorDimension				= 4;
 	static constexpr int textureCoordinateDimension = 2;
+	static constexpr int normalDimension			= 3;
 
-	//获取法线数据组件数
-	static constexpr int normalDimension = 3;
-
-private:
-	glm::vec3	m_position;
-	glm::vec4	m_color;
-	glm::vec2	m_texCoord;
-	glm::vec3	m_normal;
+	glm::vec3	position;
+	glm::vec4	color;
+	glm::vec2	texCoord;
+	glm::vec3	normal;
 };
 
 class NB_API Mesh
@@ -87,54 +63,25 @@ public:
 	//是否有属性
 	bool hasAttribute(Vertex::VertexAttribute attr) const;
 
-	//获取顶点个数
-	uint32_t vertexCount() const;
-
-	//获取位置数据
+	//获取位置|颜色|纹理坐标|法向量数据
 	float *positionData();
 	const float *positionData() const;
-
-	//设置第vertexIndex个顶点的位置为position
-	void setPositionAt(uint32_t vertexIndex, const glm::vec3 &position);
-
-	//获取第vertexIndex个顶点的位置数据
-	glm::vec3 positionAt(uint32_t vertexIndex) const;
-
-	//获取颜色数据
 	float *colorData();
 	const float *colorData() const;
-
-	//设置第vertexIndex个顶点的颜色为color
-	void setColorAt(uint32_t vertexIndex, const glm::vec4 &color);
-
-	//获取第vertexIndex个顶点的颜色
-	glm::vec4 colorAt(uint32_t vertexIndex) const;
-
-	//获取纹理坐标数据
 	float *textureCoordinateData();
 	const float *textureCoordinateData() const;
-
-	//设置第vertexIndex个顶点的纹理坐标为texCoord
-	void setTextureCoordinateAt(uint32_t vertexIndex, const glm::vec2 &texCoord);
-
-	//获取第vertexIndex个顶点的纹理坐标
-	glm::vec2 textureCoordinateAt(uint32_t vertexIndex) const;
-
-	//获取法线数据
 	float *normalData();
 	const float *normalData() const;
 
-	//设置第vertexIndex个顶点的法线为texCoord
-	void setNormalAt(uint32_t vertexIndex, const glm::vec3 &normal);
-
-	//获取第vertexIndex个顶点的法线
-	glm::vec3 normalAt(uint32_t vertexIndex) const;
-
-	//将所有顶点颜色统一
-	void unifyColor(const glm::vec4 &color);
+	//顶点集合
+	std::vector<Vertex> &vertexs();
+	const std::vector<Vertex> &vertexs() const;
 
 	//顶点序列(逆时针)
 	const std::vector<uint16_t> &indices() const;
+
+	//将所有顶点颜色统一
+	void unifyColor(const glm::vec4 &color);
 
 private:
 	nb::core::EnumFlags<Vertex::VertexAttribute>	m_attributes;
@@ -148,18 +95,11 @@ public:
 	//构建一个模型，它的顶点个数为_vertexCount，属性类型为flags
 	//异常：nVertexCount < 0
 	Model();
-	virtual ~Model();
+	virtual ~Model() = default;
 
-public:
-	//mesh个数
-	uint32_t meshCount() const;
-
-	//mesh
-	Mesh &mesh(uint32_t index);
-	const Mesh &mesh(uint32_t index) const;
-
-	std::vector<Mesh> &meshs();
-	const std::vector<Mesh> &meshs() const;
+	//mesh集合
+	std::vector<Mesh> &meshes();
+	const std::vector<Mesh> &meshes() const;
 
 	//设置模型矩阵(经过了平移、旋转、缩放）
 	void setMatrix(const glm::mat4x4 &matrix);
@@ -181,16 +121,15 @@ public:
 
 	bool triangleTest(const glm::vec3 & a, const glm::vec3 &b, const glm::vec3 &c, int x, int y) const;
 
+	//剔除表面，不重写则禁用
 	virtual void cullFace();
-
-protected:
-	std::vector<Mesh>						m_meshs;
 
 private:
 	glm::mat4x4								m_matrix;
 	glm::mat4x4								m_translateMatrix;
 	glm::mat4x4								m_rotateMatrix;
 	glm::mat4x4								m_scaleMatrix;
+	std::vector<Mesh>						m_meshes;
 };
 
 }}

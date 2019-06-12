@@ -245,7 +245,7 @@ SizeI SizeI::operator / (int n) const
 SizeI SizeI::operator / (float d) const
 {
 	if (d == 0.0f)
-		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+		nbThrowException(std::invalid_argument, "divisor is 0");
 
 	return SizeI((int)(width() / d), (int)(height() / d));
 }

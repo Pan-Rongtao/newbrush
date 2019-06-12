@@ -69,7 +69,7 @@ Point Point::operator * (float f) const
 Point Point::operator / (float f) const
 {
 	if (f == 0.0f)
-		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+		nbThrowException(std::invalid_argument, "divisor is 0");
 
 	return Point(x() / f, y() / f);
 }
@@ -247,7 +247,7 @@ PointI PointI::operator / (int n) const
 PointI PointI::operator / (float f) const
 {
 	if (f == 0.0f)
-		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+		nbThrowException(std::invalid_argument, "divisor is 0");
 
 	return PointI((int)(x() / f), (int)(y() / f));
 }
@@ -442,7 +442,7 @@ Point3D Point3D::operator * (float f) const
 Point3D Point3D::operator / (float f) const
 {
 	if (f == 0.0f)
-		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+		nbThrowException(std::invalid_argument, "divisor is 0");
 
 	return Point3D(x() / f, y() / f, z() / f);
 }
@@ -638,7 +638,7 @@ Point3DI Point3DI::operator / (int n) const
 Point3DI Point3DI::operator / (float f) const
 {
 	if (f == 0.0f)
-		NB_THROW_EXCEPTION(std::invalid_argument, "divisor is 0");
+		nbThrowException(std::invalid_argument, "divisor is 0");
 
 	return Point3DI((int)(x() / f), (int)(y() / f), (int)(z() / f));
 }
