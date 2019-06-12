@@ -19,14 +19,14 @@ public:
 	MyApplication();
 	~MyApplication();
 
-	void DrawTriangles(bool bOrigin);
-	void DrawQuadrangles(bool bOrigin);
-	void DrawEllipses(bool bOrigin);
-	void DrawCubes(bool bOrigin);
-	void DrawSphere(bool bOrigin);
-	void drawPhone(bool bOrigin);
-	void drawModel(bool bOrigin);
-	void drawGlyph(bool bOrigin);
+	void DrawTriangles();
+	void DrawQuadrangles();
+	void DrawEllipses();
+	void DrawCubes();
+	void DrawSphere();
+	void drawPhone();
+	void drawModel();
+	void drawGlyph();
 
 protected:
 	virtual void preRender() override;

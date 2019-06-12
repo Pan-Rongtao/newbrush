@@ -26,6 +26,7 @@ public:
 	void ortho(float left, float right, float bottom, float top, float near, float far);
 
 	//透视投影
+	//fovy：弧度
 	void perspective(float fovy, float aspect, float near, float far);
 
 	static std::shared_ptr<Projection> instance();

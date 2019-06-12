@@ -32,7 +32,7 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = false;
+bool g_Original = true;
 
 MyApplication::MyApplication()
 {
@@ -57,23 +57,23 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	OnResize(args);
 
-	DrawTriangles(g_Original);
-	DrawQuadrangles(g_Original);
-	DrawEllipses(g_Original);
-	DrawCubes(g_Original);
-	DrawSphere(g_Original);
-	drawPhone(g_Original);
-	//	drawModel(g_Original);
-	drawGlyph(g_Original);
+	DrawTriangles();
+	DrawQuadrangles();
+	DrawEllipses();
+	DrawCubes();
+	DrawSphere();
+	drawPhone();
+	//	drawModel();
+	drawGlyph();
 }
 
-void MyApplication::DrawTriangles(bool bOrigin)
+void MyApplication::DrawTriangles()
 {
 	int objectCount = 1;
 	for(int i = 0; i != objectCount; ++i)
 	{
 		std::shared_ptr<Triangle> tri;
-		if (bOrigin)
+		if (g_Original)
 		{
 			float step = 0.3f;
 			tri = std::make_shared<Triangle>(glm::vec2(-1.5f + step * i, 1.5f), glm::vec2(-1.7f + step * i, -0.3f), glm::vec2(0.4f + step * i, -0.3f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
@@ -96,7 +96,7 @@ void MyApplication::DrawTriangles(bool bOrigin)
 	}
 }
 
-void MyApplication::DrawQuadrangles(bool bOrigin)
+void MyApplication::DrawQuadrangles()
 {
 	float step;
 	int objectCount = 2;
@@ -104,7 +104,7 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 	{
 		std::shared_ptr<Quadrangle> quad;
 		glm::vec2 p0, p1, p2, p3;
-		if (bOrigin)
+		if (g_Original)
 		{
 			step = 0.3f;
 			p0 = { -0.5f + step * i, -0.5f + step * i };
@@ -152,13 +152,13 @@ void MyApplication::DrawQuadrangles(bool bOrigin)
 
 }
 
-void MyApplication::DrawEllipses(bool bOrigin)
+void MyApplication::DrawEllipses()
 {
 	std::shared_ptr<Ellipse> epse;
-	if(bOrigin)
-		epse = std::make_shared<Ellipse>(-0.5f, -.5f, 0.25f, 0.25f, bOrigin);
+	if(g_Original)
+		epse = std::make_shared<Ellipse>(-0.5f, -.5f, 0.25f, 0.25f, g_Original);
 	else
-		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, bOrigin);
+		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
 	epse->mesh(0).unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->insert("unif_colorMode", 0);
@@ -166,10 +166,10 @@ void MyApplication::DrawEllipses(bool bOrigin)
 	m_context->queue(ro);
 }
 
-void MyApplication::DrawCubes(bool bOrigin)
+void MyApplication::DrawCubes()
 {
 	std::shared_ptr<Cube> cube;
-	if (bOrigin)
+	if (g_Original)
 	{
 		float w = 0.7f;
 		cube = std::make_shared<Cube>(0.0f, 0.0f, 0.0f, w, w, w);
@@ -194,13 +194,13 @@ void MyApplication::DrawCubes(bool bOrigin)
 	ro->material()->textures().push_back(cm);
 }
 
-void MyApplication::DrawSphere(bool bOrigin)
+void MyApplication::DrawSphere()
 {
 	std::shared_ptr<Sphere> sp;
-	if(bOrigin)
-		sp = std::make_shared<Sphere>(0.5f, 0.5f, 0.5f, 0.5f, bOrigin);
+	if(g_Original)
+		sp = std::make_shared<Sphere>(0.5f, 0.5f, 0.5f, 0.5f, g_Original);
 	else
-		sp = std::make_shared<Sphere>(600.0f, 200.0f, 0.0f, 100.0f, bOrigin);
+		sp = std::make_shared<Sphere>(600.0f, 200.0f, 0.0f, 100.0f, g_Original);
 	sp->mesh(0).unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
@@ -210,10 +210,10 @@ void MyApplication::DrawSphere(bool bOrigin)
 	//ro->storage()->insert("unif_colorMode", 1);
 }
 
-void MyApplication::drawPhone(bool bOrigin)
+void MyApplication::drawPhone()
 {
 	std::shared_ptr<Cube> quad;
-	if (bOrigin)
+	if (g_Original)
 	{
 		float w = 0.5f;
 		quad = std::make_shared<Cube>(-1.0f, -0.0f, 0.0f, w, w, w);
@@ -242,7 +242,7 @@ void MyApplication::drawPhone(bool bOrigin)
 	m_context->queue(ro);
 	ro->storage()->insert("viewPos", cameraPosition);
 	ro->storage()->insert("material.shininess", 32.0);
-	if(bOrigin)
+	if(g_Original)
 		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, 3.0f));
 	else
 		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, -3.0f));
@@ -275,11 +275,11 @@ void MyApplication::drawPhone(bool bOrigin)
 	ro->material()->textures().push_back(cm);
 }
 
-void MyApplication::drawModel(bool bOrigin)
+void MyApplication::drawModel()
 {
 	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(nullptr, std::make_shared<Material>(Programs::primitive()));
 	renderer->loadFromFile("e:/model/nanosuit/nanosuit.obj");
-	if (bOrigin)
+	if (g_Original)
 	{
 		renderer->model()->scale(0.05f, 0.05f, 0.05f);
 	}
@@ -292,14 +292,14 @@ void MyApplication::drawModel(bool bOrigin)
 	m_context->queue(renderer);
 }
 
-void MyApplication::drawGlyph(bool bOrigin)
+void MyApplication::drawGlyph()
 {
 	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijkqrstx");
 	Glyph glyph = GlyphFactory::getGlyph('z');
 	auto w = glyph.info.bm_width;
 	auto h = glyph.info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
-	if (bOrigin)
+	if (g_Original)
 	{
 		p0 = { -0.5f, -0.5f };
 		p1 = { 0.5f, -0.5f };
@@ -337,6 +337,7 @@ void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
+	//nb::gl::getProjection()->perspective(NB_ANG2RAD(45.0f), (float)args.width / (float)args.height, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else
@@ -503,16 +504,16 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		case nb::gl::Window::VKey_Z:
 			break;
 		case nb::gl::Window::VKey_Left:
-			m_context->renderObject(0)->model()->translate(-0.01f, 0, 0);
+			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0, 0, 0);
 			break;
 		case nb::gl::Window::VKey_Up:
-			m_context->renderObject(0)->model()->translate(0, 0.01f, 0);
+			m_context->renderObject(0)->model()->translate(0, g_Original ? 0.01f : 10.0, 0);
 			break;
 		case nb::gl::Window::VKey_Right:
-			m_context->renderObject(0)->model()->translate(0.01f, 0, 0);
+			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0, 0, 0);
 			break;
 		case nb::gl::Window::VKey_Down:
-			m_context->renderObject(0)->model()->translate(0, -0.01f, 0);
+			m_context->renderObject(0)->model()->translate(0, g_Original ? -0.01f : -10.0, 0);
 			break;
 		case nb::gl::Window::VKey_Add:
 			m_context->renderObject(0)->model()->scale(2, 2, 2);

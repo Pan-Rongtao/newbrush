@@ -26,7 +26,7 @@ void Projection::ortho(float left, float right, float bottom, float top, float n
 
 void Projection::perspective(float fovy, float aspect, float near, float far)
 {
-	m_matrix = glm::perspective(fovy, aspect, near, far);
+	m_matrix = glm::perspective(glm::radians(fovy), aspect, near, far);
 }
 
 std::shared_ptr<Projection> Projection::instance()

@@ -274,7 +274,7 @@ void Model::translate(float x, float y, float z)
 
 void Model::rotate(float angle, float x, float y, float z)
 {
-	m_rotateMatrix = glm::rotate(m_rotateMatrix, angle, glm::vec3(x, y, z));
+	m_rotateMatrix = glm::rotate(m_rotateMatrix, glm::radians(angle), glm::vec3(x, y, z));
 	m_matrix = m_translateMatrix * m_rotateMatrix * m_scaleMatrix;
 }
 
