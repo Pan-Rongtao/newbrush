@@ -36,7 +36,7 @@ bool g_Original = true;
 
 MyApplication::MyApplication()
 {
-	m_font = std::make_shared<Font>("../../../resource/STKAITI.TTF", 130);
+	m_font = std::make_shared<Font>("../../resource/STKAITI.TTF", 130);
 	m_timer.setInterval(20);
 	m_timer.TickEvent.addHandler(std::bind(&MyApplication::OnTick, this, std::placeholders::_1));
 //	m_timer.start();

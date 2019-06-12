@@ -28,9 +28,4 @@ set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
 target_link_libraries(${LIB_NAME} core media gles)
 
 # 4. Project Install
-if(WIN32)
-	install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/debug CONFIGURATIONS debug)
-	install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/release CONFIGURATIONS release)
-elseif(UNIX AND NOT ANDROID)
-	install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif()
+install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})

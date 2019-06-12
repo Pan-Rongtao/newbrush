@@ -28,9 +28,4 @@ set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME uit.nb.test.${BIN_NAME}
 target_link_libraries(${BIN_NAME} core media gles gui)
 
 # 4. Project Install
-if(WIN32)
-	install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR}/debug CONFIGURATIONS debug)
-	install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR}/release CONFIGURATIONS release)
-elseif(UNIX AND NOT ANDROID)
-	install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
+install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
