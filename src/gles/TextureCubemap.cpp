@@ -48,7 +48,7 @@ void TextureCubemap::load(const std::vector<std::string> &paths)
 	for (int i = 0; i != paths.size(); ++i)
 	{
 		bms[i].load(paths[i].data());
-		bitmapFormatToGlFormat(bms[i].pixelFormat(), glFormat[i], glType[i]);
+		bitmapFormatToGlFormat(bms[i].channels(), glFormat[i], glType[i]);
 	}
 
 	bind();

@@ -38,7 +38,7 @@ Texture2D::Texture2D(const nb::media::Bitmap &bm)
 {
 	int glFormat;
 	int glType;
-	bitmapFormatToGlFormat(bm.pixelFormat(), glFormat, glType);
+	bitmapFormatToGlFormat(bm.channels(), glFormat, glType);
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
 	unbind();
@@ -83,7 +83,7 @@ void Texture2D::loadFromPath(const std::string &path)
 	Bitmap bm(path.data());
 	int glFormat;
 	int glType;
-	bitmapFormatToGlFormat(bm.pixelFormat(), glFormat, glType);
+	bitmapFormatToGlFormat(bm.channels(), glFormat, glType);
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, bm.width(), bm.height(), 0, glFormat, glType, bm.data());
 	unbind();

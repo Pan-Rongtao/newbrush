@@ -154,7 +154,7 @@ protected:
 	Texture(unsigned int width, unsigned int height);
 	virtual ~Texture();
 
-	void bitmapFormatToGlFormat(nb::media::Bitmap::PixelFormat bmFormat, int &glInteralFormat, int &glPixcelDepth) const;
+	void bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const;
 
 	TextureWrapping		m_wrapping;
 	TextureFilter		m_filter;

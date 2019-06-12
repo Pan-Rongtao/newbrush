@@ -1,8 +1,5 @@
 #include "../TestBase.h"
 #include "TestBitmap.h"
-#include "TestExifReader.h"
-#include "TestGifReader.h"
-#include "TestTiffReader.h"
 #include "TestFont.h"
 
 int main(int argc, char *argv[])
