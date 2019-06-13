@@ -18,7 +18,7 @@
 #include "gles/Sphere.h"
 #include "gles/Storage.h"
 #include "gles/Projection.h"
-#include "gles/TextureGlyphAtlas.h"
+#include "gles/GlyphFactory.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -32,11 +32,10 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = true;
+bool g_Original = false;
 
 MyApplication::MyApplication()
 {
-	m_font = std::make_shared<Font>("../../resource/STKAITI.TTF", 130);
 	m_timer.setInterval(20);
 	m_timer.TickEvent.addHandler(std::bind(&MyApplication::OnTick, this, std::placeholders::_1));
 //	m_timer.start();
@@ -56,13 +55,13 @@ MyApplication::MyApplication()
 	args.width = m_window->width();
 	args.height = m_window->height();
 	OnResize(args);
-
+	/*
 	DrawTriangles();
 	DrawQuadrangles();
 	DrawEllipses();
 	DrawCubes();
 	DrawSphere();
-	drawPhone();
+	drawPhone();*/
 	//	drawModel();
 	drawGlyph();
 }
@@ -141,6 +140,7 @@ void MyApplication::DrawQuadrangles()
 		//	ro->model()->meshes()[0].setPositionAt(3, Vec3(0, 0, 0));
 		//	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
 		//	ro->material()->textures().push_back(glypTexture);
+			ro->setRenderable(false);
 		}
 		if (i == 2)
 		{
@@ -294,8 +294,7 @@ void MyApplication::drawModel()
 
 void MyApplication::drawGlyph()
 {
-	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijkqrstx");
-	Glyph glyph = GlyphFactory::getGlyph('z');
+	Glyph glyph = GlyphFactory::getGlyph('b');
 	auto w = glyph.info.bm_width;
 	auto h = glyph.info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
@@ -319,7 +318,7 @@ void MyApplication::drawGlyph()
 	quad->meshes()[0].vertexs()[2].texCoord = glyph.uv[2];
 	quad->meshes()[0].vertexs()[3].texCoord = glyph.uv[3];
 	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-	renderer->material()->textures().push_back(glypTexture);
+	renderer->material()->textures().push_back(std::make_shared<Texture2D>(glyph.texureId));
 	m_context->queue(renderer);
 }
 

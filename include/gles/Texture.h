@@ -122,6 +122,8 @@ public:
 	};
 
 public:
+	virtual ~Texture();
+
 	//绑定当前纹理，表示之后的gl操作都是针对当前纹理。在每次的Gles纹理操作都应该调用此函数
 	virtual void bind() = 0;
 
@@ -152,7 +154,6 @@ public:
 protected:
 	Texture();
 	Texture(unsigned int width, unsigned int height);
-	virtual ~Texture();
 
 	void bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const;
 

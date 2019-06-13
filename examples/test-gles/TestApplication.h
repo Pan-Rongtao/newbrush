@@ -42,7 +42,6 @@ private:
 	std::shared_ptr<nb::gl::Surface>					m_surface;
 	std::shared_ptr<nb::gl::Window>						m_window;
 	nb::core::Timer										m_timer;
-	std::shared_ptr<Font>								m_font;
 };
 
 class TestApplication : public TestBase

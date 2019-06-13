@@ -11,6 +11,11 @@ Texture2D::Texture2D()
 	setFilter(TextureFilter());
 }
 
+Texture2D::Texture2D(uint32_t id)
+{
+	m_handle = id;
+}
+
 Texture2D::Texture2D(unsigned int width, unsigned int height)
 	: Texture(width, height)
 {
