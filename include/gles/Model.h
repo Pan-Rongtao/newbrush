@@ -58,6 +58,9 @@ class NB_API Mesh
 {
 public:
 	Mesh(const nb::core::EnumFlags<Vertex::VertexAttribute> &attributes);
+
+	//vertexs：顶点集合
+	//indices：顶点序列（逆时针，且隐藏背面）
 	Mesh(const nb::core::EnumFlags<Vertex::VertexAttribute> &attributes, const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
 	//是否有属性

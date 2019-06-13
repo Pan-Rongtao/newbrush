@@ -30,7 +30,6 @@ public:
 	Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec4 &color0, const glm::vec4 &color1, const glm::vec4 &color2);
 
 private:
-	std::vector<uint16_t> getIndices() const;
 	double distance(const glm::vec2 &p0, const glm::vec2 &p1) const;
 	//ÄÚÐÄ
 	glm::vec2 center(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2) const;

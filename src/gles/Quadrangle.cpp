@@ -27,14 +27,8 @@ Quadrangle::Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2
 		Vertex(glm::vec3(p2, 0.0f) - center, color2, glm::vec2(1.0, 1.0)),
 		Vertex(glm::vec3(p3, 0.0f) - center, color3, glm::vec2(0.0, 1.0))
 	};
-	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, { 0, 1, 2, 0, 2, 3 }));
 	translate(center.x, center.y, center.z);
-}
-
-std::vector<uint16_t> Quadrangle::getIndices() const
-{
-	//ÄæÊ±Õë£¬ÇÒÒþ²Ø±³Ãæ
-	return std::vector<uint16_t>{ 0, 1, 2, 0, 2, 3 };
 }
 
 glm::vec3 Quadrangle::getCenter(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3) const

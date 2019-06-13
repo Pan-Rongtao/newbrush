@@ -27,13 +27,8 @@ Triangle::Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2
 		Vertex(glm::vec3(p1, 0.0f) - c, color1),
 		Vertex(glm::vec3(p2, 0.0f) - c, color2) 
 	};
-	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, { 0, 1, 2 }));
 	translate(c.x, c.y, c.z);
-}
-
-std::vector<uint16_t> Triangle::getIndices() const
-{
-	return std::vector<uint16_t>{ 0, 1, 2 };
 }
 
 double Triangle::distance(const glm::vec2 & p0, const glm::vec2 & p1) const

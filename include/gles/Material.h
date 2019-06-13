@@ -30,7 +30,6 @@ public:
 	//构建一个材质，它的Program为program，它的纹理texture
 	Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures);
 
-public:
 	//设置program
 	void setProgram(std::shared_ptr<Program> program);
 

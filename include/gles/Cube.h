@@ -25,8 +25,6 @@ public:
 
 private:
 	virtual void cullFace() override;
-
-	std::vector<uint16_t> getIndices() const;
 };
 
 }}
