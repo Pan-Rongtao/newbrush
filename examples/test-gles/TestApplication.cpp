@@ -55,13 +55,13 @@ MyApplication::MyApplication()
 	args.width = m_window->width();
 	args.height = m_window->height();
 	OnResize(args);
-	/*
+	
 	DrawTriangles();
 	DrawQuadrangles();
 	DrawEllipses();
 	DrawCubes();
 	DrawSphere();
-	drawPhone();*/
+	drawPhone();
 	//	drawModel();
 	drawGlyph();
 }
@@ -89,7 +89,7 @@ void MyApplication::DrawTriangles()
 		tri->meshes()[0].vertexs()[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
 		tri->meshes()[0].vertexs()[2].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
-		ro->storage()->insert("unif_colorMode", 1);
+		ro->storage()->insert(Program::nbColorModeLocationStr, 1);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 		m_context->queue(ro);
 	}
@@ -124,14 +124,14 @@ void MyApplication::DrawQuadrangles()
 		if (i == 0)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->storage()->insert("unif_colorMode", 1);
+			ro->storage()->insert(Program::nbColorModeLocationStr, 1);
 			//ro->setRenderable(false);
 			ro->model()->meshes()[0].unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 		}
 		if (i == 1)
 		{
-			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
-		//	ro->storage()->insert("unif_colorMode", 0);
+			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
+		//	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
 		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));
@@ -144,7 +144,7 @@ void MyApplication::DrawQuadrangles()
 		}
 		if (i == 2)
 		{
-			ro->storage()->insert("unif_colorMode", 1);
+			ro->storage()->insert(Program::nbColorModeLocationStr, 1);
 		//	ro->setRenderable(false);
 		}
 		m_context->queue(ro);
@@ -161,7 +161,7 @@ void MyApplication::DrawEllipses()
 		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
 	epse->meshes()[0].unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
-	ro->storage()->insert("unif_colorMode", 0);
+	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 	m_context->queue(ro);
 }
@@ -204,10 +204,9 @@ void MyApplication::DrawSphere()
 	sp->meshes()[0].unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
-	ro->storage()->insert("unif_colorMode", 0);
+	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
 	m_context->queue(ro);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world4.jpg"));
-	//ro->storage()->insert("unif_colorMode", 1);
 }
 
 void MyApplication::drawPhone()
@@ -242,10 +241,7 @@ void MyApplication::drawPhone()
 	m_context->queue(ro);
 	ro->storage()->insert("viewPos", cameraPosition);
 	ro->storage()->insert("material.shininess", 32.0);
-	if(g_Original)
-		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, 3.0f));
-	else
-		ro->storage()->insert("light.direction", glm::vec3(1.0f, -0.0f, -3.0f));
+	ro->storage()->insert("light.direction", g_Original ? glm::vec3(1.0f, -0.0f, 3.0f) : glm::vec3(1.0f, -0.0f, -3.0f));
 	ro->storage()->insert("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
 	ro->storage()->insert("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
 	ro->storage()->insert("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -317,9 +313,9 @@ void MyApplication::drawGlyph()
 	quad->meshes()[0].vertexs()[1].texCoord = glyph.uv[1];
 	quad->meshes()[0].vertexs()[2].texCoord = glyph.uv[2];
 	quad->meshes()[0].vertexs()[3].texCoord = glyph.uv[3];
-	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
-	renderer->material()->textures().push_back(std::make_shared<Texture2D>(glyph.texureId));
-	m_context->queue(renderer);
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>(glyph.texureId));
+	m_context->queue(ro);
 }
 
 void MyApplication::preRender()

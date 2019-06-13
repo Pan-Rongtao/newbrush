@@ -106,13 +106,13 @@ void RenderObject::draw() const
 	//计算后的mvp
 	{
 		auto mvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
-		program->uniform(program->getUniformLocation("nb_Mvp"), mvp);
+		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
 	}
 	//分开的mvp
 	{
-		program->uniform(program->getUniformLocation("nb_P"), nb::gl::getProjection()->matrix());
-		program->uniform(program->getUniformLocation("nb_V"), nb::gl::getCamera()->matrix());
-		program->uniform(program->getUniformLocation("nb_M"), m_model->getMatrix());
+		program->uniform(program->getUniformLocation(Program::nbPStr), nb::gl::getProjection()->matrix());
+		program->uniform(program->getUniformLocation(Program::nbVStr), nb::gl::getCamera()->matrix());
+		program->uniform(program->getUniformLocation(Program::nbMStr), m_model->getMatrix());
 	}
 	//storage中的uniform
 	for (auto iter = m_storage->beg(); iter != m_storage->end(); ++iter)
@@ -137,17 +137,17 @@ void RenderObject::draw() const
 		auto const &mesh = m_model->meshes()[i];
 		//检查各个顶点位置、颜色、向量、纹理坐标属性，如果有则传到gpu
 		if (mesh.hasAttribute(Vertex::positionAttribute))
-			program->vertexAttributePointer(Program::positionLocation, Vertex::positionDimension, 12 * sizeof(float), mesh.positionData());
+			program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, 12 * sizeof(float), mesh.positionData());
 
 		if (mesh.hasAttribute(Vertex::colorAttribute))
-			program->vertexAttributePointer(Program::colorLocation, Vertex::colorDimension, 12 * sizeof(float), mesh.colorData());
+			program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, 12 * sizeof(float), mesh.colorData());
 
 		if (mesh.hasAttribute(Vertex::normalAttribute))
-			program->vertexAttributePointer(Program::normalLocation, Vertex::normalDimension, 12 * sizeof(float), mesh.normalData());
+			program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, 12 * sizeof(float), mesh.normalData());
 
 		if (mesh.hasAttribute(Vertex::textureCoordinateAttribute) && !textures.empty())
 		{
-			int nTexCoord = Program::texCoordLocaltion;
+			int nTexCoord = Program::nbTexCoordLocaltion;
 			textures[0]->bind();
 			program->vertexAttributePointer(nTexCoord, Vertex::textureCoordinateDimension, 12 * sizeof(float), mesh.textureCoordinateData());
 		}

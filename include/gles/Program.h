@@ -14,6 +14,7 @@
 #pragma once
 #include "../core/Def.h"
 #include "glm/glm.hpp"
+#include <map>
 
 namespace nb{ namespace gl{
 
@@ -22,13 +23,20 @@ class FragmentShader;
 class NB_API Program
 {
 public:
-	enum AttributeLocation
-	{
-		positionLocation	= 0,	//"nb_Position"
-		colorLocation,				//"nb_Color"
-		texCoordLocaltion,			//"nb_TextCoord"
-		normalLocation,				//"nb_Normal"
-	};
+	//nb固定location和locationStr
+	static constexpr int nbPositionLocation			= 0;
+	static constexpr int nbColorLocation			= 1;
+	static constexpr int nbTexCoordLocaltion		= 2;
+	static constexpr int nbNormalLocation			= 3;
+	static constexpr char *nbPositionLocationStr	= "nbPos";
+	static constexpr char *nbColorLocationStr		= "nbColor";
+	static constexpr char *nbTexCoordLocaltionStr	= "nbTexCoord";
+	static constexpr char *nbNormalLocationStr		= "nbNormal";
+	static constexpr char *nbMvpStr					= "nbMvp";
+	static constexpr char *nbMStr					= "nbM";
+	static constexpr char *nbVStr					= "nbV";
+	static constexpr char *nbPStr					= "nbP";
+	static constexpr char *nbColorModeLocationStr	= "nbColorMode";
 
 public:
 	//构建一个Program，未指定顶点着色器和片元着色器
