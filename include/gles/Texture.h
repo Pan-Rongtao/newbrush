@@ -143,25 +143,15 @@ public:
 	//获取纹理过滤方式
 	TextureFilter &filter();
 	const TextureFilter &filter() const;
-
-	//获取像素高
-	unsigned int width() const;
-
-	//获取像素宽
-	unsigned int height() const;
-
-
+	
 protected:
 	Texture();
-	Texture(unsigned int width, unsigned int height);
 
 	void bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const;
 
 	TextureWrapping		m_wrapping;
 	TextureFilter		m_filter;
 	unsigned int		m_handle;
-	unsigned int		m_width;
-	unsigned int		m_height;
 };
 
 }}

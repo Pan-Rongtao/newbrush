@@ -17,8 +17,11 @@ Texture2D::Texture2D(uint32_t id)
 }
 
 Texture2D::Texture2D(unsigned int width, unsigned int height)
-	: Texture(width, height)
+	: m_width(width)
+	, m_height(height)
 {
+	setWrapping(TextureWrapping());
+	setFilter(TextureFilter());
 }
 
 Texture2D::Texture2D(const std::string &path)
@@ -33,9 +36,9 @@ Texture2D::Texture2D(const std::string &path, const TextureFilter &filter)
 
 Texture2D::Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter)
 {
-	loadFromPath(path);
 	setWrapping(wrapping);
 	setFilter(filter);
+	loadFromPath(path);
 }
 
 Texture2D::Texture2D(const nb::media::Bitmap &bm)
@@ -114,6 +117,16 @@ void Texture2D::loadFromData(const char *data, int width, int height, Texture::P
 	unbind();
 	m_width = width;
 	m_height = height;
+}
+
+unsigned int Texture2D::width() const
+{
+	return m_width;
+}
+
+unsigned int Texture2D::height() const
+{
+	return m_height;
 }
 
 int Texture2D::maxWidthSupported()

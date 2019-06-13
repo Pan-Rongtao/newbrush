@@ -133,14 +133,14 @@ void MyApplication::DrawQuadrangles()
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
 		//	ro->storage()->insert("unif_colorMode", 0);
 		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-			//ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
+			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));
 		//	ro->model()->meshes()[0].setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
 		//	ro->model()->meshes()[0].setPositionAt(2, Vec3(m_window->width(), 0, 0));
 		//	ro->model()->meshes()[0].setPositionAt(3, Vec3(0, 0, 0));
 		//	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
 		//	ro->material()->textures().push_back(glypTexture);
-			ro->setRenderable(false);
+		//	ro->setRenderable(false);
 		}
 		if (i == 2)
 		{
@@ -294,7 +294,7 @@ void MyApplication::drawModel()
 
 void MyApplication::drawGlyph()
 {
-	Glyph glyph = GlyphFactory::getGlyph('b');
+	Glyph glyph = GlyphFactory::getGlyph(L'Äã');
 	auto w = glyph.info.bm_width;
 	auto h = glyph.info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
@@ -317,7 +317,7 @@ void MyApplication::drawGlyph()
 	quad->meshes()[0].vertexs()[1].texCoord = glyph.uv[1];
 	quad->meshes()[0].vertexs()[2].texCoord = glyph.uv[2];
 	quad->meshes()[0].vertexs()[3].texCoord = glyph.uv[3];
-	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
+	std::shared_ptr<RenderObject> renderer = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
 	renderer->material()->textures().push_back(std::make_shared<Texture2D>(glyph.texureId));
 	m_context->queue(renderer);
 }
@@ -326,10 +326,6 @@ void MyApplication::preRender()
 {
 //	changeColor();
 	m_timer.drive();
-}
-
-MyApplication::~MyApplication()
-{
 }
 
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)

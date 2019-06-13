@@ -98,13 +98,6 @@ int TextureFilter::glValue(TextureFilter::Filter filter)
 
 //class Texture
 Texture::Texture()
-	: Texture(0, 0)
-{
-}
-
-Texture::Texture(unsigned int width, unsigned int height)
-	: m_width(width)
-	, m_height(height)
 {
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
@@ -139,16 +132,6 @@ TextureFilter &Texture::filter()
 const TextureFilter &Texture::filter() const
 {
 	return m_filter;
-}
-
-unsigned int Texture::width() const
-{
-	return m_width;
-}
-
-unsigned int Texture::height() const
-{
-	return m_height;
 }
 
 void Texture::bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const

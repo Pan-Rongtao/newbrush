@@ -17,7 +17,6 @@ class MyApplication : public nb::gl::Application
 {
 public:
 	MyApplication();
-	~MyApplication();
 
 	void DrawTriangles();
 	void DrawQuadrangles();

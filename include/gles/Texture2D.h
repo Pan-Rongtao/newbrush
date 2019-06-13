@@ -25,6 +25,7 @@ public:
 	//它的纹理环绕方式为WrappingMode::WrappingMode_Repeat，它的纹理过滤方式为TextureFilter::Point
 	Texture2D();
 
+	//从一个以存在的id构建Texture2D，必须保证id未被释放
 	Texture2D(uint32_t id);
 
 	//构建一个2D纹理对象，它的宽高为width, height
@@ -71,6 +72,15 @@ public:
 	//从数据加载
 	void loadFromData(const char *data, int width, int height, Texture::PixelFormat format);
 
+	//获取像素高
+	unsigned int width() const;
+
+	//获取像素宽
+	unsigned int height() const;
+
+private:
+	unsigned int		m_width;
+	unsigned int		m_height;
 };
 
 }}
