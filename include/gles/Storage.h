@@ -19,21 +19,20 @@ namespace nb{ namespace gl{
 class NB_API Storage
 {
 public:
-	Storage();
-	~Storage();
+	Storage() = default;
+	~Storage() = default;
 
-	void insert(const std::string &name, const nb::core::Any &v);
+	template<class T>
+	void insert(const std::string &name, const T &v)
+	{
+		m_uniforms.insert(std::make_pair(name, v));
+	}
 
-	std::map<const std::string, nb::core::Any>::iterator beg();
+	const std::map<std::string, nb::core::Any> &uniforms() const;
 
-	std::map<const std::string, nb::core::Any>::iterator end();
-
-	nb::core::Any find(const std::string &name);
-	
 	void clear();
 
 private:
-
 	std::map<std::string, nb::core::Any>	m_uniforms;
 };
 

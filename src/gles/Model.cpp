@@ -115,10 +115,10 @@ const std::vector<uint16_t> &Mesh::indices() const
 
 ////////////////////////class Model
 Model::Model()
-	: m_matrix(1)
-	, m_translateMatrix(1)
-	, m_rotateMatrix(1)
-	, m_scaleMatrix(1)
+	: m_matrix(1.0f)
+	, m_translateMatrix(1.0f)
+	, m_rotateMatrix(1.0f)
+	, m_scaleMatrix(1.0f)
 {
 }
 
@@ -148,9 +148,38 @@ void Model::translate(float x, float y, float z)
 	m_matrix = m_translateMatrix * m_rotateMatrix * m_scaleMatrix;
 }
 
+glm::mat4x4 rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v)
+{
+	float const a = radian;
+	float const c = cos(a);
+	float const s = sin(a);
+	glm::mat4x4 Result;
+
+	glm::vec3 axis = normalize(v);
+
+	Result[0][0] = c + (static_cast<float>(1) - c)      * axis.x     * axis.x;
+	Result[0][1] = (static_cast<float>(1) - c) * axis.x * axis.y - s * axis.z;
+	Result[0][2] = (static_cast<float>(1) - c) * axis.x * axis.z + s * axis.y;
+	Result[0][3] = static_cast<float>(0);
+
+	Result[1][0] = (static_cast<float>(1) - c) * axis.y * axis.x + s * axis.z;
+	Result[1][1] = c + (static_cast<float>(1) - c) * axis.y * axis.y;
+	Result[1][2] = (static_cast<float>(1) - c) * axis.y * axis.z - s * axis.x;
+	Result[1][3] = static_cast<float>(0);
+
+	Result[2][0] = (static_cast<float>(1) - c) * axis.z * axis.x - s * axis.y;
+	Result[2][1] = (static_cast<float>(1) - c) * axis.z * axis.y + s * axis.x;
+	Result[2][2] = c + (static_cast<float>(1) - c) * axis.z * axis.z;
+	Result[2][3] = static_cast<float>(0);
+
+	Result[3] = glm::vec4(0, 0, 0, 1);
+	return Result * m;
+}
+
 void Model::rotate(float angle, float x, float y, float z)
 {
-	m_rotateMatrix = glm::rotate(m_rotateMatrix, glm::radians(angle), glm::vec3(x, y, z));
+	m_rotateMatrix = rotate_fix(m_rotateMatrix, glm::radians(angle), glm::vec3(x, y, z));
+	//如果使用rotate_slow（已经被我修改成跟自己写的一样），拖动鼠标旋转则表现为跟之前版本一致
 	m_matrix = m_translateMatrix * m_rotateMatrix * m_scaleMatrix;
 }
 

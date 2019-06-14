@@ -105,6 +105,9 @@ void RenderObject::draw() const
 	//uniform只需更新依次即可，不必每个mesh都更新
 	//计算后的mvp
 	{
+		auto m = m_model->getMatrix();
+		auto v = nb::gl::getCamera()->matrix();
+		auto p = nb::gl::getProjection()->matrix();
 		auto mvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
 		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
 	}
@@ -115,10 +118,10 @@ void RenderObject::draw() const
 		program->uniform(program->getUniformLocation(Program::nbMStr), m_model->getMatrix());
 	}
 	//storage中的uniform
-	for (auto iter = m_storage->beg(); iter != m_storage->end(); ++iter)
+	for (auto const &iter : m_storage->uniforms())
 	{
-		int location = program->getUniformLocation(iter->first.data());
-		const Any &v = iter->second;
+		int location = program->getUniformLocation(iter.first.data());
+		const Any &v = iter.second;
 		if (v.type() == typeid(bool))				program->uniform(location, any_cast<bool>(v));
 		else if (v.type() == typeid(int))			program->uniform(location, any_cast<int>(v));
 		else if (v.type() == typeid(float))			program->uniform(location, any_cast<float>(v));
@@ -129,6 +132,9 @@ void RenderObject::draw() const
 		else if (v.type() == typeid(glm::mat2x2))	program->uniform(location, any_cast<glm::mat2x2>(v));
 		else if (v.type() == typeid(glm::mat3x3))	program->uniform(location, any_cast<glm::mat3x3>(v));
 		else if (v.type() == typeid(glm::mat4x4))	program->uniform(location, any_cast<glm::mat4x4>(v));
+		else if (v.type() == typeid(glm::ivec2))	program->uniform(location, any_cast<glm::ivec2>(v));
+		else if (v.type() == typeid(glm::ivec3))	program->uniform(location, any_cast<glm::ivec3>(v));
+		else if (v.type() == typeid(glm::ivec4))	program->uniform(location, any_cast<glm::ivec4>(v));
 	}
 
 	//依次绘制meshs

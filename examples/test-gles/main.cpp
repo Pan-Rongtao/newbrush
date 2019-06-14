@@ -10,7 +10,7 @@ using namespace nb::core;
 int main(int argc, char* argv[])
 {
 	try{
-		TestHandle<TestSoureDecoder> test;
+		TestHandle<TestApplication> test;
 		test->test();
 	}
 	catch (std::exception &e)
