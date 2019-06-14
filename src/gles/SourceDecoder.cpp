@@ -3,135 +3,204 @@
 
 using namespace nb::gl;
 
-#define KEYWORD_MAIN			"main"
-#define KEYWORD_UNIFORM			"uniform"
+constexpr char KeywordMain[] = "main";
+constexpr char KeywordUniform[] = "uniform";
+constexpr char KeywordStruct[] = "struct";
+constexpr size_t KeywordUniformSize = sizeof(KeywordUniform) - 1;
+constexpr size_t KeywordStructSize = sizeof(KeywordStruct) - 1;
+
 SourceDecoder::SourceDecoder()
 {
-	typeid(int).hash_code();
 }
 
 void SourceDecoder::decode(const std::string & verSource, const std::string & fragSource)
 {
-	m_Uniforms.clear();
+	m_uniforms.clear();
 	decodeOne(verSource);
 	decodeOne(fragSource);
 }
 
-void SourceDecoder::getUniforms(std::map<std::string, size_t> &uniforms)
+void SourceDecoder::getUniforms(std::map<std::string, VarType> &uniforms)
 {
-	uniforms = m_Uniforms;
+	uniforms = m_uniforms;
 }
 
-void SourceDecoder::decodeOne(const std::string &s)
+void SourceDecoder::decodeOne(const std::string &source)
 {
-	size_t mainP = s.find(KEYWORD_MAIN);
-	if (mainP != std::string::npos)
-	{
-		std::string sCutMain = s.substr(0, mainP);
-		for (unsigned int i = 0; i <= sCutMain.size() - sizeof(KEYWORD_UNIFORM);)
-		{
-			std::string s = sCutMain.substr(i, sizeof(KEYWORD_UNIFORM));
-			if (toLower(s) == KEYWORD_UNIFORM)
-			{
-				//+6表示后6个字符肯定不是';'，被空白符和类型、变量名占位。
-				int nLineBeg = i + sizeof(KEYWORD_UNIFORM) + 6;
-				int nLineEnd = s.find(nLineBeg, ';');
+	std::string sCutMain = cutMain(source);
+	if (source.empty())
+		return;
 
-				size_t hash;
-				std::string name;
-				extractLine(s.substr(nLineBeg, nLineEnd - nLineBeg), hash, name);
-				if (hash != typeid(nullptr).hash_code())
-					m_Uniforms.insert(std::make_pair(name, hash));
-				i = nLineEnd + 1;
+	for (unsigned int i = 0; i <= sCutMain.size() - KeywordUniformSize;)
+	{
+		std::string sSubStruct = sCutMain.substr(i, KeywordStructSize);
+		std::string sSubUniform = sCutMain.substr(i, KeywordUniformSize);
+		if (toLower(sSubStruct) == KeywordStruct)
+		{
+			int offset = i + KeywordStructSize + 1;
+			auto end = sCutMain.find('}', offset);
+			if (end != std::string::npos)
+			{
+				std::string sStructDefineStr = sCutMain.substr(i + KeywordStructSize, end - (i + KeywordStructSize) + 1);
+				std::string structName;
+				std::map<std::string, VarType> structMembers;
+				extractStruct(sStructDefineStr, structName, structMembers);
+				i = end + 1;
 			}
 			else
 			{
-				++i;
+				nbThrowException(std::runtime_error, "decode error");
+			}
+		}
+		else if (toLower(sSubUniform) == KeywordUniform)
+		{
+			//+6表示后6个字符肯定不是';'，被空白符和类型、变量名占位。
+			int offset = i + KeywordUniformSize + 6;
+			int end = sCutMain.find(';', offset);
+			if (end != std::string::npos)
+			{
+				std::string varTypeName;
+				std::string varName;
+				VarType varType;
+				std::string sVarDefineStr = sCutMain.substr(i, end - i);
+				extractVar(sVarDefineStr, varTypeName, varName, varType);
+				if (varType != VarType::unknown)
+				{
+					if (varType == VarType::structure)
+					{
+						auto structMembers = m_structDefines.find(varTypeName)->second;
+						for (auto const &member : structMembers)
+						{
+							m_uniforms.insert({varName + "." + member.first, member.second});
+						}
+					}
+					else
+					{
+						m_uniforms.insert({ varName, varType });
+					}
+				}
+				i = end + 1;
+			}
+			else
+			{
+				nbThrowException(std::runtime_error, "decode error");
+			}
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+}
+
+std::string SourceDecoder::cutMain(const std::string & s)
+{
+	size_t mainP = s.find(KeywordMain);
+	return mainP != std::string::npos ? s.substr(0, mainP - 5) : "";	//prev 'void'
+}
+
+void SourceDecoder::extractStruct(const std::string & sStructDefineStr, std::string & structName, std::map<std::string, VarType>& structMembers)
+{
+	std::string::const_iterator a = std::find_if(sStructDefineStr.begin(), sStructDefineStr.end(), [](char c) {return !isblank(c); });
+	auto b = std::find_if(a, sStructDefineStr.end(), [](char c) {return isblank(c) || c == '{'; });
+	structName.assign(a, b);
+	std::string memberDefineStr(b, sStructDefineStr.end());
+	size_t n = memberDefineStr.find(';');
+	std::map<std::string, VarType> members;
+	while (n != std::string::npos) 
+	{
+		std::string sVarDefStr = memberDefineStr.substr(0, n);
+		std::string memberTypeName;
+		std::string memberName;
+		VarType memberType;
+		extractVar(sVarDefStr, memberTypeName, memberName, memberType);
+		if (memberType != VarType::unknown && memberType != VarType::structure)
+			members.insert({ memberName, memberType });
+		n = memberDefineStr.find(';', n + 1);
+	}
+	m_structDefines.insert({ structName, members });
+}
+
+void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarType &varType)
+{
+	//如果';'前面有空白字符，需要先把空白字符去掉
+	std::string sDef = sVarDefineStr;
+	if (isblank(sVarDefineStr.back()))
+	{
+		for (int i = sVarDefineStr.size() - 2; i >= 0; --i)
+		{
+			if (!isblank(sVarDefineStr[i]))
+			{
+				sDef = sVarDefineStr.substr(0, i + 1);
+				break;
 			}
 		}
 	}
-}
-
-void SourceDecoder::extractLine(const std::string &sLine, size_t &hash, std::string &name)
-{
 	int nNameBeg = std::string::npos;
 	int nTypeBeg = std::string::npos;
 	int nTypeEnd = std::string::npos;
-	for (int i = sLine.size() - 1; i >= 0; --i)
+	for (int i = sDef.size() - 1; i >= 0; --i)
 	{
 		if (nNameBeg == std::string::npos)
 		{
-			if (isBlank(sLine[i]))
+			if (isBlank(sDef[i]))
 			{
-				name = sLine.substr(i);
-				nNameBeg = i;
+				nNameBeg = i + 1;
+				varName = sDef.substr(nNameBeg);
 			}
 		}
 		else
 		{
 			if (nTypeEnd == std::string::npos)
 			{
-				if (!isBlank(sLine[i]))
+				if (!isBlank(sDef[i]))
 				{
-					nTypeEnd = i;
+					nTypeEnd = i + 1;
 				}
 			}
 			else
 			{
-				if (isBlank(sLine[i]))
+				if (isBlank(sDef[i]))
 				{
-					nTypeBeg = i;
+					nTypeBeg = i + 1;
+					break;
 				}
 			}
 		}
-		if (nTypeBeg != std::string::npos)
-			break;
 	}
-	name = sLine.substr(nNameBeg);
-	std::string sType = toLower(sLine.substr(nTypeBeg, nTypeEnd - nTypeBeg));
-	if (sType == "bool")
-	{
-		hash = typeid(bool).hash_code();
-	}
-	else if (sType == "int")
-	{
-		hash = typeid(int).hash_code();
-	}
-	else if (sType == "float")
-	{
-		hash = typeid(float).hash_code();
-	}
-	else if (sType == "vec2")
-	{
-		hash = typeid(glm::vec2).hash_code();
-	}
-	else if (sType == "vec3")
-	{
-		hash = typeid(glm::vec3).hash_code();
-	}
-	else if (sType == "vec4")
-	{
-		hash = typeid(glm::vec4).hash_code();
-	}
-	else if (sType == "mat2")
-	{
-		hash = typeid(glm::mat2x2).hash_code();
-	}
-	else if (sType == "mat3")
-	{
-		hash = typeid(glm::mat3x3).hash_code();
-	}
-	else if (sType == "mat4")
-	{
-		hash = typeid(glm::mat4x4).hash_code();
-	}
+	varTypeName = sDef.substr(nTypeBeg, nTypeEnd - nTypeBeg);
+	std::string sLower = toLower(varTypeName);
+	if (sLower == "bool")							varType = VarType::boolean;
+	else if (sLower == "int")						varType = VarType::integer;
+	else if (sLower == "float")						varType = VarType::real;
+	else if (sLower == "vec2")						varType = VarType::vec2;
+	else if (sLower == "vec3")						varType = VarType::vec3;
+	else if (sLower == "vec4")						varType = VarType::vec4;
+	else if (sLower == "mat2" || sLower == "mat2x2")varType = VarType::mat2x2;
+	else if (sLower == "mat3" || sLower == "mat3x3")varType = VarType::mat3x3;
+	else if (sLower == "mat4" || sLower == "mat4x4")varType = VarType::mat4x4;
+	else if (sLower == "mat2x3")					varType = VarType::mat2x2;
+	else if (sLower == "mat2x4")					varType = VarType::mat2x2;
+	else if (sLower == "mat3x2")					varType = VarType::mat2x2;
+	else if (sLower == "mat3x4")					varType = VarType::mat2x2;
+	else if (sLower == "mat4x2")					varType = VarType::mat2x2;
+	else if (sLower == "mat4x3")					varType = VarType::mat2x2;
 	else
 	{
-		hash = typeid(nullptr).hash_code();
+		if (m_structDefines.find(varTypeName) != m_structDefines.end())
+		{
+			varType = VarType::structure;
+		}
+		else
+		{
+			varType = VarType::unknown;
+		}
 	}
+
 }
 
-bool SourceDecoder::isBlank(char c)
+bool SourceDecoder::isBlank(char c) const
 {
 	return c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v';
 }

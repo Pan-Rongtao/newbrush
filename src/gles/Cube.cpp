@@ -4,15 +4,6 @@
 using namespace nb::core;
 using namespace nb::gl;
 
-constexpr uint16_t indices[] = {
-	3,2,1, 3,1,0,
-	7,6,5, 7,5,4,
-	0,5,6, 0,6,3,
-	1,2,7, 1,7,4,
-	0,1,5, 1,4,5,
-	3,6,7, 3,7,2,
-};
-
 Cube::Cube()
 	: Cube(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
 {}

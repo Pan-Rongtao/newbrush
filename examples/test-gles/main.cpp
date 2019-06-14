@@ -3,14 +3,14 @@
 #include "TestWindow.h"
 #include "TestConfigure.h"
 #include "TestModel.h"
-#include "core/Any.h"
 #include "TestTexture2D.h"
+#include "TestSoureDecoder.h"
 
 using namespace nb::core;
 int main(int argc, char* argv[])
 {
 	try{
-		TestHandle<TestApplication> test;
+		TestHandle<TestSoureDecoder> test;
 		test->test();
 	}
 	catch (std::exception &e)
