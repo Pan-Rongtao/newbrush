@@ -22,45 +22,7 @@ Image::Image()
 
 void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	Rect rc;
-	switch (Stretch)
-	{
-	case Stretch::Origion:	rc.setSize((float)Source()->width(), (float)Source()->width());	break;
-	case Stretch::Fill:		rc.setSize(ActualSize);											break;
-	case Stretch::Uniform:	
-	{
-		float pixelRatio = (float)(Source()->width() / Source()->heigth());
-		float containerRatio = ActualSize().width() / ActualSize().height();
-		if (pixelRatio < containerRatio)
-		{
-			rc.setSize(ActualSize().height() * pixelRatio, ActualSize().height());
-			rc.moveHorizontal(rc.left() + (ActualSize().width() - rc.width()) / 2);
-		}
-		else
-		{
-			rc.setSize(ActualSize().width(), ActualSize().width() / pixelRatio);
-			rc.moveVertical(rc.top() + (ActualSize().height() - rc.height()) / 2);
-		}
-	}
-	break;
-	case Stretch::UniformToFill:
-	{
-		auto pixelRatio = Source()->width() / Source()->heigth();
-		auto containerRatio = ActualSize().width() / ActualSize().height();
-		if (pixelRatio < containerRatio)
-		{
-			rc.setSize((float)ActualSize().width(), (float)(ActualSize().width() / pixelRatio));
-		}
-		else
-		{
-			rc.setSize((float)(ActualSize().height() * pixelRatio), (float)ActualSize().height());
-		}
-	}
-	break;
-	default:
-		break;
-	}
-	rc.move(Offset().x(), Offset().y());
+	Rect rc(Offset().x(), Offset().y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
 	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()), 
 		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
@@ -70,22 +32,62 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 
 Size Image::measureOverride(const Size & availableSize)
 {
-	if (Source())
-		return Size((float)Source()->width(), (float)Source()->heigth());
-	else
-		return Size();
+	m_availableSize = availableSize;
+	return Size(std::max(availableSize.width(), (float)Source()->Bm()->width()), std::max(availableSize.height(), (float)Source()->Bm()->height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
 {
-	return finalSize;
+	switch (Stretch)
+	{
+	case StretchE::Origion:
+	{
+		return{ (float)Source()->Bm()->width(), (float)Source()->Bm()->height() };
+	}
+	case StretchE::Fill:
+	{
+		return m_availableSize;
+	}
+	case StretchE::Uniform:
+	{
+		Size sz;
+		float pixelRatio = (float)(Source()->width() / Source()->heigth());
+		float containerRatio = m_availableSize.width() / m_availableSize.height();
+		if (pixelRatio < containerRatio)
+		{
+			sz.reset(m_availableSize.height() * pixelRatio, m_availableSize.height());
+		}
+		else
+		{
+			sz.reset(m_availableSize.width(), m_availableSize.width() / pixelRatio);
+		}
+		return sz;
+	}
+	case StretchE::UniformToFill:
+	{
+		Size sz;
+		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto containerRatio = m_availableSize.width() / m_availableSize.height();
+		if (pixelRatio < containerRatio)
+		{
+			sz.reset((float)m_availableSize.width(), (float)(m_availableSize.width() / pixelRatio));
+		}
+		else
+		{
+			sz.reset((float)(m_availableSize.height() * pixelRatio), (float)m_availableSize.height());
+		}
+		return sz;
+	}
+	default:
+		return Size();
+	}
 }
 
 void Image::onSourceChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
 {
 }
 
-void Image::onStretchChanged(const nb::gui::Stretch &_old, const nb::gui::Stretch &_new)
+void Image::onStretchChanged(const nb::gui::StretchE &_old, const nb::gui::StretchE &_new)
 {
 	
 }

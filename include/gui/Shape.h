@@ -24,7 +24,7 @@ class NB_API Shape : public UIElement
 {
 public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Fill;
-	nb::core::Property_rw<nb::gui::Stretch>				Stretch;
+	nb::core::Property_rw<nb::gui::StretchE>			Stretch;
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Stroke;
 	nb::core::Property_rw<PenLineCap>					StrokeDashCap;
 	nb::core::Property_rw<PenLineJoin>					StrokeLineJoin;

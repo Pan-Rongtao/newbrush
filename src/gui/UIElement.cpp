@@ -115,9 +115,9 @@ void UIElement::arrage(const Rect & finalRect)
 
 	switch (VerticalAlignment)
 	{
-	case VerticalAlignmentE::Top:		Offset().y() = finalRect.top() + Margin().top();														break;
+	case VerticalAlignmentE::Top:		Offset().y() = finalRect.top() + Margin().top();	break;
 	case VerticalAlignmentE::Center:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
-	case VerticalAlignmentE::Bottom:	Offset().y() = finalRect.height() - Margin().bottom() - RenderSize().height();							break;
+	case VerticalAlignmentE::Bottom:	Offset().y() = finalRect.top() + (finalRect.height() - Margin().bottom() - RenderSize().height());		break;
 	default:
 	{
 		if (RenderSize().height() >= clientSize.height())
@@ -133,8 +133,8 @@ void UIElement::arrage(const Rect & finalRect)
 	}
 	m_actualSize = RenderSize;
 	//²Ã¼ô
-	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
-	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
+//	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
+//	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
 }
 
 Size UIElement::measureOverride(const Size & availableSize)

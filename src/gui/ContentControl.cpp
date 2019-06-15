@@ -34,7 +34,7 @@ Size ContentControl::arrangeOverride(const Size & finalSize)
 {
 	if (Content())
 	{
-		Content()->arrage(Rect(0.0, 0.0, DesiredSize));
+		Content()->arrage(Rect(0.0, 0.0, Content()->DesiredSize));
 	}
 	return finalSize;
 }

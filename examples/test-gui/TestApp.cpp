@@ -8,26 +8,31 @@ using namespace nb::core;
 using namespace nb::gui;
 void TestApp::test()
 {
-	Window w;
-/*
+#if 1
 	auto image = std::make_shared<Image>();
 	image->Source = std::make_shared<ImageSource>("e:/Pics/3.jpg");
 	image->Margin = Thickness(20);
-	image->Stretch = Stretch::Uniform;
-	w.Content = image;
-	*/
+	image->Stretch = StretchE::Uniform;
+	image->HorizontalAlignment = HorizontalAlignmentE::Left;
+	image->VerticalAlignment = VerticalAlignmentE::Bottom;
+	m_window.Content = image;
+#endif
+
+#if 0
 	auto rect = std::make_shared<Rectangle>();
 	//rect->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
 	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	rect->Margin = Thickness(20);
-	w.Content = rect;
-	
+	rect->Width = 100;
+	rect->Height = 200;
+	m_window.Content = rect;
+#endif
 
 /*	auto ellipse = std::make_shared<nb::gui::Ellipse>();
 	//ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	ellipse->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
-	w.Content = ellipse;*/
+	m_window.Content = ellipse;*/
 
-//	w.Content()->Margin = Thickness(300, 200, 300, 200);
+//	m_window.Content()->Margin = Thickness(300, 200, 300, 200);
 
 }

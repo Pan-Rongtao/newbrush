@@ -78,7 +78,7 @@ Size Canvas::measureOverride(const Size & availableSize)
 {
 	for (auto child : Children())
 	{
-		child->measure(Size((float)(Width == NB_DOUBLE_NAN ? 0.0 : Width), (float)(Height == NB_DOUBLE_NAN ? 0.0 : Height)));
+		child->measure(Size((float)(child->Width == NB_DOUBLE_NAN ? 0.0 : child->Width), (float)(child->Height == NB_DOUBLE_NAN ? 0.0 : child->Height)));
 	}
 	return availableSize;
 }

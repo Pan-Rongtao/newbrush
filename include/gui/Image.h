@@ -28,7 +28,7 @@ public:
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Source;
-	nb::core::Property_rw<nb::gui::Stretch>					Stretch;
+	nb::core::Property_rw<nb::gui::StretchE>				Stretch;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
@@ -37,7 +37,9 @@ protected:
 private:
 
 	void onSourceChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
-	void onStretchChanged(const nb::gui::Stretch &_old, const nb::gui::Stretch &_new);
+	void onStretchChanged(const nb::gui::StretchE &_old, const nb::gui::StretchE &_new);
+
+	core::Size	m_availableSize;
 };
 
 

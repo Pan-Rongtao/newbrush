@@ -3,7 +3,7 @@
 namespace nb{ namespace gui{
 
 //描述如何调节内容大小以适应目标空间
-enum Stretch
+enum StretchE
 {
 	Origion	=			0,		//保持原内容大小
 	Fill =				1,		//不保持内容纵横比，调节内容大小以完全且刚好填充目标尺寸
