@@ -35,7 +35,6 @@ int Application::run()
 	{
 		for (auto w : WindowCollections::Windows())
 		{
-			w->init();
 			w->measure(Size((float)w->Width, (float)w->Height));
 			w->arrage(Rect(0.0f, 0.0f, (float)w->Width, (float)w->Height));
 			w->onRender(w->DrawContext());

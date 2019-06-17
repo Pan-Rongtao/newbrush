@@ -16,8 +16,14 @@ Image::Image()
 	: Source(nullptr)
 	, Stretch(Uniform)
 {
-	Source.notify(std::bind(&Image::onSourceChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Stretch.notify(std::bind(&Image::onStretchChanged, this, std::placeholders::_1, std::placeholders::_2));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
+	
+	Source.notify([&](const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new) {
+		Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
+	});
+	Stretch.notify([&](const StretchE &_old, const StretchE &_new) {
+
+	});
 }
 
 void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
@@ -25,15 +31,14 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc(Offset().x(), Offset().y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
 	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()), 
 		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
 	drawContext->queue(Renderer());
-	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
 }
 
 Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
-	return Size(std::max(availableSize.width(), (float)Source()->Bm()->width()), std::max(availableSize.height(), (float)Source()->Bm()->height()));
+	return Size(std::max(availableSize.width(), (float)Source()->Bm()->width()), 
+		std::max(availableSize.height(), (float)Source()->Bm()->height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
@@ -81,13 +86,4 @@ Size Image::arrangeOverride(const Size & finalSize)
 	default:
 		return Size();
 	}
-}
-
-void Image::onSourceChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
-{
-}
-
-void Image::onStretchChanged(const nb::gui::StretchE &_old, const nb::gui::StretchE &_new)
-{
-	
 }

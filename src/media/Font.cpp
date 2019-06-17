@@ -51,6 +51,7 @@ GlyphInfo Font::getGlyphInfo(wchar_t unicode)
 	auto x = FT_Load_Char(m_face, unicode, FT_LOAD_DEFAULT);
 	FT_Glyph glyph;
 	FT_Get_Glyph(m_face->glyph, &glyph);
+	;
 	FT_Glyph_To_Bitmap(&glyph, size() >= 16 ? FT_RENDER_MODE_NORMAL : FT_RENDER_MODE_MONO, 0, 1);
 
 	FT_BitmapGlyph bmGlyph = (FT_BitmapGlyph)glyph;
@@ -67,5 +68,6 @@ GlyphInfo Font::getGlyphInfo(wchar_t unicode)
 		}
 	}
 	FT_Bitmap_Done(media::FontFamily::getFT(), &bm);
-	return GlyphInfo{ m_face->glyph->bitmap_left, m_face->glyph->bitmap_top, bmGlyph->root.advance.x, bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
+	return GlyphInfo{ bmGlyph->left, bmGlyph->top, bmGlyph->root.advance.x,
+		bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
 }

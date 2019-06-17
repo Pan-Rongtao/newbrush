@@ -35,10 +35,6 @@ protected:
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
 private:
-
-	void onSourceChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
-	void onStretchChanged(const nb::gui::StretchE &_old, const nb::gui::StretchE &_new);
-
 	core::Size	m_availableSize;
 };
 

@@ -38,6 +38,15 @@ Window::Window(const std::string &title, int width, int height)
 	setTitle(title);
 }
 
+Window::Window(const std::string &title, int x, int y, int width, int height)
+{
+	setX(x);
+	setY(y);
+	setWidth(width);
+	setHeight(height);
+	setTitle(title);
+}
+
 Window::~Window()
 {
 	delete m_internal;

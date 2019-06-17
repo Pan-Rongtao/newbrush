@@ -11,7 +11,15 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 nb::gui::Window::Window()
+	: WindowState(WindowState::Normal)
+	, m_glWindow(std::make_shared<nb::gl::Window>(800.0, 600.0))
+	, DrawContext(std::make_shared<nb::gl::Context>(nb::gl::getConfigure()))
 {
+	Width = m_glWindow->width();
+	Height = m_glWindow->height();
+	onWidthChanged(0.0, Width);
+	onHeightChanged(0.0, Height);
+
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Topmost.notify(std::bind(&Window::onTopmostChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Left.notify(std::bind(&Window::onLeftChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -22,6 +30,8 @@ nb::gui::Window::Window()
 	Icon.notify(std::bind(&Window::onIconChanged, this, std::placeholders::_1, std::placeholders::_2));
 
 	WindowCollections::Windows().push_back(this);
+	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
+	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
 }
 
 nb::gui::Window::~Window()
@@ -45,16 +55,6 @@ void nb::gui::Window::hide()
 
 void nb::gui::Window::close()
 {
-}
-
-void nb::gui::Window::init()
-{
-	m_glWindow = std::make_shared<nb::gl::Window>();
-	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
-	DrawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
-	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
-	Width = 800.0;
-	Height = 600.0;
 }
 
 void nb::gui::Window::onWindowStateChanged(const gui::WindowState & _old, const gui::WindowState & _new)

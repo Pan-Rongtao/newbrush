@@ -98,6 +98,9 @@ public:
 	//构建一个Window对象，它的标题为title，区域为(x-middle, y-middle, width, height)
 	Window(const std::string &title, int width, int height);
 
+	//构建一个Window对象，它的标题为title，区域为(x-middle, y-middle, width, height)
+	Window(const std::string &title, int x, int y, int width, int height);
+
 	virtual ~Window();
 
 public:

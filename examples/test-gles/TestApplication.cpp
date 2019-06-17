@@ -290,9 +290,9 @@ void MyApplication::drawModel()
 
 void MyApplication::drawGlyph()
 {
-	Glyph glyph = GlyphFactory::getGlyph(L'Äã');
-	auto w = glyph.info.bm_width;
-	auto h = glyph.info.bm_height;
+	auto glyph = GlyphFactory::getGlyph(L'Äã');
+	auto w = glyph->info.bm_width;
+	auto h = glyph->info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
 	if (g_Original)
 	{
@@ -309,12 +309,12 @@ void MyApplication::drawGlyph()
 		p3 = { 300, 0 };
 	}
 	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
-	quad->meshes()[0].vertexs()[0].texCoord = glyph.uv[0];
-	quad->meshes()[0].vertexs()[1].texCoord = glyph.uv[1];
-	quad->meshes()[0].vertexs()[2].texCoord = glyph.uv[2];
-	quad->meshes()[0].vertexs()[3].texCoord = glyph.uv[3];
+	quad->meshes()[0].vertexs()[0].texCoord = glyph->uv[0];
+	quad->meshes()[0].vertexs()[1].texCoord = glyph->uv[1];
+	quad->meshes()[0].vertexs()[2].texCoord = glyph->uv[2];
+	quad->meshes()[0].vertexs()[3].texCoord = glyph->uv[3];
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
-	ro->material()->textures().push_back(std::make_shared<Texture2D>(glyph.texureId));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>(glyph->texureId));
 	m_context->queue(ro);
 }
 

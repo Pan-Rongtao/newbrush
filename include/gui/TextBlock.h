@@ -2,9 +2,14 @@
 #include "../gui/UIElement.h"
 #include "../gui/Brush.h"
 
-namespace nb{namespace gui{
+namespace nb{ namespace gl{
+	class RenderObject;
+	struct Glyph;
+}}
 
-enum TextAlignment
+namespace nb{ namespace gui{
+
+enum TextAlignmentE
 {
 	Left,
 	Right,
@@ -12,39 +17,57 @@ enum TextAlignment
 	Justify,
 };
 
-enum TextWrapping
+enum TextWrappingE
 {
 	NoWrap,
 	Wrap,
 	WrapWithOverflow,
 };
 
-enum TextTrimming
+enum TextTrimmingE
 {
 	None,
 	CharacterEllipsis,
 	WordEllipsis,
 };
 
-class TextBlock : public UIElement
+enum TextDecorationE
+{
+	OverLine,
+	Strikethrough,
+	Baseline,
+	Underline
+};
+
+class NB_API TextBlock : public UIElement
 {
 public:
 	TextBlock();
-	TextBlock(const std::string &content);
-	virtual ~TextBlock();
+	explicit TextBlock(const std::string &content);
 
-public:
-	nb::core::Property_rw<std::string>				Text;
-	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;
-	nb::core::Property_rw<std::string>				FontFamily;
-	nb::core::Property_rw<double>					FontSize;
-	nb::core::Property_rw<int>						FontWeight;
-	nb::core::Property_rw<nb::core::Color>			Foreground;
-	nb::core::Property_rw<double>					LineHeight;
-	nb::core::Property_rw<Thickness>				Padding;
-	nb::core::Property_rw<TextAlignment>			TextAlignment;
-	nb::core::Property_rw<TextTrimming>				TextTrimming;
-	nb::core::Property_rw<TextWrapping>				TextWrapping;
+	//fontstyle有啥用
+	nb::core::Property_rw<std::string>				Text;			//文本内容
+	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;		//背景
+	nb::core::Property_rw<std::string>				FontFamily;		//字体
+	nb::core::Property_rw<double>					FontSize;		//字体大小
+	nb::core::Property_rw<int>						FontWeight;		//字体权重
+	nb::core::Property_rw<nb::core::Color>			Foreground;		//字体前景
+	nb::core::Property_rw<double>					LineHeight;		//行间距
+	nb::core::Property_rw<Thickness>				Padding;		//内距
+	nb::core::Property_rw<TextAlignmentE>			TextAlignment;	//文本排列方式
+	nb::core::Property_rw<TextTrimmingE>			TextTrimming;	//文本溢出决策
+	nb::core::Property_rw<TextWrappingE>			TextWrapping;	//文本换行
+	nb::core::Property_rw<TextDecorationE>			TextDecoration;	//文本修饰
+
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+
+	std::vector<std::pair<std::shared_ptr<gl::RenderObject>, std::shared_ptr<gl::Glyph>>>	m_charRenderers;
+	double m_x;
+	double m_y;
 };
 
 }}

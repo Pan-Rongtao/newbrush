@@ -50,22 +50,22 @@ public:
 
 	//获取一个字符的信息
 	//如果存在返回存在的字形，否则新建一个新字形，并存储下来；倘若TextureGlyphAtlas已满则不允许新建，最终返回的Glyph.texureId为-1
-	Glyph getGlyph(wchar_t ch)
+	std::shared_ptr<Glyph> getGlyph(wchar_t ch)
 	{
 		auto iter = m_glyphs.find(ch);
 		return (iter != m_glyphs.end()) ? iter->second : appendChar(ch);
 	}
 
 	//返回的Plyph的texureId=-1表示添加失败，已满
-	Glyph appendChar(wchar_t ch)
+	std::shared_ptr<Glyph> appendChar(wchar_t ch)
 	{
 		if (m_glyphs.find(ch) != m_glyphs.end())
-			return{ -1 };
+			return{ nullptr };
 
 		auto glyph = m_font->getGlyphInfo(ch);
 		//不再有空余
 		if (m_x + glyph.bm_width > width() && m_y + m_font->size() > height())
-			return{ -1 };
+			return{ nullptr };
 
 		glm::vec2 uv[4];
 
@@ -95,7 +95,13 @@ public:
 		}
 		unbind();
 
-		Glyph ret = { (int)m_handle,{ uv[0], uv[1], uv[2], uv[3] }, glyph };
+		std::shared_ptr<Glyph> ret = std::make_shared<Glyph>();
+		ret->texureId = m_handle;
+		ret->info = glyph;
+		ret->uv[0] = uv[0];
+		ret->uv[1] = uv[1];
+		ret->uv[2] = uv[2];
+		ret->uv[3] = uv[3];
 		m_glyphs.insert({ ch, ret });
 		return ret;
 	}
@@ -107,10 +113,10 @@ public:
 	}
 
 private:
-	float						m_x;
-	float						m_y;
-	std::map<wchar_t, Glyph>	m_glyphs;
-	std::shared_ptr<Font>		m_font;
+	float										m_x;
+	float										m_y;
+	std::map<wchar_t, std::shared_ptr<Glyph>>	m_glyphs;
+	std::shared_ptr<Font>						m_font;
 	friend class GlyphFactory;
 };
 
@@ -294,20 +300,20 @@ constexpr wchar_t highFrequencyWhars[] = {
 	L"\u87f9\u9761\u7663\u7fb9\u9b13\u6518\u8815\u5dcd\u9cde\u7cef\u8b6c\u9739\u8e8f\u9ad3\u8638\u9576\u74e4\u77d7"
 };
 
-Glyph GlyphFactory::getGlyph(wchar_t ch)
+std::shared_ptr<Glyph> GlyphFactory::getGlyph(wchar_t ch)
 {
 	if (g_glyphAtlas.empty())
 	{
-		auto font = std::make_shared<Font>("../../resource/STKAITI.TTF", 16);
+		auto font = std::make_shared<Font>("../../resource/STKAITI.TTF", 32);
 		auto firstTextureGlyphAtlas = new TextureGlyphAtlas(font, highFrequencyWhars);
 		printf("firstTextureGlyphAtlas.size=%d\n", firstTextureGlyphAtlas->m_glyphs.size());
 	}
 
-	Glyph ret;
+	std::shared_ptr<Glyph> ret;
 	for (auto &atlas : g_glyphAtlas)
 	{
 		ret = atlas->getGlyph(ch);
-		if (ret.texureId != -1)
+		if (ret)
 			return ret;
 	}
 

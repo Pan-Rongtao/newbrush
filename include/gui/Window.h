@@ -36,8 +36,6 @@ public:
 	//关闭
 	void close();
 
-	virtual void init();
-
 public:
 	nb::core::Property_rw<gui::WindowState>					WindowState;
 	nb::core::Property_rw<bool>								Topmost;

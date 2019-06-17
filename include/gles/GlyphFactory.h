@@ -14,7 +14,7 @@ struct Glyph
 class NB_API GlyphFactory
 {
 public:
-	static Glyph getGlyph(wchar_t ch);
+	static std::shared_ptr<Glyph> getGlyph(wchar_t ch);
 
 };
 

@@ -11,13 +11,14 @@
 #include "TestPropertyAnimation.h"
 #include "TestPropertyAnimationUsingKeyFrames.h"
 #include "TestStoryboard.h"
+#include "TestTextBlock.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestWrapPanel> test;
+		TestHandle<TestTextBlock> test;
 		test->test();
 		return app.run();
 	}
