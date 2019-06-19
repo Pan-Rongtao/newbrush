@@ -19,6 +19,7 @@
 #include "gles/Storage.h"
 #include "gles/Projection.h"
 #include "gles/GlyphFactory.h"
+#include "gles/GlyphBunch.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -56,17 +57,18 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	OnResize(args);
 	
-	DrawTriangles();
-	DrawQuadrangles();
-	DrawEllipses();
-	DrawCubes();
-	DrawSphere();
+	drawTriangles();
+	drawQuadrangles();
+	drawEllipses();
+	drawCubes();
+	drawSphere();
 	drawPhone();
 	//	drawModel();
 	drawGlyph();
+	drawGlyphBunch();
 }
 
-void MyApplication::DrawTriangles()
+void MyApplication::drawTriangles()
 {
 	int objectCount = 1;
 	for(int i = 0; i != objectCount; ++i)
@@ -95,7 +97,7 @@ void MyApplication::DrawTriangles()
 	}
 }
 
-void MyApplication::DrawQuadrangles()
+void MyApplication::drawQuadrangles()
 {
 	float step;
 	int objectCount = 2;
@@ -152,7 +154,7 @@ void MyApplication::DrawQuadrangles()
 
 }
 
-void MyApplication::DrawEllipses()
+void MyApplication::drawEllipses()
 {
 	std::shared_ptr<Ellipse> epse;
 	if(g_Original)
@@ -166,7 +168,7 @@ void MyApplication::DrawEllipses()
 	m_context->queue(ro);
 }
 
-void MyApplication::DrawCubes()
+void MyApplication::drawCubes()
 {
 	std::shared_ptr<Cube> cube;
 	if (g_Original)
@@ -194,7 +196,7 @@ void MyApplication::DrawCubes()
 	ro->material()->textures().push_back(cm);
 }
 
-void MyApplication::DrawSphere()
+void MyApplication::drawSphere()
 {
 	std::shared_ptr<Sphere> sp;
 	if(g_Original)
@@ -290,7 +292,7 @@ void MyApplication::drawModel()
 
 void MyApplication::drawGlyph()
 {
-	auto glyph = GlyphFactory::getGlyph(L'��');
+	auto glyph = GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), L'a');
 	auto w = glyph->info.bm_width;
 	auto h = glyph->info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
@@ -315,6 +317,15 @@ void MyApplication::drawGlyph()
 	quad->meshes()[0].vertexs()[3].texCoord = glyph->uv[3];
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
 	ro->material()->textures().push_back(std::make_shared<Texture2D>(glyph->texureId));
+	m_context->queue(ro);
+}
+
+void MyApplication::drawGlyphBunch()
+{
+	auto glyphBunch = std::make_shared<GlyphBunch>();
+	glyphBunch->arrage(Fonts::getFont(Fonts::STKaiti), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrapping::Wrap, 300);
+	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), 'a')->texureId));
 	m_context->queue(ro);
 }
 

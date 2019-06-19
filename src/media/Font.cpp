@@ -7,16 +7,17 @@
 
 using namespace nb::media;
 
-Font::Font(const std::string &fontPath)
-	: Font(fontPath, 30)
+Font::Font(const std::string &path)
+	: Font(path, 32)
 {
 }
 
-Font::Font(const std::string &fontPath, uint32_t fontSize)
+Font::Font(const std::string &path, uint32_t fontSize)
 	: m_fontSize(fontSize)
+	, m_path(path)
 	, m_face(nullptr)
 {
-	auto x = FT_New_Face(FontFamily::getFT(), fontPath.data(), 0, &m_face);
+	auto x = FT_New_Face(FontFamily::getFT(), path.data(), 0, &m_face);
 	if (x != 0)
 		nbThrowException(std::runtime_error, "FT_New_Face fail[%d]", x);
 	setSize(fontSize);
@@ -27,7 +28,12 @@ Font::~Font()
 	FT_Done_Face(m_face);
 }
 
-std::string Font::name() const
+std::string Font::path() const
+{
+	return m_path;
+}
+
+std::string Font::familyName() const
 {
 	return m_face->family_name;
 }
@@ -51,7 +57,6 @@ GlyphInfo Font::getGlyphInfo(wchar_t unicode)
 	auto x = FT_Load_Char(m_face, unicode, FT_LOAD_DEFAULT);
 	FT_Glyph glyph;
 	FT_Get_Glyph(m_face->glyph, &glyph);
-	;
 	FT_Glyph_To_Bitmap(&glyph, size() >= 16 ? FT_RENDER_MODE_NORMAL : FT_RENDER_MODE_MONO, 0, 1);
 
 	FT_BitmapGlyph bmGlyph = (FT_BitmapGlyph)glyph;
@@ -70,4 +75,47 @@ GlyphInfo Font::getGlyphInfo(wchar_t unicode)
 	FT_Bitmap_Done(media::FontFamily::getFT(), &bm);
 	return GlyphInfo{ bmGlyph->left, bmGlyph->top, bmGlyph->root.advance.x,
 		bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
+}
+
+//system fonts
+////////////////////////
+std::map<std::string, std::shared_ptr<Font>> g_systemFonts;
+
+void initSystemFonts()
+{
+	auto loadSystemFonts = [](const std::string &path)->std::shared_ptr<Font>
+	{
+		std::shared_ptr<Font> font;
+		try {
+			font = std::make_shared<Font>(path);
+		}
+		catch (...) {
+			printf("load font [%s] fail.\n", font->path().data());
+			return nullptr;
+		}
+		g_systemFonts.insert({ font->familyName(), font });
+		return font;
+	};
+
+	static bool systemFontsInit = false;
+	if (!systemFontsInit)
+	{
+		loadSystemFonts("../../resource/msyh.ttf");
+		loadSystemFonts("../../resource/simsun.ttc");
+		loadSystemFonts("../../resource/STKAITI.TTF");
+		systemFontsInit = true;
+	}
+}
+
+std::shared_ptr<Font> Fonts::getFont(const std::string &name)
+{
+	initSystemFonts();
+	auto iter = g_systemFonts.find(name);
+	return iter != g_systemFonts.end() ? iter->second : nullptr;
+}
+
+std::map<std::string, std::shared_ptr<Font>> nb::media::Fonts::systemFonts()
+{
+	initSystemFonts();
+	return g_systemFonts;
 }

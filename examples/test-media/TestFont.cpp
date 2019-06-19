@@ -2,9 +2,8 @@
 
 void TestFont::test()
 {
-	Font font("../../resource/STKAITI.TTF");
-	font.setSize(48);
-	int fontSize = font.size();
-	auto familyName = font.name();
-	printf("familyName:%s\n", familyName.data());
+	for (auto font : Fonts::systemFonts())
+	{
+		printf("[%s]: %s\n", font.second->path().data(), font.first.data());
+	}
 }

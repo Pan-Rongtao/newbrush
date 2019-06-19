@@ -18,14 +18,15 @@ class MyApplication : public nb::gl::Application
 public:
 	MyApplication();
 
-	void DrawTriangles();
-	void DrawQuadrangles();
-	void DrawEllipses();
-	void DrawCubes();
-	void DrawSphere();
+	void drawTriangles();
+	void drawQuadrangles();
+	void drawEllipses();
+	void drawCubes();
+	void drawSphere();
 	void drawPhone();
 	void drawModel();
 	void drawGlyph();
+	void drawGlyphBunch();
 
 protected:
 	virtual void preRender() override;

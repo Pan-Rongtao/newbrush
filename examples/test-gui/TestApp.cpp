@@ -10,11 +10,9 @@ void TestApp::test()
 {
 #if 1
 	auto image = std::make_shared<Image>();
-	image->Source = std::make_shared<ImageSource>("e:/Pics/3.jpg");
+	image->Source = std::make_shared<ImageSource>("e:/Pics/5.jpg");
 	image->Margin = Thickness(20);
 	image->Stretch = StretchE::Uniform;
-	image->HorizontalAlignment = HorizontalAlignmentE::Left;
-	image->VerticalAlignment = VerticalAlignmentE::Bottom;
 	m_window.Content = image;
 #endif
 

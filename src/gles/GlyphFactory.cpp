@@ -122,7 +122,7 @@ private:
 
 constexpr wchar_t highFrequencyWhars[] = {
 	//94+3498
-	L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnoprstuvwxyz{|}~"
+	L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
 	L"\u4e00\u4e59\u4e8c\u5341\u4e01\u5382\u4e03\u535c\u4eba\u5165\u516b\u4e5d\u51e0\u513f\u4e86\u529b\u4e43\u5200\u53c8\u4e09"
 	L"\u4e8e\u5e72\u4e8f\u58eb\u5de5\u571f\u624d\u5bf8\u4e0b\u5927\u4e08\u4e0e\u4e07\u4e0a\u5c0f\u53e3\u5dfe\u5c71\u5343\u4e5e"
 	L"\u5ddd\u4ebf\u4e2a\u52fa\u4e45\u51e1\u53ca\u5915\u4e38\u4e48\u5e7f\u4ea1\u95e8\u4e49\u4e4b\u5c38\u5f13\u5df1\u5df2\u5b50"
@@ -300,15 +300,8 @@ constexpr wchar_t highFrequencyWhars[] = {
 	L"\u87f9\u9761\u7663\u7fb9\u9b13\u6518\u8815\u5dcd\u9cde\u7cef\u8b6c\u9739\u8e8f\u9ad3\u8638\u9576\u74e4\u77d7"
 };
 
-std::shared_ptr<Glyph> GlyphFactory::getGlyph(wchar_t ch)
+std::shared_ptr<Glyph> GlyphFactory::getGlyph(std::shared_ptr<Font> font, wchar_t ch)
 {
-	if (g_glyphAtlas.empty())
-	{
-		auto font = std::make_shared<Font>("../../resource/STKAITI.TTF", 32);
-		auto firstTextureGlyphAtlas = new TextureGlyphAtlas(font, highFrequencyWhars);
-		printf("firstTextureGlyphAtlas.size=%d\n", firstTextureGlyphAtlas->m_glyphs.size());
-	}
-
 	std::shared_ptr<Glyph> ret;
 	for (auto &atlas : g_glyphAtlas)
 	{
@@ -317,7 +310,7 @@ std::shared_ptr<Glyph> GlyphFactory::getGlyph(wchar_t ch)
 			return ret;
 	}
 
-	auto newAtlas = new TextureGlyphAtlas(g_glyphAtlas[0]->font(), L"");
+	auto newAtlas = new TextureGlyphAtlas(font, L"");
 	printf("GlyphFactory::getGlyph[%d] at new Atlas\n", ch);
 	return newAtlas->getGlyph(ch);
 }
