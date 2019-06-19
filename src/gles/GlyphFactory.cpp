@@ -6,7 +6,7 @@
 #include <freetype/ft2build.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftbitmap.h>
-#include "media/FontFamily.h"
+#include "media/Font.h"
 #include FT_FREETYPE_H
 
 using namespace nb::core;
@@ -62,7 +62,7 @@ public:
 		if (m_glyphs.find(ch) != m_glyphs.end())
 			return{ nullptr };
 
-		auto glyph = m_font->getGlyphInfo(ch);
+		auto glyph = GlyphMetrics::measureGlyp(font(), ch);
 		//²»ÔÙÓÐ¿ÕÓà
 		if (m_x + glyph.bm_width > width() && m_y + m_font->size() > height())
 			return{ nullptr };

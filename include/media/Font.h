@@ -3,22 +3,11 @@
 #include <map>
 #include "../core/Def.h"
 
+struct FT_LibraryRec_;
 struct FT_FaceRec_;
 struct FT_BitmapGlyphRec_;
 
 namespace nb{ namespace media{
-
-struct GlyphInfo
-{
-	int				left;
-	int				top;
-	int				advancex;
-	int				advancey;
-	unsigned int    bm_width;
-	unsigned int    bm_height;
-	int             bm_pitch;
-	unsigned char*  bm_buffer;
-};
 
 class NB_API Font
 {
@@ -40,12 +29,13 @@ public:
 	void setSize(uint32_t fontSize);
 	uint32_t size() const;
 
-	GlyphInfo getGlyphInfo(wchar_t unicode);
+	static FT_LibraryRec_ *getFT();
 
 private:
 	uint32_t		m_fontSize;
 	std::string		m_path;
 	FT_FaceRec_		*m_face;
+	friend class GlyphMetrics;
 };
 
 

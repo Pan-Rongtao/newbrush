@@ -1,5 +1,5 @@
 #pragma once
-#include "../media/Font.h"
+#include "../media/GlyphMetrics.h"
 #include "glm/glm.hpp"
 
 namespace nb{ namespace gl{
