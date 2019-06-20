@@ -441,25 +441,22 @@ std::shared_ptr<Program> Programs::glpy()
 
 	constexpr char vs[] =
 		"attribute vec4 nbPos;"
-		"attribute vec4 nbColor;"
 		"attribute vec2 nbTexCoord;"
 		"uniform mat4 nbMvp;"
-		"varying vec4 vary_color;"
-		"varying vec2 vary_textureCoord;"
+		"varying vec2 _texCoord;"
 		"void main()"
 		"{"
-		"	vary_color = nbColor;"
-		"	vary_textureCoord = nbTexCoord;"
+		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
 		"}";
 	constexpr char fs[] =
-		"varying vec4 vary_color;"
-		"varying vec2 vary_textureCoord;"
-		"uniform sampler2D unif_sampler;"
+		"varying vec2 _texCoord;"
+		"uniform vec4 fontColor;"
+		"uniform sampler2D sampler;"
 		"void main()"
 		"{"
-		"	vec4 color = texture2D(unif_sampler, vary_textureCoord);"
-		"	gl_FragColor = color.w * vary_color;"
+		"	vec4 color = texture2D(sampler, _texCoord);"
+		"	gl_FragColor = color.w * fontColor;"
 		"}";
 	return compileBindLink(vs, fs);
 }

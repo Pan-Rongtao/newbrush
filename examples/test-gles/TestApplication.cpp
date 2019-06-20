@@ -92,7 +92,7 @@ void MyApplication::drawTriangles()
 		tri->meshes()[0].vertexs()[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
 		tri->meshes()[0].vertexs()[2].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
-		ro->storage()->insert(Program::nbColorModeLocationStr, 1);
+		ro->storage()->set(Program::nbColorModeLocationStr, 1);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 		m_context->queue(ro);
 	}
@@ -127,7 +127,7 @@ void MyApplication::drawQuadrangles()
 		if (i == 0)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->storage()->insert(Program::nbColorModeLocationStr, 1);
+			ro->storage()->set(Program::nbColorModeLocationStr, 1);
 			//ro->setRenderable(false);
 			ro->model()->meshes()[0].unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 		}
@@ -147,7 +147,7 @@ void MyApplication::drawQuadrangles()
 		}
 		if (i == 2)
 		{
-			ro->storage()->insert(Program::nbColorModeLocationStr, 1);
+			ro->storage()->set(Program::nbColorModeLocationStr, 1);
 		//	ro->setRenderable(false);
 		}
 		m_context->queue(ro);
@@ -164,7 +164,7 @@ void MyApplication::drawEllipses()
 		epse = std::make_shared<Ellipse>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
 	epse->meshes()[0].unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
-	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
+	ro->storage()->set(Program::nbColorModeLocationStr, 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 	m_context->queue(ro);
 }
@@ -207,7 +207,7 @@ void MyApplication::drawSphere()
 	sp->meshes()[0].unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
-	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
+	ro->storage()->set(Program::nbColorModeLocationStr, 0);
 	m_context->queue(ro);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world4.jpg"));
 }
@@ -242,12 +242,12 @@ void MyApplication::drawPhone()
 	//	std::shared_ptr<Ellipse> epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::phong()));
 	m_context->queue(ro);
-	ro->storage()->insert("viewPos", cameraPosition);
-	ro->storage()->insert("material.shininess", 32.0);
-	ro->storage()->insert("light.direction", g_Original ? glm::vec3(1.0f, -0.0f, 3.0f) : glm::vec3(1.0f, -0.0f, -3.0f));
-	ro->storage()->insert("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-	ro->storage()->insert("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-	ro->storage()->insert("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+	ro->storage()->set("viewPos", cameraPosition);
+	ro->storage()->set("material.shininess", 32.0);
+	ro->storage()->set("light.direction", g_Original ? glm::vec3(1.0f, -0.0f, 3.0f) : glm::vec3(1.0f, -0.0f, -3.0f));
+	ro->storage()->set("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+	ro->storage()->set("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+	ro->storage()->set("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
 	//	ro->material()->setTexture(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 
 	std::shared_ptr<TextureCubemap> cm = std::make_shared<TextureCubemap>();

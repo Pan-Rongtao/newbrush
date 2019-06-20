@@ -30,7 +30,7 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	if (typeid(*Fill()) == typeid(ImageBrush))
 	{
 		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
-		Renderer()->storage()->insert(nb::gl::Program::nbColorModeLocationStr, 0);
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 0);
 		if(imgbrush->Source())
 			Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*(imgbrush->Source()->Bm())));
 	}
@@ -38,7 +38,7 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	{
 		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
 		auto color = solidbrush->Color();
-		Renderer()->storage()->insert(nb::gl::Program::nbColorModeLocationStr, 1);
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
 		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 	}
 }

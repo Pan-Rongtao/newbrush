@@ -29,6 +29,8 @@ TextBlock::TextBlock(const std::string & content)
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::glpy()));
 	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Font(), L'a')->texureId));
 //	Text.notify(onTextChanged);
+	Foreground.notify(std::bind(&TextBlock::onForegroundChanged, this, std::placeholders::_1, std::placeholders::_2));
+	onForegroundChanged(Color(0, 0, 0, 0), Color(255, 0, 0, 0));
 }
 
 nb::core::Size TextBlock::measureOverride(const nb::core::Size & availableSize)
@@ -42,12 +44,12 @@ nb::core::Size TextBlock::arrangeOverride(const nb::core::Size & finalSize)
 	{
 	case nb::gui::NoWrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing, LineHeight, TextWrapping::NoWrap, -1);
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), (float)CharSpacing, (float)LineHeight, TextWrapping::NoWrap, -1);
 		return sz;
 	}
 	case nb::gui::Wrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing, LineHeight, TextWrapping::Wrap, finalSize.width());
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), (float)CharSpacing, (float)LineHeight, TextWrapping::Wrap, finalSize.width());
 		return sz;
 	}
 	case nb::gui::WrapWithOverflow:
@@ -58,11 +60,16 @@ nb::core::Size TextBlock::arrangeOverride(const nb::core::Size & finalSize)
 	return Size();
 }
 
+void TextBlock::onForegroundChanged(const nb::core::Color & _old, const nb::core::Color & _new)
+{
+	Renderer()->storage()->set("fontColor", glm::vec4(_new.redF(), _new.greenF(), _new.blueF(), _new.alphaF()));
+}
+
 void TextBlock::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	float x = Offset().x();
 	float y = Offset().y();
 	media::TextWrapping tw = TextWrapping == TextWrappingE::Wrap ? TextWrapping::Wrap : TextWrapping::NoWrap;
-	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing, LineHeight, tw, ActualSize().width());
+	m_glyphBunch->arrage(Font(), x, y, Text(), (float)CharSpacing, (float)LineHeight, tw, ActualSize().width());
 	drawContext->queue(Renderer());
 }

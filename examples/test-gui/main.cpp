@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestWindow> test;
+		TestHandle<TestTextBlock> test;
 		test->test();
 		return app.run();
 	}

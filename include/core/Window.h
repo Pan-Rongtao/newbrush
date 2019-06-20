@@ -142,7 +142,7 @@ public:
 	//窗口句柄
 	long handle() const;
 
-	//置顶（仅windows下有效）
+	//窗口置顶（仅windows下有效）
 	void setTopMost(bool topMost);
 	bool topMost() const;
 

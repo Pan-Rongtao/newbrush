@@ -23,9 +23,9 @@ public:
 	~Storage() = default;
 
 	template<class T>
-	void insert(const std::string &name, const T &v)
+	void set(const std::string &name, const T &v)
 	{
-		m_uniforms.insert(std::make_pair(name, v));
+		m_uniforms[name] = v;
 	}
 
 	const std::map<std::string, nb::core::Any> &uniforms() const;
