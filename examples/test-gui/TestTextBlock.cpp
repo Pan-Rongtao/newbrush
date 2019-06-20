@@ -5,7 +5,7 @@ void TestTextBlock::test()
 	auto tb = std::make_shared<TextBlock>();
 	tb->Text = "abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 //	tb->Text = "12345";
-	tb->VerticalAlignment = VerticalAlignmentE::Center;
+	tb->VerticalAlignment = VerticalAlignmentE::Top;
 //	tb->HorizontalAlignment = HorizontalAlignmentE::Right;
 	tb->Padding = 0.0f;
 //	tb->Width = 400;

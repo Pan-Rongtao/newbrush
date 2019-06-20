@@ -51,6 +51,7 @@ MyApplication::MyApplication()
 	m_window->PointerEvent.addHandler(std::bind(&MyApplication::OnPointerAction, this, std::placeholders::_1));
 	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));
 	m_surface = std::make_shared<WindowSurface>(m_window->width(), m_window->height(), m_window->handle());
+	nb::gl::makeCurrent(m_surface, m_surface, m_context);
 
 	nb::gl::Window::ResizeArgs args;
 	args.width = m_window->width();
@@ -346,7 +347,6 @@ void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 		nb::gl::getCamera()->lookat2D(args.width, args.height);
 
 	nb::gl::viewport(0, 0, args.width, args.height);
-	nb::gl::makeCurrent(m_surface, m_surface, m_context);
 }
 
 bool bPress = false;

@@ -1,5 +1,6 @@
 ﻿#include "gui/Window.h"
 #include "gles/Egl.h"
+#include "core/Window.h"
 #include "gles/Window.h"
 #include "gles/Projection.h"
 #include "gles/Camera.h"
@@ -10,15 +11,22 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
+void onWindowResized(const nb::core::Window::ResizeArgs & args)
+{
+	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
+	nb::gl::getCamera()->lookat2D(args.width, args.height);
+	nb::gl::viewport(0, 0, args.width, args.height);
+}
+
 nb::gui::Window::Window()
 	: WindowState(WindowState::Normal)
-	, m_glWindow(std::make_shared<nb::gl::Window>(800.0, 600.0))
+	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
 	, DrawContext(std::make_shared<nb::gl::Context>(nb::gl::getConfigure()))
 {
 	Width = m_glWindow->width();
 	Height = m_glWindow->height();
-	onWidthChanged(0.0, Width);
-	onHeightChanged(0.0, Height);
+	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
+	onWindowResized({ Width, Height });
 
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Topmost.notify(std::bind(&Window::onTopmostChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -78,17 +86,11 @@ void nb::gui::Window::onTopChanged(const double & _old, const double & _new)
 void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setWidth((int)_new);
-	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
-	nb::gl::getProjection()->perspective(45.0f, (float)(Width / Height), 0.1f, 10000.0f);
-	nb::gl::getCamera()->lookat2D(Width, Height);
 }
 
 void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
 {
 	m_glWindow->setHeight((int)_new);
-	nb::gl::viewport(0, 0, (unsigned int)Width, (unsigned int)Height);
-	nb::gl::getProjection()->perspective(45.0f, (float)(Width / Height), 0.1f, 10000.0f);
-	nb::gl::getCamera()->lookat2D(Width, Height);
 }
 
 void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string & _new)
