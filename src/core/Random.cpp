@@ -206,3 +206,47 @@ double RandomF::get(double min, double max)
 {
 	return RandomF(min, max).get();
 }
+
+/////////////////////////////
+constexpr wchar_t *DefaultStringRandomRange = L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+RandomS::RandomS()
+	: RandomS(DefaultStringRandomRange)
+{
+}
+
+RandomS::RandomS(const std::wstring & range)
+	: m_range(range)
+{
+	m_rand.setRange(0, range.size() - 1);
+}
+
+void RandomS::setRange(const std::wstring & range)
+{
+	m_range = range;
+	m_rand.setRange(0, range.size() - 1);
+}
+
+const std::wstring & RandomS::range() const
+{
+	return m_range;
+}
+
+std::wstring RandomS::get(uint32_t size)
+{
+	if (m_range.empty() || size == 0)
+	{
+		return L"";
+	}
+	else
+	{
+		std::wstring ret;
+		for (int i = 0; i != size; ++i)
+			ret += m_range[m_rand.get()];
+		return ret;
+	}
+}
+
+std::wstring RandomS::get(const std::wstring & range, uint32_t size)
+{
+	return RandomS(range).get(size);
+}

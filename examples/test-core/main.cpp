@@ -5,11 +5,12 @@
 #include "TestDateTime.h"
 #include "TestTimer.h"
 #include "TestTimeSpan.h"
+#include "TestRandom.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestDateTime> test;
+		TestHandle<TestRandom> test;
 		test->test();
 	}
 	catch (std::exception &e)

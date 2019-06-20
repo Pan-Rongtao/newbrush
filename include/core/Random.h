@@ -86,4 +86,29 @@ private:
 	std::uniform_real_distribution<double>	m_dis;
 };
 
+class NB_API RandomS
+{
+public:
+	//构建一个字符串随机器，它的随机池是：" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+	RandomS();
+
+	//构建一个字符串随机器，它的随机池范围是range
+	RandomS(const std::wstring &range);
+
+	//设置随机范围
+	void setRange(const std::wstring &range);
+
+	//获取随机池
+	const std::wstring &range() const;
+
+	//获取一串随机字符串
+	std::wstring get(uint32_t size);
+
+	static std::wstring get(const std::wstring &range, uint32_t size);
+
+private:
+	Random			m_rand;
+	std::wstring	m_range;
+};
+
 }}
