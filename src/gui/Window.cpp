@@ -71,6 +71,7 @@ void nb::gui::Window::onWindowStateChanged(const gui::WindowState & _old, const 
 
 void nb::gui::Window::onTopmostChanged(const bool & _old, const bool & _new)
 {
+	m_glWindow->setTopMost(_new);
 }
 
 void nb::gui::Window::onLeftChanged(const double & _old, const double & _new)

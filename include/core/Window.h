@@ -142,6 +142,10 @@ public:
 	//窗口句柄
 	long handle() const;
 
+	//置顶（仅windows下有效）
+	void setTopMost(bool topMost);
+	bool topMost() const;
+
 	//尺寸重置事件
 	struct ResizeArgs { int width; int height; };
 	nb::core::Event<ResizeArgs>			ResizeEvent;

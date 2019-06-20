@@ -111,3 +111,13 @@ long Window::handle() const
 {
 	return m_internal->handle();
 }
+
+void Window::setTopMost(bool topMost)
+{
+	return m_internal->setTopMost(topMost);
+}
+
+bool Window::topMost() const
+{
+	return m_internal->topMost();
+}

@@ -14,4 +14,5 @@ void TestWindow::test()
 	rc0->Height = 100;
 	rc0->HorizontalAlignment = HorizontalAlignmentE::Stretch;
 	this->Content = rc0;
+	this->Topmost = true;
 }

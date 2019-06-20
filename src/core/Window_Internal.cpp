@@ -125,7 +125,7 @@ void Window_Internal::setX(int x)
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x, y(), x + width(), y() + height()};
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x, y(), rc.right - rc.left, rc.bottom - rc.top, true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x, y(), width(), height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -153,7 +153,7 @@ void Window_Internal::setY(int y)
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x(), y, x() + width(), y + height() };
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x(), y, rc.right - rc.left, rc.bottom - rc.top, true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y, width(), height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -181,7 +181,7 @@ void Window_Internal::setWidth(int width)
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc = { x(), y(), x() + width, y() + height() };
 	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x(), y(), rc.right - rc.left, rc.bottom - rc.top, true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y(), width, height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -240,6 +240,23 @@ long Window_Internal::handle() const
 	return m_X11WindowID;
 #elif NB_OS == NB_OS_LINUX_ARM
 	return (long)m_wlWindow;
+#endif
+}
+
+void Window_Internal::setTopMost(bool topMost)
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	::SetWindowPos(m_hwnd, topMost ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+#endif
+}
+
+bool Window_Internal::topMost() const
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	int style = GetWindowLong(m_hwnd, WS_EX_TOPMOST) & WS_EX_TOPMOST;
+	return style == WS_EX_TOPMOST;
+#else
+	return false;
 #endif
 }
 

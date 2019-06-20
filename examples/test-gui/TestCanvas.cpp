@@ -24,6 +24,17 @@ void TestCanvas::test()
 	rc3->Width = 100;
 	rc3->Height = 100;
 
+	doubleAni.From = 800;
+	doubleAni.To = 1000;
+	doubleAni.Easing = std::make_shared<SineEase>();
+	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
+	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
+	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
+	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
+	doubleAni.TargetProperty = &m_window.Width;
+	doubleAni.begin();
+
 	cv->Children().push_back(rc0);
 	cv->Children().push_back(rc1);
 	cv->Children().push_back(rc2);
@@ -39,4 +50,21 @@ void TestCanvas::test()
 
 	m_window.Content = cv;
 	
+}
+
+void TestCanvas::onStateChanged(const Timeline::StateChangedArgs & args)
+{
+	printf("onStateChanged:%d\n", args.state);
+}
+
+void TestCanvas::onProgress(const Timeline::ProgressArgs & args)
+{
+	//	printf("onProgress:%f, width=%f\n", args.progress, m_window.Width());
+	//printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
+	//	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
+}
+
+void TestCanvas::onCompleted(const Timeline::CompleteArgs & args)
+{
+	printf("onCompleted.\n");
 }

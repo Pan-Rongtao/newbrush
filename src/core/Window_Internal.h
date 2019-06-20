@@ -38,6 +38,9 @@ public:
 
 	long handle() const;
 
+	void setTopMost(bool topMost);
+	bool topMost() const;
+
 	void pending();
 
 private:
