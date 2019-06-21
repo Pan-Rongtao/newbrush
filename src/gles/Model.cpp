@@ -213,3 +213,8 @@ void Model::cullFace()
 {
 	glDisable(GL_CULL_FACE);
 }
+
+unsigned int Model::drawMode() const
+{
+	return GL_TRIANGLES;
+}

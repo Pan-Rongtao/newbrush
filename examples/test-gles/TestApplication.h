@@ -18,6 +18,7 @@ class MyApplication : public nb::gl::Application
 public:
 	MyApplication();
 
+	void drawLines();
 	void drawTriangles();
 	void drawQuadrangles();
 	void drawEllipses();

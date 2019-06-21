@@ -158,7 +158,7 @@ void RenderObject::draw() const
 			program->vertexAttributePointer(nTexCoord, Vertex::textureCoordinateDimension, 12 * sizeof(float), mesh.textureCoordinateData());
 		}
 
-		glDrawElements(GL_TRIANGLES, (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());
+		glDrawElements(m_model->drawMode(), (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());
 		if (!textures.empty())
 			textures[0]->unbind();
 	}

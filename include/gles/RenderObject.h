@@ -64,7 +64,7 @@ public:
 	//获取存储
 	std::shared_ptr<Storage> storage();
 
-	//绘制
+	//绘制，重写此方法以构建自己的渲染方式
 	virtual void draw() const;
 
 private:

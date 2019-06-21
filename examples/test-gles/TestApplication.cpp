@@ -20,6 +20,7 @@
 #include "gles/Projection.h"
 #include "gles/GlyphFactory.h"
 #include "gles/GlyphBunch.h"
+#include "gles/Line.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -58,6 +59,7 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	OnResize(args);
 	
+	drawLines();
 	drawTriangles();
 	drawQuadrangles();
 	drawEllipses();
@@ -67,6 +69,16 @@ MyApplication::MyApplication()
 	//	drawModel();
 	drawGlyph();
 	drawGlyphBunch();
+}
+
+void MyApplication::drawLines()
+{
+	auto line = std::make_shared<Line>(0.0f, 300.0f, 200.f, 300.0f);
+	auto ro = std::make_shared<RenderObject>(line, std::make_shared<Material>(Programs::primitive()));
+	ro->storage()->set(Program::nbColorModeLocationStr, 1);
+	line->meshes()[0].vertexs()[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	line->meshes()[0].vertexs()[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	m_context->queue(ro);
 }
 
 void MyApplication::drawTriangles()
@@ -327,6 +339,7 @@ void MyApplication::drawGlyphBunch()
 	glyphBunch->arrage(Fonts::getFont(Fonts::STKaiti), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrappingE::Wrap, 300);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
 	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), 'a')->texureId));
+	ro->storage()->set("fontColor", glm::vec4(1.0, 0.0, 0.0, 1.0));
 	m_context->queue(ro);
 }
 

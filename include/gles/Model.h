@@ -127,6 +127,9 @@ public:
 	//剔除表面，不重写则禁用
 	virtual void cullFace();
 
+	//绘制方式，不重写则默认为GL_TRIANGLES
+	virtual unsigned int drawMode() const;
+
 private:
 	glm::mat4x4								m_matrix;
 	glm::mat4x4								m_translateMatrix;
