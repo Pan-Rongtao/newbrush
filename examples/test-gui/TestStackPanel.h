@@ -12,5 +12,5 @@ class TestStackPanel : public TestBase
 public:
 	void test();
 
-	Window m_window;
+	nb::gui::Window m_window;
 };

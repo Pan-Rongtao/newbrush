@@ -34,7 +34,7 @@ class NB_API TextureWrapping
 {
 public:
 	//纹理环绕方式
-	enum class WrappingMode
+	enum class WrappingModeE
 	{
 		Repeat,			//重复
 		MirroredRepeat,	//镜像重复
@@ -47,23 +47,23 @@ public:
 	TextureWrapping();
 
 	//构建一个纹理环绕方式，它的S轴为s，它的T轴为t
-	TextureWrapping(WrappingMode s, WrappingMode t);
+	TextureWrapping(WrappingModeE s, WrappingModeE t);
 
 	//构建一个纹理环绕方式，它的S轴是s，它的T轴是t，它的用户颜色边缘延伸是borderColor
-	TextureWrapping(WrappingMode s, WrappingMode t, const glm::vec4 &borderColor);
+	TextureWrapping(WrappingModeE s, WrappingModeE t, const glm::vec4 &borderColor);
 
 	//转到gl的值
-	static int glValue(WrappingMode wrapping);
+	static int glValue(WrappingModeE wrapping);
 
 	//获取S轴
-	WrappingMode s() const;
+	WrappingModeE s() const;
 
 	//获取T轴
-	WrappingMode t() const;
+	WrappingModeE t() const;
 
 private:
-	WrappingMode	m_s;
-	WrappingMode	m_t;
+	WrappingModeE	m_s;
+	WrappingModeE	m_t;
 	glm::vec4		m_borderColor;
 };
 
@@ -74,12 +74,12 @@ public:
 	//纹理过滤方式，依次向下，纹理细节表现质量越好，性能要求越大
 	//放大过滤只支持Point和Bilinear
 	//缩小过滤支持所有的过滤方式
-	enum class Filter
+	enum class FilterE
 	{
-		Point = 0,						//最邻近过滤，指取最接近浮点的整型像素点位置
-		Bilinear,						//双线性过滤，对邻近的四个点进行线性插值算法，两个维度三次运算
-		Trilinear,						//三线性过滤。三线性过滤以双线性过滤为基础。会对pixel大小与texel大小最接近的两层Mipmap level分别进行双线性过滤，然后再对两层得到的结果进生线性插值。
-		Anisotropic,					//各向异性过滤，当需要贴图的三维表面平行于屏幕(viewport)，则是各向同性的。当要贴图的三维表面与屏幕有一定角度的倾斜，则是各向异性的。
+		Point = 0,		//最邻近过滤，指取最接近浮点的整型像素点位置
+		Bilinear,		//双线性过滤，对邻近的四个点进行线性插值算法，两个维度三次运算
+		Trilinear,		//三线性过滤。三线性过滤以双线性过滤为基础。会对pixel大小与texel大小最接近的两层Mipmap level分别进行双线性过滤，然后再对两层得到的结果进生线性插值。
+		Anisotropic,	//各向异性过滤，当需要贴图的三维表面平行于屏幕(viewport)，则是各向同性的。当要贴图的三维表面与屏幕有一定角度的倾斜，则是各向异性的。
 	};
 
 public:
@@ -87,31 +87,31 @@ public:
 	TextureFilter();
 
 	//构建一个纹理过滤方式，放大过滤和缩小过滤都使用uniformFilter
-	TextureFilter(Filter uniformFilter);
+	TextureFilter(FilterE uniformFilter);
 
 	//构建一个纹理过滤方式，放大过滤和缩小过滤都使用uniformFilter
-	TextureFilter(Filter magnify, Filter narrow);
+	TextureFilter(FilterE magnify, FilterE narrow);
 
 	//返回默认的过滤方式(Point)
 	static TextureFilter defaultx();
 
 	//获取gl值
-	static int glValue(Filter filter);
+	static int glValue(FilterE filter);
 
 	//获取放大/缩小过滤方式
-	Filter magnifyFilter() const;
-	Filter narrowFilter() const;
+	FilterE magnifyFilter() const;
+	FilterE narrowFilter() const;
 
 private:
-	Filter	m_MagnifyFilter;
-	Filter	m_NarrowFilter;
+	FilterE	m_MagnifyFilter;
+	FilterE	m_NarrowFilter;
 };
 
 //class Texture
 class NB_API Texture
 {
 public:
-	enum class PixelFormat
+	enum class PixelFormatE
 	{
 		Bpp8_Alpha = 0,
 		Bpp16_Rgb565,

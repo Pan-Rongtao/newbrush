@@ -20,7 +20,7 @@ void SourceDecoder::decode(const std::string & verSource, const std::string & fr
 	decodeOne(fragSource);
 }
 
-void SourceDecoder::getUniforms(std::map<std::string, VarType> &uniforms)
+void SourceDecoder::getUniforms(std::map<std::string, VarTypeE> &uniforms)
 {
 	uniforms = m_uniforms;
 }
@@ -43,7 +43,7 @@ void SourceDecoder::decodeOne(const std::string &source)
 			{
 				std::string sStructDefineStr = sCutMain.substr(i + KeywordStructSize, end - (i + KeywordStructSize) + 1);
 				std::string structName;
-				std::map<std::string, VarType> structMembers;
+				std::map<std::string, VarTypeE> structMembers;
 				extractStruct(sStructDefineStr, structName, structMembers);
 				i = end + 1;
 			}
@@ -61,12 +61,12 @@ void SourceDecoder::decodeOne(const std::string &source)
 			{
 				std::string varTypeName;
 				std::string varName;
-				VarType varType;
+				VarTypeE varType;
 				std::string sVarDefineStr = sCutMain.substr(i, end - i);
 				extractVar(sVarDefineStr, varTypeName, varName, varType);
-				if (varType != VarType::unknown)
+				if (varType != VarTypeE::unknown)
 				{
-					if (varType == VarType::structure)
+					if (varType == VarTypeE::structure)
 					{
 						auto structMembers = m_structDefines.find(varTypeName)->second;
 						for (auto const &member : structMembers)
@@ -100,29 +100,29 @@ std::string SourceDecoder::cutMain(const std::string & s)
 	return mainP != std::string::npos ? s.substr(0, mainP - 5) : "";	//prev 'void'
 }
 
-void SourceDecoder::extractStruct(const std::string & sStructDefineStr, std::string & structName, std::map<std::string, VarType>& structMembers)
+void SourceDecoder::extractStruct(const std::string & sStructDefineStr, std::string & structName, std::map<std::string, VarTypeE>& structMembers)
 {
 	std::string::const_iterator a = std::find_if(sStructDefineStr.begin(), sStructDefineStr.end(), [](char c) {return !isblank(c); });
 	auto b = std::find_if(a, sStructDefineStr.end(), [](char c) {return isblank(c) || c == '{'; });
 	structName.assign(a, b);
 	std::string memberDefineStr(b, sStructDefineStr.end());
 	size_t n = memberDefineStr.find(';');
-	std::map<std::string, VarType> members;
+	std::map<std::string, VarTypeE> members;
 	while (n != std::string::npos) 
 	{
 		std::string sVarDefStr = memberDefineStr.substr(0, n);
 		std::string memberTypeName;
 		std::string memberName;
-		VarType memberType;
+		VarTypeE memberType;
 		extractVar(sVarDefStr, memberTypeName, memberName, memberType);
-		if (memberType != VarType::unknown && memberType != VarType::structure)
+		if (memberType != VarTypeE::unknown && memberType != VarTypeE::structure)
 			members.insert({ memberName, memberType });
 		n = memberDefineStr.find(';', n + 1);
 	}
 	m_structDefines.insert({ structName, members });
 }
 
-void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarType &varType)
+void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarTypeE &varType)
 {
 	//如果';'前面有空白字符，需要先把空白字符去掉
 	std::string sDef = sVarDefineStr;
@@ -171,30 +171,30 @@ void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &va
 	}
 	varTypeName = sDef.substr(nTypeBeg, nTypeEnd - nTypeBeg);
 	std::string sLower = toLower(varTypeName);
-	if (sLower == "bool")							varType = VarType::boolean;
-	else if (sLower == "int")						varType = VarType::integer;
-	else if (sLower == "float")						varType = VarType::real;
-	else if (sLower == "vec2")						varType = VarType::vec2;
-	else if (sLower == "vec3")						varType = VarType::vec3;
-	else if (sLower == "vec4")						varType = VarType::vec4;
-	else if (sLower == "mat2" || sLower == "mat2x2")varType = VarType::mat2x2;
-	else if (sLower == "mat3" || sLower == "mat3x3")varType = VarType::mat3x3;
-	else if (sLower == "mat4" || sLower == "mat4x4")varType = VarType::mat4x4;
-	else if (sLower == "mat2x3")					varType = VarType::mat2x2;
-	else if (sLower == "mat2x4")					varType = VarType::mat2x2;
-	else if (sLower == "mat3x2")					varType = VarType::mat2x2;
-	else if (sLower == "mat3x4")					varType = VarType::mat2x2;
-	else if (sLower == "mat4x2")					varType = VarType::mat2x2;
-	else if (sLower == "mat4x3")					varType = VarType::mat2x2;
+	if (sLower == "bool")							varType = VarTypeE::boolean;
+	else if (sLower == "int")						varType = VarTypeE::integer;
+	else if (sLower == "float")						varType = VarTypeE::real;
+	else if (sLower == "vec2")						varType = VarTypeE::vec2;
+	else if (sLower == "vec3")						varType = VarTypeE::vec3;
+	else if (sLower == "vec4")						varType = VarTypeE::vec4;
+	else if (sLower == "mat2" || sLower == "mat2x2")varType = VarTypeE::mat2x2;
+	else if (sLower == "mat3" || sLower == "mat3x3")varType = VarTypeE::mat3x3;
+	else if (sLower == "mat4" || sLower == "mat4x4")varType = VarTypeE::mat4x4;
+	else if (sLower == "mat2x3")					varType = VarTypeE::mat2x2;
+	else if (sLower == "mat2x4")					varType = VarTypeE::mat2x2;
+	else if (sLower == "mat3x2")					varType = VarTypeE::mat2x2;
+	else if (sLower == "mat3x4")					varType = VarTypeE::mat2x2;
+	else if (sLower == "mat4x2")					varType = VarTypeE::mat2x2;
+	else if (sLower == "mat4x3")					varType = VarTypeE::mat2x2;
 	else
 	{
 		if (m_structDefines.find(varTypeName) != m_structDefines.end())
 		{
-			varType = VarType::structure;
+			varType = VarTypeE::structure;
 		}
 		else
 		{
-			varType = VarType::unknown;
+			varType = VarTypeE::unknown;
 		}
 	}
 

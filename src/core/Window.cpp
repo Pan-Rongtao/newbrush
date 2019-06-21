@@ -121,3 +121,38 @@ bool Window::topMost() const
 {
 	return m_internal->topMost();
 }
+
+void Window::setWindowState(WindowStateE state)
+{
+	m_internal->setWindowState(state);
+}
+
+WindowStateE Window::getWindowState() const
+{
+	return m_internal->getWindowState();
+}
+
+void Window::setWindowStyle(WindowStyleE style)
+{
+	m_internal->setWindowStyle(style);
+}
+
+WindowStyleE Window::getWindowStyle() const
+{
+	return m_internal->getWindowStyle();
+}
+
+void Window::show(bool show)
+{
+	m_internal->show(show);
+}
+
+bool Window::isShow() const
+{
+	return m_internal->isShow();
+}
+
+void Window::active()
+{
+	m_internal->active();
+}

@@ -260,6 +260,119 @@ bool Window_Internal::topMost() const
 #endif
 }
 
+void Window_Internal::setWindowState(WindowStateE state)
+{
+	switch (state)
+	{
+	case WindowStateE::Normal:
+#ifdef NB_OS_FAMILY_WINDOWS
+		::ShowWindow(m_hwnd, SW_SHOWNORMAL);
+#endif
+		break;
+	case WindowStateE::Maximized:
+#ifdef NB_OS_FAMILY_WINDOWS
+		::ShowWindow(m_hwnd, SW_SHOWMAXIMIZED);
+#endif
+		break;
+	case WindowStateE::Minimized:
+#ifdef NB_OS_FAMILY_WINDOWS
+		::ShowWindow(m_hwnd, SW_SHOWMINIMIZED);
+#endif
+		break;
+	case WindowStateE::FullScreen:
+	{
+#ifdef NB_OS_FAMILY_WINDOWS
+		//左上角如果设置为0, 0的话，会一直覆盖其他层次，不知道为什么
+		SetWindowPos(m_hwnd, HWND_TOP, 1, 1, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 0);
+#endif
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+WindowStateE Window_Internal::getWindowState() const
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	return ::IsZoomed(m_hwnd) ? WindowStateE::Maximized : IsIconic(m_hwnd) ? WindowStateE::Minimized : WindowStateE::Normal;
+#endif
+}
+
+void Window_Internal::setWindowStyle(WindowStyleE style)
+{
+	switch (style)
+	{
+	case WindowStyleE::None:
+#ifdef NB_OS_FAMILY_WINDOWS
+	{
+		long s = ::GetWindowLong(m_hwnd, GWL_STYLE);
+		s = s &~WS_CAPTION &~WS_SYSMENU &~WS_SIZEBOX;
+		::SetWindowLong(m_hwnd, GWL_STYLE, s);
+	}
+#endif
+		break;
+	case WindowStyleE::Fixed:
+#ifdef NB_OS_FAMILY_WINDOWS
+	{
+		long s = ::GetWindowLong(m_hwnd, GWL_STYLE);
+		s = s &~WS_MINIMIZEBOX &~WS_MAXIMIZEBOX &~WS_SIZEBOX;
+		::SetWindowLong(m_hwnd, GWL_STYLE, s);
+	}
+#endif
+		break;
+	case WindowStyleE::SizeBox:
+#ifdef NB_OS_FAMILY_WINDOWS
+	{
+		long s = ::GetWindowLong(m_hwnd, GWL_STYLE);
+		s = s | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+		::SetWindowLong(m_hwnd, GWL_STYLE, s);
+	}
+#endif
+	default:
+		break;
+	}
+}
+
+WindowStyleE Window_Internal::getWindowStyle() const
+{
+	WindowStyleE ret = WindowStyleE::SizeBox;
+#ifdef NB_OS_FAMILY_WINDOWS
+	auto testBit = [](long style, long b)
+	{
+		return (style & b) == b;
+	};
+
+	long s = ::GetWindowLong(m_hwnd, GWL_EXSTYLE);
+	if (!testBit(s, WS_CAPTION) & !testBit(s, WS_SYSMENU) & !testBit(s, WS_SIZEBOX))
+		ret = WindowStyleE::None;
+	else if (!testBit(s, WS_MINIMIZEBOX) & !testBit(s, WS_MAXIMIZEBOX) & !testBit(s, WS_SIZEBOX))
+		ret = WindowStyleE::Fixed;
+	else
+		ret = WindowStyleE::SizeBox;
+#endif
+	return ret;
+}
+
+void Window_Internal::show(bool show)
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	::ShowWindow(m_hwnd, show ? SW_SHOW : SW_HIDE);
+#endif
+}
+
+bool Window_Internal::isShow() const
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	return ::IsWindowVisible(m_hwnd);
+#endif
+}
+
+void Window_Internal::active()
+{
+	::SetForegroundWindow(m_hwnd);
+}
+
 void Window_Internal::pending()
 {
 #ifdef NB_OS_FAMILY_WINDOWS
@@ -319,7 +432,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (pWindow)
 			{
 				Window::PointerEventArgs args;
-				args.action = Window::PointerAction_Down;
+				args.action = PointerActionE::Down;
 				args.x = GET_X_LPARAM(lParam);
 				args.y = GET_Y_LPARAM(lParam);
 				pWindow->PointerEvent.dispatch(args);
@@ -331,7 +444,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (pWindow && m_pressed)
 			{
 				Window::PointerEventArgs args;
-				args.action = Window::PointerAction_Move;
+				args.action = PointerActionE::Move;
 				args.x = GET_X_LPARAM(lParam);
 				args.y = GET_Y_LPARAM(lParam);
 				pWindow->PointerEvent.dispatch(args);
@@ -348,7 +461,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 				int y = GET_Y_LPARAM(lParam);
 
 				Window::PointerEventArgs args;
-				args.action = Window::PointerAction_Up;
+				args.action = PointerActionE::Up;
 				args.x = x;
 				args.y = y;
 				pWindow->PointerEvent.dispatch(args);
@@ -357,7 +470,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 				::GetClientRect(hwnd, &rcClient);
 				if (x >= 0 && x <= (rcClient.right - rcClient.left) && y >= 0 && y <= (rcClient.bottom - rcClient.top))
 				{
-					args.action = Window::PointerAction_Click;
+					args.action = PointerActionE::Click;
 					pWindow->PointerEvent.dispatch(args);
 				}
 			}
@@ -369,16 +482,16 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (pWindow)
 			{
 				Window::KeyEventArgs args;
-				args.action = msg == WM_KEYDOWN ? Window::KeyAction_Down : Window::KeyAction_Up;
+				args.action = msg == WM_KEYDOWN ? KeyActionE::Down : KeyActionE::Up;
 				args.mask = 0;
-				if (wParam == VK_ESCAPE)														args.key = Window::VKey_Esc;
-				else if (wParam >= VK_F1 && wParam <= VK_F12)									args.key = (Window::KeyCode)(wParam - VK_F1 + Window::VKey_F1);
-				else if (wParam == VK_SPACE)													args.key = Window::VKey_Space;
-				else if ((wParam >= '0' && wParam <= '9') || (wParam >= 'A' && wParam <= 'Z'))	args.key = (Window::KeyCode)wParam;
-				else if (wParam >= VK_LEFT && wParam <= VK_DOWN)								args.key = (Window::KeyCode)(wParam - VK_LEFT + Window::VKey_Left);
-				else if (wParam == VK_ADD)														args.key = Window::VKey_Add;
-				else if (wParam == VK_SUBTRACT)													args.key = Window::VKey_Sub;
-				else																			args.key = Window::VKey_Unknown;
+				if (wParam == VK_ESCAPE)														args.key = KeyCodeE::Esc;
+				else if (wParam >= VK_F1 && wParam <= VK_F12)									args.key = (KeyCodeE)(wParam - VK_F1 + static_cast<int>(KeyCodeE::F1));
+				else if (wParam == VK_SPACE)													args.key = KeyCodeE::Space;
+				else if ((wParam >= '0' && wParam <= '9') || (wParam >= 'A' && wParam <= 'Z'))	args.key = (KeyCodeE)wParam;
+				else if (wParam >= VK_LEFT && wParam <= VK_DOWN)								args.key = (KeyCodeE)(wParam - VK_LEFT + static_cast<int>(KeyCodeE::Left));
+				else if (wParam == VK_ADD)														args.key = KeyCodeE::Add;
+				else if (wParam == VK_SUBTRACT)													args.key = KeyCodeE::Sub;
+				else																			args.key = KeyCodeE::Unknown;
 				pWindow->KeyEvent.dispatch(args);
 			}
 		}
@@ -391,8 +504,8 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 				if (wParam == VK_F10)//F10只有systemkey，且F10会影响其他key建
 				{
 					Window::KeyEventArgs args;
-					args.action = msg == WM_KEYDOWN ? Window::KeyAction_Down : Window::KeyAction_Up;
-					args.key = Window::VKey_F10;
+					args.action = msg == WM_KEYDOWN ? KeyActionE::Down : KeyActionE::Up;
+					args.key = KeyCodeE::F10;
 					args.mask = 0;
 					pWindow->KeyEvent.dispatch(args);
 

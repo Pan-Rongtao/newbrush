@@ -324,7 +324,7 @@ void MyApplication::drawGlyph()
 void MyApplication::drawGlyphBunch()
 {
 	auto glyphBunch = std::make_shared<GlyphBunch>();
-	glyphBunch->arrage(Fonts::getFont(Fonts::STKaiti), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrapping::Wrap, 300);
+	glyphBunch->arrage(Fonts::getFont(Fonts::STKaiti), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrappingE::Wrap, 300);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
 	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), 'a')->texureId));
 	m_context->queue(ro);
@@ -356,15 +356,15 @@ void MyApplication::OnPointerAction(const nb::core::Window::PointerEventArgs & a
 {
 	switch (args.action)
 	{
-	case nb::gl::Window::PointerAction_Down:
+	case PointerActionE::Down:
 		bPress = true;
 		pressX = args.x;
 		pressY = args.y;
 		break;
-	case nb::gl::Window::PointerAction_Up:
+	case PointerActionE::Up:
 		bPress = false;
 		break;
-	case nb::gl::Window::PointerAction_Move:
+	case PointerActionE::Move:
 	{
 		for (int i = 0; i != m_context->renderObjectCount(); ++i)
 		{
@@ -385,16 +385,14 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 //	printf("MyApplication::OnKeyAction---action[%d], key[%d],mask[%d]\r\n", action, key, mask);
 	switch (args.action)
 	{
-	case nb::gl::Window::KeyAction_Down:
+	case KeyActionE::Down:
 		switch (args.key)
 		{
-		case nb::gl::Window::VKey_Unknown:
-			break;
-		case nb::gl::Window::VKey_Esc:
+		case KeyCodeE::Esc:
 			for (int i = 0; i != m_context->renderObjectCount(); ++i)
 				m_context->renderObject(i)->model()->setMatrix(glm::identity<glm::mat4x4>());
 			break;
-		case nb::gl::Window::VKey_F1:
+		case KeyCodeE::F1:
 		{
 		/*	Matrix4x4 mat = Matrix4x4::identity();
 			mat.rotateAngleY(60.0);
@@ -403,133 +401,133 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 			m_context->renderObject(0)->model()->setMatrix(mat);*/
 		}
 			break;
-		case nb::gl::Window::VKey_F2:
+		case KeyCodeE::F2:
 			break;
-		case nb::gl::Window::VKey_F3:
+		case KeyCodeE::F3:
 			break;
-		case nb::gl::Window::VKey_F4:
+		case KeyCodeE::F4:
 			break;
-		case nb::gl::Window::VKey_F5:
+		case KeyCodeE::F5:
 			break;
-		case nb::gl::Window::VKey_F6:
+		case KeyCodeE::F6:
 			break;
-		case nb::gl::Window::VKey_F7:
+		case KeyCodeE::F7:
 			break;
-		case nb::gl::Window::VKey_F8:
+		case KeyCodeE::F8:
 			break;
-		case nb::gl::Window::VKey_F9:
+		case KeyCodeE::F9:
 			break;
-		case nb::gl::Window::VKey_F10:
+		case KeyCodeE::F10:
 			break;
-		case nb::gl::Window::VKey_F11:
+		case KeyCodeE::F11:
 			break;
-		case nb::gl::Window::VKey_F12:
+		case KeyCodeE::F12:
 			break;
-		case nb::gl::Window::VKey_Space:
+		case KeyCodeE::Space:
 			break;
-		case nb::gl::Window::VKey_A:
+		case KeyCodeE::A:
 			m_context->renderObject(0)->model()->rotate(10, 0, 1, 0);
 			break;
-		case nb::gl::Window::VKey_D:
+		case KeyCodeE::D:
 			m_context->renderObject(0)->model()->rotate(-10, 0, 1, 0);
 			break;
-		case nb::gl::Window::VKey_W:
+		case KeyCodeE::W:
 			m_context->renderObject(0)->model()->rotate(10, 1, 0, 0);
 			break;
-		case nb::gl::Window::VKey_S:
+		case KeyCodeE::S:
 			m_context->renderObject(0)->model()->rotate(-10, 1, 0, 0);
 			break;
-		case nb::gl::Window::VKey_B:
+		case KeyCodeE::B:
 			break;
-		case nb::gl::Window::VKey_C:
+		case KeyCodeE::C:
 			break;
-		case nb::gl::Window::VKey_E:
+		case KeyCodeE::E:
 			break;
-		case nb::gl::Window::VKey_F:
+		case KeyCodeE::F:
 			break;
-		case nb::gl::Window::VKey_G:
+		case KeyCodeE::G:
 			break;
-		case nb::gl::Window::VKey_H:
+		case KeyCodeE::H:
 			break;
-		case nb::gl::Window::VKey_I:
+		case KeyCodeE::I:
 		{
 			cameraPosition += 0.1f * cameraFront;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 			printf("z=%.1f\r\n", cameraPosition.z);
 		}
 			break;
-		case nb::gl::Window::VKey_J:
+		case KeyCodeE::J:
 		{
 			auto x = glm::cross(cameraFront, cameraUp) * 0.1f;
 			cameraPosition -= x;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}
 			break;
-		case nb::gl::Window::VKey_K:
+		case KeyCodeE::K:
 		{
 			cameraPosition -= 0.1f * cameraFront;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 			printf("z=%.1f\r\n", cameraPosition.z);
 		}
 			break;
-		case nb::gl::Window::VKey_L:
+		case KeyCodeE::L:
 		{
 			auto x = glm::cross(cameraFront, cameraUp) * 0.1f;
 			cameraPosition += x;
 			nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 		}
 			break;
-		case nb::gl::Window::VKey_M:
+		case KeyCodeE::M:
 			break;
-		case nb::gl::Window::VKey_N:
+		case KeyCodeE::N:
 			break;
-		case nb::gl::Window::VKey_O:
+		case KeyCodeE::O:
 			break;
-		case nb::gl::Window::VKey_P:
+		case KeyCodeE::P:
 			break;
-		case nb::gl::Window::VKey_Q:
+		case KeyCodeE::Q:
 			break;
-		case nb::gl::Window::VKey_R:
+		case KeyCodeE::R:
 			m_context->renderObject(0)->model()->rotate(-10, 0, 0, 1);
 			break;
-		case nb::gl::Window::VKey_T:
+		case KeyCodeE::T:
 			m_context->renderObject(0)->model()->rotate(10, 0, 0, 1);
 			break;
-		case nb::gl::Window::VKey_U:
+		case KeyCodeE::U:
 			break;
-		case nb::gl::Window::VKey_V:
+		case KeyCodeE::V:
 			break;
-		case nb::gl::Window::VKey_X:
+		case KeyCodeE::X:
 			break;
-		case nb::gl::Window::VKey_Y:
+		case KeyCodeE::Y:
 			break;
-		case nb::gl::Window::VKey_Z:
+		case KeyCodeE::Z:
 			break;
-		case nb::gl::Window::VKey_Left:
+		case KeyCodeE::Left:
 			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0f, 0.0f, 0.0f);
 			break;
-		case nb::gl::Window::VKey_Up:
+		case KeyCodeE::Up:
 			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? 0.01f : 10.0f, 0.0f);
 			break;
-		case nb::gl::Window::VKey_Right:
+		case KeyCodeE::Right:
 			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0f, 0.0f, 0.0f);
 			break;
-		case nb::gl::Window::VKey_Down:
+		case KeyCodeE::Down:
 			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? -0.01f : -10.0f, 0.0f);
 			break;
-		case nb::gl::Window::VKey_Add:
+		case KeyCodeE::Add:
 			m_context->renderObject(0)->model()->scale(2, 2, 2);
 			break;
-		case nb::gl::Window::VKey_Sub:
+		case KeyCodeE::Sub:
 			m_context->renderObject(0)->model()->scale(0.5, 0.5, 0.5);
 			break;
 		default:
 			break;
 		}
 		break;
-	case nb::gl::Window::KeyAction_Up:
+	case KeyActionE::Up:
 		break;
-	case nb::gl::Window::KeyAction_LongPress:
+	case KeyActionE::LongPress:
 		break;
 	default:
 		break;

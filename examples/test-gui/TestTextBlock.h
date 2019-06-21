@@ -5,6 +5,7 @@
 #include "gui/PropertyAnimation.h"
 
 using namespace nb::core;
+using namespace nb::media;
 using namespace nb::gui;
 
 class TestTextBlock : public TestBase
@@ -15,10 +16,10 @@ public:
 	ColorAnimation				colorAni;
 
 private:
-private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
 	void onProgress(const Timeline::ProgressArgs &args);
 	void onCompleted(const Timeline::CompleteArgs &args);
 
-	Window	m_window;
+	std::shared_ptr<TextBlock>	m_text;
+	nb::gui::Window				m_window;
 };

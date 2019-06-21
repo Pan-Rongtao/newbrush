@@ -13,22 +13,27 @@ using namespace nb::gui;
 
 void onWindowResized(const nb::core::Window::ResizeArgs & args)
 {
-	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
+	auto ratio = (float)args.width / (float)args.height;
+	nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
 	nb::gl::getCamera()->lookat2D(args.width, args.height);
 	nb::gl::viewport(0, 0, args.width, args.height);
 }
 
 nb::gui::Window::Window()
-	: WindowState(WindowState::Normal)
+	: WindowState(WindowStateE::Normal)
+	, WindowStyle(WindowStyleE::SizeBox)
 	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
 	, DrawContext(std::make_shared<nb::gl::Context>(nb::gl::getConfigure()))
 {
+	Left = m_glWindow->x();
+	Top = m_glWindow->y();
 	Width = m_glWindow->width();
 	Height = m_glWindow->height();
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
-	onWindowResized({ Width, Height });
+	onWindowResized({ (int)Width, (int)Height });
 
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
+	WindowStyle.notify(std::bind(&Window::onWindowStyleChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Topmost.notify(std::bind(&Window::onTopmostChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Left.notify(std::bind(&Window::onLeftChanged, this, std::placeholders::_1, std::placeholders::_2));
 	Top.notify(std::bind(&Window::onTopChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -51,22 +56,32 @@ nb::gui::Window::~Window()
 
 void nb::gui::Window::active()
 {
+	m_glWindow->active();
 }
 
 void nb::gui::Window::show()
 {
+	m_glWindow->show(true);
 }
 
 void nb::gui::Window::hide()
 {
+	m_glWindow->show(false);
 }
 
 void nb::gui::Window::close()
 {
+	m_glWindow = nullptr;
 }
 
-void nb::gui::Window::onWindowStateChanged(const gui::WindowState & _old, const gui::WindowState & _new)
+void nb::gui::Window::onWindowStateChanged(const core::WindowStateE & _old, const core::WindowStateE & _new)
 {
+	m_glWindow->setWindowState(_new);
+}
+
+void nb::gui::Window::onWindowStyleChanged(const core::WindowStyleE & _old, const core::WindowStyleE & _new)
+{
+	m_glWindow->setWindowStyle(_new);
 }
 
 void nb::gui::Window::onTopmostChanged(const bool & _old, const bool & _new)

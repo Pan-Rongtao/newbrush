@@ -22,7 +22,7 @@ void TestSoureDecoder::test()
 	auto k = NB_TICK_COUT;
 	sd.decode(program0->vertexShader()->source(), program0->fragmentShader()->source());
 	printf("decode cost [%d] ms\n", int(NB_TICK_COUT - k));
-	std::map<std::string, SourceDecoder::VarType> uniforms;
+	std::map<std::string, SourceDecoder::VarTypeE> uniforms;
 	sd.getUniforms(uniforms);
 
 	for(auto const &one : uniforms)

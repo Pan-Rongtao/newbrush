@@ -14,7 +14,7 @@ using namespace nb::gui;
 
 Image::Image()
 	: Source(nullptr)
-	, Stretch(Uniform)
+	, Stretch(StretchE::Uniform)
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
 	

@@ -34,19 +34,19 @@ Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color, const glm::v
 }
 
 //class Mesh
-Mesh::Mesh(const EnumFlags<Vertex::VertexAttribute>& attributes)
+Mesh::Mesh(const EnumFlags<Vertex::VertexAttributeE>& attributes)
 	: m_attributes(attributes)
 {
 }
 
-Mesh::Mesh(const EnumFlags<Vertex::VertexAttribute>& attributes, const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
+Mesh::Mesh(const EnumFlags<Vertex::VertexAttributeE>& attributes, const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
 	: m_attributes(attributes)
 	, m_vertexs(vertexs)
 	, m_indices(indices)
 {
 }
 
-bool Mesh::hasAttribute(Vertex::VertexAttribute attr) const
+bool Mesh::hasAttribute(Vertex::VertexAttributeE attr) const
 {
 	return m_attributes.testFlag(attr);
 }

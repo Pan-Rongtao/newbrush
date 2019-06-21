@@ -14,7 +14,7 @@
 namespace nb{ namespace core {
 
 //星期枚举
-enum class Week
+enum class WeekE
 {
 	Sunday		= 0,
 	Monday		= 1,
@@ -26,7 +26,7 @@ enum class Week
 };
 
 //月份枚举
-enum class Month
+enum class MonthE
 {
 	January		= 1,
 	February	= 2,
@@ -106,7 +106,7 @@ public:
 	int day() const;
 
 	//星期
-	Week week() const;
+	WeekE week() const;
 
 	//自1月1日经过的天数，包括当天
 	int dayOfYear() const;
@@ -332,7 +332,7 @@ public:
 	int day() const;
 
 	//星期
-	Week week() const;
+	WeekE week() const;
 
 	//时
 	int hour() const;

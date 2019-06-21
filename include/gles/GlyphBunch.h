@@ -10,7 +10,7 @@ class NB_API GlyphBunch : public Model
 public:
 	GlyphBunch();
 
-	void arrage(std::shared_ptr<media::Font> font, float xStart, float yStart, const std::string &text, float charSpacing, float lineHeight, media::TextWrapping tw, float widthMax);
+	void arrage(std::shared_ptr<media::Font> font, float xStart, float yStart, const std::string &text, float charSpacing, float lineHeight, media::TextWrappingE tw, float widthMax);
 
 	float getWidth() const;
 	float getHeight() const;

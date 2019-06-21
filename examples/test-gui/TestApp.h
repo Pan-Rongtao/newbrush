@@ -12,5 +12,5 @@ public:
 	virtual void test();
 
 private:
-	Window m_window;
+	nb::gui::Window m_window;
 };

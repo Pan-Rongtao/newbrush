@@ -6,7 +6,7 @@ namespace nb{ namespace core{
 class Binding
 {
 public:
-	enum class Mode
+	enum class ModeE
 	{
 		OneTime,
 		OneWay,

@@ -23,16 +23,16 @@ namespace nb{ namespace media {
 class NB_API Bitmap
 {
 public:
-	enum class PixelFormat
+	enum class PixelFormatE
 	{
-		Format_Invalid = 0,		//不可用的图像
-		Format_Bpp1_Palette,	//1位调色板图像
-		Format_Bpp4_Palette,	//4位调色板图像
-		Format_Bpp8_Palette,	//8位调色板图像
-		Format_Bpp16_Rgb555,	//16位Rgb图像，保留位-1, R-5, G-1, B-5
-		Format_Bpp16_Rgb565,	//16位Rgb图像，R-5, G-6, B-5
-		Format_Bpp24_Rgb888,	//24位Rgb图像，R-8, G-8, B-8
-		Format_Bpp32_Rgba8888,	//32Rgba位图像, R-8, G-8, B-8，A-8
+		Invalid = 0,	//不可用的图像
+		Bpp1_Palette,	//1位调色板图像
+		Bpp4_Palette,	//4位调色板图像
+		Bpp8_Palette,	//8位调色板图像
+		Bpp16_Rgb555,	//16位Rgb图像，保留位-1, R-5, G-1, B-5
+		Bpp16_Rgb565,	//16位Rgb图像，R-5, G-6, B-5
+		Bpp24_Rgb888,	//24位Rgb图像，R-8, G-8, B-8
+		Bpp32_Rgba8888,	//32Rgba位图像, R-8, G-8, B-8，A-8
 	};
 
 public:

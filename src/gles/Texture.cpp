@@ -9,41 +9,41 @@ using namespace nb::gl;
 
 //class TexutreWrapping
 TextureWrapping::TextureWrapping()
-	: TextureWrapping(WrappingMode::Repeat, WrappingMode::Repeat, { 0.0f, 0.0f, 0.0f, 1.0f })
+	: TextureWrapping(WrappingModeE::Repeat, WrappingModeE::Repeat, { 0.0f, 0.0f, 0.0f, 1.0f })
 {
 }
 
-TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t)
+TextureWrapping::TextureWrapping(TextureWrapping::WrappingModeE s, TextureWrapping::WrappingModeE t)
 	: TextureWrapping(s, t, { 0.0f, 0.0f, 0.0f, 1.0f })
 {
 }
 
-TextureWrapping::TextureWrapping(TextureWrapping::WrappingMode s, TextureWrapping::WrappingMode t, const glm::vec4 &borderColor)
+TextureWrapping::TextureWrapping(TextureWrapping::WrappingModeE s, TextureWrapping::WrappingModeE t, const glm::vec4 &borderColor)
 	: m_s(s)
 	, m_t(t)
 	, m_borderColor(borderColor)
 {
 }
 
-TextureWrapping::WrappingMode TextureWrapping::s() const
+TextureWrapping::WrappingModeE TextureWrapping::s() const
 {
 	return m_s;
 }
 
-TextureWrapping::WrappingMode TextureWrapping::t() const
+TextureWrapping::WrappingModeE TextureWrapping::t() const
 {
 	return m_t;
 }
 
-int TextureWrapping::glValue(TextureWrapping::WrappingMode wrapping)
+int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
 {
 	GLint nGl = GL_REPEAT;
 	switch (wrapping)
 	{
-	case WrappingMode::Repeat:				nGl = GL_REPEAT;							break;
-	case WrappingMode::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;					break;
-	case WrappingMode::ClampToEdge:			nGl = GL_CLAMP_TO_EDGE;						break;
-	case WrappingMode::ClampToBorder:		printf("warning, not in opengl es 2.0");	break;
+	case WrappingModeE::Repeat:				nGl = GL_REPEAT;							break;
+	case WrappingModeE::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;					break;
+	case WrappingModeE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;						break;
+	case WrappingModeE::ClampToBorder:		printf("warning, not in opengl es 2.0");	break;
 	default:																			break;
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
@@ -52,45 +52,45 @@ int TextureWrapping::glValue(TextureWrapping::WrappingMode wrapping)
 
 //class TextureFilter
 TextureFilter::TextureFilter()
-	: TextureFilter(Filter::Point, Filter::Point)
+	: TextureFilter(FilterE::Point, FilterE::Point)
 {
 }
 
-TextureFilter::TextureFilter(Filter uniformFilter)
+TextureFilter::TextureFilter(FilterE uniformFilter)
 	: TextureFilter(uniformFilter, uniformFilter)
 {
 }
 
-TextureFilter::TextureFilter(Filter magnify, Filter narrow)
+TextureFilter::TextureFilter(FilterE magnify, FilterE narrow)
 	: m_MagnifyFilter(magnify)
 	, m_NarrowFilter(narrow)
 {
 }
 
-TextureFilter::Filter TextureFilter::magnifyFilter() const
+TextureFilter::FilterE TextureFilter::magnifyFilter() const
 {
 	return m_MagnifyFilter;
 }
 
-TextureFilter::Filter TextureFilter::narrowFilter() const
+TextureFilter::FilterE TextureFilter::narrowFilter() const
 {
 	return m_NarrowFilter;
 }
 
 TextureFilter TextureFilter::defaultx()
 {
-	return Filter();
+	return FilterE();
 }
 
-int TextureFilter::glValue(TextureFilter::Filter filter)
+int TextureFilter::glValue(TextureFilter::FilterE filter)
 {
 	GLint nGl = GL_NEAREST;
 	switch (filter)
 	{
-	case Filter::Point:			nGl = GL_NEAREST;																	break;
-	case Filter::Bilinear:		nGl = GL_LINEAR;																	break;
-	case Filter::Trilinear:		nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
-	case Filter::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
+	case FilterE::Point:		nGl = GL_NEAREST;																	break;
+	case FilterE::Bilinear:		nGl = GL_LINEAR;																	break;
+	case FilterE::Trilinear:	nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
+	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
 	default:																										break;
 	}
 	return nGl;

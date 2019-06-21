@@ -1,7 +1,7 @@
 #pragma once
 #include "../gui/Panel.h"
 
-namespace nb{namespace gui{
+namespace nb{ namespace gui{
 
 enum class DockE
 {

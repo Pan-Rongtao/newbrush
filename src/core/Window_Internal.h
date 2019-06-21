@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include "core/Def.h"
+#include "core/Window.h"
 #ifdef NB_OS_FAMILY_WINDOWS
 	#include <Windows.h>
 	#include <WindowsX.h>
@@ -14,7 +15,6 @@
 
 namespace nb{ namespace core{
 
-class Window;
 class Window_Internal
 {
 public:
@@ -40,6 +40,17 @@ public:
 
 	void setTopMost(bool topMost);
 	bool topMost() const;
+
+	void setWindowState(WindowStateE state);
+	WindowStateE getWindowState() const;
+
+	void setWindowStyle(WindowStyleE style);
+	WindowStyleE getWindowStyle() const;
+	
+	void show(bool show);
+	bool isShow() const;
+
+	void active();
 
 	void pending();
 

@@ -34,18 +34,18 @@ GlyphInfo GlyphMetrics::measureGlyp(std::shared_ptr<Font> font, wchar_t ch)
 		bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
 }
 
-nb::core::Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const std::string & text, float charSpacing, float lineHeight, TextWrapping tw, float widthMax)
+nb::core::Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
 {
 	if (!font)
 		nbThrowException(std::invalid_argument, "font is nullptr");
-	if (text.empty() || (tw == TextWrapping::Wrap && widthMax <= 0.0f))
+	if (text.empty() || (tw == TextWrappingE::Wrap && widthMax <= 0.0f))
 		return Size(0.0f, 0.0f);
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
 	std::wstring unicodeStr = cvt.from_bytes(text);
 	switch (tw)
 	{
-	case TextWrapping::NoWrap:
+	case TextWrappingE::NoWrap:
 	{
 		float x = 0.0f;
 		for (int i = 0; i != unicodeStr.size(); ++i)
@@ -55,7 +55,7 @@ nb::core::Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const
 		}
 		return Size(x - charSpacing, lineHeight);
 	}
-	case TextWrapping::Wrap:
+	case TextWrappingE::Wrap:
 	{
 		float x = 0.0f, y = 0.0f;
 		for (int i = 0; i != unicodeStr.size(); ++i)

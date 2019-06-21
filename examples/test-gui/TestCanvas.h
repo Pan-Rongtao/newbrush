@@ -14,7 +14,7 @@ public:
 
 
 	PropertyAnimation<double>	doubleAni;
-	Window m_window;
+	nb::gui::Window m_window;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);

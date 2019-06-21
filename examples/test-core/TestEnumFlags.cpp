@@ -2,7 +2,7 @@
 #include "core/EnumFlags.h"
 
 using namespace nb::core;
-enum MutexFlag
+enum MutexFlagE
 {
 	Flag_0x00000001 = 0x00000001,
 	Flag_0x00000002 = 0x00000002,
@@ -40,16 +40,16 @@ enum MutexFlag
 
 void TestEnumFlags::test()
 {
-	EnumFlags<MutexFlag> mf;
-	EnumFlags<MutexFlag> mf1(1);
-	EnumFlags<MutexFlag> mf2(Flag_0x00000001);
-	EnumFlags<MutexFlag> mf3 = Flag_0x00000002 | Flag_0x00000004;
-	EnumFlags<MutexFlag> mf4(Flag_0x00000002 | Flag_0x00000004);
-	EnumFlags<MutexFlag> mf5 = EnumFlags<MutexFlag>();
+	EnumFlags<MutexFlagE> mf;
+	EnumFlags<MutexFlagE> mf1(1);
+	EnumFlags<MutexFlagE> mf2(Flag_0x00000001);
+	EnumFlags<MutexFlagE> mf3 = Flag_0x00000002 | Flag_0x00000004;
+	EnumFlags<MutexFlagE> mf4(Flag_0x00000002 | Flag_0x00000004);
+	EnumFlags<MutexFlagE> mf5 = EnumFlags<MutexFlagE>();
 	mf5 = mf1;
-	EnumFlags<MutexFlag> mf6 = Flag_0x00000010;
+	EnumFlags<MutexFlagE> mf6 = Flag_0x00000010;
 
-	EnumFlags<MutexFlag> mf7;
+	EnumFlags<MutexFlagE> mf7;
 	mf7 &= mf6;
 
 	mf7 = mf7 | mf6;
@@ -58,7 +58,7 @@ void TestEnumFlags::test()
 
 	mf7 |= Flag_0x80000000;
 	uint32_t xx = (int)mf7;
-	mf7 ^= EnumFlags<MutexFlag>(Flag_0x80000000);
+	mf7 ^= EnumFlags<MutexFlagE>(Flag_0x80000000);
 	mf7  = mf7 ^ Flag_0x08000000;
 
 	bool b = mf5 == mf1;
@@ -139,7 +139,7 @@ void TestEnumFlags::test()
 	printf("#########################%d\n", (int)mf);
 	for(int i = 0; i != 32; ++i)
 	{
-		bool b3 = mf.testFlag((MutexFlag)(0x1 << i));
+		bool b3 = mf.testFlag((MutexFlagE)(0x1 << i));
 
 		int xx = 10;
 	}
@@ -209,7 +209,7 @@ void TestEnumFlags::test()
 	mf.removeFlags(Flag_0x80000000);
 	printf("mf=%u\n", (int)mf);
 
-	auto f = [](EnumFlags<MutexFlag> flags) {
+	auto f = [](EnumFlags<MutexFlagE> flags) {
 		uint32_t xxx = (int)flags;
 		bool bb = 0;
 	};

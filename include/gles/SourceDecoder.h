@@ -8,7 +8,7 @@ namespace nb{ namespace gl{
 class NB_API SourceDecoder
 {
 public:
-	enum class VarType
+	enum class VarTypeE
 	{
 		unknown,
 		boolean,
@@ -40,18 +40,18 @@ public:
 
 	void decode(const std::string &verSource, const std::string &fragSource);
 	
-	void getUniforms(std::map<std::string, VarType> &uniforms);
+	void getUniforms(std::map<std::string, VarTypeE> &uniforms);
 
 private:
 	void decodeOne(const std::string &s);
 	std::string cutMain(const std::string &s);
-	void extractStruct(const std::string &sStructDefineStr, std::string &structName, std::map<std::string, VarType> &structMembers);
-	void extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarType &varType);
+	void extractStruct(const std::string &sStructDefineStr, std::string &structName, std::map<std::string, VarTypeE> &structMembers);
+	void extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarTypeE &varType);
 	bool isBlank(char c) const;
 	std::string toLower(const std::string &s) const;
 
-	std::map<std::string, VarType>							m_uniforms;
-	std::map<std::string, std::map<std::string, VarType>>	m_structDefines;
+	std::map<std::string, VarTypeE>							m_uniforms;
+	std::map<std::string, std::map<std::string, VarTypeE>>	m_structDefines;
 };
 
 } }

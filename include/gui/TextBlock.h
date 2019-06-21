@@ -3,6 +3,7 @@
 #include "../gui/Brush.h"
 #include "../gles/Model.h"
 #include "../media/Font.h"
+#include "../media/GlyphMetrics.h"
 
 namespace nb{ namespace gl{
 	class RenderObject;
@@ -11,7 +12,7 @@ namespace nb{ namespace gl{
 
 namespace nb{ namespace gui{
 
-enum TextAlignmentE
+enum class TextAlignmentE
 {
 	Left,
 	Right,
@@ -19,21 +20,14 @@ enum TextAlignmentE
 	Justify,
 };
 
-enum TextWrappingE
-{
-	NoWrap,
-	Wrap,
-	WrapWithOverflow,
-};
-
-enum TextTrimmingE
+enum class TextTrimmingE
 {
 	None,
 	CharacterEllipsis,
 	WordEllipsis,
 };
 
-enum TextDecorationE
+enum class TextDecorationE
 {
 	OverLine,
 	Strikethrough,
@@ -59,7 +53,7 @@ public:
 	nb::core::Property_rw<Thickness>				Padding;		//内距
 	nb::core::Property_rw<TextAlignmentE>			TextAlignment;	//文本排列方式
 	nb::core::Property_rw<TextTrimmingE>			TextTrimming;	//文本溢出决策
-	nb::core::Property_rw<TextWrappingE>			TextWrapping;	//文本换行
+	nb::core::Property_rw<media::TextWrappingE>		TextWrapping;	//文本换行
 	nb::core::Property_rw<TextDecorationE>			TextDecoration;	//文本修饰
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
@@ -68,6 +62,7 @@ protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
+	void onTextChanged(const std::string &_old, const std::string &_new);
 	void onForegroundChanged(const nb::core::Color &_old, const nb::core::Color &_new);
 
 	std::shared_ptr<gl::GlyphBunch>	m_glyphBunch;

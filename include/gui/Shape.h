@@ -5,19 +5,19 @@
 
 namespace nb{ namespace gui{
 
-enum PenLineCap
+enum class PenLineCapE
 {
-	PenLineCap_Flat,
-	PenLineCap_Round,
-	PenLineCap_Square,
-	PenLineCap_Triangle,
+	Flat,
+	Round,
+	Square,
+	Triangle,
 };
 
-enum PenLineJoin
+enum class PenLineJoinE
 {
-	PenLineJoin_Beval,
-	PenLineJoin_Miter,
-	PenLineJoin_Round,
+	Beval,
+	Miter,
+	Round,
 };
 
 class NB_API Shape : public UIElement
@@ -26,8 +26,8 @@ public:
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Fill;
 	nb::core::Property_rw<nb::gui::StretchE>			Stretch;
 	nb::core::Property_rw<std::shared_ptr<Brush>>		Stroke;
-	nb::core::Property_rw<PenLineCap>					StrokeDashCap;
-	nb::core::Property_rw<PenLineJoin>					StrokeLineJoin;
+	nb::core::Property_rw<PenLineCapE>					StrokeDashCap;
+	nb::core::Property_rw<PenLineJoinE>					StrokeLineJoin;
 	nb::core::Property_rw<Thickness>					StrokeThickness;
 
 protected:

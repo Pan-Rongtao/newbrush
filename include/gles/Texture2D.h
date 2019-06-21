@@ -70,7 +70,7 @@ public:
 	void loadFromPath(const std::string &path);
 
 	//从数据加载
-	void loadFromData(const char *data, int width, int height, Texture::PixelFormat format);
+	void loadFromData(const char *data, int width, int height, Texture::PixelFormatE format);
 
 	//获取像素高
 	unsigned int width() const;

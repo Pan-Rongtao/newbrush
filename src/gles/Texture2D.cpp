@@ -99,18 +99,18 @@ void Texture2D::loadFromPath(const std::string &path)
 	m_height = bm.height();
 }
 
-void Texture2D::loadFromData(const char *data, int width, int height, Texture::PixelFormat format)
+void Texture2D::loadFromData(const char *data, int width, int height, Texture::PixelFormatE format)
 {
 	int glFormat = GL_RGBA;
 	int glType = GL_UNSIGNED_BYTE;
 	switch(format)
 	{
-	case PixelFormat::Bpp8_Alpha:		glFormat = GL_ALPHA;	glType = GL_UNSIGNED_BYTE;			break;
-	case PixelFormat::Bpp16_Rgb565:		glFormat = GL_RGB;		glType = GL_UNSIGNED_SHORT_5_6_5;	break;
-	case PixelFormat::Bpp24_Rgb888:		glFormat = GL_RGB;		glType = GL_UNSIGNED_BYTE;			break;
-	case PixelFormat::Bpp32_Rgb4444:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_4_4_4_4; break;
-	case PixelFormat::Bpp32_Rgb5551:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_5_5_5_1; break;
-	case PixelFormat::Bpp32_Rgba8888:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_BYTE;			break;
+	case PixelFormatE::Bpp8_Alpha:		glFormat = GL_ALPHA;	glType = GL_UNSIGNED_BYTE;			break;
+	case PixelFormatE::Bpp16_Rgb565:	glFormat = GL_RGB;		glType = GL_UNSIGNED_SHORT_5_6_5;	break;
+	case PixelFormatE::Bpp24_Rgb888:	glFormat = GL_RGB;		glType = GL_UNSIGNED_BYTE;			break;
+	case PixelFormatE::Bpp32_Rgb4444:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_4_4_4_4;	break;
+	case PixelFormatE::Bpp32_Rgb5551:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_SHORT_5_5_5_1;	break;
+	case PixelFormatE::Bpp32_Rgba8888:	glFormat = GL_RGBA;		glType = GL_UNSIGNED_BYTE;			break;
 	}
 	bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
