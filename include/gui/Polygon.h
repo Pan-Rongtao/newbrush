@@ -1,23 +1,20 @@
 #pragma once
 #include "../gui/Shape.h"
+#include "../core/Point.h"
 
-namespace nb{ namespace gl{
-	class Line;
+namespace nb { namespace gl {
+	class Polyline;
 }}
 
-namespace nb{ namespace gui{
+namespace nb { namespace gui {
 
-class NB_API Line : public Shape
+class NB_API Polygon : public Shape
 {
 public:
-	Line();
-	virtual ~Line() = default;
+	Polygon();
+	virtual ~Polygon() = default;
 
-public:
-	nb::core::Property_rw<double>		X1;
-	nb::core::Property_rw<double>		X2;
-	nb::core::Property_rw<double>		Y1;
-	nb::core::Property_rw<double>		Y2;
+	core::Property_rw<std::shared_ptr<std::vector<core::Point>>>	Points;
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

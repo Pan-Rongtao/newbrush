@@ -15,12 +15,12 @@
 #include "gles/Sphere.h"
 #include "gles/TextureCubemap.h"
 #include "core/Random.h"
-#include "gles/Sphere.h"
 #include "gles/Storage.h"
 #include "gles/Projection.h"
 #include "gles/GlyphFactory.h"
 #include "gles/GlyphBunch.h"
 #include "gles/Line.h"
+#include "gles/Polyline.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -60,6 +60,7 @@ MyApplication::MyApplication()
 	OnResize(args);
 	
 	drawLines();
+	drawPolylines();
 	drawTriangles();
 	drawQuadrangles();
 	drawEllipses();
@@ -78,6 +79,16 @@ void MyApplication::drawLines()
 	ro->storage()->set(Program::nbColorModeLocationStr, 1);
 	line->meshes()[0].vertexs()[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	line->meshes()[0].vertexs()[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
+	m_context->queue(ro);
+}
+
+void MyApplication::drawPolylines()
+{
+	auto polyline = std::make_shared<Polyline>(std::vector<glm::vec2>{glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), glm::vec2(50.0f, 100.0f), glm::vec2(200.0f, 150.0f), glm::vec2(300.0f, 200.0f), glm::vec2(400.0f, 0.0f)});
+	auto ro = std::make_shared<RenderObject>(polyline, std::make_shared<Material>(Programs::primitive()));
+	ro->storage()->set(Program::nbColorModeLocationStr, 1);
+	polyline->meshes()[0].vertexs()[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	polyline->meshes()[0].vertexs()[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 	m_context->queue(ro);
 }
 
@@ -221,7 +232,7 @@ void MyApplication::drawSphere()
 
 	ro->storage()->set(Program::nbColorModeLocationStr, 0);
 	m_context->queue(ro);
-	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world4.jpg"));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world5.jpg"));
 }
 
 void MyApplication::drawPhone()

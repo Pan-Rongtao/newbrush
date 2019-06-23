@@ -19,6 +19,7 @@ public:
 	MyApplication();
 
 	void drawLines();
+	void drawPolylines();
 	void drawTriangles();
 	void drawQuadrangles();
 	void drawEllipses();

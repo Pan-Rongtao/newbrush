@@ -9,7 +9,7 @@ public:
 	Ellipse();
 
 public:
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
+	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
