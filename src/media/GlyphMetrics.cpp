@@ -38,6 +38,7 @@ nb::core::Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const
 {
 	if (!font)
 		nbThrowException(std::invalid_argument, "font is nullptr");
+
 	if (text.empty() || (tw == TextWrappingE::Wrap && widthMax <= 0.0f))
 		return Size(0.0f, 0.0f);
 

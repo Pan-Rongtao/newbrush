@@ -1,4 +1,6 @@
 #include "TestCanvas.h"
+#include <glm/gtx/spline.hpp>
+#include "E:\bezier\include\bezier.h"
 
 void TestCanvas::test()
 {
@@ -38,7 +40,15 @@ void TestCanvas::test()
 
 	auto pl0 = std::make_shared<Polyline>();
 	pl0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
-	std::vector<Point> points{Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
+	std::vector<Point> points;// { Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
+	for (float i = 0.0f; i <= 1.000001; i += 0.01f)
+	{
+		Bezier::Bezier<3> cubicBezier({ { 120, 160 },{ 35, 200 },{ 220, 260 },{ 220, 40 } });
+		//glm::vec2 p0 = glm::cubic(glm::vec2(0, 0), glm::vec2(100, 100), glm::vec2(150, 50), glm::vec2(200, 50), 0.1 * i);
+		Bezier::Point p = cubicBezier.valueAt(i);
+		points.push_back({p.x, p.y});
+	}
+
 	pl0->Points = std::make_shared<std::vector<Point>>(points);
 
 	auto pg0 = std::make_shared<Polygon>();
@@ -55,7 +65,7 @@ void TestCanvas::test()
 	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
 	doubleAni.TargetProperty = &m_window.Width;
-//	doubleAni.begin();
+	doubleAni.begin();
 
 	cv->Children().push_back(rc0);
 	cv->Children().push_back(rc1);

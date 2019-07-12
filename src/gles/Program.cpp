@@ -2,6 +2,7 @@
 #include "gles/Shader.h"
 #include <GLES2/gl2.h>
 #include <cstring>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace nb::gl;
 
@@ -152,12 +153,7 @@ void Program::uniform(int location, const glm::vec2 &vec)
 
 void Program::uniform(int location, glm::vec2 *vec, int count)
 {
-	int dimension = vec->length();
-	float *data = new float[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec->x), dimension * sizeof(float));
-	glUniform2fv(location, count, data);
-	delete []data;
+	glUniform2fv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, const glm::vec3 &vec)
@@ -167,12 +163,7 @@ void Program::uniform(int location, const glm::vec3 &vec)
 
 void Program::uniform(int location, glm::vec3 *vec, int count)
 {
-	int dimension = vec->length();
-	float *data = new float[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec->x), dimension * sizeof(float));
-	glUniform3fv(location, count, data);
-	delete []data;
+	glUniform3fv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, const glm::vec4 &vec)
@@ -182,12 +173,7 @@ void Program::uniform(int location, const glm::vec4 &vec)
 
 void Program::uniform(int location, glm::vec4 *vec, int count)
 {
-	int dimension = vec->length();
-	float *data = new float[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec->x), dimension * sizeof(float));
-	glUniform4fv(location, count, data);
-	delete []data;
+	glUniform4fv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, int v)
@@ -207,12 +193,7 @@ void Program::uniform(int location, const glm::ivec2 &vec)
 
 void Program::uniform(int location, glm::ivec2 *vec, int count)
 {
-	int dimension = vec->length();
-	int *data = new int[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec[i].x), dimension * sizeof(float));
-	glUniform2iv(location, count, data);
-	delete []data;
+	glUniform2iv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, const glm::ivec3 &vec)
@@ -222,12 +203,7 @@ void Program::uniform(int location, const glm::ivec3 &vec)
 
 void Program::uniform(int location, glm::ivec3 *vec, int count)
 {
-	int dimension = vec->length();
-	int *data = new int[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec[i].x), dimension * sizeof(float));
-	glUniform3iv(location, count, data);
-	delete []data;
+	glUniform3iv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, const glm::ivec4 &vec)
@@ -237,69 +213,37 @@ void Program::uniform(int location, const glm::ivec4 &vec)
 
 void Program::uniform(int location, glm::ivec4 *vec, int count)
 {
-	int dimension = vec->length();
-	int *data = new int[count * dimension];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * dimension * sizeof(float), &(vec[i].x), dimension * sizeof(float));
-	glUniform4iv(location, count, data);
-	delete []data;
+	glUniform4iv(location, count, glm::value_ptr(*vec));
 }
 
 void Program::uniform(int location, const glm::mat2x2 &matrix)
 {
-	int n = matrix.length() * matrix.length();
-	float *data = new float[n];
-	memcpy(data, &(matrix[0][0]), n * sizeof(float));
-	glUniformMatrix2fv(location, 1, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Program::uniform(int location, glm::mat2x2 *matrix, int count)
 {
-	int n = matrix->length() * matrix->length();
-	float *data = new float[n * count];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), &(matrix[i][0][0]), n * sizeof(float));
-	glUniformMatrix2fv(location, count, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix2fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
 }
 
 void Program::uniform(int location, const glm::mat3x3 &matrix)
 {
-	int n = matrix.length() * matrix.length();
-	float *data = new float[n];
-	memcpy(data, &(matrix[0][0]), n * sizeof(float));
-	glUniformMatrix3fv(location, 1, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Program::uniform(int location, glm::mat3x3 *matrix, int count)
 {
-	int n = matrix->length() * matrix->length();
-	float *data = new float[n * count];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), &(matrix[i][0][0]), n * sizeof(float));
-	glUniformMatrix3fv(location, count, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix3fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
 }
 
 void Program::uniform(int location, const glm::mat4x4 &matrix)
 {
-	auto n = matrix.length() * matrix.length();
-	float *data = new float[n];
-	memcpy(data, &(matrix[0][0]), n * sizeof(float));
-	glUniformMatrix4fv(location, 1, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Program::uniform(int location, glm::mat4x4 *matrix, int count)
 {
-	int n = matrix->length() * matrix->length();
-	float *data = new float[n * count];
-	for(int i = 0; i != count; ++i)
-		memcpy(data + i * n * sizeof(float), &(matrix[i][0][0]), n * sizeof(float));
-	glUniformMatrix4fv(location, count, GL_FALSE, data);
-	delete []data;
+	glUniformMatrix4fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
 }
 
 ////////////////programs

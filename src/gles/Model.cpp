@@ -1,6 +1,7 @@
 #include "gles/Model.h"
 #include <GLES2/gl2.h>
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -53,42 +54,42 @@ bool Mesh::hasAttribute(Vertex::VertexAttributeE attr) const
 
 float *Mesh::positionData()
 {
-	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position[0]) : nullptr;
+	return hasAttribute(Vertex::positionAttribute) ? glm::value_ptr(m_vertexs[0].position) : nullptr;
 }
 
 const float *Mesh::positionData() const
 {
-	return hasAttribute(Vertex::positionAttribute) ? &(m_vertexs[0].position[0]) : nullptr;
+	return const_cast<Mesh *>(this)->positionData();
 }
 
 float *Mesh::colorData()
 {
-	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color[0]) : nullptr;
+	return hasAttribute(Vertex::colorAttribute) ? glm::value_ptr(m_vertexs[0].color) : nullptr;
 }
 
 const float *Mesh::colorData() const
 {
-	return hasAttribute(Vertex::colorAttribute) ? &(m_vertexs[0].color[0]) : nullptr;
+	return const_cast<Mesh *>(this)->colorData();
 }
 
 float *Mesh::textureCoordinateData()
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord[0]) : nullptr;
+	return hasAttribute(Vertex::textureCoordinateAttribute) ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
 }
 
 const float *Mesh::textureCoordinateData() const
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) ? &(m_vertexs[0].texCoord[0]) : nullptr;
+	return const_cast<Mesh *>(this)->textureCoordinateData();
 }
 
 float *Mesh::normalData()
 {
-	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal[0]) : nullptr;
+	return hasAttribute(Vertex::normalAttribute) ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
 }
 
 const float *Mesh::normalData() const
 {
-	return hasAttribute(Vertex::normalAttribute) ? &(m_vertexs[0].normal[0]) : nullptr;
+	return const_cast<Mesh *>(this)->normalData();
 }
 
 std::vector<Vertex> &Mesh::vertexs()

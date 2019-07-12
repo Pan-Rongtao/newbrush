@@ -6,6 +6,7 @@ using namespace nb::core;
 using namespace nb::gui;
 
 nb::gui::Polygon::Polygon()
+	: Points(std::make_shared<std::vector<Point>>())
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 }
