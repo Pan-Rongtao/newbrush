@@ -19,7 +19,7 @@ public:
 	PropertyAnimation<Point>	pointAni;
 
 	Property_rw<Color>			Background;
-	ColorAnimation				colorAni;
+	PropertyAnimation<Color>	colorAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);

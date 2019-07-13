@@ -39,7 +39,7 @@ public:
 	core::Property_rw<T>							By;
 
 protected:
-	//要求属性必须实现了operator +, operator -, operator *
+	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
 	virtual void progressing(double progress) override
 	{
 		if (!TargetProperty)	return;
@@ -49,19 +49,18 @@ protected:
 	}
 };
 
-//颜色动画
-class NB_API ColorAnimation : public AnimationTimeline<core::Color>
+//特化Color
+template<>
+void PropertyAnimation<nb::core::Color>::progressing(double progress)
 {
-public:
-	ColorAnimation();
-	virtual ~ColorAnimation() = default;
+	if (!TargetProperty)	return;
 
-	core::Property_rw<core::Color>					From;
-	core::Property_rw<core::Color>					To;
-	core::Property_rw<core::Color>					By;
-
-protected:
-	virtual void progressing(double progress) override;
-};
+	auto ft = Easing()->easeInCore(progress);
+	int r = 0, g = 0, b = 0;
+	r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
+	g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
+	b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
+	*TargetProperty = nb::core::Color(r, g, b);
+}
 
 }}

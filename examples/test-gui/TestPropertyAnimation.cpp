@@ -22,7 +22,7 @@ void TestPropertyAnimation::test()
 	pointAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	pointAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	pointAni.TargetProperty = &Position;
-	pointAni.begin();
+//	pointAni.begin();
 	
 	colorAni.From = Color(220, 100, 40);
 	colorAni.To = Color(80, 200, 10);
@@ -32,7 +32,7 @@ void TestPropertyAnimation::test()
 	colorAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	colorAni.TargetProperty = &Background;
-//	colorAni.begin();
+	colorAni.begin();
 	
 }
 
@@ -44,8 +44,8 @@ void TestPropertyAnimation::onStateChanged(const Timeline::StateChangedArgs & ar
 void TestPropertyAnimation::onProgress(const Timeline::ProgressArgs & args)
 {
 //	printf("onProgress:%f, width=%f\n", args.progress, Width());
-	printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
-//	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
+//	printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
+	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
 }
 
 void TestPropertyAnimation::onCompleted(const Timeline::CompleteArgs & args)

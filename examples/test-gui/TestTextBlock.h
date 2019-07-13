@@ -13,7 +13,7 @@ class TestTextBlock : public TestBase
 public:
 	void test();
 
-	ColorAnimation				colorAni;
+	PropertyAnimation<nb::core::Color>				colorAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
