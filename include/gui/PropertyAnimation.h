@@ -27,13 +27,6 @@ template<class T>
 class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
-	//限制类型为基础类型（不限制，否则Point这些无法编译通过）
-	PropertyAnimation()
-	{
-	//	static_assert(std::is_trivial<T>::value, "PropertyAnimation<T> only surpport trivial(basic) type");
-	}
-	virtual ~PropertyAnimation() = default;
-
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;
 	core::Property_rw<T>							By;
@@ -56,11 +49,10 @@ void PropertyAnimation<nb::core::Color>::progressing(double progress)
 	if (!TargetProperty)	return;
 
 	auto ft = Easing()->easeInCore(progress);
-	int r = 0, g = 0, b = 0;
-	r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
-	g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
-	b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
-	*TargetProperty = nb::core::Color(r, g, b);
+	int r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
+	int g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
+	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
+	(*TargetProperty)().setRgb(r, g, b);
 }
 
 }}
