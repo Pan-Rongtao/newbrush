@@ -25,7 +25,7 @@ set(LIB_NAME "core")
 file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.cpp")
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
-set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME uit_nb-${LIB_NAME})
+set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME NbCore)
 if(WIN32 AND NOT MINGW)
 	target_link_libraries(${LIB_NAME})
 elseif(UNIX AND NOT ANDROID)

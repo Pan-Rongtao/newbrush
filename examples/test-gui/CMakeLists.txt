@@ -24,7 +24,7 @@ set(BIN_NAME "test-gui")
 file(GLOB SRC_FILES "*.h" "*.cpp")
 
 add_executable(${BIN_NAME} ${SRC_FILES})
-set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME uit.nb.test.${BIN_NAME})
+set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME nb.test.${BIN_NAME})
 target_link_libraries(${BIN_NAME} core media gles gui)
 
 # 4. Project Install

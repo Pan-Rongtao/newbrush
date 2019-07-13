@@ -364,7 +364,7 @@ void Window_Internal::show(bool show)
 bool Window_Internal::isShow() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	return ::IsWindowVisible(m_hwnd);
+	return ::IsWindowVisible(m_hwnd) != 0;
 #endif
 }
 
