@@ -63,6 +63,11 @@ public:
 	//indices：顶点序列（逆时针，且隐藏背面）
 	Mesh(const nb::core::EnumFlags<Vertex::VertexAttributeE> &attributes, const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
+	Mesh(const Mesh &other);
+	Mesh(const Mesh &&other);
+	void operator = (const Mesh &other);
+	void operator = (const Mesh &&other);
+
 	//是否有属性
 	bool hasAttribute(Vertex::VertexAttributeE attr) const;
 
@@ -95,10 +100,14 @@ private:
 class NB_API Model
 {
 public:
-	//构建一个模型，它的顶点个数为_vertexCount，属性类型为flags
-	//异常：nVertexCount < 0
+	//构建一个模型，它的定点为空
 	Model();
 	virtual ~Model() = default;
+
+	Model(const Model &other);
+	Model(const Model &&other);
+	void operator = (const Model &other);
+	void operator = (const Model &&other);
 
 	//mesh集合
 	std::vector<Mesh> &meshes();

@@ -11,9 +11,7 @@ constexpr int EllipseIndicesBufferSize = 3 * (EllipseVertexCount - 1);
 
 Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 {
-	std::vector<Vertex> vertexs;
-	//中心点
-	vertexs.push_back(Vertex(glm::vec3(), glm::vec4(), glm::vec2(0.5, 0.5)));
+	std::vector<Vertex> vertexs{ Vertex(glm::vec3(), glm::vec4(), glm::vec2(0.5, 0.5)) };//中心点
 	double oneRadian = NB_2PI / (EllipseVertexCount - 2);
 	//是否是笛卡尔坐标系，顶点和纹理坐标将不同
 	if (cartesian)
@@ -22,7 +20,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 		{
 			double radian = oneRadian * i;
 			glm::vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(0.5 * sin(radian) + 0.5));
-			vertexs.push_back(Vertex(glm::vec3(a * (float)cos(radian), b * (float)sin(radian), 0.0f), glm::vec4(), texCoord));
+			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}
 	}
 	else
@@ -31,7 +29,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 		{
 			double radian = oneRadian * i;
 			glm::vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(1 - (0.5 * sin(radian) + 0.5)));
-			vertexs.push_back(Vertex(glm::vec3((float)(a * cos(radian)), (float)(b * sin(radian)), 0.0f), glm::vec4(), texCoord));
+			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}
 	}
 	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));

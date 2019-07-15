@@ -47,6 +47,35 @@ Mesh::Mesh(const EnumFlags<Vertex::VertexAttributeE>& attributes, const std::vec
 {
 }
 
+Mesh::Mesh(const Mesh & other)
+	: m_attributes(other.m_attributes)
+	, m_vertexs(other.m_vertexs)
+	, m_indices(other.m_indices)
+{
+}
+
+Mesh::Mesh(const Mesh && other)
+	: m_attributes(other.m_attributes)
+	, m_vertexs(std::move(other.m_vertexs))
+	, m_indices(std::move(other.m_indices))
+{
+
+}
+
+void Mesh::operator = (const Mesh &other)
+{
+	m_attributes = other.m_attributes;
+	m_vertexs = other.m_vertexs;
+	m_indices = other.m_indices;
+}
+
+void Mesh::operator = (const Mesh &&other)
+{
+	m_attributes = other.m_attributes;
+	m_vertexs = std::move(other.m_vertexs);
+	m_indices = std::move(other.m_indices);
+}
+
 bool Mesh::hasAttribute(Vertex::VertexAttributeE attr) const
 {
 	return m_attributes.testFlag(attr);
@@ -121,6 +150,42 @@ Model::Model()
 	, m_rotateMatrix(1.0f)
 	, m_scaleMatrix(1.0f)
 {
+}
+
+Model::Model(const Model & other)
+	: m_matrix(other.m_matrix)
+	, m_translateMatrix(other.m_translateMatrix)
+	, m_rotateMatrix(other.m_rotateMatrix)
+	, m_scaleMatrix(other.m_scaleMatrix)
+	, m_meshes(other.m_meshes)
+{
+}
+
+Model::Model(const Model && other)
+	: m_matrix(other.m_matrix)
+	, m_translateMatrix(other.m_translateMatrix)
+	, m_rotateMatrix(other.m_rotateMatrix)
+	, m_scaleMatrix(other.m_scaleMatrix)
+	, m_meshes(std::move(other.m_meshes))
+{
+}
+
+void Model::operator=(const Model & other)
+{
+	m_matrix = other.m_matrix;
+	m_translateMatrix = other.m_translateMatrix;
+	m_rotateMatrix = other.m_rotateMatrix;
+	m_scaleMatrix = other.m_scaleMatrix;
+	m_meshes = other.m_meshes;
+}
+
+void Model::operator=(const Model && other)
+{
+	m_matrix = other.m_matrix;
+	m_translateMatrix = other.m_translateMatrix;
+	m_rotateMatrix = other.m_rotateMatrix;
+	m_scaleMatrix = other.m_scaleMatrix;
+	m_meshes = std::move(other.m_meshes);
 }
 
 std::vector<Mesh>& Model::meshes()
