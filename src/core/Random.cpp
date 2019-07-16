@@ -159,13 +159,11 @@ RandomS::RandomS()
 RandomS::RandomS(const std::wstring & range)
 	: m_range(range)
 {
-	m_rand.setRange(0, range.size() - 1);
 }
 
 void RandomS::setRange(const std::wstring & range)
 {
 	m_range = range;
-	m_rand.setRange(0, range.size() - 1);
 }
 
 const std::wstring & RandomS::getRange() const
@@ -181,9 +179,10 @@ std::wstring RandomS::get(uint32_t size) const
 	}
 	else
 	{
-		std::wstring ret;
-		for (int i = 0; i != size; ++i)
-			ret += m_range[m_rand.get()];
+		std::wstring ret(size, 0);
+		std::uniform_int_distribution<int>	dis;
+		dis.param(decltype(dis)::param_type(0, m_range.size() - 1));
+		std::generate_n(ret.begin(), size, [&]() {return m_range[dis(g_seed)]; });
 		return ret;
 	}
 }

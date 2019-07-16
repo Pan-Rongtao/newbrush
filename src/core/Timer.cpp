@@ -95,7 +95,7 @@ void Timer::drive()
 
 void Timer::add(Timer * timer)
 {
-	m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
+	m_tickSequence.insert({ NB_TICK_COUT + timer->interval(), timer } );
 }
 
 std::multimap<uint64_t, Timer *>::iterator Timer::remove(Timer *timer)

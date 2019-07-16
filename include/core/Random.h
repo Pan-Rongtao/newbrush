@@ -112,7 +112,6 @@ public:
 
 
 private:
-	Random			m_rand;
 	std::wstring	m_range;
 };
 

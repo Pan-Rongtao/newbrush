@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <vector>
+#include <unordered_map>
 #include <functional>
 
 namespace nb{ namespace core{
@@ -8,45 +8,44 @@ template<class ArgsT>
 class Event
 {
 public:
-	void addHandler(std::function<void(const ArgsT &args)> handler)
+	int addHandler(std::function<void(const ArgsT &args)> callback)
 	{
-		m_handlers.push_back(handler);
+		static int i = 0;
+		m_callbacks.insert({ i++, callback });
+		return i - 1;
 	}
 
-	void removeHandler(std::function<void(const ArgsT &args)> handler)
+	void removeHandler(int handler)
 	{
-		for (auto iter = m_handlers.begin(); iter != m_handlers.end();)
-		{
-			if (iter->target_type() == handler.target_type())
-			{
-				iter = m_handlers.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
-		}
+		auto iter = m_callbacks.find(handler);
+		if(iter != m_callbacks.end())
+			m_callbacks.erase(handler);
+	}
+
+	void clear()
+	{
+		m_callbacks.clear();
 	}
 
 	void dispatch(const ArgsT &args)
 	{
-		for (int i = 0; i != m_handlers.size(); ++i)
-			if (m_handlers[i])
-				m_handlers[i](args);
+		for (const auto &callback : m_callbacks)
+			if (callback.second)
+				callback.second(args);
 	}
 
-	void operator += (std::function<void(const ArgsT &args)> handler)
+	void operator += (std::function<void(const ArgsT &args)> callback)
 	{
-		addHandler(handler);
+		addHandler(callback);
 	}
 
-	void operator -=(std::function<void(const ArgsT &args)> handler)
+	void operator -=(int handler)
 	{
-		remove(handler);
+		remove(callback);
 	}
 
 private:
-	std::vector<std::function<void(const ArgsT &)>>	m_handlers;
+	std::unordered_map<int, std::function<void(const ArgsT &)>>	m_callbacks;
 };
 
 }}

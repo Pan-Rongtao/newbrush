@@ -59,7 +59,7 @@ void TestRandom::test()
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
 		printf("RandomS.get(0)=%s\n", Encoding::utf8ToGb2312(cvt.to_bytes(rs.get(0).data()).data()).data());
 		printf("RandomS.get(10)=%s\n", Encoding::utf8ToGb2312(cvt.to_bytes(rs.get(10).data()).data()).data());
-		printf("RandomS.get(300)=%s\n", Encoding::utf8ToGb2312(cvt.to_bytes(rs.get(50).data()).data()).data());
+		printf("RandomS.get(50)=%s\n", Encoding::utf8ToGb2312(cvt.to_bytes(rs.get(50).data()).data()).data());
 
 		RandomS rs1;
 		rs1.setRange(L"nihaoµÂÈüÎ÷Íş123");

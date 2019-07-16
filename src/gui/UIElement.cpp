@@ -39,24 +39,24 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	double Widthx = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
-	double Heightx = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
-	constrainedSize.reset((float)Widthx, (float)Heightx);
+	double Widthx = nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
+	double Heightx = nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
+	constrainedSize.reset(Widthx, Heightx);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
 	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : desiredSizeTemp.width());
-	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : desiredSizeTemp.height());
+	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : desiredSizeTemp.width());
+	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : desiredSizeTemp.height());
 	desiredSizeTemp.reset((float)Width, (float)Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
 	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
 	//保证在（0, availabelSize)区间
-	desiredSizeTemp.width() = (float)nb::bound<double>(0.0, availabelSize.width(), desiredSizeTemp.width());
-	desiredSizeTemp.height() = (float)nb::bound<double>(0.0, availabelSize.height(), desiredSizeTemp.height());
+	desiredSizeTemp.width() = (float)nb::clamp<double>(0.0, availabelSize.width(), desiredSizeTemp.width());
+	desiredSizeTemp.height() = (float)nb::clamp<double>(0.0, availabelSize.height(), desiredSizeTemp.height());
 	m_desiredSize = desiredSizeTemp;
 }
 
@@ -80,8 +80,8 @@ void UIElement::arrage(const Rect & finalRect)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	Width = (float)nb::bound<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : arrangeSize.width());
-	Height = (float)nb::bound<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : arrangeSize.height());
+	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : arrangeSize.width());
+	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : arrangeSize.height());
 	arrangeSize.reset((float)Width(), (float)Height());
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域

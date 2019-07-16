@@ -99,7 +99,7 @@ double BounceEase::easeInCore(double t)
 
 double CircleEase::easeInCore(double t)
 {
-	t = nb::bound(0.0, 1.0, t);
+	t = nb::clamp(0.0, 1.0, t);
 	switch (EasingMode)
 	{
 	case EasingModeE::EaseIn:		return 1 - sqrt(1 - (t * t));

@@ -6,11 +6,12 @@
 #include "TestTimer.h"
 #include "TestTimeSpan.h"
 #include "TestRandom.h"
+#include "TestEvent.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestTimer> test;
+		TestHandle<TestEvent> test;
 		test->test();
 	}
 	catch (std::exception &e)
