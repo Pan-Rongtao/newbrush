@@ -65,9 +65,22 @@ FT_LibraryRec_ *Font::getFT()
 
 //system fonts
 ////////////////////////
-std::map<std::string, std::shared_ptr<Font>> g_systemFonts;
+std::map<std::string, std::shared_ptr<Font>> Fonts::s_systemFonts;
 
-void initSystemFonts()
+std::shared_ptr<Font> Fonts::getFont(const std::string &name)
+{
+	initSystemFonts();
+	auto iter = s_systemFonts.find(name);
+	return iter != s_systemFonts.end() ? iter->second : nullptr;
+}
+
+std::map<std::string, std::shared_ptr<Font>> nb::media::Fonts::systemFonts()
+{
+	initSystemFonts();
+	return s_systemFonts;
+}
+
+void Fonts::initSystemFonts()
 {
 	auto loadSystemFonts = [](const std::string &path)->std::shared_ptr<Font>
 	{
@@ -79,7 +92,7 @@ void initSystemFonts()
 			printf("load font [%s] fail.\n", font->path().data());
 			return nullptr;
 		}
-		g_systemFonts.insert({ font->familyName(), font });
+		s_systemFonts.insert({ font->familyName(), font });
 		return font;
 	};
 
@@ -91,17 +104,4 @@ void initSystemFonts()
 		loadSystemFonts("../../resource/STKAITI.TTF");
 		systemFontsInit = true;
 	}
-}
-
-std::shared_ptr<Font> Fonts::getFont(const std::string &name)
-{
-	initSystemFonts();
-	auto iter = g_systemFonts.find(name);
-	return iter != g_systemFonts.end() ? iter->second : nullptr;
-}
-
-std::map<std::string, std::shared_ptr<Font>> nb::media::Fonts::systemFonts()
-{
-	initSystemFonts();
-	return g_systemFonts;
 }

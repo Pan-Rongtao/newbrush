@@ -52,6 +52,9 @@ public:
 	//获取已存在的字体
 	static std::map<std::string, std::shared_ptr<Font>> systemFonts();
 
+private:
+	static void initSystemFonts();
+	static std::map<std::string, std::shared_ptr<Font>> s_systemFonts;
 };
 
 } }

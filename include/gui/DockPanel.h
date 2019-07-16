@@ -14,6 +14,8 @@ enum class DockE
 class NB_API DockPanel : public Panel
 {
 public:
+	static constexpr const char *AttachedPropertyDock = "DockPanel.Dock";
+
 	DockPanel();
 	virtual ~DockPanel();
 

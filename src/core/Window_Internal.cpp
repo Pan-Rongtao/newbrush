@@ -8,9 +8,6 @@ using namespace nb::core;
 	bool Window_Internal::m_pressed = false;
 	std::map<long, Window *> Window_Internal::m_windows;
 	#define WINDOW_CLASS_NAME	"Newbrush Class"
-#elif defined NB_OS_FAMILY_UNIX
-	static wl_fixed_t x_pointer_move = 0;
-	static wl_fixed_t y_pointer_move = 0;
 #endif
 
 Window_Internal::Window_Internal(Window *p)
@@ -30,10 +27,7 @@ Window_Internal::Window_Internal(Window *p)
 	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	windowClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	//	windowClass.hIconSm			= 0;
-	if (::RegisterClassA(&windowClass) == 0)
-	{
-		//already exist class name, not a error
-	}
+	::RegisterClassA(&windowClass);
 	RECT rcClient = { 0, 0, 800, 480 };
 	::AdjustWindowRect(&rcClient, WS_TILEDWINDOW, false);
 	int width = rcClient.right - rcClient.left;

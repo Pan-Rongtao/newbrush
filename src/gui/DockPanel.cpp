@@ -4,8 +4,6 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-#define DOCKPANEL_ATTACHED_PROPERTY_DOCK	"DockPanel.Dock"
-
 DockPanel::DockPanel()
 {
 }
@@ -18,13 +16,13 @@ void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, DOCKPANEL_ATTACHED_PROPERTY_DOCK, dock);
+		AttachedProperties::registerAttached(element, AttachedPropertyDock, dock);
 	}
 }
 
 DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, DOCKPANEL_ATTACHED_PROPERTY_DOCK);
+	auto v = AttachedProperties::findAttached(element, AttachedPropertyDock);
 	return v.empty() ? DockE::Left : any_cast<DockE>(v);
 }
 

@@ -16,7 +16,7 @@ Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Confi
 	if (instanced)
 		nbThrowException(std::runtime_error, "create more than one application object");
 
-	//初始化GL，注意，使用Configure((int *)NULL)开启深度帧率降低很多
+	//初始化GL，注意，使用Configure((int *)nullptr)开启深度帧率降低很多
 	if(!display)	display = std::make_shared<Display>(Display::defaultx());
 	nb::gl::initialize(display);
 	if(!configure)	configure = std::make_shared<Configure>(Configure::fromSystemRecommend(0))/*Configure((int *)nullptr)*/;

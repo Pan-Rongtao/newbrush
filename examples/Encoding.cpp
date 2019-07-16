@@ -186,14 +186,14 @@ std::string Encoding::utf8ToGb2312(const char* utf8)
 {
 #ifdef  WIN32
 	//获取转换为多字节后需要的缓冲区大小，创建多字节缓冲区  
-	int nLen = MultiByteToWideChar(CP_UTF8, NULL, utf8, -1, NULL, NULL);
+	int nLen = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, nullptr, 0);
 	WCHAR *wszBuffer = new WCHAR[nLen + 1];
-	nLen = MultiByteToWideChar(CP_UTF8, NULL, utf8, -1, wszBuffer, nLen);
+	nLen = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wszBuffer, nLen);
 	wszBuffer[nLen] = 0;
 
-	nLen = WideCharToMultiByte(936, NULL, wszBuffer, -1, NULL, NULL, NULL, NULL);
+	nLen = WideCharToMultiByte(936, 0, wszBuffer, -1, nullptr, 0, nullptr, nullptr);
 	CHAR *szBuffer = new CHAR[nLen + 1];
-	nLen = WideCharToMultiByte(936, NULL, wszBuffer, -1, szBuffer, nLen, NULL, NULL);
+	nLen = WideCharToMultiByte(936, 0, wszBuffer, -1, szBuffer, nLen, nullptr, nullptr);
 	szBuffer[nLen] = 0;
 
 	std::string s1 = szBuffer;
@@ -209,14 +209,14 @@ std::string Encoding::utf8ToGb2312(const char* utf8)
 std::string Encoding::gb2312ToUtf8(const char * gb2312)
 {
 #ifdef WIN32
-	int len = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
+	int len = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, nullptr, 0);
 	wchar_t* wstr = new wchar_t[len + 1];
 	memset(wstr, 0, len + 1);
 	MultiByteToWideChar(CP_ACP, 0, gb2312, -1, wstr, len);
-	len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+	len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
 	char* str = new char[len + 1];
 	memset(str, 0, len + 1);
-	WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, nullptr, nullptr);
 	if (wstr) delete[] wstr;
 	return str;
 #else

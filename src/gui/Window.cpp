@@ -11,14 +11,6 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
-void onWindowResized(const nb::core::Window::ResizeArgs & args)
-{
-	auto ratio = (float)args.width / (float)args.height;
-	nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-	nb::gl::getCamera()->lookat2D(args.width, args.height);
-	nb::gl::viewport(0, 0, args.width, args.height);
-}
-
 nb::gui::Window::Window()
 	: WindowState(WindowStateE::Normal)
 	, WindowStyle(WindowStyleE::SizeBox)
@@ -29,6 +21,14 @@ nb::gui::Window::Window()
 	Top = m_glWindow->y();
 	Width = m_glWindow->width();
 	Height = m_glWindow->height();
+
+	auto onWindowResized = [](const nb::core::Window::ResizeArgs & args)
+	{
+		auto ratio = (float)args.width / (float)args.height;
+		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
+		nb::gl::getCamera()->lookat2D(args.width, args.height);
+		nb::gl::viewport(0, 0, args.width, args.height);
+	};
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
 	onWindowResized({ (int)Width, (int)Height });
 

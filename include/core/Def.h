@@ -36,7 +36,7 @@
 	#ifdef (__ANDROID__)
 		#define NB_OS NB_OS_ANDROID
 	#else
-		#define NB_OS_LINUX_X11
+		#define NB_OS_LINUX
 	#endif
 #elif defined(__QNX__) || defined(__QNXNTO)										//qnx(gcc 5.4)
 	#define NB_OS_FAMILY_UNIX 1
@@ -107,7 +107,7 @@ namespace nb
 	//取边界内的合法值（传入的min和max会被修正），返回值可以是min, max，也可以是value本身；Bound(1, 5, 10) = 5; Bound(1, 5, 0) = 1; Bound(1, 5, 3) = 3;
 	//min和max被定义为宏，需要加()
 	template<class T>
-	NB_API const T &bound(const T &lower, const T &upper, const T &value)
+	constexpr NB_API const T &bound(const T &lower, const T &upper, const T &value)
 	{
 		return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
 	}

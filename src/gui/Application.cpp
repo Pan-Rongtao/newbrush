@@ -6,7 +6,7 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-Application *g_app = nullptr;
+Application *Application::g_app = nullptr;
 Application::Application()
 {
 	if (g_app)

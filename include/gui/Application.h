@@ -22,6 +22,8 @@ public:
 protected:
 	virtual void preRender() override;
 
+private:
+	static Application *g_app;
 };
 
 }}

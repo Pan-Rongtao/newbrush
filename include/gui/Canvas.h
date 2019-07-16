@@ -26,7 +26,11 @@ public:
 	Canvas();
 	virtual ~Canvas();
 
-public:
+	static constexpr char *AttachedPropertyLeft		= "Canvas.Left";
+	static constexpr char *AttachedPropertyRight	= "Canvas.Right";
+	static constexpr char *AttachedPropertyTop		= "Canvas.Top";
+	static constexpr char *AttachedPropertyBottom	= "Canvas.Bottom";
+	
 	void setLeft(std::shared_ptr<UIElement> element, double left);
 	double getLeft(std::shared_ptr<UIElement> element);
 

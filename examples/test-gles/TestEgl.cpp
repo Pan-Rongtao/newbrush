@@ -8,7 +8,7 @@ void TestEgl::test()
 
 	display = std::make_shared<Display>(Display::defaultx());
 	nb::gl::initialize(display);
-	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(0))/*Configure((int *)NULL)*/;
+	auto configure = std::make_shared<Configure>(Configure::fromSystemRecommend(0))/*Configure((int *)nullptr)*/;
 	nb::gl::setConfigure(configure);
 
 	auto display1 = nb::gl::getDisplay();

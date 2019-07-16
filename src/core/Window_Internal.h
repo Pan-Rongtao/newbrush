@@ -70,6 +70,8 @@ private:
 	::Display						*m_X11Display;
 	::Window						m_X11WindowID;
 	nb::core::RectI					m_rect;
+	static wl_fixed_t x_pointer_move = 0;
+	static wl_fixed_t y_pointer_move = 0;
 #elif NB_OS == NB_OS_LINUX_ARM
 	//wl_registry globalœ˚œ¢
 	static void onWaylandRegistryGlobal(void *data, struct wl_registry *wl_registry, uint32_t name, const char *interface, uint32_t version);
