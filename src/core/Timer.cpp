@@ -2,19 +2,18 @@
 
 using namespace nb::core;
 
+bool								Timer::m_onDispatching = false;		//标记正在dispatch期间
+std::set<Timer *>					Timer::m_timerRemovedOnDispatching;	//记录在dispatch期间调用stop()/remove()的timer
 std::multimap<uint64_t, Timer *>	Timer::m_tickSequence;
 
 Timer::Timer()
-	: m_interval(1000)
-	, m_singleShot(false)
-	, m_stopFlag(false)
+	: Timer(1000, false)
 {
 }
 
 Timer::Timer(uint64_t ms, bool singleShot)
 	: m_interval(ms)
 	, m_singleShot(singleShot)
-	, m_stopFlag(false)
 {
 }
 
@@ -52,7 +51,7 @@ void Timer::start(int msec)
 void Timer::start()
 {
 	remove(this);
-	m_tickSequence.insert(std::make_pair(NB_TICK_COUT + interval(), this));
+	add(this);
 }
 
 void Timer::stop()
@@ -63,7 +62,7 @@ void Timer::stop()
 bool Timer::isActive() const
 {
 	return std::find_if(m_tickSequence.begin(), m_tickSequence.end(), [this](const std::pair<uint64_t, Timer *> &p) {
-		return (p.second == this && !p.second->m_stopFlag); }) != m_tickSequence.end();
+		return (p.second == this); }) != m_tickSequence.end();
 }
 
 void Timer::drive()
@@ -71,40 +70,46 @@ void Timer::drive()
 	uint64_t currentTick = NB_TICK_COUT;
 	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); )
 	{
-		//到点的timer发送事件并移除此tick对应的timer序列
+		//大于等于表示到点的timer，发送事件并移除此timer，
+		//小于代表后面的都未到点，全部忽略
 		if (currentTick >= iter->first)
 		{
 			Timer *timer = iter->second;
-			if (timer->m_stopFlag)
+			m_onDispatching = true;			//标记以使记录在dispatch期间调用stop()/remove()的timer，供是否重新add该timer提供判断依据
+			timer->TickEvent.dispatch({});
+			m_onDispatching = false;
+			iter = remove(timer);
+			// 假如timer是单次触发模式，或者在dispatch期间已经被stop，不再将此timer重新加入到队列中
+			if (!timer->isSingleShot() && m_timerRemovedOnDispatching.find(timer) == m_timerRemovedOnDispatching.end())
 			{
-				iter = m_tickSequence.erase(iter);
+				add(timer);
 			}
-			else
-			{
-				Timer::TickArgs args;
-				timer->TickEvent.dispatch(args);
-				iter = m_tickSequence.erase(iter);
-				// 假如不是单次触发模式，将此timer重新加入到队列中
-				if (!timer->isSingleShot())
-					m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
-			}
+			m_timerRemovedOnDispatching.clear();
 		}
 		else
 		{
-			//大于代表后面的都为到点，全部忽略
 			break;
 		}
 	}
 }
 
-void Timer::remove(Timer *timer)
+void Timer::add(Timer * timer)
 {
-	for (auto const &iter : m_tickSequence)
+	m_tickSequence.insert(std::make_pair(NB_TICK_COUT + timer->interval(), timer));
+}
+
+std::multimap<uint64_t, Timer *>::iterator Timer::remove(Timer *timer)
+{
+	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); ++iter)
 	{
-		if (iter.second == timer)
+		if (iter->second == timer)
 		{
-			iter.second->m_stopFlag = true;
-			return;
+			if (m_onDispatching)
+			{
+				m_timerRemovedOnDispatching.insert(timer);
+			}
+			return m_tickSequence.erase(iter);
 		}
 	}
+	return m_tickSequence.end();
 }

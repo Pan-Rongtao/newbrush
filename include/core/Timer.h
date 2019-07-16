@@ -2,6 +2,7 @@
 #include "Def.h"
 #include "Event.h"
 #include <map>
+#include <set>
 
 namespace nb { namespace core
 {
@@ -41,13 +42,15 @@ public:
 	nb::core::Event<TickArgs> TickEvent;
 
 private:
-	void remove(Timer *timer);
+	static void add(Timer *timer);
+	static std::multimap<uint64_t, Timer *>::iterator remove(Timer *timer);
 
 	uint64_t								m_interval;
 	bool									m_singleShot;
-	bool									m_stopFlag;
+
+	static bool								m_onDispatching;
 	static std::multimap<uint64_t, Timer *>	m_tickSequence;
-	friend class TimersDriver;
+	static std::set<Timer *>				m_timerRemovedOnDispatching;
 };
 
 }}
