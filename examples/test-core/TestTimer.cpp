@@ -32,7 +32,13 @@ void TestTimer::onTick1(const Timer::TickArgs & args)
 void TestTimer::onTick2(const Timer::TickArgs & args)
 {
 	printf("on timer2 tick\n");
+	printf("timer0 isActive=%d\n", m_timer0.isActive());
+	printf("timer1 isActive=%d\n", m_timer1.isActive());
+	printf("timer2 isActive=%d\n", m_timer2.isActive());
 	m_timer0.stop();
 	m_timer1.stop();
 	m_timer2.stop();
+	printf("timer0 isActive=%d\n", m_timer0.isActive());
+	printf("timer1 isActive=%d\n", m_timer1.isActive());
+	printf("timer2 isActive=%d\n", m_timer2.isActive());
 }

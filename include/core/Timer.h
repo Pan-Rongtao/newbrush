@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Def.h"
 #include "Event.h"
+#include <map>
 
 namespace nb { namespace core
 {
@@ -40,10 +41,13 @@ public:
 	nb::core::Event<TickArgs> TickEvent;
 
 private:
-	uint64_t		m_interval;
-	bool			m_singleShot;
-	bool			m_stopFlag;
-	friend class	TimersDriver;
+	void remove(Timer *timer);
+
+	uint64_t								m_interval;
+	bool									m_singleShot;
+	bool									m_stopFlag;
+	static std::multimap<uint64_t, Timer *>	m_tickSequence;
+	friend class TimersDriver;
 };
 
 }}
