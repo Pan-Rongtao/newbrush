@@ -9,40 +9,38 @@ using namespace nb::gl;
 //https://www.jianshu.com/p/123c5884f635;
 //https://blog.csdn.net/martin20150405/article/details/53888204
 
-constexpr int vSlices = 50;										//把球按维度分成的切片数
-constexpr int hSlices = vSlices / 2;							//经度循环为纬度切片数的一半
-constexpr int vertextCount = (hSlices + 1) * (vSlices + 1);		//顶点数
-constexpr int indicesCount = hSlices * vSlices * 6;				//顶点序列数
-constexpr double angleStep = (2.0f * NB_PI) / ((float)vSlices);	//每个扇形的角度
+constexpr int SphereVSlices						= 50;										//把球按维度分成的切片数
+constexpr int SphereHSlices						= SphereVSlices / 2;						//经度循环为纬度切片数的一半
+constexpr int SphereIndicesCountVertextCount	= (SphereHSlices + 1) * (SphereVSlices + 1);//顶点数
+constexpr int SphereIndicesCount				= SphereHSlices * SphereVSlices * 6;		//顶点序列数
+constexpr double SphereAngleStep				= NB_2PI / (float)SphereVSlices;			//每个扇形的角度
 
 Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 {
 	std::vector<Vertex> vertexs;
 	if (cartesian)
 	{
-		for (int i = 0; i < hSlices + 1; ++i)
+		for (int i = 0; i < SphereHSlices + 1; ++i)
 		{
-			for (int j = 0; j < vSlices + 1; ++j)
+			for (int j = 0; j < SphereVSlices + 1; ++j)
 			{
-				int index = i * (vSlices + 1) + j;
-				float x = (float)(r * sin(angleStep * i) * sin(angleStep * j));
-				float y = (float)(r * cos(angleStep * i));
-				float z = (float)(r * sin(angleStep * i) * cos(angleStep * j));
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)vSlices, 1.0f - ((float)i / (float)hSlices))));
+				float x = (float)(r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j));
+				float y = (float)(r * cos(SphereAngleStep * i));
+				float z = (float)(r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j));
+				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)SphereVSlices, 1.0f - ((float)i / (float)SphereHSlices))));
 			}
 		}
 	}
 	else
 	{
-		for (int i = hSlices; i != -1; --i)
+		for (int i = SphereHSlices; i != -1; --i)
 		{
-			for (int j = vSlices; j != -1; --j)
+			for (int j = SphereVSlices; j != -1; --j)
 			{
-				int index = i * (vSlices + 1) + j;
-				float x = (float)(r * sin(angleStep * (float)i) * sin(angleStep * (float)j));
-				float y = (float)(r * cos(angleStep * (float)i));
-				float z = (float)(r * sin(angleStep * (float)i) * cos(angleStep * (float)j));
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)vSlices, ((float)i / (float)hSlices))));
+				float x = (float)(r * sin(SphereAngleStep * (float)i) * sin(SphereAngleStep * (float)j));
+				float y = (float)(r * cos(SphereAngleStep * (float)i));
+				float z = (float)(r * sin(SphereAngleStep * (float)i) * cos(SphereAngleStep * (float)j));
+				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)SphereVSlices, ((float)i / (float)SphereHSlices))));
 			}
 		}
 	}
@@ -58,20 +56,19 @@ void Sphere::cullFace()
 
 std::vector<uint16_t> Sphere::getIndices() const
 {
-	unsigned short data[indicesCount];
 	int x = 0;
-	for (int i = 0; i < hSlices; i++)
+	std::vector<uint16_t> indices(SphereIndicesCount);
+	for (int i = 0; i < SphereHSlices; i++)
 	{
-		for (int j = 0; j < vSlices; j++)
+		for (int j = 0; j < SphereVSlices; j++)
 		{
-			data[x++] = i * (vSlices + 1) + j;
-			data[x++] = (i + 1) * (vSlices + 1) + j;
-			data[x++] = (i + 1) * (vSlices + 1) + (j + 1);
-			data[x++] = i * (vSlices + 1) + j;
-			data[x++] = (i + 1) * (vSlices + 1) + (j + 1);
-			data[x++] = i * (vSlices + 1) + (j + 1);
+			indices[x++] = i * (SphereVSlices + 1) + j;
+			indices[x++] = (i + 1) * (SphereVSlices + 1) + j;
+			indices[x++] = (i + 1) * (SphereVSlices + 1) + (j + 1);
+			indices[x++] = i * (SphereVSlices + 1) + j;
+			indices[x++] = (i + 1) * (SphereVSlices + 1) + (j + 1);
+			indices[x++] = i * (SphereVSlices + 1) + (j + 1);
 		}
 	}
-	std::vector<uint16_t> ret(data, data + indicesCount);
-	return ret;
+	return indices;
 }

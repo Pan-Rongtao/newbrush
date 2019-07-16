@@ -5,13 +5,13 @@
 
 using namespace nb::gl;
 
-static std::shared_ptr<Display> g_display = nullptr;
-static std::shared_ptr<Configure> g_configure = nullptr;
-static std::shared_ptr<Camera> g_camera = std::make_shared<Camera>();
-static std::shared_ptr<Projection> g_projection = std::make_shared<Projection>();
-static std::shared_ptr<Surface> g_onScreenSurface = nullptr;
-static std::shared_ptr<Surface> g_offScreenSurface = nullptr;
-static std::shared_ptr<Context> g_context = nullptr;
+static std::shared_ptr<Display>		g_display			= nullptr;
+static std::shared_ptr<Configure>	g_configure			= nullptr;
+static std::shared_ptr<Camera>		g_camera			= std::make_shared<Camera>();
+static std::shared_ptr<Projection>	g_projection		= std::make_shared<Projection>();
+static std::shared_ptr<Surface>		g_onScreenSurface	= nullptr;
+static std::shared_ptr<Surface>		g_offScreenSurface	= nullptr;
+static std::shared_ptr<Context>		g_context			= nullptr;
 
 std::string nb::gl::getVersion()
 {

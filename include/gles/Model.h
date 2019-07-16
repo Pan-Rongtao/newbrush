@@ -42,11 +42,12 @@ public:
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord, const glm::vec3 &normal);
 
-	//获取位置数据|颜色数据|颜色数据|法线数据的组件数
+	//获取位置数据|颜色数据|颜色数据|法线数据的组件数以及组件间隔
 	static constexpr int positionDimension			= 3;
 	static constexpr int colorDimension				= 4;
-	static constexpr int textureCoordinateDimension = 2;
+	static constexpr int texCoordDimension			= 2;
 	static constexpr int normalDimension			= 3;
+	static constexpr int stride						= (positionDimension + colorDimension + texCoordDimension + normalDimension) * sizeof(float);
 
 	glm::vec3	position;
 	glm::vec4	color;
@@ -140,6 +141,8 @@ public:
 	virtual unsigned int drawMode() const;
 
 private:
+	glm::mat4x4 rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v);
+
 	glm::mat4x4								m_matrix;
 	glm::mat4x4								m_translateMatrix;
 	glm::mat4x4								m_rotateMatrix;

@@ -248,20 +248,6 @@ void Program::uniform(int location, glm::mat4x4 *matrix, int count)
 
 ////////////////programs
 
-std::shared_ptr<Program> compileBindLink(const std::string &vs, const std::string &fs)
-{
-	auto p = std::make_shared<Program>(std::make_shared<VertexShader>(vs), std::make_shared<FragmentShader>(fs));
-	p->vertexShader()->compile();
-	p->fragmentShader()->compile();
-	//必须在link之前绑定
-	p->bindAttributeLocation(Program::nbPositionLocation, Program::nbPositionLocationStr);
-	p->bindAttributeLocation(Program::nbColorLocation, Program::nbColorLocationStr);
-	p->bindAttributeLocation(Program::nbTexCoordLocaltion, Program::nbTexCoordLocaltionStr);
-	p->bindAttributeLocation(Program::nbNormalLocation, Program::nbNormalLocationStr);
-	p->link();
-	return p;
-}
-
 std::shared_ptr<Program> Programs::primitive()
 {
 	static std::shared_ptr<Program> p;
@@ -403,4 +389,18 @@ std::shared_ptr<Program> Programs::glpy()
 		"	gl_FragColor = color.w * fontColor;"
 		"}";
 	return compileBindLink(vs, fs);
+}
+
+std::shared_ptr<Program> Programs::compileBindLink(const std::string &vs, const std::string &fs)
+{
+	auto p = std::make_shared<Program>(std::make_shared<VertexShader>(vs), std::make_shared<FragmentShader>(fs));
+	p->vertexShader()->compile();
+	p->fragmentShader()->compile();
+	//必须在link之前绑定
+	p->bindAttributeLocation(Program::nbPositionLocation, Program::nbPositionLocationStr);
+	p->bindAttributeLocation(Program::nbColorLocation, Program::nbColorLocationStr);
+	p->bindAttributeLocation(Program::nbTexCoordLocaltion, Program::nbTexCoordLocaltionStr);
+	p->bindAttributeLocation(Program::nbNormalLocation, Program::nbNormalLocationStr);
+	p->link();
+	return p;
 }

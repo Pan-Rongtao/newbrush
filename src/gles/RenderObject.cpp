@@ -102,7 +102,7 @@ void RenderObject::draw() const
 
 	program->use();
 	m_model->cullFace();
-	//uniform只需更新依次即可，不必每个mesh都更新
+	//uniform只需更新一次即可，不必每个mesh都更新
 	//计算后的mvp
 	{
 		auto m = m_model->getMatrix();
@@ -143,19 +143,19 @@ void RenderObject::draw() const
 		auto const &mesh = m_model->meshes()[i];
 		//检查各个顶点位置、颜色、向量、纹理坐标属性，如果有则传到gpu
 		if (mesh.hasAttribute(Vertex::positionAttribute))
-			program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, 12 * sizeof(float), mesh.positionData());
+			program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
 
 		if (mesh.hasAttribute(Vertex::colorAttribute))
-			program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, 12 * sizeof(float), mesh.colorData());
+			program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
 
 		if (mesh.hasAttribute(Vertex::normalAttribute))
-			program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, 12 * sizeof(float), mesh.normalData());
+			program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
 
 		if (mesh.hasAttribute(Vertex::textureCoordinateAttribute) && !textures.empty())
 		{
 			int nTexCoord = Program::nbTexCoordLocaltion;
 			textures[0]->bind();
-			program->vertexAttributePointer(nTexCoord, Vertex::textureCoordinateDimension, 12 * sizeof(float), mesh.textureCoordinateData());
+			program->vertexAttributePointer(nTexCoord, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
 		}
 
 		glDrawElements(m_model->drawMode(), (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());

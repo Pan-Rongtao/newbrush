@@ -32,23 +32,27 @@ public:
 	Random(int min, int max);
 
 	//获取一个随机整数值，包含min和max，min可以大于max
-	static int get(int min, int max);
+	static int generate(int min, int max);
 
 	//设置随机范围，min可以大于max
 	void setRange(int min, int max);
 
-	//获取随机范围
-	void range(int &min, int &max) const;
+	//获取随机范围，返回的pair，first是min，second是max且min一定小于max
+	std::pair<int, int> getRange() const;
 
 	//获取一个随机值
 	int get() const;
+	int get(int min, int max);
 
-	//获取一组随机值，nCount需要在0~10e6（百万个）之间，不然将产生异常
-	std::vector<int> group(int count) const;
+	//获取一组随机值，cout=1e6性能大概为125ms，cout=1e7性能大概为1248ms
+	//异常：count超过了std::vector可设置大小
+	std::vector<int> group(uint32_t count) const;
 
-	//获取一组不重复随机值，nCount需要在0~1e6（百万）之间，不然将产生异常
-	//如果nCount大于随机范围所包含的所有元素个数，将保证范围内不重复，超出的部分为任意随机值
-	std::vector<int> groupNonRepeat(int count) const;
+	//获取一组不重复随机值，
+	//overflowRepeater：如果为true，count超过range的部分以相同的方式每组按range长度生成，直到vector大小为count为止；否则超出的部分为任意随机值
+	//cout=1e6性能大概为110ms(62ms-overflowRepeater=true)，cout=1e7性能大概为1248ms(624ms-overflowRepeater=true)
+	//异常：count超过了std::vector可设置大小
+	std::vector<int> groupNonRepeat(uint32_t count, bool overflowRepeater = false) const;
 
 private:
 	std::uniform_int_distribution<int>	m_dis;
@@ -64,23 +68,22 @@ public:
 	RandomF(double min, double max);
 
 	//获取一个随机浮点值，否则异常；min可以大于max
-	static double get(double min, double max);
+	static double generate(double min, double max);
 	
 	//设置随机范围，包含fMin和fMax；Abs(Max-Min)必须在MaxRange()之内，否则异常；fMin可以大于fMax
 	void setRange(double min, double max);
 
 	//获取随机范围
-	void range(double &min, double &max) const;
+	std::pair<double, double> getRange() const;
 
 	//获取一个随机值
 	double get() const;
+	double get(double min, double max);
 
-	//获取一组随机值，nCount需要在0~10e6（百万个）之间，不然将产生异常
-	std::vector<double> group(int count) const;
+	//获取一组随机值，cout=1e6性能大概为187ms，cout=1e7性能大概为1825ms
+	//异常：count超过了std::vector可设置大小
+	std::vector<double> group(uint32_t count) const;
 
-	//获取一组不重复随机值，nCount需要在0~1e6（百万）之间，不然将产生异常
-	//如果nCount大于随机范围所包含的所有元素个数，将保证范围内不重复，超出的部分为任意随机值
-	std::vector<double> groupNonRepeat(int count) const;
 
 private:
 	std::uniform_real_distribution<double>	m_dis;
@@ -95,16 +98,18 @@ public:
 	//构建一个字符串随机器，它的随机池范围是range
 	RandomS(const std::wstring &range);
 
+	static std::wstring generate(const std::wstring &range, uint32_t size);
+
 	//设置随机范围
 	void setRange(const std::wstring &range);
 
 	//获取随机池
-	const std::wstring &range() const;
+	const std::wstring &getRange() const;
 
 	//获取一串随机字符串
-	std::wstring get(uint32_t size);
+	std::wstring get(uint32_t size) const;
+	std::wstring get(const std::wstring &range, uint32_t size);
 
-	static std::wstring get(const std::wstring &range, uint32_t size);
 
 private:
 	Random			m_rand;

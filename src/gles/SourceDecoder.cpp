@@ -3,11 +3,11 @@
 
 using namespace nb::gl;
 
-constexpr char KeywordMain[] = "main";
-constexpr char KeywordUniform[] = "uniform";
-constexpr char KeywordStruct[] = "struct";
-constexpr size_t KeywordUniformSize = sizeof(KeywordUniform) - 1;
-constexpr size_t KeywordStructSize = sizeof(KeywordStruct) - 1;
+constexpr char		KeywordMain[]		= "main";
+constexpr char		KeywordUniform[]	= "uniform";
+constexpr char		KeywordStruct[]		= "struct";
+constexpr size_t	KeywordUniformSize	= sizeof(KeywordUniform) - 1;
+constexpr size_t	KeywordStructSize	= sizeof(KeywordStruct) - 1;
 
 SourceDecoder::SourceDecoder()
 {

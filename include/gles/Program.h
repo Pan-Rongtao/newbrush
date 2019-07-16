@@ -138,6 +138,9 @@ public:
 
 	//glyp program
 	static std::shared_ptr<Program> glpy();
+
+private:
+	static std::shared_ptr<Program> compileBindLink(const std::string &vs, const std::string &fs);
 };
 
 }}

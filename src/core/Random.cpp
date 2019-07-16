@@ -1,10 +1,12 @@
 ﻿#include "core/Random.h"
 #include <algorithm>
+#include <numeric>
 #include <time.h>
 #include <float.h>
+#include <functional>
 
 using namespace nb::core;
-static std::default_random_engine g_randomEngine((unsigned int)time(nullptr));
+static std::default_random_engine g_seed((unsigned int)time(nullptr));
 
 Random::Random()
 	: Random(0, 100)
@@ -16,10 +18,9 @@ Random::Random(int min, int max)
 	setRange(min, max);
 }
 
-void Random::range(int &min, int &max) const
+std::pair<int, int> Random::getRange() const
 {
-	min = m_dis.min();
-	max = m_dis.max();
+	return{ m_dis.min(), m_dis.max() };
 }
 
 void Random::setRange(int min, int max)
@@ -29,120 +30,69 @@ void Random::setRange(int min, int max)
 
 int Random::get() const
 {
-	return const_cast<Random *>(this)->m_dis(g_randomEngine);
-}
-
-std::vector<int> Random::group(int count) const
-{
-	std::vector<int> ret;
-	for(int i = 0;i != count; ++i)
-		ret.push_back(get());
-	return ret;
-}
-
-//洗牌算法
-void shuffle(int a[], int n)  
-{  
-	int index, tmp, i;
-	for(i = n - 1; i > 0; i--)  
-	{  
-		index = Random::get(0, i);// rand() % (n - i) + i;
-		if(index != i)  
-		{  
-			tmp = a[i];  
-			a[i] = a[index];  
-			a[index] = tmp;  
-		}  
-	}  
-}
-
-std::vector<int> Random::groupNonRepeat(int count) const
-{
-	std::vector<int> ret;
-
-	int min, max;
-	range(min, max);
-	int nMin = std::min(min, max);
-	int nMax = std::max(min, max);
-	unsigned int n = (unsigned int)nMax - (unsigned int)nMin + 1;
-
-	//十万级内的range使用洗牌算法效率高，任何nCount消耗在0ms以内；
-	if(n <= 1e5 + 1)
-	{
-		int *pArr = new int[n];
-		for(int i = 0; i != n; ++i)
-			pArr[i] = nMin + i;
-
-		shuffle(pArr, n);
-		ret.insert(ret.begin(), pArr, pArr + (std::min(n, (unsigned int)count)));
-		delete []pArr;
-
-		if((unsigned int)count > n)
-		{
-			std::vector<int> g = group(count - n);
-			ret.insert(ret.end(), g.begin(), g.end());
-		}
-	}
-	////////////////////////////////////////////////////
-	//	由于目前MaxRange()限定在内的方式，所以n必定小于1e5 + 1，
-	//	因此不会走到else分支保留else代码，假若之后MaxRange()变大，
-	//	有超过1e5+1的可能，则要走到else 分支
-	////////////////////////////////////////////////////
-	//
-	//千万级内的range且nCount大于2000的效率，任何nCount消耗在1s以内
-	//
-	else
-	{
-		if(count <= 2000)	//任何range，2000个随机数获取组个加入，1s以内
-		{
-			while(ret.size() < (unsigned int)count)
-			{
-				int nOne = get();
-				if(ret.size() >= n || std::find(ret.begin(), ret.end(), nOne) == ret.end())
-					ret.push_back(nOne);
-			}
-		}
-		else			
-		{
-			if(n <= 1e7 + 1)	//range千万级别内，且count大于2000的效率，任何nCount消耗在1s以内
-			{
-				int *pArr = new int[n];
-				for(int i = 0; i != n; ++i)
-					pArr[i] = nMin + i;
-
-				shuffle(pArr, n);
-				ret.insert(ret.begin(), pArr, pArr + (std::min(n, (unsigned int)count)));
-				delete []pArr;
-
-				if((unsigned int)count > n)
-				{
-					std::vector<int> g = group(count - n);
-					ret.insert(ret.begin(), g.begin(), g.end());
-				}
-			}
-			else					//千万级以上range
-			{
-				if(count <= 10000)
-				{
-					while(ret.size() < (unsigned int)count)
-					{
-						int nOne = get();
-						if(ret.size() >= n || std::find(ret.begin(), ret.end(), nOne) == ret.end())
-							ret.push_back(nOne);
-					}
-				}
-				else			//此分支，千万级以上，不能使用洗牌算法（内存太高），不能遍历插入（效率太低），所有直接抛异常
-				{
-					nbThrowException(std::invalid_argument, "random range size[%d], count[%d] are refused", n, count);
-				}
-			}
-		}
-	}
-
-	return ret;
+	return const_cast<Random *>(this)->m_dis(g_seed);
 }
 
 int Random::get(int min, int max)
+{
+	setRange(min, max);
+	return get();
+}
+
+std::vector<int> Random::group(uint32_t count) const
+{
+	std::vector<int> ret;
+	try {
+		ret.resize(count);
+		std::generate_n(ret.begin(), count, std::bind(m_dis, g_seed));
+	}
+	catch (...) {
+		nbThrowException(std::length_error, "count[%d] is too long for vector.", count);
+	}
+	return ret;
+}
+
+std::vector<int> Random::groupNonRepeat(uint32_t count, bool overflowRepeater) const
+{
+	auto r = getRange();
+	auto range = (uint32_t)(r.second - r.first) + 1;
+	std::vector<int> ret;
+	try {
+		ret.resize(count);
+	}
+	catch (...) { 
+		nbThrowException(std::length_error, "count[%d] is too long for vector.", count);
+	}
+	if (overflowRepeater)
+	{
+		auto iter = ret.begin();
+		while (count >= range)
+		{
+			std::iota(iter, iter + range, r.first);
+			std::shuffle(iter, iter + range, g_seed);
+			count -= range;
+			iter += range;
+		}
+		std::iota(iter, ret.end(), r.first);
+		std::shuffle(iter, ret.end(), g_seed);
+	}
+	else
+	{
+		if (count >= range)
+		{
+			std::iota(ret.begin(), ret.begin() + range, r.first);
+			std::shuffle(ret.begin(), ret.begin() + range, g_seed);
+			std::generate_n(ret.begin() + range, count - range, std::bind(m_dis, g_seed));
+		}
+		else
+		{
+			std::generate_n(ret.begin(), count, std::bind(m_dis, g_seed));
+		}
+	}
+	return ret;
+}
+
+int Random::generate(int min, int max)
 {
 	return Random(min, max).get();
 }
@@ -166,51 +116,43 @@ void RandomF::setRange(double min, double max)
 	m_dis.param(decltype(m_dis)::param_type(min, max));
 }
 
-void RandomF::range(double &min, double &max) const
+std::pair<double, double> RandomF::getRange() const
 {
-	min = m_dis.min();
-	max = m_dis.max();
+	return{ m_dis.min(), m_dis.max() };
 }
 
 double RandomF::get() const
 {
-	return const_cast<RandomF *>(this)->m_dis(g_randomEngine);
+	return const_cast<RandomF *>(this)->m_dis(g_seed);
 }
 
-std::vector<double> RandomF::group(int count) const
+double RandomF::get(double min, double max)
 {
-	std::vector<double> ret;
-	for(int i = 0; i != count; ++i)
-		ret.push_back(get());
-	return ret;
+	setRange(min, max);
+	return get();
 }
 
-std::vector<double> RandomF::groupNonRepeat(int count) const
+std::vector<double> RandomF::group(uint32_t count) const
 {
-	double min, max;
-	range(min, max);
-	int nMin = (int)std::min(min, max);
-	int nMax = (int)std::max(min, max);
-	unsigned int n = (unsigned int)nMax - (unsigned int)nMin + 1;
 	std::vector<double> ret;
-	while(ret.size() < (unsigned int)count)
-	{
-		double fOne = get();
-		if(ret.size() >= n || std::find(ret.begin(), ret.end(), fOne) == ret.end())
-			ret.push_back(fOne);
+	try {
+		ret.resize(count);
+		std::generate_n(ret.begin(), count, std::bind(m_dis, g_seed));
+	}
+	catch (...) {
+		nbThrowException(std::length_error, "count[%d] is too long for vector.", count);
 	}
 	return ret;
 }
 
-double RandomF::get(double min, double max)
+double RandomF::generate(double min, double max)
 {
 	return RandomF(min, max).get();
 }
 
 /////////////////////////////
-constexpr wchar_t *DefaultStringRandomRange = L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 RandomS::RandomS()
-	: RandomS(DefaultStringRandomRange)
+	: RandomS(L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 {
 }
 
@@ -226,12 +168,12 @@ void RandomS::setRange(const std::wstring & range)
 	m_rand.setRange(0, range.size() - 1);
 }
 
-const std::wstring & RandomS::range() const
+const std::wstring & RandomS::getRange() const
 {
 	return m_range;
 }
 
-std::wstring RandomS::get(uint32_t size)
+std::wstring RandomS::get(uint32_t size) const
 {
 	if (m_range.empty() || size == 0)
 	{
@@ -247,6 +189,12 @@ std::wstring RandomS::get(uint32_t size)
 }
 
 std::wstring RandomS::get(const std::wstring & range, uint32_t size)
+{
+	setRange(range);
+	return get(size);
+}
+
+std::wstring RandomS::generate(const std::wstring & range, uint32_t size)
 {
 	return RandomS(range).get(size);
 }
