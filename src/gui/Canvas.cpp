@@ -23,7 +23,7 @@ void Canvas::setLeft(std::shared_ptr<UIElement> element, double left)
 double Canvas::getLeft(std::shared_ptr<UIElement> element)
 {
 	auto v = AttachedProperties::findAttached(element, AttachedPropertyLeft);
-	return v.empty() ? NB_DOUBLE_NAN : any_cast<double>(v);
+	return v.empty() ? NAN : any_cast<double>(v);
 }
 
 void Canvas::setRight(std::shared_ptr<UIElement> element, double right)
@@ -37,7 +37,7 @@ void Canvas::setRight(std::shared_ptr<UIElement> element, double right)
 double Canvas::getRight(std::shared_ptr<UIElement> element)
 {
 	auto v = AttachedProperties::findAttached(element, AttachedPropertyRight);
-	return v.empty() ? NB_DOUBLE_NAN : any_cast<double>(v);
+	return v.empty() ? NAN : any_cast<double>(v);
 }
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, double top)
@@ -51,7 +51,7 @@ void Canvas::setTop(std::shared_ptr<UIElement> element, double top)
 double Canvas::getTop(std::shared_ptr<UIElement> element)
 {
 	auto v = AttachedProperties::findAttached(element, AttachedPropertyTop);
-	return v.empty() ? NB_DOUBLE_NAN : any_cast<double>(v);
+	return v.empty() ? NAN : any_cast<double>(v);
 }
 
 void Canvas::setBottom(std::shared_ptr<UIElement> element, double bottom)
@@ -65,7 +65,7 @@ void Canvas::setBottom(std::shared_ptr<UIElement> element, double bottom)
 double Canvas::getBottom(std::shared_ptr<UIElement> element)
 {
 	auto v = AttachedProperties::findAttached(element, AttachedPropertyBottom);
-	return v.empty() ? NB_DOUBLE_NAN : any_cast<double>(v);
+	return v.empty() ? NAN : any_cast<double>(v);
 }
 
 //位设置宽高则默认为0
@@ -73,7 +73,7 @@ Size Canvas::measureOverride(const Size & availableSize)
 {
 	for (auto child : Children())
 	{
-		child->measure(Size((float)(child->Width == NB_DOUBLE_NAN ? 0.0 : child->Width), (float)(child->Height == NB_DOUBLE_NAN ? 0.0 : child->Height)));
+		child->measure(Size((float)(std::isnan(child->Width) ? 0.0 : child->Width), (float)(std::isnan(child->Height) ? 0.0 : child->Height)));
 	}
 	return availableSize;
 }
@@ -84,8 +84,8 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 	{
 		double x = getLeft(child);
 		double y = getTop(child);
-		if (x == NB_DOUBLE_NAN)	x = 0.0;
-		if (y == NB_DOUBLE_NAN)	y = 0.0;
+		if (std::isnan(x))	x = 0.0;
+		if (std::isnan(y))	y = 0.0;
 		double w = child->DesiredSize().width();
 		double h = child->DesiredSize().height();
 				

@@ -11,14 +11,13 @@
 
 //平台识别,如果识别不了平台，编译器则会输出报错，并终止编译
 //类UNIX下可使用g++ -dM -E - </dev/null命令查看编译器默认宏
-#define NB_OS_UNKNOWN		0x00000001
-#define NB_OS_WINDOWS_NT	0x00000002
-#define NB_OS_WINDOWS_CE	0x00000004
-#define NB_OS_LINUX			0x00000008
-#define NB_OS_MAC_OS_X		0x00000010
-#define NB_OS_IOS			0x00000020
-#define NB_OS_ANDROID		0x00000040
-#define NB_OS_QNX			0x00000080
+#define NB_OS_WINDOWS_NT		0x00000001
+#define NB_OS_WINDOWS_CE		0x00000002
+#define NB_OS_LINUX				0x00000004
+#define NB_OS_MAC_OS_X			0x00000008
+#define NB_OS_IOS				0x00000010
+#define NB_OS_ANDROID			0x00000020
+#define NB_OS_QNX				0x00000040
 
 #if defined(_WINDOWS) || defined(_WIN32_WCE)									//windows
 	#define NB_OS_FAMILY_WINDOWS 1
@@ -36,7 +35,7 @@
 	#ifdef (__ANDROID__)
 		#define NB_OS NB_OS_ANDROID
 	#else
-		#define NB_OS_LINUX
+		#define NB_OS NB_OS_LINUX
 	#endif
 #elif defined(__QNX__) || defined(__QNXNTO)										//qnx(gcc 5.4)
 	#define NB_OS_FAMILY_UNIX 1
@@ -87,17 +86,8 @@ do{\
 #define NB_HALF_PI								(1.57079632679489661)
 #define NB_ANG2RAD(angle)						(0.01745329251994329 * angle)
 #define NB_RAD2ANG(radian)						(57.2957795130823208 * radian)
-#define NB_INT_MAX								(std::numeric_limits<int>::max())
-#define NB_DOUBLE_MAX							(std::numeric_limits<double>::max())
-#define NB_DOUBLE_NAN							(DBL_EPSILON)
 #define NB_PID									(nb::getPid())
 #define NB_TICK_COUT							(nb::getTickCount())
-
-constexpr int64_t MicrosecondsPerDay			= 86400000000;
-constexpr int64_t MicrosecondsPerHour			= 3600000000;
-constexpr int64_t MicrosecondsPerMinute			= 60000000;
-constexpr int64_t MicrosecondsPerSecond			= 1000000;
-constexpr int64_t MicrosecondsPerMillisecond	= 1000;
 
 namespace nb 
 {

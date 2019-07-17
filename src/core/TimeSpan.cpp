@@ -5,6 +5,7 @@
 #include <regex>
 #include <algorithm>
 #include <string.h>
+#include <ratio>
 
 using namespace nb::core;
 
@@ -117,32 +118,32 @@ TimeSpan TimeSpan::operator+(const TimeSpan & other) const
 
 int TimeSpan::days() const
 {
-	return (int)(totalMicroseconds() / MicrosecondsPerDay);
+	return (int)(totalMicroseconds() / 86400000000);
 }
 
 int TimeSpan::hours() const
 {
-	return (int)(totalMicroseconds() % MicrosecondsPerDay / MicrosecondsPerHour);
+	return (int)(totalMicroseconds() % 86400000000 / 3600000000);
 }
 
 int TimeSpan::minutes() const
 {
-	return (int)(totalMicroseconds() % MicrosecondsPerDay % MicrosecondsPerHour / MicrosecondsPerMinute);
+	return (int)(totalMicroseconds() % 86400000000 % 3600000000 / 60000000);
 }
 
 int TimeSpan::seconds() const
 {
-	return (int)(totalMicroseconds() % MicrosecondsPerDay % MicrosecondsPerHour % MicrosecondsPerMinute / MicrosecondsPerSecond);
+	return (int)(totalMicroseconds() % 86400000000 % 3600000000 % 60000000 / std::micro::den);
 }
 
 int TimeSpan::milliseconds() const
 {
-	return (int)(totalMicroseconds() % MicrosecondsPerDay % MicrosecondsPerHour % MicrosecondsPerMinute % MicrosecondsPerSecond / MicrosecondsPerMillisecond);
+	return (int)(totalMicroseconds() % 86400000000 % 3600000000 % 60000000 % std::micro::den / std::milli::den);
 }
 
 int TimeSpan::microseconds() const
 {
-	return (int)(totalMicroseconds() % MicrosecondsPerDay % MicrosecondsPerHour % MicrosecondsPerMinute % MicrosecondsPerSecond % MicrosecondsPerMillisecond);
+	return (int)(totalMicroseconds() % 86400000000 % 3600000000 % 60000000 % std::micro::den % std::milli::den);
 }
 
 TimeSpan TimeSpan::negate() const
@@ -157,27 +158,27 @@ TimeSpan TimeSpan::abs() const
 
 double TimeSpan::totalDays() const
 {
-	return (double)totalMicroseconds() / MicrosecondsPerDay;
+	return (double)totalMicroseconds() / 86400000000;
 }
 
 double TimeSpan::totalHours() const
 {
-	return (double)totalMicroseconds() / MicrosecondsPerHour;
+	return (double)totalMicroseconds() / 3600000000;
 }
 
 double TimeSpan::totalMinutes() const
 {
-	return (double)totalMicroseconds() / MicrosecondsPerMinute;
+	return (double)totalMicroseconds() / 60000000;
 }
 
 double TimeSpan::totalSeconds() const
 {
-	return (double)totalMicroseconds() / MicrosecondsPerSecond;
+	return (double)totalMicroseconds() / std::micro::den;
 }
 
 double TimeSpan::totalMilliseconds() const
 {
-	return (double)totalMicroseconds() / MicrosecondsPerMillisecond;
+	return (double)totalMicroseconds() / std::milli::den;
 }
 
 int64_t TimeSpan::totalMicroseconds() const
@@ -227,7 +228,7 @@ std::string TimeSpan::toString(const std::string & format)
 
 int64_t TimeSpan::unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const
 {
-	return days * MicrosecondsPerDay + hours * MicrosecondsPerHour + minutes * MicrosecondsPerMinute + seconds * MicrosecondsPerSecond + milliseconds * MicrosecondsPerMillisecond + microseconds;
+	return days * 86400000000 + hours * 3600000000 + minutes * 60000000 + seconds * std::micro::den + milliseconds * std::milli::den + microseconds;
 }
 
 std::string TimeSpan::simpleToString(const std::string & format, const std::map<char, int>& char_v)

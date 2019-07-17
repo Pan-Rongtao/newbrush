@@ -1,13 +1,9 @@
 ﻿#include "core/DateTime.h"
 #include <chrono>
 #include <ctime>
+#include <ratio>
 
 using namespace nb::core;
-
-constexpr int MaxYear = 9999;
-constexpr int MinYear = 1;
-constexpr int MaxMonth = 12;
-constexpr int MinMonth = 1;
 
 ////////////////////////////////////class Date
 Date::Date()
@@ -38,12 +34,12 @@ Date Date::fromString(const std::string & date, const std::string & format)
 
 Date Date::maxValue()
 {
-	return Date(MaxYear, MaxMonth, 31);
+	return Date(9999, 12, 31);
 }
 
 Date Date::minValue()
 {
-	return Date(MinYear, MinMonth, 1);
+	return Date(1, 1, 1);
 }
 
 Date Date::today()
@@ -55,7 +51,7 @@ Date Date::today()
 
 bool Date::isValid(int year, int month, int day)
 {
-	return !(year < MinYear || year > MaxYear || month < MinMonth || month > MaxMonth || day < 1 || day > daysInMonth(year, month));
+	return !(year < 1 || year > 9999 || month < 1 || month > 12 || day < 1 || day > daysInMonth(year, month));
 }
 
 bool Date::isLeapYear(int year)
@@ -199,11 +195,11 @@ Date Date::addYears(int years) const
 
 Date Date::addMonths(int months) const
 {
-	int nNewYear = m_year + (m_month + months) / MaxMonth;
-	int nNewMonth = (m_month + months) % MaxMonth;
+	int nNewYear = m_year + (m_month + months) / 12;
+	int nNewMonth = (m_month + months) % 12;
 	if (nNewMonth <= 0)
 	{
-		nNewMonth += MaxMonth;
+		nNewMonth += 12;
 		--nNewYear;
 	}
 	int nDaysInMonth = daysInMonth(nNewYear, nNewMonth);
@@ -246,7 +242,7 @@ Date Date::addDays(int nDays) const
 	while (nDaysRemain >= 31)
 	{
 		int nCurMonthDayCount = daysInMonth(nCurYear, nCurMonth);
-		int nNearbyMonth = bForward ? (nCurMonth + 1 > MaxMonth ? MinMonth : nCurMonth + 1) : (nCurMonth - 1 < MinMonth ? MaxMonth : nCurMonth - 1);
+		int nNearbyMonth = bForward ? (nCurMonth + 1 > 12 ? 1 : nCurMonth + 1) : (nCurMonth - 1 < 1 ? 12 : nCurMonth - 1);
 		int nNearbyMonthDayCount = daysInMonth(nCurYear, nNearbyMonth);
 		if (bForward)
 		{
@@ -287,9 +283,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay > daysInMonth(nCurYear, nCurMonth))
 			{
 				++nCurMonth;
-				if (nCurMonth > MaxMonth)
+				if (nCurMonth > 12)
 				{
-					nCurMonth = MinMonth;
+					nCurMonth = 1;
 					++nCurYear;
 				}
 				nCurDay = 1;
@@ -301,9 +297,9 @@ Date Date::addDays(int nDays) const
 			if (nCurDay < 1)
 			{
 				--nCurMonth;
-				if (nCurMonth < MinMonth)
+				if (nCurMonth < 1)
 				{
-					nCurMonth = MaxMonth;
+					nCurMonth = 12;
 					--nCurYear;
 				}
 				nCurDay = daysInMonth(nCurYear, nCurMonth);
@@ -481,7 +477,7 @@ bool Time::isMidnight() const
 
 TimeSpan Time::timeOfDay() const
 {
-	return TimeSpan::fromMicroseconds(m_hour * MicrosecondsPerHour + m_minute * MicrosecondsPerMinute + m_second * MicrosecondsPerSecond + m_millisecond * MicrosecondsPerMillisecond + m_microsecond);
+	return TimeSpan::fromMicroseconds(m_hour * 3600000000 + m_minute * 60000000 + m_second * std::micro::den + m_millisecond * std::milli::den + m_microsecond);
 }
 
 Time &Time::add(const TimeSpan &value)

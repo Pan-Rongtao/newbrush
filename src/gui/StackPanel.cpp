@@ -24,8 +24,8 @@ Size StackPanel::measureOverride(const Size & availableSize)
 	Size childMeasureSize;
 	for (auto const &child : Children())
 	{
-		childMeasureSize.width() = (float)(child->Width != NB_DOUBLE_NAN ? child->Width : 0.0);
-		childMeasureSize.height() = (float)(child->Height != NB_DOUBLE_NAN ? child->Height : 0.0);
+		childMeasureSize.width() = (float)(std::isnan(child->Width) ? 0.0 : child->Width);
+		childMeasureSize.height() = (float)(std::isnan(child->Height) ? 0.0 : child->Height);
 		child->measure(childMeasureSize);
 		auto sz = child->DesiredSize();
 		bool b = false;

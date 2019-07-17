@@ -7,10 +7,10 @@ using namespace nb::gui;
 UIElement::UIElement()
 	: Visibility(VisibilityE::Visible)
 	, Opacity(1.0)
-	, Width(NB_DOUBLE_NAN)
-	, Height(NB_DOUBLE_NAN)
-	, MaxWidth(NB_DOUBLE_MAX)
-	, MaxHeight(NB_DOUBLE_MAX)
+	, Width(NAN)
+	, Height(NAN)
+	, MaxWidth(std::numeric_limits<double>::max())
+	, MaxHeight(std::numeric_limits<double>::max())
 	, HorizontalAlignment(HorizontalAlignmentE::Stretch)
 	, VerticalAlignment(VerticalAlignmentE::Stretch)
 	, FlowDirection(FlowDirectionE::LeftToRight)
@@ -39,8 +39,8 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	double Widthx = nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : constrainedSize.width());
-	double Heightx = nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : constrainedSize.height());
+	double Widthx = nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
+	double Heightx = nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
 	constrainedSize.reset(Widthx, Heightx);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
@@ -48,8 +48,8 @@ void UIElement::measure(const Size & availabelSize)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : desiredSizeTemp.width());
-	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : desiredSizeTemp.height());
+	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
+	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
 	desiredSizeTemp.reset((float)Width, (float)Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
@@ -80,17 +80,17 @@ void UIElement::arrage(const Rect & finalRect)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, (Width != NB_DOUBLE_NAN) ? Width : arrangeSize.width());
-	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, (Height != NB_DOUBLE_NAN) ? Height : arrangeSize.height());
+	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
+	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
 	arrangeSize.reset((float)Width(), (float)Height());
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
 	RenderSize = innerInkSize;
 	//裁剪，保证innerInkSize在Max之内
-	if (Width == NB_DOUBLE_NAN)
+	if (std::isnan(Width))
 		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = (float)MaxWidth;
-	if (Height == NB_DOUBLE_NAN)
+	if (std::isnan(Height))
 		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = (float)MaxHeight;
 	Size clipInkSize(std::min(innerInkSize.width(), (float)Width()), std::min(innerInkSize.height(), (float)Height()));
 
