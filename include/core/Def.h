@@ -94,6 +94,9 @@ namespace nb
 	//获取开机以来的时钟滴答数（毫秒数）
 	NB_API uint64_t getTickCount();
 
+	//获取线程id
+	NB_API uint32_t getPid();
+
 	//取边界内的合法值（传入的min和max会被修正），返回值可以是min, max，也可以是value本身；Bound(1, 5, 10) = 5; Bound(1, 5, 0) = 1; Bound(1, 5, 3) = 3;
 	//min和max被定义为宏，需要加()，次函数与c++17中列入标准
 	template<class T>
