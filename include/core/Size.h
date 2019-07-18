@@ -1,5 +1,5 @@
 ﻿/*******************************************************
-**	Size/SizeI
+**	Size
 **
 **	尺寸
 **	
@@ -81,77 +81,6 @@ private:
 	float		m_width;
 	float		m_height;
 
-};
-
-//class SizeI
-class NB_API SizeI
-{
-public:
-	//构建一个SizeI(0, 0)
-	SizeI();
-
-	//构建一个SizeI(width, height)
-	SizeI(int width, int height);
-
-	//从其他SizeI构建一个SizeI
-	SizeI(const SizeI &other);
-
-	//零Size(0, 0)
-	static SizeI zero();
-
-	void operator = (const SizeI &other);
-	bool operator == (const SizeI &other) const;
-	bool operator != (const SizeI &other) const;
-	SizeI operator + (const SizeI &other) const;
-	SizeI operator + (int n) const;
-	SizeI operator - (const SizeI &other) const;
-	SizeI operator - (int n) const;
-	SizeI operator * (int n) const;
-	SizeI operator * (float n) const;
-	SizeI operator / (int n) const;
-	SizeI operator / (float n) const;
-	void operator += (const SizeI &other);
-	void operator += (int n);
-	void operator -= (const SizeI &other);
-	void operator -= (int n);
-	void operator *= (int n);
-	void operator *= (float n);
-	void operator /= (int n);
-	void operator /= (float n);
-
-public:
-	//设置宽
-	void setWidth(int width);
-
-	//设置高
-	void setHeight(int height);
-
-	//重置宽高
-	void reset(int width, int height);
-
-	//宽
-	int &width();
-	const int &width() const;
-
-	//height的引用
-	int &height();
-	const int &height() const;
-
-	//是否是(0, 0)
-	bool isZero() const;
-
-	//是否是负值
-	bool isNegative() const;
-
-	//取this和other中宽和高的最小值组合成的SizeI
-	SizeI narrow(const SizeI &other) const;
-
-	//取this和other中宽和高的最大值组合成的SizeI
-	SizeI expand(const SizeI &other) const;
-
-private:
-	int		m_width;
-	int		m_height;
 };
 
 }}

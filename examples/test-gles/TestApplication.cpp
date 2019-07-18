@@ -364,7 +364,6 @@ void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
-	//nb::gl::getProjection()->perspective(NB_ANG2RAD(45.0f), (float)args.width / (float)args.height, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else

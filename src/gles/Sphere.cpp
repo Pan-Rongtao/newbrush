@@ -13,7 +13,7 @@ constexpr int SphereVSlices						= 50;										//把球按维度分成的切片数
 constexpr int SphereHSlices						= SphereVSlices / 2;						//经度循环为纬度切片数的一半
 constexpr int SphereIndicesCountVertextCount	= (SphereHSlices + 1) * (SphereVSlices + 1);//顶点数
 constexpr int SphereIndicesCount				= SphereHSlices * SphereVSlices * 6;		//顶点序列数
-constexpr double SphereAngleStep				= NB_2PI / (float)SphereVSlices;			//每个扇形的角度
+constexpr double SphereAngleStep				= NB_2PI / SphereVSlices;					//每个扇形的角度
 
 Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 {
@@ -24,10 +24,10 @@ Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 		{
 			for (int j = 0; j < SphereVSlices + 1; ++j)
 			{
-				float x = (float)(r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j));
-				float y = (float)(r * cos(SphereAngleStep * i));
-				float z = (float)(r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j));
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)SphereVSlices, 1.0f - ((float)i / (float)SphereHSlices))));
+				auto x = r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j);
+				auto y = r * cos(SphereAngleStep * i);
+				auto z = r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j);
+				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((double)j / SphereVSlices, 1.0 - ((double)i / SphereHSlices))));
 			}
 		}
 	}
@@ -37,10 +37,10 @@ Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 		{
 			for (int j = SphereVSlices; j != -1; --j)
 			{
-				float x = (float)(r * sin(SphereAngleStep * (float)i) * sin(SphereAngleStep * (float)j));
-				float y = (float)(r * cos(SphereAngleStep * (float)i));
-				float z = (float)(r * sin(SphereAngleStep * (float)i) * cos(SphereAngleStep * (float)j));
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / (float)SphereVSlices, ((float)i / (float)SphereHSlices))));
+				auto x = r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j);
+				auto y = r * cos(SphereAngleStep * i);
+				auto z = r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j);
+				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((double)j / SphereVSlices, ((double)i / SphereHSlices))));
 			}
 		}
 	}

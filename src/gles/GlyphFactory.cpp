@@ -74,23 +74,23 @@ public:
 		if (m_x + glyph.bm_width <= width())
 		{
 			glTexSubImage2D(GL_TEXTURE_2D, 0, (int)m_x, (int)m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
-			uv[0] = { (float)(m_x / width()), (float)(m_y + glyph.bm_height) / height() };
-			uv[1] = { (float)(m_x + glyph.bm_width) / width(), (float)(m_y + glyph.bm_height) / height() };
-			uv[2] = { (float)(m_x + glyph.bm_width) / width(), (float)m_y / height() }; 
-			uv[3] = { (float)m_x / width(), (float)m_y / height() };
+			uv[0] = { m_x / width(), (m_y + glyph.bm_height) / height() };
+			uv[1] = { (m_x + glyph.bm_width) / width(), (m_y + glyph.bm_height) / height() };
+			uv[2] = { (m_x + glyph.bm_width) / width(), m_y / height() }; 
+			uv[3] = { m_x / width(), m_y / height() };
 			m_x += glyph.bm_width;
 		}
 		else
 		{
 			if (m_y + m_font->size() <= height())
 			{
-				m_x = (float)glyph.bm_width;
+				m_x = static_cast<float>(glyph.bm_width);
 				m_y += m_font->size();
 				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (int)m_y, glyph.bm_width, glyph.bm_height, GL_ALPHA, GL_UNSIGNED_BYTE, glyph.bm_buffer);
-				uv[0] = { 0.0, (float)(m_y + glyph.bm_height) / height() };
-				uv[1] = { (float)glyph.bm_width / width(), (float)(m_y + glyph.bm_height) / height() };
-				uv[2] = { (float)glyph.bm_width / width(), (float)m_y / height() }; 
-				uv[3] = { 0.0, (float)m_y / height() };
+				uv[0] = { 0.0, (m_y + glyph.bm_height) / height() };
+				uv[1] = { glyph.bm_width / width(), (m_y + glyph.bm_height) / height() };
+				uv[2] = { glyph.bm_width / width(), m_y / height() }; 
+				uv[3] = { 0.0, m_y / height() };
 			}
 		}
 		unbind();
