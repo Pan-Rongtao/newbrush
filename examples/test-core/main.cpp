@@ -8,11 +8,12 @@
 #include "TestRandom.h"
 #include "TestEvent.h"
 #include "TestRect.h"
+#include "TestEasingFunction.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestRect> test;
+		TestHandle<TestEasingFunction> test;
 		test->test();
 	}
 	catch (std::exception &e)

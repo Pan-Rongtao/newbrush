@@ -23,10 +23,10 @@ class NB_API Brush
 {
 protected:
 	Brush();
-	Brush(double opacity);
+	Brush(float opacity);
 	virtual ~Brush();
 
-	nb::core::Property_rw<double>			Opacity;
+	nb::core::Property_rw<float>			Opacity;
 
 private:
 	Brush(const Brush &other) = delete;

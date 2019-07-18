@@ -12,7 +12,7 @@ Line::Line()
 
 void Line::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	Rect rc(Point((float)X1, (float)Y1), Point((float)X2, (float)Y2));
+	Rect rc(Point(X1, Y1), Point(X2, Y2));
 	rc.move(Offset().x(), Offset().y());
 	Renderer()->setModel(std::make_shared<nb::gl::Line>(rc.left(), rc.top(), rc.right(), rc.bottom()));
 	drawContext->queue(Renderer());
@@ -25,5 +25,5 @@ Size Line::measureOverride(const Size & availableSize)
 
 Size Line::arrangeOverride(const Size & finalSize)
 {
-	return Size((float)abs(X2() - X1()), (float)abs(Y2() - Y1()));
+	return Size(std::abs(X2() - X1()), std::abs(Y2() - Y1()));
 }

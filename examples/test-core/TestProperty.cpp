@@ -16,7 +16,7 @@ void TestProperty::test()
 	Size s = Range;
 	Range = Size(2.0, 0.0);
 	s = Range;
-	float xx =((Size)Range).width();
+	auto xx =((Size)Range).width();
 
 	Range1.bind([&]()->Size & {return m_range1; });
 //	Range1.bind(nullptr);
@@ -27,7 +27,6 @@ void TestProperty::test()
 	Range = Range1;
 	
 	SZR.getter([&]()->Size& {return m_szGetter; });
-	((Size)SZR).setHeight(1);
 	Size sz = SZR;
 
 	bool bxx = Visible;

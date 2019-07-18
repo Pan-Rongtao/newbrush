@@ -45,11 +45,11 @@ public:
 	nb::core::Property_rw<std::string>				Text;			//文本内容
 	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;		//背景
 	nb::core::Property_rw<std::shared_ptr<media::Font>>	Font;			//字体
-	nb::core::Property_rw<double>					FontSize;		//字体大小
+	nb::core::Property_rw<float>					FontSize;		//字体大小
 	nb::core::Property_rw<int>						FontWeight;		//字体权重
 	nb::core::Property_rw<nb::core::Color>			Foreground;		//字体前景
-	nb::core::Property_rw<double>					LineHeight;		//行间距
-	nb::core::Property_rw<double>					CharSpacing;	//字间距
+	nb::core::Property_rw<float>					LineHeight;		//行间距
+	nb::core::Property_rw<float>					CharSpacing;	//字间距
 	nb::core::Property_rw<Thickness>				Padding;		//内距
 	nb::core::Property_rw<TextAlignmentE>			TextAlignment;	//文本排列方式
 	nb::core::Property_rw<TextTrimmingE>			TextTrimming;	//文本溢出决策

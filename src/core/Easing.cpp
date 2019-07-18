@@ -1,7 +1,6 @@
-﻿#include "gui/Easing.h"
+﻿#include "core/Easing.h"
 
 using namespace nb::core;
-using namespace nb::gui;
 
 //公式参考：https://github.com/r-lyeh-archived/tween/blob/master/tween.hpp		
 //			https://github.com/MichaelHRL/PowerEaseEquations/blob/master/Power.cpp
@@ -14,7 +13,7 @@ double EasingBase::easeInCore(double normalizedTime)
 }
 
 EasingBase::EasingBase()
-	: EasingMode(EasingModeE::EaseIn)
+	: mode(EasingModeE::EaseIn)
 {
 }
 
@@ -23,19 +22,14 @@ double LinearEase::easeInCore(double t)
 	return t;
 }
 
-BackEase::BackEase()
-	: Amplitude(1.0)
+BackEase::BackEase(double amplitude)
+	: m_amplitude(amplitude)
 {
-	Amplitude.notify([](const double &_old, const double &_new) 
-	{
-		if (_new < 0.0)
-			nbThrowException(std::underflow_error, "Amplitude[%.f] < 0.0", _new);
-	});
 }
 
 double BackEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:
 	{
@@ -68,9 +62,22 @@ double BackEase::easeInCore(double t)
 	}
 }
 
-BounceEase::BounceEase()
-	: Bounces(3)
-	, Bounciness(2.0)
+void BackEase::setAmplitude(double amplitude) &
+{
+	if(amplitude < 0.0)
+		nbThrowException(std::underflow_error, "amplitude[%.2f] < 0.0", amplitude);
+
+	m_amplitude = amplitude;
+}
+
+double BackEase::amplitude() const
+{
+	return m_amplitude;
+}
+
+BounceEase::BounceEase(uint32_t bounces, double bounciness)
+	: m_bounces(bounces)
+	, m_bounciness(bounciness)
 {
 }
 
@@ -88,7 +95,7 @@ double BounceEase::easeInCore(double t)
 		return 1 - bounceEaseOut(1 - p);
 	};
 
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return bounceEaseIn(t);
 	case EasingModeE::EaseOut:		return bounceEaseOut(t);
@@ -97,10 +104,33 @@ double BounceEase::easeInCore(double t)
 	}
 }
 
+void BounceEase::setBounces(uint32_t bounces) &
+{
+	m_bounces = bounces;
+}
+
+uint32_t BounceEase::bounces() const
+{
+	return m_bounces;
+}
+
+void BounceEase::setBounciness(double bounciness) &
+{
+	if (bounciness < 0.0)
+		nbThrowException(std::underflow_error, "bounciness[%.2f] < 0.0", bounciness);
+
+	m_bounciness = bounciness;
+}
+
+double BounceEase::bounciness() const
+{
+	return m_bounciness;
+}
+
 double CircleEase::easeInCore(double t)
 {
 	t = nb::clamp(0.0, 1.0, t);
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return 1 - sqrt(1 - (t * t));
 	case EasingModeE::EaseOut:		return sqrt((2 - t) * t);
@@ -111,7 +141,7 @@ double CircleEase::easeInCore(double t)
 
 double CubicEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t;
 	case EasingModeE::EaseOut:		return t -= 1, t * t * t + 1;
@@ -120,23 +150,15 @@ double CubicEase::easeInCore(double t)
 	}
 }
 
-ElasticEase::ElasticEase()
-	: Oscillations(3)
-	, Springiness(3.0)
+ElasticEase::ElasticEase(uint32_t oscillations, double springiness)
+	: m_oscillations(oscillations)
+	, m_springiness(springiness)
 {
-	Oscillations.notify([](const int &_old, const int &_new) {
-		if (_new < 0)
-			nbThrowException(std::underflow_error, "Oscillations[%d] < 0", _new);
-	});
-	Springiness.notify([](const double &_old, const double &_new) {
-		if (_new < 0.0) 
-			nbThrowException(std::underflow_error, "Springiness[%f] < 0.0", _new);
-	});
 }
 
 double ElasticEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return sin(13 * NB_HALF_PI * t) * pow(2, 10 * (t - 1));
 	case EasingModeE::EaseOut:		return sin(-13 * NB_HALF_PI * (t + 1)) * pow(2, -10 * t) + 1;
@@ -145,14 +167,37 @@ double ElasticEase::easeInCore(double t)
 	}
 }
 
-ExponentialEase::ExponentialEase()
-	: Exponent(2.0)
+void ElasticEase::setOscillations(uint32_t oscillations) &
+{
+	m_oscillations = oscillations;
+}
+
+uint32_t ElasticEase::oscillations() const
+{
+	return m_oscillations;
+}
+
+void ElasticEase::setSpringiness(double springiness) &
+{
+	if (springiness < 0.0)
+		nbThrowException(std::underflow_error, "springiness[%f] < 0.0", springiness);
+
+	m_springiness = springiness;
+}
+
+double ElasticEase::springiness() const
+{
+	return m_oscillations;
+}
+
+ExponentialEase::ExponentialEase(double exponent)
+	: m_exponent(exponent)
 {
 }
 
 double ExponentialEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return (t == 0.0) ? t : pow(2, 10 * (t - 1));
 	case EasingModeE::EaseOut:		return (t == 1.0) ? t : 1 - pow(2, -10 * t);
@@ -161,25 +206,51 @@ double ExponentialEase::easeInCore(double t)
 	}
 }
 
-PowerEase::PowerEase()
-	: Power(2.0)
+void ExponentialEase::setExponent(double exponent) &
+{
+	if (exponent < 0.0)
+		nbThrowException(std::underflow_error, "exponent[%f] < 0.0", exponent);
+
+	m_exponent = exponent;
+}
+
+double ExponentialEase::exponent() const
+{
+	return 0.0;
+}
+
+PowerEase::PowerEase(double power)
+	: m_power(power)
 {
 }
 
 double PowerEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return pow(t, Power);
-	case EasingModeE::EaseOut:		return 1 - pow(1 - t, Power);
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * pow(2 * t, Power)) : (1 - 0.5 * pow(2 - 2 * t, Power));
+	case EasingModeE::EaseIn:		return pow(t, m_power);
+	case EasingModeE::EaseOut:		return 1 - pow(1 - t, m_power);
+	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * pow(2 * t, m_power)) : (1 - 0.5 * pow(2 - 2 * t, m_power));
 	default:						return 0.0;
 	}
 }
 
+void PowerEase::setPower(double power) &
+{
+	if (power < 0.0)
+		nbThrowException(std::underflow_error, "power[%f] < 0.0", power);
+
+	m_power = power;
+}
+
+double PowerEase::power() const
+{
+	return m_power;
+}
+
 double QuadraticEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t;
 	case EasingModeE::EaseOut:		return -(t * (t - 2));
@@ -190,7 +261,7 @@ double QuadraticEase::easeInCore(double t)
 
 double QuarticEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t * t;
 	case EasingModeE::EaseOut:		{ double f = (t - 1);	return f * f * f * (1 - t) + 1; }
@@ -201,7 +272,7 @@ double QuarticEase::easeInCore(double t)
 
 double QuinticEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t * t * t;
 	case EasingModeE::EaseOut:		{ double f = (t - 1);	return f * f * f * f * f + 1; }
@@ -212,7 +283,7 @@ double QuinticEase::easeInCore(double t)
 
 double SineEase::easeInCore(double t)
 {
-	switch (EasingMode)
+	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return sin((t - 1) * NB_HALF_PI) + 1;
 	case EasingModeE::EaseOut:		return sin(t * NB_HALF_PI);

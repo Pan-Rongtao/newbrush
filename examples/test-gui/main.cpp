@@ -6,7 +6,6 @@
 #include "TestStackPanel.h"
 #include "TestWrapPanel.h"
 #include "TestDockPanel.h"
-#include "TestEasingFunction.h"
 #include "TestTimeline.h"
 #include "TestPropertyAnimation.h"
 #include "TestPropertyAnimationUsingKeyFrames.h"

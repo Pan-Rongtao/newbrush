@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Timeline.h"
-#include "Easing.h"
+#include "core/Easing.h"
 
 namespace nb { namespace gui {
 
@@ -14,11 +14,11 @@ public:
 	}
 	virtual ~AnimationTimeline() = default;
 
-	core::Property_rw<T>							*TargetProperty;
-	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
+	core::Property_rw<T>									*TargetProperty;
+	core::Property_rw<std::shared_ptr<core::EasingBase>>	Easing;
 
 protected:
-	virtual void progressing(double progress) = 0;
+	virtual void progressing(float progress) = 0;
 
 };
 

@@ -17,12 +17,12 @@ ImageSource::ImageSource(const std::string & uri)
 {
 }
 
-double nb::gui::ImageSource::width() const
+float nb::gui::ImageSource::width() const
 {
-	return Bm()->width();
+	return (float)Bm()->width();
 }
 
-double nb::gui::ImageSource::heigth() const
+float nb::gui::ImageSource::heigth() const
 {
-	return Bm()->height();
+	return (float)Bm()->height();
 }

@@ -17,16 +17,16 @@ nb::gui::Window::Window()
 	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
 	, DrawContext(std::make_shared<nb::gl::Context>(nb::gl::getConfigure()))
 {
-	Left = m_glWindow->x();
-	Top = m_glWindow->y();
-	Width = m_glWindow->width();
-	Height = m_glWindow->height();
+	Left = (float)m_glWindow->x();
+	Top = (float)m_glWindow->y();
+	Width = (float)m_glWindow->width();
+	Height = (float)m_glWindow->height();
 
 	auto onWindowResized = [](const nb::core::Window::ResizeArgs & args)
 	{
-		auto ratio = (float)args.width / (float)args.height;
+		auto ratio = (float)args.width / args.height;
 		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-		nb::gl::getCamera()->lookat2D(args.width, args.height);
+		nb::gl::getCamera()->lookat2D((float)args.width, (float)args.height);
 		nb::gl::viewport(0, 0, args.width, args.height);
 	};
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
@@ -89,22 +89,22 @@ void nb::gui::Window::onTopmostChanged(const bool & _old, const bool & _new)
 	m_glWindow->setTopMost(_new);
 }
 
-void nb::gui::Window::onLeftChanged(const double & _old, const double & _new)
+void nb::gui::Window::onLeftChanged(const float & _old, const float & _new)
 {
 	m_glWindow->setX((int)_new);
 }
 
-void nb::gui::Window::onTopChanged(const double & _old, const double & _new)
+void nb::gui::Window::onTopChanged(const float & _old, const float & _new)
 {
 	m_glWindow->setY((int)_new);
 }
 
-void nb::gui::Window::onWidthChanged(const double & _old, const double & _new)
+void nb::gui::Window::onWidthChanged(const float & _old, const float & _new)
 {
 	m_glWindow->setWidth((int)_new);
 }
 
-void nb::gui::Window::onHeightChanged(const double & _old, const double & _new)
+void nb::gui::Window::onHeightChanged(const float & _old, const float & _new)
 {
 	m_glWindow->setHeight((int)_new);
 }

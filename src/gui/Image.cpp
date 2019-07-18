@@ -37,8 +37,7 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
-	return Size(std::max(availableSize.width(), (float)Source()->Bm()->width()), 
-		std::max(availableSize.height(), (float)Source()->Bm()->height()));
+	return Size(std::max<float>(availableSize.width(), (float)Source()->Bm()->width()), std::max<float>(availableSize.height(), (float)Source()->Bm()->height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
@@ -47,7 +46,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 	{
 	case StretchE::Origion:
 	{
-		return{ (float)Source()->Bm()->width(), (float)Source()->Bm()->height() };
+		return Size((float)Source()->Bm()->width(), (float)Source()->Bm()->height());
 	}
 	case StretchE::Fill:
 	{
@@ -56,8 +55,8 @@ Size Image::arrangeOverride(const Size & finalSize)
 	case StretchE::Uniform:
 	{
 		Size sz;
-		float pixelRatio = (float)(Source()->width() / Source()->heigth());
-		float containerRatio = m_availableSize.width() / m_availableSize.height();
+		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{
 			sz.reset(m_availableSize.height() * pixelRatio, m_availableSize.height());
@@ -75,11 +74,11 @@ Size Image::arrangeOverride(const Size & finalSize)
 		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{
-			sz.reset((float)m_availableSize.width(), (float)(m_availableSize.width() / pixelRatio));
+			sz.reset(m_availableSize.width(), m_availableSize.width() / pixelRatio);
 		}
 		else
 		{
-			sz.reset((float)(m_availableSize.height() * pixelRatio), (float)m_availableSize.height());
+			sz.reset(m_availableSize.height() * pixelRatio, m_availableSize.height());
 		}
 		return sz;
 	}

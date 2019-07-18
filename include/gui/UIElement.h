@@ -62,14 +62,14 @@ public:
 
 public:
 	core::Property_rw<VisibilityE>							Visibility;
-	core::Property_rw<double>								Opacity;
+	core::Property_rw<float>								Opacity;
 	core::Property_rw<bool>									Focusable;
-	core::Property_rw<double>								Width;
-	core::Property_rw<double>								Height;
-	core::Property_rw<double>								MinWidth;
-	core::Property_rw<double>								MinHeight;
-	core::Property_rw<double>								MaxWidth;
-	core::Property_rw<double>								MaxHeight;
+	core::Property_rw<float>								Width;
+	core::Property_rw<float>								Height;
+	core::Property_rw<float>								MinWidth;
+	core::Property_rw<float>								MinHeight;
+	core::Property_rw<float>								MaxWidth;
+	core::Property_rw<float>								MaxHeight;
 	core::Property_r<core::Size>							DesiredSize;
 	core::Property_r<core::Size>							ActualSize;
 	core::Property_rw<core::Size>							RenderSize;
@@ -87,7 +87,7 @@ protected:
 
 private:
 	void onVisibilityChanged(const gui::VisibilityE &_old, const gui::VisibilityE &_new);
-	void onOpacityChanged(const double &_old, const double &_new);
+	void onOpacityChanged(const float &_old, const float &_new);
 	void onFocusableChanged(const bool &_old, const bool &_new);
 	void onDesiredSizeChanged(const core::Size &_old, const core::Size &_new);
 	void onMaginChanged(const Thickness &_old, const Thickness &_new);

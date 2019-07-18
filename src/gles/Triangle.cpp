@@ -31,18 +31,16 @@ Triangle::Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2
 	translate(c.x, c.y, c.z);
 }
 
-double Triangle::distance(const glm::vec2 & p0, const glm::vec2 & p1) const
-{
-	return sqrt((p0.x - p1.x) * (p0.x - p1.x) + (p0.y - p1.y * (p0.y - p1.y)));
-}
-
 glm::vec2 Triangle::center(const glm::vec2 & p0, const glm::vec2 & p1, const glm::vec2 & p2) const
 {
-	double A = distance(p1, p2);
-	double B = distance(p0, p2);
-	double C = distance(p0, p1);
-	double S = A + B + C;
-	double x = (A * p0.x + B * p1.x + C * p2.x) / S;
-	double y = (A * p0.y + B * p1.y + C * p2.y) / S;
-	return glm::vec2((float)x, (float)y);
+	auto distance = [](const glm::vec2 & p0, const glm::vec2 & p1) {
+		return std::hypotf(p0.x - p1.x, p0.y - p1.y);
+	};
+	auto A = distance(p1, p2);
+	auto B = distance(p0, p2);
+	auto C = distance(p0, p1);
+	auto S = A + B + C;
+	auto x = (A * p0.x + B * p1.x + C * p2.x) / S;
+	auto y = (A * p0.y + B * p1.y + C * p2.y) / S;
+	return glm::vec2(x, y);
 }

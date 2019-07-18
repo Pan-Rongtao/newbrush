@@ -50,7 +50,7 @@ public:
 	core::Event<StateChangedArgs>					StateChangedEvent;
 
 	//进度事件
-	struct ProgressArgs { double progress; };
+	struct ProgressArgs { float progress; };
 	core::Event<ProgressArgs>						ProgressEvent;
 
 	//完成事件

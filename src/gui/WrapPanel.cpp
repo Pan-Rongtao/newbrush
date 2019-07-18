@@ -21,8 +21,8 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 	Size childMeasureSize;
 	for (auto const &child : Children())
 	{
-		childMeasureSize.width() = (float)(!std::isnan(ItemWidth) ? ItemWidth : !std::isnan(child->Width) ? child->Width : 0.0);
-		childMeasureSize.height() = (float)(!std::isnan(ItemHeight) ? ItemHeight : !std::isnan(child->Height) ? child->Height : 0.0);
+		childMeasureSize.width() = !std::isnan(ItemWidth()) ? ItemWidth() : !std::isnan(child->Width()) ? child->Width() : 0.0f;
+		childMeasureSize.height() = !std::isnan(ItemHeight()) ? ItemHeight() : !std::isnan(child->Height()) ? child->Height() : 0.0f;
 		child->measure(childMeasureSize);
 	}
 	return availableSize;
@@ -33,34 +33,34 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 //当Orientation == OrientationE::Vertical时，分两种情况：1、指定了ItemWdith，则每一行高度为ItemWidth，累加每个item，当累加高度超过finalSize.height时，换列；2、未指定ItemWidth，先遍历items，确定列信息（每一列的开头下标，以及最宽项作为该列的宽）
 Size WrapPanel::arrangeOverride(const Size & finalSize)
 {
-	//计算行（列）信息，返回没行（列）的起始index和高（宽）std::queue<std::pair<int, double>>
-	auto calcLinesInfo = [&]()->std::queue<std::pair<int, double>>
+	//计算行（列）信息，返回没行（列）的起始index和高（宽）std::queue<std::pair<int, float>>
+	auto calcLinesInfo = [&]()->std::queue<std::pair<int, float>>
 	{
-		std::queue<std::pair<int, double>> ret;
+		std::queue<std::pair<int, float>> ret;
 		if (Children().empty())	return ret;
 
-		double sum = 0.0;
-		ret.push({ 0, 0.0 });
+		auto sum = 0.0f;
+		ret.push({ 0, 0.0f });
 		for (int i = 0; i != Children().size(); ++i)
 		{
 			auto child = Children()[i];
-			double one = 0.0;
-			double maxLen = 0.0;
+			auto one = 0.0f;
+			auto maxLen = 0.0f;
 			if (Orientation == OrientationE::Horizontal)
 			{
 				maxLen = finalSize.width();
-				one = !std::isnan(ItemWidth) ? ItemWidth : child->DesiredSize().width();
+				one = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
 			}
 			else
 			{
 				maxLen = finalSize.height();
-				one = !std::isnan(ItemHeight) ? ItemHeight : child->DesiredSize().height();
+				one = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
 			}
 
 			if (sum + one <= maxLen)
 			{
 				ret.back().first = i;
-				ret.back().second = std::max(ret.back().second, (double)(Orientation == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width()));
+				ret.back().second = std::max<float>(ret.back().second, Orientation == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width());
 				sum += one;
 			}
 			else
@@ -72,8 +72,8 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 		return ret;
 	};
 
-	double x = 0.0;
-	double y = 0.0;
+	auto x = 0.0f;
+	auto y = 0.0f;
 	Rect arrangeRect;
 	if (Orientation == OrientationE::Horizontal)
 	{
@@ -83,17 +83,17 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 		{
 			for (auto const &child : Children())
 			{
-				double w = !std::isnan(ItemWidth) ? ItemWidth : child->DesiredSize().width();
+				auto w = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
 				{
-					arrangeRect.reset((float)x, (float)y, (float)w, (float)ItemHeight);
+					arrangeRect.reset(x, y, w, ItemHeight);
 					x += w;
 				}
 				else
 				{
 					y += ItemHeight;
-					arrangeRect.reset(0.0f, (float)y, (float)w, (float)ItemHeight);
+					arrangeRect.reset(0.0, y, w, ItemHeight);
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -105,17 +105,17 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != Children().size(); ++i)
 			{
 				auto const &child = Children().at(i);
-				double w = !std::isnan(ItemWidth) ? ItemWidth : child->DesiredSize().width();
+				auto w = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
 				if (i <= linesInfo.front().first)
 				{
-					arrangeRect.reset((float)x, (float)y, (float)w, (float)linesInfo.front().second);
+					arrangeRect.reset(x, y, w, linesInfo.front().second);
 					x += w;
 				}
 				else
 				{
 					y += linesInfo.front().second;
 					linesInfo.pop();
-					arrangeRect.reset(0.0f, (float)y, (float)w, (float)linesInfo.front().second);
+					arrangeRect.reset(0.0, y, w, linesInfo.front().second);
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -130,17 +130,17 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 		{
 			for (auto const &child : Children())
 			{
-				double h = !std::isnan(ItemHeight) ? ItemHeight : child->DesiredSize().height();
+				auto h = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
 				{
-					arrangeRect.reset((float)x, (float)y, (float)ItemWidth, (float)h);
+					arrangeRect.reset(x, y, ItemWidth, h);
 					y += h;
 				}
 				else
 				{
 					x += ItemWidth;
-					arrangeRect.reset((float)x, 0.0f, (float)ItemWidth, (float)h);
+					arrangeRect.reset(x, 0.0f, ItemWidth, h);
 					y = h;
 				}
 				child->arrage(arrangeRect);
@@ -152,17 +152,17 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != Children().size(); ++i)
 			{
 				auto const &child = Children().at(i);
-				double h = !std::isnan(ItemHeight) ? ItemHeight : child->DesiredSize().height();
+				auto h = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
 				if (i <= linesInfo.front().first)
 				{
-					arrangeRect.reset((float)x, (float)y, (float)linesInfo.front().second, (float)h);
+					arrangeRect.reset(x, y, linesInfo.front().second, h);
 					y += h;
 				}
 				else
 				{
 					x += linesInfo.front().second;
 					linesInfo.pop();
-					arrangeRect.reset((float)x, 0.0f, (float)linesInfo.front().second, (float)h);
+					arrangeRect.reset(x, 0.0f, linesInfo.front().second, h);
 					y = h;
 				}
 				child->arrage(arrangeRect);

@@ -26,8 +26,8 @@ public:
 	void scrollToHome();
 	void scrollToEnd();
 
-	void scrollToHorizontalOffset(double offset);
-	void scrollToVerticalOffset(double offset);
+	void scrollToHorizontalOffset(float offset);
+	void scrollToVerticalOffset(float offset);
 
 public:
 	nb::core::Property_rw<bool>		CanContentScroll;
@@ -35,11 +35,11 @@ public:
 	nb::core::Property_rw<bool>		HorizontalScrollBarEnabled;
 	nb::core::Property_rw<bool>		VerticalScrollBarVisibility;
 	nb::core::Property_rw<bool>		VerticalScrollBarEnabled;
-	nb::core::Property_rw<double>	HorizontalOffset;
-	nb::core::Property_rw<double>	VerticalOffset;
-	nb::core::Property_rw<double>	PanningDeceleration;
-	nb::core::Property_rw<double>	ScrollableWidth;
-	nb::core::Property_rw<double>	ScrollableHeight;
+	nb::core::Property_rw<float>	HorizontalOffset;
+	nb::core::Property_rw<float>	VerticalOffset;
+	nb::core::Property_rw<float>	PanningDeceleration;
+	nb::core::Property_rw<float>	ScrollableWidth;
+	nb::core::Property_rw<float>	ScrollableHeight;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

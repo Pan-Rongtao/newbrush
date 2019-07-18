@@ -8,13 +8,13 @@ GridLength::GridLength()
 {
 }
 
-GridLength::GridLength(double value)
+GridLength::GridLength(float value)
 	: m_type(Pixcel)
 	, m_value(value)
 {
 }
 
-GridLength::GridLength(double value, GridUnitType type)
+GridLength::GridLength(float value, GridUnitType type)
 	: m_type(type)
 	, m_value(value)
 {
@@ -40,7 +40,7 @@ bool GridLength::isStar() const
 	return m_type == Star;
 }
 
-double GridLength::value() const
+float GridLength::value() const
 {
 	return m_value;
 }

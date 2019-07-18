@@ -363,11 +363,11 @@ void MyApplication::preRender()
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
 	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
-	nb::gl::getProjection()->perspective(45.0f, (float)args.width / (float)args.height, 0.1f, 10000.0f);
+	nb::gl::getProjection()->perspective(45.0f, (float)args.width / args.height, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else
-		nb::gl::getCamera()->lookat2D(args.width, args.height);
+		nb::gl::getCamera()->lookat2D((float)args.width, (float)args.height);
 
 	nb::gl::viewport(0, 0, args.width, args.height);
 }

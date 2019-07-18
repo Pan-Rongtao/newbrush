@@ -8,7 +8,7 @@ using namespace nb::core;
 //顶点越多越圆滑
 constexpr int		EllipseVertexCount			= 50;
 constexpr int		EllipseIndicesBufferSize	= 3 * (EllipseVertexCount - 1);
-constexpr double	EllipseRadianStep			= NB_2PI / (EllipseVertexCount - 2);
+constexpr auto		EllipseRadianStep			= NB_2PI / (EllipseVertexCount - 2);
 
 Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 {
@@ -18,7 +18,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 	{
 		for (int i = 1; i != EllipseVertexCount; ++i)
 		{
-			double radian = EllipseRadianStep * i;
+			auto radian = EllipseRadianStep * i;
 			glm::vec2 texCoord(0.5 * cos(radian) + 0.5, 0.5 * sin(radian) + 0.5);
 			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}
@@ -27,7 +27,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 	{
 		for (int i = EllipseVertexCount - 1; i != 0; --i)
 		{
-			double radian = EllipseRadianStep * i;
+			auto radian = EllipseRadianStep * i;
 			glm::vec2 texCoord(0.5 * cos(radian) + 0.5, 1 - (0.5 * sin(radian) + 0.5));
 			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}

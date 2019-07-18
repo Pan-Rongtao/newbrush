@@ -68,11 +68,11 @@ void ScrollViewer::scrollToEnd()
 {
 }
 
-void ScrollViewer::scrollToHorizontalOffset(double offset)
+void ScrollViewer::scrollToHorizontalOffset(float offset)
 {
 }
 
-void ScrollViewer::scrollToVerticalOffset(double offset)
+void ScrollViewer::scrollToVerticalOffset(float offset)
 {
 }
 

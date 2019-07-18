@@ -312,7 +312,7 @@ uint8_t Color::argbF2Argb(float f)
 
 float Color::argb2ArgbF(uint8_t n)
 {
-	return (float)n / 255.0f;
+	return n / 255.0f;
 }
 //以下为公式
 void Color::rgbF2Hsv(float r, float g, float b, float &h, float &s, float &v)

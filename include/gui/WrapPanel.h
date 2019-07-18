@@ -28,8 +28,8 @@ public:
 
 public:
 	nb::core::Property_rw<OrientationE>	Orientation;
-	nb::core::Property_rw<double>		ItemWidth;
-	nb::core::Property_rw<double>		ItemHeight;
+	nb::core::Property_rw<float>		ItemWidth;
+	nb::core::Property_rw<float>		ItemHeight;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

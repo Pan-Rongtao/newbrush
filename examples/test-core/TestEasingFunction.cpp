@@ -1,11 +1,11 @@
 #include "TestEasingFunction.h"
-#include "gui/Easing.h"
+#include "core/Easing.h"
 
-using namespace nb::gui;
+using namespace nb::core;
 
 void testEasing(EasingBase &e, EasingBase::EasingModeE mode)
 {
-	e.EasingMode = mode;
+	e.mode = mode;
 	printf("%s:mode[%d]\n", typeid(e).name(), mode);
 	for (double t = 0.0; t <= 1.000000001; t += 0.01)
 	{

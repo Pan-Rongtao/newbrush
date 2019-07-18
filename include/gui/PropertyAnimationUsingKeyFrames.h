@@ -19,7 +19,7 @@
 #include "../core/Property.h"
 #include "../core/TimeSpan.h"
 #include "AnimationTimeline.h"
-#include "Easing.h"
+#include "core/Easing.h"
 
 namespace nb{ namespace gui{
 
@@ -29,12 +29,12 @@ class NB_API KeyFrame
 public:
 	KeyFrame() : KeyFrame(T(), TimeSpan(), std::make_shared<LinearEase>()) {}
 	KeyFrame(const core::Property_rw<T> &value, const core::TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
-	KeyFrame(const core::Property_rw<T> &value, const core::TimeSpan &keyTime, std::shared_ptr<EasingBase> easing) : Value(value), KeyTime(keyTime), Easing(easing) {}
+	KeyFrame(const core::Property_rw<T> &value, const core::TimeSpan &keyTime, std::shared_ptr<core::EasingBase> easing) : Value(value), KeyTime(keyTime), Easing(easing) {}
 	bool operator < (const KeyFrame<T> &other) const{	return KeyTime() < other.KeyTime(); }
 
-	core::Property_rw<T>							Value;
-	core::Property_rw<core::TimeSpan>				KeyTime;
-	core::Property_rw<std::shared_ptr<EasingBase>>	Easing;
+	core::Property_rw<T>									Value;
+	core::Property_rw<core::TimeSpan>						KeyTime;
+	core::Property_rw<std::shared_ptr<core::EasingBase>>	Easing;
 };
 
 template<class T>
@@ -44,7 +44,7 @@ public:
 	core::Property_rw<std::set<KeyFrame<T>>>		KeyFrames;
 
 protected:
-	virtual void progressing(double progress) override
+	virtual void progressing(float progress) override
 	{
 		if (!TargetProperty || KeyFrames().empty())	return;
 		//根据ticks获取当前frame，找不到表示超出了范围
@@ -66,7 +66,7 @@ protected:
 			T toValue = curFrame.Value();
 			int64_t frmeBegTick = (prevFrameIter == KeyFrames().end() ? 0 : (int64_t)(*prevFrameIter).KeyTime().totalMilliseconds());
 			int64_t frameEndTick = (int64_t)curFrame.KeyTime().totalMilliseconds();
-			double t = (double)(ticks - frmeBegTick) / (double)(frameEndTick - frmeBegTick);
+			auto t = (double)(ticks - frmeBegTick) / (frameEndTick - frmeBegTick);
 			auto ft = curFrame.Easing()->easeInCore(t);
 			*TargetProperty = fromValue + (toValue - fromValue) * ft;
 		}

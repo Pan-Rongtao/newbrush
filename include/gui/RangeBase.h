@@ -11,11 +11,11 @@ public:
 	virtual ~RangeBase();
 
 public:
-	nb::core::Property_rw<double>			Value;
-	nb::core::Property_rw<double>			Maximum;
-	nb::core::Property_rw<double>			Minimum;
-	nb::core::Property_rw<double>			SmallChange;
-	nb::core::Property_rw<double>			LargeChange;
+	nb::core::Property_rw<float>			Value;
+	nb::core::Property_rw<float>			Maximum;
+	nb::core::Property_rw<float>			Minimum;
+	nb::core::Property_rw<float>			SmallChange;
+	nb::core::Property_rw<float>			LargeChange;
 			
 protected:
 	virtual void OnValueChanged(float fOldValue, float fNewValue);

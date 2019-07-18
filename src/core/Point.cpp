@@ -152,10 +152,10 @@ bool Point::isNegative() const
 
 float Point::distance(const Point &other) const
 {
-	return (float)sqrt(pow(x() - other.x(), 2) + pow(y() - other.y(), 2));
+	return std::hypotf(x() - other.x(), y() - other.y());
 }
 
 float Point::manhattanLength(const Point &other) const
 {
-	return abs(x() - other.x()) + abs(y() - other.y());
+	return std::abs(x() - other.x()) + std::abs(y() - other.y());
 }

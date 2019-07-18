@@ -17,7 +17,7 @@ public:
 	void test();
 
 
-	PropertyAnimation<double>	doubleAni;
+	PropertyAnimation<float>	doubleAni;
 	nb::gui::Window m_window;
 
 private:

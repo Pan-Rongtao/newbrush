@@ -19,7 +19,7 @@
 #pragma once
 #include "../core/Property.h"
 
-namespace nb { namespace gui {
+namespace nb { namespace core {
 
 //缓动函数基类
 class NB_API EasingBase
@@ -39,7 +39,7 @@ public:
 	//t：动画的规范化时间，0.0~1.0之间
 	virtual double easeInCore(double t);
 
-	core::Property_rw<EasingModeE>		EasingMode;
+	EasingModeE		mode;
 
 protected:
 	EasingBase();
@@ -57,21 +57,37 @@ public:
 class NB_API BackEase : public EasingBase
 {
 public:
-	BackEase();
+	BackEase(double amplitude = 1.0);
 	virtual double easeInCore(double t) override;
 
-	core::Property_rw<double>		Amplitude;	//收回幅度
+	//回升幅度参数
+	//异常：amplitude为负数
+	void setAmplitude(double amplitude) &;
+	double amplitude() const;
+
+private:
+	double	m_amplitude;
 };
 
 //BounceEase（弹跳缓冲）
 class NB_API BounceEase : public EasingBase
 {
 public:
-	BounceEase();
+	BounceEase(uint32_t bounces = 3, double bounciness = 2.0);
 	virtual double easeInCore(double t) override;
 
-	core::Property_rw<int>		Bounces;		//弹跳次数，负数解析为0
-	core::Property_rw<double>	Bounciness;		//弹性系数
+	//弹跳次数
+	void setBounces(uint32_t bounces) &;
+	uint32_t bounces() const;
+
+	//弹跳系数
+	//异常：bounciness为负数
+	void setBounciness(double bounciness) &;
+	double bounciness() const;
+
+private:
+	uint32_t	m_bounces;
+	double		m_bounciness;
 };
 
 //CircleEase（圆缓冲）
@@ -92,31 +108,53 @@ public:
 class NB_API ElasticEase : public EasingBase
 {
 public:
-	ElasticEase();
+	ElasticEase(uint32_t oscillations = 3, double springiness = 3.0);
 	virtual double easeInCore(double t) override;
 
-	core::Property_rw<int>		Oscillations;	//弹动次数
-	core::Property_rw<double>	Springiness;	//弹簧刚度
+	//弹动次数
+	void setOscillations(uint32_t oscillations) &;
+	uint32_t oscillations() const;
+
+	//弹簧刚度
+	//异常：springiness为负数
+	void setSpringiness(double springiness) &;
+	double springiness() const;
+
+private:
+	uint32_t	m_oscillations;
+	double		m_springiness;
 };
 
 //ExponentialEase（指数缓冲）
 class NB_API ExponentialEase : public EasingBase
 {
 public:
-	ExponentialEase();
+	ExponentialEase(double exponent = 2.0);
 	virtual double easeInCore(double t) override;
 
-	core::Property_rw<double>	Exponent;		//内插指数
+	//内插指数
+	//异常：exponent为负数
+	void setExponent(double exponent) &;
+	double exponent() const;
+
+private:
+	double	m_exponent;		
 };
 
 //PowerEase（乘方缓冲）
 class NB_API PowerEase : public EasingBase
 {
 public:
-	PowerEase();
+	PowerEase(double power = 2.0);
 	virtual double easeInCore(double t) override;
 
-	core::Property_rw<double>	Power;			//内插的指数幂。例如，值为 7 将创建遵循方程式 f(t) = t7
+	//内插的指数幂
+	//异常：power为负数
+	void setPower(double power) &;
+	double power() const;
+
+private:
+	double m_power;			//内插的指数幂。例如，值为 7 将创建遵循方程式 f(t) = t7
 };
 
 //QuadraticEase（平方缓冲）

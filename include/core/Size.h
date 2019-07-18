@@ -1,5 +1,5 @@
 ﻿/*******************************************************
-**	Size
+**	Size/SizeI
 **
 **	尺寸
 **	
@@ -49,13 +49,13 @@ public:
 
 public:
 	//设置宽为width
-	void setWidth(float width);
+	void setWidth(float width) &;
 
 	//设置高为height
-	void setHeight(float height);
+	void setHeight(float height) &;
 
 	//重置宽高为width, height
-	void reset(float width, float height);
+	void reset(float width, float height) &;
 
 	//宽
 	float &width();

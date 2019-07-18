@@ -9,8 +9,8 @@ UIElement::UIElement()
 	, Opacity(1.0)
 	, Width(NAN)
 	, Height(NAN)
-	, MaxWidth(std::numeric_limits<double>::max())
-	, MaxHeight(std::numeric_limits<double>::max())
+	, MaxWidth(std::numeric_limits<float>::max())
+	, MaxHeight(std::numeric_limits<float>::max())
 	, HorizontalAlignment(HorizontalAlignmentE::Stretch)
 	, VerticalAlignment(VerticalAlignmentE::Stretch)
 	, FlowDirection(FlowDirectionE::LeftToRight)
@@ -39,8 +39,8 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	double Widthx = nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
-	double Heightx = nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
+	auto Widthx = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
+	auto Heightx = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
 	constrainedSize.reset(Widthx, Heightx);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
@@ -48,15 +48,15 @@ void UIElement::measure(const Size & availabelSize)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
-	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
-	desiredSizeTemp.reset((float)Width, (float)Height);
+	Width = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
+	Height = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
+	desiredSizeTemp.reset(Width, Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
 	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
 	//保证在（0, availabelSize)区间
-	desiredSizeTemp.width() = (float)nb::clamp<double>(0.0, availabelSize.width(), desiredSizeTemp.width());
-	desiredSizeTemp.height() = (float)nb::clamp<double>(0.0, availabelSize.height(), desiredSizeTemp.height());
+	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
+	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
 	m_desiredSize = desiredSizeTemp;
 }
 
@@ -80,19 +80,19 @@ void UIElement::arrage(const Rect & finalRect)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	Width = (float)nb::clamp<double>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
-	Height = (float)nb::clamp<double>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
-	arrangeSize.reset((float)Width(), (float)Height());
+	Width = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
+	Height = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
+	arrangeSize.reset(Width(), Height());
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
 	RenderSize = innerInkSize;
 	//裁剪，保证innerInkSize在Max之内
 	if (std::isnan(Width))
-		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = (float)MaxWidth;
+		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = MaxWidth;
 	if (std::isnan(Height))
-		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = (float)MaxHeight;
-	Size clipInkSize(std::min(innerInkSize.width(), (float)Width()), std::min(innerInkSize.height(), (float)Height()));
+		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = MaxHeight;
+	Size clipInkSize(std::min(innerInkSize.width(), Width()), std::min(innerInkSize.height(), Height()));
 
 	switch (HorizontalAlignment)
 	{
@@ -156,7 +156,7 @@ void UIElement::onVisibilityChanged(const nb::gui::VisibilityE & _old, const nb:
 
 }
 
-void UIElement::onOpacityChanged(const double & _old, const double & _new)
+void UIElement::onOpacityChanged(const float & _old, const float & _new)
 {
 }
 

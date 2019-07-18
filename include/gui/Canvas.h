@@ -31,17 +31,17 @@ public:
 	static constexpr char *AttachedPropertyTop		= "Canvas.Top";
 	static constexpr char *AttachedPropertyBottom	= "Canvas.Bottom";
 	
-	void setLeft(std::shared_ptr<UIElement> element, double left);
-	double getLeft(std::shared_ptr<UIElement> element);
+	void setLeft(std::shared_ptr<UIElement> element, float left);
+	float getLeft(std::shared_ptr<UIElement> element);
 
-	void setRight(std::shared_ptr<UIElement> element, double right);
-	double getRight(std::shared_ptr<UIElement> element);
+	void setRight(std::shared_ptr<UIElement> element, float right);
+	float getRight(std::shared_ptr<UIElement> element);
 
-	void setTop(std::shared_ptr<UIElement> element, double top);
-	double getTop(std::shared_ptr<UIElement> element);
+	void setTop(std::shared_ptr<UIElement> element, float top);
+	float getTop(std::shared_ptr<UIElement> element);
 
-	void setBottom(std::shared_ptr<UIElement> element, double bottom);
-	double getBottom(std::shared_ptr<UIElement> element);
+	void setBottom(std::shared_ptr<UIElement> element, float bottom);
+	float getBottom(std::shared_ptr<UIElement> element);
 
 
 protected:

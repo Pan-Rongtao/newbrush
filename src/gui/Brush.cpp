@@ -9,7 +9,7 @@ Brush::Brush()
 {
 }
 
-Brush::Brush(double opacity)
+Brush::Brush(float opacity)
 	: Opacity(opacity)
 {
 }

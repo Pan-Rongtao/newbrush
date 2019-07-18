@@ -23,13 +23,13 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 {
 	Time timeNow = Time::now();
 
-	double dt = 0.0;
+	auto dt = 0.0f;
 	if(timeNow >= TimeStart)	//跨天的话，也许会出现 timeNow < TimeStart()的情况
 	{
-		dt = (timeNow - TimeStart).totalMilliseconds() / 1000.0;
+		dt = (float)(timeNow - TimeStart).totalMilliseconds() / 1000.0f;
 	}
 
-    double speed = Speed + Accel * dt;
+    auto speed = Speed + Accel * dt;
 
 	bool bEnd = false;
 	if((InitSpeed > 0 && speed < 0) || (InitSpeed < 0 && speed > 0))
@@ -40,7 +40,7 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 		speed = 0;
 		dt = -Speed / Accel;
 	}
-    double fSpace = Speed * dt + Accel * dt * dt / 2;
+	auto fSpace = Speed * dt + Accel * dt * dt / 2;
 
 	Speed = speed;
 	CurrentPos = CurrentPos + fSpace;
@@ -57,7 +57,7 @@ void KineticMove::onTick(const Timer::TickArgs &args)
 	}
 	
 	MoveDistanceArgs pmd;
-	pmd.m_nSpace = nPos;
+	pmd.m_nSpace = (float)nPos;
 	MoveDistanceEvent.dispatch(pmd);
 
 	if(bEnd)
@@ -100,7 +100,6 @@ void KineticMove::Stop()
 
 float KineticMove::GetSpeed() /*const*/
 {
-	//return (Float)const_cast<KineticMove *>(this)->Speed();
 	return (float)Speed;
 }
 

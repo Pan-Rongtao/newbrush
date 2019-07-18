@@ -46,16 +46,16 @@ Size DockPanel::measureOverride(const Size & availableSize)
 			auto dock = getDock(child);
 			if (dock == DockE::Left || dock == DockE::Right)
 			{
-				double width = std::isnan(child->Width) ? 0.0 : child->Width;
-				double height = remainSize.height();
-				childMeasureSize.reset((float)width, (float)height);
+				auto width = std::isnan(child->Width()) ? 0.0f : child->Width();
+				auto height = remainSize.height();
+				childMeasureSize.reset(width, height);
 				remainSize.width() -= childMeasureSize.width();
 			}
 			else
 			{
-				double width = remainSize.width();
-				double height = std::isnan(child->Height) ? 0.0 : child->Height;
-				childMeasureSize.reset((float)width, (float)height);
+				auto width = remainSize.width();
+				auto height = std::isnan(child->Height()) ? 0.0f : child->Height();
+				childMeasureSize.reset(width, height);
 				remainSize.height() -= childMeasureSize.height();
 			}
 		}
@@ -79,31 +79,31 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 		else
 		{
 			auto dock = getDock(child);
-			double w = 0.0, h = 0.0;
+			auto w = 0.0f, h = 0.0f;
 			switch (dock)
 			{
 			case nb::gui::DockE::Left:
-				w = std::isnan(child->Width) ? remainRect.width() : childDesiredSize.width();
+				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
-				childArrageRect = Rect(remainRect.leftTop(), (float)w, (float)h);
+				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetLeft(childDesiredSize.width());
 				break;
 			case nb::gui::DockE::Right:
-				w = std::isnan(child->Width) ? remainRect.width() : childDesiredSize.width();
+				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
-				childArrageRect = Rect(remainRect.right() - childDesiredSize.width(), remainRect.y(), (float)w, (float)h);
+				childArrageRect = Rect(remainRect.right() - childDesiredSize.width(), remainRect.y(), w, h);
 				remainRect.moveOffsetRight(-childDesiredSize.width());
 				break;
 			case nb::gui::DockE::Top:
 				w = remainRect.width();
-				h = std::isnan(child->Height) ? remainRect.height() : childDesiredSize.height();
-				childArrageRect = Rect(remainRect.leftTop(), (float)w, (float)h);
+				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
+				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetTop(childDesiredSize.height());
 				break;
 			case nb::gui::DockE::Bottom:
 				w = remainRect.width();
-				h = std::isnan(child->Height) ? remainRect.height() : childDesiredSize.height();
-				childArrageRect = Rect(remainRect.x(), remainRect.bottom() - childDesiredSize.height(), (float)w, (float)h);
+				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
+				childArrageRect = Rect(remainRect.x(), remainRect.bottom() - childDesiredSize.height(), w, h);
 				remainRect.moveOffsetBottom(-childDesiredSize.height());
 				break;
 			default:

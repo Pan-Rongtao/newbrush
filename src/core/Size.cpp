@@ -4,7 +4,6 @@
 
 using namespace nb::core;
 
-////////////////////class Size
 Size::Size()
 	: Size(0.0f, 0.0f)
 {
@@ -102,17 +101,17 @@ void Size::operator /= (float f)
 	*this = (operator /(f));
 }
 
-void Size::setWidth(float width)
+void Size::setWidth(float width) &
 {
 	m_width = width;
 }
 
-void Size::setHeight(float height)
+void Size::setHeight(float height) &
 {
 	m_height = height;
 }
 
-void Size::reset(float width, float height)
+void Size::reset(float width, float height) &
 {
 	setWidth(width);
 	setHeight(height);

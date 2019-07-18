@@ -55,14 +55,14 @@ public:
 	static void ComputeSpace(float v, float a, float &s);
 
 public:
-	nb::core::Property_rw<double>			InitSpeed;
-	nb::core::Property_rw<double>			Speed;
-	nb::core::Property_rw<double>			Accel;
-	nb::core::Property_rw<double>			StartPos;
-	nb::core::Property_rw<double>			CurrentPos;
+	nb::core::Property_rw<float>			InitSpeed;
+	nb::core::Property_rw<float>			Speed;
+	nb::core::Property_rw<float>			Accel;
+	nb::core::Property_rw<float>			StartPos;
+	nb::core::Property_rw<float>			CurrentPos;
 	nb::core::Property_rw<nb::core::Time>	TimeStart;
 
-	struct MoveDistanceArgs { int m_nSpace; };
+	struct MoveDistanceArgs { float m_nSpace; };
 	nb::core::Event<MoveDistanceArgs>		MoveDistanceEvent;
 
 	struct MoveEndArgs { float m_fSpace; };

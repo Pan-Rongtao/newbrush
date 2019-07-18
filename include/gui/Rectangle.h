@@ -10,8 +10,8 @@ public:
 	virtual ~Rectangle();
 
 public:
-	nb::core::Property_rw<double>		RadiusX;
-	nb::core::Property_rw<double>		RadiusY;
+	nb::core::Property_rw<float>		RadiusX;
+	nb::core::Property_rw<float>		RadiusY;
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 

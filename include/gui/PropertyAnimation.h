@@ -18,7 +18,7 @@
 #include <type_traits>
 #include "../core/Color.h"
 #include "AnimationTimeline.h"
-#include "Easing.h"
+#include "core/Easing.h"
 
 namespace nb { namespace gui {
 
@@ -33,18 +33,18 @@ public:
 
 protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
-	virtual void progressing(double progress) override
+	virtual void progressing(float progress) override
 	{
 		if (!TargetProperty)	return;
 
-		auto ft = Easing()->easeInCore(progress);
+		decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
 		*TargetProperty = From() + (To() - From()) * ft;
 	}
 };
 
 //特化Color
 template<>
-void PropertyAnimation<nb::core::Color>::progressing(double progress)
+void PropertyAnimation<nb::core::Color>::progressing(float progress)
 {
 	if (!TargetProperty)	return;
 

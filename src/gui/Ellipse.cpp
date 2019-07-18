@@ -13,7 +13,7 @@ Ellipse::Ellipse()
 void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	Rect rc(Offset().x(), Offset().y(), ActualSize);
-	Renderer()->setModel(std::make_shared<gl::Ellipse>(rc.center().x(), rc.center().y(), rc.width() / 2, rc.height() / 2, false));
+	Renderer()->setModel(std::make_shared<gl::Ellipse>(static_cast<float>(rc.center().x()), static_cast<float>(rc.center().y()), static_cast<float>(rc.width() / 2), static_cast<float>(rc.height() / 2), false));
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 	drawContext->queue(Renderer());
 

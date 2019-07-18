@@ -43,7 +43,7 @@ void Timeline::onTick(const Timer::TickArgs & args)
 	auto curTicks = NB_TICK_COUT;
 	if (curTicks >= m_begTick)
 	{
-		double progress = std::min(1.0, double(curTicks - m_begTick) / Duration().totalMilliseconds());
+		auto progress = std::min<float>(1.0f, float((curTicks - m_begTick) / Duration().totalMilliseconds()));
 		ProgressEvent.dispatch({ progress });
 		if (curTicks >= endTicks)
 		{

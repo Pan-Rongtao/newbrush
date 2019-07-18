@@ -11,10 +11,10 @@ public:
 	~ColumnDefinition();
 
 	nb::core::Property_rw<GridLength>		Width;
-	nb::core::Property_r<double>			ActualWidth;
+	nb::core::Property_r<float>				ActualWidth;
 
 private:
-	double	m_actualWidth;
+	float	m_actualWidth;
 };
 
 }}

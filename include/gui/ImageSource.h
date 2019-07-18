@@ -25,8 +25,8 @@ public:
 	void operator = (const ImageSource &other) = delete;
 
 public:
-	double width() const;
-	double heigth() const;
+	float width() const;
+	float heigth() const;
 
 	nb::core::Property_rw<std::shared_ptr<media::Bitmap>> 	Bm;
 

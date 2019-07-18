@@ -74,10 +74,10 @@ Rect Rect::operator | (const Rect &other) const
 {
 	Rect rc1 = normalize();
 	Rect rc2 = other.normalize();
-	float fLeft = std::min(rc1.x(), rc2.x());
-	float fTop = std::min(rc1.y(), rc2.y());
-	float fRight = std::max(rc1.right(), rc2.right());
-	float fBottom = std::max(rc1.bottom(), rc2.bottom());
+	auto fLeft = std::min(rc1.x(), rc2.x());
+	auto fTop = std::min(rc1.y(), rc2.y());
+	auto fRight = std::max(rc1.right(), rc2.right());
+	auto fBottom = std::max(rc1.bottom(), rc2.bottom());
 	return Rect::fromLTRB(fLeft, fTop, fRight, fBottom);
 }
 
@@ -90,12 +90,12 @@ Rect Rect::operator & (const Rect &other) const
 {
 	Rect rc1 = normalize();
 	Rect rc2 = other.normalize();
-	float fLeft = std::max(rc1.x(), rc2.x());
-	float fTop = std::max(rc1.y(), rc2.y());
-	float fRight = std::min(rc1.right(), rc2.right());
-	float fBottom = std::min(rc1.bottom(), rc2.bottom());
+	auto fLeft = std::max(rc1.x(), rc2.x());
+	auto fTop = std::max(rc1.y(), rc2.y());
+	auto fRight = std::min(rc1.right(), rc2.right());
+	auto fBottom = std::min(rc1.bottom(), rc2.bottom());
 	Rect rc = Rect::fromLTRB(fLeft, fTop, fRight, fBottom);
-	if(rc.width() < 0 || rc.height() < 0)
+	if(rc.width() < 0.0f || rc.height() < 0.0f)
 		rc = Rect::zero();
 	return rc;
 }
@@ -117,7 +117,7 @@ float Rect::x() const
 
 void Rect::setLeft(float left) &
 {
-	float fOffset = left - m_x;
+	auto fOffset = left - m_x;
 	m_x = left;
 	m_width -= fOffset;
 }
@@ -139,7 +139,7 @@ float Rect::y() const
 
 void Rect::setTop(float top) &
 {
-	float fOffset = top - m_y;
+	auto fOffset = top - m_y;
 	m_y = top;
 	m_height -= fOffset;
 }
@@ -284,15 +284,15 @@ Point Rect::center() const
 
 Rect Rect::normalize() const
 {
-	float nLeft = std::min(left(), right());
-	float nTop = std::min(top(), bottom());
-	return Rect(nLeft, nTop, abs(width()), abs(height()));
+	auto fLeft = std::min(left(), right());
+	auto fTop = std::min(top(), bottom());
+	return Rect(fLeft, fTop, std::abs(width()), abs(height()));
 }
 
 bool Rect::contains(float x, float y) const
 {
-	bool bHorizontal = width() >= 0 ? (x >= left() && x < right()) : (x <= left() && x > right());
-	bool bVertical = height() >= 0 ? (y >= top() && y < bottom()) : (y <= top() && y > bottom());
+	bool bHorizontal = width() >= 0.0f ? (x >= left() && x < right()) : (x <= left() && x > right());
+	bool bVertical = height() >= 0.0f ? (y >= top() && y < bottom()) : (y <= top() && y > bottom());
 	return bHorizontal && bVertical;
 }
 
@@ -306,11 +306,11 @@ bool Rect::contains(const Rect &rc) const
 	bool bHorizontal = false;
 	bool bVertical = false;
 
-	if(width() >= 0)	bHorizontal = rc.width() >= 0 ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() <= right() && rc.right() >= left());
-	else				bHorizontal = rc.width() >= 0 ? (rc.left() >= right() && rc.right() <= left()) : (rc.left() <= left() && rc.right() >= right());
+	if(width() >= 0.0f)	bHorizontal = rc.width() >= 0.0f ? (rc.left() >= left() && rc.right() <= right()) : (rc.left() <= right() && rc.right() >= left());
+	else				bHorizontal = rc.width() >= 0.0f ? (rc.left() >= right() && rc.right() <= left()) : (rc.left() <= left() && rc.right() >= right());
 
-	if(height() >= 0)	bVertical = rc.height() >= 0 ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() <= bottom() && rc.bottom() >= top());
-	else				bVertical = rc.height() >= 0 ? (rc.top() >= bottom() && rc.bottom() <= top()) : (rc.top() <= top() && rc.bottom() >= bottom());
+	if(height() >= 0.0f)bVertical = rc.height() >= 0.0f ? (rc.top() >= top() && rc.bottom() <= bottom()) : (rc.top() <= bottom() && rc.bottom() >= top());
+	else				bVertical = rc.height() >= 0.0f ? (rc.top() >= bottom() && rc.bottom() <= top()) : (rc.top() <= top() && rc.bottom() >= bottom());
 
 	return bHorizontal && bVertical;
 }

@@ -21,7 +21,7 @@ TextBlock::TextBlock()
 
 TextBlock::TextBlock(const std::string & content)
 	: Font(Fonts::getFont(Fonts::SimSun))
-	, LineHeight(Font()->size())
+	, LineHeight((float)Font()->size())
 	, m_glyphBunch(std::make_shared<GlyphBunch>())
 {
 	Renderer()->setModel(m_glyphBunch);
@@ -43,12 +43,12 @@ nb::core::Size TextBlock::arrangeOverride(const nb::core::Size & finalSize)
 	{
 	case TextWrappingE::NoWrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), (float)CharSpacing, (float)LineHeight, media::TextWrappingE::NoWrap, -1);
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing, LineHeight, media::TextWrappingE::NoWrap, -1);
 		return sz;
 	}
 	case TextWrappingE::Wrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), (float)CharSpacing, (float)LineHeight, media::TextWrappingE::Wrap, finalSize.width());
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing, LineHeight, media::TextWrappingE::Wrap, finalSize.width());
 		return sz;
 	}
 	case TextWrappingE::WrapWithOverflow:
@@ -61,9 +61,9 @@ nb::core::Size TextBlock::arrangeOverride(const nb::core::Size & finalSize)
 
 void TextBlock::onTextChanged(const std::string & _old, const std::string & _new)
 {
-	float x = 0;// Offset().x();
-	float y = 0;// Offset().y();
-	m_glyphBunch->arrage(Font(), x, y, Text(), (float)CharSpacing, (float)LineHeight, TextWrapping(), ActualSize().width());
+	auto x = 0.0f;// Offset().x();
+	auto y = 0.0f;// Offset().y();
+	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing, LineHeight, TextWrapping(), ActualSize().width());
 }
 
 void TextBlock::onForegroundChanged(const nb::core::Color & _old, const nb::core::Color & _new)
@@ -73,8 +73,8 @@ void TextBlock::onForegroundChanged(const nb::core::Color & _old, const nb::core
 
 void TextBlock::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	float x = Offset().x();
-	float y = Offset().y();
-	m_glyphBunch->arrage(Font(), x, y, Text(), (float)CharSpacing, (float)LineHeight, TextWrapping(), ActualSize().width());
+	auto x = Offset().x();
+	auto y = Offset().y();
+	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing, LineHeight, TextWrapping(), ActualSize().width());
 	drawContext->queue(Renderer());
 }

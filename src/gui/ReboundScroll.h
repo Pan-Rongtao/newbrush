@@ -22,14 +22,14 @@ public:
 public:
 	nb::core::Property_rw<bool>			IsRuning;
 	nb::core::Property_rw<bool>			UseRebound;
-	nb::core::Property_rw<double>		TopLeftReboundPos;
-	nb::core::Property_rw<double>		BottomRightReboundPos;
-	nb::core::Property_rw<double>		ReboundStopLength;
-	nb::core::Property_rw<double>		ReboundAccel;
-	nb::core::Property_rw<double>		ContentHeight;
-	nb::core::Property_rw<double>		PageHeight;
+	nb::core::Property_rw<float>		TopLeftReboundPos;
+	nb::core::Property_rw<float>		BottomRightReboundPos;
+	nb::core::Property_rw<float>		ReboundStopLength;
+	nb::core::Property_rw<float>		ReboundAccel;
+	nb::core::Property_rw<float>		ContentHeight;
+	nb::core::Property_rw<float>		PageHeight;
 
-	struct ScrollArgs { int m_nSpace; };
+	struct ScrollArgs { float m_nSpace; };
 	nb::core::Event<ScrollArgs>			ScrollEvent;
 
 	struct ScrollEndArgs { };

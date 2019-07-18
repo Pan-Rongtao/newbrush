@@ -26,7 +26,7 @@ public:
 
 	//lookup
 	void lookat(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &upVec);
-	void lookat2D(double width, double height);
+	void lookat2D(float width, float height);
 
 private:
 	glm::mat4x4		m_matrix;

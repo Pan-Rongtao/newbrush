@@ -5,12 +5,12 @@ using namespace nb::gui;
 
 StackPanel::StackPanel()
 {
-	ExtentWidth.getter([&]()->double & {return m_extentWidth; });
-	ExtentHeight.getter([&]()->double & {return m_extentHeight; });
-	HorizontalOffset.getter([&]()->double & {return m_horizontalOffset; });
-	VerticalOffset.getter([&]()->double & {return m_verticalOffset; });
-	ViewportWidth.getter([&]()->double & {return m_viewportWidth; });
-	ViewportHeight.getter([&]()->double & {return m_viewportHeight; });
+	ExtentWidth.getter([&]()->auto & {return m_extentWidth; });
+	ExtentHeight.getter([&]()->auto & {return m_extentHeight; });
+	HorizontalOffset.getter([&]()->auto & {return m_horizontalOffset; });
+	VerticalOffset.getter([&]()->auto & {return m_verticalOffset; });
+	ViewportWidth.getter([&]()->auto & {return m_viewportWidth; });
+	ViewportHeight.getter([&]()->auto & {return m_viewportHeight; });
 }
 
 StackPanel::~StackPanel()
@@ -24,8 +24,8 @@ Size StackPanel::measureOverride(const Size & availableSize)
 	Size childMeasureSize;
 	for (auto const &child : Children())
 	{
-		childMeasureSize.width() = (float)(std::isnan(child->Width) ? 0.0 : child->Width);
-		childMeasureSize.height() = (float)(std::isnan(child->Height) ? 0.0 : child->Height);
+		childMeasureSize.width() = std::isnan(child->Width()) ? 0.0f : child->Width();
+		childMeasureSize.height() = std::isnan(child->Height()) ? 0.0f : child->Height();
 		child->measure(childMeasureSize);
 		auto sz = child->DesiredSize();
 		bool b = false;
@@ -36,7 +36,7 @@ Size StackPanel::measureOverride(const Size & availableSize)
 Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
-	float x = 0.0f, y = 0.0f;
+	auto x = 0.0f, y = 0.0f;
 	for (auto child : Children())
 	{
 		if (Orientation == OrientationE::Horizontal)

@@ -14,7 +14,7 @@ class TestWindow :public nb::gui::Window, public TestBase
 public:
 	virtual void test();
 
-	PropertyAnimation<double>	doubleAni;
+	PropertyAnimation<float>	doubleAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
