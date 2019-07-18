@@ -156,12 +156,10 @@ public:
 	//转换为字符串，形如#FFFFFF
 	std::string toString() const;
 
-	//判断颜色值是否相等
-	bool equals(const Color &other) const;
-
 private:
 	//返回值将被四舍五入，比如如果R计算为127.5，置为128
 	static uint8_t argbF2Argb(float f);
+
 	//返回结果将保持float的小数精度
 	static float argb2ArgbF(uint8_t n);
 

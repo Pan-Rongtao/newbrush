@@ -7,11 +7,12 @@
 #include "TestTimeSpan.h"
 #include "TestRandom.h"
 #include "TestEvent.h"
+#include "TestRect.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestEvent> test;
+		TestHandle<TestRect> test;
 		test->test();
 	}
 	catch (std::exception &e)

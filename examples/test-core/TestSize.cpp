@@ -15,13 +15,8 @@ void TestSize::test()
 	size3.setWidth(11);
 	size3.setHeight(8);
 
-	size4.swap();
-
 	Size size5 = Size::zero().expand(Size(7.2f, 0));
-
 	Size sizeXX(7.2f, -5.1f);
-	bool bxx = size5.equals(Size(7.2f, 0));
-
 	Size size6 = Size(-9.8f, 11.9f).narrow(Size(12.6f, -0.4f));
 
 	float nW = size5.width();
@@ -29,12 +24,7 @@ void TestSize::test()
 
 	float nW1 = ++size6.width();
 	float nH1 = --size6.height();
-
-	bool b1 = size4.equals(Size(-1.2f, -3.2f));
-
 	bool b2 = Size(1.6f, 2.8f).isZero();
-
-	bool b3 = Size(1.52f, 11.15145f) == (Size(11.9f, 1.25f).swap());
 
 	Size size7 = size1 + size2;
 	size7 += Size(-1.0f, 2.30f);
@@ -62,8 +52,6 @@ void TestSize::test()
 	si3.setWidth(11);
 	si3.setHeight(8);
 
-	si4.swap();
-
 	SizeI si5 = SizeI::zero().expand(SizeI(7, -5));
 	SizeI si6 = SizeI(-9, 11).narrow(SizeI(12, -0));
 
@@ -73,9 +61,7 @@ void TestSize::test()
 	int nWi1 = ++si6.width();
 	int nHi1 = --si6.height();
 
-	b1 = si4.equals(SizeI(-1, -3));
 	b2 = SizeI(1, 2).isZero();
-	b3 = SizeI(1, 11) == (SizeI(11, 1).swap());
 
 	SizeI si7 = si1 + si2;
 	si7 += SizeI(-1, 2);
@@ -88,6 +74,4 @@ void TestSize::test()
 	SizeI si10 = si2 / 1.2f;
 	si10 /= 2.2f;
 
-	SizeI si11 = SizeI(9, 9).multiplyRound(2.3f);
-	SizeI si12 = SizeI(9, 9).divideRound(2.1f);
 }

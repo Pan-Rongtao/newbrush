@@ -130,12 +130,6 @@ public:
 	//添加日
 	Date addDays(int days) const;
 
-	//比较两个Date
-	int compare(const Date &other) const;
-
-	//是否相等
-	bool equals(const Date &other) const;
-
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//y|yy|yyy|yyyy：年字段
 	//M|MM：月字段
@@ -242,10 +236,6 @@ public:
 	Time &addSeconds(int seconds);
 	Time &addMilliseconds(int milliseconds);
 	Time &addMicroseconds(int microseconds);
-
-	//比较两个Time，小于返回-1，大于返回1，等于返回0
-	int compare(const Time &other) const;
-	bool equals(const Time &other) const;
 
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//h|hh|H|HH：时字段,H|HH位24进制
@@ -380,12 +370,6 @@ public:
 	DateTime &addMilliseconds(int milliseconds);
 	DateTime &addMicroseconds(int microseconds);
 
-	//比较
-	int compare(const DateTime &other) const;
-
-	//是否相等
-	bool equals(const DateTime &other) const;
-
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//y|yy|yyy|yyyy：年字段
 	//M|MM：月字段
@@ -404,34 +388,5 @@ private:
 	Date	m_date;
 	Time	m_time;
 };
-
-static int compare(const Date &d0, const Date &d1)
-{
-	return d0.compare(d1);
-}
-
-static bool equals(const Date &d0, const Date &d1)
-{
-	return d0.equals(d1);
-}
-
-static int compare(const Time &t0, const Time &t1)
-{
-	return t0.compare(t1);
-}
-
-static bool equals(const Time &t0, const Time &t1)
-{
-	return t0.equals(t1);
-}
-
-static int compare(const DateTime &dt0, const DateTime &dt1)
-{
-	return dt0.compare(dt1);
-}
-static bool equals(const DateTime &dt0, const DateTime &dt1)
-{
-	return dt0.equals(dt1);
-}
 
 }}

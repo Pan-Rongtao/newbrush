@@ -106,8 +106,3 @@ const float &Thickness::bottom() const
 {
 	return m_fBottom;
 }
-
-bool Thickness::equals(const Thickness &other) const
-{
-	return *this == other;
-}

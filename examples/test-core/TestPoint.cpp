@@ -17,14 +17,11 @@ void TestPoint::test()
 
 	float x = p2.x();
 	float y = p2.y();
-	bool b1 = p2.equals(Point(9.99f, 1.11f));
 	bool b2 = Point() == Point::zero();
 	bool b3 = Point().isZero();
-	bool b4 = equals(Point(1.1f, 0.4f), Point(0, 0.5f));
 
-	Point p3 = Point(0.4f, -5.5f).swap();
-	float f = p3.distance(Point(4.3f, 5.6f));
-	float fMH = p3.manhattanLength(Point(-12.3f, 11));
+	float f = p2.distance(Point(4.3f, 5.6f));
+	float fMH = p2.manhattanLength(Point(-12.3f, 11));
 	Point p4 = Point(-1.2f, -10.33f) * 3;
 	Point p5 = Point(-1.2f, -10.33f) / 0.0000000001f;
 	Point p6(-3.2f, 2.2f);
@@ -40,7 +37,7 @@ void TestPoint::test()
 	PointI pi2(pi1);
 	pi2 = PointI((int)3.11f, (int)-45.2f);
 	PointI pi3 = PointI::zero();
-	b1 = pi3.isZero();
+	auto b1 = pi3.isZero();
 
 	pi3.setX(-100);
 	pi3.setY(88);
@@ -51,11 +48,9 @@ void TestPoint::test()
 	pi3.x() += 3;
 	pi3.y() += 8;
 
-	PointI pi4 = pi3.swap();
-	int fDis = pi4.distance(PointI(0, 0));
+	int fDis = pi3.distance(PointI(0, 0));
 	int fDis1 = PointI(2, 4).distance(PointI(-3, -5));
 	int nManhadum = PointI(2, 4).manhattanLength(PointI(-3, -5));
-	b2 = PointI().equals(PointI::zero());
 	b3 = PointI(4, -3) != PointI(4, 3);
 	PointI pi5 = PointI((int)10.11f, 3) + PointI(5, 5);
 	pi5 += (int)4.4f;
@@ -66,8 +61,6 @@ void TestPoint::test()
 	float xx = 0.0f;
 	int xxx = (int)(7.0 / xx);
 	PointI pi7 = PointI(7, 0) / 0.0f;
-	PointI pi8 = PointI(9, 9).multiplyRound(0);
-	PointI pi9 = PointI(-9, -9).divideRound(0);
 
 	/////////Point3D
 	Point3D cd1;
@@ -82,8 +75,6 @@ void TestPoint::test()
 	b1 = cd4.isZero();
 	b2 = cd3 == cd4;
 	b3 = cd5 != cd4;
-	b4 = cd4.equals(cd3);
-	bool b5 = equals(cd2, cd3);
 
 	bool b6 = Point3D(1, 2, 3) == Point3D(1, 2, 3.0000000001f);
 	Point3D cd6(1.34f, 2.6f, 4.1f);
@@ -134,8 +125,6 @@ void TestPoint::test()
 	b1 = cdi4.isZero();
 	b2 = cdi3 == cdi4;
 	b3 = cdi5 != cdi4;
-	b4 = cdi4.equals(cdi3);
-	b5 = Equals(cdi2, cdi3);
 
 	b6 = Point3DI(1, 2, 3) == Point3DI(1, 2, 4);
 
@@ -159,10 +148,7 @@ void TestPoint::test()
 
 	int distancei = cdi6.distance(cdi3);
 	int distancei1 = cdi3.distance(cdi6);
-
-	Point3DI cdi7 = cdi6.multiplyRound(3.3f);
-	Point3DI cdi8 = cdi6.divideRound(4);
-
+	
 	Point3DI cdi9 = Point3DI(1, 7, 11);
 	cdi9 = cdi9 + 1 + 1;
 	cdi9 = cdi9 + cdi9;

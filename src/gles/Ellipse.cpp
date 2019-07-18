@@ -19,7 +19,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 		for (int i = 1; i != EllipseVertexCount; ++i)
 		{
 			double radian = EllipseRadianStep * i;
-			glm::vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(0.5 * sin(radian) + 0.5));
+			glm::vec2 texCoord(0.5 * cos(radian) + 0.5, 0.5 * sin(radian) + 0.5);
 			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}
 	}
@@ -28,7 +28,7 @@ Ellipse::Ellipse(float x, float y, float a, float b, bool cartesian)
 		for (int i = EllipseVertexCount - 1; i != 0; --i)
 		{
 			double radian = EllipseRadianStep * i;
-			glm::vec2 texCoord((float)(0.5 * cos(radian) + 0.5), (float)(1 - (0.5 * sin(radian) + 0.5)));
+			glm::vec2 texCoord(0.5 * cos(radian) + 0.5, 1 - (0.5 * sin(radian) + 0.5));
 			vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 		}
 	}

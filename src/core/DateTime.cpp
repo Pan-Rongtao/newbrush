@@ -309,16 +309,6 @@ Date Date::addDays(int nDays) const
 	return Date(nCurYear, nCurMonth, nCurDay);
 }
 
-int Date::compare(const Date &other) const
-{
-	return (*this > other) ? 1 : (*this < other ? -1 : 0);
-}
-
-bool Date::equals(const Date &other) const
-{
-	return *this == other;
-}
-
 std::string Date::toString() const
 {
 	return toString("yyyy/MM/dd");
@@ -521,16 +511,6 @@ Time & nb::core::Time::addMicroseconds(int microseconds)
 	return add(TimeSpan::fromMicroseconds(microseconds));
 }
 
-int Time::compare(const Time &other) const
-{
-	return (*this) > other ? 1 : (*this < other ? -1 : 0);
-}
-
-bool Time::equals(const Time &other) const
-{
-	return *this == other;
-}
-
 std::string Time::toString() const
 {
 	return toString("hh:mm:ss.fff.ggg");
@@ -548,7 +528,6 @@ std::string Time::toString(const std::string & format) const
 	};
 	return TimeSpan::simpleToString(format, char_v);
 }
-
 
 //////////////////////////////class DateTime
 DateTime::DateTime()
@@ -809,16 +788,6 @@ DateTime &DateTime::addMilliseconds(int milliseconds)
 DateTime & DateTime::addMicroseconds(int microseconds)
 {
 	return add(TimeSpan::fromMicroseconds(microseconds));
-}
-
-int DateTime::compare(const DateTime &other) const
-{
-	return (*this > other) ? 1 : (*this < other ? -1 : 0);
-}
-
-bool DateTime::equals(const DateTime &other) const
-{
-	return *this == other;
 }
 
 std::string DateTime::toString() const

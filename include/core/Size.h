@@ -71,17 +71,11 @@ public:
 	//是否是负值
 	bool isNegative() const;
 
-	//返回交换宽和高的新Size
-	Size &swap();
-
 	//收缩，取this和other中宽和高的最小值组合成的Size
 	Size narrow(const Size &other) const;
 
 	//拓展，取this和other中宽和高的最大值组合成的Size
 	Size expand(const Size &other) const;
-
-	//是否相等
-	bool equals(const Size &other) const;
 
 private:
 	float		m_width;
@@ -149,37 +143,15 @@ public:
 	//是否是负值
 	bool isNegative() const;
 
-	//返回交换宽和高的新SizeI
-	SizeI &swap();
-
 	//取this和other中宽和高的最小值组合成的SizeI
 	SizeI narrow(const SizeI &other) const;
 
 	//取this和other中宽和高的最大值组合成的SizeI
 	SizeI expand(const SizeI &other) const;
 
-	//是否相等
-	bool equals(const SizeI &other) const;
-
-	//做乘法并以返回舍入到最接近的整数值构成的SizeI
-	SizeI multiplyRound(float f) const;
-
-	//做乘法并以返回舍入到最接近的整数值构成的SizeI
-	SizeI divideRound(float f) const;
-
 private:
 	int		m_width;
 	int		m_height;
 };
-
-static bool equals(const Size &s0, const Size &s1)
-{
-	return s0.equals(s1);
-}
-
-static bool equals(const SizeI &s0, const SizeI &s1)
-{
-	return s0.equals(s1);
-}
 
 }}

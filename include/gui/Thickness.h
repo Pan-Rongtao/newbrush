@@ -42,8 +42,6 @@ public:
 	float &bottom();
 	const float &bottom() const;
 
-	bool equals(const Thickness &other) const;
-
 private:
 	float	m_fLeft;
 	float	m_fTop;

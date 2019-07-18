@@ -25,6 +25,7 @@ public:
 	bool isSingleShot() const;
 
 	//启动
+	//msec：间隔将被置为msec
 	void start();
 	void start(int msec);
 
@@ -35,7 +36,7 @@ public:
     bool isActive() const;
 
 	//引发定时器引擎，一般而言，在循环中调用
-	static void drive();
+	static void driveInLoop();
 
 	//Tick事件
 	struct TickArgs {};

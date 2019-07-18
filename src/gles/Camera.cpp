@@ -26,8 +26,8 @@ void Camera::lookat(const glm::vec3 & position, const glm::vec3 & target, const 
 void Camera::lookat2D(double width, double height)
 {
 	auto z = height / (2 * tan((22.5 * NB_PI) / 180.0));
-	glm::vec3 position((float)(width / 2.0), (float)(height / 2.0), (float)(-z));
-	glm::vec3 target((float)(width / 2.0), (float)(height / 2.0), 0.0);
+	glm::vec3 position(width / 2.0, height / 2.0, -z);
+	glm::vec3 target(width / 2.0, height / 2.0, 0.0);
 	glm::vec3 upVec(0.0f, -1.0f, 0.0f);
 	lookat(position, target, upVec);
 }

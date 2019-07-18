@@ -357,7 +357,7 @@ void MyApplication::drawGlyphBunch()
 void MyApplication::preRender()
 {
 //	changeColor();
-	m_timer.drive();
+	m_timer.driveInLoop();
 }
 
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)

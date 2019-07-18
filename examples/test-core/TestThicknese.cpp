@@ -9,7 +9,6 @@ void TestThicknese::test()
 
 	Thickness tk2(tk1);
 	
-	bool b = tk.equals(tk2);
 	tk2 = tk;
 	bool b1 = tk2 == tk;
 

@@ -64,10 +64,10 @@ public:
 
 	void operator =(const TimeSpan &other);
 	TimeSpan operator -() const { return negate(); }
-	bool operator ==(const TimeSpan &other) const;
+	bool operator !=(const TimeSpan &other) const;
 	bool operator <(const TimeSpan &other) const;
 	inline bool operator >(const TimeSpan &other) const { return other < *this; }
-	inline bool operator !=(const TimeSpan &other) const { return !(*this == other); }
+	inline bool operator ==(const TimeSpan &other) const { return !(*this != other); }
 	inline bool operator <=(const TimeSpan &other) const { return !(*this > other); }
 	inline bool operator >=(const TimeSpan &other) const { return !(*this < other); }
 	TimeSpan operator +(const TimeSpan &other) const;
@@ -112,10 +112,6 @@ public:
 	TimeSpan &add(const TimeSpan &other);
 	TimeSpan &sub(const TimeSpan &other);
 
-	//比较
-	int compare(const TimeSpan &other) const;
-	bool equals(const TimeSpan &other) const;
-
 	//转换为字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//d：天数字段
 	//H|HH:小时数字段
@@ -134,6 +130,8 @@ private:
 	//按照给定的字符数据集，格式化为字符串的过程，连续的命中字符，将取尽相同的部分为止
 	//char_v：需格式化的字符，对应的值
 	static std::string simpleToString(const std::string &format, const std::map<char, int> &char_v);
+
+	//flags：标识format中的需识别的字段
 	static std::vector<int64_t> simpleFromString(const std::string & s, const std::string & format, const std::string &flags);
 
 	int64_t		m_micros;

@@ -65,7 +65,7 @@ bool Timer::isActive() const
 		return (p.second == this); }) != m_tickSequence.end();
 }
 
-void Timer::drive()
+void Timer::driveInLoop()
 {
 	uint64_t currentTick = NB_TICK_COUT;
 	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); )

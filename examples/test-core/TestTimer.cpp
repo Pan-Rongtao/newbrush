@@ -19,7 +19,7 @@ void TestTimer::test()
 
 	while (true)
 	{
-		Timer::drive();
+		Timer::driveInLoop();
 	}
 }
 

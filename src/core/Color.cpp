@@ -247,11 +247,6 @@ std::string Color::toString() const
 	return arr;
 }
 
-bool Color::equals(const Color &other) const
-{
-	return *this == other;
-}
-
 Color Color::fromIntegerArgb(uint32_t argb)
 {
 	Color c;

@@ -28,9 +28,7 @@ void TestDateTime::test()
 
 	bool b1 = Date(20, 12, 2) <= Date(20, 12, 2);
 	bool b2 = Date(2000, 2, 29) >= Date(1999, 2, 28);
-
-	int x = compare(minDate, maxDate);
-	bool b3 = Date(maxDate).equals(Date(9999, 12, 31));
+	bool b3 = Date(maxDate) == (Date(9999, 12, 31));
 	bool b4 = Date(1, 1, 1) != Date(minDate);
 
 	bool b5 = Date::isValid(9999, 2, 29);
@@ -95,7 +93,6 @@ void TestDateTime::test()
 	int pms = Time(9, 11, 32, 909).timeOfDay().milliseconds();
 	int pmis = Time(9, 11, 32, 909, 10).timeOfDay().microseconds();
 
-	int xx = compare(t1, Time::midnight());
 	bool b12 = Time(0, 0, 0, 0).isMidnight();
 
 	bool b13 = Time(1, 23, 0, 999) != Time(1, 23, 0, 999);
@@ -103,8 +100,6 @@ void TestDateTime::test()
 
 	bool b15 = Time(11, 11, 11, 11) > Time(11, 11, 11, 11);
 	bool b16 = Time(1, 12, 11, 13) < Time(0, 12, 12, 12);
-
-	int xxx = Time(0, 0, 11, 222).compare(Time(0, 0, 11, 222));
 
 	Time t7(0, 0, 0, 999);
 
@@ -151,8 +146,6 @@ void TestDateTime::test()
 
 	bool b22 = dt8 != dt3;
 	bool b23 = DateTime(2017, 2, 28, 23, 59, 59, 997) <= DateTime(2016, 2, 29, 23, 59, 59, 997);
-
-	auto xd = dt8.compare(dt1);
 
 	Date dt = dt8.date() + TimeSpan::fromDays(1);
 	Time t = dt8.time().addMilliseconds(1);

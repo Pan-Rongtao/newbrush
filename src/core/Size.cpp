@@ -148,12 +148,6 @@ bool Size::isNegative() const
 	return m_width < 0.0f && m_height < 0.0f;
 }
 
-Size &Size::swap()
-{
-	std::swap(m_width, m_height);
-	return *this;
-}
-
 Size Size::narrow(const Size &other) const
 {
 	return Size(std::min(width(), other.width()), std::min(height(), other.height()));
@@ -162,11 +156,6 @@ Size Size::narrow(const Size &other) const
 Size Size::expand(const Size &other) const
 {
 	return Size(std::max(width(), other.width()), std::max(height(), other.height()));
-}
-
-bool Size::equals(const Size &other) const
-{
-	return *this == other;
 }
 
 ////////////////class SizeI
@@ -336,12 +325,6 @@ bool SizeI::isNegative() const
 	return width() < 0 && height() < 0;
 }
 
-SizeI &SizeI::swap()
-{
-	std::swap(m_width, m_height);
-	return *this;
-}
-
 SizeI SizeI::narrow(const SizeI &other) const
 {
 	return SizeI(std::min(width(), other.width()), std::min(height(), other.height()));
@@ -350,19 +333,4 @@ SizeI SizeI::narrow(const SizeI &other) const
 SizeI SizeI::expand(const SizeI &other) const
 {
 	return SizeI(std::max(width(), other.width()), std::max(height(), other.height()));
-}
-
-bool SizeI::equals(const SizeI &other) const
-{
-	return *this == other;
-}
-
-SizeI SizeI::multiplyRound(float f) const
-{
-	return SizeI((int)std::round(width() * f), (int)std::round(height() * f));
-}
-
-SizeI SizeI::divideRound(float f) const
-{
-	return SizeI((int)std::round(width() / f), (int)std::round(height() / f));
 }

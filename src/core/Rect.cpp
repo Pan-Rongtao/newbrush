@@ -105,7 +105,7 @@ void Rect::operator &= (const Rect &other)
 	*this = (operator & (other));
 }
 
-void Rect::setX(float x)
+void Rect::setX(float x) &
 {
 	setLeft(x);
 }
@@ -115,7 +115,7 @@ float Rect::x() const
 	return left();
 }
 
-void Rect::setLeft(float left)
+void Rect::setLeft(float left) &
 {
 	float fOffset = left - m_x;
 	m_x = left;
@@ -127,7 +127,7 @@ float Rect::left() const
 	return m_x;
 }
 
-void Rect::setY(float y)
+void Rect::setY(float y) &
 {
 	setTop(y);
 }
@@ -137,7 +137,7 @@ float Rect::y() const
 	return top();
 }
 
-void Rect::setTop(float top)
+void Rect::setTop(float top) &
 {
 	float fOffset = top - m_y;
 	m_y = top;
@@ -149,7 +149,7 @@ float Rect::top() const
 	return m_y;
 }
 
-void Rect::setWidth(float width)
+void Rect::setWidth(float width) &
 {
 	m_width = width;
 }
@@ -159,7 +159,7 @@ float Rect::width() const
 	return m_width;
 }
 
-void Rect::setHeight(float height)
+void Rect::setHeight(float height) &
 {
 	m_height = height;
 }
@@ -169,13 +169,13 @@ float Rect::height() const
 	return m_height;
 }
 
-void Rect::setSize(float width, float height)
+void Rect::setSize(float width, float height) &
 {
 	setWidth(width);
 	setHeight(height);
 }
 
-void Rect::setSize(const Size &size)
+void Rect::setSize(const Size &size) &
 {
 	setSize(size.width(), size.height());
 }
@@ -193,7 +193,7 @@ void Rect::reset(float x, float y, float width, float height)
 	setHeight(height);
 }
 
-void Rect::setRight(float right)
+void Rect::setRight(float right) &
 {
 	m_width = right - left();
 }
@@ -203,7 +203,7 @@ float Rect::right() const
 	return left() + width();
 }
 
-void Rect::setBottom(float bottom)
+void Rect::setBottom(float bottom) &
 {
 	m_height = bottom - top();
 }
@@ -213,13 +213,13 @@ float Rect::bottom() const
 	return top() + height();
 }
 
-void Rect::setLeftTop(float left, float top)
+void Rect::setLeftTop(float left, float top) &
 {
 	setLeft(left);
 	setTop(top);
 }
 
-void Rect::setLeftTop(const Point &p)
+void Rect::setLeftTop(const Point &p) &
 {
 	setLeftTop(p.x(), p.y());
 }
@@ -229,13 +229,13 @@ Point Rect::leftTop() const
 	return Point(left(), top());
 }
 
-void Rect::setRightTop(float right, float top)
+void Rect::setRightTop(float right, float top) &
 {
 	setRight(right);
 	setTop(top);
 }
 
-void Rect::setRightTop(const Point &p)
+void Rect::setRightTop(const Point &p) &
 {
 	setRightTop(p.x(), p.y());
 }
@@ -245,13 +245,13 @@ Point Rect::rightTop() const
 	return Point(right(), top());
 }
 
-void Rect::setLeftBottom(float left, float bottom)
+void Rect::setLeftBottom(float left, float bottom) &
 {
 	setLeft(left);
 	setBottom(bottom);
 }
 
-void Rect::setLeftBottom(const Point &p)
+void Rect::setLeftBottom(const Point &p) &
 {
 	setLeftBottom(p.x(), p.y());
 }
@@ -261,13 +261,13 @@ Point Rect::leftBottom() const
 	return Point(left(), bottom());
 }
 
-void Rect::setRightBottom(float right, float bottom)
+void Rect::setRightBottom(float right, float bottom) &
 {
 	setRight(right);
 	setBottom(bottom);
 }
 
-void Rect::setRightBottom(const Point &p)
+void Rect::setRightBottom(const Point &p) &
 {
 	setRightBottom(p.x(), p.y());
 }
@@ -325,11 +325,6 @@ bool Rect::isZero() const
 	return leftTop().isZero() && size().isZero();
 }
 
-bool Rect::equals(const Rect &other) const
-{
-	return *this == other;
-}
-
 void Rect::moveHorizontal(float fHorizontal)
 {
 	setLeft(left() + fHorizontal);
@@ -348,66 +343,66 @@ void Rect::move(float fHorizontal, float fVertical)
 	moveVertical(fVertical);
 }
 
-void Rect::moveOffsetLeft(float offset)
+void Rect::moveOffsetLeft(float offset) &
 {
 	setLeft(left() + offset);
 }
 
-void Rect::moveOffsetTop(float offset)
+void Rect::moveOffsetTop(float offset) &
 {
 	setTop(top() + offset);
 }
 
-void Rect::moveOffsetRight(float offset)
+void Rect::moveOffsetRight(float offset) &
 {
 	setRight(right() + offset);
 }
 
-void Rect::moveOffsetBottom(float offset)
+void Rect::moveOffsetBottom(float offset) &
 {
 	setBottom(bottom() + offset);
 }
 
-void Rect::moveOffsetLeftTop(float offsetX, float offsetY)
+void Rect::moveOffsetLeftTop(float offsetX, float offsetY) &
 {
 	moveOffsetLeft(offsetX);
 	moveOffsetTop(offsetY);
 }
 
-void Rect::moveOffsetLeftTop(const Point &ptOffset)
+void Rect::moveOffsetLeftTop(const Point &ptOffset) &
 {
 	moveOffsetLeftTop(ptOffset.x(), ptOffset.y());
 }
 
-void Rect::moveOffsetRightTop(float offsetX, float offsetY)
+void Rect::moveOffsetRightTop(float offsetX, float offsetY) &
 {
 	moveOffsetRight(offsetX);
 	moveOffsetTop(offsetY);
 }
 
-void Rect::moveOffsetRightTop(const Point &ptOffset)
+void Rect::moveOffsetRightTop(const Point &ptOffset) &
 {
 	moveOffsetRightTop(ptOffset.x(), ptOffset.y());
 }
 
-void Rect::moveOffsetLeftBottom(float offsetX, float offsetY)
+void Rect::moveOffsetLeftBottom(float offsetX, float offsetY) &
 {
 	moveOffsetLeft(offsetX);
 	moveOffsetBottom(offsetY);
 }
 
-void Rect::moveOffsetLeftBottom(const Point &ptOffset)
+void Rect::moveOffsetLeftBottom(const Point &ptOffset) &
 {
 	moveOffsetLeftBottom(ptOffset.x(), ptOffset.y());
 }
 
-void Rect::moveOffsetRightBottom(float offsetX, float offsetY)
+void Rect::moveOffsetRightBottom(float offsetX, float offsetY) &
 {
 	moveOffsetRight(offsetX);
 	moveOffsetBottom(offsetY);
 }
 
-void Rect::moveOffsetRightBottom(const Point &ptOffset)
+void Rect::moveOffsetRightBottom(const Point &ptOffset) &
 {
 	moveOffsetRightBottom(ptOffset.x(), ptOffset.y());
 }
@@ -529,7 +524,7 @@ void RectI::operator &= (const RectI &other)
 	*this = (operator & (other));
 }
 
-void RectI::setX(int x)
+void RectI::setX(int x) &
 {
 	setLeft(x);
 }
@@ -539,7 +534,7 @@ int RectI::x() const
 	return left();
 }
 
-void RectI::setLeft(int left)
+void RectI::setLeft(int left) &
 {
 	int nOffset = left - m_x;
 	m_x = left;
@@ -551,7 +546,7 @@ int RectI::left() const
 	return m_x;
 }
 
-void RectI::setY(int y)
+void RectI::setY(int y) &
 {
 	setTop(y);
 }
@@ -561,7 +556,7 @@ int RectI::y() const
 	return top();
 }
 
-void RectI::setTop(int top)
+void RectI::setTop(int top) &
 {
 	int nOffset = top - m_y;
 	m_y = top;
@@ -573,7 +568,7 @@ int RectI::top() const
 	return m_y;
 }
 
-void RectI::setWidth(int width)
+void RectI::setWidth(int width) &
 {
 	m_width = width;
 }
@@ -583,7 +578,7 @@ int RectI::width() const
 	return m_width;
 }
 
-void RectI::setHeight(int height)
+void RectI::setHeight(int height) &
 {
 	m_height = height;
 }
@@ -593,13 +588,13 @@ int RectI::height() const
 	return m_height;
 }
 
-void RectI::setSize(int width, int height)
+void RectI::setSize(int width, int height) &
 {
 	setWidth(width);
 	setHeight(height);
 }
 
-void RectI::setSize(const SizeI &size)
+void RectI::setSize(const SizeI &size) &
 {
 	setSize(size.width(), size.height());
 }
@@ -609,7 +604,7 @@ SizeI RectI::size() const
 	return SizeI(width(), height());
 }
 
-void RectI::reset(int x, int y, int width, int height)
+void RectI::reset(int x, int y, int width, int height) &
 {
 	setLeft(x);
 	setTop(y);
@@ -617,7 +612,7 @@ void RectI::reset(int x, int y, int width, int height)
 	setHeight(height);
 }
 
-void RectI::setRight(int right)
+void RectI::setRight(int right) &
 {
 	m_width = right - left();
 }
@@ -627,7 +622,7 @@ int RectI::right() const
 	return left() + width();
 }
 
-void RectI::setBottom(int bottom)
+void RectI::setBottom(int bottom) &
 {
 	m_height = bottom - top();
 }
@@ -637,7 +632,7 @@ int RectI::bottom() const
 	return top() + height();
 }
 
-void RectI::setLeftTop(const PointI &p)
+void RectI::setLeftTop(const PointI &p) &
 {
 	setLeft(p.x());
 	setTop(p.y());
@@ -648,7 +643,7 @@ PointI RectI::leftTop() const
 	return PointI(left(), top());
 }
 
-void RectI::setRightTop(const PointI &p)
+void RectI::setRightTop(const PointI &p) &
 {
 	setRight(p.x());
 	setTop(p.y());
@@ -659,7 +654,7 @@ PointI RectI::rightTop() const
 	return PointI(right(), top());
 }
 
-void RectI::setLeftBottom(const PointI &p)
+void RectI::setLeftBottom(const PointI &p) &
 {
 	setLeft(p.x());
 	setBottom(p.y());
@@ -670,7 +665,7 @@ PointI RectI::leftBottom() const
 	return PointI(left(), bottom());
 }
 
-void RectI::setRightBottom(const PointI &p)
+void RectI::setRightBottom(const PointI &p) &
 {
 	setRight(p.x());
 	setBottom(p.y());
@@ -730,11 +725,6 @@ bool RectI::isZero() const
 	return leftTop().isZero() && size().isZero();
 }
 
-bool RectI::equals(const RectI &other) const
-{
-	return *this == other;
-}
-
 void RectI::moveHorizontal(int nHorizontal)
 {
 	setLeft(left() + nHorizontal);
@@ -753,66 +743,66 @@ void RectI::move(int nHorizontal, int nVertical)
 	moveVertical(nVertical);
 }
 
-void RectI::moveOffsetLeft(int offset)
+void RectI::moveOffsetLeft(int offset) &
 {
 	setLeft(left() + offset);
 }
 
-void RectI::moveOffsetTop(int offset)
+void RectI::moveOffsetTop(int offset) &
 {
 	setTop(top() + offset);
 }
 
-void RectI::moveOffsetRight(int offset)
+void RectI::moveOffsetRight(int offset) &
 {
 	setRight(right() + offset);
 }
 
-void RectI::moveOffsetBottom(int offset)
+void RectI::moveOffsetBottom(int offset) &
 {
 	setBottom(bottom() + offset);
 }
 
-void RectI::moveOffsetLeftTop(int offsetX, int offsetY)
+void RectI::moveOffsetLeftTop(int offsetX, int offsetY) &
 {
 	moveOffsetLeft(offsetX);
 	moveOffsetTop(offsetY);
 }
 
-void RectI::moveOffsetLeftTop(const PointI &ptOffset)
+void RectI::moveOffsetLeftTop(const PointI &ptOffset) &
 {
 	moveOffsetLeftTop(ptOffset.x(), ptOffset.y());
 }
 
-void RectI::moveOffsetRightTop(int offsetX, int offsetY)
+void RectI::moveOffsetRightTop(int offsetX, int offsetY) &
 {
 	moveOffsetRight(offsetX);
 	moveOffsetTop(offsetY);
 }
 
-void RectI::moveOffsetRightTop(const PointI &ptOffset)
+void RectI::moveOffsetRightTop(const PointI &ptOffset) &
 {
 	moveOffsetRightTop(ptOffset.x(), ptOffset.y());
 }
 
-void RectI::moveOffsetLeftBottom(int offsetX, int offsetY)
+void RectI::moveOffsetLeftBottom(int offsetX, int offsetY) &
 {
 	moveOffsetLeft(offsetX);
 	moveOffsetBottom(offsetY);
 }
 
-void RectI::moveOffsetLeftBottom(const PointI &ptOffset)
+void RectI::moveOffsetLeftBottom(const PointI &ptOffset) &
 {
 	moveOffsetLeftBottom(ptOffset.x(), ptOffset.y());
 }
 
-void RectI::moveOffsetRightBottom(int offsetX, int offsetY)
+void RectI::moveOffsetRightBottom(int offsetX, int offsetY) &
 {
 	moveOffsetRight(offsetX);
 	moveOffsetBottom(offsetY);
 }
 
-void RectI::moveOffsetRightBottom(const PointI &ptOffset)
+void RectI::moveOffsetRightBottom(const PointI &ptOffset) &
 {
 	moveOffsetRightBottom(ptOffset.x(), ptOffset.y());
 }

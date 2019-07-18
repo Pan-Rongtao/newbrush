@@ -44,19 +44,19 @@ void TestTimeSpan::test()
 
 
 	TimeSpan ts6;
-	TimeSpan *ts7 = new TimeSpan(48, -43, 1001);
-	TimeSpan *ts8 = new TimeSpan(-32, -4, 12, -1002);
-	TimeSpan *ts9 = new TimeSpan(2224, -102, 33, 100, -1009);
+	TimeSpan ts7 = TimeSpan(48, -43, 1001);
+	TimeSpan ts8 = TimeSpan(-32, -4, 12, -1002);
+	TimeSpan ts9 = TimeSpan(2224, -102, 33, 100, -1009);
 
-	double days = ts7->totalDays();
-	double hours = ts7->totalHours();
-	double minutes = ts7->totalMinutes();
-	double seconds = ts7->totalSeconds();
-	auto millseconds = ts7->totalMilliseconds();
-	auto microseconds = ts7->totalMicroseconds();
+	double days = ts7.totalDays();
+	double hours = ts7.totalHours();
+	double minutes = ts7.totalMinutes();
+	double seconds = ts7.totalSeconds();
+	auto millseconds = ts7.totalMilliseconds();
+	auto microseconds = ts7.totalMicroseconds();
 
-	TimeSpan ts10 = ts9->negate();
-	TimeSpan ts11 = -(*ts9);
+	TimeSpan ts10 = ts9.negate();
+	TimeSpan ts11 = -(ts9);
 
 	bool e = ts10 == ts11;
 
@@ -67,11 +67,7 @@ void TestTimeSpan::test()
 	bool e5 = ts6 >= TimeSpan::zero() + TimeSpan::fromMicroseconds(1);
 	
 
-	ts11 = *ts7;
-
-	bool e6 = ts11.equals(*ts7);
-	//int k = (new TimeSpan())->compare(TimeSpan::zero());
-
+	ts11 = ts7;
 	TimeSpan ts12 = ts11 + TimeSpan::fromMilliseconds(12);
 	ts12 -= TimeSpan::fromMilliseconds(12);
 	ts12 += TimeSpan::fromHours(12);
@@ -92,8 +88,5 @@ void TestTimeSpan::test()
 	f1.close();
 	*/
 
-	delete ts7;
-	delete ts8;
-	delete ts9;
 	bool bEnd = true;
 }

@@ -101,9 +101,9 @@ void TimeSpan::operator =(const TimeSpan &other)
 	m_micros = other.m_micros;
 }
 
-bool TimeSpan::operator ==(const TimeSpan &other) const
+bool TimeSpan::operator !=(const TimeSpan &other) const
 {
-	return totalMicroseconds() == other.totalMicroseconds();
+	return totalMicroseconds() != other.totalMicroseconds();
 }
 
 bool TimeSpan::operator <(const TimeSpan &other) const
@@ -195,16 +195,6 @@ TimeSpan &TimeSpan::add(const TimeSpan &other)
 TimeSpan &TimeSpan::sub(const TimeSpan &other)
 {
 	return add(-other);
-}
-
-int TimeSpan::compare(const TimeSpan &other) const
-{
-	return (*this > other) ? 1 : (*this < other ? -1 : 0);
-}
-
-bool TimeSpan::equals(const TimeSpan &other) const
-{
-	return *this == other;
 }
 
 std::string TimeSpan::toString()

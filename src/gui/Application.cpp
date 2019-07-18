@@ -26,7 +26,7 @@ Application *Application::current()
 
 void Application::preRender()
 {
-	Timer::drive();
+	Timer::driveInLoop();
 }
 
 int Application::run()

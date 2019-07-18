@@ -63,36 +63,36 @@ public:
 
 public:
 	//设置矩形的x（左边），宽可能会被改变，但绝不会改变顶部、底部、右边和高
-	void setX(float x);
-	void setLeft(float left);
+	void setX(float x) &;
+	void setLeft(float left) &;
 
 	//x(left)不可引用
 	float x() const;
 	float left() const;
 
 	//设置矩形的y（顶部），高可能会被改变，但绝不会改变左边、底部、右边和宽
-	void setY(float y);
-	void setTop(float top);
+	void setY(float y) &;
+	void setTop(float top) &;
 
 	//y(top)不可引用
 	float y() const;
 	float top() const;
 
 	//设置矩形的宽，右边可能会改变，但绝不会改变左边、顶部、底部和高
-	void setWidth(float width);
+	void setWidth(float width) &;
 
 	//宽，不可引用
 	float width() const;
 
 	//设置矩形的高，底部可能会改变，但绝不会改变左边、顶部、右边和宽
-	void setHeight(float height);
+	void setHeight(float height) &;
 
 	//高，不可引用
 	float height() const;
 
 	//设置矩形的尺寸，右边和底部可能会改变，但绝不会改变左边和顶部
-	void setSize(float width, float height);
-	void setSize(const Size &size);
+	void setSize(float width, float height) &;
+	void setSize(const Size &size) &;
 
 	//尺寸
 	Size size() const;
@@ -101,31 +101,31 @@ public:
 	void reset(float x, float y, float width, float height);
 
 	//设置矩形的右边，宽可能会被改变，但绝不会改变左边、顶部、底部和高
-	void setRight(float right);
+	void setRight(float right) &;
 	float right() const;
 
 	//设置矩形的底部，高可能会被改变，但绝不会改变左边、顶部、右边和宽
-	void setBottom(float bottom);
+	void setBottom(float bottom) &;
 	float bottom() const;
 
 	//设置矩形的左上角坐标（左边和顶部），宽和高都可能会改变，但绝不会改变右下角坐标（右边和底部）
-	void setLeftTop(float left, float top);
-	void setLeftTop(const Point &p);
+	void setLeftTop(float left, float top) &;
+	void setLeftTop(const Point &p) &;
 	Point leftTop() const;
 
 	//设置矩形的右上角坐标（右边和顶部），宽和高都可能会改变，但绝不会改变左下角坐标（左边和底部）
-	void setRightTop(float right, float top);
-	void setRightTop(const Point &p);
+	void setRightTop(float right, float top) &;
+	void setRightTop(const Point &p) &;
 	Point rightTop() const;
 
 	//设置矩形的左下角坐标（左边和底部），宽和高都可能会改变，但绝不会改变右上角坐标（右边和顶部）
-	void setLeftBottom(float left, float bottom);
-	void setLeftBottom(const Point &p);
+	void setLeftBottom(float left, float bottom) &;
+	void setLeftBottom(const Point &p) &;
 	Point leftBottom() const;
 
 	//设置矩形的右下角坐标（右边和底部），宽和高都可能会改变，但绝不会改变左上角坐标（左边和顶部）
-	void setRightBottom(float right, float bottom);
-	void setRightBottom(const Point &p);
+	void setRightBottom(float right, float bottom) &;
+	void setRightBottom(const Point &p) &;
 	Point rightBottom() const;
 
 	//中心
@@ -147,28 +147,25 @@ public:
 	//是否为Zero矩形
 	bool isZero() const;
 
-	//相等
-	bool equals(const Rect &other) const;
-
 	//整个在水平和垂直方向移动一定值，不会改变矩形的形状
 	void moveHorizontal(float fHorizontal);
 	void moveVertical(float fVertical);
 	void move(float nHorizontal, float nVertical);
 
 	//移动某条边或者顶点以改变矩形的形状，并非移动整个矩形移动，offset为偏移值
-	void moveOffsetLeft(float offset);
-	void moveOffsetTop(float offset);
-	void moveOffsetRight(float offset);
-	void moveOffsetBottom(float offset);
+	void moveOffsetLeft(float offset) &;
+	void moveOffsetTop(float offset) &;
+	void moveOffsetRight(float offset) &;
+	void moveOffsetBottom(float offset) &;
 
-	void moveOffsetLeftTop(float offsetX, float offsetY);
-	void moveOffsetLeftTop(const Point &ptOffset);
-	void moveOffsetRightTop(float offsetX, float offsetY);
-	void moveOffsetRightTop(const Point &ptOffset);
-	void moveOffsetLeftBottom(float offsetX, float offsetY);
-	void moveOffsetLeftBottom(const Point &ptOffset);
-	void moveOffsetRightBottom(float offsetX, float offsetY);
-	void moveOffsetRightBottom(const Point &ptOffset);
+	void moveOffsetLeftTop(float offsetX, float offsetY) &;
+	void moveOffsetLeftTop(const Point &ptOffset) &;
+	void moveOffsetRightTop(float offsetX, float offsetY) &;
+	void moveOffsetRightTop(const Point &ptOffset) &;
+	void moveOffsetLeftBottom(float offsetX, float offsetY) &;
+	void moveOffsetLeftBottom(const Point &ptOffset) &;
+	void moveOffsetRightBottom(float offsetX, float offsetY) &;
+	void moveOffsetRightBottom(const Point &ptOffset) &;
 
 	//是否与另一个Rect相交
 	bool isInterset(const Rect &other) const;
@@ -230,65 +227,65 @@ public:
 
 public:
 	//设置矩形的x（左边），宽可能会被改变，但绝不会改变顶部、底部、右边和高
-	void setX(int x);
-	void setLeft(int left);
+	void setX(int x) &;
+	void setLeft(int left) &;
 
 	//x(left)不可引用
 	int x() const;
 	int left() const;
 
 	//设置矩形的y（顶部），高可能会被改变，但绝不会改变左边、底部、右边和宽
-	void setY(int y);
-	void setTop(int top);
+	void setY(int y) &;
+	void setTop(int top) &;
 
 	//y(top)不可引用
 	int y() const;
 	int top() const;
 
 	//设置矩形的宽，右边可能会改变，但绝不会改变左边、顶部、底部和高
-	void setWidth(int width);
+	void setWidth(int width) &;
 
 	//宽，不可引用
 	int width() const;
 
 	//设置矩形的高，底部可能会改变，但绝不会改变左边、顶部、右边和宽
-	void setHeight(int height);
+	void setHeight(int height) &;
 
 	//高，不可引用
 	int height() const;
 
 	//设置矩形的尺寸，右边和底部可能会改变，但绝不会改变左边和顶部
-	void setSize(int width, int height);
-	void setSize(const SizeI &size);
+	void setSize(int width, int height) &;
+	void setSize(const SizeI &size) &;
 
 	//尺寸
 	SizeI size() const;
 
 	//重置矩形
-	void reset(int x, int y, int width, int height);
+	void reset(int x, int y, int width, int height) &;
 
 	//设置矩形的右边，宽可能会被改变，但绝不会改变左边、顶部、底部和高
-	void setRight(int right);
+	void setRight(int right) &;
 	int right() const;
 
 	//设置矩形的底部，高可能会被改变，但绝不会改变左边、顶部、右边和宽
-	void setBottom(int bottom);
+	void setBottom(int bottom) &;
 	int bottom() const;
 
 	//设置矩形的左上角坐标（左边和顶部），宽和高都可能会改变，但绝不会改变右下角坐标（右边和底部）
-	void setLeftTop(const PointI &p);
+	void setLeftTop(const PointI &p) &;
 	PointI leftTop() const;
 
 	//设置矩形的右上角坐标（右边和顶部），宽和高都可能会改变，但绝不会改变左下角坐标（左边和底部）
-	void setRightTop(const PointI &p);
+	void setRightTop(const PointI &p) &;
 	PointI rightTop() const;
 
 	//设置矩形的左下角坐标（左边和底部），宽和高都可能会改变，但绝不会改变右上角坐标（右边和顶部）
-	void setLeftBottom(const PointI &p);
+	void setLeftBottom(const PointI &p) &;
 	PointI leftBottom() const;
 
 	//设置矩形的右下角坐标（右边和底部），宽和高都可能会改变，但绝不会改变左上角坐标（左边和顶部）
-	void setRightBottom(const PointI &p);
+	void setRightBottom(const PointI &p) &;
 	PointI rightBottom() const;
 
 	//中心
@@ -309,27 +306,25 @@ public:
 	//是否为Zero矩形
 	bool isZero() const;
 
-	bool equals(const RectI &other) const;
-
 	//整个在水平和垂直方向移动一定值，不会改变矩形的形状
 	void moveHorizontal(int nHorizontal);
 	void moveVertical(int nVertical);
 	void move(int nHorizontal, int nVertical);
 
 	//移动某条边或者顶点以改变矩形的形状，并非移动整个矩形移动，offset为偏移值
-	void moveOffsetLeft(int offset);
-	void moveOffsetTop(int offset);
-	void moveOffsetRight(int offset);
-	void moveOffsetBottom(int offset);
+	void moveOffsetLeft(int offset) &;
+	void moveOffsetTop(int offset) &;
+	void moveOffsetRight(int offset) &;
+	void moveOffsetBottom(int offset) &;
 
-	void moveOffsetLeftTop(int offsetX, int offsetY);
-	void moveOffsetLeftTop(const PointI &ptOffset);
-	void moveOffsetRightTop(int offsetX, int offsetY);
-	void moveOffsetRightTop(const PointI &ptOffset);
-	void moveOffsetLeftBottom(int offsetX, int offsetY);
-	void moveOffsetLeftBottom(const PointI &ptOffset);
-	void moveOffsetRightBottom(int offsetX, int offsetY);
-	void moveOffsetRightBottom(const PointI &ptOffset);
+	void moveOffsetLeftTop(int offsetX, int offsetY) &;
+	void moveOffsetLeftTop(const PointI &ptOffset) &;
+	void moveOffsetRightTop(int offsetX, int offsetY) &;
+	void moveOffsetRightTop(const PointI &ptOffset) &;
+	void moveOffsetLeftBottom(int offsetX, int offsetY) &;
+	void moveOffsetLeftBottom(const PointI &ptOffset) &;
+	void moveOffsetRightBottom(int offsetX, int offsetY) &;
+	void moveOffsetRightBottom(const PointI &ptOffset) &;
 
 	//是否与另一个RectI相交
 	bool isInterset(const RectI &other) const;
@@ -346,15 +341,5 @@ private:
 	int		m_width;
 	int		m_height;
 };
-
-static bool equals(const Rect &rc0, const Rect &rc1)
-{
-	return rc0.equals(rc1);
-}
-
-static bool equals(const RectI &rc0, const RectI &rc1)
-{
-	return rc0.equals(rc1);
-}
 
 }}
