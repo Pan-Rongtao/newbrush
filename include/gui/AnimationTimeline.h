@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Timeline.h"
-#include "core/Easing.h"
+#include "../core/Easing.h"
 
 namespace nb { namespace gui {
 

@@ -19,10 +19,11 @@ TextBlock::TextBlock()
 {
 }
 
-TextBlock::TextBlock(const std::string & content)
+TextBlock::TextBlock(const std::string & text)
 	: Font(Fonts::getFont(Fonts::SimSun))
 	, LineHeight((float)Font()->size())
 	, m_glyphBunch(std::make_shared<GlyphBunch>())
+	, Text(text)
 {
 	Renderer()->setModel(m_glyphBunch);
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::glpy()));

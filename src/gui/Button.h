@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "ContentControl.h"
-#include "../core/Property.h"
+#include "core/Property.h"
 
 namespace nb { namespace gui {
 

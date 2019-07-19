@@ -11,13 +11,14 @@
 #include "TestPropertyAnimationUsingKeyFrames.h"
 #include "TestStoryboard.h"
 #include "TestTextBlock.h"
+#include "TestGrid.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestCanvas> test;
+		TestHandle<TestGrid> test;
 		test->test();
 		return app.run();
 	}

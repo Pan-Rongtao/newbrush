@@ -1,6 +1,6 @@
 #pragma once
-#include "core/Def.h"
-#include "core/Window.h"
+#include "../core/Def.h"
+#include "../core/Window.h"
 
 namespace nb{ namespace gl{
 

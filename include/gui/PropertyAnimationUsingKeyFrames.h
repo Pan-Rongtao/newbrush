@@ -19,7 +19,7 @@
 #include "../core/Property.h"
 #include "../core/TimeSpan.h"
 #include "AnimationTimeline.h"
-#include "core/Easing.h"
+#include "../core/Easing.h"
 
 namespace nb{ namespace gui{
 

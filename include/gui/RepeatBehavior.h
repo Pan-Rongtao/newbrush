@@ -1,6 +1,6 @@
 #pragma once
-#include "core/Property.h"
-#include "core/TimeSpan.h"
+#include "../core/Property.h"
+#include "../core/TimeSpan.h"
 
 namespace nb{namespace gui{
 

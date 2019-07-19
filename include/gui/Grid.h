@@ -21,39 +21,107 @@
  *****************************************************************************/
 #pragma once
 #include "../gui/Panel.h"
-#include "../gui/RowDefinition.h"
-#include "../gui/ColumnDefinition.h"
 
 namespace nb { namespace gui {
 
+///////class GridLength
+class NB_API GridLength
+{
+public:
+	enum class GridUnitType
+	{
+		Auto,
+		Pixcel,
+		Star
+	};
+
+public:
+	GridLength();
+	GridLength(float value);
+	GridLength(float value, GridUnitType type);
+	bool operator == (const GridLength &other) const;
+	bool operator != (const GridLength &other) const;
+
+	bool isAuto() const;
+	bool isStar() const;
+	float value() const;
+
+	GridUnitType gridUnitType() const;
+
+	static GridLength automate();
+
+private:
+	GridUnitType	m_type;
+	float			m_value;
+};
+
+///////class RowDefinition
+class NB_API RowDefinition
+{
+public:
+	RowDefinition();
+	~RowDefinition();
+
+	nb::core::Property_rw<GridLength>		Height;			//设定高
+	nb::core::Property_rw<GridLength>		MinHeight;		//最小高限制
+	nb::core::Property_rw<GridLength>		MaxHeight;		//最大高限制
+	nb::core::Property_r<float>				ActualHeight;	//实际高度
+
+private:
+	float	m_actualHeight;
+};
+
+///////class ColumnDefinition
+class NB_API ColumnDefinition
+{
+public:
+	ColumnDefinition();
+	~ColumnDefinition();
+
+	nb::core::Property_rw<GridLength>		Width;			//设定宽
+	nb::core::Property_rw<GridLength>		MinWidth;		//最小宽限制
+	nb::core::Property_rw<GridLength>		MaxWidth;		//最大宽限制
+	nb::core::Property_r<float>				ActualWidth;	//实际宽度
+
+private:
+	float	m_actualWidth;
+};
+
+///////class Grid
 class NB_API Grid : public Panel
 {
 public:
 	Grid();
 	virtual ~Grid();
 
-	void setRow(int row, std::shared_ptr<UIElement> element);
-	int getRow(std::shared_ptr<UIElement> element);
+	static constexpr char *AttachedPropertyRow			= "Grid.Row";
+	static constexpr char *AttachedPropertyColumn		= "Grid.Column";
+	static constexpr char *AttachedPropertyRowSpan		= "Grid.RowSpan";
+	static constexpr char *AttachedPropertyColumnSpan	= "Grid.ColumnSpan";
 
-	void setColumn(int col, std::shared_ptr<UIElement> element);
-	int getColumn(std::shared_ptr<UIElement> element);
+	void setRow(std::shared_ptr<UIElement> element, uint32_t row);
+	uint32_t getRow(std::shared_ptr<UIElement> element);
 
-	void setRowSpan(std::shared_ptr<UIElement> element, int value);
-	int getRowSpan(std::shared_ptr<UIElement> element);
+	void setColumn(std::shared_ptr<UIElement> element, uint32_t col);
+	uint32_t getColumn(std::shared_ptr<UIElement> element);
 
-	void setColumnSpan(std::shared_ptr<UIElement> element, int value);
-	int getColumnSpan(std::shared_ptr<UIElement> element);
+	void setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan);
+	uint32_t getRowSpan(std::shared_ptr<UIElement> element);
+
+	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
+	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
 public:
 	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;
-	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		ColumnDefinitions;
+	nb::core::Property_rw<std::vector<std::shared_ptr<ColumnDefinition>>>	ColumnDefinitions;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
 private:
-
+	std::vector<float>	m_pixcelWidthsForEachCols;
+	std::vector<float>	m_pixcelHeightsForEachRows;
 };
 
 }}

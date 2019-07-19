@@ -19,7 +19,7 @@
 #define NB_OS_ANDROID			0x00000020
 #define NB_OS_QNX				0x00000040
 
-#if defined(_WINDOWS) || defined(_WIN32_WCE)									//windows
+#if defined(WIN32) || defined(WIN64) || defined(_WINDOWS) || defined(_WIN32_WCE)									//windows
 	#define NB_OS_FAMILY_WINDOWS 1
 	#if defined(_WIN32_WCE)
 		#define NB_OS NB_OS_WINDOWS_CE

@@ -18,7 +18,7 @@
 #include <type_traits>
 #include "../core/Color.h"
 #include "AnimationTimeline.h"
-#include "core/Easing.h"
+#include "../core/Easing.h"
 
 namespace nb { namespace gui {
 

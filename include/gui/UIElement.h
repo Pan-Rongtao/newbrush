@@ -86,12 +86,6 @@ protected:
 	virtual core::Size arrangeOverride(const core::Size &finalSize);
 
 private:
-	void onVisibilityChanged(const gui::VisibilityE &_old, const gui::VisibilityE &_new);
-	void onOpacityChanged(const float &_old, const float &_new);
-	void onFocusableChanged(const bool &_old, const bool &_new);
-	void onDesiredSizeChanged(const core::Size &_old, const core::Size &_new);
-	void onMaginChanged(const Thickness &_old, const Thickness &_new);
-
 	nb::core::Size											m_desiredSize;
 	nb::core::Size											m_actualSize;
 	std::shared_ptr<gl::RenderObject>						m_renderer;

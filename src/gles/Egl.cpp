@@ -17,7 +17,7 @@ std::string nb::gl::getVersion()
 {
 	if (!getDisplay())
 		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
-
+	
 	return eglQueryString(getDisplay()->handle(), EGL_VERSION);
 }
 

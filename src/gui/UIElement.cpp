@@ -18,10 +18,6 @@ UIElement::UIElement()
 {
 	DesiredSize.getter([&]()->Size& { return m_desiredSize; });
 	ActualSize.getter([&]()->Size& {return m_actualSize; });
-	Visibility.notify(std::bind(&UIElement::onVisibilityChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Opacity.notify(std::bind(&UIElement::onOpacityChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Focusable.notify(std::bind(&UIElement::onFocusableChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Margin.notify(std::bind(&UIElement::onMaginChanged, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 UIElement::~UIElement()
@@ -148,26 +144,5 @@ Size UIElement::arrangeOverride(const Size & finalSize)
 }
 
 void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
-{
-}
-
-void UIElement::onVisibilityChanged(const nb::gui::VisibilityE & _old, const nb::gui::VisibilityE & _new)
-{
-
-}
-
-void UIElement::onOpacityChanged(const float & _old, const float & _new)
-{
-}
-
-void UIElement::onFocusableChanged(const bool & _old, const bool & _new)
-{
-}
-
-void UIElement::onDesiredSizeChanged(const Size & _old, const Size & _new)
-{
-}
-
-void UIElement::onMaginChanged(const Thickness & _old, const Thickness & _new)
 {
 }
