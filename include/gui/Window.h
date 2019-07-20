@@ -39,7 +39,7 @@ public:
 	nb::core::Property_rw<float>							Top;
 	nb::core::Property_rw<std::string>						Title;
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Icon;	//未实现，难点
-	nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	DrawContext;
+	static nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	DrawContext;
 	nb::core::Property_rw<std::shared_ptr<nb::gl::Surface>>	DrawSurface;
 
 private:

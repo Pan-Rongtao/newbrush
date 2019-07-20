@@ -28,13 +28,11 @@ Window_Internal::Window_Internal(Window *p)
 	windowClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	//	windowClass.hIconSm			= 0;
 	::RegisterClassA(&windowClass);
-	RECT rcClient = { 0, 0, 800, 480 };
-	::AdjustWindowRect(&rcClient, WS_TILEDWINDOW, false);
-	int width = rcClient.right - rcClient.left;
-	int height = rcClient.bottom - rcClient.top;
-	int x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	int y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
-	m_hwnd = ::CreateWindowA(windowClass.lpszClassName, "", WS_TILEDWINDOW, x, y, width, height, NULL, NULL, m_instance, NULL);
+	int w = 800;
+	int h = 480;
+	int x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+	int y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
+	m_hwnd = ::CreateWindowA(windowClass.lpszClassName, "", WS_TILEDWINDOW, x, y, w, h, NULL, NULL, m_instance, NULL);
 	::ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	::UpdateWindow(m_hwnd);
 	m_windows[(long)m_hwnd] = m_pW;
@@ -117,9 +115,7 @@ std::string Window_Internal::title() const
 void Window_Internal::setX(int x)
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	RECT rc = { x, y(), x + width(), y() + height()};
-	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, x, y(), rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x, y(), width(), height(), true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x, y(), width(), height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -145,9 +141,7 @@ int Window_Internal::x() const
 void Window_Internal::setY(int y)
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	RECT rc = { x(), y, x() + width(), y + height() };
-	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, x(), y, rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x(), y, width(), height(), true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y, width(), height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -173,9 +167,7 @@ int Window_Internal::y() const
 void Window_Internal::setWidth(int width)
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	RECT rc = { x(), y(), x() + width, y() + height() };
-	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, x(), y(), rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x(), y(), width, height(), true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y(), width, height());
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -187,7 +179,7 @@ int Window_Internal::width() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcClient;
-	::GetClientRect(m_hwnd, &rcClient);
+	::GetWindowRect(m_hwnd, &rcClient);
 	return rcClient.right - rcClient.left;
 #elif defined NB_OS_FAMILY_UNIX
 	//	XWindowAttributes attrs;
@@ -201,9 +193,7 @@ int Window_Internal::width() const
 void Window_Internal::setHeight(int height)
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	RECT rc = { x(), y(), x() + width(), y() + height };
-	::AdjustWindowRect(&rc, WS_TILEDWINDOW, false);
-	::MoveWindow(m_hwnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
+	::MoveWindow(m_hwnd, x(), y(), width(), height, true);
 #elif defined NB_OS_FAMILY_UNIX
 	XMoveResizeWindow(m_X11Display, m_X11WindowID, x(), y(), width(), height);
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -215,7 +205,7 @@ int Window_Internal::height() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rcClient;
-	::GetClientRect(m_hwnd, &rcClient);
+	::GetWindowRect(m_hwnd, &rcClient);
 	return rcClient.bottom - rcClient.top;
 #elif defined NB_OS_FAMILY_UNIX
 	//	XWindowAttributes attrs;
@@ -413,8 +403,8 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 			if (pWindow)
 			{
 				Window::ResizeArgs args;
-				args.width = LOWORD(lParam);
-				args.height = HIWORD(lParam);
+				args.width = pWindow->width();// LOWORD(lParam);
+				args.height = pWindow->height();// HIWORD(lParam);
 				pWindow->ResizeEvent.dispatch(args);
 			}
 		}

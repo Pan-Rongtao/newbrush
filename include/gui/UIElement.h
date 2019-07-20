@@ -55,6 +55,8 @@ public:
 	UIElement();
 	virtual ~UIElement();
 
+	void updateLayout();
+
 	void measure(const core::Size &availabelSize);
 	void arrage(const core::Rect &finalRect);
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);

@@ -23,6 +23,13 @@ UIElement::UIElement()
 UIElement::~UIElement()
 {
 }
+#include <gui/Window.h>
+void UIElement::updateLayout()
+{
+	measure({ Width, Height });
+	arrage(Rect(0, 0, DesiredSize()));
+	onRender(gui::Window::DrawContext());
+}
 
 void UIElement::measure(const Size & availabelSize)
 {

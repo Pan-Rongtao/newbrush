@@ -11,23 +11,27 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
+nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	nb::gui::Window::DrawContext;
 nb::gui::Window::Window()
 	: WindowState(WindowStateE::Normal)
 	, WindowStyle(WindowStyleE::SizeBox)
 	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
-	, DrawContext(std::make_shared<nb::gl::Context>(nb::gl::getConfigure()))
 {
+	DrawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
 	Left = (float)m_glWindow->x();
 	Top = (float)m_glWindow->y();
 	Width = (float)m_glWindow->width();
 	Height = (float)m_glWindow->height();
 
-	auto onWindowResized = [](const nb::core::Window::ResizeArgs & args)
+	auto onWindowResized = [&](const nb::core::Window::ResizeArgs & args)
 	{
 		auto ratio = (float)args.width / args.height;
 		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
 		nb::gl::getCamera()->lookat2D((float)args.width, (float)args.height);
 		nb::gl::viewport(0, 0, args.width, args.height);
+		Width = args.width;
+		Height = args.height;
+		updateLayout();
 	};
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
 	onWindowResized({ (int)Width, (int)Height });
