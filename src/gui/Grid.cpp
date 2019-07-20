@@ -55,7 +55,7 @@ GridLength::GridUnitType GridLength::gridUnitType() const
 
 GridLength GridLength::automate()
 {
-	return GridLength(1.0, GridUnitType::Auto);
+	return GridLength(0.0, GridUnitType::Auto);
 }
 
 RowDefinition::RowDefinition()
@@ -140,6 +140,9 @@ uint32_t Grid::getColumnSpan(std::shared_ptr<UIElement> element)
 	return v.empty() ? 1 : any_cast<uint32_t>(v);
 }
 
+//规则：每次根据RowDefinitions和ColumnDefinitions把每个网格单元的像素尺寸计算出来：
+//根据每个望各单元的长度类型GridUnitType，如果是Pixcel，则直接保存；如果是Auto，则取该行/列中的最大元素；如果是Star，则换算成Pixcel
+//所有单元格尺寸都保存在m_pixcelWidthsForEachCols和m_pixcelHeightsForEachRows中，在arrangeOverride中会用到
 Size Grid::measureOverride(const Size & availableSize)
 {
 	auto calcPixcelLenghts = [&](bool isRowdefinition)->std::vector<float>
@@ -163,23 +166,14 @@ Size Grid::measureOverride(const Size & availableSize)
 			case GridLength::GridUnitType::Auto:
 			{
 				auto maxLenghtOfRowOrCol = 0.0f;
-				if (isRowdefinition)
+				for (auto child : Children())
 				{
-					for (auto indexOfOneRow = i * cols; indexOfOneRow != i * cols + cols; ++indexOfOneRow)
-					{
-						auto x = std::isnan(Children()[indexOfOneRow]->Height()) ? 0.0f : Children()[indexOfOneRow]->Height();
-						if (x > maxLenghtOfRowOrCol)	maxLenghtOfRowOrCol = x;
-					}
+					auto childRowOrCol = isRowdefinition ? getRow(child) : getColumn(child);
+					auto x = isRowdefinition ? (std::isnan(child->Height()) ? 0.0f : child->Height()) : (std::isnan(child->Height()) ? 0.0f : child->Height());
+					if(childRowOrCol == i && x > maxLenghtOfRowOrCol)
+						maxLenghtOfRowOrCol = x;
 				}
-				else
-				{
-					for (auto indexOfOneCol = i; indexOfOneCol < rows * cols; indexOfOneCol += cols)
-					{
-						auto x = std::isnan(Children()[indexOfOneCol]->Width()) ? 0.0f : Children()[indexOfOneCol]->Width();
-						if (x > maxLenghtOfRowOrCol)	maxLenghtOfRowOrCol = x;
-					}
-				}
-				rowOrColUnitsPixcelLenghts[i] = lenght.value();
+				rowOrColUnitsPixcelLenghts[i] = maxLenghtOfRowOrCol;
 				++verifiedCount;
 			}
 			break;
@@ -236,6 +230,7 @@ Size Grid::measureOverride(const Size & availableSize)
 	return Size(w, h);
 }
 
+//以m_pixcelWidthsForEachCols和m_pixcelHeightsForEachRows对Children进行arrage
 Size Grid::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : Children())

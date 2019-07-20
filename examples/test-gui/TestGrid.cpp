@@ -13,7 +13,8 @@ void TestGrid::test()
 	
 	auto rowdef0 = std::make_shared<RowDefinition>();
 	//rowdef0->Height = 200;
-	rowdef0->Height = GridLength(1, GridLength::GridUnitType::Star);
+	//rowdef0->Height = GridLength(1, GridLength::GridUnitType::Star);
+	rowdef0->Height = GridLength::automate();
 	auto rowdef1 = std::make_shared<RowDefinition>();
 	//rowdef1->Height = 200;
 	rowdef1->Height = GridLength(2, GridLength::GridUnitType::Star);
@@ -52,8 +53,8 @@ void TestGrid::test()
 
 	auto rc3 = std::make_shared<Rectangle>();
 	rc3->Fill = std::make_shared<SolidColorBrush>(Colors::firebrick());
-//	rc3->Width = 100;
-//	rc3->Height = 100;
+	rc3->Width = 100;
+	rc3->Height = 100;
 
 	auto es0 = std::make_shared<Ellipse>();
 	es0->Fill = std::make_shared<SolidColorBrush>(Colors::floralWhite());
@@ -67,7 +68,7 @@ void TestGrid::test()
 	grid->Children().push_back(rc2);
 	grid->Children().push_back(rc3);
 	grid->Children().push_back(es0);
-	//grid->Children().push_back(text);
+	grid->Children().push_back(text);
 
 	grid->setRow(rc0, 0);
 	grid->setColumn(rc0, 0);
