@@ -157,7 +157,7 @@ void MyApplication::drawQuadrangles()
 		if (i == 1)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-		//	ro->storage()->insert(Program::nbColorModeLocationStr, 0);
+			ro->storage()->set(Program::nbColorModeLocationStr, 0);
 		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));

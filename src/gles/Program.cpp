@@ -278,7 +278,8 @@ std::shared_ptr<Program> Programs::primitive()
 		"	else"
 		"		gl_FragColor = texture2D(sampler, _texCoord);"
 		"}";
-	return compileBindLink(vs, fs);
+	p = compileBindLink(vs, fs);
+	return p;
 }
 
 std::shared_ptr<Program> nb::gl::Programs::phong()
@@ -337,7 +338,8 @@ std::shared_ptr<Program> nb::gl::Programs::phong()
 		"	vec3 baseColor = vec3(1.0f, 0.5f, 0.31f);"
 		"	gl_FragColor = vec4((ambient + diffuse + specular) * baseColor, 1.0f);"
 		"}";
-	return compileBindLink(vs, fs);
+	p = compileBindLink(vs, fs);
+	return p;
 }
 
 std::shared_ptr<Program> nb::gl::Programs::cube()
@@ -361,7 +363,8 @@ std::shared_ptr<Program> nb::gl::Programs::cube()
 		"{"
 		"	gl_FragColor = textureCube(sampler, _texCoord);"
 		"}";
-	return compileBindLink(vs, fs);
+	p = compileBindLink(vs, fs);
+	return p;
 }
 
 std::shared_ptr<Program> Programs::glpy()
@@ -388,7 +391,8 @@ std::shared_ptr<Program> Programs::glpy()
 		"	vec4 color = texture2D(sampler, _texCoord);"
 		"	gl_FragColor = color.w * fontColor;"
 		"}";
-	return compileBindLink(vs, fs);
+	p = compileBindLink(vs, fs);
+	return p;
 }
 
 std::shared_ptr<Program> Programs::compileBindLink(const std::string &vs, const std::string &fs)

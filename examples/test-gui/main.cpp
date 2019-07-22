@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestWrapPanel> test;
+		TestHandle<TestGrid> test;
 		test->test();
 		return app.run();
 	}
