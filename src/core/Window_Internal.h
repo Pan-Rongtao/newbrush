@@ -36,6 +36,9 @@ public:
 	void setHeight(int height);
 	int height() const;
 
+	int clientWidth() const;
+	int clientHeight() const;
+
 	long handle() const;
 
 	void setTopMost(bool topMost);

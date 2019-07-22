@@ -25,16 +25,16 @@ nb::gui::Window::Window()
 
 	auto onWindowResized = [&](const nb::core::Window::ResizeArgs & args)
 	{
-		auto ratio = (float)args.width / args.height;
+		auto ratio = (float)m_glWindow->clientWidth() / m_glWindow->clientHeight();
 		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-		nb::gl::getCamera()->lookat2D((float)args.width, (float)args.height);
-		nb::gl::viewport(0, 0, args.width, args.height);
+		nb::gl::getCamera()->lookat2D(m_glWindow->clientWidth(), m_glWindow->clientHeight());
+		nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
+		printf("w=%d, h=%d\n", (int)m_glWindow->clientWidth(), (int)m_glWindow->clientHeight());
 		Width = args.width;
 		Height = args.height;
 		updateLayout();
 	};
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
-	onWindowResized({ (int)Width, (int)Height });
 
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
 	WindowStyle.notify(std::bind(&Window::onWindowStyleChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -49,6 +49,7 @@ nb::gui::Window::Window()
 	WindowCollections::Windows().push_back(this);
 	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
 	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
+	onWindowResized({ (int)Width, (int)Height });
 }
 
 nb::gui::Window::~Window()
@@ -76,6 +77,28 @@ void nb::gui::Window::hide()
 void nb::gui::Window::close()
 {
 	m_glWindow = nullptr;
+}
+
+nb::core::Size nb::gui::Window::measureOverride(const nb::core::Size & availableSize)
+{
+	if (Content())
+	{
+		Content()->measure({ (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight() });
+		return Content()->DesiredSize;
+	}
+	else
+	{
+		return ContentControl::measureOverride(availableSize);
+	}
+}
+
+nb::core::Size nb::gui::Window::arrangeOverride(const nb::core::Size & finalSize)
+{
+	if (Content())
+	{
+		Content()->arrage(Rect(0.0, 0.0, m_glWindow->clientWidth(), m_glWindow->clientHeight()));
+	}
+	return finalSize;
 }
 
 void nb::gui::Window::onWindowStateChanged(const core::WindowStateE & _old, const core::WindowStateE & _new)

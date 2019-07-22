@@ -216,6 +216,24 @@ int Window_Internal::height() const
 #endif
 }
 
+int nb::core::Window_Internal::clientWidth() const
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	RECT rc;
+	GetClientRect(m_hwnd, &rc);
+	return rc.right - rc.left;
+#endif
+}
+
+int nb::core::Window_Internal::clientHeight() const
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	RECT rc;
+	GetClientRect(m_hwnd, &rc);
+	return rc.bottom - rc.top;
+#endif
+}
+
 long Window_Internal::handle() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS

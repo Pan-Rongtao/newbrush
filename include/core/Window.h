@@ -100,7 +100,11 @@ public:
 	void setHeight(int height);
 
 	//获取窗口客户端高度
-	int height() const;		
+	int height() const;	
+
+	//获取客户区
+	int clientWidth() const;
+	int clientHeight() const;
 
 	//检查窗口事件
 	void pending();

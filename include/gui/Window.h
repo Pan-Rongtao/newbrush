@@ -42,6 +42,10 @@ public:
 	static nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	DrawContext;
 	nb::core::Property_rw<std::shared_ptr<nb::gl::Surface>>	DrawSurface;
 
+protected:
+	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
+	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+
 private:
 	void onWindowStateChanged(const core::WindowStateE &_old, const core::WindowStateE &_new);
 	void onWindowStyleChanged(const core::WindowStyleE &_old, const core::WindowStyleE &_new);

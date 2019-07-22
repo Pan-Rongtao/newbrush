@@ -102,6 +102,16 @@ int Window::height() const
 	return m_internal->height();
 }
 
+int Window::clientWidth() const
+{
+	return m_internal->clientWidth();
+}
+
+int Window::clientHeight() const
+{
+	return m_internal->clientHeight();
+}
+
 void Window::pending()
 {
 	m_internal->pending();

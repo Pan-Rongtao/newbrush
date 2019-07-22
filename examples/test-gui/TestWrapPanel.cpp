@@ -3,16 +3,16 @@
 void TestWrapPanel::test()
 {
 	auto wp = std::make_shared<WrapPanel>();
-	wp->Orientation = OrientationE::Vertical;
+	wp->Orientation = OrientationE::Horizontal;
 //	wp->ItemHeight = 150;
-	wp->ItemWidth = 150;
+//	wp->ItemWidth = 150;
 
 	auto rc0 = std::make_shared<Rectangle>();
 	rc0->Fill = std::make_shared<SolidColorBrush>(Colors::red());
 	rc0->Width = 100;
 	rc0->Height = 50;
-	rc0->VerticalAlignment = VerticalAlignmentE::Top;
-	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
+//	rc0->VerticalAlignment = VerticalAlignmentE::Top;
+//	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
 
 	auto rc1 = std::make_shared<Rectangle>();
 	rc1->Fill = std::make_shared<SolidColorBrush>(Colors::green());
@@ -57,5 +57,6 @@ void TestWrapPanel::test()
 	wp->Children().push_back(rc6);
 	wp->Children().push_back(rc7);
 
+	//m_window.Width = 599;
 	m_window.Content = wp;
 }
