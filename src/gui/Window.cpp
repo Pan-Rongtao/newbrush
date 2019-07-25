@@ -6,6 +6,7 @@
 #include "gles/Camera.h"
 #include "gui/Application.h"
 #include "WindowCollections.h"
+#include "../src/gles/EglMaster.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -29,7 +30,6 @@ nb::gui::Window::Window()
 		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
 		nb::gl::getCamera()->lookat2D(m_glWindow->clientWidth(), m_glWindow->clientHeight());
 		nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
-		printf("w=%d, h=%d\n", (int)m_glWindow->clientWidth(), (int)m_glWindow->clientHeight());
 		Width = args.width;
 		Height = args.height;
 		updateLayout();

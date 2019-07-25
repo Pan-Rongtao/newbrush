@@ -398,7 +398,7 @@ void Window_Internal::pending()
 
 LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	if (msg == WM_SIZE || msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP || msg == WM_LBUTTONDBLCLK || msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP || msg == WM_MOUSEMOVE || 
+	if (msg == WM_SIZE || msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP || msg == WM_LBUTTONDBLCLK || msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP || msg == WM_MOUSEMOVE ||
 		msg == WM_KEYDOWN || msg == WM_KEYUP || msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_DESTROY || msg == WM_CLOSE || msg == WM_QUIT)
 	{
 		auto iter = m_windows.find((long)hwnd);
@@ -410,11 +410,11 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 		case WM_DESTROY:
 			break;
 		case WM_CLOSE:
-		case WM_QUIT:		
+		case WM_QUIT:
 			::PostQuitMessage(0);
 			break;
-		case WM_SIZE:		
-			if (pWindow)	
+		case WM_SIZE:
+			if (pWindow)
 				pWindow->ResizeEvent.dispatch({ pWindow->width(), pWindow->height() });
 			break;
 		case WM_LBUTTONDOWN:

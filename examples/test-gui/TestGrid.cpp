@@ -84,5 +84,17 @@ void TestGrid::test()
 	grid->setRow(es0, 2);
 	grid->setColumn(es0, 2);
 
+
+	doubleAni.From = 800;
+	doubleAni.To = 2000;
+	doubleAni.Easing = std::make_shared<ElasticEase>();
+	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
+	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(5);
+//	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
+//	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
+//	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
+	doubleAni.TargetProperty = &m_window.Width;
+//	doubleAni.begin();
+
 	m_window.Content = grid;
 }

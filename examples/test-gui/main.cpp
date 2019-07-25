@@ -12,13 +12,14 @@
 #include "TestStoryboard.h"
 #include "TestTextBlock.h"
 #include "TestGrid.h"
+#include "TestUniformGrid.h"
 
 using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestGrid> test;
+		TestHandle<TestUniformGrid> test;
 		test->test();
 		return app.run();
 	}

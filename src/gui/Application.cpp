@@ -35,10 +35,6 @@ int Application::run()
 	{
 		for (auto w : WindowCollections::Windows())
 		{
-			w->measure({ w->Width, w->Height });
-			//w->arrage({ 0, 0, w->Width, w->Height });
-			w->arrage(Rect(0, 0, w->DesiredSize()));
-			w->onRender(Window::DrawContext());
 			w->updateLayout();
 		}
 		return nb::gl::Application::run();
