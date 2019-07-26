@@ -34,7 +34,7 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = false;
+bool g_Original = true;
 
 MyApplication::MyApplication()
 {
@@ -49,7 +49,7 @@ MyApplication::MyApplication()
 	m_window->setHeight(480);
 	m_window->setTitle("newbrush");
 	m_window->ResizeEvent.addHandler(std::bind(&MyApplication::OnResize, this, std::placeholders::_1));
-	m_window->PointerEvent.addHandler(std::bind(&MyApplication::OnPointerAction, this, std::placeholders::_1));
+	m_window->MouseEvent.addHandler(std::bind(&MyApplication::OnMouseAction, this, std::placeholders::_1));
 	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));
 	m_surface = std::make_shared<WindowSurface>(m_window->width(), m_window->height(), m_window->handle());
 	nb::gl::makeCurrent(m_surface, m_surface, m_context);
@@ -63,9 +63,9 @@ MyApplication::MyApplication()
 //	drawPolylines();
 	drawTriangles();
 	drawQuadrangles();
-//	drawEllipses();
-//	drawCubes();
-//	drawSphere();
+	drawEllipses();
+	drawCubes();
+	drawSphere();
 //	drawPhone();
 	//	drawModel();
 //	drawGlyph();
@@ -394,22 +394,22 @@ void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 bool bPress = false;
 static int pressX = 0;
 static int pressY = 0;
-void MyApplication::OnPointerAction(const nb::core::Window::PointerEventArgs & args)
+void MyApplication::OnMouseAction(const nb::core::Window::MouseEventArgs & args)
 {
 	switch (args.action)
 	{
-	case PointerActionE::Down:
+	case MouseActionE::Down:
 		bPress = true;
 		pressX = args.x;
 		pressY = args.y;
 		break;
-	case PointerActionE::Up:
+	case MouseActionE::Up:
 	{
 		bPress = false;
 		hitTest(args.x, args.y);
 		break;
 	}
-	case PointerActionE::Move:
+	case MouseActionE::Move:
 	{
 		for (int i = 0; i != m_context->renderObjectCount(); ++i)
 		{

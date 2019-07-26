@@ -38,11 +38,18 @@ enum class KeyCodeE
 	Add,Sub,
 };
 
-enum class PointerActionE
+enum class MouseActionE
 {
 	Down,
-	Move,
 	Up,
+	LeftButtonDown,
+	LeftButtonUp,
+	RightButtonDown,
+	RightButtonUp,
+	Enter,
+	Move,
+	Leave,
+	Wheel,
 	Click,
 	LongPress,
 };
@@ -136,8 +143,8 @@ public:
 	nb::core::Event<ResizeArgs>			ResizeEvent;
 
 	//鼠标事件
-	struct PointerEventArgs { PointerActionE action; int x; int y; };
-	nb::core::Event<PointerEventArgs>	PointerEvent;
+	struct MouseEventArgs { MouseActionE action; int x; int y; };
+	nb::core::Event<MouseEventArgs>		MouseEvent;
 
 	//键盘事件
 	struct KeyEventArgs { KeyActionE action; KeyCodeE key; int mask; };

@@ -9,7 +9,7 @@ public:
 
 private:
 	void OnResize(const nb::core::Window::ResizeArgs &args);
-	void OnPointerAction(const nb::core::Window::PointerEventArgs &args);
+	void OnMouseAction(const nb::core::Window::MouseEventArgs &args);
 	void OnKeyAction(const nb::core::Window::KeyEventArgs &args);
 
 	nb::core::Window	*m_window;

@@ -14,10 +14,10 @@ void TestWindow::test()
 	m_window = new Window(200, 200, 800, 480);
 	m_window1 = new Window(200, 200, 800, 480);
 	m_window->ResizeEvent.addHandler(std::bind(&TestWindow::OnResize, this, std::placeholders::_1));
-	m_window->PointerEvent.addHandler(std::bind(&TestWindow::OnPointerAction, this, std::placeholders::_1));
+	m_window->MouseEvent.addHandler(std::bind(&TestWindow::OnMouseAction, this, std::placeholders::_1));
 	m_window->KeyEvent.addHandler(std::bind(&TestWindow::OnKeyAction, this, std::placeholders::_1));
 	m_window1->ResizeEvent.addHandler(std::bind(&TestWindow::OnResize, this, std::placeholders::_1));
-	m_window1->PointerEvent.addHandler(std::bind(&TestWindow::OnPointerAction, this, std::placeholders::_1));
+	m_window1->MouseEvent.addHandler(std::bind(&TestWindow::OnMouseAction, this, std::placeholders::_1));
 	m_window1->KeyEvent.addHandler(std::bind(&TestWindow::OnKeyAction, this, std::placeholders::_1));
 
 	m_window->setTitle("1111");
@@ -46,9 +46,9 @@ void TestWindow::OnResize(const nb::core::Window::ResizeArgs & args)
 	printf("TestWindow::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
 }
 
-void TestWindow::OnPointerAction(const nb::core::Window::PointerEventArgs & args)
+void TestWindow::OnMouseAction(const nb::core::Window::MouseEventArgs & args)
 {
-	printf("TestWindow::OnPointerAction--action[%d], x[%d], y[%d]\r\n", args.action, args.x, args.y);
+	printf("TestWindow::OnMouseAction--action[%d], x[%d], y[%d]\r\n", args.action, args.x, args.y);
 }
 
 void TestWindow::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
