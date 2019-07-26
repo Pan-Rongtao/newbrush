@@ -394,9 +394,10 @@ void Window_Internal::pending()
 //以下为其他私有函数，callback等
 
 #ifdef NB_OS_FAMILY_WINDOWS
-
+bool bTrackFlag = false;
 LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static bool bHover = false;
 	auto iter = m_windows.find((long)hwnd);
 	Window *pWindow = iter == m_windows.end() ? nullptr : iter->second;
 
@@ -412,6 +413,13 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 	case WM_SIZE:
 		if (pWindow)
 			pWindow->ResizeEvent.dispatch({ pWindow->width(), pWindow->height() });
+		break;
+	case WM_MOUSELEAVE:
+		if (pWindow)
+		{
+			bHover = false;
+			pWindow->MouseEvent.dispatch({ MouseActionE::Leave, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+		}
 		break;
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
@@ -429,7 +437,16 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 	case WM_MOUSEMOVE:
 	{
 		if (pWindow)
+		{
+			TRACKMOUSEEVENT tme{ sizeof(TRACKMOUSEEVENT), TME_LEAVE, hwnd, 0 };
+			::TrackMouseEvent(&tme);
+			if (!bHover)
+			{
+				pWindow->MouseEvent.dispatch({ MouseActionE::Enter, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+				bHover = true;
+			}
 			pWindow->MouseEvent.dispatch({ MouseActionE::Move, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+		}
 	}
 	break;
 	case WM_LBUTTONUP:

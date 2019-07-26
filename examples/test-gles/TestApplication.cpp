@@ -411,6 +411,7 @@ void MyApplication::OnMouseAction(const nb::core::Window::MouseEventArgs & args)
 	}
 	case MouseActionE::Move:
 	{
+		if (!bPress)	break;
 		for (int i = 0; i != m_context->renderObjectCount(); ++i)
 		{
 			m_context->renderObject(i)->model()->rotate((float)-(args.x - pressX), 0.0f, 1.0f, 0.0f);
