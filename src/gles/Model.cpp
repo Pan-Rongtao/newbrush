@@ -2,6 +2,10 @@
 #include <GLES2/gl2.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/intersect.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/ext/matrix_projection.hpp>
+#include "gles/Egl.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -227,23 +231,28 @@ void Model::scale(float x, float y, float z)
 	m_matrix = m_translateMatrix * m_rotateMatrix * m_scaleMatrix;
 }
 
-bool Model::hitTest(int x, int y) const
+bool Model::hitTest(float xNormalized, float yNormalized) const
 {
-	return false;
-}
-
-bool Model::triangleTest(const glm::vec3 & a, const glm::vec3 &b, const glm::vec3 &c, int x, int y) const
-{
-/*	CELL::Ray ray = Domain::GetInstance()->GetCamera()->GetPrivateData()->CreateRayFromScreen(x, y);
-	float t, u, v;
-	CELL::float4 tranVec1 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(a.x(),a.y(),a.z(),1.0);
-	CELL::float4 tranglm::vec2 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(b.x(),b.y(),b.z(), 1.0);
-	CELL::float4 tranglm::vec3 = modelMatrix().GetPrivateData()->m_matrix * CELL::float4(c.x(),c.y(),c.z(),1.0);
-
-	CELL::float3 v1(tranVec1.x, tranVec1.y, tranVec1.z);
-	CELL::float3 v2(tranglm::vec2.x, tranglm::vec2.y, tranglm::vec2.z);
-	CELL::float3 v3(tranglm::vec3.x, tranglm::vec3.y, tranglm::vec3.z);
-	return CELL::intersectTriangle<float>(ray.getOrigin(), ray.getDirection(), v1, v2, v3, &t, &u, &v);*/
+	glm::mat4 invVP = glm::inverse(nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix());
+	glm::vec4 screenPos = glm::vec4(xNormalized, -yNormalized, 1.0f, 1.0f);
+	glm::vec4 worldPos = invVP * screenPos;
+	glm::vec3 raypos = nb::gl::getCamera()->posotion();
+	glm::vec3 raydir = glm::normalize(glm::vec3(worldPos));
+	for (auto const &mesh : meshes())
+	{
+		auto idxs = mesh.indices();
+		for (auto i = 0u; i + 3 <= mesh.indices().size(); i += 3)
+		{
+			auto p0 = mesh.vertexs()[idxs[i + 0]].position;
+			auto p1 = mesh.vertexs()[idxs[i + 1]].position;
+			auto p2 = mesh.vertexs()[idxs[i + 2]].position;
+			glm::vec2 bary;
+			float d;
+			auto mvp = getMatrix();
+			if (glm::intersectRayTriangle(raypos, raydir, glm::vec3(mvp * glm::vec4(p0, 1.0)), glm::vec3(mvp * glm::vec4(p1, 1.0)), glm::vec3(mvp * glm::vec4(p2, 1.0)), bary, d))
+				return true;
+		}
+	}
 	return false;
 }
 

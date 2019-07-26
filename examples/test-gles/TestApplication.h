@@ -30,6 +30,9 @@ public:
 	void drawGlyph();
 	void drawGlyphBunch();
 
+	bool isHit(std::shared_ptr<RenderObject> obj, int x, int y) const;
+	void hitTest(int x, int y);
+
 protected:
 	virtual void preRender() override;
 

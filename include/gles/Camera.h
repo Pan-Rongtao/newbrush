@@ -28,7 +28,10 @@ public:
 	void lookat(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &upVec);
 	void lookat2D(float width, float height);
 
+	glm::vec3 posotion() const;
+
 private:
+	glm::vec3		m_pos;
 	glm::mat4x4		m_matrix;
 };
 

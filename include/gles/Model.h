@@ -130,9 +130,8 @@ public:
 	void scale(float x, float y, float z);
 
 	//命中测试
-	virtual bool hitTest(int x, int y) const;
-
-	bool triangleTest(const glm::vec3 & a, const glm::vec3 &b, const glm::vec3 &c, int x, int y) const;
+	//xNormalized和yNormalized都是归一化的x,y，范围在[-1, 1]之间
+	virtual bool hitTest(float xNormalized, float yNormalized) const;
 
 	//剔除表面，不重写则禁用
 	virtual void cullFace();

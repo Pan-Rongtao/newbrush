@@ -6,7 +6,7 @@
 void TestUniformGrid::test()
 {
 	auto uniformGrid = std::make_shared<UniformGrid>();
-	uniformGrid->Rows = 0;
+	uniformGrid->Rows = 8;
 	uniformGrid->Columns = 4;
 	uniformGrid->FirstColumn = 1;
 	
@@ -37,13 +37,13 @@ void TestUniformGrid::test()
 	//	es0->Height = 100;
 
 	auto text = std::make_shared<TextBlock>("abcdefg");
-	/*
+	
 	uniformGrid->Children().push_back(rc0);
 	uniformGrid->Children().push_back(rc1);
 	uniformGrid->Children().push_back(rc2);
 	uniformGrid->Children().push_back(rc3);
 	uniformGrid->Children().push_back(es0);
 	uniformGrid->Children().push_back(text);
-	*/
+	
 	m_window.Content = uniformGrid;
 }

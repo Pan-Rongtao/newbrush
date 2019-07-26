@@ -59,17 +59,17 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	OnResize(args);
 	
-	drawLines();
-	drawPolylines();
+//	drawLines();
+//	drawPolylines();
 	drawTriangles();
 	drawQuadrangles();
-	drawEllipses();
-	drawCubes();
-	drawSphere();
-	drawPhone();
+//	drawEllipses();
+//	drawCubes();
+//	drawSphere();
+//	drawPhone();
 	//	drawModel();
-	drawGlyph();
-	drawGlyphBunch();
+//	drawGlyph();
+//	drawGlyphBunch();
 }
 
 void MyApplication::drawLines()
@@ -354,6 +354,23 @@ void MyApplication::drawGlyphBunch()
 	m_context->queue(ro);
 }
 
+bool MyApplication::isHit(std::shared_ptr<RenderObject> obj, int x, int y) const
+{
+	float xNormalized = x / (m_window->clientWidth() * 0.5f) - 1.0f;
+	float yNormalized = y / (m_window->clientHeight() * 0.5f) - 1.0f;
+	return obj->model()->hitTest(xNormalized, yNormalized);
+}
+
+void MyApplication::hitTest(int x, int y)
+{
+	for (auto i = 0u; i != m_context->renderObjectCount(); ++i)
+	{
+		auto obj = m_context->renderObject(i);
+		if (isHit(obj, x, y))
+			printf("obj[%d] is hit.\n", i);
+	}
+}
+
 void MyApplication::preRender()
 {
 //	changeColor();
@@ -362,14 +379,16 @@ void MyApplication::preRender()
 
 void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 {
-	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", args.width, args.height);
-	nb::gl::getProjection()->perspective(45.0f, (float)args.width / args.height, 0.1f, 10000.0f);
+	auto w = m_window->clientWidth();
+	auto h = m_window->clientHeight();
+	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", w, h);
+	nb::gl::getProjection()->perspective(45.0f, (float)w / h, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
 	else
-		nb::gl::getCamera()->lookat2D((float)args.width, (float)args.height);
+		nb::gl::getCamera()->lookat2D((float)w, (float)h);
 
-	nb::gl::viewport(0, 0, args.width, args.height);
+	nb::gl::viewport(0, 0, w, h);
 }
 
 bool bPress = false;
@@ -385,8 +404,11 @@ void MyApplication::OnPointerAction(const nb::core::Window::PointerEventArgs & a
 		pressY = args.y;
 		break;
 	case PointerActionE::Up:
+	{
 		bPress = false;
+		hitTest(args.x, args.y);
 		break;
+	}
 	case PointerActionE::Move:
 	{
 		for (int i = 0; i != m_context->renderObjectCount(); ++i)
