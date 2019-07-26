@@ -47,13 +47,13 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 	{
 		if (Columns <= 0)
 		{
-			rows = std::ceil(sqrt(Children().size()));
+			rows = (int)std::ceil(sqrt(Children().size()));
 			cols = rows;
 		}
 		else
 		{
 			cols = Columns;
-			rows = std::ceil(Children().size() / (double)cols);
+			rows = (int)std::ceil(Children().size() / (double)cols);
 		}
 	}
 	else
@@ -61,7 +61,7 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 		rows = Rows;
 		if (Columns <= 0)
 		{
-			cols = std::ceil(Children().size() / (double)rows);
+			cols = (int)std::ceil(Children().size() / (double)rows);
 		}
 		else
 		{

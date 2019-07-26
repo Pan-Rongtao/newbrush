@@ -394,46 +394,25 @@ void Window_Internal::pending()
 //以下为其他私有函数，callback等
 
 #ifdef NB_OS_FAMILY_WINDOWS
-bool bTrackFlag = false;
 LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	static bool bHover = false;
 	auto iter = m_windows.find((long)hwnd);
 	Window *pWindow = iter == m_windows.end() ? nullptr : iter->second;
-
-	//只有pWindow->listener()方式才能访问非static成员，因为m_listener不是Window_Internal的成员。
 	switch (msg)
 	{
-	case WM_DESTROY:
-		break;
+	case WM_DESTROY:																																			break;
 	case WM_CLOSE:
-	case WM_QUIT:
-		::PostQuitMessage(0);
-		break;
-	case WM_SIZE:
-		if (pWindow)
-			pWindow->ResizeEvent.dispatch({ pWindow->width(), pWindow->height() });
-		break;
-	case WM_MOUSELEAVE:
-		if (pWindow)
-		{
-			bHover = false;
-			pWindow->MouseEvent.dispatch({ MouseActionE::Leave, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
-		}
-		break;
-	case WM_LBUTTONDOWN:
-	case WM_RBUTTONDOWN:
-	{
-		::SetCapture(hwnd);
-		if (pWindow)
-		{
-			int x = GET_X_LPARAM(lParam);
-			int y = GET_Y_LPARAM(lParam);
-			pWindow->MouseEvent.dispatch({ msg == WM_LBUTTONDOWN ? MouseActionE::LeftButtonDown : MouseActionE::RightButtonDown, x, y });
-			pWindow->MouseEvent.dispatch({ MouseActionE::Down, x, y });
-		}
-	}
-	break;
+	case WM_QUIT:			::PostQuitMessage(0);																												break;
+	case WM_SIZE:			if (pWindow) { pWindow->ResizeEvent.dispatch({ pWindow->width(), pWindow->height() }); }											break;
+	case WM_MOUSELEAVE:		if (pWindow) { bHover = false; pWindow->MouseLeaveEvent.dispatch({ }); }															break;
+	case WM_LBUTTONDOWN:	::SetCapture(hwnd);  if (pWindow)	pWindow->MouseLeftButtonEvent.dispatch({ true, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });	break;
+	case WM_RBUTTONDOWN:	::SetCapture(hwnd);  if (pWindow)	pWindow->MouseRightButtonEvent.dispatch({ true, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });	break;
+	case WM_MBUTTONDOWN:	::SetCapture(hwnd);  if (pWindow)	pWindow->MouseMiddleButtonEvent.dispatch({ true, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });	break;
+	case WM_LBUTTONUP:		::ReleaseCapture();	if (pWindow)	pWindow->MouseLeftButtonEvent.dispatch({false, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });	break;
+	case WM_RBUTTONUP:		::ReleaseCapture();	if (pWindow)	pWindow->MouseRightButtonEvent.dispatch({ false, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });	break;
+	case WM_MBUTTONUP:		::ReleaseCapture();	if (pWindow)	pWindow->MouseMiddleButtonEvent.dispatch({ false, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });break;
+	case WM_MOUSEWHEEL:		if (pWindow)	pWindow->MouseWheelEvent.dispatch({ (short)HIWORD(wParam) });														break;
 	case WM_MOUSEMOVE:
 	{
 		if (pWindow)
@@ -442,40 +421,19 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 			::TrackMouseEvent(&tme);
 			if (!bHover)
 			{
-				pWindow->MouseEvent.dispatch({ MouseActionE::Enter, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+				pWindow->MouseEnterEvent.dispatch({});
 				bHover = true;
 			}
-			pWindow->MouseEvent.dispatch({ MouseActionE::Move, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
+			pWindow->MouseMoveEvent.dispatch({ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) });
 		}
 	}
 	break;
-	case WM_LBUTTONUP:
-	case WM_RBUTTONUP:
-	{
-		::ReleaseCapture();
-		if (pWindow)
-		{
-			int x = GET_X_LPARAM(lParam);
-			int y = GET_Y_LPARAM(lParam);
-			pWindow->MouseEvent.dispatch({ msg == WM_LBUTTONUP ? MouseActionE::LeftButtonUp : MouseActionE::RightButtonUp, x, y });
-			pWindow->MouseEvent.dispatch({ MouseActionE::Up, x, y });
-			RECT rcClient;
-			::GetClientRect(hwnd, &rcClient);
-			if (x >= 0 && x <= (rcClient.right - rcClient.left) && y >= 0 && y <= (rcClient.bottom - rcClient.top))
-				pWindow->MouseEvent.dispatch({ MouseActionE::Click, x, y});
-		}
-	}
-	break;
-	case WM_MOUSEWHEEL:
-		if (pWindow)
-			pWindow->MouseEvent.dispatch({ MouseActionE::Wheel, (short)HIWORD(wParam), (short)LOWORD(wParam) });
-		break;
 	case WM_KEYDOWN:
 	case WM_KEYUP:
 	{
 		if (pWindow)
 		{
-			Window::KeyEventArgs args{ msg == WM_KEYDOWN ? KeyActionE::Down : KeyActionE::Up, KeyCodeE::Unknown, 0 };
+			Window::KeyEventArgs args{ msg == WM_KEYDOWN, KeyCodeE::Unknown, 0 };
 			if (wParam == VK_ESCAPE)														args.key = KeyCodeE::Esc;
 			else if (wParam >= VK_F1 && wParam <= VK_F12)									args.key = (KeyCodeE)(wParam - VK_F1 + static_cast<int>(KeyCodeE::F1));
 			else if (wParam == VK_SPACE)													args.key = KeyCodeE::Space;
@@ -495,7 +453,7 @@ LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 		{
 			if (wParam == VK_F10)//F10只有systemkey，且F10会影响其他key建
 			{
-				pWindow->KeyEvent.dispatch({ msg == WM_KEYDOWN ? KeyActionE::Down : KeyActionE::Up, KeyCodeE::F10, 0 });
+				pWindow->KeyEvent.dispatch({ msg == WM_KEYDOWN, KeyCodeE::F10, 0 });
 
 				//F10在win32中会让窗口消息进入空闲状态，此时不会再接收到F1-F12按键，除非再按一次F10来取消这种状态
 				//而直接return 0不return ::DefWindowProc(hwnd, msg, wParam, lParam);可防止这种事情发生。

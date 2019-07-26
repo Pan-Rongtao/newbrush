@@ -28,10 +28,10 @@ nb::gui::Window::Window()
 	{
 		auto ratio = (float)m_glWindow->clientWidth() / m_glWindow->clientHeight();
 		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-		nb::gl::getCamera()->lookat2D(m_glWindow->clientWidth(), m_glWindow->clientHeight());
+		nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
 		nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
-		Width = args.width;
-		Height = args.height;
+		Width = (float)args.width;
+		Height = (float)args.height;
 		updateLayout();
 	};
 	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
@@ -96,7 +96,7 @@ nb::core::Size nb::gui::Window::arrangeOverride(const nb::core::Size & finalSize
 {
 	if (Content())
 	{
-		Content()->arrage(Rect(0.0, 0.0, m_glWindow->clientWidth(), m_glWindow->clientHeight()));
+		Content()->arrage(Rect(0.0, 0.0, (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight()));
 	}
 	return finalSize;
 }

@@ -1,6 +1,5 @@
 ﻿#include "TestEgl.h"
 #include "TestApplication.h"
-#include "TestWindow.h"
 #include "TestConfigure.h"
 #include "TestModel.h"
 #include "TestTexture2D.h"

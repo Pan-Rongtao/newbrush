@@ -37,9 +37,15 @@ protected:
 	virtual void preRender() override;
 
 private:
-	void OnResize(const nb::core::Window::ResizeArgs &args);
-	void OnMouseAction(const nb::core::Window::MouseEventArgs &args);
-	void OnKeyAction(const nb::core::Window::KeyEventArgs &args);
+	void onResize(const nb::core::Window::ResizeArgs &args);
+	void onMouseEnter(const nb::core::Window::MouseEnterEventArgs &args);
+	void onMouseLeave(const nb::core::Window::MouseLeaveEventArgs &args);
+	void onMouseMove(const nb::core::Window::MouseMoveEventArgs &args);
+	void onMouseLeftButton(const nb::core::Window::MouseLeftButtonEventArgs &args);
+	void onMouseRightButton(const nb::core::Window::MouseRightButtonEventArgs &args);
+	void onMouseMiddleButton(const nb::core::Window::MouseMiddleButtonEventArgs &args);
+	void onMouseWheel(const nb::core::Window::MouseWheelEventArgs &args);
+	void onKeyAction(const nb::core::Window::KeyEventArgs &args);
 
 	void OnTick(const nb::core::Timer::TickArgs & param);
 

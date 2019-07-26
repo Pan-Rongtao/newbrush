@@ -48,16 +48,22 @@ MyApplication::MyApplication()
 	m_window->setWidth(800);
 	m_window->setHeight(480);
 	m_window->setTitle("newbrush");
-	m_window->ResizeEvent.addHandler(std::bind(&MyApplication::OnResize, this, std::placeholders::_1));
-	m_window->MouseEvent.addHandler(std::bind(&MyApplication::OnMouseAction, this, std::placeholders::_1));
-	m_window->KeyEvent.addHandler(std::bind(&MyApplication::OnKeyAction, this, std::placeholders::_1));
+	m_window->ResizeEvent += std::bind(&MyApplication::onResize, this, std::placeholders::_1);
+	m_window->MouseEnterEvent += std::bind(&MyApplication::onMouseEnter, this, std::placeholders::_1);
+	m_window->MouseLeaveEvent += std::bind(&MyApplication::onMouseLeave, this, std::placeholders::_1);
+	m_window->MouseMoveEvent += std::bind(&MyApplication::onMouseMove, this, std::placeholders::_1);
+	m_window->MouseLeftButtonEvent += std::bind(&MyApplication::onMouseLeftButton, this, std::placeholders::_1);
+	m_window->MouseRightButtonEvent += std::bind(&MyApplication::onMouseRightButton, this, std::placeholders::_1);
+	m_window->MouseMiddleButtonEvent += std::bind(&MyApplication::onMouseMiddleButton, this, std::placeholders::_1);
+	m_window->MouseWheelEvent += std::bind(&MyApplication::onMouseWheel, this, std::placeholders::_1);
+	m_window->KeyEvent.addHandler(std::bind(&MyApplication::onKeyAction, this, std::placeholders::_1));
 	m_surface = std::make_shared<WindowSurface>(m_window->width(), m_window->height(), m_window->handle());
 	nb::gl::makeCurrent(m_surface, m_surface, m_context);
 
 	nb::gl::Window::ResizeArgs args;
 	args.width = m_window->width();
 	args.height = m_window->height();
-	OnResize(args);
+	onResize(args);
 	
 //	drawLines();
 //	drawPolylines();
@@ -377,11 +383,11 @@ void MyApplication::preRender()
 	m_timer.driveInLoop();
 }
 
-void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
+void MyApplication::onResize(const nb::core::Window::ResizeArgs & args)
 {
 	auto w = m_window->clientWidth();
 	auto h = m_window->clientHeight();
-	printf("MyApplication::OnResize--width[%d], height[%d]\r\n", w, h);
+	printf("MyApplication::onResize--width[%d], height[%d]\r\n", w, h);
 	nb::gl::getProjection()->perspective(45.0f, (float)w / h, 0.1f, 10000.0f);
 	if (g_Original)
 		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
@@ -391,47 +397,61 @@ void MyApplication::OnResize(const nb::core::Window::ResizeArgs & args)
 	nb::gl::viewport(0, 0, w, h);
 }
 
+void MyApplication::onMouseEnter(const nb::core::Window::MouseEnterEventArgs & args)
+{
+}
+
+void MyApplication::onMouseLeave(const nb::core::Window::MouseLeaveEventArgs & args)
+{
+}
+
 bool bPress = false;
 static int pressX = 0;
 static int pressY = 0;
-void MyApplication::OnMouseAction(const nb::core::Window::MouseEventArgs & args)
+void MyApplication::onMouseLeftButton(const nb::core::Window::MouseLeftButtonEventArgs & args)
 {
-	switch (args.action)
+	if (args.pressed)
 	{
-	case MouseActionE::Down:
 		bPress = true;
 		pressX = args.x;
 		pressY = args.y;
-		break;
-	case MouseActionE::Up:
+	}
+	else
 	{
 		bPress = false;
 		hitTest(args.x, args.y);
-		break;
-	}
-	case MouseActionE::Move:
-	{
-		if (!bPress)	break;
-		for (int i = 0; i != m_context->renderObjectCount(); ++i)
-		{
-			m_context->renderObject(i)->model()->rotate((float)-(args.x - pressX), 0.0f, 1.0f, 0.0f);
-			m_context->renderObject(i)->model()->rotate((float)-(args.y - pressY), 1.0f, 0.0f, 0.0f);
-		}
-		pressX = args.x;
-		pressY = args.y;
-		break;
-	}
-	default:
-		break;
 	}
 }
 
-void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
+void MyApplication::onMouseRightButton(const nb::core::Window::MouseRightButtonEventArgs & args)
 {
-//	printf("MyApplication::OnKeyAction---action[%d], key[%d],mask[%d]\r\n", action, key, mask);
-	switch (args.action)
+}
+
+void MyApplication::onMouseMiddleButton(const nb::core::Window::MouseMiddleButtonEventArgs & args)
+{
+}
+
+void MyApplication::onMouseWheel(const nb::core::Window::MouseWheelEventArgs & args)
+{
+}
+
+void MyApplication::onMouseMove(const nb::core::Window::MouseMoveEventArgs & args)
+{
+	if (!bPress)	return;
+	for (int i = 0; i != m_context->renderObjectCount(); ++i)
 	{
-	case KeyActionE::Down:
+		m_context->renderObject(i)->model()->rotate((float)-(args.x - pressX), 0.0f, 1.0f, 0.0f);
+		m_context->renderObject(i)->model()->rotate((float)-(args.y - pressY), 1.0f, 0.0f, 0.0f);
+	}
+	pressX = args.x;
+	pressY = args.y;
+}
+
+void MyApplication::onKeyAction(const nb::core::Window::KeyEventArgs & args)
+{
+	switch (args.down)
+	{
+	case true:
 		switch (args.key)
 		{
 		case KeyCodeE::Esc:
@@ -570,10 +590,6 @@ void MyApplication::OnKeyAction(const nb::core::Window::KeyEventArgs & args)
 		default:
 			break;
 		}
-		break;
-	case KeyActionE::Up:
-		break;
-	case KeyActionE::LongPress:
 		break;
 	default:
 		break;

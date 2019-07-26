@@ -20,13 +20,6 @@ enum class WindowStyleE
 	SizeBox,
 };
 
-enum class KeyActionE
-{
-	Down,
-	Up,
-	LongPress,
-};
-
 enum class KeyCodeE
 {
 	Unknown = -1,
@@ -36,22 +29,6 @@ enum class KeyCodeE
 	A		= 0x41, B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,
 	Left,Up,Right,Down,
 	Add,Sub,
-};
-
-enum class MouseActionE
-{
-	Down,
-	Up,
-	LeftButtonDown,
-	LeftButtonUp,
-	RightButtonDown,
-	RightButtonUp,
-	Enter,
-	Move,
-	Leave,
-	Wheel,
-	Click,
-	LongPress,
 };
 
 class Window_Internal;
@@ -142,13 +119,37 @@ public:
 	struct ResizeArgs { int width; int height; };
 	nb::core::Event<ResizeArgs>			ResizeEvent;
 
-	//鼠标事件
-	struct MouseEventArgs { MouseActionE action; int x; int y; };
-	nb::core::Event<MouseEventArgs>		MouseEvent;
+	//鼠标进入事件
+	struct MouseEnterEventArgs { };
+	nb::core::Event<MouseEnterEventArgs>		MouseEnterEvent;
+
+	//鼠标移动事件
+	struct MouseMoveEventArgs { int x; int y; };
+	nb::core::Event<MouseMoveEventArgs>			MouseMoveEvent;
+
+	//鼠标离开事件
+	struct MouseLeaveEventArgs { };
+	nb::core::Event<MouseLeaveEventArgs>		MouseLeaveEvent;
+
+	//鼠标左键事件
+	struct MouseLeftButtonEventArgs { bool pressed; int x; int y; };
+	nb::core::Event<MouseLeftButtonEventArgs>	MouseLeftButtonEvent;
+
+	//鼠标右键事件
+	struct MouseRightButtonEventArgs { bool pressed; int x; int y; };
+	nb::core::Event<MouseRightButtonEventArgs>	MouseRightButtonEvent;
+
+	//鼠标中键事件
+	struct MouseMiddleButtonEventArgs { bool pressed; int x; int y; };
+	nb::core::Event<MouseMiddleButtonEventArgs>	MouseMiddleButtonEvent;
+
+	//鼠标滚轮事件
+	struct MouseWheelEventArgs { int delta; };
+	nb::core::Event<MouseWheelEventArgs>		MouseWheelEvent;
 
 	//键盘事件
-	struct KeyEventArgs { KeyActionE action; KeyCodeE key; int mask; };
-	nb::core::Event<KeyEventArgs>		KeyEvent;
+	struct KeyEventArgs { bool down; KeyCodeE key; int mask; };
+	nb::core::Event<KeyEventArgs>				KeyEvent;
 
 private:
 	Window_Internal	*m_internal;

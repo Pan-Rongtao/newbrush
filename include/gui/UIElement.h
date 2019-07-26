@@ -86,6 +86,9 @@ public:
 protected:
 	virtual core::Size measureOverride(const core::Size &availableSize);
 	virtual core::Size arrangeOverride(const core::Size &finalSize);
+//	virtual void onMouseEnter();
+//	virtual void onMouseLeave();
+//	virtual void onMouesLeftButtonDown();
 
 private:
 	nb::core::Size											m_desiredSize;
