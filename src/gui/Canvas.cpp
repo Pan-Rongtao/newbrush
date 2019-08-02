@@ -14,10 +14,8 @@ Canvas::~Canvas()
 
 void Canvas::setLeft(std::shared_ptr<UIElement> element, float left)
 {
-	if (std::find(Children().begin(), Children().end(), element) != Children().end())
-	{
+	if (containsChild(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyLeft, left);
-	}
 }
 
 float Canvas::getLeft(std::shared_ptr<UIElement> element)
@@ -28,10 +26,8 @@ float Canvas::getLeft(std::shared_ptr<UIElement> element)
 
 void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
 {
-	if (std::find(Children().begin(), Children().end(), element) != Children().end())
-	{
+	if (containsChild(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyRight, right);
-	}
 }
 
 float Canvas::getRight(std::shared_ptr<UIElement> element)
@@ -42,10 +38,8 @@ float Canvas::getRight(std::shared_ptr<UIElement> element)
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
 {
-	if (std::find(Children().begin(), Children().end(), element) != Children().end())
-	{
+	if (containsChild(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyTop, top);
-	}
 }
 
 float Canvas::getTop(std::shared_ptr<UIElement> element)
@@ -56,10 +50,8 @@ float Canvas::getTop(std::shared_ptr<UIElement> element)
 
 void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
 {
-	if (std::find(Children().begin(), Children().end(), element) != Children().end())
-	{
+	if (containsChild(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyBottom, bottom);
-	}
 }
 
 float Canvas::getBottom(std::shared_ptr<UIElement> element)
@@ -71,7 +63,7 @@ float Canvas::getBottom(std::shared_ptr<UIElement> element)
 //位设置宽高则默认为0
 Size Canvas::measureOverride(const Size & availableSize)
 {
-	for (auto child : Children())
+	for (auto child : m_children)
 	{
 		child->measure(Size((std::isnan(child->Width()) ? 0.0f : child->Width()), (std::isnan(child->Height()) ? 0.0f : child->Height())));
 	}
@@ -80,7 +72,7 @@ Size Canvas::measureOverride(const Size & availableSize)
 
 Size Canvas::arrangeOverride(const Size & finalSize)
 {
-	for (auto child : Children())
+	for (auto child : m_children)
 	{
 		auto x = getLeft(child);
 		auto y = getTop(child);

@@ -83,7 +83,8 @@ void TestButton::test()
 	group->States().push_back(state_press);
 	group->States().push_back(state_mouseover);
 	*/
-	m_window.Content = m_btn;
+	m_window = std::make_shared<nb::gui::Window>();
+	m_window->Content = m_btn;
 //	m_btn->Width = 100;
 }
 

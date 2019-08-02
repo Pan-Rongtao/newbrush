@@ -30,7 +30,7 @@ void Panel::init()
 
 void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	for (auto child : Children())
+	for (auto child : m_children)
 	{
 		child->onRender(drawContext);
 	}

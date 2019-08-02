@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestGrid> test;
+		TestHandle<TestButton> test;
 		test->test();
 		return app.run();
 	}

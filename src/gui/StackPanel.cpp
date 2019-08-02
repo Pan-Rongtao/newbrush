@@ -22,7 +22,7 @@ StackPanel::~StackPanel()
 Size StackPanel::measureOverride(const Size & availableSize)
 {
 	Size childMeasureSize;
-	for (auto const &child : Children())
+	for (auto const &child : m_children)
 	{
 		childMeasureSize.width() = std::isnan(child->Width()) ? 0.0f : child->Width();
 		childMeasureSize.height() = std::isnan(child->Height()) ? 0.0f : child->Height();
@@ -37,7 +37,7 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
 	auto x = 0.0f, y = 0.0f;
-	for (auto child : Children())
+	for (auto child : m_children)
 	{
 		if (Orientation == OrientationE::Horizontal)
 		{

@@ -27,10 +27,10 @@ void TestStackPanel::test()
 	rc3->Width = 100;
 	rc3->Height = 100;
 
-	sp->Children().push_back(rc0);
-	sp->Children().push_back(rc1);
-	sp->Children().push_back(rc2);
-	sp->Children().push_back(rc3);
+	sp->addChild(rc0);
+	sp->addChild(rc1);
+	sp->addChild(rc2);
+	sp->addChild(rc3);
 
 	m_window.Content = sp;
 }

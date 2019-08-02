@@ -63,12 +63,12 @@ void TestGrid::test()
 
 	auto text = std::make_shared<TextBlock>("abcdefg");
 
-	grid->Children().push_back(rc0);
-	grid->Children().push_back(rc1);
-	grid->Children().push_back(rc2);
-	grid->Children().push_back(rc3);
-	grid->Children().push_back(es0);
-	grid->Children().push_back(text);
+	grid->addChild(rc0);
+	grid->addChild(rc1);
+	grid->addChild(rc2);
+	grid->addChild(rc3);
+	grid->addChild(es0);
+	grid->addChild(text);
 
 	grid->setRow(rc0, 0);
 	grid->setColumn(rc0, 0);

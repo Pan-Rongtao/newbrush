@@ -63,7 +63,8 @@ public:
 	void removeChild(std::shared_ptr<UIElement> child);
 	void removeChild(uint32_t index, uint32_t count = 1);
 	void clearChild();
-	std::shared_ptr<UIElement> parent();
+	std::shared_ptr<UIElement> childAt(uint32_t index);
+	bool containsChild(std::shared_ptr<UIElement> element) const;
 
 	void updateLayout();
 
@@ -90,7 +91,7 @@ public:
 	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
 	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
 	core::Property_rw<FlowDirectionE>						FlowDirection;
-	core::Property_r<std::shared_ptr<UIElement>>			Parent;
+//	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
 	core::Property_rw<std::shared_ptr<Style>>				style;
 	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
@@ -120,6 +121,7 @@ public:
 	virtual void onMouseWheel(int delta);
 
 protected:
+	std::shared_ptr<UIElement>								m_parent;
 	std::vector<std::shared_ptr<UIElement>>					m_children;
 
 private:

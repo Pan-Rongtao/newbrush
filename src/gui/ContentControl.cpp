@@ -7,6 +7,10 @@ using namespace nb::core;
 
 ContentControl::ContentControl()
 {
+	Content.notify([&](const std::shared_ptr<UIElement> &_old, const std::shared_ptr<UIElement> &_new) {
+		if (childCount() == 0)	addChild(_new);
+		else					m_children[0] = _new;
+	});
 }
 
 ContentControl::~ContentControl()

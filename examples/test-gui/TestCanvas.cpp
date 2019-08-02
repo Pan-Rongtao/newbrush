@@ -67,14 +67,14 @@ void TestCanvas::test()
 	doubleAni.TargetProperty = &m_window.Width;
 	doubleAni.begin();
 
-	cv->Children().push_back(rc0);
-	cv->Children().push_back(rc1);
-	cv->Children().push_back(rc2);
-	cv->Children().push_back(rc3);
-	cv->Children().push_back(es0);
-	cv->Children().push_back(line0);
-	cv->Children().push_back(pl0);
-	cv->Children().push_back(pg0);
+	cv->addChild(rc0);
+	cv->addChild(rc1);
+	cv->addChild(rc2);
+	cv->addChild(rc3);
+	cv->addChild(es0);
+	cv->addChild(line0);
+	cv->addChild(pl0);
+	cv->addChild(pg0);
 	cv->setLeft(rc0, 100);
 	cv->setTop(rc0, 100);
 	cv->setLeft(rc1, 200);

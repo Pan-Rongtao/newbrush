@@ -38,8 +38,7 @@ uint32_t UIElement::childCount() const
 
 void UIElement::addChild(std::shared_ptr<UIElement> child)
 {
-	m_children.push_back(child);
-	child->parent() = shared_from_this();
+	insertChild(childCount(), child);
 }
 
 void UIElement::insertChild(uint32_t index, std::shared_ptr<UIElement> child)
@@ -48,7 +47,11 @@ void UIElement::insertChild(uint32_t index, std::shared_ptr<UIElement> child)
 		nbThrowException(std::out_of_range, "index");
 
 	m_children.insert(m_children.begin() + index, child);
-	child->parent() = shared_from_this();
+	try {
+		child->m_parent = shared_from_this();
+	}catch(...){
+		nbThrowException(std::runtime_error, "parent must be a std::shared object.");
+	}
 }
 
 void UIElement::removeChild(std::shared_ptr<UIElement> child)
@@ -74,9 +77,16 @@ void UIElement::clearChild()
 	m_children.clear();
 }
 
-std::shared_ptr<UIElement> UIElement::parent()
+std::shared_ptr<UIElement> UIElement::childAt(uint32_t index)
 {
-	return std::shared_ptr<UIElement>();
+	if (index >= childCount())
+		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d]", index, childCount());
+	return m_children[index];
+}
+
+bool UIElement::containsChild(std::shared_ptr<UIElement> element) const
+{
+	return std::find(m_children.begin(), m_children.end(), element) != m_children.end();
 }
 
 void UIElement::updateLayout()

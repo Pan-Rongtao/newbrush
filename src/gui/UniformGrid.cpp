@@ -15,7 +15,7 @@ Size UniformGrid::measureOverride(const nb::core::Size & availableSize)
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = availableSize.width() / rowsColums.second;
 	auto cellHeight = availableSize.height() / rowsColums.first;
-	for (auto child : Children())
+	for (auto child : m_children)
 	{
 		child->measure(Size(cellWidth, cellHeight));
 	}
@@ -28,9 +28,9 @@ Size UniformGrid::arrangeOverride(const nb::core::Size & finalSize)
 	auto cellWidth = finalSize.width() / rowsColums.second;
 	auto cellHeight = finalSize.height() / rowsColums.first;
 	auto firstCol = (Columns < 0 || FirstColumn < 0 || FirstColumn >= Columns) ? 0 : FirstColumn();
-	for (auto i = 0u; i != Children().size(); ++i)
+	for (auto i = 0u; i != m_children.size(); ++i)
 	{
-		auto child = Children()[i];
+		auto child = m_children[i];
 		auto row = (i + firstCol) % rowsColums.second;
 		auto col = (i + firstCol) / rowsColums.second;
 		auto x = row * cellWidth;
@@ -47,13 +47,13 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 	{
 		if (Columns <= 0)
 		{
-			rows = (int)std::ceil(sqrt(Children().size()));
+			rows = (int)std::ceil(sqrt(m_children.size()));
 			cols = rows;
 		}
 		else
 		{
 			cols = Columns;
-			rows = (int)std::ceil(Children().size() / (double)cols);
+			rows = (int)std::ceil(m_children.size() / (double)cols);
 		}
 	}
 	else
@@ -61,7 +61,7 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 		rows = Rows;
 		if (Columns <= 0)
 		{
-			cols = (int)std::ceil(Children().size() / (double)rows);
+			cols = (int)std::ceil(m_children.size() / (double)rows);
 		}
 		else
 		{

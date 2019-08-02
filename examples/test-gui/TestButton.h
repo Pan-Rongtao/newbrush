@@ -15,5 +15,5 @@ public:
 	void onBtnClick(const Button::ClickEventArgs &args);
 
 	std::shared_ptr<Button> m_btn;
-	nb::gui::Window m_window;
+	std::shared_ptr<nb::gui::Window> m_window;
 };
