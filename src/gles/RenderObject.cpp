@@ -3,6 +3,7 @@
 #include "gles/Camera.h"
 #include "gles/Projection.h"
 #include "gles/Egl.h"
+#include "core/Log.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -43,7 +44,7 @@ void RenderObject::loadFromFile(const std::string & path)
 	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		printf("load [%s] fail, error:%s\r\n", path.data(), importer.GetErrorString());
+		nb::Log::error("load [%s] fail:%s", path.data(), importer.GetErrorString());
 		return;
 	}
 

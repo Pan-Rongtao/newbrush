@@ -7,6 +7,7 @@
 #include "gui/Application.h"
 #include "WindowCollections.h"
 #include "../src/gles/EglMaster.h"
+#include "gui/VisualTreeHelper.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -34,7 +35,15 @@ nb::gui::Window::Window()
 		Height = (float)args.height;
 		updateLayout();
 	};
-	m_glWindow->ResizeEvent.addHandler(std::bind(onWindowResized, std::placeholders::_1));
+	m_glWindow->ResizeEvent += std::bind(&Window::onNativeWindowResize, this, std::placeholders::_1);
+	m_glWindow->MouseEnterEvent += std::bind(&Window::onNativeWindowMouseEnter, this, std::placeholders::_1);
+	m_glWindow->MouseLeaveEvent += std::bind(&Window::onNativeWindowMouseLeave, this, std::placeholders::_1);
+	m_glWindow->MouseMoveEvent += std::bind(&Window::onNativeWindowMouseMove, this, std::placeholders::_1);
+	m_glWindow->MouseLeftButtonEvent += std::bind(&Window::onNativeWindowMouseLeftButton, this, std::placeholders::_1);
+	m_glWindow->MouseRightButtonEvent += std::bind(&Window::onNativeWindowMouseRightButton, this, std::placeholders::_1);
+	m_glWindow->MouseMiddleButtonEvent += std::bind(&Window::onNativeWindowMouseMiddleButton, this, std::placeholders::_1);
+	m_glWindow->MouseWheelEvent += std::bind(&Window::onNativeWindowMouseWheel, this, std::placeholders::_1);
+	m_glWindow->KeyEvent += std::bind(&Window::onNativeWindowKeyAction, this, std::placeholders::_1);
 
 	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
 	WindowStyle.notify(std::bind(&Window::onWindowStyleChanged, this, std::placeholders::_1, std::placeholders::_2));
@@ -84,7 +93,8 @@ nb::core::Size nb::gui::Window::measureOverride(const nb::core::Size & available
 	if (Content())
 	{
 		Content()->measure({ (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight() });
-		return Content()->DesiredSize;
+		//return Content()->DesiredSize;
+		return availableSize;
 	}
 	else
 	{
@@ -99,6 +109,37 @@ nb::core::Size nb::gui::Window::arrangeOverride(const nb::core::Size & finalSize
 		Content()->arrage(Rect(0.0, 0.0, (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight()));
 	}
 	return finalSize;
+}
+
+void loopTest(int x, int y, std::shared_ptr<nb::gl::Window> w, UIElement *e, std::vector<UIElement *> &hits)
+{
+	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
+	{
+		float xNormalized = x / (w->clientWidth() * 0.5f) - 1.0f;
+		float yNormalized = y / (w->clientHeight() * 0.5f) - 1.0f;
+		if (!obj || obj->model() == nullptr)	return false;
+		return obj->model()->hitTest(xNormalized, yNormalized);
+	};
+
+	auto count = VisualTreeHelper::getChildCount(e);
+	for (int i = 0; i != count; ++i)
+	{
+		auto child = VisualTreeHelper::getChild(e, i);
+		if (!child)	continue;
+		if (hit(child->Renderer()))
+			hits.push_back(child);
+		if (VisualTreeHelper::getChildCount(child) > 0)
+		{
+			loopTest(x, y, w, child, hits);
+		}
+	}
+};
+
+std::vector<UIElement *> nb::gui::Window::hitElements(int x, int y) const
+{
+	std::vector<UIElement *> hits;
+	loopTest(x, y, m_glWindow, const_cast<nb::gui::Window *>(this), hits);
+	return hits;
 }
 
 void nb::gui::Window::onWindowStateChanged(const core::WindowStateE & _old, const core::WindowStateE & _new)
@@ -134,6 +175,70 @@ void nb::gui::Window::onWidthChanged(const float & _old, const float & _new)
 void nb::gui::Window::onHeightChanged(const float & _old, const float & _new)
 {
 	m_glWindow->setHeight((int)_new);
+}
+
+void nb::gui::Window::onNativeWindowResize(const core::Window::ResizeArgs & args)
+{
+	auto ratio = (float)m_glWindow->clientWidth() / m_glWindow->clientHeight();
+	nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
+	nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
+	nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
+	Width = (float)args.width;
+	Height = (float)args.height;
+	updateLayout();
+}
+
+void nb::gui::Window::onNativeWindowMouseEnter(const core::Window::MouseEnterEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowMouseLeave(const core::Window::MouseLeaveEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowMouseMove(const core::Window::MouseMoveEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowMouseLeftButton(const core::Window::MouseLeftButtonEventArgs & args)
+{
+	auto hits = hitElements(args.x, args.y);
+	if (args.pressed)
+	{
+		for (auto e : hits)
+		{
+			e->onMouseLeftButtonDown();
+			e->onMouseDown();
+			e->MouseLeftButtonDown.dispatch({});
+			e->MouseDown.dispatch({});
+		}
+	}
+	else
+	{
+		for (auto e : hits)
+		{
+			e->onMouseLeftButtonUp();
+			e->onMouseUp();
+			e->MouseLeftButtonUp.dispatch({});
+			e->MouseUp.dispatch({});
+		}
+	}
+}
+
+void nb::gui::Window::onNativeWindowMouseRightButton(const core::Window::MouseRightButtonEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowMouseMiddleButton(const core::Window::MouseMiddleButtonEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowMouseWheel(const core::Window::MouseWheelEventArgs & args)
+{
+}
+
+void nb::gui::Window::onNativeWindowKeyAction(const core::Window::KeyEventArgs & args)
+{
 }
 
 void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string & _new)

@@ -6,6 +6,7 @@
 #include "gles/Configure.h"
 #include "gles/RenderObject.h"
 #include "EglMaster.h"
+#include "core/Log.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -58,6 +59,6 @@ void Application::render()
 		float fps = frames * 1000.0f / (kk - k);
 		frames = 0;
 		k = kk;
-		printf("fps:%.2f\r\n", fps);
+		Log::info("fps:%.2f", fps);
 	}
 }

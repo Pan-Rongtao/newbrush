@@ -1,5 +1,5 @@
 ﻿#include "gui/DockPanel.h"
-#include "gui/AttachedProperty.h"
+#include "gui/DependencyProperty.h"
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -16,13 +16,13 @@ void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyDock, dock);
+		DependencyProperty::registerAttached(element, AttachedPropertyDock, dock);
 	}
 }
 
 DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyDock);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyDock);
 	return v.empty() ? DockE::Left : any_cast<DockE>(v);
 }
 

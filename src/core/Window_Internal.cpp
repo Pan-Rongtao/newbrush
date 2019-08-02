@@ -1,6 +1,7 @@
 #include "Window_Internal.h"
 #include "core/Window.h"
 #include <cstring>
+#include "core/Log.h"
 
 using namespace nb::core;
 
@@ -75,7 +76,7 @@ Window_Internal::~Window_Internal()
 #ifdef NB_OS_FAMILY_WINDOWS
 	if (::DestroyWindow(m_hwnd) == 0 || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
 	{
-		printf("DestroyWindow or UnregisterClass window class fail. error code[%d]\n", GetLastError());
+		Log::error("DestroyWindow or UnregisterClass window class fail. error code[%d]", GetLastError());
 	}
 #elif defined NB_OS_FAMILY_UNIX
 	XCloseDisplay(m_X11Display);

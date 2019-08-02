@@ -6,6 +6,7 @@
 #include <freetype/ft2build.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftbitmap.h>
+#include "core/Log.h"
 #include "media/Font.h"
 #include FT_FREETYPE_H
 
@@ -26,7 +27,7 @@ public:
 		: Texture2D(GlyphAltasWidth, GlyphAltasHeight) , m_x(0) , m_y(0) , m_font(font)
 	{
 		if ((width() != 0 && height() != 0) && (width() % m_font->size() != 0 || height() % m_font->size() != 0))
-			printf("warning: width or height mod glypSize != 0\n");
+			nb::Log::warn("width or height mod glypSize != 0");
 
 		bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width(), height(), 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
@@ -131,6 +132,6 @@ std::shared_ptr<Glyph> GlyphFactory::getGlyph(std::shared_ptr<Font> font, wchar_
 	}
 
 	auto newAtlas = new TextureGlyphAtlas(font, L"");
-	printf("GlyphFactory::getGlyph[%d] at new Atlas\n", ch);
+	nb::Log::info("char[%d] at new TextureGlyphAtlas", ch);
 	return newAtlas->getGlyph(ch);
 }

@@ -27,6 +27,11 @@ template<class T>
 class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
+	PropertyAnimation() = default;
+	PropertyAnimation(const T &to) : To(to) {}
+	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
+	PropertyAnimation(const T &from, const T &to, const T &by) : From(from), To(to), By(by) {}
+
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;
 	core::Property_rw<T>							By;
@@ -55,4 +60,5 @@ void PropertyAnimation<nb::core::Color>::progressing(float progress)
 	(*TargetProperty)().setRgb(r, g, b);
 }
 
-}}
+}
+}

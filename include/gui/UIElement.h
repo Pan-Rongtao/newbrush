@@ -6,6 +6,9 @@
 #include "../gui/Thickness.h"
 #include "../gles/RenderObject.h"
 #include "../gui/AnimationTimeline.h"
+#include "gui/DependencyProperty.h"
+#include "gui/Style.h"
+#include "gui/VisualStateMachine.h"
 
 namespace nb{ namespace gl{
 	class Context;
@@ -48,12 +51,19 @@ enum class OrientationE
 	Vertical,
 };
 
-
-class NB_API UIElement
+class NB_API UIElement : public std::enable_shared_from_this<UIElement>
 {
 public:
 	UIElement();
 	virtual ~UIElement();
+
+	uint32_t childCount() const;
+	void addChild(std::shared_ptr<UIElement> child);
+	void insertChild(uint32_t index, std::shared_ptr<UIElement> child);
+	void removeChild(std::shared_ptr<UIElement> child);
+	void removeChild(uint32_t index, uint32_t count = 1);
+	void clearChild();
+	std::shared_ptr<UIElement> parent();
 
 	void updateLayout();
 
@@ -82,13 +92,35 @@ public:
 	core::Property_rw<FlowDirectionE>						FlowDirection;
 	core::Property_r<std::shared_ptr<UIElement>>			Parent;
 	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
+	core::Property_rw<std::shared_ptr<Style>>				style;
+	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
+
+	struct MouseEnterArgs {}; core::Event<MouseEnterArgs>	MouseEnter;
+	struct MouseLeaveArgs {}; core::Event<MouseLeaveArgs>	MouseLeave;
+	struct MouseDownArgs {}; core::Event<MouseDownArgs>		MouseDown;
+	struct MouseUpArgs {}; core::Event<MouseUpArgs>			MouseUp;
+	struct MouseLeftButtonDownArgs {}; core::Event<MouseLeftButtonDownArgs>		MouseLeftButtonDown;
+	struct MouseLeftButtonUpArgs {}; core::Event<MouseLeftButtonUpArgs>			MouseLeftButtonUp;
+	struct MouseRightButtonDownArgs {}; core::Event<MouseRightButtonDownArgs>	MouseRightButtonDown;
+	struct MouseRightButtonUpArgs {}; core::Event<MouseRightButtonUpArgs>		MouseRightButtonUp;
+	struct MouseWheelArgs {}; core::Event<MouseWheelArgs>						MouseWheel;
 	
-protected:
+public:
 	virtual core::Size measureOverride(const core::Size &availableSize);
 	virtual core::Size arrangeOverride(const core::Size &finalSize);
-//	virtual void onMouseEnter();
-//	virtual void onMouseLeave();
-//	virtual void onMouesLeftButtonDown();
+	virtual void onMouseEnter();
+	virtual void onMouseLeave();
+	virtual void onMouseDown();
+	virtual void onMouseUp();
+	virtual void onMouseLeftButtonDown();
+	virtual void onMouseLeftButtonUp();
+	virtual void onMouseRightButtonDown();
+	virtual void onMouseRightButtonUp();
+	virtual void onMouseMove();
+	virtual void onMouseWheel(int delta);
+
+protected:
+	std::vector<std::shared_ptr<UIElement>>					m_children;
 
 private:
 	nb::core::Size											m_desiredSize;
@@ -97,5 +129,4 @@ private:
 };
 
 }
-
 }

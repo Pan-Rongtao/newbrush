@@ -2,6 +2,7 @@
 #include <GLES2/gl2ext.h>
 #include "gles/Texture.h"
 #include "gles/Egl.h"
+#include "core/Log.h"
 
 using namespace nb::core;
 using namespace nb::media;
@@ -43,7 +44,7 @@ int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
 	case WrappingModeE::Repeat:				nGl = GL_REPEAT;							break;
 	case WrappingModeE::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;					break;
 	case WrappingModeE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;						break;
-	case WrappingModeE::ClampToBorder:		printf("warning, not in opengl es 2.0");	break;
+	case WrappingModeE::ClampToBorder:		nb::Log::warn("not in opengl es 2.0");		break;
 	default:																			break;
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
@@ -90,7 +91,7 @@ int TextureFilter::glValue(TextureFilter::FilterE filter)
 	case FilterE::Point:		nGl = GL_NEAREST;																	break;
 	case FilterE::Bilinear:		nGl = GL_LINEAR;																	break;
 	case FilterE::Trilinear:	nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
-	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	printf("warning, check if gpu supports\n");	break;
+	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	nb::Log::warn("check if gpu supports\n");	break;
 	default:																										break;
 	}
 	return nGl;

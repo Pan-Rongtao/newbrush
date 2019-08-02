@@ -47,6 +47,8 @@ protected:
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
 private:
+	std::vector<UIElement *> hitElements(int x, int y) const;
+
 	void onWindowStateChanged(const core::WindowStateE &_old, const core::WindowStateE &_new);
 	void onWindowStyleChanged(const core::WindowStyleE &_old, const core::WindowStyleE &_new);
 	void onTopmostChanged(const bool &_old, const bool &_new);
@@ -56,6 +58,16 @@ private:
 	void onIconChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
 	void onWidthChanged(const float &_old, const float &_new);
 	void onHeightChanged(const float &_old, const float &_new);
+
+	void onNativeWindowResize(const core::Window::ResizeArgs &args);
+	void onNativeWindowMouseEnter(const core::Window::MouseEnterEventArgs &args);
+	void onNativeWindowMouseLeave(const core::Window::MouseLeaveEventArgs &args);
+	void onNativeWindowMouseMove(const core::Window::MouseMoveEventArgs &args);
+	void onNativeWindowMouseLeftButton(const core::Window::MouseLeftButtonEventArgs &args);
+	void onNativeWindowMouseRightButton(const core::Window::MouseRightButtonEventArgs &args);
+	void onNativeWindowMouseMiddleButton(const core::Window::MouseMiddleButtonEventArgs &args);
+	void onNativeWindowMouseWheel(const core::Window::MouseWheelEventArgs &args);
+	void onNativeWindowKeyAction(const core::Window::KeyEventArgs &args);
 
 	std::shared_ptr<nb::gl::Window>		m_glWindow;
 };

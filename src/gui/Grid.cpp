@@ -1,5 +1,5 @@
 ﻿#include "gui/Grid.h"
-#include "gui/AttachedProperty.h"
+#include "gui/DependencyProperty.h"
 #include <numeric>
 
 using namespace nb::core;
@@ -88,13 +88,13 @@ void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
 {
 	if ((row > 0 && row < RowDefinitions().size()) && std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyRow, row);
+		DependencyProperty::registerAttached(element, AttachedPropertyRow, row);
 	}
 }
 
 uint32_t Grid::getRow(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyRow);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyRow);
 	return v.empty() ? 0 : any_cast<uint32_t>(v);
 }
 
@@ -102,13 +102,13 @@ void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
 {
 	if ((col > 0 && col < ColumnDefinitions().size()) && std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyColumn, col);
+		DependencyProperty::registerAttached(element, AttachedPropertyColumn, col);
 	}
 }
 
 uint32_t Grid::getColumn(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyColumn);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumn);
 	return v.empty() ? 0 : any_cast<uint32_t>(v);
 }
 
@@ -116,13 +116,13 @@ void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
 {
 	if ((rowSpan >= 1 && rowSpan <= RowDefinitions().size()) && std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyRowSpan, rowSpan);
+		DependencyProperty::registerAttached(element, AttachedPropertyRowSpan, rowSpan);
 	}
 }
 
 uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyRowSpan);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyRowSpan);
 	return v.empty() ? 1 : any_cast<uint32_t>(v);
 }
 
@@ -130,13 +130,13 @@ void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
 {
 	if ((colSpan <= ColumnDefinitions().size()) && std::find(Children().begin(), Children().end(), element) != Children().end() && colSpan >= 1)
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyColumnSpan, colSpan);
+		DependencyProperty::registerAttached(element, AttachedPropertyColumnSpan, colSpan);
 	}
 }
 
 uint32_t Grid::getColumnSpan(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyColumnSpan);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumnSpan);
 	return v.empty() ? 1 : any_cast<uint32_t>(v);
 }
 

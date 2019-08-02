@@ -8,7 +8,7 @@ using namespace nb::core;
 using namespace nb::gui;
 void TestApp::test()
 {
-#if 1
+#if 0
 	auto image = std::make_shared<Image>();
 	image->Source = std::make_shared<ImageSource>("e:/Pics/5.jpg");
 	image->Margin = Thickness(20);
@@ -16,13 +16,11 @@ void TestApp::test()
 	m_window.Content = image;
 #endif
 
-#if 0
+#if 1
 	auto rect = std::make_shared<Rectangle>();
-	//rect->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
 	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
-	rect->Margin = Thickness(20);
+	rect->Margin = Thickness(10);
 	rect->Width = 100;
-	rect->Height = 200;
 	m_window.Content = rect;
 #endif
 

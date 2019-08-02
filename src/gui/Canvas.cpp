@@ -1,5 +1,5 @@
 ﻿#include "gui/Canvas.h"
-#include "gui/AttachedProperty.h"
+#include "gui/DependencyProperty.h"
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -16,13 +16,13 @@ void Canvas::setLeft(std::shared_ptr<UIElement> element, float left)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyLeft, left);
+		DependencyProperty::registerAttached(element, AttachedPropertyLeft, left);
 	}
 }
 
 float Canvas::getLeft(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyLeft);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyLeft);
 	return v.empty() ? NAN : any_cast<float>(v);
 }
 
@@ -30,13 +30,13 @@ void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyRight, right);
+		DependencyProperty::registerAttached(element, AttachedPropertyRight, right);
 	}
 }
 
 float Canvas::getRight(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyRight);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyRight);
 	return v.empty() ? NAN : any_cast<float>(v);
 }
 
@@ -44,13 +44,13 @@ void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyTop, top);
+		DependencyProperty::registerAttached(element, AttachedPropertyTop, top);
 	}
 }
 
 float Canvas::getTop(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyTop);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyTop);
 	return v.empty() ? NAN : any_cast<float>(v);
 }
 
@@ -58,13 +58,13 @@ void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
 {
 	if (std::find(Children().begin(), Children().end(), element) != Children().end())
 	{
-		AttachedProperties::registerAttached(element, AttachedPropertyBottom, bottom);
+		DependencyProperty::registerAttached(element, AttachedPropertyBottom, bottom);
 	}
 }
 
 float Canvas::getBottom(std::shared_ptr<UIElement> element)
 {
-	auto v = AttachedProperties::findAttached(element, AttachedPropertyBottom);
+	auto v = DependencyProperty::findAttached(element, AttachedPropertyBottom);
 	return v.empty() ? NAN : any_cast<float>(v);
 }
 

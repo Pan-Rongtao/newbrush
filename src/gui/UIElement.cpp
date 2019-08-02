@@ -1,4 +1,5 @@
 #include "gui/UIElement.h"
+#include "gui/Window.h"
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -15,15 +16,69 @@ UIElement::UIElement()
 	, VerticalAlignment(VerticalAlignmentE::Stretch)
 	, FlowDirection(FlowDirectionE::LeftToRight)
 	, Renderer(std::make_shared<nb::gl::RenderObject>())
+	, StateMachine(std::make_shared<VisualStateMachine>())
 {
 	DesiredSize.getter([&]()->Size& { return m_desiredSize; });
 	ActualSize.getter([&]()->Size& {return m_actualSize; });
+	Width.notify([&](const float &_old, const float &_new) {updateLayout(); });
+	Height.notify([&](const float &_old, const float &_new) {updateLayout(); });
+	style.notify([&](const std::shared_ptr<Style> &_old, const std::shared_ptr<Style> &_new) {
+		
+	});
 }
 
 UIElement::~UIElement()
 {
 }
-#include <gui/Window.h>
+
+uint32_t UIElement::childCount() const
+{
+	return m_children.size();
+}
+
+void UIElement::addChild(std::shared_ptr<UIElement> child)
+{
+	m_children.push_back(child);
+	child->parent() = shared_from_this();
+}
+
+void UIElement::insertChild(uint32_t index, std::shared_ptr<UIElement> child)
+{
+	if (index > childCount())
+		nbThrowException(std::out_of_range, "index");
+
+	m_children.insert(m_children.begin() + index, child);
+	child->parent() = shared_from_this();
+}
+
+void UIElement::removeChild(std::shared_ptr<UIElement> child)
+{
+	auto iter = std::find(m_children.begin(), m_children.end(), child);
+	if (iter != m_children.end())
+	{
+		m_children.erase(iter);
+		return;
+	}
+}
+
+void UIElement::removeChild(uint32_t index, uint32_t count)
+{
+	if(index >= childCount())
+		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d]", index, childCount());
+	auto end = index + count < childCount() ? m_children.begin() + index + count : m_children.end();
+	m_children.erase(m_children.begin() + index, end);
+}
+
+void UIElement::clearChild()
+{
+	m_children.clear();
+}
+
+std::shared_ptr<UIElement> UIElement::parent()
+{
+	return std::shared_ptr<UIElement>();
+}
+
 void UIElement::updateLayout()
 {
 	measure({ Width, Height });
@@ -148,6 +203,46 @@ Size UIElement::measureOverride(const Size & availableSize)
 Size UIElement::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
+}
+
+void UIElement::onMouseEnter()
+{
+}
+
+void UIElement::onMouseLeave()
+{
+}
+
+void UIElement::onMouseDown()
+{
+}
+
+void UIElement::onMouseUp()
+{
+}
+
+void UIElement::onMouseLeftButtonDown()
+{
+}
+
+void UIElement::onMouseLeftButtonUp()
+{
+}
+
+void UIElement::onMouseRightButtonDown()
+{
+}
+
+void UIElement::onMouseRightButtonUp()
+{
+}
+
+void UIElement::onMouseMove()
+{
+}
+
+void UIElement::onMouseWheel(int delta)
+{
 }
 
 void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)

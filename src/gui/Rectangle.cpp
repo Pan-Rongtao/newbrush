@@ -45,10 +45,11 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 
 Size Rectangle::measureOverride(const Size & availableSize)
 {
+	m_availableSize = availableSize;
 	return availableSize;
 }
 
 Size Rectangle::arrangeOverride(const Size & finalSize)
 {
-	return finalSize;
+	return m_availableSize;
 }

@@ -9,6 +9,7 @@
 ********************************************************/
 #pragma once
 #include <typeinfo>
+#include "Def.h"
 
 namespace nb{ namespace core{
 
