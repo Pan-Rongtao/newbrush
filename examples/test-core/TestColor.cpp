@@ -1,10 +1,14 @@
 #include "TestColor.h"
 #include "core/Color.h"
 #include "limits.h"
+#include "core/Singleton.h"
 
 using namespace nb::core;
 void TestColor::test()
 {
+	Singleton<Color>::instance();
+	Singleton<Color>::instance();
+	  
 	Color c1;
 	Color c2(255, 0, 0);
 	Color c3(125, 0, 255, 0);

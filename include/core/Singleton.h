@@ -28,23 +28,22 @@ template<class T>
 class NB_API Singleton
 {
 public:
-	static T *Current()
+	static T *instance()
 	{
+		static T *t = nullptr;
 		if(!t)	t = new T();
 		return t;
 	}
-
-private:
-	static T			*t;
 };
-template<class T> T *Singleton<T>::t = nullptr;
 
 template<class T>
 class SingletonS
 {
 public:
-	static T *Current()
+	static T *instance()
 	{
+		static T *t = nullptr;
+		static std::mutex lock;
 		//加一层判断，减少lock消耗
 		if(!t)
 		{
@@ -55,11 +54,6 @@ public:
 		return t;
 	}
 
-private:
-	static T					*t;
-	static std::mutex			lock;
 };
-template<class T> T *SingletonS<T>::t = nullptr;
-template<class T> std::mutex SingletonS<T>::lock;
 
 }}
