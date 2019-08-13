@@ -129,9 +129,14 @@ public:
 	//缩放
 	void scale(float x, float y, float z);
 
-	//命中测试
-	//xNormalized和yNormalized都是归一化的x,y，范围在[-1, 1]之间
-	virtual bool hitTest(float xNormalized, float yNormalized) const;
+	//视线命中测试
+	//x,y：坐标
+	//viewWidth, viewHeight：可是区域，一般为窗口大小
+	virtual bool sightHitTest(float xNormalized, float yNormalized) const;
+
+	//正交命中测试
+	//x,y：坐标
+	virtual bool orthoHitTest(float x, float y);
 
 	//剔除表面，不重写则禁用
 	virtual void cullFace();
@@ -141,6 +146,7 @@ public:
 
 private:
 	glm::mat4x4 rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v);
+	bool intersect(const glm::vec3 &raypos, const glm::vec3 &raydir) const;
 
 	glm::mat4x4								m_matrix;
 	glm::mat4x4								m_translateMatrix;

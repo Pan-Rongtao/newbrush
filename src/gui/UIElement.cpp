@@ -89,11 +89,44 @@ bool UIElement::containsChild(std::shared_ptr<UIElement> element) const
 	return std::find(m_children.begin(), m_children.end(), element) != m_children.end();
 }
 
+std::shared_ptr<UIElement> UIElement::getRoot()
+{
+	try {
+		std::shared_ptr<UIElement> ret = shared_from_this();
+		while (ret->m_parent)
+		{
+			ret = ret->m_parent;
+		}
+		return ret;
+	}
+	catch (...) {
+		return nullptr;
+	}
+}
+
+Point UIElement::worldOffset()
+{
+	try {
+		std::shared_ptr<UIElement> p = shared_from_this();
+		Point ret;
+		do {
+			ret += p->Offset();
+		} while ((p->m_parent) && (p = p->m_parent));
+		return ret;
+	}
+	catch (...) {
+		return Point::zero();
+	}
+}
+
 void UIElement::updateLayout()
 {
-	measure({ Width, Height });
-	arrage(Rect(0, 0, DesiredSize()));
-	onRender(gui::Window::DrawContext());
+	auto root = getRoot();
+	if (!root)	return;
+
+	root->measure({ root->Width, root->Height });
+	root->arrage(Rect(0, 0, root->DesiredSize()));
+	root->onRender(gui::Window::DrawContext());
 }
 
 void UIElement::measure(const Size & availabelSize)
@@ -107,18 +140,16 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	auto Widthx = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
-	auto Heightx = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
-	constrainedSize.reset(Widthx, Heightx);
+	constrainedSize.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
+	constrainedSize.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
 	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	auto Widthxx = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
-	auto Heightxx = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
-	desiredSizeTemp.reset(Widthxx, Heightxx);
+	desiredSizeTemp.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
+	desiredSizeTemp.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
 
 	//由于child不关注和计算magin，因此需重新+margin
 	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
@@ -138,19 +169,16 @@ void UIElement::arrage(const Rect & finalRect)
 	auto arrangeSize = Size(finalRect.width() - Margin().left() - Margin().right(), finalRect.height() - Margin().top() - Margin().bottom());
 	auto clientSize = arrangeSize;
 	//调整arrange大于DesiredSize
-	arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
+	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)
-		arrangeSize.setWidth(DesiredSize().width());
-	if (VerticalAlignment != VerticalAlignmentE::Stretch)
-		arrangeSize.setHeight(DesiredSize().height());
+	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(DesiredSize().width());
+	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(DesiredSize().height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	auto Widthx = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
-	auto Heightx = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
-	arrangeSize.reset(Widthx, Heightx);
+	arrangeSize.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
+	arrangeSize.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);

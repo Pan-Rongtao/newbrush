@@ -231,29 +231,22 @@ void Model::scale(float x, float y, float z)
 	m_matrix = m_translateMatrix * m_rotateMatrix * m_scaleMatrix;
 }
 
-bool Model::hitTest(float xNormalized, float yNormalized) const
+//https://stackoverflow.com/questions/29997209/opengl-c-mouse-ray-picking-glmunproject
+bool Model::sightHitTest(float xNormalized, float yNormalized) const
 {
 	glm::mat4 invVP = glm::inverse(nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix());
 	glm::vec4 screenPos = glm::vec4(xNormalized, -yNormalized, 1.0f, 1.0f);
 	glm::vec4 worldPos = invVP * screenPos;
 	glm::vec3 raypos = nb::gl::getCamera()->posotion();
 	glm::vec3 raydir = glm::normalize(glm::vec3(worldPos));
-	for (auto const &mesh : meshes())
-	{
-		auto idxs = mesh.indices();
-		for (auto i = 0u; i + 3 <= mesh.indices().size(); i += 3)
-		{
-			auto p0 = mesh.vertexs()[idxs[i + 0]].position;
-			auto p1 = mesh.vertexs()[idxs[i + 1]].position;
-			auto p2 = mesh.vertexs()[idxs[i + 2]].position;
-			glm::vec2 bary;
-			float d;
-			auto mvp = getMatrix();
-			if (glm::intersectRayTriangle(raypos, raydir, glm::vec3(mvp * glm::vec4(p0, 1.0)), glm::vec3(mvp * glm::vec4(p1, 1.0)), glm::vec3(mvp * glm::vec4(p2, 1.0)), bary, d))
-				return true;
-		}
-	}
-	return false;
+	return intersect(raypos, raydir);
+}
+
+bool Model::orthoHitTest(float x, float y)
+{
+	glm::vec3 raypos(x, y, 10000.0f);
+	glm::vec3 raydir(0.0f, 0.0f, -1.0f);
+	return intersect(raypos, raydir);
 }
 
 void Model::cullFace()
@@ -292,4 +285,24 @@ glm::mat4x4 Model::rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 cons
 
 	Result[3] = glm::vec4(0, 0, 0, 1);
 	return Result * m;
+}
+
+bool Model::intersect(const glm::vec3 & raypos, const glm::vec3 & raydir) const
+{
+	for (auto const &mesh : meshes())
+	{
+		auto idxs = mesh.indices();
+		for (auto i = 0u; i + 3 <= mesh.indices().size(); i += 3)
+		{
+			auto p0 = mesh.vertexs()[idxs[i + 0]].position;
+			auto p1 = mesh.vertexs()[idxs[i + 1]].position;
+			auto p2 = mesh.vertexs()[idxs[i + 2]].position;
+			glm::vec2 bary;
+			float d;
+			auto m = getMatrix();
+			if (glm::intersectRayTriangle(raypos, raydir, glm::vec3(m * glm::vec4(p0, 1.0)), glm::vec3(m * glm::vec4(p1, 1.0)), glm::vec3(m * glm::vec4(p2, 1.0)), bary, d))
+				return true;
+		}
+	}
+	return false;
 }

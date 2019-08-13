@@ -92,12 +92,13 @@ void TestButton::onBtnMouseLeftButtonDown(const Button::MouseLeftButtonDownArgs 
 {
 	printf("onBtnMouseLeftButtonDown\n");
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
-	//m_btn->Width = 100;
+	m_btn->Width = 100;
 }
 
 void TestButton::onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs & args)
 {
 	printf("onBtnMouseLeftButtonUp\n");
+	m_btn->Width = 300;
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
 }
 
@@ -105,5 +106,8 @@ void TestButton::onBtnClick(const Button::ClickEventArgs & args)
 {
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 	printf("onBtnClick\n");
-	m_btn->Width = 100;
+	auto rcBtn = Rect( m_btn->worldOffset(), m_btn->ActualSize);
+	auto rcRect = Rect(m_btn->Content()->worldOffset(), m_btn->Content()->ActualSize);
+	printf("rcBtn{%d, %d, %d, %d}\n", (int)rcBtn.left(), (int)rcBtn.top(), (int)rcBtn.width(), (int)rcBtn.height());
+	printf("rcRect{%d, %d, %d, %d\n}", (int)rcRect.left(), (int)rcRect.top(), (int)rcRect.width(), (int)rcRect.height());
 }

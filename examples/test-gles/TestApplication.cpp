@@ -46,7 +46,7 @@ MyApplication::MyApplication()
 	m_context = std::make_shared<Context>(nb::gl::getConfigure());
 	m_window = std::make_shared<nb::gl::Window>();
 	m_window->setWidth(800);
-	m_window->setHeight(480);
+	m_window->setHeight(600);
 	m_window->setTitle("newbrush");
 	m_window->ResizeEvent += std::bind(&MyApplication::onResize, this, std::placeholders::_1);
 	m_window->MouseEnterEvent += std::bind(&MyApplication::onMouseEnter, this, std::placeholders::_1);
@@ -362,9 +362,16 @@ void MyApplication::drawGlyphBunch()
 
 bool MyApplication::isHit(std::shared_ptr<RenderObject> obj, int x, int y) const
 {
-	float xNormalized = x / (m_window->clientWidth() * 0.5f) - 1.0f;
-	float yNormalized = y / (m_window->clientHeight() * 0.5f) - 1.0f;
-	return obj->model()->hitTest(xNormalized, yNormalized);
+	if (g_Original)
+	{
+		float xNormalized = x / (m_window->clientWidth() * 0.5f) - 1.0f;
+		float yNormalized = y / (m_window->clientHeight() * 0.5f) - 1.0f;
+		return obj->model()->sightHitTest(xNormalized, yNormalized);
+	}
+	else
+	{
+		return obj->model()->orthoHitTest(x, y);
+	}
 }
 
 void MyApplication::hitTest(int x, int y)
@@ -388,11 +395,16 @@ void MyApplication::onResize(const nb::core::Window::ResizeArgs & args)
 	auto w = m_window->clientWidth();
 	auto h = m_window->clientHeight();
 	printf("MyApplication::onResize--width[%d], height[%d]\r\n", w, h);
-	nb::gl::getProjection()->perspective(45.0f, (float)w / h, 0.1f, 10000.0f);
 	if (g_Original)
-		nb::gl::getCamera()->lookat(cameraPosition, cameraPosition + cameraFront, cameraUp);
+	{
+		nb::gl::getProjection()->perspective(45.0f, (float)w / h, 0.1f, 10000.0f);
+		nb::gl::getCamera()->lookat(cameraPosition, { 0.0, 0.0, 0.0 }/*cameraPosition + cameraFront*/, cameraUp);
+	}
 	else
-		nb::gl::getCamera()->lookat2D((float)w, (float)h);
+	{
+		nb::gl::getProjection()->ortho(0, w, h, 0, 1000, -1000);
+		;// nb::gl::getCamera()->lookat2D((float)w, (float)h);
+	}
 
 	nb::gl::viewport(0, 0, w, h);
 }
@@ -419,6 +431,7 @@ void MyApplication::onMouseLeftButton(const nb::core::Window::MouseLeftButtonEve
 	else
 	{
 		bPress = false;
+		printf("x=%d, y=%d\n", args.x, args.y);
 		hitTest(args.x, args.y);
 	}
 }

@@ -66,6 +66,8 @@ public:
 	std::shared_ptr<UIElement> childAt(uint32_t index);
 	bool containsChild(std::shared_ptr<UIElement> element) const;
 
+	std::shared_ptr<UIElement> getRoot();
+	core::Point worldOffset();
 	void updateLayout();
 
 	void measure(const core::Size &availabelSize);

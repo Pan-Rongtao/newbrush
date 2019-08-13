@@ -115,10 +115,8 @@ void loopTest(int x, int y, std::shared_ptr<nb::gl::Window> w, UIElement *e, std
 {
 	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
 	{
-		float xNormalized = x / (w->clientWidth() * 0.5f) - 1.0f;
-		float yNormalized = y / (w->clientHeight() * 0.5f) - 1.0f;
 		if (!obj || obj->model() == nullptr)	return false;
-		return obj->model()->hitTest(xNormalized, yNormalized);
+		return obj->model()->orthoHitTest(x, y);
 	};
 
 	auto count = VisualTreeHelper::getChildCount(e);
