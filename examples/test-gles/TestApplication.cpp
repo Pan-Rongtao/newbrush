@@ -370,7 +370,7 @@ bool MyApplication::isHit(std::shared_ptr<RenderObject> obj, int x, int y) const
 	}
 	else
 	{
-		return obj->model()->orthoHitTest(x, y);
+		return obj->model()->orthoHitTest((float)x, (float)y);
 	}
 }
 
@@ -402,7 +402,7 @@ void MyApplication::onResize(const nb::core::Window::ResizeArgs & args)
 	}
 	else
 	{
-		nb::gl::getProjection()->ortho(0, w, h, 0, 1000, -1000);
+		nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
 		;// nb::gl::getCamera()->lookat2D((float)w, (float)h);
 	}
 

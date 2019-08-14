@@ -27,9 +27,12 @@ nb::gui::Window::Window()
 
 	auto onWindowResized = [&](const nb::core::Window::ResizeArgs & args)
 	{
-		auto ratio = (float)m_glWindow->clientWidth() / m_glWindow->clientHeight();
-		nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-		nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
+		auto w = (float)m_glWindow->clientWidth();
+		auto h = m_glWindow->clientHeight();
+		auto ratio = w / h;
+		//nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
+		nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
+		//nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
 		nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
 		Width = (float)args.width;
 		Height = (float)args.height;
@@ -116,7 +119,7 @@ void loopTest(int x, int y, std::shared_ptr<nb::gl::Window> w, UIElement *e, std
 	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
 	{
 		if (!obj || obj->model() == nullptr)	return false;
-		return obj->model()->orthoHitTest(x, y);
+		return obj->model()->orthoHitTest((float)x, (float)y);
 	};
 
 	auto count = VisualTreeHelper::getChildCount(e);
@@ -177,9 +180,12 @@ void nb::gui::Window::onHeightChanged(const float & _old, const float & _new)
 
 void nb::gui::Window::onNativeWindowResize(const core::Window::ResizeArgs & args)
 {
-	auto ratio = (float)m_glWindow->clientWidth() / m_glWindow->clientHeight();
-	nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-	nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
+	auto w = (float)m_glWindow->clientWidth();
+	auto h = m_glWindow->clientHeight();
+	auto ratio = w / h;
+	//nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
+	nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
+	//nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
 	nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
 	Width = (float)args.width;
 	Height = (float)args.height;
