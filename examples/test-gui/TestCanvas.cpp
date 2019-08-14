@@ -4,6 +4,7 @@
 
 void TestCanvas::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
 	auto cv = std::make_shared<Canvas>();
 
 	auto rc0 = std::make_shared<Rectangle>();
@@ -64,7 +65,7 @@ void TestCanvas::test()
 	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
-	doubleAni.TargetProperty = &m_window.Width;
+	doubleAni.TargetProperty = &m_window->Width;
 	doubleAni.begin();
 
 	cv->addChild(rc0);
@@ -92,7 +93,7 @@ void TestCanvas::test()
 	cv->setLeft(pg0, 200);
 	cv->setTop(pg0, 10);
 
-	m_window.Content = cv;
+	m_window->Content = cv;
 	
 }
 

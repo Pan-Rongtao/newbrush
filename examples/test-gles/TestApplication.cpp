@@ -34,7 +34,7 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = true;
+bool g_Original = false;
 
 MyApplication::MyApplication()
 {

@@ -11,5 +11,5 @@ class TestWrapPanel : public TestBase
 public:
 	void test();
 
-	nb::gui::Window m_window;
+	std::shared_ptr<nb::gui::Window> m_window;
 };

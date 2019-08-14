@@ -12,9 +12,13 @@ Polyline::Polyline()
 Polyline::Polyline(const std::vector<glm::vec2>& points)
 	: m_drawMode(GL_LINE_STRIP)
 {
-	auto xMinMax = std::minmax_element(points.begin(), points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
-	auto yMinMax = std::minmax_element(points.begin(), points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.y > p0.y; });
-	auto center = glm::vec3((xMinMax.second->x - xMinMax.first->x) / 2.0f, (yMinMax.second->y - yMinMax.first->y) / 2.0f, 0.0f);
+	auto center = glm::vec3(0.0f);
+	if (!points.empty())
+	{
+		auto xMinMax = std::minmax_element(points.begin(), points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
+		auto yMinMax = std::minmax_element(points.begin(), points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.y > p0.y; });
+		auto center = glm::vec3((xMinMax.second->x - xMinMax.first->x) / 2.0f, (yMinMax.second->y - yMinMax.first->y) / 2.0f, 0.0f);
+	}
 	std::vector<Vertex> vertexs;
 	std::vector<uint16_t> indices;
 	for (int i = 0; i != points.size(); ++i)

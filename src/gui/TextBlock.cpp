@@ -74,8 +74,9 @@ void TextBlock::onForegroundChanged(const nb::core::Color & _old, const nb::core
 
 void TextBlock::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	auto x = Offset().x();
-	auto y = Offset().y();
+	auto offset = worldOffset();
+	auto x = offset.x();
+	auto y = offset.y();
 	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing, LineHeight, TextWrapping(), ActualSize().width());
 	drawContext->queue(Renderer());
 }

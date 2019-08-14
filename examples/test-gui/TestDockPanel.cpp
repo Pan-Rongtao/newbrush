@@ -2,6 +2,7 @@
 
 void TestDockPanel::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
 	auto cv = std::make_shared<DockPanel>();
 	cv->LastChildFill = true;
 
@@ -36,5 +37,5 @@ void TestDockPanel::test()
 	cv->setDock(rc2, DockE::Right);
 	cv->setDock(rc3, DockE::Bottom);
 
-	m_window.Content = cv;
+	m_window->Content = cv;
 }

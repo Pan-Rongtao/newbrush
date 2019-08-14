@@ -28,9 +28,9 @@ class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
 	PropertyAnimation() = default;
-	PropertyAnimation(const T &to) : To((T)to) {}
-	PropertyAnimation(const T &from, const T &to) : From((T)from), To((T)to) {}
-	PropertyAnimation(const T &from, const T &to, const T &by) : From((T)from), To((T)to), By((T)by) {}
+	PropertyAnimation(const T &to) : To(to) {}
+	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
+	PropertyAnimation(const T &from, const T &to, const T &by) : From(from), To(to), By(by) {}
 
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;

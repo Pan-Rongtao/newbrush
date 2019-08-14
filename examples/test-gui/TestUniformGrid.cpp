@@ -5,6 +5,8 @@
 
 void TestUniformGrid::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
+
 	auto uniformGrid = std::make_shared<UniformGrid>();
 	uniformGrid->Rows = 8;
 	uniformGrid->Columns = 4;
@@ -45,5 +47,5 @@ void TestUniformGrid::test()
 	uniformGrid->addChild(es0);
 	uniformGrid->addChild(text);
 	
-	m_window.Content = uniformGrid;
+	m_window->Content = uniformGrid;
 }

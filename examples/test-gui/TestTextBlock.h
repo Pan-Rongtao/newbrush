@@ -20,6 +20,6 @@ private:
 	void onProgress(const Timeline::ProgressArgs &args);
 	void onCompleted(const Timeline::CompleteArgs &args);
 
-	std::shared_ptr<TextBlock>	m_text;
-	nb::gui::Window				m_window;
+	std::shared_ptr<TextBlock>			m_text;
+	std::shared_ptr<nb::gui::Window>	m_window;
 };

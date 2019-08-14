@@ -211,20 +211,20 @@ void nb::gui::Window::onNativeWindowMouseLeftButton(const core::Window::MouseLef
 	{
 		for (auto e : hits)
 		{
-			e->onMouseLeftButtonDown();
-			e->onMouseDown();
 			e->MouseLeftButtonDown.dispatch({});
 			e->MouseDown.dispatch({});
+			e->onMouseLeftButtonDown();
+			e->onMouseDown();
 		}
 	}
 	else
 	{
 		for (auto e : hits)
 		{
-			e->onMouseLeftButtonUp();
-			e->onMouseUp();
 			e->MouseLeftButtonUp.dispatch({});
 			e->MouseUp.dispatch({});
+			e->onMouseLeftButtonUp();
+			e->onMouseUp();
 		}
 	}
 }

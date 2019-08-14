@@ -12,8 +12,9 @@ Line::Line()
 
 void Line::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
+	auto offset = worldOffset();
 	Rect rc(Point(X1, Y1), Point(X2, Y2));
-	rc.move(Offset().x(), Offset().y());
+	rc.move(offset.x(), offset.y());
 	Renderer()->setModel(std::make_shared<nb::gl::Line>(rc.left(), rc.top(), rc.right(), rc.bottom()));
 	drawContext->queue(Renderer());
 }

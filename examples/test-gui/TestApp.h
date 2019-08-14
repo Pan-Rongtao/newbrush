@@ -12,5 +12,5 @@ public:
 	virtual void test();
 
 private:
-	nb::gui::Window m_window;
+	std::shared_ptr<nb::gui::Window> m_window;
 };

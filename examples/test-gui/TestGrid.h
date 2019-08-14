@@ -11,5 +11,5 @@ public:
 	virtual void test() override;
 
 	PropertyAnimation<float>	doubleAni;
-	nb::gui::Window m_window;
+	std::shared_ptr<nb::gui::Window> m_window;
 };

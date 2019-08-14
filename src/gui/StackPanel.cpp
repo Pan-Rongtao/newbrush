@@ -54,5 +54,5 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 			ret.height() += child->DesiredSize().height();
 		}
 	}
-	return ret;
+	return finalSize;
 }

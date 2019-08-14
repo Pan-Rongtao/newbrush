@@ -39,8 +39,8 @@ void TestButton::test()
 	state_normal = std::make_shared<VisualState>();
 	state_normal->Name = "NormalState";
 
-	auto doubleAni = std::make_shared<PropertyAnimation<float>>(100);
-	doubleAni->Duration = TimeSpan::fromSeconds(1);
+	auto doubleAni = std::make_shared<PropertyAnimation<float>>(100.0f); 
+	doubleAni->Duration = TimeSpan::fromSeconds(1); 
 	doubleAni->TargetProperty = &m_btn->Width;
 	state_normal->Storyboard = std::make_shared<Storyboard>();
 	state_normal->Storyboard()->Duration = TimeSpan::fromMilliseconds(1000);
@@ -106,8 +106,8 @@ void TestButton::onBtnClick(const Button::ClickEventArgs & args)
 {
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 	printf("onBtnClick\n");
-	auto rcBtn = Rect( m_btn->worldOffset(), m_btn->ActualSize);
-	auto rcRect = Rect(m_btn->Content()->worldOffset(), m_btn->Content()->ActualSize);
-	printf("rcBtn{%d, %d, %d, %d}\n", (int)rcBtn.left(), (int)rcBtn.top(), (int)rcBtn.width(), (int)rcBtn.height());
-	printf("rcRect{%d, %d, %d, %d\n}", (int)rcRect.left(), (int)rcRect.top(), (int)rcRect.width(), (int)rcRect.height());
+	//auto rcBtn = Rect( m_btn->worldOffset(), m_btn->ActualSize);
+	//auto rcRect = Rect(m_btn->Content()->worldOffset(), m_btn->Content()->ActualSize);
+	//printf("rcBtn{%d, %d, %d, %d}\n", (int)rcBtn.left(), (int)rcBtn.top(), (int)rcBtn.width(), (int)rcBtn.height());
+	//printf("rcRect{%d, %d, %d, %d\n}", (int)rcRect.left(), (int)rcRect.top(), (int)rcRect.width(), (int)rcRect.height());
 }

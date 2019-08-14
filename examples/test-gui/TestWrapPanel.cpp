@@ -2,6 +2,8 @@
 
 void TestWrapPanel::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
+
 	auto wp = std::make_shared<WrapPanel>();
 	wp->Orientation = OrientationE::Horizontal;
 //	wp->ItemHeight = 150;
@@ -58,5 +60,5 @@ void TestWrapPanel::test()
 	wp->addChild(rc7);
 
 	//m_window.Width = 599;
-	m_window.Content = wp;
+	m_window->Content = wp;
 }

@@ -2,6 +2,8 @@
 
 void TestStackPanel::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
+
 	auto sp = std::make_shared<StackPanel>();
 //	sp->Orientation = OrientationE::Vertical;
 
@@ -9,8 +11,8 @@ void TestStackPanel::test()
 	rc0->Fill = std::make_shared<SolidColorBrush>(Colors::red());
 	rc0->Width = 100;
 	rc0->Height = 100;
-//	rc0->VerticalAlignment = VerticalAlignmentE::Top;
-//	rc0->HorizontalAlignment = HorizontalAlignmentE::Right;
+	rc0->VerticalAlignment = VerticalAlignmentE::Top;
+	rc0->HorizontalAlignment = HorizontalAlignmentE::Right;
 
 	auto rc1 = std::make_shared<Rectangle>();
 	rc1->Fill = std::make_shared<SolidColorBrush>(Colors::green());
@@ -32,5 +34,5 @@ void TestStackPanel::test()
 	sp->addChild(rc2);
 	sp->addChild(rc3);
 
-	m_window.Content = sp;
+	m_window->Content = sp;
 }

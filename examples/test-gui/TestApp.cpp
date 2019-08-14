@@ -8,6 +8,7 @@ using namespace nb::core;
 using namespace nb::gui;
 void TestApp::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
 #if 0
 	auto image = std::make_shared<Image>();
 	image->Source = std::make_shared<ImageSource>("e:/Pics/5.jpg");
@@ -21,7 +22,7 @@ void TestApp::test()
 	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	rect->Margin = Thickness(10);
 	rect->Width = 100;
-	m_window.Content = rect;
+	m_window->Content = rect;
 #endif
 
 /*	auto ellipse = std::make_shared<nb::gui::Ellipse>();

@@ -18,7 +18,7 @@ public:
 
 
 	PropertyAnimation<float>	doubleAni;
-	nb::gui::Window m_window;
+	std::shared_ptr<nb::gui::Window> m_window;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);

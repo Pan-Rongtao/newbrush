@@ -27,7 +27,7 @@ Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Confi
 
 int Application::run()
 {
-//	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
+	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	while(true)

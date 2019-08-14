@@ -3,6 +3,7 @@
 
 void TestTextBlock::test()
 {
+	m_window = std::make_shared<nb::gui::Window>();
 	m_text = std::make_shared<TextBlock>();
 	m_text->Text = "abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 //	m_text->Text = "12345";
@@ -12,7 +13,7 @@ void TestTextBlock::test()
 //	m_text->Width = 400;
 	m_text->CharSpacing = 1.0f;
 	m_text->TextWrapping = TextWrappingE::Wrap;
-	m_window.Content = m_text;
+	m_window->Content = m_text;
 
 	colorAni.From = m_text->Foreground;
 	colorAni.To = Color(255, 0, 10);
@@ -42,14 +43,14 @@ void TestTextBlock::onCompleted(const Timeline::CompleteArgs & args)
 {
 	m_text->Text = "123";
 	return;
-	m_window.WindowState = WindowStateE::FullScreen;
-	m_window.WindowStyle = WindowStyleE::None;
-	m_window.Topmost = false;
+	m_window->WindowState = WindowStateE::FullScreen;
+	m_window->WindowStyle = WindowStyleE::None;
+	m_window->Topmost = false;
 	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window.WindowStyle = WindowStyleE::Fixed;
+	m_window->WindowStyle = WindowStyleE::Fixed;
 	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window.WindowStyle = WindowStyleE::None;
+	m_window->WindowStyle = WindowStyleE::None;
 	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window.WindowStyle = WindowStyleE::SizeBox;
+	m_window->WindowStyle = WindowStyleE::SizeBox;
 	printf("onCompleted.\n");
 }

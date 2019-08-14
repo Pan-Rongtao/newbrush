@@ -87,7 +87,7 @@ bool Mesh::hasAttribute(Vertex::VertexAttributeE attr) const
 
 float *Mesh::positionData()
 {
-	return hasAttribute(Vertex::positionAttribute) ? glm::value_ptr(m_vertexs[0].position) : nullptr;
+	return hasAttribute(Vertex::positionAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].position) : nullptr;
 }
 
 const float *Mesh::positionData() const
@@ -97,7 +97,7 @@ const float *Mesh::positionData() const
 
 float *Mesh::colorData()
 {
-	return hasAttribute(Vertex::colorAttribute) ? glm::value_ptr(m_vertexs[0].color) : nullptr;
+	return hasAttribute(Vertex::colorAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].color) : nullptr;
 }
 
 const float *Mesh::colorData() const
@@ -107,7 +107,7 @@ const float *Mesh::colorData() const
 
 float *Mesh::textureCoordinateData()
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
+	return hasAttribute(Vertex::textureCoordinateAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
 }
 
 const float *Mesh::textureCoordinateData() const
@@ -117,7 +117,7 @@ const float *Mesh::textureCoordinateData() const
 
 float *Mesh::normalData()
 {
-	return hasAttribute(Vertex::normalAttribute) ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
+	return hasAttribute(Vertex::normalAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
 }
 
 const float *Mesh::normalData() const
