@@ -142,21 +142,13 @@ void RenderObject::draw() const
 	for (int i = 0; i != m_model->meshes().size(); ++i)
 	{
 		auto const &mesh = m_model->meshes()[i];
-		//检查各个顶点位置、颜色、向量、纹理坐标属性，如果有则传到gpu
-		if (mesh.hasAttribute(Vertex::positionAttribute))
-			program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
-
-		if (mesh.hasAttribute(Vertex::colorAttribute))
-			program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
-
-		if (mesh.hasAttribute(Vertex::normalAttribute))
-			program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
-
-		if (mesh.hasAttribute(Vertex::textureCoordinateAttribute) && !textures.empty())
+		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
+		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
+		program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
+		if (!textures.empty())
 		{
-			int nTexCoord = Program::nbTexCoordLocaltion;
 			textures[0]->bind();
-			program->vertexAttributePointer(nTexCoord, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
+			program->vertexAttributePointer(Program::nbTexCoordLocaltion, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
 		}
 
 		glDrawElements(m_model->drawMode(), (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());
@@ -204,5 +196,5 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 		}
 	}
 #endif
-	return Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, indices);
+	return Mesh(vertexs, indices);
 }

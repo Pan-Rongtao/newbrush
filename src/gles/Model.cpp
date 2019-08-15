@@ -39,28 +39,25 @@ Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color, const glm::v
 }
 
 //class Mesh
-Mesh::Mesh(const EnumFlags<Vertex::VertexAttributeE>& attributes)
-	: m_attributes(attributes)
+Mesh::Mesh()
+	: Mesh({}, {})
 {
 }
 
-Mesh::Mesh(const EnumFlags<Vertex::VertexAttributeE>& attributes, const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
-	: m_attributes(attributes)
-	, m_vertexs(vertexs)
+Mesh::Mesh(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
+	: m_vertexs(vertexs)
 	, m_indices(indices)
 {
 }
 
 Mesh::Mesh(const Mesh & other)
-	: m_attributes(other.m_attributes)
-	, m_vertexs(other.m_vertexs)
+	: m_vertexs(other.m_vertexs)
 	, m_indices(other.m_indices)
 {
 }
 
 Mesh::Mesh(const Mesh && other)
-	: m_attributes(other.m_attributes)
-	, m_vertexs(std::move(other.m_vertexs))
+	: m_vertexs(std::move(other.m_vertexs))
 	, m_indices(std::move(other.m_indices))
 {
 
@@ -68,26 +65,19 @@ Mesh::Mesh(const Mesh && other)
 
 void Mesh::operator = (const Mesh &other)
 {
-	m_attributes = other.m_attributes;
 	m_vertexs = other.m_vertexs;
 	m_indices = other.m_indices;
 }
 
 void Mesh::operator = (const Mesh &&other)
 {
-	m_attributes = other.m_attributes;
 	m_vertexs = std::move(other.m_vertexs);
 	m_indices = std::move(other.m_indices);
 }
 
-bool Mesh::hasAttribute(Vertex::VertexAttributeE attr) const
-{
-	return m_attributes.testFlag(attr);
-}
-
 float *Mesh::positionData()
 {
-	return hasAttribute(Vertex::positionAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].position) : nullptr;
+	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].position) : nullptr;
 }
 
 const float *Mesh::positionData() const
@@ -97,7 +87,7 @@ const float *Mesh::positionData() const
 
 float *Mesh::colorData()
 {
-	return hasAttribute(Vertex::colorAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].color) : nullptr;
+	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].color) : nullptr;
 }
 
 const float *Mesh::colorData() const
@@ -107,7 +97,7 @@ const float *Mesh::colorData() const
 
 float *Mesh::textureCoordinateData()
 {
-	return hasAttribute(Vertex::textureCoordinateAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
+	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
 }
 
 const float *Mesh::textureCoordinateData() const
@@ -117,7 +107,7 @@ const float *Mesh::textureCoordinateData() const
 
 float *Mesh::normalData()
 {
-	return hasAttribute(Vertex::normalAttribute) && !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
+	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
 }
 
 const float *Mesh::normalData() const
@@ -137,7 +127,6 @@ const std::vector<Vertex> &Mesh::vertexs() const
 
 void Mesh::unifyColor(const glm::vec4 &color)
 {
-	if (!hasAttribute(Vertex::colorAttribute))	return;
 	for (int i = 0; i != m_vertexs.size(); ++i)
 		m_vertexs[i].color = color;
 }
@@ -163,6 +152,7 @@ Model::Model(const Model & other)
 	, m_rotateMatrix(other.m_rotateMatrix)
 	, m_scaleMatrix(other.m_scaleMatrix)
 	, m_meshes(other.m_meshes)
+	, m_mode(GL_TRIANGLES)
 {
 }
 
@@ -172,6 +162,7 @@ Model::Model(const Model && other)
 	, m_rotateMatrix(other.m_rotateMatrix)
 	, m_scaleMatrix(other.m_scaleMatrix)
 	, m_meshes(std::move(other.m_meshes))
+	, m_mode(GL_TRIANGLES)
 {
 }
 
@@ -182,6 +173,7 @@ void Model::operator=(const Model & other)
 	m_rotateMatrix = other.m_rotateMatrix;
 	m_scaleMatrix = other.m_scaleMatrix;
 	m_meshes = other.m_meshes;
+	m_mode = other.m_mode;
 }
 
 void Model::operator=(const Model && other)
@@ -191,6 +183,7 @@ void Model::operator=(const Model && other)
 	m_rotateMatrix = other.m_rotateMatrix;
 	m_scaleMatrix = other.m_scaleMatrix;
 	m_meshes = std::move(other.m_meshes);
+	m_mode = other.m_mode;
 }
 
 std::vector<Mesh>& Model::meshes()

@@ -81,7 +81,7 @@ void GlyphBunch::arrage(std::shared_ptr<Font> font, float xStart, float yStart, 
 	default:
 		break;
 	}
-	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, indices));
+	meshes().push_back(Mesh(vertexs, indices));
 }
 
 float GlyphBunch::getWidth() const

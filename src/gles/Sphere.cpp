@@ -44,7 +44,7 @@ Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 			}
 		}
 	}
-	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute | Vertex::textureCoordinateAttribute | Vertex::normalAttribute, vertexs, getIndices()));
+	meshes().push_back(Mesh(vertexs, getIndices()));
 	translate(x, y, z);
 }
 

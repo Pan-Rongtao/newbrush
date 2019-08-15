@@ -26,16 +26,6 @@ namespace nb{ namespace gl{
 class NB_API Vertex
 {
 public:
-	//顶点属性类型
-	enum VertexAttributeE
-	{
-		positionAttribute			= 0x00000001 << 0,		//位置
-		colorAttribute				= 0x00000001 << 1,		//颜色
-		textureCoordinateAttribute	= 0x00000001 << 2,		//纹理坐标
-		normalAttribute				= 0x00000001 << 3,		//法线
-	};
-
-public:
 	Vertex();
 	explicit Vertex(const glm::vec3 &position);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color);
@@ -58,19 +48,16 @@ public:
 class NB_API Mesh
 {
 public:
-	Mesh(const nb::core::EnumFlags<Vertex::VertexAttributeE> &attributes);
+	Mesh();
 
 	//vertexs：顶点集合
 	//indices：顶点序列（逆时针，且隐藏背面）
-	Mesh(const nb::core::EnumFlags<Vertex::VertexAttributeE> &attributes, const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
+	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
 	Mesh(const Mesh &other);
 	Mesh(const Mesh &&other);
 	void operator = (const Mesh &other);
 	void operator = (const Mesh &&other);
-
-	//是否有属性
-	bool hasAttribute(Vertex::VertexAttributeE attr) const;
 
 	//获取位置|颜色|纹理坐标|法向量数据
 	float *positionData();
@@ -93,7 +80,6 @@ public:
 	void unifyColor(const glm::vec4 &color);
 
 private:
-	nb::core::EnumFlags<Vertex::VertexAttributeE>	m_attributes;
 	std::vector<Vertex>								m_vertexs;
 	std::vector<uint16_t>							m_indices;
 };
