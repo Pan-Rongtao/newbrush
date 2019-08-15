@@ -10,8 +10,6 @@ public:
 
 	Line(float x0, float y0, float x1, float y1);
 
-protected:
-	virtual unsigned int drawMode() const;
 };
 
 }}

@@ -1,6 +1,7 @@
 #include "gui/Polygon.h"
 #include "gles/Polyline.h"
 #include "gles/Context.h"
+#include <opengl/GLES2/gl2.h>
 
 using namespace nb::core;
 using namespace nb::gui;
@@ -20,7 +21,7 @@ void nb::gui::Polygon::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
 	}
 	auto model = std::make_shared<nb::gl::Polyline>(points);
-	model->loop(true);
+	model->setDrawMode(GL_LINE_LOOP);
 	Renderer()->setModel(model);
 	drawContext->queue(Renderer());
 }

@@ -25,19 +25,6 @@ nb::gui::Window::Window()
 	Width = (float)m_glWindow->width();
 	Height = (float)m_glWindow->height();
 
-	auto onWindowResized = [&](const nb::core::Window::ResizeArgs & args)
-	{
-		auto w = (float)m_glWindow->clientWidth();
-		auto h = m_glWindow->clientHeight();
-		auto ratio = w / h;
-		//nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
-		nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
-		//nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
-		nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
-		Width = (float)args.width;
-		Height = (float)args.height;
-		updateLayout();
-	};
 	m_glWindow->ResizeEvent += std::bind(&Window::onNativeWindowResize, this, std::placeholders::_1);
 	m_glWindow->MouseEnterEvent += std::bind(&Window::onNativeWindowMouseEnter, this, std::placeholders::_1);
 	m_glWindow->MouseLeaveEvent += std::bind(&Window::onNativeWindowMouseLeave, this, std::placeholders::_1);
@@ -61,7 +48,7 @@ nb::gui::Window::Window()
 	WindowCollections::Windows().push_back(this);
 	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
 	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
-	onWindowResized({ (int)Width, (int)Height });
+	onNativeWindowResize({ (int)Width, (int)Height });
 }
 
 nb::gui::Window::~Window()
@@ -183,9 +170,7 @@ void nb::gui::Window::onNativeWindowResize(const core::Window::ResizeArgs & args
 	auto w = (float)m_glWindow->clientWidth();
 	auto h = m_glWindow->clientHeight();
 	auto ratio = w / h;
-	//nb::gl::getProjection()->perspective(45.0f, std::isnan(ratio) ? 0.0f : ratio, 0.1f, 10000.0f);
 	nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
-	//nb::gl::getCamera()->lookat2D((float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight());
 	nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
 	Width = (float)args.width;
 	Height = (float)args.height;
@@ -202,6 +187,14 @@ void nb::gui::Window::onNativeWindowMouseLeave(const core::Window::MouseLeaveEve
 
 void nb::gui::Window::onNativeWindowMouseMove(const core::Window::MouseMoveEventArgs & args)
 {
+	auto hits = hitElements(args.x, args.y);
+	for (auto e : hits)
+	{
+		e->MouseEnter.dispatch({});
+		e->onMouseEnter();
+		e->MouseMove.dispatch({});
+		e->onMouseMove();
+	}
 }
 
 void nb::gui::Window::onNativeWindowMouseLeftButton(const core::Window::MouseLeftButtonEventArgs & args)

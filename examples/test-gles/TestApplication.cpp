@@ -21,6 +21,7 @@
 #include "gles/GlyphBunch.h"
 #include "gles/Line.h"
 #include "gles/Polyline.h"
+#include <opengl/GLES2/gl2.h>
 
 using namespace nb::core;
 using namespace nb::gl;
@@ -65,14 +66,14 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	onResize(args);
 	
-//	drawLines();
-//	drawPolylines();
+	drawLines();
+	drawPolylines();
 	drawTriangles();
 	drawQuadrangles();
 	drawEllipses();
 	drawCubes();
 	drawSphere();
-//	drawPhone();
+	drawPhone();
 	//	drawModel();
 //	drawGlyph();
 //	drawGlyphBunch();
@@ -234,6 +235,7 @@ void MyApplication::drawSphere()
 	else
 		sp = std::make_shared<Sphere>(600.0f, 200.0f, 0.0f, 100.0f, g_Original);
 	sp->meshes()[0].unifyColor({ 1.0f, 0.0, 0.0, 1.0 });
+	sp->setDrawMode(GL_LINE_LOOP);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
 	ro->storage()->set(Program::nbColorModeLocationStr, 0);

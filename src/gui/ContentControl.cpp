@@ -5,7 +5,8 @@
 using namespace nb::gui;
 using namespace nb::core;
 
-ContentControl::ContentControl()
+ContentControl::ContentControl(std::shared_ptr<UIElement> content)
+	: Content(content)
 {
 	Content.notify([&](const std::shared_ptr<UIElement> &_old, const std::shared_ptr<UIElement> &_new) {
 		if (childCount() == 0)	addChild(_new);

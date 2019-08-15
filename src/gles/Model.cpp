@@ -153,6 +153,7 @@ Model::Model()
 	, m_translateMatrix(1.0f)
 	, m_rotateMatrix(1.0f)
 	, m_scaleMatrix(1.0f)
+	, m_mode(GL_TRIANGLES)
 {
 }
 
@@ -254,9 +255,14 @@ void Model::cullFace()
 	glDisable(GL_CULL_FACE);
 }
 
+void Model::setDrawMode(unsigned int mode)
+{
+	m_mode = mode;
+}
+
 unsigned int Model::drawMode() const
 {
-	return GL_TRIANGLES;
+	return m_mode;
 }
 
 glm::mat4x4 Model::rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v)

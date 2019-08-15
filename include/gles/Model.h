@@ -130,8 +130,7 @@ public:
 	void scale(float x, float y, float z);
 
 	//视线命中测试
-	//x,y：坐标
-	//viewWidth, viewHeight：可是区域，一般为窗口大小
+	//xNormalized,yNormalized：标准和坐标[-1,1]
 	virtual bool sightHitTest(float xNormalized, float yNormalized) const;
 
 	//正交命中测试
@@ -141,18 +140,20 @@ public:
 	//剔除表面，不重写则禁用
 	virtual void cullFace();
 
-	//绘制方式，不重写则默认为GL_TRIANGLES
-	virtual unsigned int drawMode() const;
+	//绘制方式，默认为GL_TRIANGLES
+	void setDrawMode(unsigned int mode);
+	unsigned int drawMode() const;
 
 private:
 	glm::mat4x4 rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v);
 	bool intersect(const glm::vec3 &raypos, const glm::vec3 &raydir) const;
 
-	glm::mat4x4								m_matrix;
-	glm::mat4x4								m_translateMatrix;
-	glm::mat4x4								m_rotateMatrix;
-	glm::mat4x4								m_scaleMatrix;
-	std::vector<Mesh>						m_meshes;
+	glm::mat4x4			m_matrix;
+	glm::mat4x4			m_translateMatrix;
+	glm::mat4x4			m_rotateMatrix;
+	glm::mat4x4			m_scaleMatrix;
+	std::vector<Mesh>	m_meshes;
+	unsigned int		m_mode;
 };
 
 }}

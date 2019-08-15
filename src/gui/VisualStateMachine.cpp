@@ -3,6 +3,17 @@
 using namespace nb::core;
 using namespace nb::gui;
 
+VisualState::VisualState()
+	: VisualState("", nullptr)
+{
+}
+
+VisualState::VisualState(const std::string & name, std::shared_ptr<nb::gui::Storyboard> sb)
+	: Name(name)
+	, Storyboard(sb)
+{
+}
+
 void VisualStateMachine::addGroup(std::shared_ptr<VisualStateGroup> group)
 {
 	for (auto const &g : m_groups)
@@ -34,4 +45,15 @@ bool VisualStateMachine::gotoState(const std::string &groupName, const std::stri
 		}
 	}
 	return false;
+}
+
+VisualStateGroup::VisualStateGroup(const std::string & name)
+	: VisualStateGroup(name, {})
+{
+}
+
+VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<std::shared_ptr<VisualState>>& states)
+	: Name(name)
+	, States(states)
+{
 }

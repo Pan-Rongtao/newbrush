@@ -11,12 +11,6 @@ public:
 
 	Polyline(const std::vector<glm::vec2> &points);
 
-	void loop(bool b);
-
-protected:
-	virtual unsigned int drawMode() const;
-
-	unsigned int m_drawMode;
 };
 
 }}

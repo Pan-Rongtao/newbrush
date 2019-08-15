@@ -30,7 +30,8 @@ public:
 	PropertyAnimation() = default;
 	PropertyAnimation(const T &to) : To(to) {}
 	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
-	PropertyAnimation(const T &from, const T &to, const T &by) : From(from), To(to), By(by) {}
+	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration) : From(from), To(to) { Duration = duration; }
+	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration, core::Property_rw<T> *target) : From(from), To(to) { Duration = duration; TargetProperty = target; }
 
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;

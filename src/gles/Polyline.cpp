@@ -10,8 +10,9 @@ Polyline::Polyline()
 }
 
 Polyline::Polyline(const std::vector<glm::vec2>& points)
-	: m_drawMode(GL_LINE_STRIP)
 {
+	setDrawMode(GL_LINE_STRIP);//GL_LINE_LOOP
+
 	auto center = glm::vec3(0.0f);
 	if (!points.empty())
 	{
@@ -28,14 +29,4 @@ Polyline::Polyline(const std::vector<glm::vec2>& points)
 	}
 	meshes().push_back(Mesh(Vertex::positionAttribute | Vertex::colorAttribute, vertexs, indices));
 	translate(center.x, center.y, center.z);
-}
-
-void Polyline::loop(bool b)
-{
-	m_drawMode = b ? GL_LINE_LOOP : GL_LINE_STRIP;
-}
-
-unsigned int Polyline::drawMode() const
-{
-	return m_drawMode;
 }

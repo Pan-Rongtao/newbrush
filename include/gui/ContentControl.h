@@ -6,7 +6,7 @@ namespace nb { namespace  gui {
 class NB_API ContentControl : public Control
 {
 public:
-	ContentControl();
+	explicit ContentControl(std::shared_ptr<UIElement> content = nullptr);
 	virtual ~ContentControl();
 
 public:

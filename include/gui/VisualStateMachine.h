@@ -12,6 +12,9 @@ class UIElement;
 class NB_API VisualState
 {
 public:
+	VisualState();
+	VisualState(const std::string &name, std::shared_ptr<Storyboard> sb = nullptr);
+
 	core::Property_rw<std::string>					Name;		//名字
 	core::Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
 };
@@ -30,6 +33,9 @@ public:
 class NB_API VisualStateGroup
 {
 public:
+	VisualStateGroup(const std::string &name);
+	VisualStateGroup(const std::string &name, const std::vector<std::shared_ptr<VisualState>> &states);
+
 	core::Property_rw<std::string>					Name;		//名字
 	core::Property_rw<std::vector<std::shared_ptr<VisualState>>>		States;		//状态集合
 	core::Property_r<VisualState>					CurrentState;//当前状态

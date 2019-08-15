@@ -98,15 +98,35 @@ public:
 	core::Property_rw<std::shared_ptr<Style>>				style;
 	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
 
-	struct MouseEnterArgs {}; core::Event<MouseEnterArgs>	MouseEnter;
-	struct MouseLeaveArgs {}; core::Event<MouseLeaveArgs>	MouseLeave;
-	struct MouseDownArgs {}; core::Event<MouseDownArgs>		MouseDown;
-	struct MouseUpArgs {}; core::Event<MouseUpArgs>			MouseUp;
-	struct MouseLeftButtonDownArgs {}; core::Event<MouseLeftButtonDownArgs>		MouseLeftButtonDown;
-	struct MouseLeftButtonUpArgs {}; core::Event<MouseLeftButtonUpArgs>			MouseLeftButtonUp;
-	struct MouseRightButtonDownArgs {}; core::Event<MouseRightButtonDownArgs>	MouseRightButtonDown;
-	struct MouseRightButtonUpArgs {}; core::Event<MouseRightButtonUpArgs>		MouseRightButtonUp;
-	struct MouseWheelArgs {}; core::Event<MouseWheelArgs>						MouseWheel;
+	struct MouseEnterArgs {};
+	core::Event<MouseEnterArgs>								MouseEnter;
+
+	struct MouseLeaveArgs {};
+	core::Event<MouseLeaveArgs>								MouseLeave;
+
+	struct MouseMoveArgs {};
+	core::Event<MouseMoveArgs>								MouseMove;
+
+	struct MouseDownArgs {};
+	core::Event<MouseDownArgs>								MouseDown;
+
+	struct MouseUpArgs {};
+	core::Event<MouseUpArgs>								MouseUp;
+
+	struct MouseLeftButtonDownArgs {};
+	core::Event<MouseLeftButtonDownArgs>					MouseLeftButtonDown;
+
+	struct MouseLeftButtonUpArgs {}; 
+	core::Event<MouseLeftButtonUpArgs>						MouseLeftButtonUp;
+
+	struct MouseRightButtonDownArgs {};
+	core::Event<MouseRightButtonDownArgs>					MouseRightButtonDown;
+
+	struct MouseRightButtonUpArgs {};
+	core::Event<MouseRightButtonUpArgs>						MouseRightButtonUp;
+
+	struct MouseWheelArgs {};
+	core::Event<MouseWheelArgs>								MouseWheel;
 	
 public:
 	virtual core::Size measureOverride(const core::Size &availableSize);
