@@ -3,7 +3,6 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-std::map<std::size_t, std::pair<std::string, nb::core::Any>>		DependencyProperty::m_dependencyProperties;
 std::map<std::shared_ptr<UIElement>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;
 
 void DependencyProperty::registerAttached(std::shared_ptr<UIElement> element, const std::string & property_name, const Any & property_v)
@@ -38,4 +37,29 @@ Any DependencyProperty::findAttached(std::shared_ptr<UIElement> element, const s
 		else
 			return iterInner->second;
 	}
+}
+
+std::string DependencyProperty::name() const
+{
+	return m_name;
+}
+
+size_t nb::gui::DependencyProperty::hash() const
+{
+	return m_hash;
+}
+
+bool DependencyProperty::isSealed() const
+{
+	return m_isSealed;
+}
+
+Any DependencyProperty::defaultValue() const
+{
+	return m_defaultV;
+}
+
+bool DependencyProperty::operator == (const DependencyProperty &other) const
+{
+	return m_hash == other.m_hash;
 }

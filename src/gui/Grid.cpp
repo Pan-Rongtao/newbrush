@@ -63,8 +63,22 @@ RowDefinition::RowDefinition()
 {
 }
 
-RowDefinition::~RowDefinition()
+DependencyProperty RowDefinition::HeightProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("Height", GridLength(1.0f, GridLength::GridUnitType::Star));
+	return dp;
+}
+
+DependencyProperty RowDefinition::MinHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MinHeight", GridLength());
+	return dp;
+}
+
+DependencyProperty RowDefinition::MaxHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MaxHeight", GridLength(std::numeric_limits<float>::max()));
+	return dp;
 }
 
 ColumnDefinition::ColumnDefinition()
@@ -72,18 +86,39 @@ ColumnDefinition::ColumnDefinition()
 {
 }
 
-ColumnDefinition::~ColumnDefinition()
+DependencyProperty ColumnDefinition::WidthProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("Width", GridLength(1.0f, GridLength::GridUnitType::Star));
+	return dp;
+}
+
+DependencyProperty ColumnDefinition::MinWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MinWidth", GridLength(0.0f));
+	return dp;
+}
+
+DependencyProperty ColumnDefinition::MaxWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MaxWidth", GridLength(std::numeric_limits<float>::max()));
+	return dp;
 }
 
 Grid::Grid()
 {
 }
 
-Grid::~Grid()
+DependencyProperty Grid::RowDefinitionsProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Grid, std::vector<std::shared_ptr<RowDefinition>>>("RowDefinitions", {});
+	return dp;
 }
 
+DependencyProperty Grid::ColumnDefinitionsProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency <Grid, std::vector<std::shared_ptr<ColumnDefinition>>>("ColumnDefinitions", {});
+	return dp;
+}
 void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
 {
 	if ((row > 0 && row < RowDefinitions().size()) && containsChild(element))

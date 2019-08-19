@@ -6,7 +6,7 @@
 #include "../gui/Thickness.h"
 #include "../gles/RenderObject.h"
 #include "../gui/AnimationTimeline.h"
-#include "gui/DependencyProperty.h"
+#include "gui/DependencyObject.h"
 #include "gui/Style.h"
 #include "gui/VisualStateMachine.h"
 
@@ -51,11 +51,48 @@ enum class OrientationE
 	Vertical,
 };
 
-class NB_API UIElement : public std::enable_shared_from_this<UIElement>
+class NB_API UIElement : public DependencyObject, public std::enable_shared_from_this<UIElement>
 {
 public:
 	UIElement();
-	virtual ~UIElement();
+	virtual ~UIElement() = default;
+
+	static const DependencyProperty							VisibilityProperty();
+	static const DependencyProperty							OpacityProperty();
+	static const DependencyProperty							FocusableProperty();
+	static const DependencyProperty 						WidthProperty();
+	static const DependencyProperty 						HeightProperty();
+	static const DependencyProperty 						MinWidthProperty();
+	static const DependencyProperty 						MinHeightProperty();
+	static const DependencyProperty 						MaxWidthProperty();
+	static const DependencyProperty 						MaxHeightProperty();
+	static const DependencyProperty 						ActualSizeProperty();
+	static const DependencyProperty 						MarginProperty();
+	static const DependencyProperty 						HorizontalAlignmentProperty();
+	static const DependencyProperty 						VerticalAlignmentProperty();
+	static const DependencyProperty 						FlowDirectionProperty();
+	static const DependencyProperty 						StateMachineProperty();
+
+	core::Property_rw<VisibilityE>							Visibility;
+	core::Property_rw<float>								Opacity;
+	core::Property_rw<bool>									Focusable;
+	core::Property_rw<float>								Width;
+	core::Property_rw<float>								Height;
+	core::Property_rw<float>								MinWidth;
+	core::Property_rw<float>								MinHeight;
+	core::Property_rw<float>								MaxWidth;
+	core::Property_rw<float>								MaxHeight;
+	core::Property_r<core::Size>							DesiredSize;
+	core::Property_r<core::Size>							ActualSize;
+	core::Property_rw<core::Size>							RenderSize;
+	core::Property_rw<core::Point>							Offset;
+	core::Property_rw<Thickness>							Margin;
+	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
+	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
+	core::Property_rw<FlowDirectionE>						FlowDirection;
+	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
+	core::Property_rw<std::shared_ptr<Style>>				style;
+	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
 
 	uint32_t childCount() const;
 	void addChild(std::shared_ptr<UIElement> child);
@@ -74,30 +111,7 @@ public:
 	void arrage(const core::Rect &finalRect);
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
-
-public:
-	core::Property_rw<VisibilityE>							Visibility;
-	core::Property_rw<float>								Opacity;
-	core::Property_rw<bool>									Focusable;
-	core::Property_rw<float>								Width;
-	core::Property_rw<float>								Height;
-	core::Property_rw<float>								MinWidth;
-	core::Property_rw<float>								MinHeight;
-	core::Property_rw<float>								MaxWidth;
-	core::Property_rw<float>								MaxHeight;
-	core::Property_r<core::Size>							DesiredSize;
-	core::Property_r<core::Size>							ActualSize;
-	core::Property_rw<core::Size>							RenderSize;
-	core::Property_rw<core::Point>							Offset;
-	core::Property_rw<Thickness>							Margin;
-	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
-	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
-	core::Property_rw<FlowDirectionE>						FlowDirection;
-//	core::Property_r<std::shared_ptr<UIElement>>			Parent;
-	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
-	core::Property_rw<std::shared_ptr<Style>>				style;
-	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
-
+	
 	struct MouseEnterArgs {};
 	core::Event<MouseEnterArgs>								MouseEnter;
 
@@ -128,6 +142,7 @@ public:
 	struct MouseWheelArgs {};
 	core::Event<MouseWheelArgs>								MouseWheel;
 	
+
 public:
 	virtual core::Size measureOverride(const core::Size &availableSize);
 	virtual core::Size arrangeOverride(const core::Size &finalSize);
@@ -147,9 +162,14 @@ protected:
 	std::vector<std::shared_ptr<UIElement>>					m_children;
 
 private:
-	nb::core::Size											m_desiredSize;
+	core::Size												m_desiredSize;
+	core::Size												m_renderSize;
 	nb::core::Size											m_actualSize;
+	core::Point												m_offset;
 	std::shared_ptr<gl::RenderObject>						m_renderer;
+
+private:
+	void onPropertyChanged(const PropertyChangedArg &args);
 };
 
 }

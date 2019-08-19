@@ -7,10 +7,10 @@ class NB_API ContentControl : public Control
 {
 public:
 	explicit ContentControl(std::shared_ptr<UIElement> content = nullptr);
-	virtual ~ContentControl();
+	virtual ~ContentControl() = default;
 
-public:
 	nb::core::Property_rw<std::shared_ptr<UIElement>>	Content;
+	static const DependencyProperty						ContentProperty();
 	
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

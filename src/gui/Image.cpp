@@ -22,7 +22,7 @@ Image::Image()
 		Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
 	});
 	Stretch.notify([&](const StretchE &_old, const StretchE &_new) {
-
+		setValue<StretchE>(StretchProperty(), _new);
 	});
 }
 
@@ -30,9 +30,19 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()), 
+	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 	drawContext->queue(Renderer());
+}
+
+const DependencyProperty Image::SourceProperty()
+{
+	return DependencyProperty();
+}
+
+const DependencyProperty Image::StretchProperty()
+{
+	return DependencyProperty();
 }
 
 Size Image::measureOverride(const Size & availableSize)

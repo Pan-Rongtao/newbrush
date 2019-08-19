@@ -14,8 +14,10 @@ ContentControl::ContentControl(std::shared_ptr<UIElement> content)
 	});
 }
 
-ContentControl::~ContentControl()
+const DependencyProperty ContentControl::ContentProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content", nullptr);
+	return dp;
 }
 
 void ContentControl::onRender(std::shared_ptr<nb::gl::Context> drawContext)

@@ -30,6 +30,10 @@ public:
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Source;
 	nb::core::Property_rw<nb::gui::StretchE>				Stretch;
 
+	static const DependencyProperty							SourceProperty();
+	static const DependencyProperty							StretchProperty();
+
+
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;

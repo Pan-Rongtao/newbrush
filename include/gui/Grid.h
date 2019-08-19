@@ -56,32 +56,40 @@ private:
 };
 
 ///////class RowDefinition
-class NB_API RowDefinition
+class NB_API RowDefinition : public DependencyObject
 {
 public:
 	RowDefinition();
-	~RowDefinition();
+	~RowDefinition() = default;
 
 	nb::core::Property_rw<GridLength>		Height;			//设定高
 	nb::core::Property_rw<GridLength>		MinHeight;		//最小高限制
 	nb::core::Property_rw<GridLength>		MaxHeight;		//最大高限制
 	nb::core::Property_r<float>				ActualHeight;	//实际高度
+	
+	static DependencyProperty				HeightProperty();
+	static DependencyProperty				MinHeightProperty();
+	static DependencyProperty				MaxHeightProperty();
 
 private:
 	float	m_actualHeight;
 };
 
 ///////class ColumnDefinition
-class NB_API ColumnDefinition
+class NB_API ColumnDefinition : public DependencyObject
 {
 public:
 	ColumnDefinition();
-	~ColumnDefinition();
+	~ColumnDefinition() = default;
 
 	nb::core::Property_rw<GridLength>		Width;			//设定宽
 	nb::core::Property_rw<GridLength>		MinWidth;		//最小宽限制
 	nb::core::Property_rw<GridLength>		MaxWidth;		//最大宽限制
 	nb::core::Property_r<float>				ActualWidth;	//实际宽度
+
+	static DependencyProperty				WidthProperty();
+	static DependencyProperty				MinWidthProperty();
+	static DependencyProperty				MaxWidthProperty();
 
 private:
 	float	m_actualWidth;
@@ -92,7 +100,7 @@ class NB_API Grid : public Panel
 {
 public:
 	Grid();
-	virtual ~Grid();
+	virtual ~Grid() = default;
 
 	static constexpr char *AttachedPropertyRow			= "Grid.Row";
 	static constexpr char *AttachedPropertyColumn		= "Grid.Column";
@@ -111,9 +119,11 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-public:
 	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;
 	nb::core::Property_rw<std::vector<std::shared_ptr<ColumnDefinition>>>	ColumnDefinitions;
+
+	static DependencyProperty	RowDefinitionsProperty();
+	static DependencyProperty	ColumnDefinitionsProperty();
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

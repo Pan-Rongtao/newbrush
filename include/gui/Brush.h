@@ -15,17 +15,20 @@
 #include "../core/Property.h"
 #include "../core/Color.h"
 #include "../gui/ImageSource.h"
+#include "../gui/DependencyObject.h"
 
-namespace nb{ namespace gui {
+namespace nb{
+namespace gui {
 
 //class Brush
-class NB_API Brush
+class NB_API Brush : public DependencyObject
 {
 protected:
 	Brush();
 	Brush(float opacity);
 	virtual ~Brush();
 
+	static const DependencyProperty			OpacityProperty();
 	nb::core::Property_rw<float>			Opacity;
 
 private:
@@ -39,8 +42,9 @@ class NB_API SolidColorBrush : public Brush
 {
 public:
 	SolidColorBrush();
-	explicit SolidColorBrush(const nb::core::Color &color);
+	explicit SolidColorBrush(const core::Color &color);
 
+	static const DependencyProperty			ColorProperty();
 	nb::core::Property_rw<nb::core::Color>	Color;
 };
 
@@ -51,6 +55,7 @@ public:
 	ImageBrush();
 	explicit ImageBrush(const std::shared_ptr<ImageSource> &imgSource);
 
+	static const DependencyProperty						SourceProperty();
 	nb::core::Property_rw<std::shared_ptr<ImageSource>>	Source;
 };
 

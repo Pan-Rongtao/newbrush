@@ -22,13 +22,99 @@ UIElement::UIElement()
 	ActualSize.getter([&]()->Size& {return m_actualSize; });
 	Width.notify([&](const float &_old, const float &_new) {updateLayout(); });
 	Height.notify([&](const float &_old, const float &_new) {updateLayout(); });
-	style.notify([&](const std::shared_ptr<Style> &_old, const std::shared_ptr<Style> &_new) {
-		
-	});
+//	Width.notify([&](const float &_old, const float &_new) {updateLayout(); });
+//	Height.notify([&](const float &_old, const float &_new) {updateLayout(); });
+//	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
 }
 
-UIElement::~UIElement()
+const DependencyProperty UIElement::VisibilityProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible);
+	return dp;
+}
+
+const DependencyProperty UIElement::OpacityProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f);
+	return dp;
+}
+
+const DependencyProperty UIElement::FocusableProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true);
+	return dp;
+}
+
+const DependencyProperty UIElement::WidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN);
+	return dp;
+}
+
+const DependencyProperty UIElement::HeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN);
+	return dp;
+}
+
+const DependencyProperty UIElement::MinWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f);
+	return dp;
+}
+
+const DependencyProperty UIElement::MinHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f);
+	return dp;
+}
+
+const DependencyProperty UIElement::MaxWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max());
+	return dp;
+}
+
+const DependencyProperty UIElement::MaxHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max());
+	return dp;
+}
+
+const DependencyProperty UIElement::ActualSizeProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize", Size(0.0f, 0.0f));
+	return dp;
+}
+
+const DependencyProperty UIElement::MarginProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness(0.0f));
+	return dp;
+}
+
+const DependencyProperty UIElement::HorizontalAlignmentProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch);
+	return dp;
+}
+
+const DependencyProperty UIElement::VerticalAlignmentProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch);
+	return dp;
+}
+
+const DependencyProperty UIElement::FlowDirectionProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight);
+	return dp;
+}
+
+const DependencyProperty UIElement::StateMachineProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<VisualStateMachine>>("StateMachine", nullptr);
+	return dp;
 }
 
 uint32_t UIElement::childCount() const
@@ -171,8 +257,8 @@ void UIElement::arrage(const Rect & finalRect)
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(DesiredSize().width());
-	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(DesiredSize().height());
+	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(m_desiredSize.width());
+	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(m_desiredSize.height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
@@ -227,7 +313,8 @@ void UIElement::arrage(const Rect & finalRect)
 	}
 		break;
 	}
-	m_actualSize = RenderSize;
+	m_actualSize = RenderSize();
+	setValue<Size>(ActualSizeProperty(), RenderSize());
 	//裁剪
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
@@ -281,6 +368,14 @@ void UIElement::onMouseMove()
 
 void UIElement::onMouseWheel(int delta)
 {
+}
+
+void UIElement::onPropertyChanged(const PropertyChangedArg & args)
+{
+	if (args.dp == UIElement::WidthProperty() || args.dp == UIElement::HeightProperty())
+	{
+		updateLayout();
+	}
 }
 
 void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)

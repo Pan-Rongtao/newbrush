@@ -7,12 +7,21 @@ using namespace nb::gui;
 
 Button::Button()
 	: m_pressed(false)
-{ 
+{
+	IsCancel.notify([&](const float &_old, const float &_new) { setValue<float>(IsCancelProperty(), _new); });
+	IsDefault.notify([&](const float &_old, const float &_new) { setValue<float>(IsDefaultProperty(), _new); });
 }
 
-Button::~Button()
+const DependencyProperty Button::IsCancelProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsCancel", false);
+	return dp;
+}
 
+const DependencyProperty Button::IsDefaultProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsDefault", false);
+	return dp;
 }
 
 void Button::onMouseDown()

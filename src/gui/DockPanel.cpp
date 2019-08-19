@@ -6,10 +6,7 @@ using namespace nb::gui;
 
 DockPanel::DockPanel()
 {
-}
-
-DockPanel::~DockPanel()
-{
+	LastChildFill.notify([&](const bool &_old, const bool &_new) {setValue<bool>(LastChildFillProperty(), _new); });
 }
 
 void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
@@ -22,6 +19,12 @@ DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyDock);
 	return v.empty() ? DockE::Left : any_cast<DockE>(v);
+}
+
+const DependencyProperty DockPanel::LastChildFillProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false);
+	return dp;
 }
 
 //当测量一个子元素时，遵循这样的原则：如果该子元素已经是最后一个元素，它的分配将受到LastChildFill的影响；
