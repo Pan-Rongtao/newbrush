@@ -25,7 +25,7 @@ Size Size::zero()
 	return Size(0.0f, 0.0f);
 }
 
-void Size::operator = (const Size &other)
+void Size::operator = (const Size &other) &
 {
 	m_width = other.width();
 	m_height = other.height();
@@ -71,32 +71,32 @@ Size Size::operator / (float f) const
 	return Size(width() / f, height() / f);
 }
 
-void Size::operator += (const Size &other)
+void Size::operator += (const Size &other) &
 {
 	*this = (operator +(other));
 }
 
-void Size::operator += (float f)
+void Size::operator += (float f) &
 {
 	*this = (operator +(f));
 }
 
-void Size::operator -= (const Size &other)
+void Size::operator -= (const Size &other) &
 {
 	*this = (operator -(other));
 }
 
-void Size::operator -= (float f)
+void Size::operator -= (float f) &
 {
 	*this = (operator -(f));
 }
 
-void Size::operator *= (float f)
+void Size::operator *= (float f) &
 {
 	*this = (operator *(f));
 }
 
-void Size::operator /= (float f)
+void Size::operator /= (float f) &
 {
 	*this = (operator /(f));
 }

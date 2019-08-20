@@ -13,17 +13,21 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 Image::Image()
-	: Source(nullptr)
-	, Stretch(StretchE::Uniform)
+	: Source([&](shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]() {return get<shared_ptr<ImageSource>>(SourceProperty()); })
+	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]() {return get<StretchE>(StretchProperty()); })
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
-	
-	Source.notify([&](const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new) {
-		Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
-	});
-	Stretch.notify([&](const StretchE &_old, const StretchE &_new) {
-		setValue<StretchE>(StretchProperty(), _new);
-	});
+	PropertyChanged += [&](const PropertyChangedArg &arg) {
+		if (arg.dp == SourceProperty())
+		{
+			Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
+		}
+		else if (arg.dp == StretchProperty())
+		{
+			set(StretchProperty(), any_cast<StretchE>(arg.value));
+		}
+	};
+
 }
 
 void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
@@ -37,12 +41,14 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 
 const DependencyProperty Image::SourceProperty()
 {
-	return DependencyProperty();
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Image, shared_ptr<ImageSource>>("Source", nullptr);
+	return dp;
 }
 
 const DependencyProperty Image::StretchProperty()
 {
-	return DependencyProperty();
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
+	return dp;
 }
 
 Size Image::measureOverride(const Size & availableSize)
@@ -53,7 +59,7 @@ Size Image::measureOverride(const Size & availableSize)
 
 Size Image::arrangeOverride(const Size & finalSize)
 {
-	switch (Stretch)
+	switch (Stretch())
 	{
 	case StretchE::Origion:
 	{

@@ -6,10 +6,9 @@ using namespace nb::core;
 using namespace nb::gui;
 
 Button::Button()
-	: m_pressed(false)
+	: IsCancel([&](bool v) { set(IsCancelProperty(), v); }, [&]() {return get<bool>(IsCancelProperty()); })
+	, IsDefault([&](bool v) { set(IsDefaultProperty(), v); }, [&]() {return get<bool>(IsDefaultProperty()); })
 {
-	IsCancel.notify([&](const float &_old, const float &_new) { setValue<float>(IsCancelProperty(), _new); });
-	IsDefault.notify([&](const float &_old, const float &_new) { setValue<float>(IsDefaultProperty(), _new); });
 }
 
 const DependencyProperty Button::IsCancelProperty()

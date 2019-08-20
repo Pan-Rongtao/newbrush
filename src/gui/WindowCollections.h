@@ -9,7 +9,7 @@ class Window;
 class WindowCollections
 {
 public:
-	static nb::core::Property_rw<std::vector<Window *>>			Windows;
+	static std::vector<Window *>			Windows;
 };
 
 }}

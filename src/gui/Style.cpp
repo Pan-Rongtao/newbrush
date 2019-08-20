@@ -3,7 +3,10 @@
 using namespace nb::core;
 using namespace nb::gui;
 
-Style::Style(const std::size_t &tagetTypeHash)
-	: m_tagetTypeHash(tagetTypeHash)
+Style::Style()
+	: BaseOn(nullptr, nullptr)
+	, Setters(nullptr, nullptr)
+	, Triggers(nullptr, nullptr)
+//	, m_tagetTypeHash(tagetTypeHash)
 {
 }

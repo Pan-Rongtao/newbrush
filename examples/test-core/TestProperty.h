@@ -9,8 +9,8 @@ class TestProperty : public TestBase
 {
 public:
 	TestProperty();
-	virtual void test() override;
-
+	virtual void test() override {}
+/*
 	Property_rw<bool>	IsBool;
 	Property_rw<int>	Integer0;
 	Property_rw<int>	Integer1;
@@ -20,7 +20,7 @@ public:
 	Property_r<bool>	Visible;
 	Property_w<std::string> Name;
 	Property_r<Size>	SZR;
-
+	*/
 private:
 	void notifyIsBool(bool _old, bool _new);
 

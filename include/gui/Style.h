@@ -24,7 +24,7 @@ public:
 class NB_API Style
 {
 public:
-	Style(const std::size_t &tagetTypeHash);
+	Style();
 
 
 	core::Property_rw<std::shared_ptr<Style>>					BaseOn;

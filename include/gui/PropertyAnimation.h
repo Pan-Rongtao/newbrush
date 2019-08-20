@@ -27,11 +27,11 @@ template<class T>
 class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
-	PropertyAnimation() = default;
-	PropertyAnimation(const T &to) : To(to) {}
-	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
-	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration) : From(from), To(to) { Duration = duration; }
-	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration, core::Property_rw<T> *target) : From(from), To(to) { Duration = duration; TargetProperty = target; }
+	PropertyAnimation() : From(nullptr, nullptr), To(nullptr, nullptr), By(nullptr, nullptr){}
+//	PropertyAnimation(const T &to) : To(to) {}
+//	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
+//	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration) : From(from), To(to) { Duration = duration; }
+//	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration, core::Property_rw<T> *target) : From(from), To(to) { Duration = duration; TargetProperty = target; }
 
 	core::Property_rw<T>							From;
 	core::Property_rw<T>							To;
@@ -41,10 +41,10 @@ protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
 	virtual void progressing(float progress) override
 	{
-		if (!TargetProperty)	return;
+//		if (!TargetProperty)	return;
 
 		decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
-		*TargetProperty = From() + (To() - From()) * ft;
+//		*TargetProperty = From() + (To() - From()) * ft;
 	}
 };
 
@@ -52,13 +52,13 @@ protected:
 template<>
 void PropertyAnimation<nb::core::Color>::progressing(float progress)
 {
-	if (!TargetProperty)	return;
+//	if (!TargetProperty)	return;
 
 	auto ft = Easing()->easeInCore(progress);
 	int r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
 	int g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
 	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
-	(*TargetProperty)().setRgb(r, g, b);
+//	(*TargetProperty)().setRgb(r, g, b);
 }
 
 }

@@ -23,31 +23,31 @@ class NB_API StackPanel : public Panel
 {
 public:
 	StackPanel();
-	virtual ~StackPanel();
+	virtual ~StackPanel() = default;
 
-public:
-	nb::core::Property_rw<OrientationE>		Orientation;
-	nb::core::Property_r<float>				ExtentWidth;
-	nb::core::Property_r<float>				ExtentHeight;
-	nb::core::Property_r<float>				HorizontalOffset;
-	nb::core::Property_r<float>				VerticalOffset;
-	nb::core::Property_r<float>				ViewportWidth;
-	nb::core::Property_r<float>				ViewportHeight;
-	//nb::core::Property_rw<Scrollview>		ScrollOwner;
-	//nb::core::Property_rw<bool>			CanHorizontallyScroll;
-	//nb::core::Property_rw<bool>			CanVerticallyScroll;
+	Property_rw<OrientationE>			Orientation;
+	Property_r<float>					ExtentWidth;
+	Property_r<float>					ExtentHeight;
+	Property_r<float>					HorizontalOffset;
+	Property_r<float>					VerticalOffset;
+	Property_r<float>					ViewportWidth;
+	Property_r<float>					ViewportHeight;
+	//Property_rw<Scrollview>			ScrollOwner;
+	//Property_rw<bool>					CanHorizontallyScroll;
+	//Property_rw<bool>					CanVerticallyScroll;
+
+	static const DependencyProperty		OrientationProperty();
+	static const DependencyProperty		ExtentWidthProperty();
+	static const DependencyProperty		ExtentHeightProperty();
+	static const DependencyProperty		HorizontalOffsetProperty();
+	static const DependencyProperty		VerticalOffsetProperty();
+	static const DependencyProperty		ViewportWidthProperty();
+	static const DependencyProperty		ViewportHeightProperty();
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
 	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
 
-private:
-	float									m_extentWidth;
-	float									m_extentHeight;
-	float									m_horizontalOffset;
-	float									m_verticalOffset;
-	float									m_viewportWidth;
-	float									m_viewportHeight;
 };
 
 }}

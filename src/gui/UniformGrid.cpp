@@ -4,10 +4,28 @@ using namespace nb::core;
 using namespace nb::gui;
 
 UniformGrid::UniformGrid()
-	: Rows(-1)
-	, Columns(-1)
-	, FirstColumn(-1)
+	: Rows([&](int v) {set(RowsProperty(), v); }, [&]() {return get<int>(RowsProperty()); })
+	, Columns([&](int v) {set(ColumnsProperty(), v); }, [&]() {return get<int>(ColumnsProperty()); })
+	, FirstColumn([&](int v) {set(FirstColumnProperty(), v); }, [&]() {return get<int>(FirstColumnProperty()); })
 {
+}
+
+const DependencyProperty UniformGrid::RowsProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UniformGrid, int>("Rows", -1);
+	return dp;
+}
+
+const DependencyProperty UniformGrid::ColumnsProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UniformGrid, int>("Columns", -1);
+	return dp;
+}
+
+const DependencyProperty UniformGrid::FirstColumnProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UniformGrid, int>("FirstColumn", -1);
+	return dp;
 }
 
 Size UniformGrid::measureOverride(const nb::core::Size & availableSize)
@@ -27,7 +45,7 @@ Size UniformGrid::arrangeOverride(const nb::core::Size & finalSize)
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = finalSize.width() / rowsColums.second;
 	auto cellHeight = finalSize.height() / rowsColums.first;
-	auto firstCol = (Columns < 0 || FirstColumn < 0 || FirstColumn >= Columns) ? 0 : FirstColumn();
+	auto firstCol = (Columns() < 0 || FirstColumn() < 0 || FirstColumn() >= Columns()) ? 0 : FirstColumn();
 	for (auto i = 0u; i != m_children.size(); ++i)
 	{
 		auto child = m_children[i];
@@ -43,29 +61,29 @@ Size UniformGrid::arrangeOverride(const nb::core::Size & finalSize)
 std::pair<int, int> UniformGrid::calcRowsColums() const
 {
 	int32_t rows, cols;
-	if (Rows <= 0)
+	if (Rows() <= 0)
 	{
-		if (Columns <= 0)
+		if (Columns() <= 0)
 		{
 			rows = (int)std::ceil(sqrt(m_children.size()));
 			cols = rows;
 		}
 		else
 		{
-			cols = Columns;
+			cols = Columns();
 			rows = (int)std::ceil(m_children.size() / (double)cols);
 		}
 	}
 	else
 	{
-		rows = Rows;
-		if (Columns <= 0)
+		rows = Rows();
+		if (Columns() <= 0)
 		{
 			cols = (int)std::ceil(m_children.size() / (double)rows);
 		}
 		else
 		{
-			cols = Columns;
+			cols = Columns();
 		}
 	}
 	return{ rows, cols };

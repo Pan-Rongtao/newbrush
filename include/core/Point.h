@@ -31,7 +31,7 @@ public:
 	//零值，x=0.0; y=0.0
 	static Point zero();
 
-	void operator = (const Point &p);
+	void operator = (const Point &p) &;
 	bool operator == (const Point &p) const;
 	bool operator != (const Point &p) const;
 	Point operator + (const Point &p) const;
@@ -40,12 +40,12 @@ public:
 	Point operator - (float f) const;
 	Point operator * (float f) const;
 	Point operator / (float f) const;
-	void operator += (const Point &p);
-	void operator += (float f);
-	void operator -= (const Point &p);
-	void operator -= (float f);
-	void operator *= (float f);
-	void operator /= (float f);
+	void operator += (const Point &p) &;
+	void operator += (float f) &;
+	void operator -= (const Point &p) &;
+	void operator -= (float f) &;
+	void operator *= (float f) &;
+	void operator /= (float f) &;
 
 public:
 	//设置x的值

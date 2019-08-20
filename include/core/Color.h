@@ -35,7 +35,7 @@ public:
 	//从其他Color构建一个Color
 	Color(const Color &other);
 
-	void operator =(const Color &other);
+	void operator =(const Color &other) &;
 	bool operator ==(const Color &other) const;
 	bool operator !=(const Color &other) const;
 
@@ -77,22 +77,22 @@ public:
 	const uint8_t &blue() const;
 
 	//设置alpha值
-	void setAlpha(uint8_t a);
+	void setAlpha(uint8_t a) &;
 
 	//设置red值
-	void setRed(uint8_t r);
+	void setRed(uint8_t r) &;
 
 	//设置green值
-	void setGreen(uint8_t g);
+	void setGreen(uint8_t g) &;
 
 	//设置blue值
-	void setBlue(uint8_t b);
+	void setBlue(uint8_t b) &;
 
 	//设置rgb值
-	void setRgb(uint8_t r, uint8_t g, uint8_t b);
+	void setRgb(uint8_t r, uint8_t g, uint8_t b) &;
 
 	//设置argb值
-	void setArgb(uint8_t a, uint8_t r, uint8_t g, uint8_t b);
+	void setArgb(uint8_t a, uint8_t r, uint8_t g, uint8_t b) &;
 
 	//alpha值的浮点形式（0.0-1.0)
 	float alphaF() const;
@@ -107,22 +107,22 @@ public:
 	float blueF() const;
 
 	//设置浮点形式alpha值
-	void setAlphaF(float a);
+	void setAlphaF(float a) &;
 
 	//设置浮点形式red值
-	void setRedF(float r);
+	void setRedF(float r) &;
 
 	//设置浮点形式green值
-	void setGreenF(float g);
+	void setGreenF(float g) &;
 
 	//设置浮点形式blue值
-	void setBlueF(float b);
+	void setBlueF(float b) &;
 
 	//设置浮点形式rgb值
-	void setRgbF(float r, float g, float b);
+	void setRgbF(float r, float g, float b) &;
 
 	//设置浮点形式argb值
-	void setArgbF(float a, float r, float g, float b);
+	void setArgbF(float a, float r, float g, float b) &;
 
 	//色调
 	float hue() const;
@@ -134,20 +134,20 @@ public:
 	float value() const;
 
 	//设置色调
-	void setHue(float h);
+	void setHue(float h) &;
 
 	//设置饱和度
-	void setSaturation(float s);
+	void setSaturation(float s) &;
 
 	//设置亮度
-	void setValue(float v);
+	void setValue(float v) &;
 
 	//设置色调、饱和度、亮度值
-	void setHsv(float h, float s, float v);
+	void setHsv(float h, float s, float v) &;
 
 	//转换成32位整数，0xAARRGGBB/0xRRGGBB
-	void setIntegerArgb(uint32_t argb);
-	void setIntegerRgb(uint32_t rgb);
+	void setIntegerArgb(uint32_t argb) &;
+	void setIntegerRgb(uint32_t rgb) &;
 
 	//转换为整数
 	uint32_t toIntegerArgb() const;

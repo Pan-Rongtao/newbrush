@@ -96,7 +96,7 @@ TimeSpan TimeSpan::fromString(const std::string & ts, const std::string & format
 	return TimeSpan((int)args[0], (int)args[1], (int)args[2], (int)args[3], (int)args[4], args[5]);
 }
 
-void TimeSpan::operator =(const TimeSpan &other)
+void TimeSpan::operator =(const TimeSpan &other) &
 {
 	m_micros = other.m_micros;
 }
@@ -186,13 +186,13 @@ int64_t TimeSpan::totalMicroseconds() const
 	return m_micros;
 }
 
-TimeSpan &TimeSpan::add(const TimeSpan &other)
+TimeSpan &TimeSpan::add(const TimeSpan &other) &
 {
 	m_micros += other.m_micros;
 	return *this;
 }
 
-TimeSpan &TimeSpan::sub(const TimeSpan &other)
+TimeSpan &TimeSpan::sub(const TimeSpan &other) &
 {
 	return add(-other);
 }

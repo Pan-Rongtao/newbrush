@@ -6,25 +6,28 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
-	: Visibility(VisibilityE::Visible)
-	, Opacity(1.0)
-	, Width(NAN)
-	, Height(NAN)
-	, MaxWidth(std::numeric_limits<float>::max())
-	, MaxHeight(std::numeric_limits<float>::max())
-	, HorizontalAlignment(HorizontalAlignmentE::Stretch)
-	, VerticalAlignment(VerticalAlignmentE::Stretch)
-	, FlowDirection(FlowDirectionE::LeftToRight)
-	, Renderer(std::make_shared<nb::gl::RenderObject>())
-	, StateMachine(std::make_shared<VisualStateMachine>())
+	: Visibility([&](VisibilityE v) {set(VisibilityProperty(), v); }, [&]() {return get<VisibilityE>(VisibilityProperty()); })
+	, Opacity([&](float v) {set(OpacityProperty(), v); }, [&]() {return get<float>(OpacityProperty()); })
+	, Focusable([&](bool v) {set(FocusableProperty(), v); }, [&]() {return get<bool>(FocusableProperty()); })
+	, Width([&](float v) {set(WidthProperty(), v); }, [&]() {return get<float>(WidthProperty()); })
+	, Height([&](float v) {set(HeightProperty(), v); }, [&]() {return get<float>(HeightProperty()); })
+	, MinWidth([&](float v) {set(MinWidthProperty(), v); }, [&]() {return get<float>(MinWidthProperty()); })
+	, MinHeight([&](float v) {set(MinHeightProperty(), v); }, [&]() {return get<float>(MinHeightProperty()); })
+	, MaxWidth([&](float v) {set(MaxWidthProperty(), v); }, [&]() {return get<float>(MaxWidthProperty()); })
+	, MaxHeight([&](float v) {set(MaxHeightProperty(), v); }, [&]() {return get<float>(MaxHeightProperty()); })
+	, DesiredSize([&]() {return get<Size>(DesiredSizeProperty()); })
+	, ActualSize([&]() {return get<Size>(ActualSizeProperty()); })
+	, RenderSize([&](Size v) {set(RenderSizeProperty(), v); }, [&]() {return get<Size>(RenderSizeProperty()); })
+	, Offset([&](Point v) {set(OffsetProperty(), v); }, [&]() {return get<Point>(OffsetProperty()); })
+	, Margin([&](Thickness v) {set(MarginProperty(), v); }, [&]() {return get<Thickness>(MarginProperty()); })
+	, HorizontalAlignment([&](HorizontalAlignmentE v) {set(HorizontalAlignmentProperty(), v); }, [&]() {return get<HorizontalAlignmentE>(HorizontalAlignmentProperty()); })
+	, VerticalAlignment([&](VerticalAlignmentE v) {set(VerticalAlignmentProperty(), v); }, [&]() {return get<VerticalAlignmentE>(VerticalAlignmentProperty()); })
+	, FlowDirection([&](FlowDirectionE v) {set(FlowDirectionProperty(), v); }, [&]() {return get<FlowDirectionE>(FlowDirectionProperty()); })
+	, Renderer([&]() {return get<shared_ptr<RenderObject>>(RendererProperty()); })
+	, style([&](shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]() {return get<shared_ptr<Style>>(StyleProperty()); })
+	//, StateMachine([&](shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]() {return get<shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
 {
-	DesiredSize.getter([&]()->Size& { return m_desiredSize; });
-	ActualSize.getter([&]()->Size& {return m_actualSize; });
-	Width.notify([&](const float &_old, const float &_new) {updateLayout(); });
-	Height.notify([&](const float &_old, const float &_new) {updateLayout(); });
-//	Width.notify([&](const float &_old, const float &_new) {updateLayout(); });
-//	Height.notify([&](const float &_old, const float &_new) {updateLayout(); });
-//	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
+	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
 }
 
 const DependencyProperty UIElement::VisibilityProperty()
@@ -81,9 +84,27 @@ const DependencyProperty UIElement::MaxHeightProperty()
 	return dp;
 }
 
+const DependencyProperty UIElement::DesiredSizeProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize", Size(0.0f, 0.0f));
+	return dp;
+}
+
 const DependencyProperty UIElement::ActualSizeProperty()
 {
 	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize", Size(0.0f, 0.0f));
+	return dp;
+}
+
+const DependencyProperty UIElement::RenderSizeProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize", Size(0.0f, 0.0f));
+	return dp;
+}
+
+const DependencyProperty UIElement::OffsetProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Point>("Offset", Point(0.0f, 0.0f));
 	return dp;
 }
 
@@ -111,9 +132,21 @@ const DependencyProperty UIElement::FlowDirectionProperty()
 	return dp;
 }
 
+const DependencyProperty UIElement::RendererProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer", std::make_shared<RenderObject>());
+	return dp;
+}
+
+const DependencyProperty UIElement::StyleProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<Style>>("Style", std::make_shared<Style>());
+	return dp;
+}
+
 const DependencyProperty UIElement::StateMachineProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<VisualStateMachine>>("StateMachine", nullptr);
+	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
 	return dp;
 }
 
@@ -210,9 +243,9 @@ void UIElement::updateLayout()
 	auto root = getRoot();
 	if (!root)	return;
 
-	root->measure({ root->Width, root->Height });
+	root->measure({ root->Width(), root->Height() });
 	root->arrage(Rect(0, 0, root->DesiredSize()));
-	root->onRender(gui::Window::DrawContext());
+	root->onRender(gui::Window::drawContext);
 }
 
 void UIElement::measure(const Size & availabelSize)
@@ -226,23 +259,23 @@ void UIElement::measure(const Size & availabelSize)
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	constrainedSize.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? constrainedSize.width() : Width);
-	constrainedSize.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? constrainedSize.height() : Height);
+	constrainedSize.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? constrainedSize.width() : Width());
+	constrainedSize.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? constrainedSize.height() : Height());
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
 	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	desiredSizeTemp.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? desiredSizeTemp.width(): Width);
-	desiredSizeTemp.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? desiredSizeTemp.height() : Height);
+	desiredSizeTemp.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? desiredSizeTemp.width(): Width());
+	desiredSizeTemp.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? desiredSizeTemp.height() : Height());
 
 	//由于child不关注和计算magin，因此需重新+margin
 	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
 	//保证在（0, availabelSize)区间
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
-	m_desiredSize = desiredSizeTemp;
+	set(DesiredSizeProperty(), desiredSizeTemp);
 }
 
 void UIElement::arrage(const Rect & finalRect)
@@ -257,64 +290,43 @@ void UIElement::arrage(const Rect & finalRect)
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(m_desiredSize.width());
-	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(m_desiredSize.height());
+	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(DesiredSize().width());
+	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(DesiredSize().height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	arrangeSize.width() = nb::clamp<float>(MinWidth, MaxWidth, std::isnan(Width) ? arrangeSize.width() : Width);
-	arrangeSize.height() = nb::clamp<float>(MinHeight, MaxHeight, std::isnan(Height) ? arrangeSize.height() : Height);
+	arrangeSize.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? arrangeSize.width() : Width());
+	arrangeSize.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? arrangeSize.height() : Height());
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
 	RenderSize = innerInkSize;
+	auto ss = RenderSize();
 	//裁剪，保证innerInkSize在Max之内
-	if (std::isnan(Width))
-		if (innerInkSize.width() > MaxWidth)	innerInkSize.width() = MaxWidth;
-	if (std::isnan(Height))
-		if (innerInkSize.height() > MaxHeight)	innerInkSize.height() = MaxHeight;
+	if (std::isnan(Width()))
+		if (innerInkSize.width() > MaxWidth())	innerInkSize.width() = MaxWidth();
+	if (std::isnan(Height()))
+		if (innerInkSize.height() > MaxHeight())	innerInkSize.height() = MaxHeight();
 	Size clipInkSize(std::min(innerInkSize.width(), Width()), std::min(innerInkSize.height(), Height()));
 
-	switch (HorizontalAlignment)
+	float offsetX = 0.0f, offsetY = 0.0f;
+	switch (HorizontalAlignment())
 	{
-	case HorizontalAlignmentE::Left:	Offset().x() = finalRect.x() + Margin().left();														break;
-	case HorizontalAlignmentE::Center:	Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
-	case HorizontalAlignmentE::Right:	Offset().x() = finalRect.width() - Margin().right() - RenderSize().width();							break;
-	default:
+	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + Margin().left();														break;
+	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - Margin().right() - RenderSize().width();							break;
+	default:							offsetX = RenderSize().width() >= clientSize.width() ? finalRect.left() + Margin().left() : finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	}
+	switch (VerticalAlignment())
 	{
-		if (RenderSize().width() >= clientSize.width())
-		{
-			Offset().x() = finalRect.left() + Margin().left();
-		}
-		else
-		{
-			Offset().x() = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;
-		}
+	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + Margin().top();														break;
+	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
+	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - Margin().bottom() - RenderSize().height());		break;
+	default:							offsetY = RenderSize().height() >= clientSize.height() ? finalRect.top() + Margin().top() : finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
 	}
-		break;
-	}
-
-	switch (VerticalAlignment)
-	{
-	case VerticalAlignmentE::Top:		Offset().y() = finalRect.top() + Margin().top();	break;
-	case VerticalAlignmentE::Center:	Offset().y() = finalRect.top() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
-	case VerticalAlignmentE::Bottom:	Offset().y() = finalRect.top() + (finalRect.height() - Margin().bottom() - RenderSize().height());		break;
-	default:
-	{
-		if (RenderSize().height() >= clientSize.height())
-		{
-			Offset().y() = finalRect.top() + Margin().top();
-		}
-		else
-		{
-			Offset().y() = finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;
-		}
-	}
-		break;
-	}
-	m_actualSize = RenderSize();
-	setValue<Size>(ActualSizeProperty(), RenderSize());
+	set(OffsetProperty(), Point(offsetX, offsetY));
+	set(ActualSizeProperty(), RenderSize());
 	//裁剪
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();

@@ -13,11 +13,15 @@ public:
 	Line();
 	virtual ~Line() = default;
 
-public:
-	nb::core::Property_rw<float>		X1;
-	nb::core::Property_rw<float>		X2;
-	nb::core::Property_rw<float>		Y1;
-	nb::core::Property_rw<float>		Y2;
+	Property_rw<float>				X1;
+	Property_rw<float>				X2;
+	Property_rw<float>				Y1;
+	Property_rw<float>				Y2;
+
+	static const DependencyProperty	X1Property();
+	static const DependencyProperty	X2Property();
+	static const DependencyProperty	Y1Property();
+	static const DependencyProperty	Y2Property();
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

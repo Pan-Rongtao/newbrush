@@ -5,13 +5,28 @@ using namespace nb::core;
 using namespace nb::gui;
 
 WrapPanel::WrapPanel()
-	: ItemWidth(NAN)
-	, ItemHeight(NAN)
+	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]() {return get<OrientationE>(OrientationProperty()); })
+	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]() {return get<float>(ItemWidthProperty()); })
+	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]() {return get<float>(ItemHeightProperty()); })
 {
 }
 
-WrapPanel::~WrapPanel()
+const DependencyProperty WrapPanel::OrientationProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Visibility", OrientationE::Horizontal);
+	return dp;
+}
+
+const DependencyProperty WrapPanel::ItemWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN);
+	return dp;
+}
+
+const DependencyProperty WrapPanel::ItemHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN);
+	return dp;
 }
 
 //当测量一个子元素时，遵循这样的原则：每个子元素的childMeasureSize，如果设置了ItemWidth和ItemHeight，则measure宽高固定为ItemWidth,ItemHeight。
@@ -79,7 +94,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
 		//否则，需要先计算每一行的最高item作为那一行的高度
-		if (!std::isnan(ItemHeight))
+		if (!std::isnan(ItemHeight()))
 		{
 			for (auto const &child : m_children)
 			{
@@ -87,13 +102,13 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
 				{
-					arrangeRect.reset(x, y, w, ItemHeight);
+					arrangeRect.reset(x, y, w, ItemHeight());
 					x += w;
 				}
 				else
 				{
-					y += ItemHeight;
-					arrangeRect.reset(0.0, y, w, ItemHeight);
+					y += ItemHeight();
+					arrangeRect.reset(0.0, y, w, ItemHeight());
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -126,7 +141,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	{
 		//指定了ItemWidth，则每一列高度为ItemWidth
 		//否则，需要先计算每一列的最宽item作为那一列的宽度
-		if (!std::isnan(ItemWidth))
+		if (!std::isnan(ItemWidth()))
 		{
 			for (auto const &child : m_children)
 			{
@@ -134,13 +149,13 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
 				{
-					arrangeRect.reset(x, y, ItemWidth, h);
+					arrangeRect.reset(x, y, ItemWidth(), h);
 					y += h;
 				}
 				else
 				{
-					x += ItemWidth;
-					arrangeRect.reset(x, 0.0f, ItemWidth, h);
+					x += ItemWidth();
+					arrangeRect.reset(x, 0.0f, ItemWidth(), h);
 					y = h;
 				}
 				child->arrage(arrangeRect);

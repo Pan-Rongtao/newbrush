@@ -31,7 +31,7 @@ public:
 	//零Size(0.0, 0.0)
 	static Size zero();
 
-	void operator = (const Size &other);
+	void operator = (const Size &other) &;
 	bool operator == (const Size &other) const;
 	bool operator != (const Size &other) const;
 	Size operator + (const Size &other) const;
@@ -40,12 +40,12 @@ public:
 	Size operator - (float f) const;
 	Size operator * (float f) const;
 	Size operator / (float f) const;
-	void operator += (const Size &other);
-	void operator += (float f);
-	void operator -= (const Size &other);
-	void operator -= (float f);
-	void operator *= (float f);
-	void operator /= (float f);
+	void operator += (const Size &other) &;
+	void operator += (float f) &;
+	void operator -= (const Size &other) &;
+	void operator -= (float f) &;
+	void operator *= (float f) &;
+	void operator /= (float f) &;
 
 public:
 	//设置宽为width

@@ -13,13 +13,19 @@ using namespace nb::core;
 using namespace nb::gl;
 using namespace nb::gui;
 
-nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	nb::gui::Window::DrawContext;
+std::shared_ptr<nb::gl::Context> nb::gui::Window::drawContext = nullptr;
 nb::gui::Window::Window()
-	: WindowState(WindowStateE::Normal)
-	, WindowStyle(WindowStyleE::SizeBox)
+	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]() {return get<WindowStateE>(WindowStateProperty()); })
+	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]() {return get<WindowStyleE>(WindowStyleProperty()); })
+	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]() {return get<bool>(TopmostProperty()); })
+	, Left([&](float v) {set(LeftProperty(), v); }, [&]() {return get<float>(LeftProperty()); })
+	, Top([&](float v) {set(TopProperty(), v); }, [&]() {return get<float>(TopProperty()); })
+	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]() {return get<std::string>(TitleProperty()); })
+	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]() {return get<shared_ptr<ImageSource>>(IconProperty()); })
+	, DrawSurface([&](shared_ptr<gl::Surface> v) {set(DrawSurfaceProperty(), v); }, [&]() {return get<shared_ptr<gl::Surface>>(DrawSurfaceProperty()); })
 	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
 {
-	DrawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
+	drawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
 	Left = (float)m_glWindow->x();
 	Top = (float)m_glWindow->y();
 	Width = (float)m_glWindow->width();
@@ -35,27 +41,17 @@ nb::gui::Window::Window()
 	m_glWindow->MouseWheelEvent += std::bind(&Window::onNativeWindowMouseWheel, this, std::placeholders::_1);
 	m_glWindow->KeyEvent += std::bind(&Window::onNativeWindowKeyAction, this, std::placeholders::_1);
 
-	WindowState.notify(std::bind(&Window::onWindowStateChanged, this, std::placeholders::_1, std::placeholders::_2));
-	WindowStyle.notify(std::bind(&Window::onWindowStyleChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Topmost.notify(std::bind(&Window::onTopmostChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Left.notify(std::bind(&Window::onLeftChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Top.notify(std::bind(&Window::onTopChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Width.notify(std::bind(&Window::onWidthChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Height.notify(std::bind(&Window::onHeightChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Title.notify(std::bind(&Window::onTitleChanged, this, std::placeholders::_1, std::placeholders::_2));
-	Icon.notify(std::bind(&Window::onIconChanged, this, std::placeholders::_1, std::placeholders::_2));
-
-	WindowCollections::Windows().push_back(this);
+	WindowCollections::Windows.push_back(this);
 	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
-	nb::gl::makeCurrent(DrawSurface, DrawSurface, DrawContext);
-	onNativeWindowResize({ (int)Width, (int)Height });
+	nb::gl::makeCurrent(DrawSurface(), DrawSurface(), drawContext);
+	onNativeWindowResize({ (int)Width(), (int)Height() });
 }
 
 nb::gui::Window::~Window()
 {
-	auto iter = std::find(WindowCollections::Windows().begin(), WindowCollections::Windows().end(), this);
-	if (iter != WindowCollections::Windows().end())
-		WindowCollections::Windows().erase(iter);
+	auto iter = std::find(WindowCollections::Windows.begin(), WindowCollections::Windows.end(), this);
+	if (iter != WindowCollections::Windows.end())
+		WindowCollections::Windows.erase(iter);
 }
 
 void nb::gui::Window::active()
@@ -246,4 +242,52 @@ void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string
 void nb::gui::Window::onIconChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
 {
 
+}
+
+const DependencyProperty nb::gui::Window::WindowStateProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::WindowStyleProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::TopmostProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::LeftProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0f);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::TopProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0f);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::TitleProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, std::string>("Title", "");
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::IconProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon", nullptr);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Window::DrawSurfaceProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Window, shared_ptr<gl::Surface>>("DrawSurface", nullptr);
+	return dp;
 }

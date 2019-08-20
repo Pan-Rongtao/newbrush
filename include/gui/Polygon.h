@@ -6,7 +6,8 @@ namespace nb { namespace gl {
 	class Polyline;
 }}
 
-namespace nb { namespace gui {
+namespace nb{
+namespace gui{
 
 class NB_API Polygon : public Shape
 {
@@ -14,7 +15,9 @@ public:
 	Polygon();
 	virtual ~Polygon() = default;
 
-	core::Property_rw<std::shared_ptr<std::vector<core::Point>>>	Points;
+	Property_rw<std::vector<core::Point>>	Points;
+
+	static const DependencyProperty			PointsProperty();
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

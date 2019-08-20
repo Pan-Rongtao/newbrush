@@ -1,5 +1,5 @@
 #include "TestProperty.h"
-
+/*
 TestProperty::TestProperty()
 {
 	IsBool.notify(std::bind(&TestProperty::notifyIsBool, this, std::placeholders::_1, std::placeholders::_2));
@@ -41,3 +41,4 @@ void TestProperty::notifyIsBool(bool _old, bool _new)
 {
 
 }
+*/

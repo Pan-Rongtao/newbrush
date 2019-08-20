@@ -5,8 +5,8 @@ using namespace nb::core;
 using namespace nb::gui;
 
 DockPanel::DockPanel()
+	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]() {return get<bool>(LastChildFillProperty()); })
 {
-	LastChildFill.notify([&](const bool &_old, const bool &_new) {setValue<bool>(LastChildFillProperty(), _new); });
 }
 
 void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)

@@ -24,12 +24,15 @@ class NB_API WrapPanel : public Panel
 {
 public:
 	WrapPanel();
-	virtual ~WrapPanel();
+	virtual ~WrapPanel() = default;
 
-public:
 	nb::core::Property_rw<OrientationE>	Orientation;
 	nb::core::Property_rw<float>		ItemWidth;
 	nb::core::Property_rw<float>		ItemHeight;
+
+	static const DependencyProperty		OrientationProperty();
+	static const DependencyProperty		ItemWidthProperty();
+	static const DependencyProperty		ItemHeightProperty();
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

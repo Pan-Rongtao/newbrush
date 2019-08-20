@@ -25,7 +25,7 @@ Color::Color(const Color &other)
 {
 }
 
-void Color::operator =(const Color &other)
+void Color::operator =(const Color &other) &
 {
 	setArgb(other.alpha(), other.red(), other.green(), other.blue());
 }
@@ -80,34 +80,34 @@ const uint8_t &Color::blue() const
 	return m_blue;
 }
 
-void Color::setAlpha(uint8_t a)
+void Color::setAlpha(uint8_t a) &
 {
 	m_alpha = a;
 }
 
-void Color::setRed(uint8_t r)
+void Color::setRed(uint8_t r) &
 {
 	m_red = r;
 }
 
-void Color::setGreen(uint8_t g)
+void Color::setGreen(uint8_t g) &
 {
 	m_green = g;
 }
 
-void Color::setBlue(uint8_t b)
+void Color::setBlue(uint8_t b) &
 {
 	m_blue = b;
 }
 
-void Color::setRgb(uint8_t r, uint8_t g, uint8_t b)
+void Color::setRgb(uint8_t r, uint8_t g, uint8_t b) &
 {
 	setRed(r);
 	setGreen(g);
 	setBlue(b);
 }
 
-void Color::setArgb(uint8_t a, uint8_t r, uint8_t g, uint8_t b)
+void Color::setArgb(uint8_t a, uint8_t r, uint8_t g, uint8_t b) &
 {
 	setAlpha(a);
 	setRgb(r, g, b);
@@ -133,32 +133,32 @@ float Color::blueF() const
 	return argb2ArgbF(blue());
 }
 
-void Color::setAlphaF(float a)
+void Color::setAlphaF(float a) &
 {
 	setArgbF(a, redF(), greenF(), blueF());
 }
 
-void Color::setRedF(float r)
+void Color::setRedF(float r) &
 {
 	setArgbF(alphaF(), r, greenF(), blueF());
 }
 
-void Color::setGreenF(float g)
+void Color::setGreenF(float g) &
 {
 	setArgbF(alphaF(), redF(), g, blueF());
 }
 
-void Color::setBlueF(float b)
+void Color::setBlueF(float b) &
 {
 	setArgbF(alphaF(), redF(), greenF(), b);
 }
 
-void Color::setRgbF(float r, float g, float b)
+void Color::setRgbF(float r, float g, float b) &
 {
 	setArgbF(alphaF(), r, g, b);
 }
 
-void Color::setArgbF(float a, float r, float g, float b)
+void Color::setArgbF(float a, float r, float g, float b) &
 {
 	if (!isValidArgbF(a, r, g, b))
 		nbThrowException(std::out_of_range, "a[%.2f] or r[%.2f] or g[%.2f] or b[%.2f] is out of range [0.0, 1.0]", a, r, g, b);
@@ -190,22 +190,22 @@ float Color::value() const
 	return v;
 }
 
-void Color::setHue(float h)
+void Color::setHue(float h) &
 {
 	setHsv(h, saturation(), value());
 }
 
-void Color::setSaturation(float s)
+void Color::setSaturation(float s) &
 {
 	setHsv(hue(), s, value());
 }
 
-void Color::setValue(float v)
+void Color::setValue(float v) &
 {
 	setHsv(hue(), saturation(), v);
 }
 
-void Color::setHsv(float h, float s, float v)
+void Color::setHsv(float h, float s, float v) &
 {
 	if (!isValidHsv(h, s, v))
 		nbThrowException(std::out_of_range, "h or s or v is out of range");
@@ -215,7 +215,7 @@ void Color::setHsv(float h, float s, float v)
 	setArgbF(alphaF(), r, g, b);
 }
 
-void Color::setIntegerArgb(uint32_t argb)
+void Color::setIntegerArgb(uint32_t argb) &
 {
 	int a = (argb & 0xff000000) >> 24;
 	int r = (argb & 0x00ff0000) >> 16;
@@ -224,7 +224,7 @@ void Color::setIntegerArgb(uint32_t argb)
 	setArgb(a, r, g, b);
 }
 
-void Color::setIntegerRgb(uint32_t rgb)
+void Color::setIntegerRgb(uint32_t rgb) &
 {
 	setIntegerArgb(rgb | 0xff000000);
 }

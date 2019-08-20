@@ -15,7 +15,7 @@ void TestTextBlock::test()
 	m_text->TextWrapping = TextWrappingE::Wrap;
 	m_window->Content = m_text;
 
-	colorAni.From = m_text->Foreground;
+	colorAni.From = m_text->Foreground();
 	colorAni.To = Color(255, 0, 10);
 	colorAni.Easing = std::make_shared<PowerEase>();
 	colorAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
@@ -23,7 +23,7 @@ void TestTextBlock::test()
 	colorAni.StateChangedEvent += std::bind(&TestTextBlock::onStateChanged, this, std::placeholders::_1);
 	colorAni.ProgressEvent += std::bind(&TestTextBlock::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestTextBlock::onCompleted, this, std::placeholders::_1);
-	colorAni.TargetProperty = &m_text->Foreground;
+//	colorAni.TargetProperty = &m_text->Foreground;
 	colorAni.begin();
 }
 

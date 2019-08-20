@@ -2,9 +2,8 @@
 #include "../gui/Timeline.h"
 #include "../core/Property.h"
 
-namespace nb { namespace gui {
-
-class UIElement;
+namespace nb{
+namespace gui{
 
 class NB_API Storyboard : public Timeline
 {

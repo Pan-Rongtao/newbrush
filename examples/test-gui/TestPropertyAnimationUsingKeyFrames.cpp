@@ -7,12 +7,17 @@ void TestPropertyAnimationUsingKeyFrames::test()
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onCompleted, this, std::placeholders::_1);
-	doubleAni.KeyFrames().insert(KeyFrame<double>(20, TimeSpan(0, 0, 1)));
-	doubleAni.KeyFrames().insert(KeyFrame<double>(80, TimeSpan(0, 0, 2)));
-	doubleAni.KeyFrames().insert(KeyFrame<double>(-20, TimeSpan(0, 0, 5)));
-	doubleAni.TargetProperty = &Width;
+//	doubleAni.KeyFrames().insert(KeyFrame<double>(20, TimeSpan(0, 0, 1)));
+//	doubleAni.KeyFrames().insert(KeyFrame<double>(80, TimeSpan(0, 0, 2)));
+//	doubleAni.KeyFrames().insert(KeyFrame<double>(-20, TimeSpan(0, 0, 5)));
+//	doubleAni.TargetProperty = &Width;
 	doubleAni.begin();
 
+}
+
+TestPropertyAnimationUsingKeyFrames::TestPropertyAnimationUsingKeyFrames()
+	: Width(nullptr, nullptr)
+{
 }
 
 void TestPropertyAnimationUsingKeyFrames::onStateChanged(const Timeline::StateChangedArgs & args)

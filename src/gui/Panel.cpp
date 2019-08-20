@@ -8,6 +8,7 @@ using namespace nb::core;
 using namespace nb::gui;
 
 Panel::Panel()
+	: Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]() {return get<shared_ptr<Brush>>(BackgroundProperty()); })
 {
 }
 
@@ -24,8 +25,10 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 	return 0;
 }
 
-void Panel::init()
+const DependencyProperty Panel::BackgroundProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Panel, shared_ptr<Brush>>("Background", nullptr);
+	return dp;
 }
 
 void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)

@@ -33,7 +33,7 @@ int Application::run()
 {
 	try 
 	{
-		for (auto w : WindowCollections::Windows())
+		for (auto w : WindowCollections::Windows)
 		{
 			w->updateLayout();
 		}

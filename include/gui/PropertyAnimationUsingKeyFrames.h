@@ -41,12 +41,14 @@ template<class T>
 class NB_API PropertyAnimationUsingKeyFrames : public AnimationTimeline<T>
 {
 public:
+	PropertyAnimationUsingKeyFrames() : KeyFrames(nullptr, nullptr) {}
+
 	core::Property_rw<std::set<KeyFrame<T>>>		KeyFrames;
 
 protected:
 	virtual void progressing(float progress) override
 	{
-		if (!TargetProperty || KeyFrames().empty())	return;
+//		if (!TargetProperty || KeyFrames().empty())	return;
 		//根据ticks获取当前frame，找不到表示超出了范围
 		auto getCurrentFrame = [&](int64_t ticks) ->std::set<KeyFrame<T>>::iterator
 		{
@@ -60,7 +62,7 @@ protected:
 		auto curFrameIter = getCurrentFrame(ticks);
 		if (curFrameIter != KeyFrames().end())
 		{
-			const KeyFrame<T> &curFrame = *curFrameIter;
+/*			const KeyFrame<T> &curFrame = *curFrameIter;
 			auto prevFrameIter = (curFrameIter == KeyFrames().begin()) ? KeyFrames().end() : --curFrameIter;
 			T fromValue = (prevFrameIter == KeyFrames().end()) ? curFrame.Value : (*prevFrameIter).Value();
 			T toValue = curFrame.Value();
@@ -68,7 +70,7 @@ protected:
 			int64_t frameEndTick = (int64_t)curFrame.KeyTime().totalMilliseconds();
 			auto t = (double)(ticks - frmeBegTick) / (frameEndTick - frmeBegTick);
 			auto ft = curFrame.Easing()->easeInCore(t);
-			*TargetProperty = fromValue + (toValue - fromValue) * ft;
+			*TargetProperty = fromValue + (toValue - fromValue) * ft;*/
 		}
 	}
 };

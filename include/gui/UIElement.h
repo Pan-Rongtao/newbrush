@@ -16,6 +16,8 @@ namespace nb{ namespace gl{
 
 namespace nb{namespace gui{
 
+using std::shared_ptr;
+
 enum class VisibilityE
 {
 	Hidden,
@@ -57,22 +59,6 @@ public:
 	UIElement();
 	virtual ~UIElement() = default;
 
-	static const DependencyProperty							VisibilityProperty();
-	static const DependencyProperty							OpacityProperty();
-	static const DependencyProperty							FocusableProperty();
-	static const DependencyProperty 						WidthProperty();
-	static const DependencyProperty 						HeightProperty();
-	static const DependencyProperty 						MinWidthProperty();
-	static const DependencyProperty 						MinHeightProperty();
-	static const DependencyProperty 						MaxWidthProperty();
-	static const DependencyProperty 						MaxHeightProperty();
-	static const DependencyProperty 						ActualSizeProperty();
-	static const DependencyProperty 						MarginProperty();
-	static const DependencyProperty 						HorizontalAlignmentProperty();
-	static const DependencyProperty 						VerticalAlignmentProperty();
-	static const DependencyProperty 						FlowDirectionProperty();
-	static const DependencyProperty 						StateMachineProperty();
-
 	core::Property_rw<VisibilityE>							Visibility;
 	core::Property_rw<float>								Opacity;
 	core::Property_rw<bool>									Focusable;
@@ -90,9 +76,30 @@ public:
 	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
 	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
 	core::Property_rw<FlowDirectionE>						FlowDirection;
-	core::Property_r<std::shared_ptr<gl::RenderObject>>		Renderer;
-	core::Property_rw<std::shared_ptr<Style>>				style;
-	core::Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
+	core::Property_r<shared_ptr<gl::RenderObject>>			Renderer;
+	core::Property_rw<shared_ptr<Style>>					style;
+	//core::Property_rw<shared_ptr<VisualStateMachine>>		StateMachine;
+
+	static const DependencyProperty							VisibilityProperty();
+	static const DependencyProperty							OpacityProperty();
+	static const DependencyProperty							FocusableProperty();
+	static const DependencyProperty 						WidthProperty();
+	static const DependencyProperty 						HeightProperty();
+	static const DependencyProperty 						MinWidthProperty();
+	static const DependencyProperty 						MinHeightProperty();
+	static const DependencyProperty 						MaxWidthProperty();
+	static const DependencyProperty 						MaxHeightProperty();
+	static const DependencyProperty 						DesiredSizeProperty();
+	static const DependencyProperty 						ActualSizeProperty();
+	static const DependencyProperty 						RenderSizeProperty();
+	static const DependencyProperty 						OffsetProperty();
+	static const DependencyProperty 						MarginProperty();
+	static const DependencyProperty 						HorizontalAlignmentProperty();
+	static const DependencyProperty 						VerticalAlignmentProperty();
+	static const DependencyProperty 						FlowDirectionProperty();
+	static const DependencyProperty 						RendererProperty();
+	static const DependencyProperty 						StyleProperty();
+	static const DependencyProperty 						StateMachineProperty();
 
 	uint32_t childCount() const;
 	void addChild(std::shared_ptr<UIElement> child);
@@ -160,13 +167,6 @@ public:
 protected:
 	std::shared_ptr<UIElement>								m_parent;
 	std::vector<std::shared_ptr<UIElement>>					m_children;
-
-private:
-	core::Size												m_desiredSize;
-	core::Size												m_renderSize;
-	nb::core::Size											m_actualSize;
-	core::Point												m_offset;
-	std::shared_ptr<gl::RenderObject>						m_renderer;
 
 private:
 	void onPropertyChanged(const PropertyChangedArg &args);

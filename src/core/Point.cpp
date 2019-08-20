@@ -25,7 +25,7 @@ Point Point::zero()
 	return Point(0.0f, 0.0f);
 }
 
-void Point::operator = (const Point &p)
+void Point::operator = (const Point &p) &
 {
 	m_x = p.x();
 	m_y = p.y();
@@ -74,32 +74,32 @@ Point Point::operator / (float f) const
 	return Point(x() / f, y() / f);
 }
 
-void Point::operator += (const Point &p)
+void Point::operator += (const Point &p) &
 {
 	*this = (operator +(p));
 }
 
-void Point::operator += (float f)
+void Point::operator += (float f) &
 {
 	*this = (operator +(f));
 }
 
-void Point::operator -= (const Point &p)
+void Point::operator -= (const Point &p) &
 {
 	*this = (operator -(p));
 }
 
-void Point::operator -= (float f)
+void Point::operator -= (float f) &
 {
 	*this = (operator -(f));
 }
 
-void Point::operator *= (float f)
+void Point::operator *= (float f) &
 {
 	*this = (operator *(f));
 }
 
-void Point::operator /= (float f)
+void Point::operator /= (float f) &
 {
 	*this = (operator /(f));
 }

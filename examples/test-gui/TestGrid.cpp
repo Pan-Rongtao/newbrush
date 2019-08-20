@@ -94,7 +94,7 @@ void TestGrid::test()
 //	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
 //	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 //	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
-	doubleAni.TargetProperty = &m_window->Width;
+//	doubleAni.TargetProperty = &m_window->Width;
 //	doubleAni.begin();
 
 	m_window->Content = grid;

@@ -8,13 +8,15 @@ using namespace nb::gui;
 using namespace nb::gl;
 
 ImageSource::ImageSource()
-	: Bm(std::make_shared<Bitmap>())
+	: ImageSource("")
 {
 }
 
 ImageSource::ImageSource(const std::string & uri)
-	: Bm(std::make_shared<Bitmap>(uri))
+	: Bm([&](std::shared_ptr<Bitmap> v) { set(BmProperty(), v); }, [&]() {return get<std::shared_ptr<Bitmap>>(BmProperty()); })
 {
+	Bm = std::make_shared<Bitmap>(uri);
+
 }
 
 float nb::gui::ImageSource::width() const
@@ -25,4 +27,10 @@ float nb::gui::ImageSource::width() const
 float nb::gui::ImageSource::heigth() const
 {
 	return (float)Bm()->height();
+}
+
+const DependencyProperty ImageSource::BmProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("RowDefinitions", nullptr);
+	return dp;
 }

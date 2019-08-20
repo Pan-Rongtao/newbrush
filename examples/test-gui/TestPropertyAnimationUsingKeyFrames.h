@@ -10,6 +10,8 @@ class TestPropertyAnimationUsingKeyFrames : public TestBase
 public:
 	void test();
 
+	TestPropertyAnimationUsingKeyFrames();
+
 	Property_rw<double>						Width;
 	PropertyAnimationUsingKeyFrames<double>	doubleAni;
 

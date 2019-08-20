@@ -1,7 +1,10 @@
 ﻿#pragma once
 #include "Control.h"
 
-namespace nb { namespace  gui {
+namespace nb{
+namespace gui{
+
+using nb::core::Property_rw;
 
 class NB_API ContentControl : public Control
 {
@@ -9,8 +12,9 @@ public:
 	explicit ContentControl(std::shared_ptr<UIElement> content = nullptr);
 	virtual ~ContentControl() = default;
 
-	nb::core::Property_rw<std::shared_ptr<UIElement>>	Content;
-	static const DependencyProperty						ContentProperty();
+	Property_rw<std::shared_ptr<UIElement>>	Content;
+
+	static const DependencyProperty			ContentProperty();
 	
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

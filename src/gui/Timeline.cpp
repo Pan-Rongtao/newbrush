@@ -19,12 +19,15 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration)
 }
 
 Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const RepeatBehavior & repeatBehavior)
-	: BeginTime(beginTime)
-	, Duration(duration)
-	, Repeat(repeatBehavior)
+	: BeginTime(nullptr, nullptr)
+	, Duration(nullptr, nullptr)
+	, FillBehavior(nullptr, nullptr)
+	, AutoReverse(nullptr, nullptr)
+	, Repeat(nullptr, nullptr)
+	, State(nullptr)
 	, m_state(StateE::Stopped)
 {
-	State.getter([&]()->StateE & {return m_state; });
+//	State.getter([&]()->StateE & {return m_state; });
 	m_timer.setInterval(1);
 	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);
 }

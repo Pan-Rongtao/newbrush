@@ -26,7 +26,7 @@ public:
 	//注册依赖属性
 	//异常：std::logic_error已经注册过同类型属性
 	template<class ownerType, class propertyType>
-	static DependencyProperty registerDependency(const std::string & name, const propertyType &defaultValue)
+	static DependencyProperty registerDependency(const std::string & name, const propertyType &defaultValue = propertyType())
 	{
 		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "registerDependency<ownerType, propertyType> : ownerType must be DependencyObject or it's derived type.");

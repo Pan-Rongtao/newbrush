@@ -4,15 +4,15 @@ using namespace nb::core;
 using namespace nb::gui;
 
 Control::Control()
+	: Background([&](shared_ptr<Brush> v) { set(BackgroundProperty(), v); }, [&]() {return get<shared_ptr<Brush>>(BackgroundProperty()); })
+	, BorderBrush([&](shared_ptr<Brush> v) { set(BorderBrushProperty(), v); }, [&]() {return get<shared_ptr<Brush>>(BorderBrushProperty()); })
+	, BorderThickness([&](Thickness v) {set(BorderThicknessProperty(), v); }, [&]() {return get<Thickness>(BorderThicknessProperty()); })
+	, Padding([&](Thickness v) {set(PaddingProperty(), v); }, [&]() {return get<Thickness>(PaddingProperty()); })
+	, HorizontalContentAlignment([&](HorizontalAlignmentE v) {set(HorizontalContentAlignmentProperty(), v); }, [&](){return get<HorizontalAlignmentE>(HorizontalContentAlignmentProperty());})
+	, VerticalContentAlignment([&](VerticalAlignmentE v) {set(VerticalContentAlignmentProperty(), v); }, [&]() {return get<VerticalAlignmentE>(VerticalContentAlignmentProperty()); })
+	, TabIndex([&](int v) {set(TabIndexProperty(), v); }, [&]() {return get<int>(TabIndexProperty()); })
+	, Template([&](shared_ptr<ControlTemplate> v) {set(TemplateProperty(), v); }, [&]() {return get<shared_ptr<ControlTemplate>>(TemplateProperty()); })
 {
-	Background.notify([&](const std::shared_ptr<Brush> &_old, const std::shared_ptr<Brush> &_new) { setValue<std::shared_ptr<Brush>>(BackgroundProperty(), _new); });
-	BorderBrush.notify([&](const std::shared_ptr<Brush> &_old, const std::shared_ptr<Brush> &_new) { setValue<std::shared_ptr<Brush>>(BorderBrushProperty(), _new); });
-	BorderThickness.notify([&](const Thickness &_old, const Thickness &_new) { setValue<Thickness>(BorderBrushProperty(), _new); });
-	Padding.notify([&](const Thickness &_old, const Thickness &_new) { setValue<Thickness>(PaddingProperty(), _new); });
-	HorizontalContentAlignment.notify([&](const HorizontalAlignmentE &_old, const HorizontalAlignmentE &_new) { setValue<HorizontalAlignmentE>(HorizontalAlignmentProperty(), _new); });
-	VerticalContentAlignment.notify([&](const VerticalAlignmentE &_old, const VerticalAlignmentE &_new) { setValue<VerticalAlignmentE>(VerticalContentAlignmentProperty(), _new); });
-	TabIndex.notify([&](const int &_old, const int &_new) { setValue<int>(TabIndexProperty(), _new); });
-	Template.notify([&](const std::shared_ptr<ControlTemplate> &_old, const std::shared_ptr<ControlTemplate> &_new) {setValue<std::shared_ptr<ControlTemplate>>(TemplateProperty(), _new); });
 }
 
 const DependencyProperty Control::BackgroundProperty()

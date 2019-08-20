@@ -59,7 +59,10 @@ GridLength GridLength::automate()
 }
 
 RowDefinition::RowDefinition()
-	: Height(GridLength(1.0f, GridLength::GridUnitType::Star))
+	: Height([&](GridLength v) {set(RowDefinition::HeightProperty(), v); }, [&]() {return get<GridLength>(RowDefinition::HeightProperty()); })
+	, MinHeight([&](GridLength v) {set(RowDefinition::MinHeightProperty(), v); }, [&]() {return get<GridLength>(RowDefinition::MinHeightProperty()); })
+	, MaxHeight([&](GridLength v) {set(RowDefinition::MaxHeightProperty(), v); }, [&]() {return get<GridLength>(RowDefinition::MaxHeightProperty()); })
+	, ActualHeight([&]() {return get<float>(ActualHeightProperty()); })
 {
 }
 
@@ -81,8 +84,17 @@ DependencyProperty RowDefinition::MaxHeightProperty()
 	return dp;
 }
 
+DependencyProperty RowDefinition::ActualHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, float>("MaxHeight", 0.0f);
+	return dp;
+}
+
 ColumnDefinition::ColumnDefinition()
-	: Width(GridLength(1.0f, GridLength::GridUnitType::Star))
+	: Width([&](GridLength v) {set(ColumnDefinition::WidthProperty(), v); }, [&]() {return get<GridLength>(ColumnDefinition::WidthProperty()); })
+	, MinWidth([&](GridLength v) {set(ColumnDefinition::MinWidthProperty(), v); }, [&]() {return get<GridLength>(ColumnDefinition::MinWidthProperty()); })
+	, MaxWidth([&](GridLength v) {set(ColumnDefinition::MaxWidthProperty(), v); }, [&]() {return get<GridLength>(ColumnDefinition::MaxWidthProperty()); })
+	, ActualWidth([&]() {return get<float>(ActualWidthProperty()); })
 {
 }
 
@@ -104,7 +116,15 @@ DependencyProperty ColumnDefinition::MaxWidthProperty()
 	return dp;
 }
 
+DependencyProperty ColumnDefinition::ActualWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, float>("ActualWidth", 0.0f);
+	return dp;
+}
+
 Grid::Grid()
+	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]() {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
+	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]() {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
 {
 }
 

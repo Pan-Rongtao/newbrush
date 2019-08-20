@@ -11,6 +11,10 @@ enum class ClickModeE
 	release,//压下和释放按钮时引发click事件
 };
 
+using nb::core::Property_rw;
+using nb::core::Property_r;
+using nb::core::Event;
+
 class ButtonBase : ContentControl
 {
 public:
@@ -21,12 +25,14 @@ public:
 	virtual bool isEnableCore();
 
 
-	core::Property_rw<ClickModeE>		ClickMode;		//指定何种模式引发click的发生
-	//core::Property_rw<Command>		Command;		//按下此按钮时调用的命令
-	core::Property_r<bool>				IsPressed;		//是否处于压下状态
+	Property_rw<ClickModeE>			ClickMode;		//指定何种模式引发click的发生
+	Property_r<bool>				IsPressed;		//是否处于压下状态
 
 	struct ClickArgs {};
-	core::Event<ClickArgs>	Click;						//点击事件
+	Event<ClickArgs>				Click;			//点击事件
+
+	static const DependencyProperty	ClickModeProperty();
+	static const DependencyProperty	IsPressedProperty();
 
 protected:
 	virtual void onClick();

@@ -4,17 +4,56 @@ using namespace nb::core;
 using namespace nb::gui;
 
 StackPanel::StackPanel()
+	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]() {return get<OrientationE>(OrientationProperty()); })
+	, ExtentWidth([&]() {return get<float>(ExtentWidthProperty()); })
+	, ExtentHeight([&]() {return get<float>(ExtentHeightProperty()); })
+	, HorizontalOffset([&]() {return get<float>(HorizontalOffsetProperty()); })
+	, VerticalOffset([&]() {return get<float>(VerticalOffsetProperty()); })
+	, ViewportWidth([&]() {return get<float>(ViewportWidthProperty()); })
+	, ViewportHeight([&]() {return get<float>(ViewportHeightProperty()); })
 {
-	ExtentWidth.getter([&]()->auto & {return m_extentWidth; });
-	ExtentHeight.getter([&]()->auto & {return m_extentHeight; });
-	HorizontalOffset.getter([&]()->auto & {return m_horizontalOffset; });
-	VerticalOffset.getter([&]()->auto & {return m_verticalOffset; });
-	ViewportWidth.getter([&]()->auto & {return m_viewportWidth; });
-	ViewportHeight.getter([&]()->auto & {return m_viewportHeight; });
 }
 
-StackPanel::~StackPanel()
+const DependencyProperty StackPanel::OrientationProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal);
+	return dp;
+}
+
+const DependencyProperty StackPanel::ExtentWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentWidth", 0.0f);
+	return dp;
+}
+
+const DependencyProperty StackPanel::ExtentHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentHeight", 0.0f);
+	return dp;
+}
+
+const DependencyProperty StackPanel::HorizontalOffsetProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("HorizontalOffset", 0.0f);
+	return dp;
+}
+
+const DependencyProperty StackPanel::VerticalOffsetProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("VerticalOffset", 0.0f);
+	return dp;
+}
+
+const DependencyProperty StackPanel::ViewportWidthProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportWidth", 0.0f);
+	return dp;
+}
+
+const DependencyProperty StackPanel::ViewportHeightProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportHeight", 0.0f);
+	return dp;
 }
 
 //如果是Horizontal，水平方向是无限的，垂直方向availableSize.height

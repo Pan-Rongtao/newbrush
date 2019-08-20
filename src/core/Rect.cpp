@@ -52,7 +52,7 @@ Rect Rect::fromLTRB(float left, float top, float right, float bottom)
 	return Rect(left, top, right - left, bottom - top);
 }
 
-void Rect::operator = (const Rect &other)
+void Rect::operator = (const Rect &other) &
 {
 	m_x = other.x();
 	m_y = other.y();
@@ -81,7 +81,7 @@ Rect Rect::operator | (const Rect &other) const
 	return Rect::fromLTRB(fLeft, fTop, fRight, fBottom);
 }
 
-void Rect::operator |= (const Rect &other)
+void Rect::operator |= (const Rect &other) &
 {
 	*this = (operator | (other));
 }
@@ -100,7 +100,7 @@ Rect Rect::operator & (const Rect &other) const
 	return rc;
 }
 
-void Rect::operator &= (const Rect &other)
+void Rect::operator &= (const Rect &other) &
 {
 	*this = (operator & (other));
 }
@@ -185,7 +185,7 @@ Size Rect::size() const
 	return Size(width(), height());
 }
 
-void Rect::reset(float x, float y, float width, float height)
+void Rect::reset(float x, float y, float width, float height) &
 {
 	setLeft(x);
 	setTop(y);

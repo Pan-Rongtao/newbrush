@@ -74,7 +74,7 @@ int Date::daysInMonth(int year, int month)
 		return 31;
 }
 
-void Date::operator =(const Date &other)
+void Date::operator =(const Date &other) &
 {
 	m_year = other.year();
 	m_month = other.month();
@@ -170,13 +170,13 @@ int Date::weekOfYear() const
 	return nWeeks;
 }
 
-Date &Date::add(const TimeSpan &value)
+Date &Date::add(const TimeSpan &value) &
 {
 	*this = operator+(value);
 	return *this;
 }
 
-Date &Date::sub(const TimeSpan &value)
+Date &Date::sub(const TimeSpan &value) &
 {
 	return add(-value);
 }
@@ -404,7 +404,7 @@ Time Time::now()
 	return Time(tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(nanos / 1000000), (int)(nanos / 1000 % 1000));
 }
 
-void Time::operator =(const Time &other)
+void Time::operator =(const Time &other) &
 {
 	m_hour = other.hour();
 	m_minute = other.minute();
@@ -470,13 +470,13 @@ TimeSpan Time::timeOfDay() const
 	return TimeSpan::fromMicroseconds(m_hour * 3600000000 + m_minute * 60000000 + m_second * std::micro::den + m_millisecond * std::milli::den + m_microsecond);
 }
 
-Time &Time::add(const TimeSpan &value)
+Time &Time::add(const TimeSpan &value) &
 {
 	*this = operator+(value);
 	return *this;
 }
 
-Time &Time::sub(const TimeSpan &value)
+Time &Time::sub(const TimeSpan &value) &
 {
 	return add(value.negate());
 }
@@ -486,27 +486,27 @@ TimeSpan Time::sub(const Time &value) const
 	return timeOfDay() - value.timeOfDay();
 }
 
-Time &Time::addHours(int hours)
+Time &Time::addHours(int hours) &
 {
 	return add(TimeSpan::fromHours(hours));
 }
 
-Time &Time::addMinutes(int minutes)
+Time &Time::addMinutes(int minutes) &
 {
 	return add(TimeSpan::fromMinutes(minutes));
 }
 
-Time &Time::addSeconds(int seconds)
+Time &Time::addSeconds(int seconds) &
 {
 	return add(TimeSpan::fromSeconds(seconds));
 }
 
-Time &Time::addMilliseconds(int milliseconds)
+Time &Time::addMilliseconds(int milliseconds) &
 {
 	return add(TimeSpan::fromMilliseconds(milliseconds));
 }
 
-Time & nb::core::Time::addMicroseconds(int microseconds)
+Time & nb::core::Time::addMicroseconds(int microseconds) &
 {
 	return add(TimeSpan::fromMicroseconds(microseconds));
 }
@@ -628,7 +628,7 @@ int DateTime::daysInMonth(int year, int month)
 	return Date::daysInMonth(year, month);
 }
 
-void DateTime::operator = (const DateTime &other)
+void DateTime::operator = (const DateTime &other) &
 {
 	m_date = other.date();
 	m_time = other.time();
@@ -731,13 +731,13 @@ Time DateTime::time() const
 	return m_time;
 }
 
-DateTime &DateTime::add(const TimeSpan &value)
+DateTime &DateTime::add(const TimeSpan &value) &
 {
 	*this = operator+(value);
 	return *this;
 }
 
-DateTime &DateTime::sub(const TimeSpan &value)
+DateTime &DateTime::sub(const TimeSpan &value) &
 {
 	return add(value.negate());
 }
@@ -747,45 +747,45 @@ TimeSpan DateTime::sub(const DateTime &value) const
 	return (date() - value.date()) + (time() - value.time());
 }
 
-DateTime &DateTime::addYears(int years)
+DateTime &DateTime::addYears(int years) &
 {
 	*this = DateTime(m_date.addYears(years), m_time);
 	return *this;
 }
 
-DateTime &DateTime::addMonths(int months)
+DateTime &DateTime::addMonths(int months) &
 {
 	*this = DateTime(m_date.addMonths(months), m_time);
 	return *this;
 }
 
-DateTime &DateTime::addDays(int days)
+DateTime &DateTime::addDays(int days) &
 {
 	*this = DateTime(m_date.addDays(days), m_time);
 	return *this;
 }
 
-DateTime &DateTime::addHours(int hours)
+DateTime &DateTime::addHours(int hours) &
 {
 	return add(TimeSpan::fromHours(hours));
 }
 
-DateTime &DateTime::addMinutes(int minutes)
+DateTime &DateTime::addMinutes(int minutes) &
 {
 	return add(TimeSpan::fromMinutes(minutes));
 }
 
-DateTime &DateTime::addSeconds(int seconds)
+DateTime &DateTime::addSeconds(int seconds) &
 {
 	return add(TimeSpan::fromSeconds(seconds));
 }
 
-DateTime &DateTime::addMilliseconds(int milliseconds)
+DateTime &DateTime::addMilliseconds(int milliseconds) &
 {
 	return add(TimeSpan::fromMilliseconds(milliseconds));
 }
 
-DateTime & DateTime::addMicroseconds(int microseconds)
+DateTime & DateTime::addMicroseconds(int microseconds) &
 {
 	return add(TimeSpan::fromMicroseconds(microseconds));
 }

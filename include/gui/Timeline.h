@@ -3,10 +3,11 @@
 #include "../core/TimeSpan.h"
 #include "../core/Timer.h"
 #include "RepeatBehavior.h"
+#include "../gui/DependencyObject.h"
 
 namespace nb { namespace gui{
 
-class NB_API Timeline
+class NB_API Timeline : public DependencyObject
 {
 public:
 	//

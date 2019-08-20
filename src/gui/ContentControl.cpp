@@ -6,12 +6,15 @@ using namespace nb::gui;
 using namespace nb::core;
 
 ContentControl::ContentControl(std::shared_ptr<UIElement> content)
-	: Content(content)
+	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]() {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
 {
-	Content.notify([&](const std::shared_ptr<UIElement> &_old, const std::shared_ptr<UIElement> &_new) {
-		if (childCount() == 0)	addChild(_new);
-		else					m_children[0] = _new;
-	});
+	PropertyChanged += [&](const PropertyChangedArg &arg) {
+		if (arg.dp == ContentControl::ContentProperty()) {
+			auto content = any_cast<std::shared_ptr<UIElement>>(arg.value);
+			if (childCount() == 0)	addChild(content);
+			else					m_children[0] = content;
+		}
+	};
 }
 
 const DependencyProperty ContentControl::ContentProperty()

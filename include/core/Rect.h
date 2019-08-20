@@ -50,16 +50,16 @@ public:
 	//从左、顶、右、底部构建一个Rect
 	static Rect fromLTRB(float left, float top, float right, float bottom);
 
-	void operator = (const Rect &other);
+	void operator = (const Rect &other) &;
 	bool operator == (const Rect &other) const;
 	bool operator != (const Rect &other) const;
 	//逻辑操作将返回一个标准化的矩形
 	//返回两个矩形的并集
 	Rect operator | (const Rect &other) const;
-	void operator |= (const Rect &other);
+	void operator |= (const Rect &other) &;
 	//返回两个矩形的合集，如果无交集将返回Rect::Zero
 	Rect operator & (const Rect &other) const;
-	void operator &= (const Rect &other);
+	void operator &= (const Rect &other) &;
 
 public:
 	//设置矩形的x（左边），宽可能会被改变，但绝不会改变顶部、底部、右边和高
@@ -98,7 +98,7 @@ public:
 	Size size() const;
 
 	//重置矩形
-	void reset(float x, float y, float width, float height);
+	void reset(float x, float y, float width, float height) &;
 
 	//设置矩形的右边，宽可能会被改变，但绝不会改变左边、顶部、底部和高
 	void setRight(float right) &;

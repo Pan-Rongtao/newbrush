@@ -27,11 +27,11 @@ public:
 public:
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
-	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Source;
-	nb::core::Property_rw<nb::gui::StretchE>				Stretch;
+	Property_rw<shared_ptr<ImageSource>>	Source;
+	Property_rw<StretchE>					Stretch;
 
-	static const DependencyProperty							SourceProperty();
-	static const DependencyProperty							StretchProperty();
+	static const DependencyProperty			SourceProperty();
+	static const DependencyProperty			StretchProperty();
 
 
 protected:

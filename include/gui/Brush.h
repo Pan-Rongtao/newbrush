@@ -20,16 +20,17 @@
 namespace nb{
 namespace gui {
 
+using nb::core::Property_rw;
 //class Brush
 class NB_API Brush : public DependencyObject
 {
 protected:
 	Brush();
 	Brush(float opacity);
-	virtual ~Brush();
+	virtual ~Brush() = default;
 
-	static const DependencyProperty			OpacityProperty();
-	nb::core::Property_rw<float>			Opacity;
+	static const DependencyProperty	OpacityProperty();
+	Property_rw<float>				Opacity;
 
 private:
 	Brush(const Brush &other) = delete;
@@ -44,8 +45,8 @@ public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const core::Color &color);
 
-	static const DependencyProperty			ColorProperty();
-	nb::core::Property_rw<nb::core::Color>	Color;
+	static const DependencyProperty	ColorProperty();
+	Property_rw<nb::core::Color>	Color;
 };
 
 //class ImageBrush
@@ -55,8 +56,8 @@ public:
 	ImageBrush();
 	explicit ImageBrush(const std::shared_ptr<ImageSource> &imgSource);
 
-	static const DependencyProperty						SourceProperty();
-	nb::core::Property_rw<std::shared_ptr<ImageSource>>	Source;
+	static const DependencyProperty				SourceProperty();
+	Property_rw<std::shared_ptr<ImageSource>>	Source;
 };
 
 }}

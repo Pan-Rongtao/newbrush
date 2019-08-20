@@ -13,12 +13,10 @@ public:
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);
 
+	Property_rw<shared_ptr<Brush>>	Background;
+	static const DependencyProperty	BackgroundProperty();
+
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
-
-public:
-	nb::core::Property_rw<std::shared_ptr<Brush>>					Background;
-
-	virtual void init();
 
 protected:
 	Panel();

@@ -82,7 +82,7 @@ public:
 	//一月有多少天
 	static int daysInMonth(int year, int month);
 
-	void operator =(const Date &other);
+	void operator =(const Date &other) &;
 	bool operator !=(const Date &other) const;
 	bool operator <(const Date &other) const;
 	inline bool operator >(const Date &other) const { return other < *this; }
@@ -90,9 +90,9 @@ public:
 	inline bool operator <=(const Date &other) const { return !(*this > other); }
 	inline bool operator >=(const Date &other) const { return !(*this < other); }
 	Date operator +(const TimeSpan &value) const;
-	void operator +=(const TimeSpan &value) { operator = (operator +(value)); }
+	void operator +=(const TimeSpan &value) & { operator = (operator +(value)); }
 	Date operator -(const TimeSpan &value) const { return operator +(-value); }
-	void operator -=(const TimeSpan &value) { operator = (operator -(value)); }
+	void operator -=(const TimeSpan &value) & { operator = (operator -(value)); }
 	TimeSpan operator -(const Date &other) const { return sub(other); }
 
 public:
@@ -115,8 +115,8 @@ public:
 	int weekOfYear() const;
 
 	//与TimeSpan的运算将只取用到日，支持负数
-	Date &add(const TimeSpan &value);
-	Date &sub(const TimeSpan &value);
+	Date &add(const TimeSpan &value) &;
+	Date &sub(const TimeSpan &value) &;
 
 	//差值
 	TimeSpan sub(const Date &value) const;
@@ -188,7 +188,7 @@ public:
 	//当前时间
 	static Time now();
 
-	void operator =(const Time &other);
+	void operator =(const Time &other) &;
 	bool operator !=(const Time &other) const;
 	bool operator <(const Time &other) const;
 	inline bool operator >(const Time &other) const { return other < *this; }
@@ -196,9 +196,9 @@ public:
 	inline bool operator <=(const Time &other) const { return !(*this > other); }
 	inline bool operator >=(const Time &other) const { return !(*this < other); }
 	Time operator +(const TimeSpan &value) const;
-	inline void operator +=(const TimeSpan &value) { operator =(operator +(value)); }
+	inline void operator +=(const TimeSpan &value) & { operator =(operator +(value)); }
 	inline Time operator -(const TimeSpan &value) const { return operator +(-value); }
-	inline void operator -=(const TimeSpan &value) { operator =(operator +(value)); }
+	inline void operator -=(const TimeSpan &value) & { operator =(operator +(value)); }
 	inline TimeSpan operator -(const Time &value) const { return sub(value); }
 
 public:
@@ -224,18 +224,18 @@ public:
 	TimeSpan timeOfDay() const;
 
 	//加减TimsSpan，参数支持负数
-	Time &add(const TimeSpan &value);
-	Time &sub(const TimeSpan &value);
+	Time &add(const TimeSpan &value) &;
+	Time &sub(const TimeSpan &value) &;
 
 	//计算两个Time的差值
 	TimeSpan sub(const Time &value) const;
 
 	//添加时分秒
-	Time &addHours(int hours);
-	Time &addMinutes(int minutes);
-	Time &addSeconds(int seconds);
-	Time &addMilliseconds(int milliseconds);
-	Time &addMicroseconds(int microseconds);
+	Time &addHours(int hours) &;
+	Time &addMinutes(int minutes) &;
+	Time &addSeconds(int seconds) &;
+	Time &addMilliseconds(int milliseconds) &;
+	Time &addMicroseconds(int microseconds) &;
 
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//h|hh|H|HH：时字段,H|HH位24进制
@@ -298,7 +298,7 @@ public:
 	//一月有多少天
 	static int daysInMonth(int year, int month);
 
-	void operator = (const DateTime &other);
+	void operator = (const DateTime &other) &;
 	bool operator !=(const DateTime &other) const;
 	bool operator <(const DateTime &other) const;
 	inline bool operator >(const DateTime &other) const { return other < *this; }
@@ -306,9 +306,9 @@ public:
 	inline bool operator <=(const DateTime &other) const { return !(*this > other); }
 	inline bool operator >=(const DateTime &other) const { return !(*this < other); }
 	DateTime operator +(const TimeSpan &value) const;
-	void operator +=(const TimeSpan &value) { operator = (operator +(value)); }
+	void operator +=(const TimeSpan &value) & { operator = (operator +(value)); }
 	DateTime operator -(const TimeSpan &value) const { return operator+(-value); }
-	void operator -=(const TimeSpan &value) { operator = (operator -(value)); }
+	void operator -=(const TimeSpan &value) & { operator = (operator -(value)); }
 	TimeSpan operator -(const DateTime &other) const { return sub(other); }
 
 public:
@@ -355,20 +355,20 @@ public:
 	Time time() const;
 
 	//下面方法将返回一个新的Date，支持负数
-	DateTime &add(const TimeSpan &value);
-	DateTime &sub(const TimeSpan &value);
+	DateTime &add(const TimeSpan &value) &;
+	DateTime &sub(const TimeSpan &value) &;
 
 	TimeSpan sub(const DateTime &value) const;
 
 	//增加年月日时分秒，支持负数
-	DateTime &addYears(int years);
-	DateTime &addMonths(int months);
-	DateTime &addDays(int days);
-	DateTime &addHours(int hours);
-	DateTime &addMinutes(int minutes);
-	DateTime &addSeconds(int seconds);
-	DateTime &addMilliseconds(int milliseconds);
-	DateTime &addMicroseconds(int microseconds);
+	DateTime &addYears(int years) &;
+	DateTime &addMonths(int months) &;
+	DateTime &addDays(int days) &;
+	DateTime &addHours(int hours) &;
+	DateTime &addMinutes(int minutes) &;
+	DateTime &addSeconds(int seconds) &;
+	DateTime &addMilliseconds(int milliseconds) &;
+	DateTime &addMicroseconds(int microseconds) &;
 
 	//转成字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//y|yy|yyy|yyyy：年字段

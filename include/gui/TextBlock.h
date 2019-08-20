@@ -42,19 +42,35 @@ public:
 	explicit TextBlock(const std::string &content);
 
 	//fontstyle有啥用
-	nb::core::Property_rw<std::string>				Text;			//文本内容
-	nb::core::Property_rw<std::shared_ptr<Brush>>	Background;		//背景
-	nb::core::Property_rw<std::shared_ptr<media::Font>>	Font;			//字体
-	nb::core::Property_rw<float>					FontSize;		//字体大小
-	nb::core::Property_rw<int>						FontWeight;		//字体权重
-	nb::core::Property_rw<nb::core::Color>			Foreground;		//字体前景
-	nb::core::Property_rw<float>					LineHeight;		//行间距
-	nb::core::Property_rw<float>					CharSpacing;	//字间距
-	nb::core::Property_rw<Thickness>				Padding;		//内距
-	nb::core::Property_rw<TextAlignmentE>			TextAlignment;	//文本排列方式
-	nb::core::Property_rw<TextTrimmingE>			TextTrimming;	//文本溢出决策
-	nb::core::Property_rw<media::TextWrappingE>		TextWrapping;	//文本换行
-	nb::core::Property_rw<TextDecorationE>			TextDecoration;	//文本修饰
+	Property_rw<std::string>			Text;			//文本内容
+	Property_rw<shared_ptr<Brush>>		Background;		//背景
+	Property_rw<shared_ptr<media::Font>>Font;			//字体
+	Property_rw<float>					FontSize;		//字体大小
+	Property_rw<int>					FontWeight;		//字体权重
+	Property_rw<core::Color>			Foreground;		//字体前景
+	Property_rw<float>					LineHeight;		//行间距
+	Property_rw<float>					CharSpacing;	//字间距
+	Property_rw<Thickness>				Padding;		//内距
+	Property_rw<TextAlignmentE>			TextAlignment;	//文本排列方式
+	Property_rw<TextTrimmingE>			TextTrimming;	//文本溢出决策
+	Property_rw<media::TextWrappingE>	TextWrapping;	//文本换行
+	Property_rw<TextDecorationE>		TextDecoration;	//文本修饰
+
+
+	static const DependencyProperty		TextProperty();
+	static const DependencyProperty		BackgroundProperty();
+	static const DependencyProperty		FontProperty();
+	static const DependencyProperty		FontSizeProperty();
+	static const DependencyProperty		FontWeightProperty();
+	static const DependencyProperty		ForegroundProperty();
+	static const DependencyProperty		LineHeightProperty();
+	static const DependencyProperty		CharSpacingProperty();
+	static const DependencyProperty		PaddingProperty();
+	static const DependencyProperty		TextAlignmentProperty();
+	static const DependencyProperty		TextTrimmingProperty();
+	static const DependencyProperty		TextWrappingProperty();
+	static const DependencyProperty		TextDecorationProperty();
+
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

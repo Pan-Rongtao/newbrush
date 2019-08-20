@@ -6,29 +6,31 @@
 
 namespace nb{ namespace gui {
 
+using std::shared_ptr;
+
 class NB_API Control : public UIElement
 {
 public:
 	Control();
 	virtual ~Control() = default;
 
-	nb::core::Property_rw<std::shared_ptr<Brush>>			Background;
-	nb::core::Property_rw<std::shared_ptr<Brush>>			BorderBrush;
-	nb::core::Property_rw<Thickness>						BorderThickness;
-	nb::core::Property_rw<Thickness>						Padding;
-	nb::core::Property_rw<nb::gui::HorizontalAlignmentE>	HorizontalContentAlignment;
-	nb::core::Property_rw<nb::gui::VerticalAlignmentE>		VerticalContentAlignment;
-	nb::core::Property_rw<int>								TabIndex;
-	nb::core::Property_rw<std::shared_ptr<ControlTemplate>>	Template;
+	Property_rw<shared_ptr<Brush>>				Background;
+	Property_rw<shared_ptr<Brush>>				BorderBrush;
+	Property_rw<Thickness>						BorderThickness;
+	Property_rw<Thickness>						Padding;
+	Property_rw<HorizontalAlignmentE>			HorizontalContentAlignment;
+	Property_rw<VerticalAlignmentE>				VerticalContentAlignment;
+	Property_rw<int>							TabIndex;
+	Property_rw<shared_ptr<ControlTemplate>>	Template;
 
-	static const DependencyProperty							BackgroundProperty();
-	static const DependencyProperty							BorderBrushProperty();
-	static const DependencyProperty							BorderThicknessProperty();
-	static const DependencyProperty							PaddingProperty();
-	static const DependencyProperty							HorizontalContentAlignmentProperty();
-	static const DependencyProperty							VerticalContentAlignmentProperty();
-	static const DependencyProperty							TabIndexProperty();
-	static const DependencyProperty							TemplateProperty();
+	static const DependencyProperty				BackgroundProperty();
+	static const DependencyProperty				BorderBrushProperty();
+	static const DependencyProperty				BorderThicknessProperty();
+	static const DependencyProperty				PaddingProperty();
+	static const DependencyProperty				HorizontalContentAlignmentProperty();
+	static const DependencyProperty				VerticalContentAlignmentProperty();
+	static const DependencyProperty				TabIndexProperty();
+	static const DependencyProperty				TemplateProperty();
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

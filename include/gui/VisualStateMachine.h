@@ -1,48 +1,70 @@
 #pragma once
 #include <string>
 #include "../core/Property.h"
+#include "../core/TimeSpan.h"
 #include "../core/Easing.h"
 #include "Storyboard.h"
+#include "../gui/DependencyObject.h"
 
 namespace nb{
 namespace gui{
 
-class UIElement;
+using std::shared_ptr;
+using nb::core::Property_rw;
+using nb::core::Property_r;
+using nb::core::Event;
 
-class NB_API VisualState
+class UIElement;
+class NB_API VisualState : public DependencyObject
 {
 public:
 	VisualState();
 	VisualState(const std::string &name, std::shared_ptr<Storyboard> sb = nullptr);
 
-	core::Property_rw<std::string>					Name;		//名字
-	core::Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
+	Property_rw<std::string>			Name;		//名字
+	Property_rw<shared_ptr<Storyboard>>	Storyboard;	//故事板
+
+	static const DependencyProperty		NameProperty();
+	static const DependencyProperty		StoryboardProperty();
 };
 
-class NB_API VisualTransition
+class NB_API VisualTransition : public DependencyObject
 {
 public:
-	core::Property_rw<std::string>					From;		//起始状态
-	core::Property_rw<std::string>					To;			//目标状态
-	core::Property_rw<core::TimeSpan>				Duration;	//持续时间
-	core::Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
-	core::Property_rw<std::shared_ptr<core::EasingBase>>				Easing;		//缓动函数
+	VisualTransition();
 
+	Property_rw<std::string>			From;		//起始状态
+	Property_rw<std::string>			To;			//目标状态
+	Property_rw<core::TimeSpan>			Duration;	//持续时间
+	Property_rw<shared_ptr<Storyboard>>	Storyboard;	//故事板
+	//Property_rw<shared_ptr<core::EasingBase>>	Easing;		//缓动函数
+
+	static const DependencyProperty		FromProperty();
+	static const DependencyProperty		ToProperty();
+	static const DependencyProperty		DurationProperty();
+	static const DependencyProperty		StoryboardProperty();
+	static const DependencyProperty		EasingProperty();
 };
 
-class NB_API VisualStateGroup
+class NB_API VisualStateGroup : public DependencyObject
 {
 public:
 	VisualStateGroup(const std::string &name);
 	VisualStateGroup(const std::string &name, const std::vector<std::shared_ptr<VisualState>> &states);
 
-	core::Property_rw<std::string>					Name;		//名字
-	core::Property_rw<std::vector<std::shared_ptr<VisualState>>>		States;		//状态集合
-	core::Property_r<VisualState>					CurrentState;//当前状态
-	core::Property_r<std::vector<VisualTransition>>	Transitions;
+	Property_rw<std::string>							Name;		//名字
+	Property_rw<std::vector<shared_ptr<VisualState>>>	States;		//状态集合
+	Property_r<shared_ptr<VisualState>>					CurrentState;//当前状态
+	Property_r<std::vector<VisualTransition>>			Transitions;
+
 	struct StateChangedEventArgs {};
-	core::Event<StateChangedEventArgs>				CurrentStateChanged;
-	core::Event<StateChangedEventArgs>				CurrentStateChanging;
+	Event<StateChangedEventArgs>						CurrentStateChanged;
+	Event<StateChangedEventArgs>						CurrentStateChanging;
+
+	static const DependencyProperty		NameProperty();
+	static const DependencyProperty		StatesProperty();
+	static const DependencyProperty		CurrentStateProperty();
+	static const DependencyProperty		TransitionsProperty();
 };
 
 class NB_API VisualStateMachine

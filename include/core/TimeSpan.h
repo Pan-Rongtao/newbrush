@@ -62,7 +62,7 @@ public:
 	//格式错误将抛出
 	static TimeSpan fromString(const std::string &ts, const std::string &format);
 
-	void operator =(const TimeSpan &other);
+	void operator =(const TimeSpan &other) &;
 	TimeSpan operator -() const { return negate(); }
 	bool operator !=(const TimeSpan &other) const;
 	bool operator <(const TimeSpan &other) const;
@@ -71,9 +71,9 @@ public:
 	inline bool operator <=(const TimeSpan &other) const { return !(*this > other); }
 	inline bool operator >=(const TimeSpan &other) const { return !(*this < other); }
 	TimeSpan operator +(const TimeSpan &other) const;
-	inline void operator +=(const TimeSpan &other) { operator =(operator +(other)); }
+	inline void operator +=(const TimeSpan &other) & { operator =(operator +(other)); }
 	inline TimeSpan operator -(const TimeSpan &other) const { return operator+(-other); }
-	inline void operator -=(const TimeSpan &other) { operator = (operator -(other)); }
+	inline void operator -=(const TimeSpan &other) & { operator = (operator -(other)); }
 
 public:	
 	//天数
@@ -109,8 +109,8 @@ public:
 	TimeSpan abs() const;
 
 	//加减，会改变本身
-	TimeSpan &add(const TimeSpan &other);
-	TimeSpan &sub(const TimeSpan &other);
+	TimeSpan &add(const TimeSpan &other) &;
+	TimeSpan &sub(const TimeSpan &other) &;
 
 	//转换为字符串，format为转换格式，字母的个数表示该字段一定占用的长度，不足则补0；如果超过字段最长长度，按最长算
 	//d：天数字段

@@ -22,8 +22,10 @@
 #pragma once
 #include "../gui/Panel.h"
 
-namespace nb { namespace gui {
+namespace nb{
+namespace gui{
 
+using std::shared_ptr;
 ///////class GridLength
 class NB_API GridLength
 {
@@ -62,14 +64,15 @@ public:
 	RowDefinition();
 	~RowDefinition() = default;
 
-	nb::core::Property_rw<GridLength>		Height;			//设定高
-	nb::core::Property_rw<GridLength>		MinHeight;		//最小高限制
-	nb::core::Property_rw<GridLength>		MaxHeight;		//最大高限制
-	nb::core::Property_r<float>				ActualHeight;	//实际高度
+	Property_rw<GridLength>		Height;			//设定高
+	Property_rw<GridLength>		MinHeight;		//最小高限制
+	Property_rw<GridLength>		MaxHeight;		//最大高限制
+	Property_r<float>			ActualHeight;	//实际高度
 	
-	static DependencyProperty				HeightProperty();
-	static DependencyProperty				MinHeightProperty();
-	static DependencyProperty				MaxHeightProperty();
+	static DependencyProperty	HeightProperty();
+	static DependencyProperty	MinHeightProperty();
+	static DependencyProperty	MaxHeightProperty();
+	static DependencyProperty	ActualHeightProperty();
 
 private:
 	float	m_actualHeight;
@@ -82,14 +85,15 @@ public:
 	ColumnDefinition();
 	~ColumnDefinition() = default;
 
-	nb::core::Property_rw<GridLength>		Width;			//设定宽
-	nb::core::Property_rw<GridLength>		MinWidth;		//最小宽限制
-	nb::core::Property_rw<GridLength>		MaxWidth;		//最大宽限制
-	nb::core::Property_r<float>				ActualWidth;	//实际宽度
+	Property_rw<GridLength>		Width;			//设定宽
+	Property_rw<GridLength>		MinWidth;		//最小宽限制
+	Property_rw<GridLength>		MaxWidth;		//最大宽限制
+	Property_r<float>			ActualWidth;	//实际宽度
 
-	static DependencyProperty				WidthProperty();
-	static DependencyProperty				MinWidthProperty();
-	static DependencyProperty				MaxWidthProperty();
+	static DependencyProperty	WidthProperty();
+	static DependencyProperty	MinWidthProperty();
+	static DependencyProperty	MaxWidthProperty();
+	static DependencyProperty	ActualWidthProperty();
 
 private:
 	float	m_actualWidth;
@@ -119,8 +123,8 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-	nb::core::Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;
-	nb::core::Property_rw<std::vector<std::shared_ptr<ColumnDefinition>>>	ColumnDefinitions;
+	Property_rw<std::vector<shared_ptr<RowDefinition>>>		RowDefinitions;
+	Property_rw<std::vector<shared_ptr<ColumnDefinition>>>	ColumnDefinitions;
 
 	static DependencyProperty	RowDefinitionsProperty();
 	static DependencyProperty	ColumnDefinitionsProperty();

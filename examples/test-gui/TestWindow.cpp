@@ -18,15 +18,15 @@ void TestWindow::test()
 //	this->Topmost = true;
 
 
-	doubleAni.From = this->Top;
-	doubleAni.To = this->Top + 100;
+	doubleAni.From = this->Top();
+	doubleAni.To = this->Top() + 100;
 	doubleAni.Easing = std::make_shared<PowerEase>();
 	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
 	doubleAni.Duration = nb::core::TimeSpan::fromMilliseconds(200);
 	doubleAni.StateChangedEvent += std::bind(&TestWindow::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestWindow::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestWindow::onCompleted, this, std::placeholders::_1);
-	doubleAni.TargetProperty = &this->Top;
+//	doubleAni.TargetProperty = &this->Top;
 	doubleAni.begin();
 
 	m_timer.TickEvent.addHandler(std::bind(&TestWindow::onTick, this, std::placeholders::_1));

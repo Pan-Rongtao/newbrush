@@ -22,8 +22,9 @@ public:
 	void setDock(std::shared_ptr<UIElement> element, DockE dock);
 	DockE getDock(std::shared_ptr<UIElement> element);
 
-	nb::core::Property_rw<bool>			LastChildFill;
-	static const DependencyProperty		LastChildFillProperty();
+	Property_rw<bool>				LastChildFill;
+
+	static const DependencyProperty	LastChildFillProperty();
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

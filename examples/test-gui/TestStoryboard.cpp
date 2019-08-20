@@ -2,10 +2,10 @@
 #include "gui/AnimationTimeline.h"
 #include "gui/PropertyAnimation.h"
 
-Property_rw<double> Width;
+Property_rw<double> Width{nullptr, nullptr};
 void TestStoryboard::test()
 {
-	auto doubleAni = std::make_shared<PropertyAnimation<double>>(-122);
+	auto doubleAni = std::make_shared<PropertyAnimation<double>>(/*-122*/);
 //	doubleAni->From = 200;
 //	doubleAni->To = -122;
 //	doubleAni->Duration = TimeSpan(0, 0, 2);
@@ -13,7 +13,7 @@ void TestStoryboard::test()
 //	{
 //		printf("onProgress:%f, width=%f\n", args.progress, Width());
 //	};
-	doubleAni->TargetProperty = &Width;
+//	doubleAni->TargetProperty = &Width;
 	m_storyboard.Children().push_back(doubleAni);
 	m_storyboard.Duration = TimeSpan(0, 0, 2);
 	m_storyboard.begin();

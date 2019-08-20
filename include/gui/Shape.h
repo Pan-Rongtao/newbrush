@@ -23,12 +23,19 @@ enum class PenLineJoinE
 class NB_API Shape : public UIElement
 {
 public:
-	nb::core::Property_rw<std::shared_ptr<Brush>>		Fill;
-	nb::core::Property_rw<nb::gui::StretchE>			Stretch;
-	nb::core::Property_rw<std::shared_ptr<Brush>>		Stroke;
-	nb::core::Property_rw<PenLineCapE>					StrokeDashCap;
-	nb::core::Property_rw<PenLineJoinE>					StrokeLineJoin;
-	nb::core::Property_rw<Thickness>					StrokeThickness;
+	Property_rw<shared_ptr<Brush>>		Fill;
+	Property_rw<StretchE>				Stretch;
+	Property_rw<shared_ptr<Brush>>		Stroke;
+	Property_rw<PenLineCapE>			StrokeDashCap;
+	Property_rw<PenLineJoinE>			StrokeLineJoin;
+	Property_rw<Thickness>				StrokeThickness;
+	
+	static const DependencyProperty		FillProperty();
+	static const DependencyProperty		StretchProperty();
+	static const DependencyProperty		StrokeProperty();
+	static const DependencyProperty		StrokeDashCapProperty();
+	static const DependencyProperty		StrokeLineJoinProperty();
+	static const DependencyProperty		StrokeThicknessProperty();
 
 protected:
 	Shape();

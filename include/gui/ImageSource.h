@@ -13,10 +13,12 @@
 #pragma once
 #include "../core/Property.h"
 #include "../media/Bitmap.h"
+#include "../gui/DependencyObject.h"
+#include "../gui/DependencyProperty.h"
 
 namespace nb{ namespace gui {
 
-class NB_API ImageSource
+class NB_API ImageSource : public DependencyObject
 {
 public:
 	ImageSource();
@@ -29,6 +31,8 @@ public:
 	float heigth() const;
 
 	nb::core::Property_rw<std::shared_ptr<media::Bitmap>> 	Bm;
+
+	static const DependencyProperty BmProperty();
 
 private:
 

@@ -9,17 +9,27 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 Rectangle::Rectangle()
+	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]() {return get<float>(RadiusXProperty()); })
+	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]() {return get<float>(RadiusYProperty()); })
 {
 }
 
-Rectangle::~Rectangle()
+const DependencyProperty nb::gui::Rectangle::RadiusXProperty()
 {
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0f);
+	return dp;
+}
+
+const DependencyProperty nb::gui::Rectangle::RadiusYProperty()
+{
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0f);
+	return dp;
 }
 
 void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	auto offset = worldOffset();
-	Rect rc(offset.x(), offset.y(), ActualSize);
+	Rect rc(offset.x(), offset.y(), ActualSize());
 	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()), 
 		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));

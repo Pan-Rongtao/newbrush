@@ -35,7 +35,7 @@ public:
 	static int generate(int min, int max);
 
 	//设置随机范围，min可以大于max
-	void setRange(int min, int max);
+	void setRange(int min, int max) &;
 
 	//获取随机范围，返回的pair，first是min，second是max且min一定小于max
 	std::pair<int, int> getRange() const;
@@ -71,7 +71,7 @@ public:
 	static double generate(double min, double max);
 	
 	//设置随机范围，包含fMin和fMax；Abs(Max-Min)必须在MaxRange()之内，否则异常；fMin可以大于fMax
-	void setRange(double min, double max);
+	void setRange(double min, double max) &;
 
 	//获取随机范围
 	std::pair<double, double> getRange() const;

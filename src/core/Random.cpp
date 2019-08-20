@@ -23,7 +23,7 @@ std::pair<int, int> Random::getRange() const
 	return{ m_dis.min(), m_dis.max() };
 }
 
-void Random::setRange(int min, int max)
+void Random::setRange(int min, int max) &
 {
 	m_dis.param(decltype(m_dis)::param_type(std::min(min, max), std::max(min, max)));
 }
@@ -109,7 +109,7 @@ RandomF::RandomF(double min, double max)
 	setRange(min, max);
 }
 
-void RandomF::setRange(double min, double max)
+void RandomF::setRange(double min, double max) &
 {
 	min = std::min(min, std::nextafter(max, DBL_MAX));
 	max = std::max(min, std::nextafter(max, DBL_MAX));

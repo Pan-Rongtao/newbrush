@@ -4,6 +4,10 @@ using namespace nb::core;
 using namespace nb::gui;
 
 Slider::Slider()
+	: Delay(nullptr, nullptr)
+	, Interval(nullptr, nullptr)
+	, Orientation(nullptr, nullptr)
+	, IsDirectionReversed(nullptr, nullptr)
 {
 }
 

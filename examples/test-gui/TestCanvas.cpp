@@ -50,13 +50,13 @@ void TestCanvas::test()
 	//	points.push_back({p.x, p.y});
 	}
 
-	pl0->Points = std::make_shared<std::vector<Point>>(points);
+	pl0->Points = std::vector<Point>(points);
 
 	auto pg0 = std::make_shared<Polygon>();
 	pg0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
 	//std::vector<Point> points{ Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
-	pg0->Points = std::make_shared<std::vector<Point>>(points);
-
+	pg0->Points = std::vector<Point>(points);
+	/*
 	doubleAni.From = 800;
 	doubleAni.To = 1000;
 	doubleAni.Easing = std::make_shared<ElasticEase>();
@@ -65,9 +65,9 @@ void TestCanvas::test()
 	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
-	doubleAni.TargetProperty = &m_window->Width;
+//	doubleAni.TargetProperty = &m_window->Width;
 	doubleAni.begin();
-
+	*/
 	cv->addChild(rc0);
 	cv->addChild(rc1);
 	cv->addChild(rc2);

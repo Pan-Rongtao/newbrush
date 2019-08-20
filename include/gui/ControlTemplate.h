@@ -8,10 +8,8 @@ class NB_API ControlTemplate
 {
 public:
 	ControlTemplate();
-	virtual ~ControlTemplate();
+	virtual ~ControlTemplate() = default;
 
-	nb::core::Property_rw<std::shared_ptr<UIElement>>		Root;
-	
 };
 
 }}

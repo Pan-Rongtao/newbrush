@@ -31,16 +31,25 @@ public:
 	//关闭/销毁窗口
 	void close();
 
-public:
-	nb::core::Property_rw<core::WindowStateE>				WindowState;
-	nb::core::Property_rw<core::WindowStyleE>				WindowStyle;
-	nb::core::Property_rw<bool>								Topmost;
-	nb::core::Property_rw<float>							Left;
-	nb::core::Property_rw<float>							Top;
-	nb::core::Property_rw<std::string>						Title;
-	nb::core::Property_rw<std::shared_ptr<ImageSource>>		Icon;	//未实现，难点
-	static nb::core::Property_rw<std::shared_ptr<nb::gl::Context>>	DrawContext;
-	nb::core::Property_rw<std::shared_ptr<nb::gl::Surface>>	DrawSurface;
+	Property_rw<core::WindowStateE>					WindowState;
+	Property_rw<core::WindowStyleE>					WindowStyle;
+	Property_rw<bool>								Topmost;
+	Property_rw<float>								Left;
+	Property_rw<float>								Top;
+	Property_rw<std::string>						Title;
+	Property_rw<shared_ptr<ImageSource>>			Icon;	//未实现，难点
+	Property_rw<shared_ptr<gl::Surface>>			DrawSurface;
+
+	static const DependencyProperty					WindowStateProperty();
+	static const DependencyProperty					WindowStyleProperty();
+	static const DependencyProperty					TopmostProperty();
+	static const DependencyProperty					LeftProperty();
+	static const DependencyProperty					TopProperty();
+	static const DependencyProperty					TitleProperty();
+	static const DependencyProperty					IconProperty();
+	static const DependencyProperty					DrawSurfaceProperty();
+
+	static	shared_ptr<gl::Context>					drawContext;
 
 protected:
 	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;

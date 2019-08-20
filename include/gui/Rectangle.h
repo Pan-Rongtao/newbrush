@@ -7,11 +7,13 @@ class NB_API Rectangle : public Shape
 {
 public:
 	Rectangle();
-	virtual ~Rectangle();
+	virtual ~Rectangle() = default;
 
-public:
-	nb::core::Property_rw<float>		RadiusX;
-	nb::core::Property_rw<float>		RadiusY;
+	Property_rw<float>					RadiusX;
+	Property_rw<float>					RadiusY;
+
+	static const DependencyProperty		RadiusXProperty();
+	static const DependencyProperty		RadiusYProperty();
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 

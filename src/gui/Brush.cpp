@@ -10,12 +10,7 @@ Brush::Brush()
 }
 
 Brush::Brush(float opacity)
-	: Opacity(opacity)
-{
-	Opacity.notify([&](const float &_old, const float &_new) { setValue<float>(OpacityProperty(), _new); });
-}
-
-Brush::~Brush()
+	: Opacity([&](float v) { set(OpacityProperty(), v); }, [&]() {return get<float>(OpacityProperty()); })
 {
 }
 
@@ -32,9 +27,9 @@ SolidColorBrush::SolidColorBrush()
 }
 
 SolidColorBrush::SolidColorBrush(const nb::core::Color &color)
-	: Color(color)
+	: Color([&](nb::core::Color v){ set(ColorProperty(), v); }, [&](){return get<nb::core::Color>(ColorProperty()); })
 {
-	Color.notify([&](const nb::core::Color &_old, const nb::core::Color &_new) { setValue<nb::core::Color>(ColorProperty(), _new); });
+	Color = color;
 }
 
 const DependencyProperty SolidColorBrush::ColorProperty()
@@ -50,9 +45,9 @@ ImageBrush::ImageBrush()
 }
 
 ImageBrush::ImageBrush(const std::shared_ptr<ImageSource> &imgSource)
-	: Source(imgSource)
+	: Source([&](std::shared_ptr<ImageSource> &v) {set(SourceProperty(), imgSource); }, [&]() {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
 {
-	Source.notify([&](const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new) {setValue<std::shared_ptr<ImageSource>>(SourceProperty(), imgSource); });
+	Source = imgSource;
 }
 
 const DependencyProperty nb::gui::ImageBrush::SourceProperty()

@@ -4,6 +4,11 @@ using namespace nb::gui;
 using namespace nb::core;
 
 RangeBase::RangeBase()
+	: Value(nullptr, nullptr)
+	, Maximum(nullptr, nullptr)
+	, Minimum(nullptr, nullptr)
+	, SmallChange(nullptr, nullptr)
+	, LargeChange(nullptr, nullptr)
 {
 }
 
