@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "core/Event.h"
 
-using namespace nb::core;
+using namespace nb;
 
 class EventSender
 {

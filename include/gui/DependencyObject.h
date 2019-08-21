@@ -16,12 +16,12 @@ public:
 			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
 
 		if (!m_propertys)
-			m_propertys = std::make_shared<std::map<size_t, std::pair<core::Any, bool>>>();
+			m_propertys = std::make_shared<std::map<size_t, std::pair<Any, bool>>>();
 
-		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<core::Any, bool>> &p) {
+		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) {
 			return p.first == dp.hash(); });
 
-		const T &defaultV = nb::core::any_cast<T>(dp.defaultValue());
+		const T &defaultV = any_cast<T>(dp.defaultValue());
 		if (iter == m_propertys->end())
 		{
 			if (value != defaultV)
@@ -32,7 +32,7 @@ public:
 		}
 		else
 		{
-			if (value != core::any_cast<T>(iter->second.first))
+			if (value != any_cast<T>(iter->second.first))
 			{
 				iter->second.first = value;
 				PropertyChanged.dispatch({ dp, value });
@@ -45,17 +45,17 @@ public:
 	{
 		if (!m_propertys)
 		{
-			return core::any_cast<T>(dp.defaultValue());
+			return any_cast<T>(dp.defaultValue());
 		}
-		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<core::Any, bool>> &p) { return p.first == dp.hash(); });
-		return iter == m_propertys->end() ? core::any_cast<T>(dp.defaultValue()) : core::any_cast<T>(iter->second.first);
+		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
+		return iter == m_propertys->end() ? any_cast<T>(dp.defaultValue()) : any_cast<T>(iter->second.first);
 	}
 
-	struct PropertyChangedArg { DependencyProperty dp; core::Any value; };
-	core::Event<PropertyChangedArg>							PropertyChanged;
+	struct PropertyChangedArg { DependencyProperty dp; Any value; };
+	Event<PropertyChangedArg>							PropertyChanged;
 
 private:
-	std::shared_ptr<std::map<size_t, std::pair<core::Any, bool>>>	m_propertys;
+	std::shared_ptr<std::map<size_t, std::pair<Any, bool>>>	m_propertys;
 };
 
 

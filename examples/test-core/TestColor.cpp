@@ -3,7 +3,7 @@
 #include "limits.h"
 #include "core/Singleton.h"
 
-using namespace nb::core;
+using namespace nb;
 void TestColor::test()
 {
 	Singleton<Color>::instance();

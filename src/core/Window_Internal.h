@@ -13,7 +13,7 @@
 	#include <wayland-egl.h>
 #endif
 
-namespace nb{ namespace core{
+namespace nb{
 
 class Window_Internal
 {
@@ -71,7 +71,7 @@ private:
 	WindowEvent::KeyCode nativeKeyToKeycode(int key);
 	::Display						*m_X11Display;
 	::Window						m_X11WindowID;
-	nb::core::RectI					m_rect;
+	Rect					m_rect;
 	static wl_fixed_t x_pointer_move = 0;
 	static wl_fixed_t y_pointer_move = 0;
 #elif NB_OS == NB_OS_LINUX_ARM
@@ -147,6 +147,4 @@ private:
 #endif
 };
 
-
-
-}}
+}

@@ -60,8 +60,8 @@ void TestCanvas::test()
 	doubleAni.From = 800;
 	doubleAni.To = 1000;
 	doubleAni.Easing = std::make_shared<ElasticEase>();
-	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
+	doubleAni.Duration = TimeSpan::fromSeconds(1);
 	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);

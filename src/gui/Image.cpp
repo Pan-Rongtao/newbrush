@@ -8,7 +8,7 @@
 #include "gles/Texture2D.h"
 #include "gles/Storage.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 

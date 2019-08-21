@@ -27,23 +27,23 @@ public:
 	void *handle() const;
 
 	//入列一个渲染物
-	void queue(std::shared_ptr<nb::gl::RenderObject> renderObject);
+	void queue(std::shared_ptr<RenderObject> renderObject);
 
 	//出列一个渲染物
-	void dequeue(std::shared_ptr<nb::gl::RenderObject> renderObject);
+	void dequeue(std::shared_ptr<RenderObject> renderObject);
 
 	//渲染物个数
 	int renderObjectCount() const;
 
 	//渲染物
-	std::shared_ptr<nb::gl::RenderObject> renderObject(uint32_t index);
+	std::shared_ptr<RenderObject> renderObject(uint32_t index);
 
 	//执行渲染动作
 	void draw();
 
 private:
 	void												*m_handle;
-	std::vector<std::shared_ptr<nb::gl::RenderObject>>	m_renderObjects;
+	std::vector<std::shared_ptr<RenderObject>>	m_renderObjects;
 };
 
 }}

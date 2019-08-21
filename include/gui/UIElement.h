@@ -59,47 +59,47 @@ public:
 	UIElement();
 	virtual ~UIElement() = default;
 
-	core::Property_rw<VisibilityE>							Visibility;
-	core::Property_rw<float>								Opacity;
-	core::Property_rw<bool>									Focusable;
-	core::Property_rw<float>								Width;
-	core::Property_rw<float>								Height;
-	core::Property_rw<float>								MinWidth;
-	core::Property_rw<float>								MinHeight;
-	core::Property_rw<float>								MaxWidth;
-	core::Property_rw<float>								MaxHeight;
-	core::Property_r<core::Size>							DesiredSize;
-	core::Property_r<core::Size>							ActualSize;
-	core::Property_rw<core::Size>							RenderSize;
-	core::Property_rw<core::Point>							Offset;
-	core::Property_rw<Thickness>							Margin;
-	core::Property_rw<HorizontalAlignmentE>					HorizontalAlignment;
-	core::Property_rw<VerticalAlignmentE>					VerticalAlignment;
-	core::Property_rw<FlowDirectionE>						FlowDirection;
-	core::Property_r<shared_ptr<gl::RenderObject>>			Renderer;
-	core::Property_rw<shared_ptr<Style>>					style;
-	//core::Property_rw<shared_ptr<VisualStateMachine>>		StateMachine;
+	Property_rw<VisibilityE>						Visibility;
+	Property_rw<float>								Opacity;
+	Property_rw<bool>								Focusable;
+	Property_rw<float>								Width;
+	Property_rw<float>								Height;
+	Property_rw<float>								MinWidth;
+	Property_rw<float>								MinHeight;
+	Property_rw<float>								MaxWidth;
+	Property_rw<float>								MaxHeight;
+	Property_r<Size>								DesiredSize;
+	Property_r<Size>								ActualSize;
+	Property_rw<Size>								RenderSize;
+	Property_rw<Point>								Offset;
+	Property_rw<Thickness>							Margin;
+	Property_rw<HorizontalAlignmentE>				HorizontalAlignment;
+	Property_rw<VerticalAlignmentE>					VerticalAlignment;
+	Property_rw<FlowDirectionE>						FlowDirection;
+	Property_r<shared_ptr<gl::RenderObject>>		Renderer;
+	Property_rw<shared_ptr<Style>>					style;
+	//Property_rw<shared_ptr<VisualStateMachine>>	StateMachine;
 
-	static const DependencyProperty							VisibilityProperty();
-	static const DependencyProperty							OpacityProperty();
-	static const DependencyProperty							FocusableProperty();
-	static const DependencyProperty 						WidthProperty();
-	static const DependencyProperty 						HeightProperty();
-	static const DependencyProperty 						MinWidthProperty();
-	static const DependencyProperty 						MinHeightProperty();
-	static const DependencyProperty 						MaxWidthProperty();
-	static const DependencyProperty 						MaxHeightProperty();
-	static const DependencyProperty 						DesiredSizeProperty();
-	static const DependencyProperty 						ActualSizeProperty();
-	static const DependencyProperty 						RenderSizeProperty();
-	static const DependencyProperty 						OffsetProperty();
-	static const DependencyProperty 						MarginProperty();
-	static const DependencyProperty 						HorizontalAlignmentProperty();
-	static const DependencyProperty 						VerticalAlignmentProperty();
-	static const DependencyProperty 						FlowDirectionProperty();
-	static const DependencyProperty 						RendererProperty();
-	static const DependencyProperty 						StyleProperty();
-	static const DependencyProperty 						StateMachineProperty();
+	static const DependencyProperty					VisibilityProperty();
+	static const DependencyProperty					OpacityProperty();
+	static const DependencyProperty					FocusableProperty();
+	static const DependencyProperty 				WidthProperty();
+	static const DependencyProperty 				HeightProperty();
+	static const DependencyProperty 				MinWidthProperty();
+	static const DependencyProperty 				MinHeightProperty();
+	static const DependencyProperty 				MaxWidthProperty();
+	static const DependencyProperty 				MaxHeightProperty();
+	static const DependencyProperty 				DesiredSizeProperty();
+	static const DependencyProperty 				ActualSizeProperty();
+	static const DependencyProperty 				RenderSizeProperty();
+	static const DependencyProperty 				OffsetProperty();
+	static const DependencyProperty 				MarginProperty();
+	static const DependencyProperty 				HorizontalAlignmentProperty();
+	static const DependencyProperty 				VerticalAlignmentProperty();
+	static const DependencyProperty 				FlowDirectionProperty();
+	static const DependencyProperty 				RendererProperty();
+	static const DependencyProperty 				StyleProperty();
+	static const DependencyProperty 				StateMachineProperty();
 
 	uint32_t childCount() const;
 	void addChild(std::shared_ptr<UIElement> child);
@@ -111,48 +111,48 @@ public:
 	bool containsChild(std::shared_ptr<UIElement> element) const;
 
 	std::shared_ptr<UIElement> getRoot();
-	core::Point worldOffset();
+	Point worldOffset();
 	void updateLayout();
 
-	void measure(const core::Size &availabelSize);
-	void arrage(const core::Rect &finalRect);
+	void measure(const Size &availabelSize);
+	void arrage(const Rect &finalRect);
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
 	
 	struct MouseEnterArgs {};
-	core::Event<MouseEnterArgs>								MouseEnter;
+	Event<MouseEnterArgs>							MouseEnter;
 
 	struct MouseLeaveArgs {};
-	core::Event<MouseLeaveArgs>								MouseLeave;
+	Event<MouseLeaveArgs>							MouseLeave;
 
 	struct MouseMoveArgs {};
-	core::Event<MouseMoveArgs>								MouseMove;
+	Event<MouseMoveArgs>							MouseMove;
 
 	struct MouseDownArgs {};
-	core::Event<MouseDownArgs>								MouseDown;
+	Event<MouseDownArgs>							MouseDown;
 
 	struct MouseUpArgs {};
-	core::Event<MouseUpArgs>								MouseUp;
+	Event<MouseUpArgs>								MouseUp;
 
 	struct MouseLeftButtonDownArgs {};
-	core::Event<MouseLeftButtonDownArgs>					MouseLeftButtonDown;
+	Event<MouseLeftButtonDownArgs>					MouseLeftButtonDown;
 
 	struct MouseLeftButtonUpArgs {}; 
-	core::Event<MouseLeftButtonUpArgs>						MouseLeftButtonUp;
+	Event<MouseLeftButtonUpArgs>					MouseLeftButtonUp;
 
 	struct MouseRightButtonDownArgs {};
-	core::Event<MouseRightButtonDownArgs>					MouseRightButtonDown;
+	Event<MouseRightButtonDownArgs>					MouseRightButtonDown;
 
 	struct MouseRightButtonUpArgs {};
-	core::Event<MouseRightButtonUpArgs>						MouseRightButtonUp;
+	Event<MouseRightButtonUpArgs>					MouseRightButtonUp;
 
 	struct MouseWheelArgs {};
-	core::Event<MouseWheelArgs>								MouseWheel;
+	Event<MouseWheelArgs>							MouseWheel;
 	
 
 public:
-	virtual core::Size measureOverride(const core::Size &availableSize);
-	virtual core::Size arrangeOverride(const core::Size &finalSize);
+	virtual Size measureOverride(const Size &availableSize);
+	virtual Size arrangeOverride(const Size &finalSize);
 	virtual void onMouseEnter();
 	virtual void onMouseLeave();
 	virtual void onMouseDown();

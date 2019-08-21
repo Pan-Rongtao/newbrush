@@ -1,6 +1,6 @@
 ﻿#include "gui/ScrollViewer.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 ScrollViewer::ScrollViewer()

@@ -24,7 +24,7 @@ class NB_API Canvas : public Panel
 {
 public:
 	Canvas();
-	virtual ~Canvas();
+	virtual ~Canvas() = default;
 
 	static constexpr char *AttachedPropertyLeft		= "Canvas.Left";
 	static constexpr char *AttachedPropertyRight	= "Canvas.Right";
@@ -45,8 +45,8 @@ public:
 
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 };
 
 }}

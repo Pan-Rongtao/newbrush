@@ -22,7 +22,7 @@
 #include "../core/Def.h"
 #include <mutex>
 
-namespace nb{ namespace core{
+namespace nb{
 
 template<class T>
 class NB_API Singleton
@@ -56,4 +56,4 @@ public:
 
 };
 
-}}
+}

@@ -14,15 +14,15 @@
 #include <functional>
 #include "../core/Def.h"
 
-namespace nb{namespace core{
-	
+namespace nb{
+
 template<class T>
 class Property_rw
 {
 public:
 	Property_rw(std::function<void(T v)> setter, std::function<T()> getter) 
-		: m_setter(new std::function<void(T)>(setter))
-		, m_getter(new std::function<T()>(getter))
+		: m_setter(new std::function<void(T)>(std::move(setter)))
+		, m_getter(new std::function<T()>(std::move(getter)))
 	{ }
 	~Property_rw()								{ delete m_setter; delete m_getter; }
 	void operator =(const T &v)					{ (*m_setter)(v); }
@@ -41,7 +41,7 @@ class Property_r
 {
 public:
 	explicit Property_r(std::function<T()> getter)
-		: m_getter(new std::function<T()>(getter))
+		: m_getter(new std::function<T()>(std::move(getter)))
 	{ }
 	~Property_r()								{ delete m_getter; }
 	bool operator == (const T &v) const			{ return v == operator()(); }
@@ -55,4 +55,4 @@ private:
 };
 
 
-}}
+}

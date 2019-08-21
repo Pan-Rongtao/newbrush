@@ -11,11 +11,11 @@ public:
 	virtual ~RepeatButton();
 
 public:
-	nb::core::Property_rw<int>		Delay;
-	nb::core::Property_rw<int>		Interval;
+	Property_rw<int>		Delay;
+	Property_rw<int>		Interval;
 	
 private:
-	nb::core::Timer	m_timer;
+	Timer	m_timer;
 };
 
 }}

@@ -18,8 +18,8 @@ void TestTextBlock::test()
 	colorAni.From = m_text->Foreground();
 	colorAni.To = Color(255, 0, 10);
 	colorAni.Easing = std::make_shared<PowerEase>();
-	colorAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	colorAni.Duration = nb::core::TimeSpan::fromSeconds(2);
+	colorAni.BeginTime = TimeSpan::fromSeconds(1);
+	colorAni.Duration = TimeSpan::fromSeconds(2);
 	colorAni.StateChangedEvent += std::bind(&TestTextBlock::onStateChanged, this, std::placeholders::_1);
 	colorAni.ProgressEvent += std::bind(&TestTextBlock::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestTextBlock::onCompleted, this, std::placeholders::_1);

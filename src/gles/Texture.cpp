@@ -4,8 +4,7 @@
 #include "gles/Egl.h"
 #include "core/Log.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 
 //class TexutreWrapping
@@ -41,11 +40,11 @@ int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
 	GLint nGl = GL_REPEAT;
 	switch (wrapping)
 	{
-	case WrappingModeE::Repeat:				nGl = GL_REPEAT;							break;
-	case WrappingModeE::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;					break;
-	case WrappingModeE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;						break;
-	case WrappingModeE::ClampToBorder:		nb::Log::warn("not in opengl es 2.0");		break;
-	default:																			break;
+	case WrappingModeE::Repeat:				nGl = GL_REPEAT;					break;
+	case WrappingModeE::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;			break;
+	case WrappingModeE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;				break;
+	case WrappingModeE::ClampToBorder:		Log::warn("not in opengl es 2.0");	break;
+	default:																	break;
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
 	return nGl;
@@ -88,11 +87,11 @@ int TextureFilter::glValue(TextureFilter::FilterE filter)
 	GLint nGl = GL_NEAREST;
 	switch (filter)
 	{
-	case FilterE::Point:		nGl = GL_NEAREST;																	break;
-	case FilterE::Bilinear:		nGl = GL_LINEAR;																	break;
-	case FilterE::Trilinear:	nGl = GL_LINEAR_MIPMAP_LINEAR;														break;
-	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	nb::Log::warn("check if gpu supports\n");	break;
-	default:																										break;
+	case FilterE::Point:		nGl = GL_NEAREST;																break;
+	case FilterE::Bilinear:		nGl = GL_LINEAR;																break;
+	case FilterE::Trilinear:	nGl = GL_LINEAR_MIPMAP_LINEAR;													break;
+	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT;	Log::warn("check if gpu supports\n");	break;
+	default:																									break;
 	}
 	return nGl;
 }

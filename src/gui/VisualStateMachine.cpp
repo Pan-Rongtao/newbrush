@@ -1,6 +1,6 @@
 #include "gui/VisualStateMachine.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 VisualState::VisualState()
@@ -10,7 +10,7 @@ VisualState::VisualState()
 
 VisualState::VisualState(const std::string & name, std::shared_ptr<nb::gui::Storyboard> sb)
 	: Name([&](std::string v) { set(NameProperty(), v); }, [&]() {return get<std::string>(NameProperty()); })
-	, Storyboard([&](shared_ptr<nb::gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]() {return get<shared_ptr<nb::gui::Storyboard>>(StoryboardProperty()); })
+	, Storyboard([&](std::shared_ptr<nb::gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]() {return get<std::shared_ptr<nb::gui::Storyboard>>(StoryboardProperty()); })
 {
 //	Name = name;
 //	Storyboard = sb;
@@ -24,7 +24,7 @@ const DependencyProperty VisualState::NameProperty()
 
 const DependencyProperty VisualState::StoryboardProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualState, shared_ptr<nb::gui::Storyboard>>("Storyboard", nullptr);
+	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualState, std::shared_ptr<nb::gui::Storyboard>>("Storyboard", nullptr);
 	return dp;
 }
 
@@ -32,7 +32,7 @@ VisualTransition::VisualTransition()
 	: From([&](std::string v) { set(FromProperty(), v); }, [&]() {return get<std::string>(FromProperty()); })
 	, To([&](std::string v) { set(ToProperty(), v); }, [&]() {return get<std::string>(ToProperty()); })
 	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]() {return get<TimeSpan>(DurationProperty()); })
-	, Storyboard([&](shared_ptr<nb::gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]() {return get<shared_ptr<nb::gui::Storyboard>>(StoryboardProperty()); })
+	, Storyboard([&](std::shared_ptr<nb::gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]() {return get<std::shared_ptr<nb::gui::Storyboard>>(StoryboardProperty()); })
 	//, Easing([&](shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]() {return get<shared_ptr<EasingBase>>(EasingProperty()); })
 {
 }
@@ -74,8 +74,8 @@ VisualStateGroup::VisualStateGroup(const std::string & name)
 
 VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<std::shared_ptr<VisualState>>& states)
 	: Name([&](std::string v) { set(NameProperty(), v); }, [&]() {return get<std::string>(NameProperty()); })
-	, States([&](std::vector<shared_ptr<VisualState>> v) { set(StatesProperty(), v); }, [&]() {return get<std::vector<shared_ptr<VisualState>>>(StatesProperty()); })
-	, CurrentState([&]() {return get<shared_ptr<VisualState>>(CurrentStateProperty()); })
+	, States([&](std::vector<std::shared_ptr<VisualState>> v) { set(StatesProperty(), v); }, [&]() {return get<std::vector<std::shared_ptr<VisualState>>>(StatesProperty()); })
+	, CurrentState([&]() {return get<std::shared_ptr<VisualState>>(CurrentStateProperty()); })
 	, Transitions([&]() {return get<std::vector<VisualTransition>>(TransitionsProperty()); })
 {
 	Name = name;
@@ -90,13 +90,13 @@ const DependencyProperty VisualStateGroup::NameProperty()
 
 const DependencyProperty VisualStateGroup::StatesProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<shared_ptr<VisualState>>>("States", {});
+	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<std::shared_ptr<VisualState>>>("States", {});
 	return dp;
 }
 
 const DependencyProperty VisualStateGroup::CurrentStateProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualStateGroup, shared_ptr<VisualState>>("CurrentState", nullptr);
+	static const DependencyProperty dp = DependencyProperty::registerDependency<VisualStateGroup, std::shared_ptr<VisualState>>("CurrentState", nullptr);
 	return dp;
 }
 

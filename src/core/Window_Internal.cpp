@@ -3,7 +3,7 @@
 #include <cstring>
 #include "core/Log.h"
 
-using namespace nb::core;
+using namespace nb;
 
 #ifdef NB_OS_FAMILY_WINDOWS
 	std::map<long, Window *> Window_Internal::m_windows;
@@ -216,7 +216,7 @@ int Window_Internal::height() const
 #endif
 }
 
-int nb::core::Window_Internal::clientWidth() const
+int nb::Window_Internal::clientWidth() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc;
@@ -225,7 +225,7 @@ int nb::core::Window_Internal::clientWidth() const
 #endif
 }
 
-int nb::core::Window_Internal::clientHeight() const
+int nb::Window_Internal::clientHeight() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
 	RECT rc;

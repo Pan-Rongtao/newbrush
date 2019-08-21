@@ -11,20 +11,20 @@ public:
 	virtual ~MovePositionAnalyse();
 
 	void SetLock(float xLock, float yLock);
-	void Start(nb::core::Point pos);
-	void Move(nb::core::Point pos);
+	void Start(Point pos);
+	void Move(Point pos);
 	void Cancel();
 	bool IsActive() const;
-	nb::core::Point GetStartPos() const;
-	nb::core::Point GetActivePos() const;
+	Point GetStartPos() const;
+	Point GetActivePos() const;
 
 private:
 	float m_xLock;
 	float m_yLock;
 	bool m_bActive;
 	bool m_bStart;
-	nb::core::Point m_ptOrigin;
-	nb::core::Point m_ptActive;
+	Point m_ptOrigin;
+	Point m_ptActive;
 };
 
 }}

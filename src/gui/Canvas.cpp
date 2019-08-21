@@ -1,14 +1,10 @@
 ﻿#include "gui/Canvas.h"
 #include "gui/DependencyProperty.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Canvas::Canvas()
-{
-}
-
-Canvas::~Canvas()
 {
 }
 

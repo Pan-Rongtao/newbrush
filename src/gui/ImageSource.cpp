@@ -2,8 +2,7 @@
 #include "gles/Texture2D.h"
 #include "core/Size.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gui;
 using namespace nb::gl;
 

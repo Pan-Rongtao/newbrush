@@ -1,7 +1,7 @@
 ﻿#include "MovePositionAnalyse.h"
 #include <cmath>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 MovePositionAnalyse::MovePositionAnalyse()

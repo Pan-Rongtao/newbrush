@@ -4,7 +4,7 @@
 #include "gles/Context.h"
 #include "gles/Texture2D.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 

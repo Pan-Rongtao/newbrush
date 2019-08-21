@@ -2,8 +2,8 @@
 #include <GLES2/gl2.h>
 #include "media/Bitmap.h"
 
+using namespace nb;
 using namespace nb::gl;
-using namespace nb::media;
 
 TextureCubemap::TextureCubemap()
 {

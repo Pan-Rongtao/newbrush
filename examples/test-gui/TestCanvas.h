@@ -8,7 +8,7 @@
 #include "gui/Polyline.h"
 #include "gui/Polygon.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 class TestCanvas : public TestBase

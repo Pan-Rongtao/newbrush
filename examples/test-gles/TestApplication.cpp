@@ -23,7 +23,7 @@
 #include "gles/Polyline.h"
 #include <opengl/GLES2/gl2.h>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 /*	
 float z = 480.0f / (float)(2 * Tan((22.5f * Pi()) / 180.0f));
@@ -392,7 +392,7 @@ void MyApplication::preRender()
 	m_timer.driveInLoop();
 }
 
-void MyApplication::onResize(const nb::core::Window::ResizeArgs & args)
+void MyApplication::onResize(const nb::Window::ResizeArgs & args)
 {
 	auto w = m_window->clientWidth();
 	auto h = m_window->clientHeight();
@@ -411,18 +411,18 @@ void MyApplication::onResize(const nb::core::Window::ResizeArgs & args)
 	nb::gl::viewport(0, 0, w, h);
 }
 
-void MyApplication::onMouseEnter(const nb::core::Window::MouseEnterEventArgs & args)
+void MyApplication::onMouseEnter(const nb::Window::MouseEnterEventArgs & args)
 {
 }
 
-void MyApplication::onMouseLeave(const nb::core::Window::MouseLeaveEventArgs & args)
+void MyApplication::onMouseLeave(const nb::Window::MouseLeaveEventArgs & args)
 {
 }
 
 bool bPress = false;
 static int pressX = 0;
 static int pressY = 0;
-void MyApplication::onMouseLeftButton(const nb::core::Window::MouseLeftButtonEventArgs & args)
+void MyApplication::onMouseLeftButton(const nb::Window::MouseLeftButtonEventArgs & args)
 {
 	if (args.pressed)
 	{
@@ -438,19 +438,19 @@ void MyApplication::onMouseLeftButton(const nb::core::Window::MouseLeftButtonEve
 	}
 }
 
-void MyApplication::onMouseRightButton(const nb::core::Window::MouseRightButtonEventArgs & args)
+void MyApplication::onMouseRightButton(const nb::Window::MouseRightButtonEventArgs & args)
 {
 }
 
-void MyApplication::onMouseMiddleButton(const nb::core::Window::MouseMiddleButtonEventArgs & args)
+void MyApplication::onMouseMiddleButton(const nb::Window::MouseMiddleButtonEventArgs & args)
 {
 }
 
-void MyApplication::onMouseWheel(const nb::core::Window::MouseWheelEventArgs & args)
+void MyApplication::onMouseWheel(const nb::Window::MouseWheelEventArgs & args)
 {
 }
 
-void MyApplication::onMouseMove(const nb::core::Window::MouseMoveEventArgs & args)
+void MyApplication::onMouseMove(const nb::Window::MouseMoveEventArgs & args)
 {
 	if (!bPress)	return;
 	for (int i = 0; i != m_context->renderObjectCount(); ++i)
@@ -462,7 +462,7 @@ void MyApplication::onMouseMove(const nb::core::Window::MouseMoveEventArgs & arg
 	pressY = args.y;
 }
 
-void MyApplication::onKeyAction(const nb::core::Window::KeyEventArgs & args)
+void MyApplication::onKeyAction(const nb::Window::KeyEventArgs & args)
 {
 	switch (args.down)
 	{

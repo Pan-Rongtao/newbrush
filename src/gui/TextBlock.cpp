@@ -9,8 +9,7 @@
 #include "gles/Texture2D.h"
 #include "gles/GlyphBunch.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 
@@ -22,7 +21,7 @@ TextBlock::TextBlock()
 TextBlock::TextBlock(const std::string & text)
 	: Text([&](std::string v) {set(TextProperty(), v); }, [&]() {return get<std::string>(TextProperty()); })
 	, Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]() {return get<shared_ptr<Brush>>(BackgroundProperty()); })
-	, Font([&](shared_ptr<media::Font> v) {set(FontProperty(), v); }, [&]() {return get<shared_ptr<media::Font>>(FontProperty()); })
+	, Font([&](shared_ptr<nb::Font> v) {set(FontProperty(), v); }, [&]() {return get<shared_ptr<nb::Font>>(FontProperty()); })
 	, FontSize([&](float v) {set(FontSizeProperty(), v); }, [&]() {return get<float>(FontSizeProperty()); })
 	, FontWeight([&](int v) {set(FontWeightProperty(), v); }, [&]() {return get<int>(FontWeightProperty()); })
 	, Foreground([&](Color v) {set(ForegroundProperty(), v); }, [&]() {return get<Color>(ForegroundProperty()); })
@@ -60,7 +59,7 @@ const DependencyProperty TextBlock::BackgroundProperty()
 
 const DependencyProperty TextBlock::FontProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<media::Font>>("Font", Fonts::getFont(Fonts::SimSun));
+	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont(Fonts::SimSun));
 	return dp;
 }
 
@@ -124,23 +123,23 @@ const DependencyProperty TextBlock::TextDecorationProperty()
 	return dp;
 }
 
-nb::core::Size TextBlock::measureOverride(const nb::core::Size & availableSize)
+Size TextBlock::measureOverride(const Size & availableSize)
 {
 	return Size(availableSize.width() - Padding().left() - Padding().right(), availableSize.height() - Padding().top() - Padding().bottom());
 }
 
-nb::core::Size TextBlock::arrangeOverride(const nb::core::Size & finalSize)
+Size TextBlock::arrangeOverride(const Size & finalSize)
 {
 	switch (TextWrapping())
 	{
 	case TextWrappingE::NoWrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), media::TextWrappingE::NoWrap, -1);
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), TextWrappingE::NoWrap, -1);
 		return sz;
 	}
 	case TextWrappingE::Wrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), media::TextWrappingE::Wrap, finalSize.width());
+		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), TextWrappingE::Wrap, finalSize.width());
 		return sz;
 	}
 	case TextWrappingE::WrapWithOverflow:

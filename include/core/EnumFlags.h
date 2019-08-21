@@ -17,7 +17,7 @@
 #pragma once
 #include "../core/Def.h"
 
-namespace nb{ namespace core{
+namespace nb{
 
 template <typename EnumT>
 class NB_API EnumFlags
@@ -56,15 +56,15 @@ private:
 };
 
 template <typename EnumT>
-static nb::core::EnumFlags<EnumT> operator | (EnumT e1, EnumT e2)
+static nb::EnumFlags<EnumT> operator | (EnumT e1, EnumT e2)
 {
-	return nb::core::EnumFlags<EnumT>(e1) | e2;
+	return nb::EnumFlags<EnumT>(e1) | e2;
 }
 template <typename EnumT>
-static nb::core::EnumFlags<EnumT> operator | (EnumT e, const nb::core::EnumFlags<EnumT> &f)
+static nb::EnumFlags<EnumT> operator | (EnumT e, const nb::EnumFlags<EnumT> &f)
 {
 	return f | e;
 }
 
-}}
+}
 

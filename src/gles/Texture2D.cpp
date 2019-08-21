@@ -2,7 +2,7 @@
 #include "gles/Texture2D.h"
 #include "gles/Egl.h"
 
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 
 Texture2D::Texture2D()
@@ -41,7 +41,7 @@ Texture2D::Texture2D(const std::string &path, const TextureWrapping &wrapping, c
 	loadFromPath(path);
 }
 
-Texture2D::Texture2D(const nb::media::Bitmap &bm)
+Texture2D::Texture2D(const Bitmap &bm)
 	: Texture2D()
 {
 	int glFormat;

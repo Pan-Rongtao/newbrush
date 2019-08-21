@@ -30,7 +30,7 @@ public:
 	float width() const;
 	float heigth() const;
 
-	nb::core::Property_rw<std::shared_ptr<media::Bitmap>> 	Bm;
+	Property_rw<std::shared_ptr<Bitmap>> 	Bm;
 
 	static const DependencyProperty BmProperty();
 

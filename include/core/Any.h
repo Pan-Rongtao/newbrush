@@ -11,7 +11,7 @@
 #include <typeinfo>
 #include "Def.h"
 
-namespace nb{ namespace core{
+namespace nb{
 
 class Any
 {
@@ -104,4 +104,4 @@ T any_cast(const Any &any)
 	return static_cast<Any::HolderImp<T> *>(any.m_holder)->m_v;
 }
 
-} }
+}

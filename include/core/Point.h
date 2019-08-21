@@ -13,7 +13,7 @@
 #pragma once
 #include "../core/Def.h"
 
-namespace nb{ namespace core {
+namespace nb{
 
 //class Point
 class NB_API Point
@@ -82,4 +82,4 @@ private:
 	float		m_y;
 };
 
-}}
+}

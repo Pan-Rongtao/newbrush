@@ -15,7 +15,6 @@
 #include "TestUniformGrid.h"
 #include "TestButton.h"
 
-using namespace nb::core;
 int main(int argc, char *argv[])
 {
 	try{

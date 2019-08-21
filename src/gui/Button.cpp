@@ -2,8 +2,6 @@
 #include "gui/DependencyProperty.h"
 
 using namespace nb::gui;
-using namespace nb::core;
-using namespace nb::gui;
 
 Button::Button()
 	: IsCancel([&](bool v) { set(IsCancelProperty(), v); }, [&]() {return get<bool>(IsCancelProperty()); })

@@ -2,8 +2,7 @@
 #include <codecvt>
 #include "gles/GlyphFactory.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 
 GlyphBunch::GlyphBunch()

@@ -1,6 +1,6 @@
 ﻿#include "core/Easing.h"
 
-using namespace nb::core;
+using namespace nb;
 
 //公式参考：https://github.com/r-lyeh-archived/tween/blob/master/tween.hpp		
 //			https://github.com/MichaelHRL/PowerEaseEquations/blob/master/Power.cpp

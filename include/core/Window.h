@@ -3,7 +3,7 @@
 #include "../core/Event.h"
 #include <string>
 
-namespace nb{ namespace core{
+namespace nb{
 
 enum class WindowStateE
 {
@@ -117,42 +117,42 @@ public:
 
 	//尺寸重置事件
 	struct ResizeArgs { int width; int height; };
-	nb::core::Event<ResizeArgs>			ResizeEvent;
+	Event<ResizeArgs>			ResizeEvent;
 
 	//鼠标进入事件
 	struct MouseEnterEventArgs { };
-	nb::core::Event<MouseEnterEventArgs>		MouseEnterEvent;
+	Event<MouseEnterEventArgs>		MouseEnterEvent;
 
 	//鼠标移动事件
 	struct MouseMoveEventArgs { int x; int y; };
-	nb::core::Event<MouseMoveEventArgs>			MouseMoveEvent;
+	Event<MouseMoveEventArgs>			MouseMoveEvent;
 
 	//鼠标离开事件
 	struct MouseLeaveEventArgs { };
-	nb::core::Event<MouseLeaveEventArgs>		MouseLeaveEvent;
+	Event<MouseLeaveEventArgs>		MouseLeaveEvent;
 
 	//鼠标左键事件
 	struct MouseLeftButtonEventArgs { bool pressed; int x; int y; };
-	nb::core::Event<MouseLeftButtonEventArgs>	MouseLeftButtonEvent;
+	Event<MouseLeftButtonEventArgs>	MouseLeftButtonEvent;
 
 	//鼠标右键事件
 	struct MouseRightButtonEventArgs { bool pressed; int x; int y; };
-	nb::core::Event<MouseRightButtonEventArgs>	MouseRightButtonEvent;
+	Event<MouseRightButtonEventArgs>	MouseRightButtonEvent;
 
 	//鼠标中键事件
 	struct MouseMiddleButtonEventArgs { bool pressed; int x; int y; };
-	nb::core::Event<MouseMiddleButtonEventArgs>	MouseMiddleButtonEvent;
+	Event<MouseMiddleButtonEventArgs>	MouseMiddleButtonEvent;
 
 	//鼠标滚轮事件
 	struct MouseWheelEventArgs { int delta; };
-	nb::core::Event<MouseWheelEventArgs>		MouseWheelEvent;
+	Event<MouseWheelEventArgs>		MouseWheelEvent;
 
 	//键盘事件
 	struct KeyEventArgs { bool down; KeyCodeE key; int mask; };
-	nb::core::Event<KeyEventArgs>				KeyEvent;
+	Event<KeyEventArgs>				KeyEvent;
 
 private:
 	Window_Internal	*m_internal;
 };
 
-}}
+}

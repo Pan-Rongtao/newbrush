@@ -2,7 +2,7 @@
 #include "gles/Polyline.h"
 #include "gles/Context.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 nb::gui::Polyline::Polyline()
@@ -29,12 +29,12 @@ void nb::gui::Polyline::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	drawContext->queue(Renderer());
 }
 
-nb::core::Size nb::gui::Polyline::measureOverride(const nb::core::Size & availableSize)
+Size nb::gui::Polyline::measureOverride(const Size & availableSize)
 {
 	return availableSize;
 }
 
-nb::core::Size nb::gui::Polyline::arrangeOverride(const nb::core::Size & finalSize)
+Size nb::gui::Polyline::arrangeOverride(const Size & finalSize)
 {
 	if (Points().empty())
 	{

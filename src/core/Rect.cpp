@@ -1,7 +1,7 @@
 ﻿#include "core/Rect.h"
 #include <algorithm>
 
-using namespace nb::core;
+using namespace nb;
 
 //////////////////////////////class Rect
 Rect::Rect()

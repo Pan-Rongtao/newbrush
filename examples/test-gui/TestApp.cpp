@@ -4,7 +4,7 @@
 #include "gui/Ellipse.h"
 #include "core/Color.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 void TestApp::test()
 {

@@ -5,7 +5,6 @@
 #include "TestTexture2D.h"
 #include "TestSoureDecoder.h"
 
-using namespace nb::core;
 int main(int argc, char* argv[])
 {
 	try{

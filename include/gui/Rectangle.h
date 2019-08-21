@@ -15,13 +15,13 @@ public:
 	static const DependencyProperty		RadiusXProperty();
 	static const DependencyProperty		RadiusYProperty();
 
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
+	virtual void onRender(std::shared_ptr<gl::Context> drawContext);
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
-	core::Size	m_availableSize;
+	Size	m_availableSize;
 };
 
 }}

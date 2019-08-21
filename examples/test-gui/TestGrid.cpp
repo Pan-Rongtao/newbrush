@@ -5,7 +5,7 @@
 #include "core/Color.h"
 #include "gui/TextBlock.h"
 
-using namespace nb::core;
+using namespace nb;
 
 void TestGrid::test()
 {
@@ -89,8 +89,8 @@ void TestGrid::test()
 	doubleAni.From = 800;
 	doubleAni.To = 2000;
 	doubleAni.Easing = std::make_shared<ElasticEase>();
-	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(5);
+	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
+	doubleAni.Duration = TimeSpan::fromSeconds(5);
 //	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
 //	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
 //	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);

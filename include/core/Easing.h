@@ -17,9 +17,9 @@
 
 *****************************************************************************/
 #pragma once
-#include "../core/Property.h"
+#include "../core/Def.h"
 
-namespace nb { namespace core {
+namespace nb {
 
 //缓动函数基类
 class NB_API EasingBase
@@ -185,5 +185,5 @@ public:
 	virtual double easeInCore(double t) override;
 };
 
-}}
+}
 

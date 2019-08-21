@@ -11,10 +11,6 @@ enum class ClickModeE
 	release,//压下和释放按钮时引发click事件
 };
 
-using nb::core::Property_rw;
-using nb::core::Property_r;
-using nb::core::Event;
-
 class ButtonBase : ContentControl
 {
 public:

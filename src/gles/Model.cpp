@@ -7,7 +7,7 @@
 #include <glm/ext/matrix_projection.hpp>
 #include "gles/Egl.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 //class Vertex

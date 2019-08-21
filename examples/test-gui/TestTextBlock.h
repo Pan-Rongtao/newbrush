@@ -4,8 +4,7 @@
 #include "gui/TextBlock.h"
 #include "gui/PropertyAnimation.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gui;
 
 class TestTextBlock : public TestBase
@@ -13,7 +12,7 @@ class TestTextBlock : public TestBase
 public:
 	void test();
 
-	PropertyAnimation<nb::core::Color>				colorAni;
+	PropertyAnimation<Color>				colorAni;
 
 private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);

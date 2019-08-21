@@ -3,7 +3,7 @@
 #include <core/Property.h>
 #include <core/Size.h>
 
-using namespace nb::core;
+using namespace nb;
 
 class TestProperty : public TestBase
 {

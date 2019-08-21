@@ -15,7 +15,7 @@
 #include <map>
 #include "../core/Def.h"
 
-namespace nb{ namespace core {
+namespace nb{
 
 class NB_API TimeSpan
 {
@@ -140,4 +140,4 @@ private:
 	friend class DateTime;
 };
 
-}}
+}

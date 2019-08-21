@@ -1,8 +1,8 @@
 #include "gles/Ellipse.h"
 #include <math.h>
 
+using namespace nb;
 using namespace nb::gl;
-using namespace nb::core;
 
 //椭圆的点计算公式为：x = a * cos(α); y = b * sin(α)
 //顶点越多越圆滑

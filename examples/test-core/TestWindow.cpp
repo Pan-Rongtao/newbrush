@@ -20,7 +20,7 @@ void TestWindow::test()
 	}
 }
 
-void TestWindow::onResize(const nb::core::Window::ResizeArgs &args)
+void TestWindow::onResize(const Window::ResizeArgs &args)
 {
 	printf("TestWindow::OnResize: width=%d, height=%d\n", args.width, args.height);
 }
@@ -60,7 +60,7 @@ void TestWindow::onMouseWheel(const Window::MouseWheelEventArgs & args)
 	printf("TestWindow::onMouseWheel delta=%d\n", args.delta);
 }
 
-void TestWindow::onKeyAction(const nb::core::Window::KeyEventArgs &args)
+void TestWindow::onKeyAction(const Window::KeyEventArgs &args)
 {
 	printf("TestWindow::OnKeyAction %s, key=%d, mask=%d\n", args.down ? "down" : "up", args.key, args.mask);
 }

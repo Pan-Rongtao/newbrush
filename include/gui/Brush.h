@@ -20,7 +20,6 @@
 namespace nb{
 namespace gui {
 
-using nb::core::Property_rw;
 //class Brush
 class NB_API Brush : public DependencyObject
 {
@@ -43,10 +42,10 @@ class NB_API SolidColorBrush : public Brush
 {
 public:
 	SolidColorBrush();
-	explicit SolidColorBrush(const core::Color &color);
+	explicit SolidColorBrush(const nb::Color &color);
 
 	static const DependencyProperty	ColorProperty();
-	Property_rw<nb::core::Color>	Color;
+	Property_rw<nb::Color>	Color;
 };
 
 //class ImageBrush

@@ -8,7 +8,7 @@
 #include "EglMaster.h"
 #include "core/Log.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 Application::Application(std::shared_ptr<Display> display, std::shared_ptr<Configure> configure)
@@ -41,7 +41,7 @@ int Application::run()
 			w->pending();
 
 		for(auto const &ws : EglMaster::windowSurfaces())
-			nb::gl::swapBuffers(ws);
+			gl::swapBuffers(ws);
 	}
 }
 

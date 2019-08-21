@@ -1,7 +1,7 @@
 ﻿#include "core/Point.h"
 #include <math.h>
 
-using namespace nb::core;
+using namespace nb;
 
 //////////////////class Point
 Point::Point()

@@ -32,37 +32,37 @@ public:
 
 public:
 	Timeline();
-	Timeline(const core::TimeSpan &beginTime);
-	Timeline(const core::TimeSpan &beginTime, const core::TimeSpan &duration);
-	Timeline(const core::TimeSpan &beginTime, const core::TimeSpan &duration, const RepeatBehavior &repeatBehavior);
+	Timeline(const TimeSpan &beginTime);
+	Timeline(const TimeSpan &beginTime, const TimeSpan &duration);
+	Timeline(const TimeSpan &beginTime, const TimeSpan &duration, const RepeatBehavior &repeatBehavior);
 	virtual ~Timeline() = default;
 
 	void begin();
 
-	core::Property_rw<core::TimeSpan>				BeginTime;
-	core::Property_rw<core::TimeSpan>				Duration;
-	core::Property_rw<FillBehaviorE>				FillBehavior;
-	core::Property_rw<bool>							AutoReverse;
-	core::Property_rw<RepeatBehavior>				Repeat;
-	core::Property_r<StateE>						State;
+	Property_rw<TimeSpan>				BeginTime;
+	Property_rw<TimeSpan>				Duration;
+	Property_rw<FillBehaviorE>			FillBehavior;
+	Property_rw<bool>					AutoReverse;
+	Property_rw<RepeatBehavior>			Repeat;
+	Property_r<StateE>					State;
 
 	//状态改变
 	struct StateChangedArgs { StateE state; };
-	core::Event<StateChangedArgs>					StateChangedEvent;
+	Event<StateChangedArgs>					StateChangedEvent;
 
 	//进度事件
 	struct ProgressArgs { float progress; };
-	core::Event<ProgressArgs>						ProgressEvent;
+	Event<ProgressArgs>						ProgressEvent;
 
 	//完成事件
 	struct CompleteArgs {};
-	core::Event<CompleteArgs>						CompleteEvent;
+	Event<CompleteArgs>						CompleteEvent;
 
 private:
-	void onTick(const core::Timer::TickArgs &args);
-	uint64_t										m_begTick;
-	StateE											m_state;
-	core::Timer										m_timer;
+	void onTick(const Timer::TickArgs &args);
+	uint64_t	m_begTick;
+	StateE		m_state;
+	Timer		m_timer;
 };
 
 }}

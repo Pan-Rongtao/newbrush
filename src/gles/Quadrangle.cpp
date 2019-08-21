@@ -1,6 +1,6 @@
 #include "gles/Quadrangle.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 Quadrangle::Quadrangle()

@@ -11,7 +11,7 @@ class NB_API Setter
 {
 public:
 	std::string		propertyName;
-	core::Any		propertyValue;
+	Any				propertyValue;
 };
 
 class NB_API Trigger
@@ -27,10 +27,10 @@ public:
 	Style();
 
 
-	core::Property_rw<std::shared_ptr<Style>>					BaseOn;
-	core::Property_rw<std::vector<std::shared_ptr<Setter>>>		Setters;
-	core::Property_rw<std::vector<std::shared_ptr<Trigger>>>	Triggers;
-//	core::Property_rw<
+	Property_rw<std::shared_ptr<Style>>					BaseOn;
+	Property_rw<std::vector<std::shared_ptr<Setter>>>	Setters;
+	Property_rw<std::vector<std::shared_ptr<Trigger>>>	Triggers;
+//	Property_rw<
 
 private:
 	std::size_t		m_tagetTypeHash;

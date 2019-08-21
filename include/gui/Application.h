@@ -9,7 +9,7 @@ class Window;
 class NB_API Application : public nb::gl::Application
 {
 public:
-	//构建一个app，如果构建超过一次，会发出异常：nb::core::LogicException
+	//构建一个app，如果构建超过一次，会发出异常std::logic_error
 	Application();
 	virtual ~Application();
 

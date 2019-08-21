@@ -44,7 +44,7 @@ public:
 	Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter);
 
 	//构建一个2D纹理对象，它将从内存载入数据
-	Texture2D(const nb::media::Bitmap &bm);
+	Texture2D(const Bitmap &bm);
 
 	virtual ~Texture2D();
 

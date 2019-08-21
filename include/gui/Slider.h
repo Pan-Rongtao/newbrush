@@ -10,14 +10,14 @@ public:
 	virtual ~Slider();
 
 public:
-	nb::core::Property_rw<int>				Delay;
-	nb::core::Property_rw<int>				Interval;
-	nb::core::Property_rw<OrientationE>		Orientation;
-	nb::core::Property_rw<bool>				IsDirectionReversed;
+	Property_rw<int>				Delay;
+	Property_rw<int>				Interval;
+	Property_rw<OrientationE>		Orientation;
+	Property_rw<bool>				IsDirectionReversed;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
 };
 

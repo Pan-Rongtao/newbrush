@@ -1,6 +1,6 @@
 #include "gui/RepeatBehavior.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 RepeatBehavior::RepeatBehavior()
@@ -14,7 +14,7 @@ RepeatBehavior::RepeatBehavior(int count)
 {
 }
 
-RepeatBehavior::RepeatBehavior(const nb::core::TimeSpan & ts)
+RepeatBehavior::RepeatBehavior(const TimeSpan & ts)
 	: Count([&]() {return get<int>(CountProperty()); })
 	, Duration([&]() {return get<TimeSpan>(DurationProperty()); })
 {

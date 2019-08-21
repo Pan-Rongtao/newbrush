@@ -3,7 +3,7 @@
 #include "gui/Application.h"
 #include "gui/Window.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 class TestApp : public TestBase

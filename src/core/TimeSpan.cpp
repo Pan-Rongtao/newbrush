@@ -7,7 +7,7 @@
 #include <string.h>
 #include <ratio>
 
-using namespace nb::core;
+using namespace nb;
 
 TimeSpan::TimeSpan()
 	: TimeSpan(0, 0, 0, 0, 0, 0)

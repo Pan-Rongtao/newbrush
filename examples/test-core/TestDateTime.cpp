@@ -2,7 +2,7 @@
 #include "core/DateTime.h"
 #include <thread>
 
-using namespace nb::core;
+using namespace nb;
 void TestDateTime::test()
 {
 #if 1

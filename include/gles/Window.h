@@ -4,7 +4,7 @@
 
 namespace nb{ namespace gl{
 
-class NB_API Window : public nb::core::Window
+class NB_API Window : public nb::Window
 {
 public:	
 	//构建一个Window对象，它的标题为空，区域为(x-middle, y-middle, 800, 480)

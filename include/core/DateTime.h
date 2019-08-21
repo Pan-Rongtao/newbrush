@@ -11,7 +11,7 @@
 #pragma once
 #include "TimeSpan.h"
 
-namespace nb{ namespace core {
+namespace nb{
 
 //星期枚举
 enum class WeekE
@@ -389,4 +389,4 @@ private:
 	Time	m_time;
 };
 
-}}
+}

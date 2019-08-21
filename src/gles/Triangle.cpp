@@ -1,7 +1,7 @@
 #include "gles/Triangle.h"
 #include <math.h>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 Triangle::Triangle()

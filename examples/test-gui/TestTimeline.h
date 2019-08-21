@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "gui/Timeline.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 class TestTimeline : public TestBase
 {

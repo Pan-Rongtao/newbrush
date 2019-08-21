@@ -15,13 +15,13 @@ public:
 	//element：目标元素
 	//property_name：属性名
 	//property_v：属性值
-	static void registerAttached(std::shared_ptr<UIElement> element, const std::string &property_name, const core::Any &property_v);
+	static void registerAttached(std::shared_ptr<UIElement> element, const std::string &property_name, const Any &property_v);
 
 	
 	//查询依赖属性值，如果查询不到，将返回一个空的Any
 	//element：目标元素
 	//property_name：属性名
-	static core::Any findAttached(std::shared_ptr<UIElement> element, const std::string &property_name);
+	static Any findAttached(std::shared_ptr<UIElement> element, const std::string &property_name);
 
 	//注册依赖属性
 	//异常：std::logic_error已经注册过同类型属性
@@ -56,7 +56,7 @@ public:
 	bool isSealed() const;
 
 	//默认值
-	core::Any defaultValue() const;
+	Any defaultValue() const;
 
 	bool operator == (const DependencyProperty &other) const;
 
@@ -64,9 +64,9 @@ private:
 	std::string	m_name;
 	size_t		m_hash{0};
 	bool		m_isSealed{ true };
-	core::Any	m_defaultV;
+	Any			m_defaultV;
 
-	static std::map<std::shared_ptr<UIElement>, std::map<std::string, core::Any>>	m_attProperties;
+	static std::map<std::shared_ptr<UIElement>, std::map<std::string, Any>>	m_attProperties;
 };
 
 }

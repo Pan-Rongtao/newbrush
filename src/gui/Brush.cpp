@@ -1,6 +1,6 @@
 ﻿#include "gui/Brush.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 //class Brush
@@ -22,19 +22,19 @@ const DependencyProperty Brush::OpacityProperty()
 
 //class SolidColorBrush
 SolidColorBrush::SolidColorBrush()
-	: SolidColorBrush(nb::core::Color())
+	: SolidColorBrush(nb::Color())
 {
 }
 
-SolidColorBrush::SolidColorBrush(const nb::core::Color &color)
-	: Color([&](nb::core::Color v){ set(ColorProperty(), v); }, [&](){return get<nb::core::Color>(ColorProperty()); })
+SolidColorBrush::SolidColorBrush(const nb::Color &color)
+	: Color([&](nb::Color v){ set(ColorProperty(), v); }, [&](){return get<nb::Color>(ColorProperty()); })
 {
 	Color = color;
 }
 
 const DependencyProperty SolidColorBrush::ColorProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Brush, nb::core::Color>("Color", nb::core::Color());
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Brush, nb::Color>("Color", nb::Color());
 	return dp;
 }
 

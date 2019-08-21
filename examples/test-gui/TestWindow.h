@@ -5,8 +5,7 @@
 #include "gui/Timeline.h"
 #include "core/Timer.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gui;
 
 class TestWindow :public nb::gui::Window, public TestBase

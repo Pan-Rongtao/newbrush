@@ -5,7 +5,7 @@
 #include <float.h>
 #include <functional>
 
-using namespace nb::core;
+using namespace nb;
 static std::default_random_engine g_seed((unsigned int)time(nullptr));
 
 Random::Random()

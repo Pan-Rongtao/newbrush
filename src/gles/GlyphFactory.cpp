@@ -10,8 +10,7 @@
 #include "media/Font.h"
 #include FT_FREETYPE_H
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 
 class TextureGlyphAtlas;
@@ -23,7 +22,7 @@ class NB_API TextureGlyphAtlas : public Texture2D
 {
 public:
 	//构建一个字形图集纹理，宽高为width, height，字形的尺寸为glypSize
-	TextureGlyphAtlas(std::shared_ptr<nb::media::Font> font, const std::wstring &unicodeStr)
+	TextureGlyphAtlas(std::shared_ptr<Font> font, const std::wstring &unicodeStr)
 		: Texture2D(GlyphAltasWidth, GlyphAltasHeight) , m_x(0) , m_y(0) , m_font(font)
 	{
 		if ((width() != 0 && height() != 0) && (width() % m_font->size() != 0 || height() % m_font->size() != 0))

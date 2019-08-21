@@ -3,7 +3,7 @@
 #include "core/Color.h"
 #include <regex>
 
-using namespace nb::core;
+using namespace nb;
 
 Color::Color()
 	: Color(255, 0, 0, 0)

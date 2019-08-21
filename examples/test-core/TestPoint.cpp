@@ -1,7 +1,7 @@
 #include "TestPoint.h"
 #include "core/Point.h"
 
-using namespace nb::core;
+using namespace nb;
 void TestPoint::test()
 {
 	///////Point

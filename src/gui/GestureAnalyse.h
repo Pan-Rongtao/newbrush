@@ -15,33 +15,33 @@ public:
 
 struct Node
 {
-	nb::core::Time m_time;
-	nb::core::Point m_pos;
+	Time m_time;
+	Point m_pos;
 };
 
 public:
-	void GesturePress(nb::core::Point pos);
-	void GestureMove(nb::core::Point pos);
-	void GestureRelease(nb::core::Point pos);
+	void GesturePress(Point pos);
+	void GestureMove(Point pos);
+	void GestureRelease(Point pos);
 	float GetHorizontalSpeed() const;
 	float GetVerticalSpeed() const;
 private:
-	void onTick(const nb::core::Timer::TickArgs &args);
+	void onTick(const Timer::TickArgs &args);
 
-	void AddPos(nb::core::Point pos);
+	void AddPos(Point pos);
 	inline void ClearNodeQueue();
 private:
 	std::queue<Node *> m_queueNode;
 	bool m_bPress;
 	bool m_bOffsetActive;
-	nb::core::Point m_ptPress;
-	nb::core::Point m_ptOffset;
-	nb::core::Point m_ptPrev;
-	nb::core::Time m_timePrev;
-	nb::core::Point m_ptLast;
-	nb::core::Time m_timeLast;
+	Point m_ptPress;
+	Point m_ptOffset;
+	Point m_ptPrev;
+	Time m_timePrev;
+	Point m_ptLast;
+	Time m_timeLast;
 	float m_fSpeed;
-	nb::core::Timer m_timer;
+	Timer m_timer;
 };
 
 }}

@@ -21,8 +21,8 @@ void TestWindow::test()
 	doubleAni.From = this->Top();
 	doubleAni.To = this->Top() + 100;
 	doubleAni.Easing = std::make_shared<PowerEase>();
-	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	doubleAni.Duration = nb::core::TimeSpan::fromMilliseconds(200);
+	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
+	doubleAni.Duration = TimeSpan::fromMilliseconds(200);
 	doubleAni.StateChangedEvent += std::bind(&TestWindow::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestWindow::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestWindow::onCompleted, this, std::placeholders::_1);

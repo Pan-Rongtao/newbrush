@@ -1,7 +1,7 @@
 #include "gui/UIElement.h"
 #include "gui/Window.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 

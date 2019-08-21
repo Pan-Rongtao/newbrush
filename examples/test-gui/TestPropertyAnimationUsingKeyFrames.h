@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "gui/PropertyAnimationUsingKeyFrames.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 class TestPropertyAnimationUsingKeyFrames : public TestBase

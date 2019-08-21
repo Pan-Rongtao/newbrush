@@ -3,7 +3,7 @@
 #include <math.h>
 #include <GLES2/gl2.h>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 //«Ú∂•µ„À„∑®Õ¯÷∑£∫
 //https://www.jianshu.com/p/123c5884f635;

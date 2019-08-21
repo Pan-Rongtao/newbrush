@@ -28,13 +28,13 @@ class NB_API KeyFrame
 {
 public:
 	KeyFrame() : KeyFrame(T(), TimeSpan(), std::make_shared<LinearEase>()) {}
-	KeyFrame(const core::Property_rw<T> &value, const core::TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
-	KeyFrame(const core::Property_rw<T> &value, const core::TimeSpan &keyTime, std::shared_ptr<core::EasingBase> easing) : Value(value), KeyTime(keyTime), Easing(easing) {}
+	KeyFrame(const Property_rw<T> &value, const TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
+	KeyFrame(const Property_rw<T> &value, const TimeSpan &keyTime, std::shared_ptr<EasingBase> easing) : Value(value), KeyTime(keyTime), Easing(easing) {}
 	bool operator < (const KeyFrame<T> &other) const{	return KeyTime() < other.KeyTime(); }
 
-	core::Property_rw<T>									Value;
-	core::Property_rw<core::TimeSpan>						KeyTime;
-	core::Property_rw<std::shared_ptr<core::EasingBase>>	Easing;
+	Property_rw<T>									Value;
+	Property_rw<TimeSpan>						KeyTime;
+	Property_rw<std::shared_ptr<EasingBase>>	Easing;
 };
 
 template<class T>
@@ -43,7 +43,7 @@ class NB_API PropertyAnimationUsingKeyFrames : public AnimationTimeline<T>
 public:
 	PropertyAnimationUsingKeyFrames() : KeyFrames(nullptr, nullptr) {}
 
-	core::Property_rw<std::set<KeyFrame<T>>>		KeyFrames;
+	Property_rw<std::set<KeyFrame<T>>>		KeyFrames;
 
 protected:
 	virtual void progressing(float progress) override

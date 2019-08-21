@@ -4,7 +4,7 @@
 #include <freetype/ftbitmap.h>
 #include FT_FREETYPE_H
 
-using namespace nb::media;
+using namespace nb;
 
 Font::Font(const std::string &path)
 	: Font(path, 32)
@@ -74,7 +74,7 @@ std::shared_ptr<Font> Fonts::getFont(const std::string &name)
 	return iter != s_systemFonts.end() ? iter->second : nullptr;
 }
 
-std::map<std::string, std::shared_ptr<Font>> nb::media::Fonts::systemFonts()
+std::map<std::string, std::shared_ptr<Font>> Fonts::systemFonts()
 {
 	initSystemFonts();
 	return s_systemFonts;

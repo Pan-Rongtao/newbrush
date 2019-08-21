@@ -2,8 +2,8 @@
 
 void TestPropertyAnimationUsingKeyFrames::test()
 {
-	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(0);
-	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(5);
+	doubleAni.BeginTime = TimeSpan::fromSeconds(0);
+	doubleAni.Duration = TimeSpan::fromSeconds(5);
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onCompleted, this, std::placeholders::_1);

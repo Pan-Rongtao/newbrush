@@ -4,31 +4,31 @@
 using namespace nb::gl;
 
 Window::Window()
-	: core::Window()
+	: nb::Window()
 {
 	EglMaster::windows().push_back(this);
 }
 
 Window::Window(int width, int height)
-	: core::Window(width, height)
+	: nb::Window(width, height)
 {
 	EglMaster::windows().push_back(this);
 }
 
 Window::Window(int x, int y, int width, int height)
-	: core::Window(x, y, 800, 480)
+	: nb::Window(x, y, 800, 480)
 {
 	EglMaster::windows().push_back(this);
 }
 
 Window::Window(const std::string &title)
-	: core::Window(title)
+	: nb::Window(title)
 {
 	EglMaster::windows().push_back(this);
 }
 
 Window::Window(const std::string &title, int width, int height)
-	: core::Window(title, width, height)
+	: nb::Window(title, width, height)
 {
 	EglMaster::windows().push_back(this);
 }

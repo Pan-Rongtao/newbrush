@@ -13,7 +13,7 @@
 #pragma once
 #include "../core/Def.h"
 
-namespace nb{ namespace core {
+namespace nb{
 
 //class Size
 class NB_API Size
@@ -83,4 +83,4 @@ private:
 
 };
 
-}}
+}

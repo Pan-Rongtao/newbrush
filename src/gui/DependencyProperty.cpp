@@ -1,6 +1,6 @@
 #include "gui/DependencyProperty.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 std::map<std::shared_ptr<UIElement>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;

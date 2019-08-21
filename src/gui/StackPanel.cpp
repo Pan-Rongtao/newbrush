@@ -1,6 +1,6 @@
 ﻿#include "gui/StackPanel.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 StackPanel::StackPanel()

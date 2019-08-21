@@ -1,6 +1,6 @@
 ﻿#include "gui/Timeline.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Timeline::Timeline()

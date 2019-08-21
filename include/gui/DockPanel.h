@@ -27,8 +27,8 @@ public:
 	static const DependencyProperty	LastChildFillProperty();
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 };
 
 }}

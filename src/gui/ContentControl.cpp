@@ -2,8 +2,8 @@
 #include "gles/Quadrangle.h"
 #include "gles/Context.h"
 
+using namespace nb;
 using namespace nb::gui;
-using namespace nb::core;
 
 ContentControl::ContentControl(std::shared_ptr<UIElement> content)
 	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]() {return get<std::shared_ptr<UIElement>>(ContentProperty()); })

@@ -1,7 +1,7 @@
 #pragma once
 #include "../core/Size.h"
 
-namespace nb{ namespace media {
+namespace nb{
 
 enum class TextWrappingE
 {
@@ -30,8 +30,8 @@ public:
 	static GlyphInfo measureGlyp(std::shared_ptr<Font> font, wchar_t ch);
 
 	//测量一个字符集，返回占用的像素尺寸
-	static core::Size measureGlyphAltas(std::shared_ptr<Font> font, const std::string &text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax);
+	static Size measureGlyphAltas(std::shared_ptr<Font> font, const std::string &text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax);
 
 };
 
-} }
+}

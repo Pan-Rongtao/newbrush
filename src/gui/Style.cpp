@@ -1,6 +1,6 @@
 #include "gui/Style.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Style::Style()

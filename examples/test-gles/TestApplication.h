@@ -10,7 +10,7 @@
 #include "gles/Window.h"
 #include "gles/Display.h"
 
-using namespace nb::media;
+using namespace nb;
 using namespace nb::gl;
 
 class MyApplication : public nb::gl::Application
@@ -37,22 +37,22 @@ protected:
 	virtual void preRender() override;
 
 private:
-	void onResize(const nb::core::Window::ResizeArgs &args);
-	void onMouseEnter(const nb::core::Window::MouseEnterEventArgs &args);
-	void onMouseLeave(const nb::core::Window::MouseLeaveEventArgs &args);
-	void onMouseMove(const nb::core::Window::MouseMoveEventArgs &args);
-	void onMouseLeftButton(const nb::core::Window::MouseLeftButtonEventArgs &args);
-	void onMouseRightButton(const nb::core::Window::MouseRightButtonEventArgs &args);
-	void onMouseMiddleButton(const nb::core::Window::MouseMiddleButtonEventArgs &args);
-	void onMouseWheel(const nb::core::Window::MouseWheelEventArgs &args);
-	void onKeyAction(const nb::core::Window::KeyEventArgs &args);
+	void onResize(const nb::Window::ResizeArgs &args);
+	void onMouseEnter(const nb::Window::MouseEnterEventArgs &args);
+	void onMouseLeave(const nb::Window::MouseLeaveEventArgs &args);
+	void onMouseMove(const nb::Window::MouseMoveEventArgs &args);
+	void onMouseLeftButton(const nb::Window::MouseLeftButtonEventArgs &args);
+	void onMouseRightButton(const nb::Window::MouseRightButtonEventArgs &args);
+	void onMouseMiddleButton(const nb::Window::MouseMiddleButtonEventArgs &args);
+	void onMouseWheel(const nb::Window::MouseWheelEventArgs &args);
+	void onKeyAction(const nb::Window::KeyEventArgs &args);
 
-	void OnTick(const nb::core::Timer::TickArgs & param);
+	void OnTick(const Timer::TickArgs & param);
 
-	std::shared_ptr<nb::gl::Context>					m_context;
-	std::shared_ptr<nb::gl::Surface>					m_surface;
-	std::shared_ptr<nb::gl::Window>						m_window;
-	nb::core::Timer										m_timer;
+	std::shared_ptr<nb::gl::Context>	m_context;
+	std::shared_ptr<nb::gl::Surface>	m_surface;
+	std::shared_ptr<nb::gl::Window>		m_window;
+	Timer								m_timer;
 };
 
 class TestApplication : public TestBase

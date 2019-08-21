@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <fstream>
 
-using namespace  nb::core;
+using namespace nb;
 void TestTimeSpan::test()
 {
 	TimeSpan tsMax = TimeSpan::maxValue();

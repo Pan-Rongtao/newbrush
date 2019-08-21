@@ -3,7 +3,7 @@
 #include "gui/Rectangle.h"
 #include "gui/WrapPanel.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 class TestWrapPanel : public TestBase

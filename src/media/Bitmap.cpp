@@ -7,8 +7,7 @@
 #include "stb/stb_image_resize.h"
 #include "stb/stb_image_write.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 
 Bitmap::Bitmap()
 	: m_data(nullptr)

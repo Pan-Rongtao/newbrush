@@ -9,11 +9,6 @@
 namespace nb{
 namespace gui{
 
-using std::shared_ptr;
-using nb::core::Property_rw;
-using nb::core::Property_r;
-using nb::core::Event;
-
 class UIElement;
 class NB_API VisualState : public DependencyObject
 {
@@ -22,7 +17,7 @@ public:
 	VisualState(const std::string &name, std::shared_ptr<Storyboard> sb = nullptr);
 
 	Property_rw<std::string>			Name;		//名字
-	Property_rw<shared_ptr<Storyboard>>	Storyboard;	//故事板
+	Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
 
 	static const DependencyProperty		NameProperty();
 	static const DependencyProperty		StoryboardProperty();
@@ -35,9 +30,9 @@ public:
 
 	Property_rw<std::string>			From;		//起始状态
 	Property_rw<std::string>			To;			//目标状态
-	Property_rw<core::TimeSpan>			Duration;	//持续时间
-	Property_rw<shared_ptr<Storyboard>>	Storyboard;	//故事板
-	//Property_rw<shared_ptr<core::EasingBase>>	Easing;		//缓动函数
+	Property_rw<TimeSpan>			Duration;	//持续时间
+	Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
+	//Property_rw<shared_ptr<EasingBase>>	Easing;		//缓动函数
 
 	static const DependencyProperty		FromProperty();
 	static const DependencyProperty		ToProperty();
@@ -53,8 +48,8 @@ public:
 	VisualStateGroup(const std::string &name, const std::vector<std::shared_ptr<VisualState>> &states);
 
 	Property_rw<std::string>							Name;		//名字
-	Property_rw<std::vector<shared_ptr<VisualState>>>	States;		//状态集合
-	Property_r<shared_ptr<VisualState>>					CurrentState;//当前状态
+	Property_rw<std::vector<std::shared_ptr<VisualState>>>	States;		//状态集合
+	Property_r<std::shared_ptr<VisualState>>					CurrentState;//当前状态
 	Property_r<std::vector<VisualTransition>>			Transitions;
 
 	struct StateChangedEventArgs {};

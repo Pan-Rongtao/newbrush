@@ -21,11 +21,11 @@ public:
 	void clear();
 
 	//²éÕÒ×ÊÔ´
-	core::Any &find(const std::string &key);
-	const core::Any &find(const std::string &key) const;
+	Any &find(const std::string &key);
+	const Any &find(const std::string &key) const;
 
 private:
-	std::unordered_map<std::string, core::Any>	m_resmap;
+	std::unordered_map<std::string, Any>	m_resmap;
 };
 
 template<class resT>

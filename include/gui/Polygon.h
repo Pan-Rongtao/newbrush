@@ -15,15 +15,15 @@ public:
 	Polygon();
 	virtual ~Polygon() = default;
 
-	Property_rw<std::vector<core::Point>>	Points;
+	Property_rw<std::vector<Point>>	Points;
 
 	static const DependencyProperty			PointsProperty();
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
 };
 

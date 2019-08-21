@@ -1,7 +1,7 @@
 #include "TestEasingFunction.h"
 #include "core/Easing.h"
 
-using namespace nb::core;
+using namespace nb;
 
 void testEasing(EasingBase &e, EasingBase::EasingModeE mode)
 {

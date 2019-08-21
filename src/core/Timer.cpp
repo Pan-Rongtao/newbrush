@@ -1,6 +1,6 @@
 ﻿#include "core/Timer.h"
 
-using namespace nb::core;
+using namespace nb;
 
 bool								Timer::m_onDispatching = false;		//标记正在dispatch期间
 std::set<Timer *>					Timer::m_timerRemovedOnDispatching;	//记录在dispatch期间调用stop()/remove()的timer

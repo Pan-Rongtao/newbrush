@@ -33,9 +33,9 @@ public:
 //	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration) : From(from), To(to) { Duration = duration; }
 //	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration, core::Property_rw<T> *target) : From(from), To(to) { Duration = duration; TargetProperty = target; }
 
-	core::Property_rw<T>							From;
-	core::Property_rw<T>							To;
-	core::Property_rw<T>							By;
+	Property_rw<T>							From;
+	Property_rw<T>							To;
+	Property_rw<T>							By;
 
 protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
@@ -50,7 +50,7 @@ protected:
 
 //特化Color
 template<>
-void PropertyAnimation<nb::core::Color>::progressing(float progress)
+void PropertyAnimation<Color>::progressing(float progress)
 {
 //	if (!TargetProperty)	return;
 

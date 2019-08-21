@@ -2,7 +2,7 @@
 #include "gles/Line.h"
 #include "gles/Context.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Line::Line()

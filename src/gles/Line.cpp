@@ -1,7 +1,7 @@
 #include "gles/Line.h"
 #include <opengl/GLES2/gl2.h>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 Line::Line()

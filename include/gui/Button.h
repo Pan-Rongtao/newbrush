@@ -5,7 +5,7 @@
 
 namespace nb { namespace gui {
 
-using nb::core::Property_rw;
+using Pro = const DependencyProperty;
 
 class NB_API Button : public ContentControl
 {
@@ -19,7 +19,7 @@ public:
 	static const DependencyProperty IsDefaultProperty();
 
 	struct ClickEventArgs {};
-	core::Event<ClickEventArgs>			Click;
+	Event<ClickEventArgs>			Click;
 
 protected:
 	virtual void onMouseDown();

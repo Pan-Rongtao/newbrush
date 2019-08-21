@@ -1,7 +1,7 @@
 #include "TestSize.h"
 #include "core/Size.h"
 
-using namespace nb::core;
+using namespace nb;
 void TestSize::test()
 {
 	/////////////////////Size

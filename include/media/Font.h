@@ -7,7 +7,7 @@ struct FT_LibraryRec_;
 struct FT_FaceRec_;
 struct FT_BitmapGlyphRec_;
 
-namespace nb{ namespace media{
+namespace nb{
 
 class NB_API Font
 {
@@ -38,7 +38,6 @@ private:
 	friend class GlyphMetrics;
 };
 
-
 class NB_API Fonts
 {
 public:
@@ -57,4 +56,4 @@ private:
 	static std::map<std::string, std::shared_ptr<Font>> s_systemFonts;
 };
 
-} }
+}

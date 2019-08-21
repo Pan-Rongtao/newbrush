@@ -1,7 +1,7 @@
 #include "TestRect.h"
 #include "core/Rect.h"
 
-using namespace  nb::core;
+using namespace nb;
 void TestRect::test()
 {
 	//////////Rect

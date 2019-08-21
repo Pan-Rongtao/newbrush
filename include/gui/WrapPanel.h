@@ -26,17 +26,17 @@ public:
 	WrapPanel();
 	virtual ~WrapPanel() = default;
 
-	nb::core::Property_rw<OrientationE>	Orientation;
-	nb::core::Property_rw<float>		ItemWidth;
-	nb::core::Property_rw<float>		ItemHeight;
+	Property_rw<OrientationE>	Orientation;
+	Property_rw<float>		ItemWidth;
+	Property_rw<float>		ItemHeight;
 
 	static const DependencyProperty		OrientationProperty();
 	static const DependencyProperty		ItemWidthProperty();
 	static const DependencyProperty		ItemHeightProperty();
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
 };
 

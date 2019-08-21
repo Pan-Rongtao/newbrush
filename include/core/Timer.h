@@ -4,8 +4,8 @@
 #include <map>
 #include <set>
 
-namespace nb { namespace core
-{
+namespace nb {
+
 class NB_API Timer
 {
 public:
@@ -40,7 +40,7 @@ public:
 
 	//Tick事件
 	struct TickArgs {};
-	nb::core::Event<TickArgs> TickEvent;
+	Event<TickArgs> TickEvent;
 
 private:
 	static void add(Timer *timer);
@@ -54,4 +54,4 @@ private:
 	static std::set<Timer *>				m_timerRemovedOnDispatching;
 };
 
-}}
+}

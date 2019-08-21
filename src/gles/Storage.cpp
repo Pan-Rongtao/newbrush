@@ -1,9 +1,9 @@
 #include "gles/Storage.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
-const std::map<std::string, nb::core::Any>& nb::gl::Storage::uniforms() const
+const std::map<std::string, Any>& Storage::uniforms() const
 {
 	return m_uniforms;
 }

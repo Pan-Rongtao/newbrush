@@ -28,12 +28,12 @@ public:
 		m_uniforms[name] = v;
 	}
 
-	const std::map<std::string, nb::core::Any> &uniforms() const;
+	const std::map<std::string, Any> &uniforms() const;
 
 	void clear();
 
 private:
-	std::map<std::string, nb::core::Any>	m_uniforms;
+	std::map<std::string, Any>	m_uniforms;
 };
 
 } }

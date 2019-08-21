@@ -1,6 +1,6 @@
 #include "gui/UniformGrid.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 UniformGrid::UniformGrid()
@@ -28,7 +28,7 @@ const DependencyProperty UniformGrid::FirstColumnProperty()
 	return dp;
 }
 
-Size UniformGrid::measureOverride(const nb::core::Size & availableSize)
+Size UniformGrid::measureOverride(const Size & availableSize)
 {
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = availableSize.width() / rowsColums.second;
@@ -40,7 +40,7 @@ Size UniformGrid::measureOverride(const nb::core::Size & availableSize)
 	return availableSize;
 }
 
-Size UniformGrid::arrangeOverride(const nb::core::Size & finalSize)
+Size UniformGrid::arrangeOverride(const Size & finalSize)
 {
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = finalSize.width() / rowsColums.second;

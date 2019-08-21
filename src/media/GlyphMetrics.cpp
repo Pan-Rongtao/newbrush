@@ -6,8 +6,7 @@
 #include FT_FREETYPE_H
 #include "media/Font.h"
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 
 GlyphInfo GlyphMetrics::measureGlyp(std::shared_ptr<Font> font, wchar_t ch)
 {
@@ -34,7 +33,7 @@ GlyphInfo GlyphMetrics::measureGlyp(std::shared_ptr<Font> font, wchar_t ch)
 		bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
 }
 
-nb::core::Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
+Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
 {
 	if (!font)
 		nbThrowException(std::invalid_argument, "font is nullptr");

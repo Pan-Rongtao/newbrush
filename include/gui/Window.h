@@ -31,8 +31,8 @@ public:
 	//关闭/销毁窗口
 	void close();
 
-	Property_rw<core::WindowStateE>					WindowState;
-	Property_rw<core::WindowStyleE>					WindowStyle;
+	Property_rw<WindowStateE>					WindowState;
+	Property_rw<WindowStyleE>					WindowStyle;
 	Property_rw<bool>								Topmost;
 	Property_rw<float>								Left;
 	Property_rw<float>								Top;
@@ -52,14 +52,14 @@ public:
 	static	shared_ptr<gl::Context>					drawContext;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
 	std::vector<UIElement *> hitElements(int x, int y) const;
 
-	void onWindowStateChanged(const core::WindowStateE &_old, const core::WindowStateE &_new);
-	void onWindowStyleChanged(const core::WindowStyleE &_old, const core::WindowStyleE &_new);
+	void onWindowStateChanged(const WindowStateE &_old, const WindowStateE &_new);
+	void onWindowStyleChanged(const WindowStyleE &_old, const WindowStyleE &_new);
 	void onTopmostChanged(const bool &_old, const bool &_new);
 	void onLeftChanged(const float &_old, const float &_new);
 	void onTopChanged(const float &_old, const float &_new);
@@ -68,15 +68,15 @@ private:
 	void onWidthChanged(const float &_old, const float &_new);
 	void onHeightChanged(const float &_old, const float &_new);
 
-	void onNativeWindowResize(const core::Window::ResizeArgs &args);
-	void onNativeWindowMouseEnter(const core::Window::MouseEnterEventArgs &args);
-	void onNativeWindowMouseLeave(const core::Window::MouseLeaveEventArgs &args);
-	void onNativeWindowMouseMove(const core::Window::MouseMoveEventArgs &args);
-	void onNativeWindowMouseLeftButton(const core::Window::MouseLeftButtonEventArgs &args);
-	void onNativeWindowMouseRightButton(const core::Window::MouseRightButtonEventArgs &args);
-	void onNativeWindowMouseMiddleButton(const core::Window::MouseMiddleButtonEventArgs &args);
-	void onNativeWindowMouseWheel(const core::Window::MouseWheelEventArgs &args);
-	void onNativeWindowKeyAction(const core::Window::KeyEventArgs &args);
+	void onNativeWindowResize(const nb::Window::ResizeArgs &args);
+	void onNativeWindowMouseEnter(const nb::Window::MouseEnterEventArgs &args);
+	void onNativeWindowMouseLeave(const nb::Window::MouseLeaveEventArgs &args);
+	void onNativeWindowMouseMove(const nb::Window::MouseMoveEventArgs &args);
+	void onNativeWindowMouseLeftButton(const nb::Window::MouseLeftButtonEventArgs &args);
+	void onNativeWindowMouseRightButton(const nb::Window::MouseRightButtonEventArgs &args);
+	void onNativeWindowMouseMiddleButton(const nb::Window::MouseMiddleButtonEventArgs &args);
+	void onNativeWindowMouseWheel(const nb::Window::MouseWheelEventArgs &args);
+	void onNativeWindowKeyAction(const nb::Window::KeyEventArgs &args);
 
 	std::shared_ptr<nb::gl::Window>		m_glWindow;
 };

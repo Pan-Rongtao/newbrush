@@ -20,7 +20,7 @@
 #include <vector>
 #include <random>
 
-namespace nb{ namespace core {
+namespace nb{
 
 class NB_API Random
 {
@@ -115,4 +115,4 @@ private:
 	std::wstring	m_range;
 };
 
-}}
+}

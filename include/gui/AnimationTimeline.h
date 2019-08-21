@@ -6,8 +6,6 @@
 namespace nb{
 namespace gui{
 
-using nb::core::Property_rw;
-
 template<class T>
 class NB_API AnimationTimeline : public Timeline
 {
@@ -21,7 +19,7 @@ public:
 	virtual ~AnimationTimeline() = default;
 
 	//Property_rw<T>					*TargetProperty;
-	Property_rw<std::shared_ptr<core::EasingBase>>	Easing;
+	Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
 	static const DependencyProperty	TargetPropertyProperty() { return DependencyProperty; }
 	static const DependencyProperty	EasingProperty() { return DependencyProperty; }

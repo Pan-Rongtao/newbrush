@@ -1,7 +1,7 @@
 ﻿#include "gui/RangeBase.h"
 
+using namespace nb;
 using namespace nb::gui;
-using namespace nb::core;
 
 RangeBase::RangeBase()
 	: Value(nullptr, nullptr)

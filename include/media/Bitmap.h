@@ -18,7 +18,7 @@
 #include "../core/Def.h"
 #include "../core/Color.h"
 
-namespace nb{ namespace media {
+namespace nb{
 
 class NB_API Bitmap
 {
@@ -84,4 +84,4 @@ private:
 	int32_t			m_channels;
 };
 
-}}
+}

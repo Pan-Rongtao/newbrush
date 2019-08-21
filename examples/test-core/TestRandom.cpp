@@ -4,7 +4,7 @@
 #include <codecvt>
 #include "../Encoding.h"
 
-using namespace nb::core;
+using namespace nb;
 void TestRandom::test()
 {
 #if 1

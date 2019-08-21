@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace nb{ namespace core{
+namespace nb{
 
 template<class ArgsT>
 class Event
@@ -48,4 +48,4 @@ private:
 	std::unordered_map<int, std::function<void(const ArgsT &)>>	m_callbacks;
 };
 
-}}
+}

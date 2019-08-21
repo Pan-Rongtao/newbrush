@@ -3,7 +3,7 @@
 #include "gui/Window.h"
 #include "WindowCollections.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Application *Application::g_app = nullptr;

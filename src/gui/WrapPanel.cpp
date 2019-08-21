@@ -1,7 +1,7 @@
 ﻿#include "gui/WrapPanel.h"
 #include <queue>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 WrapPanel::WrapPanel()

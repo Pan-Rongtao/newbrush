@@ -4,7 +4,7 @@
 #include "gui/Window.h"
 #include "gui/Rectangle.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 class TestStackPanel : public TestBase

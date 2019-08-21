@@ -10,7 +10,7 @@
 #include "assimp/postprocess.h"
 #endif
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 RenderObject::RenderObject()
@@ -44,7 +44,7 @@ void RenderObject::loadFromFile(const std::string & path)
 	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		nb::Log::error("load [%s] fail:%s", path.data(), importer.GetErrorString());
+		Log::error("load [%s] fail:%s", path.data(), importer.GetErrorString());
 		return;
 	}
 
@@ -82,7 +82,7 @@ std::shared_ptr<Material> RenderObject::material()
 	return m_material;
 }
 
-std::shared_ptr<Material> nb::gl::RenderObject::material() const
+std::shared_ptr<Material> RenderObject::material() const
 {
 	return m_material;
 }

@@ -1,7 +1,7 @@
 #include "gles/Cube.h"
 #include <GLES2/gl2.h>
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gl;
 
 Cube::Cube()

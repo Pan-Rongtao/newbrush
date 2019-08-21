@@ -1,7 +1,7 @@
 #include "TestEnumFlags.h"
 #include "core/EnumFlags.h"
 
-using namespace nb::core;
+using namespace nb;
 enum MutexFlagE
 {
 	Flag_0x00000001 = 0x00000001,

@@ -3,7 +3,7 @@
 #include <ctime>
 #include <ratio>
 
-using namespace nb::core;
+using namespace nb;
 
 ////////////////////////////////////class Date
 Date::Date()
@@ -506,7 +506,7 @@ Time &Time::addMilliseconds(int milliseconds) &
 	return add(TimeSpan::fromMilliseconds(milliseconds));
 }
 
-Time & nb::core::Time::addMicroseconds(int microseconds) &
+Time & Time::addMicroseconds(int microseconds) &
 {
 	return add(TimeSpan::fromMicroseconds(microseconds));
 }

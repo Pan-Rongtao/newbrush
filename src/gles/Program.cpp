@@ -282,7 +282,7 @@ std::shared_ptr<Program> Programs::primitive()
 	return p;
 }
 
-std::shared_ptr<Program> nb::gl::Programs::phong()
+std::shared_ptr<Program> Programs::phong()
 {
 	static std::shared_ptr<Program> p;
 	if (p)	return p;
@@ -342,7 +342,7 @@ std::shared_ptr<Program> nb::gl::Programs::phong()
 	return p;
 }
 
-std::shared_ptr<Program> nb::gl::Programs::cube()
+std::shared_ptr<Program> Programs::cube()
 {
 	static std::shared_ptr<Program> p;
 	if (p)	return p;

@@ -1,6 +1,6 @@
 ﻿#include "gui/Control.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 Control::Control()

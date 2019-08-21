@@ -17,7 +17,7 @@
 #include "Point.h"
 #include "Size.h"
 
-namespace nb{ namespace core{
+namespace nb{
 
 //class Rect
 class NB_API Rect
@@ -183,4 +183,4 @@ private:
 	float		m_height;
 };
 
-}}
+}

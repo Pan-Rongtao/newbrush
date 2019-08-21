@@ -30,20 +30,20 @@ public:
 	void scrollToVerticalOffset(float offset);
 
 public:
-	nb::core::Property_rw<bool>		CanContentScroll;
-	nb::core::Property_rw<bool>		HorizontalScrollBarVisibility;
-	nb::core::Property_rw<bool>		HorizontalScrollBarEnabled;
-	nb::core::Property_rw<bool>		VerticalScrollBarVisibility;
-	nb::core::Property_rw<bool>		VerticalScrollBarEnabled;
-	nb::core::Property_rw<float>	HorizontalOffset;
-	nb::core::Property_rw<float>	VerticalOffset;
-	nb::core::Property_rw<float>	PanningDeceleration;
-	nb::core::Property_rw<float>	ScrollableWidth;
-	nb::core::Property_rw<float>	ScrollableHeight;
+	Property_rw<bool>		CanContentScroll;
+	Property_rw<bool>		HorizontalScrollBarVisibility;
+	Property_rw<bool>		HorizontalScrollBarEnabled;
+	Property_rw<bool>		VerticalScrollBarVisibility;
+	Property_rw<bool>		VerticalScrollBarEnabled;
+	Property_rw<float>	HorizontalOffset;
+	Property_rw<float>	VerticalOffset;
+	Property_rw<float>	PanningDeceleration;
+	Property_rw<float>	ScrollableWidth;
+	Property_rw<float>	ScrollableHeight;
 
 protected:
-	virtual nb::core::Size measureOverride(const nb::core::Size &availableSize) override;
-	virtual nb::core::Size arrangeOverride(const nb::core::Size &finalSize) override;
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
 
 };
 

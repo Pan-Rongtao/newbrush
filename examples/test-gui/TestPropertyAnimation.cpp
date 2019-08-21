@@ -5,8 +5,8 @@ void TestPropertyAnimation::test()
 	doubleAni.From = 100;
 	doubleAni.To = 200;
 	doubleAni.Easing = std::make_shared<ElasticEase>();
-	doubleAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	doubleAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
+	doubleAni.Duration = TimeSpan::fromSeconds(1);
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
@@ -16,8 +16,8 @@ void TestPropertyAnimation::test()
 	pointAni.From = Point(100, 100);
 	pointAni.To = Point(200, 500);
 	pointAni.Easing = std::make_shared<LinearEase>();
-	pointAni.BeginTime = nb::core::TimeSpan::fromSeconds(1);
-	pointAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	pointAni.BeginTime = TimeSpan::fromSeconds(1);
+	pointAni.Duration = TimeSpan::fromSeconds(1);
 	pointAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	pointAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	pointAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
@@ -26,8 +26,8 @@ void TestPropertyAnimation::test()
 	
 	colorAni.From = Color(220, 100, 40);
 	colorAni.To = Color(80, 200, 10);
-	colorAni.BeginTime = nb::core::TimeSpan::fromSeconds(0);
-	colorAni.Duration = nb::core::TimeSpan::fromSeconds(1);
+	colorAni.BeginTime = TimeSpan::fromSeconds(0);
+	colorAni.Duration = TimeSpan::fromSeconds(1);
 	colorAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	colorAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);

@@ -3,8 +3,7 @@
 #include "core/Size.h"
 #include <stdio.h>
 
-using namespace nb::core;
-using namespace nb::media;
+using namespace nb;
 void TestBitmap::test()
 {
 	Bitmap bmttt;

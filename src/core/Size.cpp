@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <math.h>
 
-using namespace nb::core;
+using namespace nb;
 
 Size::Size()
 	: Size(0.0f, 0.0f)

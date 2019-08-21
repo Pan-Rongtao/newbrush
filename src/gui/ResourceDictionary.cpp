@@ -1,6 +1,6 @@
 #include "gui/ResourceDictionary.h"
 
-using namespace nb::core;
+using namespace nb;
 using namespace nb::gui;
 
 void ResourceDictionary::remove(const std::string & key)
