@@ -6,18 +6,16 @@ using namespace nb;
 using namespace nb::gui;
 
 GridLength::GridLength()
-	: m_type(GridUnitType::Pixcel)
-	, m_value(0.0)
+	: GridLength(GridUnitType::Pixcel, 0.0)
 {
 }
 
 GridLength::GridLength(float value)
-	: m_type(GridUnitType::Pixcel)
-	, m_value(value)
+	: GridLength(GridUnitType::Pixcel, value)
 {
 }
 
-GridLength::GridLength(float value, GridUnitType type)
+GridLength::GridLength(GridUnitType type, float value)
 	: m_type(type)
 	, m_value(value)
 {
@@ -48,14 +46,14 @@ float GridLength::value() const
 	return m_value;
 }
 
-GridLength::GridUnitType GridLength::gridUnitType() const
+GridUnitType GridLength::gridUnitType() const
 {
 	return m_type;
 }
 
 GridLength GridLength::automate()
 {
-	return GridLength(0.0, GridUnitType::Auto);
+	return GridLength(GridUnitType::Auto, 0.0);
 }
 
 RowDefinition::RowDefinition()
@@ -68,25 +66,25 @@ RowDefinition::RowDefinition()
 
 DependencyProperty RowDefinition::HeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("Height", GridLength(1.0f, GridLength::GridUnitType::Star));
+	static auto dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("Height", GridLength(GridUnitType::Star, 1.0));
 	return dp;
 }
 
 DependencyProperty RowDefinition::MinHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MinHeight", GridLength());
+	static auto dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MinHeight");
 	return dp;
 }
 
 DependencyProperty RowDefinition::MaxHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MaxHeight", GridLength(std::numeric_limits<float>::max()));
+	static auto dp = DependencyProperty::registerDependency<RowDefinition, GridLength>("MaxHeight", GridLength(std::numeric_limits<float>::max()));
 	return dp;
 }
 
 DependencyProperty RowDefinition::ActualHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<RowDefinition, float>("MaxHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<RowDefinition, float>("MaxHeight", 0.0);
 	return dp;
 }
 
@@ -100,25 +98,25 @@ ColumnDefinition::ColumnDefinition()
 
 DependencyProperty ColumnDefinition::WidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("Width", GridLength(1.0f, GridLength::GridUnitType::Star));
+	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("Width", GridLength(GridUnitType::Star, 1.0));
 	return dp;
 }
 
 DependencyProperty ColumnDefinition::MinWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MinWidth", GridLength(0.0f));
+	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MinWidth", GridLength(0.0));
 	return dp;
 }
 
 DependencyProperty ColumnDefinition::MaxWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MaxWidth", GridLength(std::numeric_limits<float>::max()));
+	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, GridLength>("MaxWidth", GridLength(std::numeric_limits<float>::max()));
 	return dp;
 }
 
 DependencyProperty ColumnDefinition::ActualWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ColumnDefinition, float>("ActualWidth", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, float>("ActualWidth", 0.0, true);
 	return dp;
 }
 
@@ -130,13 +128,13 @@ Grid::Grid()
 
 DependencyProperty Grid::RowDefinitionsProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Grid, std::vector<std::shared_ptr<RowDefinition>>>("RowDefinitions", {});
+	static auto dp = DependencyProperty::registerDependency<Grid, std::vector<std::shared_ptr<RowDefinition>>>("RowDefinitions");
 	return dp;
 }
 
 DependencyProperty Grid::ColumnDefinitionsProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency <Grid, std::vector<std::shared_ptr<ColumnDefinition>>>("ColumnDefinitions", {});
+	static auto dp = DependencyProperty::registerDependency <Grid, std::vector<std::shared_ptr<ColumnDefinition>>>("ColumnDefinitions");
 	return dp;
 }
 void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
@@ -212,13 +210,13 @@ Size Grid::measureOverride(const Size & availableSize)
 			auto lenght = isRowdefinition ? RowDefinitions()[i]->Height() : ColumnDefinitions()[i]->Width();
 			switch (lenght.gridUnitType())
 			{
-			case GridLength::GridUnitType::Pixcel:
+			case GridUnitType::Pixcel:
 			{
 				rowOrColUnitsPixcelLenghts[i] = lenght.value();	
 				++verifiedCount;
 				break; 
 			}
-			case GridLength::GridUnitType::Auto:
+			case GridUnitType::Auto:
 			{
 				auto maxLenghtOfRowOrCol = 0.0f;
 				for (auto child : m_children)

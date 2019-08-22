@@ -9,11 +9,11 @@
 ********************************************************/
 #pragma once
 #include <typeinfo>
-#include "Def.h"
+#include "../core/Def.h"
 
 namespace nb{
 
-class Any
+class NB_API Any
 {
 public:
 	class Holder

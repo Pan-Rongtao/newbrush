@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "../gui/Timeline.h"
-#include "../core/Property.h"
+#include "../gui/Property.h"
 
 namespace nb{
 namespace gui{

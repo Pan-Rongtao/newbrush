@@ -1,22 +1,22 @@
 #pragma once
-#include <vector>
 #include "../gui/UIElement.h"
-#include "../gui/Brush.h"
 
-namespace nb{namespace gui{
+namespace nb{
+namespace gui{
 
+class Brush;
 class NB_API Panel : public UIElement
 {
 public:
-	virtual ~Panel();
+	virtual ~Panel() = default;
+
+	Property_rw<shared_ptr<Brush>>		Background;				//±≥æ∞
+	static const DependencyProperty		BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘
 
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);
 
-	Property_rw<shared_ptr<Brush>>	Background;
-	static const DependencyProperty	BackgroundProperty();
-
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
 
 protected:
 	Panel();

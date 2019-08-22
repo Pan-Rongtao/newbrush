@@ -14,7 +14,7 @@ nb::gui::Polygon::Polygon()
 
 const DependencyProperty Polygon::PointsProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points", {});
+	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points");
 	return dp;
 }
 

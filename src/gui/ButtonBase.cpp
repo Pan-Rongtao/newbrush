@@ -3,7 +3,7 @@
 using namespace nb::gui;
 
 ButtonBase::ButtonBase()
-	: ClickMode([&](ClickModeE mode) {set(ClickModeProperty(), mode); }, [&]() {return get<ClickModeE>(ClickModeProperty()); })
+	: ClickMode([&](ClickModeE v) {set(ClickModeProperty(), v); }, [&]() {return get<ClickModeE>(ClickModeProperty()); })
 	, IsPressed([&]() {return get<bool>(IsPressedProperty()); })
 {
 }
@@ -15,13 +15,13 @@ bool ButtonBase::isEnableCore()
 
 const DependencyProperty ButtonBase::ClickModeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::release);
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::release);
 	return dp;
 }
 
 const DependencyProperty ButtonBase::IsPressedProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false);
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false);
 	return dp;
 }
 
@@ -51,8 +51,14 @@ void ButtonBase::onMouseLeave()
 
 void ButtonBase::onLeftButtonDown()
 {
+	set(IsPressedProperty(), true);
 }
 
 void ButtonBase::onLeftButtonUp()
 {
+	if (IsPressed())
+	{
+		Click.dispatch({});
+		set(IsPressedProperty(), false);
+	}
 }

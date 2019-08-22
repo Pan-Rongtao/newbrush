@@ -7,6 +7,7 @@
 #include "gles/Program.h"
 #include "gles/Texture2D.h"
 #include "gles/Storage.h"
+#include "gui/ImageSource.h"
 
 using namespace nb;
 using namespace nb::gl;
@@ -17,7 +18,8 @@ Image::Image()
 	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]() {return get<StretchE>(StretchProperty()); })
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(Programs::primitive()));
-	PropertyChanged += [&](const PropertyChangedArg &arg) {
+	PropertyChanged += [&](const PropertyChangedArgs &arg)
+	{
 		if (arg.dp == SourceProperty())
 		{
 			Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
@@ -41,13 +43,13 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 
 const DependencyProperty Image::SourceProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Image, shared_ptr<ImageSource>>("Source", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Image, shared_ptr<ImageSource>>("Source");
 	return dp;
 }
 
 const DependencyProperty Image::StretchProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
+	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
 	return dp;
 }
 

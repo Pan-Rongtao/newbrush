@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 #include <map>
-#include "../core/Def.h"
 #include "../core/Any.h"
 
-namespace nb{ namespace gui{
+namespace nb{
+namespace gui{
 
 class UIElement;
 class DependencyObject;
@@ -26,7 +26,7 @@ public:
 	//注册依赖属性
 	//异常：std::logic_error已经注册过同类型属性
 	template<class ownerType, class propertyType>
-	static DependencyProperty registerDependency(const std::string & name, const propertyType &defaultValue = propertyType())
+	static const DependencyProperty &registerDependency(const std::string & name, const propertyType &defaultValue = propertyType(), bool isSealed = false)
 	{
 		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "registerDependency<ownerType, propertyType> : ownerType must be DependencyObject or it's derived type.");
@@ -41,9 +41,10 @@ public:
 		DependencyProperty dp;
 		dp.m_name = name;
 		dp.m_hash = hs;
+		dp.m_isSealed = isSealed;
 		dp.m_defaultV = defaultValue;
 		g_dependencyProperties[hs] = dp;
-		return dp;
+		return g_dependencyProperties[hs];
 	}
 
 	//名字
@@ -59,6 +60,7 @@ public:
 	Any defaultValue() const;
 
 	bool operator == (const DependencyProperty &other) const;
+	bool operator != (const DependencyProperty &other) const;
 
 private:
 	std::string	m_name;

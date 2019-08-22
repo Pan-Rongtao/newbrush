@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../core/Property.h"
+#include "../gui/Property.h"
 #include "../core/TimeSpan.h"
 #include "../core/Timer.h"
 #include "RepeatBehavior.h"

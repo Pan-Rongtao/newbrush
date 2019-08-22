@@ -16,25 +16,25 @@ Line::Line()
 
 const DependencyProperty Line::X1Property()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
 	return dp;
 }
 
 const DependencyProperty Line::X2Property()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
 	return dp;
 }
 
 const DependencyProperty Line::Y1Property()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
 	return dp;
 }
 
 const DependencyProperty Line::Y2Property()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
 	return dp;
 }
 

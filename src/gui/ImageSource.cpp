@@ -18,18 +18,18 @@ ImageSource::ImageSource(const std::string & uri)
 
 }
 
-float nb::gui::ImageSource::width() const
+float ImageSource::width() const
 {
 	return (float)Bm()->width();
 }
 
-float nb::gui::ImageSource::heigth() const
+float ImageSource::heigth() const
 {
 	return (float)Bm()->height();
 }
 
 const DependencyProperty ImageSource::BmProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("RowDefinitions", nullptr);
+	static auto dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("Bm");
 	return dp;
 }

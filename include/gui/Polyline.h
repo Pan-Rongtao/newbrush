@@ -2,7 +2,8 @@
 #include "../gui/Shape.h"
 #include "../core/Point.h"
 
-namespace nb { namespace gl {
+namespace nb{
+namespace gl {
 	class Polyline;
 }}
 
@@ -15,9 +16,8 @@ public:
 	Polyline();
 	virtual ~Polyline() = default;
 
-	Property_rw<std::vector<Point>>	Points;
-
-	static const DependencyProperty				PointsProperty();
+	Property_rw<std::vector<Point>>		Points;				//点集合
+	static const DependencyProperty		PointsProperty();	//点集合的依赖属性
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 

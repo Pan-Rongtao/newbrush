@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../core/Property.h"
+#include "../gui/Property.h"
 #include "../core/TimeSpan.h"
 #include "../core/Easing.h"
 #include "Storyboard.h"
@@ -30,7 +30,7 @@ public:
 
 	Property_rw<std::string>			From;		//起始状态
 	Property_rw<std::string>			To;			//目标状态
-	Property_rw<TimeSpan>			Duration;	//持续时间
+	Property_rw<TimeSpan>				Duration;	//持续时间
 	Property_rw<std::shared_ptr<Storyboard>>	Storyboard;	//故事板
 	//Property_rw<shared_ptr<EasingBase>>	Easing;		//缓动函数
 

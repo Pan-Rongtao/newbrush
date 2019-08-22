@@ -11,26 +11,24 @@ enum class ClickModeE
 	release,//压下和释放按钮时引发click事件
 };
 
-class ButtonBase : ContentControl
+class NB_API ButtonBase : public ContentControl
 {
 public:
 	ButtonBase();
 	virtual ~ButtonBase() = default;
 
-	//重载以返回子类的可用状态
-	virtual bool isEnableCore();
-
-
-	Property_rw<ClickModeE>			ClickMode;		//指定何种模式引发click的发生
-	Property_r<bool>				IsPressed;		//是否处于压下状态
+	Property_rw<ClickModeE>			ClickMode;				//点击模式，指定何种模式引发click的发生
+	Property_r<bool>				IsPressed;				//是否压下
+	static const DependencyProperty	ClickModeProperty();	//点击模式的依赖属性
+	static const DependencyProperty	IsPressedProperty();	//是否压下的依赖属性
 
 	struct ClickArgs {};
-	Event<ClickArgs>				Click;			//点击事件
+	Event<ClickArgs>				Click;					//点击事件
 
-	static const DependencyProperty	ClickModeProperty();
-	static const DependencyProperty	IsPressedProperty();
-
+															
 protected:
+	virtual bool isEnableCore();							//重载以返回子类的可用状态
+
 	virtual void onClick();
 	virtual void onKeyDown();
 	virtual void onKeyUp();

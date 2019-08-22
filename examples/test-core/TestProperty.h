@@ -1,6 +1,6 @@
 #pragma once
 #include "../TestBase.h"
-#include <core/Property.h>
+#include <gui/Property.h>
 #include <core/Size.h>
 
 using namespace nb;
@@ -9,7 +9,7 @@ class TestProperty : public TestBase
 {
 public:
 	TestProperty();
-	virtual void test() override {}
+	virtual void test() override {} 
 /*
 	Property_rw<bool>	IsBool;
 	Property_rw<int>	Integer0;

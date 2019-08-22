@@ -10,11 +10,10 @@ public:
 	explicit ContentControl(std::shared_ptr<UIElement> content = nullptr);
 	virtual ~ContentControl() = default;
 
-	Property_rw<std::shared_ptr<UIElement>>	Content;
-
-	static const DependencyProperty			ContentProperty();
+	Property_rw<std::shared_ptr<UIElement>>	Content;			//内容
+	static const DependencyProperty			ContentProperty();	//内容依赖属性
 	
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

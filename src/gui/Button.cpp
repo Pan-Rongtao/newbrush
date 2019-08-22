@@ -1,5 +1,4 @@
 ﻿#include "gui/Button.h"
-#include "gui/DependencyProperty.h"
 
 using namespace nb::gui;
 
@@ -11,13 +10,13 @@ Button::Button()
 
 const DependencyProperty Button::IsCancelProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsCancel", false);
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsCancel");
 	return dp;
 }
 
 const DependencyProperty Button::IsDefaultProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsDefault", false);
+	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsDefault");
 	return dp;
 }
 
@@ -31,11 +30,9 @@ void Button::onMouseUp()
 
 void Button::onMouseLeftButtonDown()
 {
-	m_pressed = true;
+
 }
 
 void Button::onMouseLeftButtonUp()
 {
-	if (m_pressed)
-		Click.dispatch({});
 }

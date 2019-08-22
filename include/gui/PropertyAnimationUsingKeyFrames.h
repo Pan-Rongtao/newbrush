@@ -16,7 +16,7 @@
 
 #pragma once
 #include <set>
-#include "../core/Property.h"
+#include "../gui/Property.h"
 #include "../core/TimeSpan.h"
 #include "AnimationTimeline.h"
 #include "../core/Easing.h"

@@ -25,22 +25,21 @@
 namespace nb{
 namespace gui{
 
-using std::shared_ptr;
+enum class GridUnitType
+{
+	Auto,
+	Pixcel,
+	Star
+};
+
 ///////class GridLength
 class NB_API GridLength
 {
 public:
-	enum class GridUnitType
-	{
-		Auto,
-		Pixcel,
-		Star
-	};
-
-public:
 	GridLength();
 	GridLength(float value);
-	GridLength(float value, GridUnitType type);
+	GridLength(GridUnitType type, float value);
+	static GridLength automate();
 	bool operator == (const GridLength &other) const;
 	bool operator != (const GridLength &other) const;
 
@@ -49,9 +48,7 @@ public:
 	float value() const;
 
 	GridUnitType gridUnitType() const;
-
-	static GridLength automate();
-
+	
 private:
 	GridUnitType	m_type;
 	float			m_value;
@@ -64,18 +61,15 @@ public:
 	RowDefinition();
 	~RowDefinition() = default;
 
-	Property_rw<GridLength>		Height;			//设定高
-	Property_rw<GridLength>		MinHeight;		//最小高限制
-	Property_rw<GridLength>		MaxHeight;		//最大高限制
-	Property_r<float>			ActualHeight;	//实际高度
-	
-	static DependencyProperty	HeightProperty();
-	static DependencyProperty	MinHeightProperty();
-	static DependencyProperty	MaxHeightProperty();
-	static DependencyProperty	ActualHeightProperty();
+	Property_rw<GridLength>		Height;					//设定高
+	Property_rw<GridLength>		MinHeight;				//最小高
+	Property_rw<GridLength>		MaxHeight;				//最大高
+	Property_r<float>			ActualHeight;			//实际高
+	static DependencyProperty	HeightProperty();		//高的依赖属性
+	static DependencyProperty	MinHeightProperty();	//最小高的依赖属性
+	static DependencyProperty	MaxHeightProperty();	//最大高的依赖属性
+	static DependencyProperty	ActualHeightProperty();	//实际高的依赖属性
 
-private:
-	float	m_actualHeight;
 };
 
 ///////class ColumnDefinition
@@ -85,18 +79,15 @@ public:
 	ColumnDefinition();
 	~ColumnDefinition() = default;
 
-	Property_rw<GridLength>		Width;			//设定宽
-	Property_rw<GridLength>		MinWidth;		//最小宽限制
-	Property_rw<GridLength>		MaxWidth;		//最大宽限制
-	Property_r<float>			ActualWidth;	//实际宽度
+	Property_rw<GridLength>		Width;					//设定宽
+	Property_rw<GridLength>		MinWidth;				//最小宽
+	Property_rw<GridLength>		MaxWidth;				//最大宽
+	Property_r<float>			ActualWidth;			//实际宽
+	static DependencyProperty	WidthProperty();		//设定宽的依赖属性
+	static DependencyProperty	MinWidthProperty();		//最小宽的依赖属性
+	static DependencyProperty	MaxWidthProperty();		//最大宽的依赖属性
+	static DependencyProperty	ActualWidthProperty();	//实际宽的依赖属性
 
-	static DependencyProperty	WidthProperty();
-	static DependencyProperty	MinWidthProperty();
-	static DependencyProperty	MaxWidthProperty();
-	static DependencyProperty	ActualWidthProperty();
-
-private:
-	float	m_actualWidth;
 };
 
 ///////class Grid
@@ -123,11 +114,10 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-	Property_rw<std::vector<shared_ptr<RowDefinition>>>		RowDefinitions;
-	Property_rw<std::vector<shared_ptr<ColumnDefinition>>>	ColumnDefinitions;
-
-	static DependencyProperty	RowDefinitionsProperty();
-	static DependencyProperty	ColumnDefinitionsProperty();
+	Property_rw<std::vector<shared_ptr<RowDefinition>>>		RowDefinitions;				//行定义
+	Property_rw<std::vector<shared_ptr<ColumnDefinition>>>	ColumnDefinitions;			//列定义
+	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
+	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

@@ -12,7 +12,7 @@ public:
 
 	void onBtnMouseLeftButtonDown(const Button::MouseLeftButtonDownArgs &args);
 	void onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs &args);
-	void onBtnClick(const Button::ClickEventArgs &args);
+	void onBtnClick(const Button::ClickArgs &args);
 
 	std::shared_ptr<Button> m_btn;
 	std::shared_ptr<nb::gui::Window> m_window;

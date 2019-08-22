@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "core/Property.h"
+#include "gui/Property.h"
 
 namespace nb{ namespace gui{
 

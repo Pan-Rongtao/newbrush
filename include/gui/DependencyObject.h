@@ -1,7 +1,7 @@
 #pragma once
 #include "../core/Event.h"
 #include "../core/Any.h"
-#include "DependencyProperty.h"
+#include "../gui/DependencyProperty.h"
 
 namespace nb {
 namespace gui{
@@ -10,7 +10,7 @@ class NB_API DependencyObject
 {
 public:
 	template<class T>
-	void set(const DependencyProperty &dp, const T &value)
+	void set(const DependencyProperty &dp, const T &value) &
 	{
 		if (dp.defaultValue().type() != typeid(value))
 			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
@@ -51,8 +51,8 @@ public:
 		return iter == m_propertys->end() ? any_cast<T>(dp.defaultValue()) : any_cast<T>(iter->second.first);
 	}
 
-	struct PropertyChangedArg { DependencyProperty dp; Any value; };
-	Event<PropertyChangedArg>							PropertyChanged;
+	struct PropertyChangedArgs { DependencyProperty dp; Any value; };
+	Event<PropertyChangedArgs>							PropertyChanged;
 
 private:
 	std::shared_ptr<std::map<size_t, std::pair<Any, bool>>>	m_propertys;

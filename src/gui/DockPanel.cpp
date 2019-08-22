@@ -1,5 +1,4 @@
 ﻿#include "gui/DockPanel.h"
-#include "gui/DependencyProperty.h"
 
 using namespace nb;
 using namespace nb::gui;
@@ -23,7 +22,7 @@ DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 
 const DependencyProperty DockPanel::LastChildFillProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false);
+	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill");
 	return dp;
 }
 
@@ -83,25 +82,25 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 			auto w = 0.0f, h = 0.0f;
 			switch (dock)
 			{
-			case nb::gui::DockE::Left:
+			case DockE::Left:
 				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
 				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetLeft(childDesiredSize.width());
 				break;
-			case nb::gui::DockE::Right:
+			case DockE::Right:
 				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
 				childArrageRect = Rect(remainRect.right() - childDesiredSize.width(), remainRect.y(), w, h);
 				remainRect.moveOffsetRight(-childDesiredSize.width());
 				break;
-			case nb::gui::DockE::Top:
+			case DockE::Top:
 				w = remainRect.width();
 				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
 				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetTop(childDesiredSize.height());
 				break;
-			case nb::gui::DockE::Bottom:
+			case DockE::Bottom:
 				w = remainRect.width();
 				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
 				childArrageRect = Rect(remainRect.x(), remainRect.bottom() - childDesiredSize.height(), w, h);

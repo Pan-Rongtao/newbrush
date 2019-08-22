@@ -14,15 +14,15 @@ Rectangle::Rectangle()
 {
 }
 
-const DependencyProperty nb::gui::Rectangle::RadiusXProperty()
+const DependencyProperty Rectangle::RadiusXProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Rectangle::RadiusYProperty()
+const DependencyProperty Rectangle::RadiusYProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY");
 	return dp;
 }
 

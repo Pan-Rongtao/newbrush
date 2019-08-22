@@ -44,7 +44,7 @@ std::string DependencyProperty::name() const
 	return m_name;
 }
 
-size_t nb::gui::DependencyProperty::hash() const
+size_t DependencyProperty::hash() const
 {
 	return m_hash;
 }
@@ -61,5 +61,10 @@ Any DependencyProperty::defaultValue() const
 
 bool DependencyProperty::operator == (const DependencyProperty &other) const
 {
-	return m_hash == other.m_hash;
+	return !operator!=(other);
+}
+
+bool DependencyProperty::operator != (const DependencyProperty &other) const
+{
+	return m_hash != other.m_hash;
 }

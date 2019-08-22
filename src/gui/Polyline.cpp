@@ -13,7 +13,7 @@ nb::gui::Polyline::Polyline()
 
 const DependencyProperty nb::gui::Polyline::PointsProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {});
+	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points");
 	return dp;
 }
 

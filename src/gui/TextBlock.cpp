@@ -38,7 +38,7 @@ TextBlock::TextBlock(const std::string & text)
 	Renderer()->setModel(m_glyphBunch);
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::glpy()));
 	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Font(), L'a')->texureId));
-	PropertyChanged += [&](const PropertyChangedArg &arg) {
+	PropertyChanged += [&](const PropertyChangedArgs &arg) {
 		auto c = any_cast<Color>(arg.value);
 		Renderer()->storage()->set("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	};

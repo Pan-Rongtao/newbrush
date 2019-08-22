@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../core/Property.h"
+#include "../gui/Property.h"
 #include "../core/Event.h"
 #include "../gui/ContentControl.h"
 #include "../gles/Context.h"
@@ -31,25 +31,25 @@ public:
 	//关闭/销毁窗口
 	void close();
 
-	Property_rw<WindowStateE>					WindowState;
-	Property_rw<WindowStyleE>					WindowStyle;
-	Property_rw<bool>								Topmost;
-	Property_rw<float>								Left;
-	Property_rw<float>								Top;
-	Property_rw<std::string>						Title;
-	Property_rw<shared_ptr<ImageSource>>			Icon;	//未实现，难点
-	Property_rw<shared_ptr<gl::Surface>>			DrawSurface;
+	Property_rw<WindowStateE>					WindowState;			//窗口状态
+	Property_rw<WindowStyleE>					WindowStyle;			//窗口样式
+	Property_rw<bool>							Topmost;				//置顶
+	Property_rw<float>							Left;					//左位置
+	Property_rw<float>							Top;					//顶位置
+	Property_rw<std::string>					Title;					//标题
+	Property_rw<shared_ptr<ImageSource>>		Icon;					//图标（未实现，难点）
+	Property_rw<shared_ptr<gl::Surface>>		DrawSurface;			//
 
-	static const DependencyProperty					WindowStateProperty();
-	static const DependencyProperty					WindowStyleProperty();
-	static const DependencyProperty					TopmostProperty();
-	static const DependencyProperty					LeftProperty();
-	static const DependencyProperty					TopProperty();
-	static const DependencyProperty					TitleProperty();
-	static const DependencyProperty					IconProperty();
-	static const DependencyProperty					DrawSurfaceProperty();
+	static const DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
+	static const DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
+	static const DependencyProperty				TopmostProperty();		//置顶的依赖属性
+	static const DependencyProperty				LeftProperty();			//左位置的依赖属性
+	static const DependencyProperty				TopProperty();			//顶位置的依赖属性
+	static const DependencyProperty				TitleProperty();		//标题的依赖属性
+	static const DependencyProperty				IconProperty();			//图标的依赖属性
+	static const DependencyProperty				DrawSurfaceProperty();	//
 
-	static	shared_ptr<gl::Context>					drawContext;
+	static	shared_ptr<gl::Context>				drawContext;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

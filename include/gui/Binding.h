@@ -1,7 +1,8 @@
 #pragma once
-#include "Property.h"
+#include "../gui/Property.h"
 
-namespace nb{ namespace core{
+namespace nb{
+namespace gui{
 	
 class Binding
 {

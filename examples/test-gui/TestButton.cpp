@@ -61,7 +61,7 @@ void TestButton::onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs & ar
 //	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
 }
 
-void TestButton::onBtnClick(const Button::ClickEventArgs & args)
+void TestButton::onBtnClick(const Button::ClickArgs & args)
 {
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 	printf("onBtnClick\n");

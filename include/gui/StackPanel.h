@@ -25,24 +25,24 @@ public:
 	StackPanel();
 	virtual ~StackPanel() = default;
 
-	Property_rw<OrientationE>			Orientation;
-	Property_r<float>					ExtentWidth;
-	Property_r<float>					ExtentHeight;
-	Property_r<float>					HorizontalOffset;
-	Property_r<float>					VerticalOffset;
-	Property_r<float>					ViewportWidth;
-	Property_r<float>					ViewportHeight;
+	Property_rw<OrientationE>			Orientation;				//方向
+	Property_r<float>					ExtentWidth;				//外部宽
+	Property_r<float>					ExtentHeight;				//外部高
+	Property_r<float>					HorizontalOffset;			//横向偏移量
+	Property_r<float>					VerticalOffset;				//纵向偏移量
+	Property_r<float>					ViewportWidth;				//视口宽
+	Property_r<float>					ViewportHeight;				//视口高
 	//Property_rw<Scrollview>			ScrollOwner;
 	//Property_rw<bool>					CanHorizontallyScroll;
 	//Property_rw<bool>					CanVerticallyScroll;
 
-	static const DependencyProperty		OrientationProperty();
-	static const DependencyProperty		ExtentWidthProperty();
-	static const DependencyProperty		ExtentHeightProperty();
-	static const DependencyProperty		HorizontalOffsetProperty();
-	static const DependencyProperty		VerticalOffsetProperty();
-	static const DependencyProperty		ViewportWidthProperty();
-	static const DependencyProperty		ViewportHeightProperty();
+	static const DependencyProperty		OrientationProperty();		//方向的依赖属性
+	static const DependencyProperty		ExtentWidthProperty();		//外部宽的依赖属性
+	static const DependencyProperty		ExtentHeightProperty();		//外部高的依赖属性
+	static const DependencyProperty		HorizontalOffsetProperty();	//横向偏移量的依赖属性
+	static const DependencyProperty		VerticalOffsetProperty();	//纵向偏移量的依赖属性
+	static const DependencyProperty		ViewportWidthProperty();	//视口宽的依赖属性
+	static const DependencyProperty		ViewportHeightProperty();	//视口高的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

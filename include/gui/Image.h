@@ -11,28 +11,24 @@
 ********************************************************/
 #pragma once
 #include "UIElement.h"
-#include "ImageSource.h"
 #include "Stretch.h"
 
-namespace nb{ namespace gui {
+namespace nb{
+namespace gui{
 
+class ImageSource;
 class NB_API Image : public UIElement
 {
 public:
 	Image();
 	virtual ~Image() = default;
-	Image(const Image &other) = delete;
-	void operator = (const Image &other) = delete;
 
-public:
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	Property_rw<shared_ptr<ImageSource>>	Source;				//源
+	Property_rw<StretchE>					Stretch;			//伸缩方式
+	static const DependencyProperty			SourceProperty();	//源的依赖属性
+	static const DependencyProperty			StretchProperty();	//伸缩方式的依赖属性
 
-	Property_rw<shared_ptr<ImageSource>>	Source;
-	Property_rw<StretchE>					Stretch;
-
-	static const DependencyProperty			SourceProperty();
-	static const DependencyProperty			StretchProperty();
-
+	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

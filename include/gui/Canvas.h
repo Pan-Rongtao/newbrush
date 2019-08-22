@@ -18,7 +18,8 @@
 #include "../gui/Panel.h"
 #include "../core/Size.h"
 
-namespace nb{ namespace gui {
+namespace nb{
+namespace gui{
 
 class NB_API Canvas : public Panel
 {

@@ -12,13 +12,13 @@
 **	
 ********************************************************/
 #pragma once
-#include "../core/Property.h"
 #include "../core/Color.h"
+#include "../gui/Property.h"
 #include "../gui/ImageSource.h"
 #include "../gui/DependencyObject.h"
 
 namespace nb{
-namespace gui {
+namespace gui{
 
 //class Brush
 class NB_API Brush : public DependencyObject
@@ -28,8 +28,8 @@ protected:
 	Brush(float opacity);
 	virtual ~Brush() = default;
 
-	static const DependencyProperty	OpacityProperty();
-	Property_rw<float>				Opacity;
+	Property_rw<float>				Opacity;			//不透明度
+	static const DependencyProperty	OpacityProperty();	//不透明度依赖属性
 
 private:
 	Brush(const Brush &other) = delete;
@@ -44,8 +44,8 @@ public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const nb::Color &color);
 
-	static const DependencyProperty	ColorProperty();
-	Property_rw<nb::Color>	Color;
+	Property_rw<nb::Color>	Color;						//颜色
+	static const DependencyProperty	ColorProperty();	//颜色依赖属性
 };
 
 //class ImageBrush
@@ -53,10 +53,10 @@ class NB_API ImageBrush : public Brush
 {
 public:
 	ImageBrush();
-	explicit ImageBrush(const std::shared_ptr<ImageSource> &imgSource);
+	explicit ImageBrush(std::shared_ptr<ImageSource> imgSource);
 
-	static const DependencyProperty				SourceProperty();
-	Property_rw<std::shared_ptr<ImageSource>>	Source;
+	Property_rw<std::shared_ptr<ImageSource>>	Source;				//源
+	static const DependencyProperty				SourceProperty();	//源依赖属性
 };
 
 }}

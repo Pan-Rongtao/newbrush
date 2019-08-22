@@ -8,8 +8,10 @@ using namespace nb::gui;
 ContentControl::ContentControl(std::shared_ptr<UIElement> content)
 	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]() {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArg &arg) {
-		if (arg.dp == ContentControl::ContentProperty()) {
+	PropertyChanged += [&](const PropertyChangedArgs &arg) 
+	{
+		if (arg.dp == ContentControl::ContentProperty()) 
+		{
 			auto content = any_cast<std::shared_ptr<UIElement>>(arg.value);
 			if (childCount() == 0)	addChild(content);
 			else					m_children[0] = content;
@@ -19,7 +21,7 @@ ContentControl::ContentControl(std::shared_ptr<UIElement> content)
 
 const DependencyProperty ContentControl::ContentProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content", nullptr);
+	static auto dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content");
 	return dp;
 }
 

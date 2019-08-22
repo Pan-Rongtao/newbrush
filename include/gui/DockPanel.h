@@ -1,7 +1,8 @@
 #pragma once
 #include "../gui/Panel.h"
 
-namespace nb{ namespace gui{
+namespace nb{
+namespace gui{
 
 enum class DockE
 {
@@ -22,9 +23,8 @@ public:
 	void setDock(std::shared_ptr<UIElement> element, DockE dock);
 	DockE getDock(std::shared_ptr<UIElement> element);
 
-	Property_rw<bool>				LastChildFill;
-
-	static const DependencyProperty	LastChildFillProperty();
+	Property_rw<bool>				LastChildFill;				//Ä©ÔªËØÌîÂú
+	static const DependencyProperty	LastChildFillProperty();	//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

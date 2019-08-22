@@ -7,7 +7,7 @@ class NB_API Slider : public RangeBase
 {
 public:
 	Slider();
-	virtual ~Slider();
+	virtual ~Slider() = default;
 
 public:
 	Property_rw<int>				Delay;

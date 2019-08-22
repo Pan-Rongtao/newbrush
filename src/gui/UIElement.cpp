@@ -32,121 +32,121 @@ UIElement::UIElement()
 
 const DependencyProperty UIElement::VisibilityProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible);
 	return dp;
 }
 
 const DependencyProperty UIElement::OpacityProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f);
 	return dp;
 }
 
 const DependencyProperty UIElement::FocusableProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true);
+	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true);
 	return dp;
 }
 
 const DependencyProperty UIElement::WidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN);
 	return dp;
 }
 
 const DependencyProperty UIElement::HeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN);
 	return dp;
 }
 
 const DependencyProperty UIElement::MinWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f);
 	return dp;
 }
 
 const DependencyProperty UIElement::MinHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f);
 	return dp;
 }
 
 const DependencyProperty UIElement::MaxWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max());
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max());
 	return dp;
 }
 
 const DependencyProperty UIElement::MaxHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max());
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max());
 	return dp;
 }
 
 const DependencyProperty UIElement::DesiredSizeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize", Size(0.0f, 0.0f));
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize");
 	return dp;
 }
 
 const DependencyProperty UIElement::ActualSizeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize", Size(0.0f, 0.0f));
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize");
 	return dp;
 }
 
 const DependencyProperty UIElement::RenderSizeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize", Size(0.0f, 0.0f));
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize");
 	return dp;
 }
 
 const DependencyProperty UIElement::OffsetProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Point>("Offset", Point(0.0f, 0.0f));
+	static auto dp = DependencyProperty::registerDependency<UIElement, Point>("Offset");
 	return dp;
 }
 
 const DependencyProperty UIElement::MarginProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness(0.0f));
+	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin");
 	return dp;
 }
 
 const DependencyProperty UIElement::HorizontalAlignmentProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch);
+	static auto dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch);
 	return dp;
 }
 
 const DependencyProperty UIElement::VerticalAlignmentProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch);
 	return dp;
 }
 
 const DependencyProperty UIElement::FlowDirectionProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight);
+	static auto dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight);
 	return dp;
 }
 
 const DependencyProperty UIElement::RendererProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer", std::make_shared<RenderObject>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer", std::make_shared<RenderObject>());
 	return dp;
 }
 
 const DependencyProperty UIElement::StyleProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<Style>>("Style", std::make_shared<Style>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<Style>>("Style", std::make_shared<Style>());
 	return dp;
 }
 
 const DependencyProperty UIElement::StateMachineProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<UIElement, shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
 	return dp;
 }
 
@@ -382,7 +382,7 @@ void UIElement::onMouseWheel(int delta)
 {
 }
 
-void UIElement::onPropertyChanged(const PropertyChangedArg & args)
+void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 {
 	if (args.dp == UIElement::WidthProperty() || args.dp == UIElement::HeightProperty())
 	{

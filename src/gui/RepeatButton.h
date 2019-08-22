@@ -10,7 +10,6 @@ public:
 	RepeatButton();
 	virtual ~RepeatButton();
 
-public:
 	Property_rw<int>		Delay;
 	Property_rw<int>		Interval;
 	

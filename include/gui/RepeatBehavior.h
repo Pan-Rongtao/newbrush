@@ -1,10 +1,10 @@
 #pragma once
-#include "../core/Property.h"
+#include "../gui/Property.h"
 #include "../core/TimeSpan.h"
-#include "../gui/DependencyProperty.h"
 #include "../gui/DependencyObject.h"
 
-namespace nb{namespace gui{
+namespace nb{
+namespace gui{
 
 class NB_API RepeatBehavior : public DependencyObject
 {
@@ -18,11 +18,10 @@ public:
 	bool operator ==(const RepeatBehavior &other) const;
 	bool operator !=(const RepeatBehavior &other) const;
 
-	Property_r<int>			Count;
-	Property_r<TimeSpan>	Duration;
-
-	static const DependencyProperty CountProperty();
-	static const DependencyProperty DurationProperty();
+	Property_r<int>					Count;				//重复次数
+	Property_r<TimeSpan>			Duration;			//持续时间
+	static const DependencyProperty CountProperty();	//重复次数的依赖属性
+	static const DependencyProperty DurationProperty();	//持续时间的依赖属性
 
 };
 

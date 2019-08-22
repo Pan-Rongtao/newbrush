@@ -12,10 +12,6 @@ Panel::Panel()
 {
 }
 
-Panel::~Panel()
-{
-}
-
 void Panel::setZIndex(std::shared_ptr<UIElement> element, int index)
 {
 }
@@ -27,7 +23,7 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 
 const DependencyProperty Panel::BackgroundProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Panel, shared_ptr<Brush>>("Background", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Panel, shared_ptr<Brush>>("Background");
 	return dp;
 }
 

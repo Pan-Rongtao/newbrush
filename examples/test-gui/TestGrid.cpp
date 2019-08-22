@@ -18,9 +18,9 @@ void TestGrid::test()
 	rowdef0->Height = GridLength::automate();
 	auto rowdef1 = std::make_shared<RowDefinition>();
 	//rowdef1->Height = 200;
-	rowdef1->Height = GridLength(2, GridLength::GridUnitType::Star);
+	rowdef1->Height = GridLength(GridUnitType::Star, 2);
 	auto rowdef2 = std::make_shared<RowDefinition>();
-	rowdef2->Height = GridLength(3, GridLength::GridUnitType::Star);
+	rowdef2->Height = GridLength(GridUnitType::Star, 3);
 	grid->RowDefinitions().push_back(rowdef0);
 	grid->RowDefinitions().push_back(rowdef1);
 	grid->RowDefinitions().push_back(rowdef2);

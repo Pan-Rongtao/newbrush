@@ -11,16 +11,12 @@ Slider::Slider()
 {
 }
 
-Slider::~Slider()
-{
-}
-
-Size nb::gui::Slider::measureOverride(const Size & availableSize)
+Size Slider::measureOverride(const Size & availableSize)
 {
 	return Size();
 }
 
-Size nb::gui::Slider::arrangeOverride(const Size & finalSize)
+Size Slider::arrangeOverride(const Size & finalSize)
 {
 	return Size();
 }

@@ -15,36 +15,36 @@ Shape::Shape()
 
 const DependencyProperty Shape::FillProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Fill", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Fill");
 	return dp;
 }
 
 const DependencyProperty Shape::StretchProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, StretchE>("Stretch", StretchE::Fill);
+	static auto dp = DependencyProperty::registerDependency<Shape, StretchE>("Stretch");
 	return dp;
 }
 
 const DependencyProperty Shape::StrokeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Stroke", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Stroke");
 	return dp;
 }
 
 const DependencyProperty Shape::StrokeDashCapProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeDashCap", PenLineCapE::Flat);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeDashCap", PenLineCapE::Flat);
 	return dp;
 }
 
 const DependencyProperty Shape::StrokeLineJoinProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, PenLineJoinE>("StrokeLineJoin", PenLineJoinE::Beval);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineJoinE>("StrokeLineJoin", PenLineJoinE::Beval);
 	return dp;
 }
 
 const DependencyProperty Shape::StrokeThicknessProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Shape, Thickness>("StrokeThickness", Thickness());
+	static auto dp = DependencyProperty::registerDependency<Shape, Thickness>("StrokeThickness");
 	return dp;
 }

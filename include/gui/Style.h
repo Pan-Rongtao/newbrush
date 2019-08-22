@@ -2,7 +2,7 @@
 #include <vector>
 #include "../core/Def.h"
 #include "../core/Any.h"
-#include "../core/Property.h"
+#include "../gui/Property.h"
 
 namespace nb {
 namespace gui {

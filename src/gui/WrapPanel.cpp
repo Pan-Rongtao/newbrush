@@ -13,19 +13,19 @@ WrapPanel::WrapPanel()
 
 const DependencyProperty WrapPanel::OrientationProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Visibility", OrientationE::Horizontal);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Visibility", OrientationE::Horizontal);
 	return dp;
 }
 
 const DependencyProperty WrapPanel::ItemWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN);
 	return dp;
 }
 
 const DependencyProperty WrapPanel::ItemHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN);
 	return dp;
 }
 

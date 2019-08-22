@@ -11,31 +11,26 @@
 **	
 ********************************************************/
 #pragma once
-#include "../core/Property.h"
-#include "../media/Bitmap.h"
+#include "../gui/Property.h"
 #include "../gui/DependencyObject.h"
-#include "../gui/DependencyProperty.h"
 
-namespace nb{ namespace gui {
+namespace nb{
+class Bitmap;
+
+namespace gui{
 
 class NB_API ImageSource : public DependencyObject
 {
 public:
 	ImageSource();
 	ImageSource(const std::string &uri);
-	ImageSource(const ImageSource &other) = delete;
-	void operator = (const ImageSource &other) = delete;
 
-public:
 	float width() const;
 	float heigth() const;
 
-	Property_rw<std::shared_ptr<Bitmap>> 	Bm;
-
-	static const DependencyProperty BmProperty();
-
-private:
-
+	Property_rw<std::shared_ptr<Bitmap>> 	Bm;				//位图
+	static const DependencyProperty			BmProperty();	//位图的依赖属性
+	
 };
 
 }}
