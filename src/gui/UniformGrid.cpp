@@ -10,19 +10,19 @@ UniformGrid::UniformGrid()
 {
 }
 
-const DependencyProperty UniformGrid::RowsProperty()
+DependencyProperty UniformGrid::RowsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Rows", -1);
 	return dp;
 }
 
-const DependencyProperty UniformGrid::ColumnsProperty()
+DependencyProperty UniformGrid::ColumnsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Columns", -1);
 	return dp;
 }
 
-const DependencyProperty UniformGrid::FirstColumnProperty()
+DependencyProperty UniformGrid::FirstColumnProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("FirstColumn", -1);
 	return dp;

@@ -15,49 +15,49 @@ Control::Control()
 {
 }
 
-const DependencyProperty Control::BackgroundProperty()
+DependencyProperty Control::BackgroundProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("Background");
 	return dp;
 }
 
-const DependencyProperty Control::BorderBrushProperty()
+DependencyProperty Control::BorderBrushProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("BorderBrush");
 	return dp;
 }
 
-const DependencyProperty Control::BorderThicknessProperty()
+DependencyProperty Control::BorderThicknessProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("BorderThickness");
 	return dp;
 }
 
-const DependencyProperty Control::PaddingProperty()
+DependencyProperty Control::PaddingProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("Padding");
 	return dp;
 }
 
-const DependencyProperty Control::HorizontalContentAlignmentProperty()
+DependencyProperty Control::HorizontalContentAlignmentProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, HorizontalAlignmentE>("HorizontalContentAlignment", HorizontalAlignmentE::Stretch);
 	return dp;
 }
 
-const DependencyProperty Control::VerticalContentAlignmentProperty()
+DependencyProperty Control::VerticalContentAlignmentProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, VerticalAlignmentE>("VerticalContentAlignment", VerticalAlignmentE::Stretch);
 	return dp;
 }
 
-const DependencyProperty Control::TabIndexProperty()
+DependencyProperty Control::TabIndexProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, int>("TabIndex", -1);
 	return dp;
 }
 
-const DependencyProperty Control::TemplateProperty()
+DependencyProperty Control::TemplateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<ControlTemplate>>("Template");
 	return dp;

@@ -86,16 +86,16 @@ void TestGrid::test()
 	grid->setColumn(es0, 2);
 
 
-	doubleAni.From = 800;
-	doubleAni.To = 2000;
-	doubleAni.Easing = std::make_shared<ElasticEase>();
-	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
-	doubleAni.Duration = TimeSpan::fromSeconds(5);
-//	doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
-//	doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
-//	doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
-//	doubleAni.TargetProperty = &m_window->Width;
-//	doubleAni.begin();
+	//doubleAni.From = 800;
+	//doubleAni.To = 2000;
+	//doubleAni.Easing = std::make_shared<ElasticEase>();
+	//doubleAni.BeginTime = TimeSpan::fromSeconds(1);
+	//doubleAni.Duration = TimeSpan::fromSeconds(5);
+	//doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
+	//doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
+	//doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
+	//doubleAni.TargetProperty = &m_window->Width;
+	//doubleAni.begin();
 
 	m_window->Content = grid;
 }

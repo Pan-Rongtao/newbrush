@@ -13,13 +13,13 @@ bool ButtonBase::isEnableCore()
 	return true;
 }
 
-const DependencyProperty ButtonBase::ClickModeProperty()
+DependencyProperty ButtonBase::ClickModeProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::release);
 	return dp;
 }
 
-const DependencyProperty ButtonBase::IsPressedProperty()
+DependencyProperty ButtonBase::IsPressedProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false);
 	return dp;

@@ -28,7 +28,7 @@ float ImageSource::heigth() const
 	return (float)Bm()->height();
 }
 
-const DependencyProperty ImageSource::BmProperty()
+DependencyProperty ImageSource::BmProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("Bm");
 	return dp;

@@ -6,6 +6,8 @@
 namespace nb {
 namespace gui{
 
+using std::shared_ptr;
+
 class NB_API DependencyObject
 {
 public:
@@ -24,9 +26,9 @@ public:
 		const T &defaultV = any_cast<T>(dp.defaultValue());
 		if (iter == m_propertys->end())
 		{
+			m_propertys->insert({ dp.hash(),{ value, false } });
 			if (value != defaultV)
 			{
-				m_propertys->insert({ dp.hash(),{ value, false } });
 				PropertyChanged.dispatch({ dp, value });
 			}
 		}

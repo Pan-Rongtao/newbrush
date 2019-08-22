@@ -5,7 +5,7 @@
 
 void f(const DependencyProperty &dp)
 {
-
+	 
 }
 
 void TestButton::test()

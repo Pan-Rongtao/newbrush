@@ -11,7 +11,7 @@ nb::gui::Polyline::Polyline()
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 }
 
-const DependencyProperty nb::gui::Polyline::PointsProperty()
+DependencyProperty nb::gui::Polyline::PointsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points");
 	return dp;

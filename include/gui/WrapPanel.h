@@ -26,13 +26,12 @@ public:
 	WrapPanel();
 	virtual ~WrapPanel() = default;
 
-	Property_rw<OrientationE>			Orientation;			//方向
-	Property_rw<float>					ItemWidth;				//项宽
-	Property_rw<float>					ItemHeight;				//项高
-
-	static const DependencyProperty		OrientationProperty();	//方向的依赖属性
-	static const DependencyProperty		ItemWidthProperty();	//项宽的依赖属性
-	static const DependencyProperty		ItemHeightProperty();	//项高的依赖属性
+	Property_rw<OrientationE>	Orientation;			//方向
+	Property_rw<float>			ItemWidth;				//项宽
+	Property_rw<float>			ItemHeight;				//项高
+	static DependencyProperty	OrientationProperty();	//方向的依赖属性
+	static DependencyProperty	ItemWidthProperty();	//项宽的依赖属性
+	static DependencyProperty	ItemHeightProperty();	//项高的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

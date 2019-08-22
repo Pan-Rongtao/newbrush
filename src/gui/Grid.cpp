@@ -124,6 +124,8 @@ Grid::Grid()
 	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]() {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
 	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]() {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
 {
+	RowDefinitions = {};
+	ColumnDefinitions = {};
 }
 
 DependencyProperty Grid::RowDefinitionsProperty()

@@ -8,15 +8,15 @@ Button::Button()
 {
 }
 
-const DependencyProperty Button::IsCancelProperty()
+DependencyProperty Button::IsCancelProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsCancel");
+	static auto dp = DependencyProperty::registerDependency<Button, bool>("IsCancel");
 	return dp;
 }
 
-const DependencyProperty Button::IsDefaultProperty()
+DependencyProperty Button::IsDefaultProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<Button, bool>("IsDefault");
+	static auto dp = DependencyProperty::registerDependency<Button, bool>("IsDefault");
 	return dp;
 }
 

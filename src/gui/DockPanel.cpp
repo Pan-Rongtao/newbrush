@@ -20,7 +20,7 @@ DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 	return v.empty() ? DockE::Left : any_cast<DockE>(v);
 }
 
-const DependencyProperty DockPanel::LastChildFillProperty()
+DependencyProperty DockPanel::LastChildFillProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill");
 	return dp;

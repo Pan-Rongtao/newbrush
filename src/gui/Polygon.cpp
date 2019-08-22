@@ -12,7 +12,7 @@ nb::gui::Polygon::Polygon()
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 }
 
-const DependencyProperty Polygon::PointsProperty()
+DependencyProperty Polygon::PointsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points");
 	return dp;

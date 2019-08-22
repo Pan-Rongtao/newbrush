@@ -40,13 +40,13 @@ bool RepeatBehavior::operator!=(const RepeatBehavior & other) const
 	return false;// m_count != other.m_count || m_duration != other.m_duration || m_hasCount != other.m_hasCount || m_hasDuration != other.m_hasDuration;
 }
 
-const DependencyProperty RepeatBehavior::CountProperty()
+DependencyProperty RepeatBehavior::CountProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, int>("Count");
 	return dp;
 }
 
-const DependencyProperty RepeatBehavior::DurationProperty()
+DependencyProperty RepeatBehavior::DurationProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, TimeSpan>("Duration");
 	return dp;

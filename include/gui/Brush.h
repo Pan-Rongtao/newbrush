@@ -28,8 +28,8 @@ protected:
 	Brush(float opacity);
 	virtual ~Brush() = default;
 
-	Property_rw<float>				Opacity;			//不透明度
-	static const DependencyProperty	OpacityProperty();	//不透明度依赖属性
+	Property_rw<float>			Opacity;			//不透明度
+	static DependencyProperty	OpacityProperty();	//不透明度依赖属性
 
 private:
 	Brush(const Brush &other) = delete;
@@ -44,8 +44,8 @@ public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const nb::Color &color);
 
-	Property_rw<nb::Color>	Color;						//颜色
-	static const DependencyProperty	ColorProperty();	//颜色依赖属性
+	Property_rw<nb::Color>		Color;				//颜色
+	static DependencyProperty	ColorProperty();	//颜色依赖属性
 };
 
 //class ImageBrush
@@ -56,7 +56,7 @@ public:
 	explicit ImageBrush(std::shared_ptr<ImageSource> imgSource);
 
 	Property_rw<std::shared_ptr<ImageSource>>	Source;				//源
-	static const DependencyProperty				SourceProperty();	//源依赖属性
+	static DependencyProperty					SourceProperty();	//源依赖属性
 };
 
 }}

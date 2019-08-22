@@ -14,45 +14,45 @@ StackPanel::StackPanel()
 {
 }
 
-const DependencyProperty StackPanel::OrientationProperty()
+DependencyProperty StackPanel::OrientationProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal);
 	return dp;
 }
 
-const DependencyProperty StackPanel::ExtentWidthProperty()
+DependencyProperty StackPanel::ExtentWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentWidth", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentWidth");
 	return dp;
 }
 
-const DependencyProperty StackPanel::ExtentHeightProperty()
+DependencyProperty StackPanel::ExtentHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentHeight");
 	return dp;
 }
 
-const DependencyProperty StackPanel::HorizontalOffsetProperty()
+DependencyProperty StackPanel::HorizontalOffsetProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("HorizontalOffset", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("HorizontalOffset");
 	return dp;
 }
 
-const DependencyProperty StackPanel::VerticalOffsetProperty()
+DependencyProperty StackPanel::VerticalOffsetProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("VerticalOffset", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("VerticalOffset");
 	return dp;
 }
 
-const DependencyProperty StackPanel::ViewportWidthProperty()
+DependencyProperty StackPanel::ViewportWidthProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportWidth", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportWidth");
 	return dp;
 }
 
-const DependencyProperty StackPanel::ViewportHeightProperty()
+DependencyProperty StackPanel::ViewportHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportHeight");
 	return dp;
 }
 

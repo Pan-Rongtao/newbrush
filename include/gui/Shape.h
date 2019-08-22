@@ -23,19 +23,19 @@ enum class PenLineJoinE
 class NB_API Shape : public UIElement
 {
 public:
-	Property_rw<shared_ptr<Brush>>		Fill;						//填充
-	Property_rw<StretchE>				Stretch;					//伸缩方式
-	Property_rw<shared_ptr<Brush>>		Stroke;						//笔画
-	Property_rw<PenLineCapE>			StrokeDashCap;				//笔画帽
-	Property_rw<PenLineJoinE>			StrokeLineJoin;				//
-	Property_rw<Thickness>				StrokeThickness;			//画笔厚度
+	Property_rw<shared_ptr<Brush>>	Fill;						//填充
+	Property_rw<StretchE>			Stretch;					//伸缩方式
+	Property_rw<shared_ptr<Brush>>	Stroke;						//笔画
+	Property_rw<PenLineCapE>		StrokeDashCap;				//笔画帽
+	Property_rw<PenLineJoinE>		StrokeLineJoin;				//
+	Property_rw<Thickness>			StrokeThickness;			//画笔厚度
 	
-	static const DependencyProperty		FillProperty();				//填充的依赖属性
-	static const DependencyProperty		StretchProperty();			//伸缩方式的依赖属性
-	static const DependencyProperty		StrokeProperty();			//笔画的依赖属性
-	static const DependencyProperty		StrokeDashCapProperty();	//笔画帽的依赖属性
-	static const DependencyProperty		StrokeLineJoinProperty();	//
-	static const DependencyProperty		StrokeThicknessProperty();	//笔画厚度的依赖属性
+	static DependencyProperty		FillProperty();				//填充的依赖属性
+	static DependencyProperty		StretchProperty();			//伸缩方式的依赖属性
+	static DependencyProperty		StrokeProperty();			//笔画的依赖属性
+	static DependencyProperty		StrokeDashCapProperty();	//笔画帽的依赖属性
+	static DependencyProperty		StrokeLineJoinProperty();	//
+	static DependencyProperty		StrokeThicknessProperty();	//笔画厚度的依赖属性
 
 protected:
 	Shape();

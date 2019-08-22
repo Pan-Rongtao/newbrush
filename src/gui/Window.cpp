@@ -244,49 +244,49 @@ void nb::gui::Window::onIconChanged(const std::shared_ptr<ImageSource>& _old, co
 
 }
 
-const DependencyProperty nb::gui::Window::WindowStateProperty()
+DependencyProperty nb::gui::Window::WindowStateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal);
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::WindowStyleProperty()
+DependencyProperty nb::gui::Window::WindowStyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox);
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::TopmostProperty()
+DependencyProperty nb::gui::Window::TopmostProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::LeftProperty()
+DependencyProperty nb::gui::Window::LeftProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Left");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::TopProperty()
+DependencyProperty nb::gui::Window::TopProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Top");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::TitleProperty()
+DependencyProperty nb::gui::Window::TitleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::IconProperty()
+DependencyProperty nb::gui::Window::IconProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon");
 	return dp;
 }
 
-const DependencyProperty nb::gui::Window::DrawSurfaceProperty()
+DependencyProperty nb::gui::Window::DrawSurfaceProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<gl::Surface>>("DrawSurface");
 	return dp;

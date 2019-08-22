@@ -21,7 +21,7 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 	return 0;
 }
 
-const DependencyProperty Panel::BackgroundProperty()
+DependencyProperty Panel::BackgroundProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Panel, shared_ptr<Brush>>("Background");
 	return dp;

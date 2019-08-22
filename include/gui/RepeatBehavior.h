@@ -18,10 +18,10 @@ public:
 	bool operator ==(const RepeatBehavior &other) const;
 	bool operator !=(const RepeatBehavior &other) const;
 
-	Property_r<int>					Count;				//重复次数
-	Property_r<TimeSpan>			Duration;			//持续时间
-	static const DependencyProperty CountProperty();	//重复次数的依赖属性
-	static const DependencyProperty DurationProperty();	//持续时间的依赖属性
+	Property_r<int>				Count;				//重复次数
+	Property_r<TimeSpan>		Duration;			//持续时间
+	static DependencyProperty	CountProperty();	//重复次数的依赖属性
+	static DependencyProperty	DurationProperty();	//持续时间的依赖属性
 
 };
 

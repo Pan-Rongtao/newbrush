@@ -15,7 +15,7 @@ Brush::Brush(float opacity)
 	Opacity = opacity;
 }
 
-const DependencyProperty Brush::OpacityProperty()
+DependencyProperty Brush::OpacityProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Brush, float>("Opacity", 1.0f);
 	return dp;
@@ -33,7 +33,7 @@ SolidColorBrush::SolidColorBrush(const nb::Color &color)
 	Color = color;
 }
 
-const DependencyProperty SolidColorBrush::ColorProperty()
+DependencyProperty SolidColorBrush::ColorProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Brush, nb::Color>("Color");
 	return dp;
@@ -51,7 +51,7 @@ ImageBrush::ImageBrush(std::shared_ptr<ImageSource> imgSource)
 	Source = imgSource;
 }
 
-const DependencyProperty ImageBrush::SourceProperty()
+DependencyProperty ImageBrush::SourceProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Brush, std::shared_ptr<ImageSource>>("Source");
 	return dp;

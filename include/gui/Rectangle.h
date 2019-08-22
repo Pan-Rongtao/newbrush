@@ -10,10 +10,10 @@ public:
 	Rectangle();
 	virtual ~Rectangle() = default;
 
-	Property_rw<float>					RadiusX;			//X弧度
-	Property_rw<float>					RadiusY;			//Y弧度
-	static const DependencyProperty		RadiusXProperty();	//X弧度的依赖属性
-	static const DependencyProperty		RadiusYProperty();	//Y弧度的依赖属性
+	Property_rw<float>			RadiusX;			//X弧度
+	Property_rw<float>			RadiusY;			//Y弧度
+	static DependencyProperty	RadiusXProperty();	//X弧度的依赖属性
+	static DependencyProperty	RadiusYProperty();	//Y弧度的依赖属性
 
 	virtual void onRender(std::shared_ptr<gl::Context> drawContext);
 

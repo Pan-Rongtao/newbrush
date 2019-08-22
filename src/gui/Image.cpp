@@ -41,13 +41,13 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	drawContext->queue(Renderer());
 }
 
-const DependencyProperty Image::SourceProperty()
+DependencyProperty Image::SourceProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Image, shared_ptr<ImageSource>>("Source");
 	return dp;
 }
 
-const DependencyProperty Image::StretchProperty()
+DependencyProperty Image::StretchProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
 	return dp;

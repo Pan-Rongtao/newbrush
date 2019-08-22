@@ -45,81 +45,81 @@ TextBlock::TextBlock(const std::string & text)
 	Renderer()->storage()->set("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
-const DependencyProperty TextBlock::TextProperty()
+DependencyProperty TextBlock::TextProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, std::string>("Text", "");
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::string>("Text");
 	return dp;
 }
 
-const DependencyProperty TextBlock::BackgroundProperty()
+DependencyProperty TextBlock::BackgroundProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<Brush>>("Background", nullptr);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<Brush>>("Background");
 	return dp;
 }
 
-const DependencyProperty TextBlock::FontProperty()
+DependencyProperty TextBlock::FontProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont(Fonts::SimSun));
+	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont(Fonts::SimSun));
 	return dp;
 }
 
-const DependencyProperty TextBlock::FontSizeProperty()
+DependencyProperty TextBlock::FontSizeProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, float>("FontSize", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("FontSize");
 	return dp;
 }
 
-const DependencyProperty TextBlock::FontWeightProperty()
+DependencyProperty TextBlock::FontWeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, int>("FontWeight", 0);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, int>("FontWeight");
 	return dp;
 }
 
-const DependencyProperty TextBlock::ForegroundProperty()
+DependencyProperty TextBlock::ForegroundProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, Color>("Foreground", Color());
+	static auto dp = DependencyProperty::registerDependency<TextBlock, Color>("Foreground");
 	return dp;
 }
 
-const DependencyProperty TextBlock::LineHeightProperty()
+DependencyProperty TextBlock::LineHeightProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, float>("LineHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("LineHeight");
 	return dp;
 }
 
-const DependencyProperty TextBlock::CharSpacingProperty()
+DependencyProperty TextBlock::CharSpacingProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, float>("CharSpacing", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("CharSpacing");
 	return dp;
 }
 
-const DependencyProperty TextBlock::PaddingProperty()
+DependencyProperty TextBlock::PaddingProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, Thickness>("Padding", Thickness());
+	static auto dp = DependencyProperty::registerDependency<TextBlock, Thickness>("Padding");
 	return dp;
 }
 
-const DependencyProperty TextBlock::TextAlignmentProperty()
+DependencyProperty TextBlock::TextAlignmentProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, TextAlignmentE>("TextAlignment", TextAlignmentE::Center);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextAlignmentE>("TextAlignment", TextAlignmentE::Center);
 	return dp;
 }
 
-const DependencyProperty TextBlock::TextTrimmingProperty()
+DependencyProperty TextBlock::TextTrimmingProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, TextTrimmingE>("TextTrimming", TextTrimmingE::None);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextTrimmingE>("TextTrimming", TextTrimmingE::None);
 	return dp;
 }
 
-const DependencyProperty TextBlock::TextWrappingProperty()
+DependencyProperty TextBlock::TextWrappingProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, TextWrappingE>("TextWrapping", TextWrappingE::NoWrap);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextWrappingE>("TextWrapping", TextWrappingE::NoWrap);
 	return dp;
 }
 
-const DependencyProperty TextBlock::TextDecorationProperty()
+DependencyProperty TextBlock::TextDecorationProperty()
 {
-	static const DependencyProperty dp = DependencyProperty::registerDependency<TextBlock, TextDecorationE>("TextDecoration", TextDecorationE::Baseline);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextDecorationE>("TextDecoration", TextDecorationE::Baseline);
 	return dp;
 }
 

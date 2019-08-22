@@ -14,13 +14,13 @@ Rectangle::Rectangle()
 {
 }
 
-const DependencyProperty Rectangle::RadiusXProperty()
+DependencyProperty Rectangle::RadiusXProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX");
 	return dp;
 }
 
-const DependencyProperty Rectangle::RadiusYProperty()
+DependencyProperty Rectangle::RadiusYProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY");
 	return dp;

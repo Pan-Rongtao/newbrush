@@ -25,8 +25,8 @@ public:
 
 	Property_rw<shared_ptr<ImageSource>>	Source;				//源
 	Property_rw<StretchE>					Stretch;			//伸缩方式
-	static const DependencyProperty			SourceProperty();	//源的依赖属性
-	static const DependencyProperty			StretchProperty();	//伸缩方式的依赖属性
+	static DependencyProperty				SourceProperty();	//源的依赖属性
+	static DependencyProperty				StretchProperty();	//伸缩方式的依赖属性
 
 	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
 

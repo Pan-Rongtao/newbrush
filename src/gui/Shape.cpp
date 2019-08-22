@@ -13,37 +13,37 @@ Shape::Shape()
 {
 }
 
-const DependencyProperty Shape::FillProperty()
+DependencyProperty Shape::FillProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Fill");
 	return dp;
 }
 
-const DependencyProperty Shape::StretchProperty()
+DependencyProperty Shape::StretchProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, StretchE>("Stretch");
 	return dp;
 }
 
-const DependencyProperty Shape::StrokeProperty()
+DependencyProperty Shape::StrokeProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Stroke");
 	return dp;
 }
 
-const DependencyProperty Shape::StrokeDashCapProperty()
+DependencyProperty Shape::StrokeDashCapProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeDashCap", PenLineCapE::Flat);
 	return dp;
 }
 
-const DependencyProperty Shape::StrokeLineJoinProperty()
+DependencyProperty Shape::StrokeLineJoinProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, PenLineJoinE>("StrokeLineJoin", PenLineJoinE::Beval);
 	return dp;
 }
 
-const DependencyProperty Shape::StrokeThicknessProperty()
+DependencyProperty Shape::StrokeThicknessProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Shape, Thickness>("StrokeThickness");
 	return dp;

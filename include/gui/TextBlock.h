@@ -56,20 +56,19 @@ public:
 	Property_rw<TextWrappingE>		TextWrapping;	//文本换行
 	Property_rw<TextDecorationE>	TextDecoration;	//文本修饰
 
-
-	static const DependencyProperty		TextProperty();
-	static const DependencyProperty		BackgroundProperty();
-	static const DependencyProperty		FontProperty();
-	static const DependencyProperty		FontSizeProperty();
-	static const DependencyProperty		FontWeightProperty();
-	static const DependencyProperty		ForegroundProperty();
-	static const DependencyProperty		LineHeightProperty();
-	static const DependencyProperty		CharSpacingProperty();
-	static const DependencyProperty		PaddingProperty();
-	static const DependencyProperty		TextAlignmentProperty();
-	static const DependencyProperty		TextTrimmingProperty();
-	static const DependencyProperty		TextWrappingProperty();
-	static const DependencyProperty		TextDecorationProperty();
+	static DependencyProperty		TextProperty();
+	static DependencyProperty		BackgroundProperty();
+	static DependencyProperty		FontProperty();
+	static DependencyProperty		FontSizeProperty();
+	static DependencyProperty		FontWeightProperty();
+	static DependencyProperty		ForegroundProperty();
+	static DependencyProperty		LineHeightProperty();
+	static DependencyProperty		CharSpacingProperty();
+	static DependencyProperty		PaddingProperty();
+	static DependencyProperty		TextAlignmentProperty();
+	static DependencyProperty		TextTrimmingProperty();
+	static DependencyProperty		TextWrappingProperty();
+	static DependencyProperty		TextDecorationProperty();
 
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;

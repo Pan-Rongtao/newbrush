@@ -31,25 +31,24 @@ public:
 	//关闭/销毁窗口
 	void close();
 
-	Property_rw<WindowStateE>					WindowState;			//窗口状态
-	Property_rw<WindowStyleE>					WindowStyle;			//窗口样式
-	Property_rw<bool>							Topmost;				//置顶
-	Property_rw<float>							Left;					//左位置
-	Property_rw<float>							Top;					//顶位置
-	Property_rw<std::string>					Title;					//标题
-	Property_rw<shared_ptr<ImageSource>>		Icon;					//图标（未实现，难点）
-	Property_rw<shared_ptr<gl::Surface>>		DrawSurface;			//
+	Property_rw<WindowStateE>				WindowState;			//窗口状态
+	Property_rw<WindowStyleE>				WindowStyle;			//窗口样式
+	Property_rw<bool>						Topmost;				//置顶
+	Property_rw<float>						Left;					//左位置
+	Property_rw<float>						Top;					//顶位置
+	Property_rw<std::string>				Title;					//标题
+	Property_rw<shared_ptr<ImageSource>>	Icon;					//图标（未实现，难点）
+	Property_rw<shared_ptr<gl::Surface>>	DrawSurface;			//
+	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
+	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
+	static DependencyProperty				TopmostProperty();		//置顶的依赖属性
+	static DependencyProperty				LeftProperty();			//左位置的依赖属性
+	static DependencyProperty				TopProperty();			//顶位置的依赖属性
+	static DependencyProperty				TitleProperty();		//标题的依赖属性
+	static DependencyProperty				IconProperty();			//图标的依赖属性
+	static DependencyProperty				DrawSurfaceProperty();	//
 
-	static const DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
-	static const DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
-	static const DependencyProperty				TopmostProperty();		//置顶的依赖属性
-	static const DependencyProperty				LeftProperty();			//左位置的依赖属性
-	static const DependencyProperty				TopProperty();			//顶位置的依赖属性
-	static const DependencyProperty				TitleProperty();		//标题的依赖属性
-	static const DependencyProperty				IconProperty();			//图标的依赖属性
-	static const DependencyProperty				DrawSurfaceProperty();	//
-
-	static	shared_ptr<gl::Context>				drawContext;
+	static shared_ptr<gl::Context>			drawContext;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

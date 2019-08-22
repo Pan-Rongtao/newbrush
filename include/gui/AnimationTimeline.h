@@ -21,8 +21,8 @@ public:
 	//Property_rw<T>					*TargetProperty;
 	Property_rw<std::shared_ptr<EasingBase>>	Easing;
 
-	static const DependencyProperty	TargetPropertyProperty() { return DependencyProperty; }
-	static const DependencyProperty	EasingProperty() { return DependencyProperty; }
+	static DependencyProperty	TargetPropertyProperty() { return DependencyProperty; }
+	static DependencyProperty	EasingProperty()		{ return DependencyProperty; }
 
 protected:
 	virtual void progressing(float progress) = 0;
