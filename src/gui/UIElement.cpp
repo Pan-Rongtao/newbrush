@@ -6,26 +6,26 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
-	: Visibility([&](VisibilityE v) {set(VisibilityProperty(), v); }, [&]() {return get<VisibilityE>(VisibilityProperty()); })
-	, Opacity([&](float v) {set(OpacityProperty(), v); }, [&]() {return get<float>(OpacityProperty()); })
-	, Focusable([&](bool v) {set(FocusableProperty(), v); }, [&]() {return get<bool>(FocusableProperty()); })
-	, Width([&](float v) {set(WidthProperty(), v); }, [&]() {return get<float>(WidthProperty()); })
-	, Height([&](float v) {set(HeightProperty(), v); }, [&]() {return get<float>(HeightProperty()); })
-	, MinWidth([&](float v) {set(MinWidthProperty(), v); }, [&]() {return get<float>(MinWidthProperty()); })
-	, MinHeight([&](float v) {set(MinHeightProperty(), v); }, [&]() {return get<float>(MinHeightProperty()); })
-	, MaxWidth([&](float v) {set(MaxWidthProperty(), v); }, [&]() {return get<float>(MaxWidthProperty()); })
-	, MaxHeight([&](float v) {set(MaxHeightProperty(), v); }, [&]() {return get<float>(MaxHeightProperty()); })
+	: Visibility([&](VisibilityE v) {set(VisibilityProperty(), v); }, [&]()->VisibilityE& {return get<VisibilityE>(VisibilityProperty()); })
+	, Opacity([&](float v) {set(OpacityProperty(), v); }, [&]()->float& {return get<float>(OpacityProperty()); })
+	, Focusable([&](bool v) {set(FocusableProperty(), v); }, [&]()->bool& {return get<bool>(FocusableProperty()); })
+	, Width([&](float v) {set(WidthProperty(), v); }, [&]()->float& {return get<float>(WidthProperty()); })
+	, Height([&](float v) {set(HeightProperty(), v); }, [&]()->float& {return get<float>(HeightProperty()); })
+	, MinWidth([&](float v) {set(MinWidthProperty(), v); }, [&]()->float& {return get<float>(MinWidthProperty()); })
+	, MinHeight([&](float v) {set(MinHeightProperty(), v); }, [&]()->float& {return get<float>(MinHeightProperty()); })
+	, MaxWidth([&](float v) {set(MaxWidthProperty(), v); }, [&]()->float& {return get<float>(MaxWidthProperty()); })
+	, MaxHeight([&](float v) {set(MaxHeightProperty(), v); }, [&]()->float& {return get<float>(MaxHeightProperty()); })
 	, DesiredSize([&]() {return get<Size>(DesiredSizeProperty()); })
 	, ActualSize([&]() {return get<Size>(ActualSizeProperty()); })
-	, RenderSize([&](Size v) {set(RenderSizeProperty(), v); }, [&]() {return get<Size>(RenderSizeProperty()); })
-	, Offset([&](Point v) {set(OffsetProperty(), v); }, [&]() {return get<Point>(OffsetProperty()); })
-	, Margin([&](Thickness v) {set(MarginProperty(), v); }, [&]() {return get<Thickness>(MarginProperty()); })
-	, HorizontalAlignment([&](HorizontalAlignmentE v) {set(HorizontalAlignmentProperty(), v); }, [&]() {return get<HorizontalAlignmentE>(HorizontalAlignmentProperty()); })
-	, VerticalAlignment([&](VerticalAlignmentE v) {set(VerticalAlignmentProperty(), v); }, [&]() {return get<VerticalAlignmentE>(VerticalAlignmentProperty()); })
-	, FlowDirection([&](FlowDirectionE v) {set(FlowDirectionProperty(), v); }, [&]() {return get<FlowDirectionE>(FlowDirectionProperty()); })
+	, RenderSize([&](Size v) {set(RenderSizeProperty(), v); }, [&]()->Size& {return get<Size>(RenderSizeProperty()); })
+	, Offset([&](Point v) {set(OffsetProperty(), v); }, [&]()->Point& {return get<Point>(OffsetProperty()); })
+	, Margin([&](Thickness v) {set(MarginProperty(), v); }, [&]()->Thickness& {return get<Thickness>(MarginProperty()); })
+	, HorizontalAlignment([&](HorizontalAlignmentE v) {set(HorizontalAlignmentProperty(), v); }, [&]()->HorizontalAlignmentE& {return get<HorizontalAlignmentE>(HorizontalAlignmentProperty()); })
+	, VerticalAlignment([&](VerticalAlignmentE v) {set(VerticalAlignmentProperty(), v); }, [&]()->VerticalAlignmentE& {return get<VerticalAlignmentE>(VerticalAlignmentProperty()); })
+	, FlowDirection([&](FlowDirectionE v) {set(FlowDirectionProperty(), v); }, [&]()->FlowDirectionE& {return get<FlowDirectionE>(FlowDirectionProperty()); })
 	, Renderer([&]() {return get<shared_ptr<RenderObject>>(RendererProperty()); })
-	, style([&](shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]() {return get<shared_ptr<Style>>(StyleProperty()); })
-	, StateMachine([&](shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]() {return get<shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
+	, style([&](shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]()->shared_ptr<Style>& {return get<shared_ptr<Style>>(StyleProperty()); })
+	, StateMachine([&](shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]()->shared_ptr<VisualStateMachine>& {return get<shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
 {
 	set(RendererProperty(), std::make_shared<RenderObject>());
 	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
@@ -87,31 +87,31 @@ DependencyProperty UIElement::MaxHeightProperty()
 
 DependencyProperty UIElement::DesiredSizeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize");
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize", Size());
 	return dp;
 }
 
 DependencyProperty UIElement::ActualSizeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize");
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("ActualSize", Size());
 	return dp;
 }
 
 DependencyProperty UIElement::RenderSizeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize");
+	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize", Size());
 	return dp;
 }
 
 DependencyProperty UIElement::OffsetProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Point>("Offset");
+	static auto dp = DependencyProperty::registerDependency<UIElement, Point>("Offset", Point());
 	return dp;
 }
 
 DependencyProperty UIElement::MarginProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin");
+	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness());
 	return dp;
 }
 
@@ -135,7 +135,7 @@ DependencyProperty UIElement::FlowDirectionProperty()
 
 DependencyProperty UIElement::RendererProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer");
+	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer", nullptr);
 	return dp;
 }
 

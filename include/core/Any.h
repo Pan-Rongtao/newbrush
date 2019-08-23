@@ -94,11 +94,11 @@ public:
 
 private:
 	Holder	*m_holder;
-	template<typename T> friend T any_cast(const Any &any);
+	template<typename T> friend T &any_cast(const Any &any);
 };
 
 template<typename T>
-T any_cast(const Any &any)
+T& any_cast(const Any &any)
 {
 	if (any.type() != typeid(T))	throw std::bad_cast();
 	return static_cast<Any::HolderImp<T> *>(any.m_holder)->m_v;

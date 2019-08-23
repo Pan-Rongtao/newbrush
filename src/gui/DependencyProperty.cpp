@@ -54,7 +54,12 @@ bool DependencyProperty::isSealed() const
 	return m_isSealed;
 }
 
-Any DependencyProperty::defaultValue() const
+Any &DependencyProperty::defaultValue()
+{
+	return m_defaultV;
+}
+
+const Any &DependencyProperty::defaultValue() const
 {
 	return m_defaultV;
 }

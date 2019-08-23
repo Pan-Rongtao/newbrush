@@ -4,7 +4,7 @@ using namespace nb;
 using namespace nb::gui;
 
 DockPanel::DockPanel()
-	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]() {return get<bool>(LastChildFillProperty()); })
+	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]()->bool& {return get<bool>(LastChildFillProperty()); })
 {
 }
 
@@ -22,7 +22,7 @@ DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 
 DependencyProperty DockPanel::LastChildFillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill");
+	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false);
 	return dp;
 }
 

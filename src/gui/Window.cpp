@@ -15,14 +15,14 @@ using namespace nb::gui;
 
 std::shared_ptr<nb::gl::Context> nb::gui::Window::drawContext = nullptr;
 nb::gui::Window::Window()
-	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]() {return get<WindowStateE>(WindowStateProperty()); })
-	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]() {return get<WindowStyleE>(WindowStyleProperty()); })
-	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]() {return get<bool>(TopmostProperty()); })
-	, Left([&](float v) {set(LeftProperty(), v); }, [&]() {return get<float>(LeftProperty()); })
-	, Top([&](float v) {set(TopProperty(), v); }, [&]() {return get<float>(TopProperty()); })
-	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]() {return get<std::string>(TitleProperty()); })
-	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]() {return get<shared_ptr<ImageSource>>(IconProperty()); })
-	, DrawSurface([&](shared_ptr<gl::Surface> v) {set(DrawSurfaceProperty(), v); }, [&]() {return get<shared_ptr<gl::Surface>>(DrawSurfaceProperty()); })
+	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE& {return get<WindowStateE>(WindowStateProperty()); })
+	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE& {return get<WindowStyleE>(WindowStyleProperty()); })
+	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]()->bool& {return get<bool>(TopmostProperty()); })
+	, Left([&](float v) {set(LeftProperty(), v); }, [&]()->float& {return get<float>(LeftProperty()); })
+	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float& {return get<float>(TopProperty()); })
+	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string& {return get<std::string>(TitleProperty()); })
+	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->shared_ptr<ImageSource>& {return get<shared_ptr<ImageSource>>(IconProperty()); })
+	, DrawSurface([&](shared_ptr<gl::Surface> v) {set(DrawSurfaceProperty(), v); }, [&]()->shared_ptr<gl::Surface>& {return get<shared_ptr<gl::Surface>>(DrawSurfaceProperty()); })
 	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
 {
 	drawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
@@ -258,36 +258,36 @@ DependencyProperty nb::gui::Window::WindowStyleProperty()
 
 DependencyProperty nb::gui::Window::TopmostProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost");
+	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false);
 	return dp;
 }
 
 DependencyProperty nb::gui::Window::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Left");
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0);
 	return dp;
 }
 
 DependencyProperty nb::gui::Window::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Top");
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0);
 	return dp;
 }
 
 DependencyProperty nb::gui::Window::TitleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title");
+	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string());
 	return dp;
 }
 
 DependencyProperty nb::gui::Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon");
+	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
 	return dp;
 }
 
 DependencyProperty nb::gui::Window::DrawSurfaceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<gl::Surface>>("DrawSurface");
+	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<gl::Surface>>("DrawSurface", nullptr);
 	return dp;
 }

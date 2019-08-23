@@ -5,9 +5,9 @@ using namespace nb;
 using namespace nb::gui;
 
 WrapPanel::WrapPanel()
-	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]() {return get<OrientationE>(OrientationProperty()); })
-	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]() {return get<float>(ItemWidthProperty()); })
-	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]() {return get<float>(ItemHeightProperty()); })
+	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE& {return get<OrientationE>(OrientationProperty()); })
+	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]()->float& {return get<float>(ItemWidthProperty()); })
+	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]()->float& {return get<float>(ItemHeightProperty()); })
 {
 }
 
@@ -61,7 +61,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			auto child = m_children[i];
 			auto one = 0.0f;
 			auto maxLen = 0.0f;
-			if (Orientation == OrientationE::Horizontal)
+			if (Orientation() == OrientationE::Horizontal)
 			{
 				maxLen = finalSize.width();
 				one = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
@@ -75,12 +75,12 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			if (sum + one <= maxLen)
 			{
 				ret.back().first = i;
-				ret.back().second = std::max<float>(ret.back().second, Orientation == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width());
+				ret.back().second = std::max<float>(ret.back().second, Orientation() == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width());
 				sum += one;
 			}
 			else
 			{
-				ret.push({ i, (Orientation == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width()) });
+				ret.push({ i, (Orientation() == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width()) });
 				sum = one;
 			}
 		}
@@ -90,7 +90,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	auto x = 0.0f;
 	auto y = 0.0f;
 	Rect arrangeRect;
-	if (Orientation == OrientationE::Horizontal)
+	if (Orientation() == OrientationE::Horizontal)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
 		//否则，需要先计算每一行的最高item作为那一行的高度

@@ -6,14 +6,14 @@ using namespace nb;
 using namespace nb::gui;
 
 nb::gui::Polyline::Polyline()
-	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]() {return get<std::vector<Point>>(PointsProperty()); })
+	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 }
 
 DependencyProperty nb::gui::Polyline::PointsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points");
+	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {});
 	return dp;
 }
 

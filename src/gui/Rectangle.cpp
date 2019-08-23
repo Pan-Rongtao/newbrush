@@ -9,20 +9,20 @@ using namespace nb::gl;
 using namespace nb::gui;
 
 Rectangle::Rectangle()
-	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]() {return get<float>(RadiusXProperty()); })
-	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]() {return get<float>(RadiusYProperty()); })
+	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
+	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
 {
 }
 
 DependencyProperty Rectangle::RadiusXProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX");
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0);
 	return dp;
 }
 
 DependencyProperty Rectangle::RadiusYProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY");
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0);
 	return dp;
 }
 

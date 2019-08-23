@@ -12,10 +12,9 @@ ImageSource::ImageSource()
 }
 
 ImageSource::ImageSource(const std::string & uri)
-	: Bm([&](std::shared_ptr<Bitmap> v) { set(BmProperty(), v); }, [&]() {return get<std::shared_ptr<Bitmap>>(BmProperty()); })
+	: Bm([&](shared_ptr<Bitmap> v) { set(BmProperty(), v); }, [&]()->shared_ptr<Bitmap>& {return get<std::shared_ptr<Bitmap>>(BmProperty()); })
 {
-	Bm = std::make_shared<Bitmap>(uri);
-
+	Bm()->load(uri);
 }
 
 float ImageSource::width() const
@@ -30,6 +29,6 @@ float ImageSource::heigth() const
 
 DependencyProperty ImageSource::BmProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("Bm");
+	static auto dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("Bm", std::make_shared<Bitmap>());
 	return dp;
 }

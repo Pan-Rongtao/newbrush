@@ -23,13 +23,14 @@ namespace gui{
 //class Brush
 class NB_API Brush : public DependencyObject
 {
-protected:
-	Brush();
-	Brush(float opacity);
+public:
 	virtual ~Brush() = default;
 
 	Property_rw<float>			Opacity;			//不透明度
 	static DependencyProperty	OpacityProperty();	//不透明度依赖属性
+
+protected:
+	Brush();
 
 private:
 	Brush(const Brush &other) = delete;

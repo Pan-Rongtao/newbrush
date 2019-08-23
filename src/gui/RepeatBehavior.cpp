@@ -42,13 +42,13 @@ bool RepeatBehavior::operator!=(const RepeatBehavior & other) const
 
 DependencyProperty RepeatBehavior::CountProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, int>("Count");
+	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, int>("Count", 0);
 	return dp;
 }
 
 DependencyProperty RepeatBehavior::DurationProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, TimeSpan>("Duration");
+	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, TimeSpan>("Duration", TimeSpan());
 	return dp;
 }
 

@@ -15,16 +15,16 @@ void TestTextBlock::test()
 	m_text->TextWrapping = TextWrappingE::Wrap;
 	m_window->Content = m_text;
 
-	colorAni.From = m_text->Foreground();
-	colorAni.To = Color(255, 0, 10);
-	colorAni.Easing = std::make_shared<PowerEase>();
-	colorAni.BeginTime = TimeSpan::fromSeconds(1);
-	colorAni.Duration = TimeSpan::fromSeconds(2);
-	colorAni.StateChangedEvent += std::bind(&TestTextBlock::onStateChanged, this, std::placeholders::_1);
-	colorAni.ProgressEvent += std::bind(&TestTextBlock::onProgress, this, std::placeholders::_1);
-	colorAni.CompleteEvent += std::bind(&TestTextBlock::onCompleted, this, std::placeholders::_1);
-//	colorAni.TargetProperty = &m_text->Foreground;
-	colorAni.begin();
+//	colorAni.From = m_text->Foreground();
+//	colorAni.To = Color(255, 0, 10);
+//	colorAni.Easing = std::make_shared<PowerEase>();
+//	colorAni.BeginTime = TimeSpan::fromSeconds(1);
+//	colorAni.Duration = TimeSpan::fromSeconds(2);
+//	colorAni.StateChangedEvent += std::bind(&TestTextBlock::onStateChanged, this, std::placeholders::_1);
+//	colorAni.ProgressEvent += std::bind(&TestTextBlock::onProgress, this, std::placeholders::_1);
+//	colorAni.CompleteEvent += std::bind(&TestTextBlock::onCompleted, this, std::placeholders::_1);
+////	colorAni.TargetProperty = &m_text->Foreground;
+//	colorAni.begin();
 }
 
 void TestTextBlock::onStateChanged(const Timeline::StateChangedArgs & args)

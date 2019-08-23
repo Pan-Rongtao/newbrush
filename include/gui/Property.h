@@ -20,20 +20,21 @@ template<class T>
 class Property_rw
 {
 public:
-	Property_rw(std::function<void(T v)> setter, std::function<T()> getter) 
+	Property_rw(std::function<void(T v)> setter, std::function<T&()> getter) 
 		: m_setter(new std::function<void(T)>(std::move(setter)))
-		, m_getter(new std::function<T()>(std::move(getter)))
+		, m_getter(new std::function<T&()>(std::move(getter)))
 	{ }
 	~Property_rw()								{ delete m_setter; delete m_getter; }
 	void operator =(const T &v)					{ (*m_setter)(v); }
 	bool operator == (const T &v) const			{ return v == operator()(); }
 	bool operator != (const T &v) const			{ return !operator==(v); }
-	T operator()() const						{ return (*m_getter)(); }
+	const T&operator()() const					{ return (*m_getter)(); }
+	T &operator()()								{ return (*m_getter)(); }
 	void operator =(const Property_rw<T> &other) = delete;
 	
 private:
 	std::function<void(T)>	*m_setter{ nullptr };
-	std::function<T()>		*m_getter{ nullptr };
+	std::function<T&()>		*m_getter{ nullptr };
 };
 
 template<typename T>

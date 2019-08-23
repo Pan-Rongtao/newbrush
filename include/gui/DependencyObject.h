@@ -17,17 +17,11 @@ public:
 		if (dp.defaultValue().type() != typeid(value))
 			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
 
-		if (!m_propertys)
-			m_propertys = std::make_shared<std::map<size_t, std::pair<Any, bool>>>();
-
-		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) {
-			return p.first == dp.hash(); });
-
-		const T &defaultV = any_cast<T>(dp.defaultValue());
-		if (iter == m_propertys->end())
+		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
+		if (iter == m_propertys.end())
 		{
-			m_propertys->insert({ dp.hash(),{ value, false } });
-			if (value != defaultV)
+			m_propertys[dp.hash()] = { value, false };
+			if (value != any_cast<T>(dp.defaultValue()))
 			{
 				PropertyChanged.dispatch({ dp, value });
 			}
@@ -43,21 +37,20 @@ public:
 	}
 
 	template<class T>
-	T get(const DependencyProperty &dp) const
+	T &get(const DependencyProperty &dp)
 	{
-		if (!m_propertys)
-		{
-			return any_cast<T>(dp.defaultValue());
-		}
-		auto iter = std::find_if(m_propertys->begin(), m_propertys->end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
-		return iter == m_propertys->end() ? any_cast<T>(dp.defaultValue()) : any_cast<T>(iter->second.first);
-	}
+		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
+		if (iter == m_propertys.end())
+			m_propertys[dp.hash()] = { dp.defaultValue(), false };
 
+		return any_cast<T>(m_propertys[dp.hash()].first);
+	}
+	
 	struct PropertyChangedArgs { DependencyProperty dp; Any value; };
 	Event<PropertyChangedArgs>							PropertyChanged;
 
 private:
-	std::shared_ptr<std::map<size_t, std::pair<Any, bool>>>	m_propertys;
+	std::map<size_t, std::pair<Any, bool>>	m_propertys;
 };
 
 

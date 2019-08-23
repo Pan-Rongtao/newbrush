@@ -6,10 +6,10 @@ using namespace nb;
 using namespace nb::gui;
 
 Line::Line()
-	: X1([&](float v) {set(X1Property(), v); }, [&]() {return get<float>(X1Property()); })
-	, X2([&](float v) {set(X2Property(), v); }, [&]() {return get<float>(X2Property()); })
-	, Y1([&](float v) {set(Y1Property(), v); }, [&]() {return get<float>(Y1Property()); })
-	, Y2([&](float v) {set(Y2Property(), v); }, [&]() {return get<float>(Y2Property()); })
+	: X1([&](float v) {set(X1Property(), v); }, [&]()->float& {return get<float>(X1Property()); })
+	, X2([&](float v) {set(X2Property(), v); }, [&]()->float& {return get<float>(X2Property()); })
+	, Y1([&](float v) {set(Y1Property(), v); }, [&]()->float& {return get<float>(Y1Property()); })
+	, Y2([&](float v) {set(Y2Property(), v); }, [&]()->float& {return get<float>(Y2Property()); })
 {
 	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
 }

@@ -5,14 +5,8 @@ using namespace nb::gui;
 
 //class Brush
 Brush::Brush()
-	: Brush(1.0f)
+	: Opacity([&](float v) { set(OpacityProperty(), v); }, [&]()->float & {return get<float>(OpacityProperty()); })
 {
-}
-
-Brush::Brush(float opacity)
-	: Opacity([&](float v) { set(OpacityProperty(), v); }, [&]() {return get<float>(OpacityProperty()); })
-{
-	Opacity = opacity;
 }
 
 DependencyProperty Brush::OpacityProperty()
@@ -28,14 +22,14 @@ SolidColorBrush::SolidColorBrush()
 }
 
 SolidColorBrush::SolidColorBrush(const nb::Color &color)
-	: Color([&](nb::Color v){ set(ColorProperty(), v); }, [&](){return get<nb::Color>(ColorProperty()); })
+	: Color([&](nb::Color v){ set(ColorProperty(), v); }, [&]()->nb::Color & {return get<nb::Color>(ColorProperty()); })
 {
 	Color = color;
 }
 
 DependencyProperty SolidColorBrush::ColorProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Brush, nb::Color>("Color");
+	static auto dp = DependencyProperty::registerDependency<Brush, nb::Color>("Color", nb::Color());
 	return dp;
 }
 
@@ -46,13 +40,13 @@ ImageBrush::ImageBrush()
 }
 
 ImageBrush::ImageBrush(std::shared_ptr<ImageSource> imgSource)
-	: Source([&](std::shared_ptr<ImageSource> &v) {set(SourceProperty(), imgSource); }, [&]() {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
+	: Source([&](shared_ptr<ImageSource> &v) {set(SourceProperty(), imgSource); }, [&]()->shared_ptr<ImageSource> & {return get<shared_ptr<ImageSource>>(SourceProperty()); })
 {
 	Source = imgSource;
 }
 
 DependencyProperty ImageBrush::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Brush, std::shared_ptr<ImageSource>>("Source");
+	static auto dp = DependencyProperty::registerDependency<Brush, std::shared_ptr<ImageSource>>("Source", std::make_shared<ImageSource>());
 	return dp;
 }
