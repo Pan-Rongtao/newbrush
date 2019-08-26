@@ -65,7 +65,6 @@ private:
 	static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	HINSTANCE						m_instance;
 	HWND							m_hwnd;
-	static std::map<long, Window *>	m_windows;
 #elif defined NB_OS_FAMILY_UNIX
 	void x11WindowPending();
 	WindowEvent::KeyCode nativeKeyToKeycode(int key);

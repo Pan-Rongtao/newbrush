@@ -13,6 +13,7 @@ public:
 	TestPropertyAnimationUsingKeyFrames();
 
 	Property_rw<double>						Width;
+	double									m_w;
 	PropertyAnimationUsingKeyFrames<double>	doubleAni;
 
 private:

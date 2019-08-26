@@ -14,6 +14,17 @@ void TestWindow::test()
 	w.MouseWheelEvent += std::bind(&TestWindow::onMouseWheel, this, std::placeholders::_1);
 	w.KeyEvent += std::bind(&TestWindow::onKeyAction, this, std::placeholders::_1);
 
+	Window w1;
+	w1.ResizeEvent += std::bind(&TestWindow::onResize, this, std::placeholders::_1);
+	w1.MouseEnterEvent += std::bind(&TestWindow::onMouseEnter, this, std::placeholders::_1);
+	w1.MouseLeaveEvent += std::bind(&TestWindow::onMouseLeave, this, std::placeholders::_1);
+	w1.MouseMoveEvent += std::bind(&TestWindow::onMouseMove, this, std::placeholders::_1);
+	w1.MouseLeftButtonEvent += std::bind(&TestWindow::onMouseLeftButton, this, std::placeholders::_1);
+	w1.MouseRightButtonEvent += std::bind(&TestWindow::onMouseRightButton, this, std::placeholders::_1);
+	w1.MouseMiddleButtonEvent += std::bind(&TestWindow::onMouseMiddleButton, this, std::placeholders::_1);
+	w1.MouseWheelEvent += std::bind(&TestWindow::onMouseWheel, this, std::placeholders::_1);
+	w1.KeyEvent += std::bind(&TestWindow::onKeyAction, this, std::placeholders::_1);
+
 	while (true)
 	{
 		w.pending();

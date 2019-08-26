@@ -14,7 +14,7 @@
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestColor> test;
+		TestHandle<TestWindow> test;
 		test->test();
 	}
 	catch (std::exception &e)

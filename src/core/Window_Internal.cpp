@@ -4,11 +4,7 @@
 #include "core/Log.h"
 
 using namespace nb;
-
-#ifdef NB_OS_FAMILY_WINDOWS
-	std::map<long, Window *> Window_Internal::m_windows;
-	#define WINDOW_CLASS_NAME	"Newbrush Class"
-#endif
+#define WINDOW_CLASS_NAME	"Newbrush Class"
 
 Window_Internal::Window_Internal(Window *p)
 	: m_pW(p)
@@ -35,7 +31,7 @@ Window_Internal::Window_Internal(Window *p)
 	m_hwnd = ::CreateWindowA(windowClass.lpszClassName, "", WS_TILEDWINDOW, x, y, w, h, nullptr, nullptr, m_instance, nullptr);
 	::ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	::UpdateWindow(m_hwnd);
-	m_windows[(long)m_hwnd] = m_pW;
+	::SetWindowLongPtr(m_hwnd, GWLP_USERDATA, (long)m_pW);
 #elif defined NB_OS_FAMILY_UNIX
 	m_X11Display = XOpenDisplay(nullptr);
 	if (m_X11Display == nullptr)
@@ -398,8 +394,7 @@ void Window_Internal::pending()
 LRESULT CALLBACK Window_Internal::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	static bool bHover = false;
-	auto iter = m_windows.find((long)hwnd);
-	Window *pWindow = iter == m_windows.end() ? nullptr : iter->second;
+	Window *pWindow = (Window *)::GetWindowLongPtr(hwnd, GWLP_USERDATA);
 	switch (msg)
 	{
 	case WM_DESTROY:																																			break;

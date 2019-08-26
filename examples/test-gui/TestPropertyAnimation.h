@@ -10,6 +10,7 @@ using namespace nb::gui;
 class TestPropertyAnimation : public TestBase
 {
 public:
+	TestPropertyAnimation();
 	void test();
 
 	Property_rw<double>			Width;
@@ -25,4 +26,8 @@ private:
 	void onStateChanged(const Timeline::StateChangedArgs &args);
 	void onProgress(const Timeline::ProgressArgs &args);
 	void onCompleted(const Timeline::CompleteArgs &args);
+
+	double	m_double;
+	Point	m_point;
+	Color	m_color;
 };

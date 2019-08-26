@@ -24,16 +24,16 @@ void TestButton::test()
 	m_btn->Margin = Thickness(10);
 
 	auto stateMachine = std::make_shared<VisualStateMachine>();
-	//m_btn->StateMachine = stateMachine;
+	m_btn->StateMachine = stateMachine;
 	auto group = std::make_shared<VisualStateGroup>("BtnStateGroup");
 	stateMachine->addGroup(group);
 	
 	auto state_normal = std::make_shared<VisualState>("NormalState");
-	auto normalAni = std::make_shared<PropertyAnimation<float>>(/*0.0f, 200.0f, TimeSpan::zero(), &m_btn->Width*/);
+	auto normalAni = std::make_shared<PropertyAnimation<float>>(0.0f, 200.0f, TimeSpan::zero(), &m_btn->Width);
 	state_normal->Storyboard = std::make_shared<Storyboard>(TimeSpan::zero(), std::vector<std::shared_ptr<Timeline>>{normalAni});
 
 	auto state_press = std::make_shared<VisualState>("PressState");
-	auto pressAni = std::make_shared<PropertyAnimation<float>>(/*0.0f, 100.0f, TimeSpan::zero(), &m_btn->Width*/);
+	auto pressAni = std::make_shared<PropertyAnimation<float>>(0.0f, 100.0f, TimeSpan::zero(), &m_btn->Width);
 	state_press->Storyboard = std::make_shared<Storyboard>(TimeSpan::zero(), std::vector<std::shared_ptr<Timeline>>{pressAni});
 
 	auto state_mouseover = std::make_shared<VisualState>("MouseOverState");
@@ -52,13 +52,13 @@ void TestButton::test()
 void TestButton::onBtnMouseLeftButtonDown(const Button::MouseLeftButtonDownArgs & args)
 {
 	printf("onBtnMouseLeftButtonDown\n");
-//	m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
+	m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 }
 
 void TestButton::onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs & args)
 {
 	printf("onBtnMouseLeftButtonUp\n");
-//	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
+	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
 }
 
 void TestButton::onBtnClick(const Button::ClickArgs & args)

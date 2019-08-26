@@ -20,31 +20,43 @@
 #include "AnimationTimeline.h"
 #include "../core/Easing.h"
 
-namespace nb { namespace gui {
+namespace nb{
+namespace gui{
 
 //内置类型属性动画
 template<class T>
 class NB_API PropertyAnimation : public AnimationTimeline<T>
 {
 public:
-	PropertyAnimation() : From(nullptr, nullptr), To(nullptr, nullptr), By(nullptr, nullptr){}
-//	PropertyAnimation(const T &to) : To(to) {}
-//	PropertyAnimation(const T &from, const T &to) : From(from), To(to) {}
-//	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration) : From(from), To(to) { Duration = duration; }
-//	PropertyAnimation(const T &from, const T &to, const core::TimeSpan &duration, core::Property_rw<T> *target) : From(from), To(to) { Duration = duration; TargetProperty = target; }
+	PropertyAnimation() : PropertyAnimation(T(), T(), TimeSpan(), nullptr) {}
+	PropertyAnimation(const T &to) : PropertyAnimation(T(), to, TimeSpan(), nullptr) {}
+	PropertyAnimation(const T &from, const T &to) : PropertyAnimation(from, to, TimeSpan(), nullptr) {}
+	PropertyAnimation(const T &from, const T &to, const TimeSpan &duration, Property_rw<T> *target)
+		: From([&](T v) {set(FromProperty(), v); }, [&]()->T & {return get<T>(FromProperty()); })
+		, To([&](T v) {set(ToProperty(), v); }, [&]()->T & {return get<T>(ToProperty()); })
+		, By([&](T v) {set(ByProperty(), v); }, [&]()->T & {return get<T>(ByProperty()); })
+	{
+		From = from;
+		To = to;
+		Duration = duration;
+		TargetProperty = target;
+	}
 
-	Property_rw<T>							From;
-	Property_rw<T>							To;
-	Property_rw<T>							By;
+	Property_rw<T>				From;
+	Property_rw<T>				To;
+	Property_rw<T>				By;
+	static DependencyProperty	FromProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("From", T()); return dp; }
+	static DependencyProperty	ToProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("To", T()); return dp; }
+	static DependencyProperty	ByProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("By", T()); return dp; }
 
 protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
 	virtual void progressing(float progress) override
 	{
-//		if (!TargetProperty)	return;
+		if (!TargetProperty)	return;
 
 		decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
-//		*TargetProperty = From() + (To() - From()) * ft;
+		*TargetProperty = From() + (To() - From()) * ft;
 	}
 };
 
@@ -52,13 +64,13 @@ protected:
 template<>
 void PropertyAnimation<Color>::progressing(float progress)
 {
-//	if (!TargetProperty)	return;
+	if (!TargetProperty)	return;
 
-	auto ft = Easing()->easeInCore(progress);
+	decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
 	int r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
 	int g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
 	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
-//	(*TargetProperty)().setRgb(r, g, b);
+	(*TargetProperty)().setRgb(r, g, b);
 }
 
 }

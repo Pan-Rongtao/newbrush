@@ -10,12 +10,12 @@ class NB_API Storyboard : public Timeline
 public:
 	Storyboard();
 	Storyboard(const TimeSpan &duration, const std::vector<std::shared_ptr<Timeline>> &propertyAnamations = {});
-	virtual ~Storyboard();
+	virtual ~Storyboard() = default;
 
 	void begin();
 
-	Property_rw<std::vector<std::shared_ptr<Timeline>>>		Children;
-
+	Property_rw<std::vector<shared_ptr<Timeline>>>		Children;
+	static DependencyProperty	ChildrenProperty();
 };
 
 }}

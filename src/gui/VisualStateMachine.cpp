@@ -12,8 +12,8 @@ VisualState::VisualState(const std::string & name, shared_ptr<gui::Storyboard> s
 	: Name([&](std::string v) { set(NameProperty(), v); }, [&]()->std::string& {return get<std::string>(NameProperty()); })
 	, Storyboard([&](shared_ptr<gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]()->shared_ptr<gui::Storyboard>& {return get<shared_ptr<gui::Storyboard>>(StoryboardProperty()); })
 {
-//	Name = name;
-//	Storyboard = sb;
+	Name = name;
+	Storyboard = sb;
 }
 
 DependencyProperty VisualState::NameProperty()
@@ -128,6 +128,7 @@ bool VisualStateMachine::gotoState(const std::string &groupName, const std::stri
 			}
 			for (auto const &s : g->States())
 			{
+				auto sn = s->Name();
 				if (s->Name() == stateName)
 				{
 					s->Storyboard()->begin();

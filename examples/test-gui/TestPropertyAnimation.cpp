@@ -1,5 +1,12 @@
 #include "TestPropertyAnimation.h"
 
+TestPropertyAnimation::TestPropertyAnimation()
+	: Width([&](double v) {m_double = v; }, [&]()->double & {return m_double; })
+	, Position([&](Point v) {m_point = v; }, [&]()->Point & {return m_point; })
+	, Background([&](Color v) {m_color = v; }, [&]()->Color & {return m_color; })
+{
+}
+
 void TestPropertyAnimation::test()
 {
 	doubleAni.From = 100;
@@ -10,7 +17,7 @@ void TestPropertyAnimation::test()
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	doubleAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-//	doubleAni.TargetProperty = &Width;
+	doubleAni.TargetProperty = &Width;
 //	doubleAni.begin();
 
 	pointAni.From = Point(100, 100);
@@ -21,7 +28,7 @@ void TestPropertyAnimation::test()
 	pointAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	pointAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	pointAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-//	pointAni.TargetProperty = &Position;
+	pointAni.TargetProperty = &Position;
 //	pointAni.begin();
 	
 	colorAni.From = Color(220, 100, 40);
@@ -31,7 +38,7 @@ void TestPropertyAnimation::test()
 	colorAni.StateChangedEvent += std::bind(&TestPropertyAnimation::onStateChanged, this, std::placeholders::_1);
 	colorAni.ProgressEvent += std::bind(&TestPropertyAnimation::onProgress, this, std::placeholders::_1);
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
-//	colorAni.TargetProperty = &Background;
+	colorAni.TargetProperty = &Background;
 	colorAni.begin();
 	
 }

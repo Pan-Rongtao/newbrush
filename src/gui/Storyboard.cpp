@@ -9,13 +9,10 @@ Storyboard::Storyboard()
 }
 
 Storyboard::Storyboard(const TimeSpan & duration, const std::vector<std::shared_ptr<Timeline>>& propertyAnamations)
-	: Children(nullptr, nullptr)
+	: Children([&](std::vector<shared_ptr<Timeline>> v) {set(ChildrenProperty(), v); }, [&]()->std::vector<shared_ptr<Timeline>>& {return get<std::vector<shared_ptr<Timeline>>>(ChildrenProperty()); })
 {
 	Duration = duration;
-}
-
-Storyboard::~Storyboard()
-{
+	Children = propertyAnamations;
 }
 
 void Storyboard::begin()
@@ -23,4 +20,10 @@ void Storyboard::begin()
 	for (auto const &animation : Children())
 		animation->begin();
 	Timeline::begin();
+}
+
+DependencyProperty Storyboard::ChildrenProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Storyboard, std::vector<shared_ptr<Timeline>>>("Text", {});
+	return dp;
 }
