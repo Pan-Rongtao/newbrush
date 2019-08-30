@@ -259,33 +259,14 @@ std::string TimeSpan::simpleToString(const std::string & format, const std::map<
 
 std::vector<int64_t> TimeSpan::simpleFromString(const std::string & s, const std::string & format, const std::string & flags)
 {
-	auto split = [](const std::string &s, const std::string &sSymbol, bool bSkipEmptyString) ->std::vector<std::string>
-	{
-		std::vector<std::string> ret;
-		std::string sSource = s;
-		char *token = strtok((char *)sSource.data(), sSymbol.data());
-		while (token)
-		{
-			std::string s = token;
-			if (bSkipEmptyString && s.empty())
-			{
-				token = strtok(nullptr, sSymbol.data());
-				continue;
-			}
-			ret.push_back(std::move(s));
-			token = strtok(nullptr, sSymbol.data());
-		}
-		return ret;
-	};
-
 	if (!format.empty() && (format[0] == '|' || format[format.size() - 1] == '|'))
 		nbThrowException(std::invalid_argument, "format string is invalid");
 
 	if (!std::regex_match(s, std::regex("^[0-9]+[0-9|]+[0-9]+$")))
 		nbThrowException(std::invalid_argument, "s string is invalid");
 
-	std::vector<std::string> formatSegments = split(format, "|", true);
-	std::vector<std::string> SSegments = split(s, "|", true);
+	std::vector<std::string> formatSegments = nb::stringSplit(format, "|", true);
+	std::vector<std::string> SSegments = nb::stringSplit(s, "|", true);
 	//检查formatSegments每段内字符完全一致
 	std::string temp;
 	for (auto one : formatSegments)

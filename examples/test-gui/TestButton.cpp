@@ -9,7 +9,7 @@ void f(const DependencyProperty &dp)
 }
 
 void TestButton::test()
-{ 
+{
 	m_btn = std::make_shared<Button>();
 	f(Button::IsCancelProperty());
 	m_btn->MouseLeftButtonDown += std::bind(&TestButton::onBtnMouseLeftButtonDown, this, std::placeholders::_1);

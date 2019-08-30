@@ -3,6 +3,7 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include <vector>
 
 //ÒªÇóc++11
 //#if __cplusplus < 201103L
@@ -105,5 +106,5 @@ namespace nb
 		return (std::max)((std::min)(lower, upper), (std::min)((std::max)(lower, upper), value));
 	}
 
-
+	NB_API std::vector<std::string> stringSplit(const std::string &s, const std::string &sSymbol, bool bSkipEmptyString);
 }

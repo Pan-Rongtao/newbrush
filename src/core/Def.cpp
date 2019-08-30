@@ -29,3 +29,22 @@ uint32_t nb::getPid()
 	os << std::this_thread::get_id();
 	return std::stoi(os.str());
 }
+
+std::vector<std::string> nb::stringSplit(const std::string & s, const std::string & sSymbol, bool bSkipEmptyString)
+{
+	std::vector<std::string> ret;
+	std::string sSource = s;
+	char *token = strtok((char *)sSource.data(), sSymbol.data());
+	while (token)
+	{
+		std::string s = token;
+		if (bSkipEmptyString && s.empty())
+		{
+			token = strtok(nullptr, sSymbol.data());
+			continue;
+		}
+		ret.push_back(std::move(s));
+		token = strtok(nullptr, sSymbol.data());
+	}
+	return ret;
+}

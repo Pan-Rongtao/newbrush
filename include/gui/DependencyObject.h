@@ -36,6 +36,24 @@ public:
 		}
 	}
 
+	void set(const DependencyProperty &dp, const Any &value) &
+	{
+		if (dp.defaultValue().type() != value.type())
+			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
+
+		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
+		if (iter == m_propertys.end())
+		{
+			m_propertys[dp.hash()] = { value, false };
+				PropertyChanged.dispatch({ dp, value });
+		}
+		else
+		{
+			iter->second.first = value;
+			PropertyChanged.dispatch({ dp, value });
+		}
+	}
+
 	template<class T>
 	T &get(const DependencyProperty &dp)
 	{
@@ -53,6 +71,6 @@ private:
 	std::map<size_t, std::pair<Any, bool>>	m_propertys;
 };
 
+using DependencyObjectPtr = std::shared_ptr<DependencyObject>;
 
-}
-}
+}}
