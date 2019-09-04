@@ -2,6 +2,7 @@
 #include "../core/Event.h"
 #include "../core/Any.h"
 #include "../gui/DependencyProperty.h"
+#include "../gui/RoutedEvent.h"
 
 namespace nb {
 namespace gui{

@@ -394,3 +394,30 @@ void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 }
+
+void UIElement::addHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+{
+	m_eventHandlers[event.hash()].push_back(handler);
+}
+
+void UIElement::removeHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+{
+	auto iter = m_eventHandlers.find(event.hash());
+	if (iter != m_eventHandlers.end())
+	{
+		auto &handlers = iter->second;
+		auto iterHandler = std::find(handlers.begin(), handlers.end(), handler);
+		if (iterHandler != handlers.end())
+			handlers.erase(iterHandler);
+	}
+}
+
+void UIElement::raiseEvent(const RoutedEventArgs & args)
+{
+	auto iter = m_eventHandlers.find(args.routedEvent().hash());
+	if (iter != m_eventHandlers.end())
+	{
+		for (auto &h : iter->second)
+			h.invoke(args);
+	}
+}

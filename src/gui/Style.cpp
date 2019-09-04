@@ -8,5 +8,6 @@ Style::Style()
 	, Setters(nullptr, nullptr)
 	, Triggers(nullptr, nullptr)
 //	, m_tagetTypeHash(tagetTypeHash)
+	, TragetType(nullptr, nullptr)
 {
 }

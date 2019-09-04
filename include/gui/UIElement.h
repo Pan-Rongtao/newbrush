@@ -9,6 +9,7 @@
 #include "gui/DependencyObject.h"
 #include "gui/Style.h"
 #include "gui/VisualStateMachine.h"
+#include "../gui/RoutedEvent.h"
 
 namespace nb{
 namespace gl{
@@ -118,6 +119,9 @@ public:
 	void arrage(const Rect &finalRect);
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
+	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
+	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
+	void raiseEvent(const RoutedEventArgs &args);
 	
 	struct MouseEnterArgs {};
 	Event<MouseEnterArgs>							MouseEnter;
@@ -170,6 +174,8 @@ protected:
 
 private:
 	void onPropertyChanged(const PropertyChangedArgs &args);
+
+	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };
 
 }

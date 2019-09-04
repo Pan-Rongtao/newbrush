@@ -25,6 +25,7 @@ void syncTargetValueData(DependencyObjectPtr target, const DependencyProperty & 
 	else if (bindingData->type() == typeid(double))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<double>>(bindingData)->get());
 	else if (bindingData->type() == typeid(long))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<long>>(bindingData)->get());
 	else if (bindingData->type() == typeid(unsigned long))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<unsigned long>>(bindingData)->get());
+	else nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", bindingData->type().name(), dp.defaultValue().type().name());
 }
 
 #ifdef NB_OS_FAMILY_WINDOWS
@@ -74,19 +75,20 @@ void BindingMaster::onBingingDataChanged(const ValueDataBase::ValueChangedArgs &
 		else if (propertyDefaultValue.type() == typeid(std::string))
 		{
 			std::string s;
-			if (bindingData->type() == typeid(int8_t))		s = std::to_string(std::dynamic_pointer_cast<ValueData<int8_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(int16_t))		s = std::to_string(std::dynamic_pointer_cast<ValueData<int16_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(int32_t))		s = std::to_string(std::dynamic_pointer_cast<ValueData<int32_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(int64_t))		s = std::to_string(std::dynamic_pointer_cast<ValueData<int64_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(uint8_t))		s = std::to_string(std::dynamic_pointer_cast<ValueData<uint8_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(uint16_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint16_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(uint32_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint32_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(uint64_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint64_t>>(bindingData)->get());
-			if (bindingData->type() == typeid(bool))		s = std::to_string(std::dynamic_pointer_cast<ValueData<bool>>(bindingData)->get());
-			if (bindingData->type() == typeid(float))		s = std::to_string(std::dynamic_pointer_cast<ValueData<float>>(bindingData)->get());
-			if (bindingData->type() == typeid(double))		s = std::to_string(std::dynamic_pointer_cast<ValueData<double>>(bindingData)->get());
-			if (bindingData->type() == typeid(long))		s = std::to_string(std::dynamic_pointer_cast<ValueData<long>>(bindingData)->get());
-			if (bindingData->type() == typeid(unsigned long))s = std::to_string(std::dynamic_pointer_cast<ValueData<unsigned long>>(bindingData)->get());
+			if (bindingData->type() == typeid(int8_t))			s = std::to_string(std::dynamic_pointer_cast<ValueData<int8_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(int16_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int16_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(int32_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int32_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(int64_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int64_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(uint8_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint8_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(uint16_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint16_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(uint32_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint32_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(uint64_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint64_t>>(bindingData)->get());
+			else if (bindingData->type() == typeid(bool))		s = std::to_string(std::dynamic_pointer_cast<ValueData<bool>>(bindingData)->get());
+			else if (bindingData->type() == typeid(float))		s = std::to_string(std::dynamic_pointer_cast<ValueData<float>>(bindingData)->get());
+			else if (bindingData->type() == typeid(double))		s = std::to_string(std::dynamic_pointer_cast<ValueData<double>>(bindingData)->get());
+			else if (bindingData->type() == typeid(long))		s = std::to_string(std::dynamic_pointer_cast<ValueData<long>>(bindingData)->get());
+			else if (bindingData->type() == typeid(unsigned long))s = std::to_string(std::dynamic_pointer_cast<ValueData<unsigned long>>(bindingData)->get());
+			else nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", bindingData->type().name(), propertyDefaultValue.type().name());
 			target->set(dp, s);
 		}
 		else

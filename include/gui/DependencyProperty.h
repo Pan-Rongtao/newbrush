@@ -31,20 +31,18 @@ public:
 		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "registerDependency<ownerType, propertyType> : ownerType must be DependencyObject or it's derived type.");
 
-		auto h0 = typeid(ownerType).hash_code();
-		std::hash<std::string> shash;
-		auto h1 = shash(name);
-		auto hs = h0 ^ h1;
-		if (g_dependencyProperties.find(hs) != g_dependencyProperties.end())
+		std::hash<std::string> _shash;
+		auto hash = typeid(ownerType).hash_code() ^ _shash(name);
+		if (g_dependencyProperties.find(hash) != g_dependencyProperties.end())
 			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(ownerType).name());
 
 		DependencyProperty dp;
 		dp.m_name = name;
-		dp.m_hash = hs;
+		dp.m_hash = hash;
 		dp.m_isSealed = isSealed;
 		dp.m_defaultV = defaultValue;
-		g_dependencyProperties[hs] = dp;
-		return g_dependencyProperties[hs];
+		g_dependencyProperties[hash] = dp;
+		return g_dependencyProperties[hash];
 	}
 
 	//Ãû×Ö
