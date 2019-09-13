@@ -60,4 +60,6 @@ public:
 	static DependencyProperty					SourceProperty();	//源依赖属性
 };
 
+
+
 }}

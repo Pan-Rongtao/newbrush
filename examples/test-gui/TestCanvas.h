@@ -1,12 +1,8 @@
 #include "../TestBase.h"
 #include "gui/Canvas.h"
 #include "gui/Window.h"
-#include "gui/Rectangle.h"
-#include "gui/Ellipse.h"
+#include "gui/Shape.h"
 #include "gui/PropertyAnimation.h"
-#include "gui/Line.h"
-#include "gui/Polyline.h"
-#include "gui/Polygon.h"
 
 using namespace nb;
 using namespace nb::gui;

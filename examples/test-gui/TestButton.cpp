@@ -1,6 +1,6 @@
 #include "TestButton.h"
 #include "gui/Image.h"
-#include "gui/Rectangle.h"
+#include "gui/Shape.h"
 #include "gui/PropertyAnimation.h"
 
 void f(const DependencyProperty &dp)

@@ -15,6 +15,7 @@
 #include "TestUniformGrid.h"
 #include "TestButton.h"
 #include "TestBinding.h"
+#include "TestShape.h"
 
 int main(int argc, char *argv[])
 {

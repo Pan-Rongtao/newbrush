@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "gui/StackPanel.h"
 #include "gui/Window.h"
-#include "gui/Rectangle.h"
+#include "gui/Shape.h"
 
 using namespace nb;
 using namespace nb::gui;

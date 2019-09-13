@@ -1,6 +1,6 @@
 #include "TestGrid.h"
-#include "gui/Rectangle.h"
-#include "gui/Ellipse.h"
+#include "gui/Shape.h"
+#include "gui/Shape.h"
 #include "gui/Brush.h"
 #include "core/Color.h"
 #include "gui/TextBlock.h"

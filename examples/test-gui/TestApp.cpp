@@ -1,7 +1,6 @@
 #include "TestApp.h"
 #include "gui/Image.h"
-#include "gui/Rectangle.h"
-#include "gui/Ellipse.h"
+#include "gui/Shape.h"
 #include "core/Color.h"
 
 using namespace nb;

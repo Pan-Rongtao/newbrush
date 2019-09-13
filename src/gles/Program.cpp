@@ -265,6 +265,7 @@ std::shared_ptr<Program> Programs::primitive()
 		"	_color = nbColor;"
 		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
+		"	gl_PointSize = 20.0f;"
 		"}";
 	constexpr char fs[] =
 		"uniform bool nbColorMode;"

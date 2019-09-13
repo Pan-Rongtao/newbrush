@@ -1,15 +1,27 @@
 #include "gui/Shape.h"
+#include "gles/Circle.h"
+#include "gles/Program.h"
+#include "gles/Context.h"
+#include "gles/Texture2D.h"
+#include "gles/Quadrangle.h"
+#include "gles/Line.h"
+#include "gles/Polyline.h"
+#include <opengl/GLES2/gl2.h>
 
 using namespace nb;
 using namespace nb::gui;
 
 Shape::Shape()
 	: Fill([&](shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(FillProperty()); })
-	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
 	, Stroke([&](shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(StrokeProperty()); })
+	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float& {return get<float>(StrokeThicknessProperty()); })
+	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
+	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
+	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashCapProperty(), v); }, [&]()->std::vector<float>& {return get<std::vector<float>>(StrokeDashCapProperty()); })
+	, StrokeDashOffset([&](float v) {set(StrokeDashCapProperty(), v); }, [&]()->float& {return get<float>(StrokeDashCapProperty()); })
 	, StrokeDashCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
 	, StrokeLineJoin([&](PenLineJoinE v) {set(StrokeLineJoinProperty(), v); }, [&]()->PenLineJoinE& {return get<PenLineJoinE>(StrokeLineJoinProperty()); })
-	, StrokeThickness([&](Thickness v) {set(StrokeThicknessProperty(), v); }, [&]()->Thickness& {return get<Thickness>(StrokeThicknessProperty()); })
+	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
 {
 }
 
@@ -45,6 +57,277 @@ DependencyProperty Shape::StrokeLineJoinProperty()
 
 DependencyProperty Shape::StrokeThicknessProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, Thickness>("StrokeThickness", Thickness());
+	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeThickness", 1.0);
 	return dp;
+}
+
+DependencyProperty Shape::StrokeStartLineCapProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeStartLineCap", PenLineCapE::Flat);
+	return dp;
+}
+
+DependencyProperty Shape::StrokeEndLineCapProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeEndLineCap", PenLineCapE::Flat);
+	return dp;
+}
+
+DependencyProperty Shape::StrokeDashArrayProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Shape, std::vector<float>>("StrokeDashArray", {});
+	return dp;
+}
+
+DependencyProperty Shape::StrokeDashOffsetProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeDashOffset", 0.0f);
+	return dp;
+}
+
+/////////////////
+Line::Line()
+	: X1([&](float v) {set(X1Property(), v); }, [&]()->float& {return get<float>(X1Property()); })
+	, X2([&](float v) {set(X2Property(), v); }, [&]()->float& {return get<float>(X2Property()); })
+	, Y1([&](float v) {set(Y1Property(), v); }, [&]()->float& {return get<float>(Y1Property()); })
+	, Y2([&](float v) {set(Y2Property(), v); }, [&]()->float& {return get<float>(Y2Property()); })
+{
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+}
+
+DependencyProperty Line::X1Property()
+{
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
+	return dp;
+}
+
+DependencyProperty Line::X2Property()
+{
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
+	return dp;
+}
+
+DependencyProperty Line::Y1Property()
+{
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
+	return dp;
+}
+
+DependencyProperty Line::Y2Property()
+{
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
+	return dp;
+}
+
+void Line::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+{
+	auto offset = worldOffset();
+	Rect rc(Point(X1(), Y1()), Point(X2(), Y2()));
+	rc.move(offset.x(), offset.y());
+	Renderer()->setModel(std::make_shared<nb::gl::Line>(rc.left(), rc.top(), rc.right(), rc.bottom()));
+	drawContext->queue(Renderer());
+}
+
+Size Line::measureOverride(const Size & availableSize)
+{
+	return availableSize;
+}
+
+Size Line::arrangeOverride(const Size & finalSize)
+{
+	return Size(std::abs(X2() - X1()), std::abs(Y2() - Y1()));
+}
+
+//////////
+Polyline::Polyline()
+	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
+{
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+}
+
+DependencyProperty Polyline::PointsProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {});
+	return dp;
+}
+
+void Polyline::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+{
+	auto offset = worldOffset();
+	std::vector<glm::vec2> points;
+	for (auto const &p : Points())
+	{
+		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
+	}
+	Renderer()->setModel(std::make_shared<nb::gl::Polyline>(points));
+	drawContext->queue(Renderer());
+}
+
+Size Polyline::measureOverride(const Size & availableSize)
+{
+	return availableSize;
+}
+
+Size Polyline::arrangeOverride(const Size & finalSize)
+{
+	if (Points().empty())
+	{
+		return Size::zero();
+	}
+	else
+	{
+		auto xMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.x() > p0.x(); });
+		auto yMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.y() > p0.y(); });
+		auto sz = Size(xMinMax.second->x() - xMinMax.first->x(), yMinMax.second->y() - yMinMax.first->y());
+		return sz;
+	}
+}
+
+///////////
+Polygon::Polygon()
+	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
+{
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+}
+
+DependencyProperty Polygon::PointsProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points", {});
+	return dp;
+}
+
+void Polygon::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+{
+	auto offset = worldOffset();
+	std::vector<glm::vec2> points;
+	for (auto const &p : Points())
+	{
+		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
+	}
+	auto model = std::make_shared<nb::gl::Polyline>(points);
+	model->setDrawMode(GL_LINE_LOOP);
+	Renderer()->setModel(model);
+	drawContext->queue(Renderer());
+}
+
+Size Polygon::measureOverride(const Size & availableSize)
+{
+	return availableSize;
+}
+
+Size Polygon::arrangeOverride(const Size & finalSize)
+{
+	if (Points().empty())
+	{
+		return Size::zero();
+	}
+	else
+	{
+		auto xMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.x() > p0.x(); });
+		auto yMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.y() > p0.y(); });
+		auto sz = Size(xMinMax.second->x() - xMinMax.first->x(), yMinMax.second->y() - yMinMax.first->y());
+		return sz;
+	}
+}
+
+
+
+//////////
+Rectangle::Rectangle()
+	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
+	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
+{
+}
+
+DependencyProperty Rectangle::RadiusXProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0);
+	return dp;
+}
+
+DependencyProperty Rectangle::RadiusYProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0);
+	return dp;
+}
+
+void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+{
+	auto offset = worldOffset();
+	Rect rc(offset.x(), offset.y(), ActualSize());
+	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
+		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+	drawContext->queue(Renderer());
+
+	if (!Fill())
+		return;
+
+	if (typeid(*Fill()) == typeid(ImageBrush))
+	{
+		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 0);
+		if (imgbrush->Source())
+			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(imgbrush->Source()->Bm())));
+	}
+	else if (typeid(*Fill()) == typeid(SolidColorBrush))
+	{
+		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
+		auto color = solidbrush->Color();
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
+		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+	}
+}
+
+Size Rectangle::measureOverride(const Size & availableSize)
+{
+	m_availableSize = availableSize;
+	return availableSize;
+}
+
+Size Rectangle::arrangeOverride(const Size & finalSize)
+{
+	//	return m_availableSize;
+	return finalSize;
+}
+
+/////////////////
+Ellipse::Ellipse()
+{
+}
+
+void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+{
+	Rect rc(Offset().x(), Offset().y(), ActualSize());
+	Renderer()->setModel(std::make_shared<gl::Circle>(static_cast<float>(rc.center().x()), static_cast<float>(rc.center().y()), static_cast<float>(rc.width() / 2), static_cast<float>(rc.height() / 2), false));
+	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+	drawContext->queue(Renderer());
+
+	if (!Fill())
+		return;
+
+	if (typeid(*Fill()) == typeid(ImageBrush))
+	{
+		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 0);
+		if (imgbrush->Source())
+			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(imgbrush->Source()->Bm())));
+	}
+	else if (typeid(*Fill()) == typeid(SolidColorBrush))
+	{
+		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
+		auto color = solidbrush->Color();
+		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
+		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+	}
+}
+
+Size Ellipse::measureOverride(const Size & availableSize)
+{
+	return availableSize;
+}
+
+Size Ellipse::arrangeOverride(const Size & finalSize)
+{
+	return finalSize;
 }

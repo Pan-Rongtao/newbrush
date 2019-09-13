@@ -178,5 +178,7 @@ private:
 	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };
 
+using UIElementPtr = std::shared_ptr<UIElement>;
+
 }
 }
