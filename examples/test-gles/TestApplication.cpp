@@ -21,6 +21,7 @@
 #include "gles/GlyphBunch.h"
 #include "gles/Line.h"
 #include "gles/Polyline.h"
+#include "gles/Strips.h"
 #include <opengl/GLES2/gl2.h>
 
 using namespace nb;
@@ -71,12 +72,13 @@ MyApplication::MyApplication()
 //	drawTriangles();
 //	drawQuadrangles();
 	drawEllipses();
-	drawCubes();
-	drawSphere();
+//	drawCubes();
+//	drawSphere();
 	drawPhone();
 	//	drawModel();
 //	drawGlyph();
 //	drawGlyphBunch();
+	drawStrip();
 }
 
 void MyApplication::drawLines()
@@ -362,6 +364,14 @@ void MyApplication::drawGlyphBunch()
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
 	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), 'a')->texureId));
 	ro->storage()->set("fontColor", glm::vec4(1.0, 0.0, 0.0, 1.0));
+	m_context->queue(ro);
+}
+
+void MyApplication::drawStrip()
+{
+	std::vector<glm::vec2> breaks{ {200, 200}, {300, 200}, {300, 300}, {200,300} };
+	auto strip = std::make_shared<Strips>(breaks);
+	auto ro = std::make_shared<RenderObject>(strip, std::make_shared<Material>(Programs::primitive()));
 	m_context->queue(ro);
 }
 

@@ -78,8 +78,8 @@ void Strips::updateVertexs()
 		glm::vec2 p3 = { stripBeg.x - (m_thickness * 0.5) * (yDiff / stripLen), stripBeg.y + (m_thickness * 0.5) * (xDiff / stripLen) };
 		
 //		glm::vec4 stripArea = { p0, p1, p2, p3 };
-//		std::vector<Vertex> vertexs{ Vertex(stripArea) };
-		//meshes().push_back(Mesh(vertexs));
+		std::vector<Vertex> vertexs{ Vertex(glm::vec3(m_breaks[i], 0)) };
+		meshes().push_back(Mesh(vertexs, {0, 1, 2, 0, 2, 3}));
 	}
 }
 

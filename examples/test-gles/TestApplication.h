@@ -29,6 +29,7 @@ public:
 	void drawModel();
 	void drawGlyph();
 	void drawGlyphBunch();
+	void drawStrip();
 
 	bool isHit(std::shared_ptr<RenderObject> obj, int x, int y) const;
 	void hitTest(int x, int y);

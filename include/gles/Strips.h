@@ -5,7 +5,7 @@
 namespace nb{
 namespace gl{
 
-class Strips : public Model
+class NB_API Strips : public Model
 {
 public:
 	//构建一个空的带状
