@@ -56,14 +56,22 @@ float Strips::dashOffset() const
 
 void Strips::updateVertexs()
 {
+	setDrawMode(GL_LINE_STRIP);
+	//y = kx + b
+	//计算斜率
+	auto getK = [&](const glm::vec2 &p0, const glm::vec2 &p1) {
+		return (p1.y - p0.y) / (p1.x - p0.x);
+	};
 	//获取中线上任意偏移位置的x,y坐标：p0为起点坐标，p1位终点坐标，offset为距起点的沿终点的长度
 	//k为线的斜率
+	//求直线方程：y = kx + b
 	auto getXYOnLine = [&](const glm::vec2 &p0, const glm::vec2 &p1, float offset) {
 		float k = (p1.y - p0.y) / (p1.x - p0.x);
 		
 		//x^2 + (kx)^2 = offset^2
 		glm::vec2 ret;
 	};
+	std::vector<Vertex> vertexs;
 	for (auto i = 0; i != m_breaks.size() - 1; ++i)
 	{
 		glm::vec2 stripBeg = m_breaks[i];
@@ -78,9 +86,9 @@ void Strips::updateVertexs()
 		glm::vec2 p3 = { stripBeg.x - (m_thickness * 0.5) * (yDiff / stripLen), stripBeg.y + (m_thickness * 0.5) * (xDiff / stripLen) };
 		
 //		glm::vec4 stripArea = { p0, p1, p2, p3 };
-		std::vector<Vertex> vertexs{ Vertex(glm::vec3(m_breaks[i], 0)) };
-		meshes().push_back(Mesh(vertexs, {0, 1, 2, 0, 2, 3}));
+		vertexs.push_back(Vertex(glm::vec3(m_breaks[i], 0)));
 	}
+	meshes().push_back(Mesh(vertexs, { 0, 1, 2}));
 }
 
 float Strips::nextArrayElementInLoop(uint32_t currentIndex)

@@ -67,14 +67,14 @@ MyApplication::MyApplication()
 	args.height = m_window->height();
 	onResize(args);
 	
-	drawLines();
-	drawPolylines();
+//	drawLines();
+//	drawPolylines();
 //	drawTriangles();
 //	drawQuadrangles();
-	drawEllipses();
+//	drawEllipses();
 //	drawCubes();
 //	drawSphere();
-	drawPhone();
+//	drawPhone();
 	//	drawModel();
 //	drawGlyph();
 //	drawGlyphBunch();
