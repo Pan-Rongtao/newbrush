@@ -67,7 +67,7 @@ bool Timer::isActive() const
 
 void Timer::driveInLoop()
 {
-	uint64_t currentTick = NB_TICK_COUT;
+	uint64_t currentTick = nb::getTickCount();
 	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); )
 	{
 		//大于等于表示到点的timer，发送事件并移除此timer，
@@ -95,7 +95,7 @@ void Timer::driveInLoop()
 
 void Timer::add(Timer * timer)
 {
-	m_tickSequence.insert({ NB_TICK_COUT + timer->interval(), timer } );
+	m_tickSequence.insert({ nb::getTickCount() + timer->interval(), timer } );
 }
 
 std::multimap<uint64_t, Timer *>::iterator Timer::remove(Timer *timer)

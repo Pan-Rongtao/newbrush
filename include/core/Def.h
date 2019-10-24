@@ -70,7 +70,7 @@
 	#define NB_API
 #endif
 
-//支持构造函数为单字符串参数的exception类型
+//支持构造函数为单字符串参数的exception类型（宏的方式是最优解，因为要打印__FUNCTION__，做成函数是无法输出正确的__FUNCTION__的）
 #define nbThrowException(exception, argfmt, ...) \
 do{\
 	char buffer[256] = {0}; \
@@ -82,21 +82,18 @@ do{\
 	throw exception(buffer);\
 }while(0)
 
-#define NB_PI									(3.14159265358979323)
-#define NB_2PI									(6.28318530717958647)
-#define NB_HALF_PI								(1.57079632679489661)
-#define NB_ANG2RAD(angle)						(0.01745329251994329 * angle)
-#define NB_RAD2ANG(radian)						(57.2957795130823208 * radian)
-#define NB_PID									(nb::getPid())
-#define NB_TICK_COUT							(nb::getTickCount())
+#define _USE_MATH_DEFINES
 
 namespace nb 
 {
 	//获取开机以来的时钟滴答数（毫秒数）
 	NB_API uint64_t getTickCount();
 
-	//获取线程id
+	//获取本进程id
 	NB_API uint32_t getPid();
+
+	//获取本线程id
+	NB_API uint32_t getTid();
 
 	//取边界内的合法值（传入的min和max会被修正），返回值可以是min, max，也可以是value本身；Bound(1, 5, 10) = 5; Bound(1, 5, 0) = 1; Bound(1, 5, 3) = 3;
 	//min和max被定义为宏，需要加()，次函数与c++17中列入标准

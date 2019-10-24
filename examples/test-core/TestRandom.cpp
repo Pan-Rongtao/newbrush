@@ -18,21 +18,21 @@ void TestRandom::test()
 			int x = rd.get();
 			int x1 = rd.get();
 			rd.setRange(0, (int)1e5);
-			uint64_t n = NB_TICK_COUT;
+			uint64_t n = nb::getTickCount();
 			uint32_t count = (uint32_t)1e6;
 			std::vector<int> vt = rd.group(count);
-			printf("Random.group(%d) cost %d\n", count, (int)(NB_TICK_COUT - n));
+			printf("Random.group(%d) cost %d\n", count, (int)(nb::getTickCount() - n));
 			//	std::set<int> ssset(vt.begin(), vt.end());
 		}
 		{
-			uint64_t k = NB_TICK_COUT;
+			uint64_t k = nb::getTickCount();
 			Random rd(0, (int)1e5);
 			uint32_t count = (uint32_t)1e6;
 			std::vector<int> vt0 = rd.groupNonRepeat(count, false);
-			printf("Random.groupNonRepeat(%d) overflowRepeater[false] cost %d\n", count, (int)(NB_TICK_COUT - k));
-			k = NB_TICK_COUT;
+			printf("Random.groupNonRepeat(%d) overflowRepeater[false] cost %d\n", count, (int)(nb::getTickCount() - k));
+			k = nb::getTickCount();
 			std::vector<int> vt1 = rd.groupNonRepeat(count, true);
-			printf("Random.groupNonRepeat(%d) overflowRepeater[true] cost %d\n", count, (int)(NB_TICK_COUT - k));
+			printf("Random.groupNonRepeat(%d) overflowRepeater[true] cost %d\n", count, (int)(nb::getTickCount() - k));
 			//std::set<int> ssset(vt1.begin(), vt1.end());
 		}
 	}
@@ -44,11 +44,11 @@ void TestRandom::test()
 		double fget = rf.get();
 		double fget1 = rf.get();
 
-		uint64_t k = NB_TICK_COUT;
+		uint64_t k = nb::getTickCount();
 		uint32_t count = (uint32_t)1e6;
 		std::vector<double> vtf = rf.group(count);
-		uint64_t n5 = NB_TICK_COUT;
-		printf("RandomF.group(%d) cost %d\n", count, (int)(NB_TICK_COUT - k));
+		uint64_t n5 = nb::getTickCount();
+		printf("RandomF.group(%d) cost %d\n", count, (int)(nb::getTickCount() - k));
 	//	std::set<double> setxx(vtf.begin(), vtf.end());
 	}
 #endif

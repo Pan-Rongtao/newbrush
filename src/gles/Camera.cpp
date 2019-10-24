@@ -1,4 +1,5 @@
 #include "gles/Camera.h"
+#include <math.h>
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb::gl;
@@ -27,7 +28,7 @@ void Camera::lookat(const glm::vec3 & position, const glm::vec3 & target, const 
 
 void Camera::lookat2D(float width, float height)
 {
-	auto z = height / (2 * tan((22.5 * NB_PI) / 180.0f));
+	auto z = height / (2 * tan((22.5 * M_PI) / 180.0f));
 	glm::vec3 position(width / 2.0, height / 2.0, -z);
 	glm::vec3 target(width / 2.0, height / 2.0, 0.0);
 	glm::vec3 upVec(0.0, -1.0, 0.0);

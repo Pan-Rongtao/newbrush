@@ -2,7 +2,11 @@
 #include "gui/AnimationTimeline.h"
 #include "gui/PropertyAnimation.h"
 
-Property_rw<double> Width{nullptr, nullptr};
+TestStoryboard::TestStoryboard()
+	: Width(nullptr, nullptr)
+{
+}
+
 void TestStoryboard::test()
 {
 	auto doubleAni = std::make_shared<PropertyAnimation<double>>(/*-122*/);

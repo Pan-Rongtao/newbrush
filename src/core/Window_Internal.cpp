@@ -4,7 +4,7 @@
 #include "core/Log.h"
 
 using namespace nb;
-#define WINDOW_CLASS_NAME	"Newbrush Class"
+#define NB_WINDOW_CLASS_NAME	"Newbrush Class"
 
 Window_Internal::Window_Internal(Window *p)
 	: m_pW(p)
@@ -17,7 +17,7 @@ Window_Internal::Window_Internal(Window *p)
 	windowClass.cbWndExtra = 0;
 	windowClass.lpszMenuName = 0;
 	windowClass.hInstance = m_instance;
-	windowClass.lpszClassName = WINDOW_CLASS_NAME;
+	windowClass.lpszClassName = NB_WINDOW_CLASS_NAME;
 	windowClass.lpfnWndProc = Window_Internal::wndProc;
 	windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -70,7 +70,7 @@ Window_Internal::Window_Internal(Window *p)
 Window_Internal::~Window_Internal()
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	if (::DestroyWindow(m_hwnd) == 0 || ::UnregisterClassA(WINDOW_CLASS_NAME, m_instance) == 0)
+	if (::DestroyWindow(m_hwnd) == 0 || ::UnregisterClassA(NB_WINDOW_CLASS_NAME, m_instance) == 0)
 	{
 		Log::error("DestroyWindow or UnregisterClass window class fail. error code[%d]", GetLastError());
 	}

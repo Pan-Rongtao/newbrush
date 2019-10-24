@@ -25,6 +25,11 @@ NB_API uint64_t nb::getTickCount()
 
 uint32_t nb::getPid()
 {
+	return ::GetCurrentProcessId();
+}
+
+uint32_t nb::getTid()
+{
 	std::stringstream  os;
 	os << std::this_thread::get_id();
 	return std::stoi(os.str());

@@ -1,4 +1,5 @@
 ﻿#include "core/Easing.h"
+#include <math.h>
 
 using namespace nb;
 
@@ -160,9 +161,9 @@ double ElasticEase::easeInCore(double t)
 {
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return sin(13 * NB_HALF_PI * t) * pow(2, 10 * (t - 1));
-	case EasingModeE::EaseOut:		return sin(-13 * NB_HALF_PI * (t + 1)) * pow(2, -10 * t) + 1;
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * sin(13 * NB_HALF_PI * (2 * t)) * pow(2, 10 * ((2 * t) - 1))) : (0.5 * (sin(-13 * NB_HALF_PI * ((2 * t - 1) + 1)) * pow(2, -10 * (2 * t - 1)) + 2));
+	case EasingModeE::EaseIn:		return sin(13 * M_PI_2 * t) * pow(2, 10 * (t - 1));
+	case EasingModeE::EaseOut:		return sin(-13 * M_PI_2 * (t + 1)) * pow(2, -10 * t) + 1;
+	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * sin(13 * M_PI_2 * (2 * t)) * pow(2, 10 * ((2 * t) - 1))) : (0.5 * (sin(-13 * M_PI_2 * ((2 * t - 1) + 1)) * pow(2, -10 * (2 * t - 1)) + 2));
 	default:						return 0.0;
 	}
 }
@@ -285,9 +286,9 @@ double SineEase::easeInCore(double t)
 {
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return sin((t - 1) * NB_HALF_PI) + 1;
-	case EasingModeE::EaseOut:		return sin(t * NB_HALF_PI);
-	case EasingModeE::EaseInOut:	return 0.5 * (1 - cos(t * NB_PI));
+	case EasingModeE::EaseIn:		return sin((t - 1) * M_PI_2) + 1;
+	case EasingModeE::EaseOut:		return sin(t * M_PI_2);
+	case EasingModeE::EaseInOut:	return 0.5 * (1 - cos(t * M_PI));
 	default:						return 0.0;
 	}
 }

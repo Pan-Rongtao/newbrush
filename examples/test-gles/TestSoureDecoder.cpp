@@ -19,9 +19,9 @@ void TestSoureDecoder::test()
 
 	SourceDecoder sd;
 	auto program0 = Programs::phong();
-	auto k = NB_TICK_COUT;
+	auto k = nb::getTickCount();
 	sd.decode(program0->vertexShader()->source(), program0->fragmentShader()->source());
-	printf("decode cost [%d] ms\n", int(NB_TICK_COUT - k));
+	printf("decode cost [%d] ms\n", int(nb::getTickCount() - k));
 	std::map<std::string, SourceDecoder::VarTypeE> uniforms;
 	sd.getUniforms(uniforms);
 

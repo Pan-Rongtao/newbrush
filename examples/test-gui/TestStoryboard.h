@@ -8,8 +8,11 @@ using namespace nb::gui;
 class TestStoryboard : public TestBase
 {
 public:
+	TestStoryboard();
+
 	void test();
 
 private:
+	Property_rw<double> Width;
 	Storyboard	m_storyboard;
 };

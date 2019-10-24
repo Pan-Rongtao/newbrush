@@ -36,7 +36,7 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = false;
+bool g_Original = 0;
 
 MyApplication::MyApplication()
 {
@@ -71,9 +71,9 @@ MyApplication::MyApplication()
 //	drawPolylines();
 //	drawTriangles();
 //	drawQuadrangles();
-//	drawEllipses();
+	drawEllipses();
 //	drawCubes();
-//	drawSphere();
+	drawSphere();
 //	drawPhone();
 	//	drawModel();
 //	drawGlyph();
@@ -245,7 +245,7 @@ void MyApplication::drawSphere()
 
 	ro->storage()->set(Program::nbColorModeLocationStr, 0);
 	m_context->queue(ro);
-	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world5.jpg"));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world4.jpg"));
 }
 
 void MyApplication::drawPhone()

@@ -11,37 +11,21 @@ using namespace nb::gl;
 
 constexpr int SphereVSlices						= 50;										//把球按维度分成的切片数
 constexpr int SphereHSlices						= SphereVSlices / 2;						//经度循环为纬度切片数的一半
-constexpr int SphereIndicesCountVertextCount	= (SphereHSlices + 1) * (SphereVSlices + 1);//顶点数
-constexpr int SphereIndicesCount				= SphereHSlices * SphereVSlices * 6;		//顶点序列数
-constexpr auto SphereAngleStep					= NB_2PI / SphereVSlices;					//每个扇形的角度
+//constexpr int SphereIndicesCountVertextCount	= (SphereHSlices + 1) * (SphereVSlices + 1);//顶点数
 
 Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 {
+	constexpr auto angleStep = 2 * M_PI / SphereVSlices;
 	std::vector<Vertex> vertexs;
-	if (cartesian)
+	for (int i = 0; i < SphereHSlices + 1; ++i)
 	{
-		for (int i = 0; i < SphereHSlices + 1; ++i)
+		for (int j = 0; j < SphereVSlices + 1; ++j)
 		{
-			for (int j = 0; j < SphereVSlices + 1; ++j)
-			{
-				auto x = r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j);
-				auto y = r * cos(SphereAngleStep * i);
-				auto z = r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j);
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / SphereVSlices, 1.0 - ((float)i / SphereHSlices))));
-			}
-		}
-	}
-	else
-	{
-		for (int i = SphereHSlices; i != -1; --i)
-		{
-			for (int j = SphereVSlices; j != -1; --j)
-			{
-				auto x = r * sin(SphereAngleStep * i) * sin(SphereAngleStep * j);
-				auto y = r * cos(SphereAngleStep * i);
-				auto z = r * sin(SphereAngleStep * i) * cos(SphereAngleStep * j);
-				vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), glm::vec2((float)j / SphereVSlices, ((float)i / SphereHSlices))));
-			}
+			auto x = r * sin(angleStep * i) * sin(angleStep * j);
+			auto y = r * cos(angleStep * i);
+			auto z = r * sin(angleStep * i) * cos(angleStep * j);
+			auto texCoor = cartesian ? glm::vec2((float)j / SphereVSlices, 1.0 - ((float)i / SphereHSlices)) : glm::vec2(1.0 - (float)j / SphereVSlices, ((float)i / SphereHSlices));
+			vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), texCoor));
 		}
 	}
 	meshes().push_back(Mesh(vertexs, getIndices()));
@@ -57,7 +41,8 @@ void Sphere::cullFace()
 std::vector<uint16_t> Sphere::getIndices() const
 {
 	int x = 0;
-	std::vector<uint16_t> indices(SphereIndicesCount);
+	constexpr auto count = SphereHSlices * SphereVSlices * 6;
+	std::vector<uint16_t> indices(count);
 	for (int i = 0; i < SphereHSlices; i++)
 	{
 		for (int j = 0; j < SphereVSlices; j++)

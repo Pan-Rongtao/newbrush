@@ -48,12 +48,12 @@ int Application::run()
 void Application::render()
 {
 	static int frames = 0;
-	static uint64_t k = NB_TICK_COUT;
+	static uint64_t k = nb::getTickCount();
 	for (auto const &context : EglMaster::contexts())
 		context->draw();
 
 	++frames;
-	uint64_t kk = NB_TICK_COUT;
+	uint64_t kk = nb::getTickCount();
 	if(kk - k >= 2000)
 	{
 		float fps = frames * 1000.0f / (kk - k);
