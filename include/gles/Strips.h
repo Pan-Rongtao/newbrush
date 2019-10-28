@@ -56,7 +56,7 @@ private:
 
 		float evalY(float x) const;
 		//÷¥–––Èœﬂº∆À„
-		float dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points);
+		void dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points);
 
 	private:
 		glm::vec2	m_p0;

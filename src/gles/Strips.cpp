@@ -77,7 +77,8 @@ void Strips::updateVertexs()
 		std::vector<glm::vec2> line0points;
 		std::vector<glm::vec2> line1points;
 		line0.dashing(offset, m_dashArray, m_thickness, line0points);
-		offset = line1.dashing(offset, m_dashArray, m_thickness, line1points);
+		line1.dashing(offset, m_dashArray, m_thickness, line1points);
+		offset += (line0.length() / m_thickness);
 		for (auto i = 0u; i <= line0points.size() - 2; i += 2)
 		{
 			vertexs.push_back(Vertex(glm::vec3(line0points[i], 0.0f)));
@@ -156,15 +157,17 @@ float Strips::LineSegment::evalY(float x) const
 	return m_k * x + m_b;
 }
 
-float Strips::LineSegment::dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points)
+void Strips::LineSegment::dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points)
 {
+	//如果不做dash，则仅存入p0和p1
 	if (array.empty())
 	{
 		points.push_back(p0());
 		points.push_back(p1());
-		return 0;
+		return;
 	}
 
+	//否则
 	//计算开始位置
 	auto offsetTemp = 0.0f;
 	bool forwardOffset = offset >= 0;
@@ -173,29 +176,14 @@ float Strips::LineSegment::dashing(float offset, const std::vector<float> &array
 	while (true)
 	{
 		offsetTemp = offsetTemp + (*iter * (forwardOffset ? 1 : -1));
-		if (forwardOffset)
+		if ((forwardOffset && offsetTemp > offset) || (!forwardOffset && offsetTemp <= offset))
 		{
-			if (offsetTemp <= offset)
-			{
-				iter = iter == array.end() - 1 ? array.begin() : iter + 1;
-				solid = !solid;
-			}
-			else
-			{
-				break;
-			}
+			break;
 		}
 		else
 		{
-			if (offsetTemp > offset)
-			{
-				iter = iter == array.begin() ? array.end() - 1 : iter - 1;
-				solid = !solid;
-			}
-			else 
-			{
-				break;
-			}
+			iter = forwardOffset ? (iter == array.end() - 1 ? array.begin() : iter + 1) : (iter == array.begin() ? array.end() - 1 : iter - 1);
+			solid = !solid;
 		}
 	}
 	//std::abs(offsetTemp - offset)为第一个实心点实际元素array一个元素的偏移量
@@ -218,13 +206,22 @@ float Strips::LineSegment::dashing(float offset, const std::vector<float> &array
 	}
 
 	//根据dashArray计算所有points
-	for (; dashedLen < totalLen; iter = iter == array.end() - 1 ? array.begin() : iter + 1)
+	while (true)
 	{
-		dashedLen = (dashedLen + *iter * thickness);
-		//相似三角形计算x, y
-		auto x = xDiff() * (dashedLen <= dashedLen ? dashedLen : totalLen) / totalLen;
-		auto y = yDiff() * (dashedLen <= dashedLen ? dashedLen : totalLen) / totalLen;
-		points.push_back(p0() + glm::vec2(x, y));
+		dashedLen = dashedLen + *iter * thickness;
+		if (dashedLen <= totalLen)
+		{
+			//相似三角形计算x, y
+			auto x = xDiff() * dashedLen / totalLen;
+			auto y = yDiff() * dashedLen / totalLen;
+			points.push_back(p0() + glm::vec2(x, y));
+			iter = iter == array.end() - 1 ? array.begin() : iter + 1;
+		}
+		else
+		{
+			points.push_back(p0() + glm::vec2(xDiff(), yDiff()));
+			break;
+		}
 	}
-	return totalLen - dashedLen;
+
 }
