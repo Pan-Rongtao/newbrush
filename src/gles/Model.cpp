@@ -16,7 +16,7 @@ Vertex::Vertex()
 }
 
 Vertex::Vertex(const glm::vec3 & position)
-	: Vertex(position, glm::vec4(), glm::vec2(), glm::vec3())
+	: Vertex(position, glm::vec4(0.0, 0.0, 0.0, 1.0), glm::vec2(), glm::vec3())
 {
 }
 

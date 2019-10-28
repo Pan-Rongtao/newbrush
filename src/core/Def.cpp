@@ -25,7 +25,11 @@ NB_API uint64_t nb::getTickCount()
 
 uint32_t nb::getPid()
 {
+#ifdef NB_OS_FAMILY_WINDOWS
 	return ::GetCurrentProcessId();
+#else
+	return getpid();
+#endif
 }
 
 uint32_t nb::getTid()

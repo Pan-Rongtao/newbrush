@@ -14,8 +14,11 @@ public:
 	//构建一个带状，它的折点为breaks
 	Strips(const std::vector<glm::vec2> &breaks);
 
-	//构建一个带状，它的折点为breaks
+	//构建一个带状，它的折点为breaks，厚度为thickness
 	Strips(const std::vector<glm::vec2> &breaks, float thickness);
+
+	//构建一个带状，它的折点为breaks，厚度为thickness，间隔样式为dashArray，偏移量为dashOffset
+	Strips(const std::vector<glm::vec2> &breaks, float thickness, const std::vector<float> &dashArray, float dashOffset);
 
 	//厚度
 	void setThickness(float thickness);
@@ -32,41 +35,28 @@ public:
 	//
 
 private:
-	//直线方程式类 y = kx + b
-	class LinearEquation
+	//线段类 y = kx + b
+	class LineSegment
 	{
 	public:
-		LinearEquation(const glm::vec2 &p0, const glm::vec2 &p1)
-			: m_p0(p0)
-			, m_p1(p1)
-			, m_k((p1.y - p0.y) / (p1.x - p0.x))
-			, m_b(p0.y - m_k * p0.x)
-		{
-		}
+		LineSegment(const glm::vec2 &p0, const glm::vec2 &p1);
 
-		float xLen() const
-		{
-			return std::abs(m_p1.x - m_p0.x);
-		}
-		float yLen() const
-		{
-			return std::abs(m_p1.y - m_p0.y);
-		}
+		//两点p0, p1
+		const glm::vec2 &p0() const;
+		const glm::vec2 &p1() const;
 
-		float length() const
-		{
-			return std::hypotf(xLen(), yLen());
-		}
+		//水平和垂直方向的距离值，可为负数
+		float xDiff() const;
+		float yDiff() const;
 
-		float evalX(float y) const
-		{
-			return (y - m_b) / m_k;
-		}
+		//线段长度
+		float length() const;
 
-		float evalY(float x) const
-		{
-			return m_k * x + m_b;
-		}
+		float evalX(float y) const;
+
+		float evalY(float x) const;
+		//执行虚线计算
+		float dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points);
 
 	private:
 		glm::vec2	m_p0;
@@ -77,6 +67,7 @@ private:
 
 	void updateVertexs();
 	float nextArrayElementInLoop(uint32_t nCurrentIndex);
+	std::vector<uint16_t> getIndices(int vertexCount) const;
 
 	float					m_thickness;
 	float					m_dashOffset;

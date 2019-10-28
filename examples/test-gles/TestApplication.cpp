@@ -71,9 +71,9 @@ MyApplication::MyApplication()
 //	drawPolylines();
 //	drawTriangles();
 //	drawQuadrangles();
-	drawEllipses();
+//	drawEllipses();
 //	drawCubes();
-	drawSphere();
+//	drawSphere();
 //	drawPhone();
 	//	drawModel();
 //	drawGlyph();
@@ -369,9 +369,11 @@ void MyApplication::drawGlyphBunch()
 
 void MyApplication::drawStrip()
 {
-	std::vector<glm::vec2> breaks{ {200, 200}, {300, 200}, {300, 300}, {200,300} };
-	auto strip = std::make_shared<Strips>(breaks);
+	std::vector<glm::vec2> breaks{ {0, 200}, {100, 200},/*{ 100, 300 },{ 100,300 }*/ };
+	auto strip = std::make_shared<Strips>(breaks, 3.0f, std::vector<float>{ 1, 2, 3 }, -0.0);
 	auto ro = std::make_shared<RenderObject>(strip, std::make_shared<Material>(Programs::primitive()));
+	ro->storage()->set(Program::nbColorModeLocationStr, 1);
+	ro->model()->meshes()[0].unifyColor(glm::vec4(0.0, 0.0, 1.0, 1.0));
 	m_context->queue(ro);
 }
 
