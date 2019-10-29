@@ -1,4 +1,5 @@
 #include "gles/Strips.h"
+#include <numeric>
 #include <GLES2/gl2.h>
 
 using namespace nb::gl;
@@ -170,6 +171,7 @@ void Strips::LineSegment::dashing(float offset, const std::vector<float> &array,
 	//否则
 	//计算开始位置
 	auto offsetTemp = 0.0f;
+	offset = std::fmod(offset, std::accumulate(array.begin(), array.end(), 0.0f) * 2);
 	bool forwardOffset = offset >= 0;
 	auto iter = forwardOffset ? array.begin() : array.end() - 1;
 	bool solid = forwardOffset;
