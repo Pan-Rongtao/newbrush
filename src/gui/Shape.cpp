@@ -7,6 +7,7 @@
 #include "gles/Line.h"
 #include "gles/Polyline.h"
 #include <opengl/GLES2/gl2.h>
+#include "gui/GradientBrush.h"
 
 using namespace nb;
 using namespace nb::gui;
@@ -237,6 +238,33 @@ Rectangle::Rectangle()
 	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
 	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
 {
+	PropertyChanged += [&](const PropertyChangedArgs &args) {
+		if (args.dp == FillProperty())
+		{
+			m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr) : nullptr;
+			auto name = Fill.type().name();
+			if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
+			{
+				m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
+				auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
+				m_fillObj->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
+				m_fillObj->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			}
+			else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
+			{
+				m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
+			}
+			else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
+			{
+				if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
+					Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
+			}
+		}
+		else if (args.dp == StrokeProperty())
+		{
+
+		}
+	};
 }
 
 DependencyProperty Rectangle::RadiusXProperty()
@@ -255,27 +283,13 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
-		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
-	drawContext->queue(Renderer());
-
-	if (!Fill())
-		return;
-
-	if (typeid(*Fill()) == typeid(ImageBrush))
+	if(m_fillObj)
 	{
-		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
-		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 0);
-		if (imgbrush->Source())
-			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(imgbrush->Source()->Bm())));
-	}
-	else if (typeid(*Fill()) == typeid(SolidColorBrush))
-	{
-		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
-		auto color = solidbrush->Color();
-		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
-		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		m_fillObj->model()->meshes()[0].vertexs()[0].position = glm::vec3(rc.left(), rc.bottom(), 0);
+		m_fillObj->model()->meshes()[0].vertexs()[1].position = glm::vec3(rc.right(), rc.bottom(), 0);
+		m_fillObj->model()->meshes()[0].vertexs()[2].position = glm::vec3(rc.right(), rc.top(), 0);
+		m_fillObj->model()->meshes()[0].vertexs()[3].position = glm::vec3(rc.left(), rc.top(), 0);
+		drawContext->queue(m_fillObj);
 	}
 }
 

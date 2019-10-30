@@ -12,6 +12,7 @@
 **	
 ********************************************************/
 #pragma once
+#include "../core/Point.h"
 #include "../core/Color.h"
 #include "../gui/Property.h"
 #include "../gui/ImageSource.h"
@@ -31,10 +32,6 @@ public:
 
 protected:
 	Brush();
-
-private:
-	Brush(const Brush &other) = delete;
-	void operator = (const Brush &other) = delete;
 
 };
 
@@ -59,7 +56,6 @@ public:
 	Property_rw<std::shared_ptr<ImageSource>>	Source;				//源
 	static DependencyProperty					SourceProperty();	//源依赖属性
 };
-
 
 
 }}

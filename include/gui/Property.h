@@ -20,39 +20,33 @@ template<class T>
 class Property_rw
 {
 public:
-	Property_rw(std::function<void(T v)> setter, std::function<T&()> getter) 
-		: m_setter(new std::function<void(T)>(std::move(setter)))
-		, m_getter(new std::function<T&()>(std::move(getter)))
-	{ }
-	~Property_rw()								{ delete m_setter; delete m_getter; }
-	void operator =(const T &v)					{ (*m_setter)(v); }
-	bool operator == (const T &v) const			{ return v == operator()(); }
-	bool operator != (const T &v) const			{ return !operator==(v); }
-	const T&operator()() const					{ return (*m_getter)(); }
-	T &operator()()								{ return (*m_getter)(); }
-	void operator =(const Property_rw<T> &other) = delete;
+	Property_rw(std::function<void(T v)> setter, std::function<T&()> getter)  : m_setter(std::move(setter)) , m_getter(std::move(getter)) { }
+	void operator =(const T &v)					{ m_setter(v); }
+	bool operator == (const T &v) const			{ return !operator!=(v);  }
+	bool operator != (const T &v) const			{ return v != operator()(); }
+	const T&operator()() const					{ return m_getter(); }
+	T &operator()()								{ return m_getter(); }
+	const std::type_info &type() const			{ return typeid(T); }
 	
 private:
-	std::function<void(T)>	*m_setter{ nullptr };
-	std::function<T&()>		*m_getter{ nullptr };
+	std::function<void(T)>	m_setter;
+	std::function<T&()>		m_getter;
 };
 
 template<typename T>
 class Property_r
 {
 public:
-	explicit Property_r(std::function<T()> getter)
-		: m_getter(new std::function<T()>(std::move(getter)))
+	explicit Property_r(std::function<T()> getter) : m_getter(std::move(getter))
 	{ }
-	~Property_r()								{ delete m_getter; }
-	bool operator == (const T &v) const			{ return v == operator()(); }
-	bool operator != (const T &v) const			{ return !operator==(v); }
-	T operator()() const						{ return (*m_getter)(); }
+	bool operator == (const T &v) const			{ return !operator!=(v); }
+	bool operator != (const T &v) const			{ return v != operator()();  }
+	T operator()() const						{ return m_getter(); }
 	void operator = (const Property_r<T> &v)	= delete;
 	void operator = (const T &v)				= delete;
 
 private:
-	std::function<T()>		*m_getter{ nullptr };
+	std::function<T()>		m_getter;
 };
 
 

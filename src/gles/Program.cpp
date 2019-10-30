@@ -265,7 +265,6 @@ std::shared_ptr<Program> Programs::primitive()
 		"	_color = nbColor;"
 		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
-		"	gl_PointSize = 20.0f;"
 		"}";
 	constexpr char fs[] =
 		"uniform bool nbColorMode;"
@@ -278,6 +277,50 @@ std::shared_ptr<Program> Programs::primitive()
 		"		gl_FragColor = _color;"
 		"	else"
 		"		gl_FragColor = texture2D(sampler, _texCoord);"
+		"}";
+	p = compileBindLink(vs, fs);
+	return p;
+}
+
+std::shared_ptr<Program> Programs::gradientPrimitive()
+{
+	static std::shared_ptr<Program> p;
+	if (p)	return p;
+
+	constexpr char vs[] =
+		"attribute vec4 nbPos;"
+		"attribute vec4 nbColor;"
+		"attribute vec2 nbTexCoord;"
+		"uniform mat4 nbMvp;"
+		"varying vec4 _color;"
+		"varying vec2 _texCoord;"
+		"void main()"
+		"{"
+		"	_color = nbColor;"
+		"	_texCoord = nbTexCoord;"
+		"	gl_Position = nbMvp * nbPos;"
+		"}";
+	constexpr char fs[] =
+		"uniform vec4 colors[];"
+		"uniform float[] offsets;"
+		"void main()"
+		"{"
+		"	vec2 u_resolution = vec2(400, 400);"
+		"	float y = gl_FragCoord.y / u_resolution.y;"
+		"	vec4 colors[];"
+		"	colors[0] = vec4(1.0, 1.0, 1.0, 1.0);"
+		"	colors[1] = vec4(1.0, 0.0, 0.0, 1.0);"
+		"	colors[2] = vec4(0.0, 0.0, 1.0, 1.0);"
+		"	colors[3] = vec4(0.0, 0.5, 0.0, 1.0);"
+		"	float[] offsets;"
+		"	offsets[0] = 0.0;"
+		"	offsets[1] = 0.33;"
+		"	offsets[2] = 0.66;"
+		"	offsets[3] = 1.0;"
+		"	vec4 color = mix(colors[0], colors[1], smoothstep(offsets[0], offsets[1], y));"
+		"	for(int i = 2; i < 4; ++i)"
+		"		color = mix(color, colors[i], smoothstep(offsets[i-1], offsets[i], y));"
+		"	gl_FragColor = color;"
 		"}";
 	p = compileBindLink(vs, fs);
 	return p;

@@ -130,6 +130,9 @@ public:
 	//¼òµ¥program
 	static std::shared_ptr<Program> primitive();
 
+	//½¥±äÍ¼Ôª
+	static std::shared_ptr<Program> gradientPrimitive();
+
 	//phong program
 	static std::shared_ptr<Program> phong();
 

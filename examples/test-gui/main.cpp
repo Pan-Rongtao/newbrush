@@ -16,12 +16,13 @@
 #include "TestButton.h"
 #include "TestBinding.h"
 #include "TestShape.h"
+#include "TestBrush.h"
 
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestCanvas> test;
+		TestHandle<TestBrush> test;
 		test->test();
 		return app.run();
 	}

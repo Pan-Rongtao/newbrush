@@ -51,6 +51,8 @@ public:
 protected:
 	Shape();
 
+	std::shared_ptr<nb::gl::RenderObject>	m_fillObj;
+	std::shared_ptr<nb::gl::RenderObject>	m_strokeObj;
 };
 
 //Ïß

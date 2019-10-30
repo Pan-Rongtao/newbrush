@@ -1,16 +1,17 @@
 #pragma once
 #include "../TestBase.h"
-#include "gui/Application.h"
-#include "gui/Window.h"
+#include "gui/GradientBrush.h"
 #include "gui/Shape.h"
+#include "gui/Window.h"
 
 using namespace nb;
 using namespace nb::gui;
 
-class TestApp : public TestBase
+class TestBrush : public TestBase
 {
 public:
-	virtual void test();
+	void test();
+
 
 private:
 	std::shared_ptr<nb::gui::Window> m_window;

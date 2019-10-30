@@ -7,6 +7,9 @@
 
 int main(int argc, char* argv[])
 {
+	std::vector<int> vt0;
+	std::vector<int> vt1;
+	bool b = vt0 == vt1;
 	try{
 		TestHandle<TestApplication> test;
 		test->test();

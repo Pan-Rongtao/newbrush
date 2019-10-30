@@ -369,8 +369,8 @@ void MyApplication::drawGlyphBunch()
 
 void MyApplication::drawStrip()
 {
-	std::vector<glm::vec2> breaks{ {0, 200}, {300, 200},{ 300, 400 }, { 0, 400 } };
-	auto strip = std::make_shared<Strips>(breaks, 10.0f, std::vector<float>{ 1, 2, 3 }, -7.0);
+	std::vector<glm::vec2> breaks{ {100, 200}, {300, 200},{ 300, 400 }, { 100, 400 },{ 100, 200 } };
+	auto strip = std::make_shared<Strips>(breaks, 10.0f, std::vector<float>{ }, -7.0);
 	auto ro = std::make_shared<RenderObject>(strip, std::make_shared<Material>(Programs::primitive()));
 	ro->storage()->set(Program::nbColorModeLocationStr, 1);
 	ro->model()->meshes()[0].unifyColor(glm::vec4(0.0, 0.0, 1.0, 1.0));

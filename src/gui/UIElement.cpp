@@ -187,7 +187,7 @@ void UIElement::removeChild(std::shared_ptr<UIElement> child)
 void UIElement::removeChild(uint32_t index, uint32_t count)
 {
 	if(index >= childCount())
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d]", index, childCount());
+		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, childCount());
 	auto end = index + count < childCount() ? m_children.begin() + index + count : m_children.end();
 	m_children.erase(m_children.begin() + index, end);
 }
