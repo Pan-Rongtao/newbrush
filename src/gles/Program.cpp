@@ -115,21 +115,6 @@ void Program::vertexAttribute(int location, const glm::vec4 &vec)
 	glVertexAttrib4f(location, vec.x, vec.y, vec.z, vec.w);
 }
 
-void Program::vertexAttribute(int location, glm::vec2 *vec)
-{
-//	glVertexAttrib2fv(location, data);
-}
-
-void Program::vertexAttribute(int location, glm::vec3 *vec)
-{
-//
-}
-
-void Program::vertexAttribute(int location, glm::vec4 *vec)
-{
-//
-}
-
 void Program::vertexAttributePointer(int location, int dimension, int stride, const void *data)
 {
 	glEnableVertexAttribArray(location);
@@ -141,9 +126,9 @@ void Program::uniform(int location, float v)
 	glUniform1f(location, v);
 }
 
-void Program::uniform(int location, float *v, int count)
+void Program::uniform(int location, const std::vector<float> &v)
 {
-	glUniform1fv(location, count, v);
+	glUniform1fv(location, v.size(), v.empty() ? nullptr : v.data());
 }
 
 void Program::uniform(int location, const glm::vec2 &vec)
@@ -151,9 +136,9 @@ void Program::uniform(int location, const glm::vec2 &vec)
 	glUniform2f(location, vec.x, vec.y);
 }
 
-void Program::uniform(int location, glm::vec2 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::vec2> &v)
 {
-	glUniform2fv(location, count, glm::value_ptr(*vec));
+	glUniform2fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::vec3 &vec)
@@ -161,9 +146,9 @@ void Program::uniform(int location, const glm::vec3 &vec)
 	glUniform3f(location, vec.x, vec.y, vec.z);
 }
 
-void Program::uniform(int location, glm::vec3 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::vec3> &v)
 {
-	glUniform3fv(location, count, glm::value_ptr(*vec));
+	glUniform3fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::vec4 &vec)
@@ -171,9 +156,9 @@ void Program::uniform(int location, const glm::vec4 &vec)
 	glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }
 
-void Program::uniform(int location, glm::vec4 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::vec4> &v)
 {
-	glUniform4fv(location, count, glm::value_ptr(*vec));
+	glUniform4fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, int v)
@@ -181,9 +166,9 @@ void Program::uniform(int location, int v)
 	glUniform1i(location, v);
 }
 
-void Program::uniform(int location, int *v, int count)
+void Program::uniform(int location, const std::vector<int> &v)
 {
-	glUniform1iv(location, count, v);
+	glUniform1iv(location, v.size(), v.empty() ? nullptr : v.data());
 }
 
 void Program::uniform(int location, const glm::ivec2 &vec)
@@ -191,9 +176,9 @@ void Program::uniform(int location, const glm::ivec2 &vec)
 	glUniform2i(location, vec.x, vec.y);
 }
 
-void Program::uniform(int location, glm::ivec2 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::ivec2> &v)
 {
-	glUniform2iv(location, count, glm::value_ptr(*vec));
+	glUniform2iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::ivec3 &vec)
@@ -201,9 +186,9 @@ void Program::uniform(int location, const glm::ivec3 &vec)
 	glUniform3i(location, vec.x, vec.y, vec.z);
 }
 
-void Program::uniform(int location, glm::ivec3 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::ivec3> &v)
 {
-	glUniform3iv(location, count, glm::value_ptr(*vec));
+	glUniform3iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::ivec4 &vec)
@@ -211,9 +196,9 @@ void Program::uniform(int location, const glm::ivec4 &vec)
 	glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
 }
 
-void Program::uniform(int location, glm::ivec4 *vec, int count)
+void Program::uniform(int location, const std::vector<glm::ivec4> &v)
 {
-	glUniform4iv(location, count, glm::value_ptr(*vec));
+	glUniform4iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat2x2 &matrix)
@@ -221,9 +206,9 @@ void Program::uniform(int location, const glm::mat2x2 &matrix)
 	glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Program::uniform(int location, glm::mat2x2 *matrix, int count)
+void Program::uniform(int location, const std::vector<glm::mat2x2> &v)
 {
-	glUniformMatrix2fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
+	glUniformMatrix2fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat3x3 &matrix)
@@ -231,9 +216,9 @@ void Program::uniform(int location, const glm::mat3x3 &matrix)
 	glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Program::uniform(int location, glm::mat3x3 *matrix, int count)
+void Program::uniform(int location, const std::vector<glm::mat3x3> &v)
 {
-	glUniformMatrix3fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
+	glUniformMatrix3fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat4x4 &matrix)
@@ -241,9 +226,9 @@ void Program::uniform(int location, const glm::mat4x4 &matrix)
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Program::uniform(int location, glm::mat4x4 *matrix, int count)
+void Program::uniform(int location, const std::vector<glm::mat4x4> &v)
 {
-	glUniformMatrix4fv(location, count, GL_FALSE, glm::value_ptr(*matrix));
+	glUniformMatrix4fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 ////////////////programs
@@ -289,36 +274,21 @@ std::shared_ptr<Program> Programs::gradientPrimitive()
 
 	constexpr char vs[] =
 		"attribute vec4 nbPos;"
-		"attribute vec4 nbColor;"
-		"attribute vec2 nbTexCoord;"
 		"uniform mat4 nbMvp;"
-		"varying vec4 _color;"
-		"varying vec2 _texCoord;"
 		"void main()"
 		"{"
-		"	_color = nbColor;"
-		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
 		"}";
 	constexpr char fs[] =
-		"uniform vec4 colors[];"
-		"uniform float[] offsets;"
+		"uniform int array_size;"
+		"uniform vec4 colors[10];"
+		"uniform float offsets[10];"
 		"void main()"
 		"{"
 		"	vec2 u_resolution = vec2(400, 400);"
 		"	float y = gl_FragCoord.y / u_resolution.y;"
-		"	vec4 colors[];"
-		"	colors[0] = vec4(1.0, 1.0, 1.0, 1.0);"
-		"	colors[1] = vec4(1.0, 0.0, 0.0, 1.0);"
-		"	colors[2] = vec4(0.0, 0.0, 1.0, 1.0);"
-		"	colors[3] = vec4(0.0, 0.5, 0.0, 1.0);"
-		"	float[] offsets;"
-		"	offsets[0] = 0.0;"
-		"	offsets[1] = 0.33;"
-		"	offsets[2] = 0.66;"
-		"	offsets[3] = 1.0;"
 		"	vec4 color = mix(colors[0], colors[1], smoothstep(offsets[0], offsets[1], y));"
-		"	for(int i = 2; i < 4; ++i)"
+		"	for(int i = 2; i < array_size; ++i)"
 		"		color = mix(color, colors[i], smoothstep(offsets[i-1], offsets[i], y));"
 		"	gl_FragColor = color;"
 		"}";

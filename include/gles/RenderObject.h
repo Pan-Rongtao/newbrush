@@ -13,10 +13,9 @@
 ********************************************************/
 #pragma once
 #include <string>
-#include "../core/Def.h"
+#include "../core/Any.h"
 #include "../gles/Model.h"
 #include "../gles/Material.h"
-#include "../gles/Storage.h"
 
 struct aiNode;
 struct aiMesh;
@@ -59,11 +58,10 @@ public:
 
 	//获取材质
 	std::shared_ptr<Material> material();
-	std::shared_ptr<Material> material() const;
 
-	//获取存储
-	std::shared_ptr<Storage> storage();
-
+	//存储变量
+	void set(const std::string &name, const Any &v);
+	
 	//绘制，重写此方法以构建自己的渲染方式
 	virtual void draw() const;
 
@@ -74,7 +72,7 @@ private:
 	bool						m_renderable;
 	std::shared_ptr<Model>		m_model;
 	std::shared_ptr<Material>	m_material;
-	std::shared_ptr<Storage>	m_storage;
+	std::map<std::string, Any>	m_uniforms;
 };
 
 }}

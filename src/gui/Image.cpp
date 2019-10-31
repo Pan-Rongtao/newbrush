@@ -6,7 +6,6 @@
 #include "gles/Quadrangle.h"
 #include "gles/Program.h"
 #include "gles/Texture2D.h"
-#include "gles/Storage.h"
 #include "gui/ImageSource.h"
 
 using namespace nb;

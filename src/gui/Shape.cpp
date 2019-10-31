@@ -238,33 +238,7 @@ Rectangle::Rectangle()
 	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
 	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArgs &args) {
-		if (args.dp == FillProperty())
-		{
-			m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr) : nullptr;
-			auto name = Fill.type().name();
-			if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
-			{
-				m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
-				auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
-				m_fillObj->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
-				m_fillObj->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-			}
-			else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
-			{
-				m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
-			}
-			else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
-			{
-				if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
-					Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
-			}
-		}
-		else if (args.dp == StrokeProperty())
-		{
-
-		}
-	};
+	PropertyChanged += std::bind(&Rectangle::onPropertyChanged, this, std::placeholders::_1);
 }
 
 DependencyProperty Rectangle::RadiusXProperty()
@@ -305,6 +279,50 @@ Size Rectangle::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
+void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
+{
+	if (args.dp == FillProperty())
+	{
+		m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr) : nullptr;
+		auto name = Fill.type().name();
+		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
+		{
+			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
+			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
+			m_fillObj->set(nb::gl::Program::nbColorModeLocationStr, 1);
+			m_fillObj->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		}
+		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
+		{
+			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
+			auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
+			auto stops = linearGradientBrush->GradientStops();
+			auto program = m_fillObj->material()->program();
+			std::vector<glm::vec4> colors;
+			std::vector<float> offsets;
+			for (auto i = 0; i != stops.count(); ++i)
+			{
+				auto stop = stops[i];
+				auto color = stop.Color();
+				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+				offsets.push_back(stop.Offset());
+			}
+			m_fillObj->set("array_size", stops.count());
+			m_fillObj->set("colors", colors);
+			m_fillObj->set("offsets", offsets);
+		}
+		else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
+		{
+			if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
+				Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
+		}
+	}
+	else if (args.dp == StrokeProperty())
+	{
+
+	}
+}
+
 /////////////////
 Ellipse::Ellipse()
 {
@@ -323,7 +341,7 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	if (typeid(*Fill()) == typeid(ImageBrush))
 	{
 		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
-		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 0);
+		Renderer()->set(nb::gl::Program::nbColorModeLocationStr, 0);
 		if (imgbrush->Source())
 			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(imgbrush->Source()->Bm())));
 	}
@@ -331,7 +349,7 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	{
 		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
 		auto color = solidbrush->Color();
-		Renderer()->storage()->set(nb::gl::Program::nbColorModeLocationStr, 1);
+		Renderer()->set(nb::gl::Program::nbColorModeLocationStr, 1);
 		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 	}
 }

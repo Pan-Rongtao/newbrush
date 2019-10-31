@@ -72,6 +72,16 @@ int GradientStopCollection::count() const
 	return m_gradientStops.size();
 }
 
+GradientStop &GradientStopCollection::operator[](int index)
+{
+	return m_gradientStops[index];
+}
+
+const GradientStop &GradientStopCollection::operator[](int index) const
+{
+	return m_gradientStops[index];
+}
+
 GradientBrush::GradientBrush()
 	: GradientBrush(GradientStopCollection())
 {

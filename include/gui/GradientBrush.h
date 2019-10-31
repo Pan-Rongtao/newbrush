@@ -29,6 +29,8 @@ public:
 	int count() const;
 
 	bool operator != (const GradientStopCollection &other) const { return true; }
+	GradientStop & operator[](int index);
+	const GradientStop & operator[](int index) const;
 
 private:
 	std::vector<GradientStop>	m_gradientStops;

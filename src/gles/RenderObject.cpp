@@ -33,7 +33,6 @@ RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Materia
 	, m_model(model)
 	, m_material(material)
 {
-	m_storage = std::make_shared<Storage>();
 }
 
 void RenderObject::loadFromFile(const std::string & path)
@@ -82,66 +81,68 @@ std::shared_ptr<Material> RenderObject::material()
 	return m_material;
 }
 
-std::shared_ptr<Material> RenderObject::material() const
+void RenderObject::set(const std::string & name, const Any & v)
 {
-	return m_material;
-}
-
-std::shared_ptr<Storage> RenderObject::storage()
-{
-	return m_storage;
+	m_uniforms[name] = v;
 }
 
 void RenderObject::draw() const
 {
-	if (!material())
-		return;
-	auto program = m_material->program();
-	auto textures = m_material->textures();
-	if (!m_renderable || !m_model || m_model->meshes().empty() || !m_material || !program)
+	if (!m_renderable || !m_model || m_model->meshes().empty() || !m_material || !m_material->program())
 		return;
 
+	auto program = m_material->program();
+	auto textures = m_material->textures();
 	program->use();
 	m_model->cullFace();
-	//uniform只需更新一次即可，不必每个mesh都更新
-	//计算后的mvp
+	//计算后的mvp，以及分开的m/v/p
 	{
 		auto m = m_model->getMatrix();
 		auto v = nb::gl::getCamera()->matrix();
 		auto p = nb::gl::getProjection()->matrix();
-		auto mvp = nb::gl::getProjection()->matrix() * nb::gl::getCamera()->matrix() * m_model->getMatrix();
+		auto mvp = p * v * m;
 		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
-	}
-	//分开的mvp
-	{
-		program->uniform(program->getUniformLocation(Program::nbPStr), nb::gl::getProjection()->matrix());
-		program->uniform(program->getUniformLocation(Program::nbVStr), nb::gl::getCamera()->matrix());
-		program->uniform(program->getUniformLocation(Program::nbMStr), m_model->getMatrix());
+		program->uniform(program->getUniformLocation(Program::nbMStr), m);
+		program->uniform(program->getUniformLocation(Program::nbVStr), v);
+		program->uniform(program->getUniformLocation(Program::nbPStr), p);
 	}
 	//storage中的uniform
-	for (auto const &iter : m_storage->uniforms())
+	for (auto const &iter : m_uniforms)
 	{
-		int location = program->getUniformLocation(iter.first.data());
-		const Any &v = iter.second;
-		if (v.type() == typeid(bool))				program->uniform(location, any_cast<bool>(v));
-		else if (v.type() == typeid(int))			program->uniform(location, any_cast<int>(v));
-		else if (v.type() == typeid(float))			program->uniform(location, any_cast<float>(v));
-		else if (v.type() == typeid(double))		program->uniform(location, (float)any_cast<double>(v));
-		else if (v.type() == typeid(glm::vec2))		program->uniform(location, any_cast<glm::vec2>(v));
-		else if (v.type() == typeid(glm::vec3))		program->uniform(location, any_cast<glm::vec3>(v));
-		else if (v.type() == typeid(glm::vec4))		program->uniform(location, any_cast<glm::vec4>(v));
-		else if (v.type() == typeid(glm::mat2x2))	program->uniform(location, any_cast<glm::mat2x2>(v));
-		else if (v.type() == typeid(glm::mat3x3))	program->uniform(location, any_cast<glm::mat3x3>(v));
-		else if (v.type() == typeid(glm::mat4x4))	program->uniform(location, any_cast<glm::mat4x4>(v));
-		else if (v.type() == typeid(glm::ivec2))	program->uniform(location, any_cast<glm::ivec2>(v));
-		else if (v.type() == typeid(glm::ivec3))	program->uniform(location, any_cast<glm::ivec3>(v));
-		else if (v.type() == typeid(glm::ivec4))	program->uniform(location, any_cast<glm::ivec4>(v));
+		auto location = program->getUniformLocation(iter.first.data());
+		auto const &v = iter.second;
+		if (v.type() == typeid(bool))							program->uniform(location, any_cast<bool>(v));
+		else if (v.type() == typeid(int))						program->uniform(location, any_cast<int>(v));
+		else if (v.type() == typeid(float))						program->uniform(location, any_cast<float>(v));
+		else if (v.type() == typeid(double))					program->uniform(location, (float)any_cast<double>(v));
+		else if (v.type() == typeid(glm::vec2))					program->uniform(location, any_cast<glm::vec2>(v));
+		else if (v.type() == typeid(glm::vec3))					program->uniform(location, any_cast<glm::vec3>(v));
+		else if (v.type() == typeid(glm::vec4))					program->uniform(location, any_cast<glm::vec4>(v));
+		else if (v.type() == typeid(glm::mat2x2))				program->uniform(location, any_cast<glm::mat2x2>(v));
+		else if (v.type() == typeid(glm::mat3x3))				program->uniform(location, any_cast<glm::mat3x3>(v));
+		else if (v.type() == typeid(glm::mat4x4))				program->uniform(location, any_cast<glm::mat4x4>(v));
+		else if (v.type() == typeid(glm::ivec2))				program->uniform(location, any_cast<glm::ivec2>(v));
+		else if (v.type() == typeid(glm::ivec3))				program->uniform(location, any_cast<glm::ivec3>(v));
+		else if (v.type() == typeid(glm::ivec4))				program->uniform(location, any_cast<glm::ivec4>(v));
+		else if (v.type() == typeid(std::vector<int>))			program->uniform(location, any_cast<std::vector<int>>(v));
+		else if (v.type() == typeid(std::vector<float>))		program->uniform(location, any_cast<std::vector<float>>(v));
+		else if (v.type() == typeid(std::vector<double>))		{ auto vt = any_cast<std::vector<double>>(v); program->uniform(location, std::vector<float>{vt.begin(), vt.end()}); }
+		else if (v.type() == typeid(std::vector<glm::vec2>))	program->uniform(location, any_cast<std::vector<glm::vec2>>(v));
+		else if (v.type() == typeid(std::vector<glm::vec3>))	program->uniform(location, any_cast<std::vector<glm::vec3>>(v));
+		else if (v.type() == typeid(std::vector<glm::vec4>))	program->uniform(location, any_cast<std::vector<glm::vec4>>(v));
+		else if (v.type() == typeid(std::vector<glm::mat2x2>))	program->uniform(location, any_cast<std::vector<glm::mat2x2>>(v));
+		else if (v.type() == typeid(std::vector<glm::mat3x3>))	program->uniform(location, any_cast<std::vector<glm::mat3x3>>(v));
+		else if (v.type() == typeid(std::vector<glm::mat4x4>))	program->uniform(location, any_cast<std::vector<glm::mat4x4>>(v));
+		else if (v.type() == typeid(std::vector<glm::ivec2>))	program->uniform(location, any_cast<std::vector<glm::ivec2>>(v));
+		else if (v.type() == typeid(std::vector<glm::ivec3>))	program->uniform(location, any_cast<std::vector<glm::ivec3>>(v));
+		else if (v.type() == typeid(std::vector<glm::ivec4>))	program->uniform(location, any_cast<std::vector<glm::ivec4>>(v));
+		else													Log::warn("%s is not a supported type for glsl.", v.type().name());
+		
 	}
 
 	//依次绘制meshs
-	for (int i = 0; i != m_model->meshes().size(); ++i)
+	for (auto const &mesh : m_model->meshes())
 	{
-		auto const &mesh = m_model->meshes()[i];
 		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
 		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
 		program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
