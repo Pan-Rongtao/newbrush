@@ -27,6 +27,6 @@ Polyline::Polyline(const std::vector<glm::vec2>& points)
 		vertexs.push_back(Vertex(glm::vec3(points[i], 0.0f) - center, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 		indices.push_back(i);
 	}
-	meshes().push_back(Mesh(vertexs, indices));
+	meshes.push_back(Mesh(vertexs, indices));
 	translate(center.x, center.y, center.z);
 }

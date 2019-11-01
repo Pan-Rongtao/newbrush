@@ -69,19 +69,16 @@ public:
 	float *normalData();
 	const float *normalData() const;
 
-	//顶点集合
-	std::vector<Vertex> &vertexs();
-	const std::vector<Vertex> &vertexs() const;
-
 	//顶点序列(逆时针)
 	const std::vector<uint16_t> &indices() const;
 
 	//将所有顶点颜色统一
 	void unifyColor(const glm::vec4 &color);
 
+	std::vector<Vertex>		vertexs;
+
 private:
-	std::vector<Vertex>								m_vertexs;
-	std::vector<uint16_t>							m_indices;
+	std::vector<uint16_t>	m_indices;
 };
 
 class NB_API Model
@@ -95,10 +92,6 @@ public:
 	Model(const Model &&other);
 	void operator = (const Model &other);
 	void operator = (const Model &&other);
-
-	//mesh集合
-	std::vector<Mesh> &meshes();
-	const std::vector<Mesh> &meshes() const;
 
 	//设置模型矩阵(经过了平移、旋转、缩放）
 	void setMatrix(const glm::mat4x4 &matrix);
@@ -123,12 +116,14 @@ public:
 	//x,y：坐标
 	virtual bool orthoHitTest(float x, float y);
 
-	//剔除表面，不重写则禁用
-	virtual void cullFace();
+	//渲染前指令
+	virtual void preCommands();
 
 	//绘制方式，默认为GL_TRIANGLES
 	void setDrawMode(unsigned int mode);
 	unsigned int drawMode() const;
+
+	std::vector<Mesh>	meshes;
 
 private:
 	glm::mat4x4 rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 const& v);
@@ -138,7 +133,6 @@ private:
 	glm::mat4x4			m_translateMatrix;
 	glm::mat4x4			m_rotateMatrix;
 	glm::mat4x4			m_scaleMatrix;
-	std::vector<Mesh>	m_meshes;
 	unsigned int		m_mode;
 };
 

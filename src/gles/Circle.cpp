@@ -19,7 +19,7 @@ Circle::Circle(float x, float y, float a, float b, bool cartesian)
 		glm::vec2 texCoord(0.5 * cos(radian) + 0.5, cartesian ? 0.5 * sin(radian) + 0.5 : 1.0 - (0.5 * sin(radian) + 0.5));
 		vertexs.push_back(Vertex(glm::vec3(a * cos(radian), b * sin(radian), 0.0), glm::vec4(), texCoord));
 	}
-	meshes().push_back(Mesh(vertexs, getIndices()));
+	meshes.push_back(Mesh(vertexs, getIndices()));
 	translate(x, y, 0.0f);
 }
 

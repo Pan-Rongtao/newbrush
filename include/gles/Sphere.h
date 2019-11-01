@@ -20,7 +20,7 @@ public:
 	Sphere(float x, float y, float z, float r, bool cartesian);
 
 private:
-	virtual void cullFace() override;
+	virtual void preCommands() override;
 	std::vector<uint16_t> getIndices() const;
 
 };

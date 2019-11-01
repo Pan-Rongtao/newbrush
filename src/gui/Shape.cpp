@@ -259,10 +259,10 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc(offset.x(), offset.y(), ActualSize());
 	if(m_fillObj)
 	{
-		m_fillObj->model()->meshes()[0].vertexs()[0].position = glm::vec3(rc.left(), rc.bottom(), 0);
-		m_fillObj->model()->meshes()[0].vertexs()[1].position = glm::vec3(rc.right(), rc.bottom(), 0);
-		m_fillObj->model()->meshes()[0].vertexs()[2].position = glm::vec3(rc.right(), rc.top(), 0);
-		m_fillObj->model()->meshes()[0].vertexs()[3].position = glm::vec3(rc.left(), rc.top(), 0);
+		m_fillObj->model()->meshes[0].vertexs[0].position = glm::vec3(rc.left(), rc.bottom(), 0);
+		m_fillObj->model()->meshes[0].vertexs[1].position = glm::vec3(rc.right(), rc.bottom(), 0);
+		m_fillObj->model()->meshes[0].vertexs[2].position = glm::vec3(rc.right(), rc.top(), 0);
+		m_fillObj->model()->meshes[0].vertexs[3].position = glm::vec3(rc.left(), rc.top(), 0);
 		drawContext->queue(m_fillObj);
 	}
 }
@@ -290,7 +290,7 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
 			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
 			m_fillObj->set(nb::gl::Program::nbColorModeLocationStr, 1);
-			m_fillObj->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			m_fillObj->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 		}
 		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
 		{
@@ -307,7 +307,7 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 				offsets.push_back(stop.Offset());
 			}
-			m_fillObj->set("array_size", stops.count());
+			m_fillObj->set("size", stops.count());
 			m_fillObj->set("colors", colors);
 			m_fillObj->set("offsets", offsets);
 		}
@@ -350,7 +350,7 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
 		auto color = solidbrush->Color();
 		Renderer()->set(nb::gl::Program::nbColorModeLocationStr, 1);
-		Renderer()->model()->meshes()[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		Renderer()->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 	}
 }
 

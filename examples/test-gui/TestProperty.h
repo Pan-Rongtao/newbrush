@@ -9,8 +9,10 @@ class TestProperty : public TestBase
 {
 public:
 	TestProperty();
-	virtual void test() override {} 
-/*
+	virtual void test() override;
+
+	void tt() const;
+
 	Property_rw<bool>	IsBool;
 	Property_rw<int>	Integer0;
 	Property_rw<int>	Integer1;
@@ -18,17 +20,14 @@ public:
 	Property_rw<Size>	Range;
 	Property_rw<Size>	Range1;
 	Property_r<bool>	Visible;
-	Property_w<std::string> Name;
-	Property_r<Size>	SZR;
-	*/
+	Property_r<Size>	BorderSize;
+	
 private:
-	void notifyIsBool(bool _old, bool _new);
-
-	Size	m_range1{Size(11,22)};
-	Size	m_szGetter{ Size(1.11f, 2.22f) };
-	bool	m_b{false};
-};
-
-class AA
-{
+	bool	m_bool{ false };
+	int		m_int0{ 0 };
+	int		m_int1{ 0 };
+	float	m_float0{ 0.0f };
+	Size	m_size0{ Size(11,22) };
+	Size	m_size1{ Size(1.11f, 2.22f) };
+	bool	m_visible{ false };
 };

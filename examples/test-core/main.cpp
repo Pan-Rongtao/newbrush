@@ -1,6 +1,5 @@
 #include "../TestBase.h"
 #include "TestException.h"
-#include "TestProperty.h"
 #include "TestColor.h"
 #include "TestDateTime.h"
 #include "TestTimer.h"

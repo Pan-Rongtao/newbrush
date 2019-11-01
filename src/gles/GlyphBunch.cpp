@@ -27,7 +27,7 @@ void GlyphBunch::arrage(std::shared_ptr<Font> font, float xStart, float yStart, 
 		indices[i * 6 + 5] = i * 4 + 3;
 	};
 
-	meshes().clear();
+	meshes.clear();
 	float x = xStart;
 	float y = yStart;
 	m_width = 0.0f;
@@ -80,7 +80,7 @@ void GlyphBunch::arrage(std::shared_ptr<Font> font, float xStart, float yStart, 
 	default:
 		break;
 	}
-	meshes().push_back(Mesh(vertexs, indices));
+	meshes.push_back(Mesh(vertexs, indices));
 }
 
 float GlyphBunch::getWidth() const

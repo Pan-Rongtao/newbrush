@@ -280,15 +280,15 @@ std::shared_ptr<Program> Programs::gradientPrimitive()
 		"	gl_Position = nbMvp * nbPos;"
 		"}";
 	constexpr char fs[] =
-		"uniform int array_size;"
-		"uniform vec4 colors[10];"
-		"uniform float offsets[10];"
+		"uniform int size;"
+		"uniform vec4 colors[100];"
+		"uniform float offsets[100];"
 		"void main()"
 		"{"
 		"	vec2 u_resolution = vec2(400, 400);"
 		"	float y = gl_FragCoord.y / u_resolution.y;"
 		"	vec4 color = mix(colors[0], colors[1], smoothstep(offsets[0], offsets[1], y));"
-		"	for(int i = 2; i < array_size; ++i)"
+		"	for(int i = 2; i < size; ++i)"
 		"		color = mix(color, colors[i], smoothstep(offsets[i-1], offsets[i], y));"
 		"	gl_FragColor = color;"
 		"}";

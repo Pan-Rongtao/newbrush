@@ -28,11 +28,11 @@ Sphere::Sphere(float x, float y, float z, float r, bool cartesian)
 			vertexs.push_back(Vertex(glm::vec3(x, y, z), glm::vec4(), texCoor));
 		}
 	}
-	meshes().push_back(Mesh(vertexs, getIndices()));
+	meshes.push_back(Mesh(vertexs, getIndices()));
 	translate(x, y, z);
 }
 
-void Sphere::cullFace()
+void Sphere::preCommands()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

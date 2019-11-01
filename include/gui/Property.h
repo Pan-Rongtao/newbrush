@@ -21,11 +21,12 @@ class Property_rw
 {
 public:
 	Property_rw(std::function<void(T v)> setter, std::function<T&()> getter)  : m_setter(std::move(setter)) , m_getter(std::move(getter)) { }
-	void operator =(const T &v)					{ m_setter(v); }
+	void operator =(const T &v) &				{ try { m_setter(v); } catch (...) { nbThrowException(std::runtime_error, "null setter"); } }
 	bool operator == (const T &v) const			{ return !operator!=(v);  }
 	bool operator != (const T &v) const			{ return v != operator()(); }
-	const T&operator()() const					{ return m_getter(); }
-	T &operator()()								{ return m_getter(); }
+	const T&operator()() const					{ return const_cast<Property_rw *>(this)->operator()(); }
+	T &operator()()								{ try { return m_getter(); } catch (...) { nbThrowException(std::runtime_error, "null getter"); } }
+	operator T() const							{ return operator()(); }
 	const std::type_info &type() const			{ return typeid(T); }
 	
 private:
@@ -37,13 +38,14 @@ template<typename T>
 class Property_r
 {
 public:
-	explicit Property_r(std::function<T()> getter) : m_getter(std::move(getter))
-	{ }
+	explicit Property_r(std::function<T()> getter) : m_getter(std::move(getter)) { }
 	bool operator == (const T &v) const			{ return !operator!=(v); }
 	bool operator != (const T &v) const			{ return v != operator()();  }
-	T operator()() const						{ return m_getter(); }
+	T operator()() const						{ try { return m_getter(); } catch (...) { nbThrowException(std::runtime_error, "null getter"); } }
 	void operator = (const Property_r<T> &v)	= delete;
 	void operator = (const T &v)				= delete;
+	operator T() const							{ return operator()(); }
+	const std::type_info &type() const			{ return typeid(T); }
 
 private:
 	std::function<T()>		m_getter;

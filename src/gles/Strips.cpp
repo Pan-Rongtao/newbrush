@@ -88,8 +88,8 @@ void Strips::updateVertexs()
 			vertexs.push_back(Vertex(glm::vec3(line1points[i], 0.0f)));
 		}
 	}
-	meshes().clear();
-	meshes().push_back(Mesh(vertexs, getIndices(vertexs.size())));
+	meshes.clear();
+	meshes.push_back(Mesh(vertexs, getIndices(vertexs.size())));
 	
 }
 

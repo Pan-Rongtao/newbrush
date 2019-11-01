@@ -88,13 +88,13 @@ void RenderObject::set(const std::string & name, const Any & v)
 
 void RenderObject::draw() const
 {
-	if (!m_renderable || !m_model || m_model->meshes().empty() || !m_material || !m_material->program())
+	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_material || !m_material->program())
 		return;
 
 	auto program = m_material->program();
 	auto textures = m_material->textures();
 	program->use();
-	m_model->cullFace();
+	m_model->preCommands();
 	//计算后的mvp，以及分开的m/v/p
 	{
 		auto m = m_model->getMatrix();
@@ -126,7 +126,6 @@ void RenderObject::draw() const
 		else if (v.type() == typeid(glm::ivec4))				program->uniform(location, any_cast<glm::ivec4>(v));
 		else if (v.type() == typeid(std::vector<int>))			program->uniform(location, any_cast<std::vector<int>>(v));
 		else if (v.type() == typeid(std::vector<float>))		program->uniform(location, any_cast<std::vector<float>>(v));
-		else if (v.type() == typeid(std::vector<double>))		{ auto vt = any_cast<std::vector<double>>(v); program->uniform(location, std::vector<float>{vt.begin(), vt.end()}); }
 		else if (v.type() == typeid(std::vector<glm::vec2>))	program->uniform(location, any_cast<std::vector<glm::vec2>>(v));
 		else if (v.type() == typeid(std::vector<glm::vec3>))	program->uniform(location, any_cast<std::vector<glm::vec3>>(v));
 		else if (v.type() == typeid(std::vector<glm::vec4>))	program->uniform(location, any_cast<std::vector<glm::vec4>>(v));
@@ -141,7 +140,7 @@ void RenderObject::draw() const
 	}
 
 	//依次绘制meshs
-	for (auto const &mesh : m_model->meshes())
+	for (auto const &mesh : m_model->meshes)
 	{
 		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
 		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
@@ -166,7 +165,7 @@ void RenderObject::loopNode(aiNode * node, const aiScene * scene)
 	for (int i = 0; i != node->mNumMeshes; ++i)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		m_model->meshes().push_back(processMesh(mesh, scene));
+		m_model->meshes.push_back(processMesh(mesh, scene));
 	}
 	for (int i = 0; i != node->mNumChildren; ++i)
 		loopNode(node->mChildren[i], scene);

@@ -20,7 +20,7 @@ Cube::Cube(float x, float y, float z, float lenght, float width, float height)
 		Vertex(glm::vec3(-lenght / 2, -height / 2, -width / 2)),
 		Vertex(glm::vec3(lenght / 2, -height / 2, -width / 2))
 	};
-	meshes().push_back(Mesh(vertexs, {
+	meshes.push_back(Mesh(vertexs, {
 		3,2,1, 3,1,0,
 		7,6,5, 7,5,4,
 		0,5,6, 0,6,3,
@@ -30,7 +30,7 @@ Cube::Cube(float x, float y, float z, float lenght, float width, float height)
 	translate(x, y, z);
 }
 
-void Cube::cullFace()
+void Cube::preCommands()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

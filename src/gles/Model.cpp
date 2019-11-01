@@ -45,19 +45,19 @@ Mesh::Mesh()
 }
 
 Mesh::Mesh(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
-	: m_vertexs(vertexs)
+	: vertexs(vertexs)
 	, m_indices(indices)
 {
 }
 
 Mesh::Mesh(const Mesh & other)
-	: m_vertexs(other.m_vertexs)
+	: vertexs(other.vertexs)
 	, m_indices(other.m_indices)
 {
 }
 
 Mesh::Mesh(const Mesh && other)
-	: m_vertexs(std::move(other.m_vertexs))
+	: vertexs(std::move(other.vertexs))
 	, m_indices(std::move(other.m_indices))
 {
 
@@ -65,19 +65,19 @@ Mesh::Mesh(const Mesh && other)
 
 void Mesh::operator = (const Mesh &other)
 {
-	m_vertexs = other.m_vertexs;
+	vertexs = other.vertexs;
 	m_indices = other.m_indices;
 }
 
 void Mesh::operator = (const Mesh &&other)
 {
-	m_vertexs = std::move(other.m_vertexs);
+	vertexs = std::move(other.vertexs);
 	m_indices = std::move(other.m_indices);
 }
 
 float *Mesh::positionData()
 {
-	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].position) : nullptr;
+	return !vertexs.empty() ? glm::value_ptr(vertexs[0].position) : nullptr;
 }
 
 const float *Mesh::positionData() const
@@ -87,7 +87,7 @@ const float *Mesh::positionData() const
 
 float *Mesh::colorData()
 {
-	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].color) : nullptr;
+	return !vertexs.empty() ? glm::value_ptr(vertexs[0].color) : nullptr;
 }
 
 const float *Mesh::colorData() const
@@ -97,7 +97,7 @@ const float *Mesh::colorData() const
 
 float *Mesh::textureCoordinateData()
 {
-	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].texCoord) : nullptr;
+	return !vertexs.empty() ? glm::value_ptr(vertexs[0].texCoord) : nullptr;
 }
 
 const float *Mesh::textureCoordinateData() const
@@ -107,7 +107,7 @@ const float *Mesh::textureCoordinateData() const
 
 float *Mesh::normalData()
 {
-	return !m_vertexs.empty() ? glm::value_ptr(m_vertexs[0].normal) : nullptr;
+	return !vertexs.empty() ? glm::value_ptr(vertexs[0].normal) : nullptr;
 }
 
 const float *Mesh::normalData() const
@@ -115,20 +115,10 @@ const float *Mesh::normalData() const
 	return const_cast<Mesh *>(this)->normalData();
 }
 
-std::vector<Vertex> &Mesh::vertexs()
-{
-	return m_vertexs;
-}
-
-const std::vector<Vertex> &Mesh::vertexs() const
-{
-	return m_vertexs;
-}
-
 void Mesh::unifyColor(const glm::vec4 &color)
 {
-	for (int i = 0; i != m_vertexs.size(); ++i)
-		m_vertexs[i].color = color;
+	for (auto &vertex : vertexs)
+		vertex.color = color;
 }
 
 const std::vector<uint16_t> &Mesh::indices() const
@@ -151,7 +141,7 @@ Model::Model(const Model & other)
 	, m_translateMatrix(other.m_translateMatrix)
 	, m_rotateMatrix(other.m_rotateMatrix)
 	, m_scaleMatrix(other.m_scaleMatrix)
-	, m_meshes(other.m_meshes)
+	, meshes(other.meshes)
 	, m_mode(GL_TRIANGLES)
 {
 }
@@ -161,7 +151,7 @@ Model::Model(const Model && other)
 	, m_translateMatrix(other.m_translateMatrix)
 	, m_rotateMatrix(other.m_rotateMatrix)
 	, m_scaleMatrix(other.m_scaleMatrix)
-	, m_meshes(std::move(other.m_meshes))
+	, meshes(std::move(other.meshes))
 	, m_mode(GL_TRIANGLES)
 {
 }
@@ -172,7 +162,7 @@ void Model::operator=(const Model & other)
 	m_translateMatrix = other.m_translateMatrix;
 	m_rotateMatrix = other.m_rotateMatrix;
 	m_scaleMatrix = other.m_scaleMatrix;
-	m_meshes = other.m_meshes;
+	meshes = other.meshes;
 	m_mode = other.m_mode;
 }
 
@@ -182,18 +172,8 @@ void Model::operator=(const Model && other)
 	m_translateMatrix = other.m_translateMatrix;
 	m_rotateMatrix = other.m_rotateMatrix;
 	m_scaleMatrix = other.m_scaleMatrix;
-	m_meshes = std::move(other.m_meshes);
+	meshes = std::move(other.meshes);
 	m_mode = other.m_mode;
-}
-
-std::vector<Mesh>& Model::meshes()
-{
-	return m_meshes;
-}
-
-const std::vector<Mesh>& Model::meshes() const
-{
-	return m_meshes;
 }
 
 void Model::setMatrix(const glm::mat4x4 &matrix)
@@ -243,7 +223,7 @@ bool Model::orthoHitTest(float x, float y)
 	return intersect(raypos, raydir);
 }
 
-void Model::cullFace()
+void Model::preCommands()
 {
 	glDisable(GL_CULL_FACE);
 }
@@ -288,14 +268,14 @@ glm::mat4x4 Model::rotate_fix(glm::mat4x4 const& m, float radian, glm::vec3 cons
 
 bool Model::intersect(const glm::vec3 & raypos, const glm::vec3 & raydir) const
 {
-	for (auto const &mesh : meshes())
+	for (auto const &mesh : meshes)
 	{
 		auto idxs = mesh.indices();
 		for (auto i = 0u; i + 3 <= mesh.indices().size(); i += 3)
 		{
-			auto p0 = mesh.vertexs()[idxs[i + 0]].position;
-			auto p1 = mesh.vertexs()[idxs[i + 1]].position;
-			auto p2 = mesh.vertexs()[idxs[i + 2]].position;
+			auto p0 = mesh.vertexs[idxs[i + 0]].position;
+			auto p1 = mesh.vertexs[idxs[i + 1]].position;
+			auto p2 = mesh.vertexs[idxs[i + 2]].position;
 			glm::vec2 bary;
 			float d;
 			auto m = getMatrix();

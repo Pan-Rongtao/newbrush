@@ -17,12 +17,13 @@
 #include "TestBinding.h"
 #include "TestShape.h"
 #include "TestBrush.h"
+#include "TestProperty.h"
 
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestBrush> test;
+		TestHandle<TestProperty> test;
 		test->test();
 		return app.run();
 	}
