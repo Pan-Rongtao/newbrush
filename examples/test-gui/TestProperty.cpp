@@ -30,6 +30,9 @@ void TestProperty::test()
 	bool v = Visible;
 	m_visible = !m_visible;
 
+	Element e;
+	m_vt.emplace_back(Element());
+
 //	auto sz = BorderSize();
 
 	tt();

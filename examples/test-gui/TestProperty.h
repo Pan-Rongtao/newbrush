@@ -5,6 +5,21 @@
 
 using namespace nb;
 
+class Element
+{
+public:
+	Element()
+		: IsPressed([&](bool v) {return m_pressed; }, [&]()->bool& {return m_pressed; })
+	{
+
+	}
+
+	Property_rw<bool>	IsPressed;
+
+private:
+	bool	m_pressed{ false };
+};
+
 class TestProperty : public TestBase
 {
 public:
@@ -30,4 +45,5 @@ private:
 	Size	m_size0{ Size(11,22) };
 	Size	m_size1{ Size(1.11f, 2.22f) };
 	bool	m_visible{ false };
+	std::vector<Element>	m_vt;
 };
