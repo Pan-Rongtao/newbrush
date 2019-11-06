@@ -15,38 +15,38 @@ public:
 	static DependencyProperty	ColorProperty();
 	static DependencyProperty	OffsetPropert();
 };
+using GradientStopPtr = std::shared_ptr<GradientStop>;
 
 class NB_API GradientStopCollection
 {
 public:
 	GradientStopCollection();
-	GradientStopCollection(const std::vector<GradientStop> &gradientStops);
+	GradientStopCollection(const std::vector<GradientStopPtr> &gradientStops);
 
-	void insert(int index, const GradientStop &value);
-	void add(const GradientStop &value);
+	void insert(int index, GradientStopPtr value);
+	void add(GradientStopPtr value);
 	void remove(int index);
-	bool contains(const GradientStop &value) const;
+	bool contains(GradientStopPtr value) const;
 	int count() const;
-
-	bool operator != (const GradientStopCollection &other) const { return true; }
-	GradientStop & operator[](int index);
-	const GradientStop & operator[](int index) const;
+	GradientStopPtr operator[](int index);
 
 private:
-	std::vector<GradientStop>	m_gradientStops;
+	std::vector<GradientStopPtr>	m_gradientStops;
 };
+using GradientStopCollectionPtr = std::shared_ptr<GradientStopCollection>;
 	
 class NB_API GradientBrush : public Brush
 {
 public:
-	Property_rw<GradientStopCollection>		GradientStops;
+	Property_rw<GradientStopCollectionPtr>		GradientStops;
 	static DependencyProperty				GradientStopsProperty();
 
 protected:
 	GradientBrush();
-	GradientBrush(const GradientStopCollection &gradientStops);
+	GradientBrush(GradientStopCollectionPtr gradientStops);
 
 };
+using GradientBrushPtr = std::shared_ptr<GradientBrush>;
 
 
 //class LinearGradientBrush
@@ -56,14 +56,15 @@ public:
 	LinearGradientBrush();
 	LinearGradientBrush(const nb::Color &startColor, const nb::Color &endColor, float angle);
 	LinearGradientBrush(const nb::Color &startColor, const nb::Color &endColor, const nb::Point &startPoint, const nb::Point &endPoint);
-	LinearGradientBrush(const GradientStopCollection &gradientStops);
-	LinearGradientBrush(const GradientStopCollection &gradientStops, float angle);
-	LinearGradientBrush(const GradientStopCollection &gradientStops, const nb::Point &startPoint, const nb::Point &endPoint);
+	LinearGradientBrush(GradientStopCollectionPtr gradientStops);
+	LinearGradientBrush(GradientStopCollectionPtr gradientStops, float angle);
+	LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point &startPoint, const nb::Point &endPoint);
 
 	Property_rw<Point>			StartPoint;
 	Property_rw<Point>			EndPoint;
 	static DependencyProperty	StartPointProperty();
 	static DependencyProperty	EndPointProperty();
 };
+using LinearGradientBrushPtr = std::shared_ptr<LinearGradientBrush>;
 
 }}

@@ -31,23 +31,23 @@ DependencyProperty GradientStop::OffsetPropert()
 }
 
 GradientStopCollection::GradientStopCollection()
-	: GradientStopCollection(std::vector<GradientStop>{})
+	: GradientStopCollection(std::vector<GradientStopPtr>{})
 {
 }
 
-GradientStopCollection::GradientStopCollection(const std::vector<GradientStop>& gradientStops)
+GradientStopCollection::GradientStopCollection(const std::vector<GradientStopPtr>& gradientStops)
 	: m_gradientStops(gradientStops)
 {
 }
 
-void GradientStopCollection::insert(int index, const GradientStop & value)
+void GradientStopCollection::insert(int index, GradientStopPtr value)
 {
 	if (index > count())
 		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, count());
 	m_gradientStops.insert(m_gradientStops.begin() + index, value);
 }
 
-void GradientStopCollection::add(const GradientStop & value)
+void GradientStopCollection::add(GradientStopPtr value)
 {
 	insert(count(), value);
 }
@@ -59,11 +59,9 @@ void GradientStopCollection::remove(int index)
 	m_gradientStops.erase(m_gradientStops.begin() + index);
 }
 
-bool GradientStopCollection::contains(const GradientStop & value) const
+bool GradientStopCollection::contains(GradientStopPtr value) const
 {
-	auto iter = std::find_if(m_gradientStops.begin(), m_gradientStops.end(), [&value](const GradientStop &gs) {
-		return false;// gs.Color() == value.Color() && gs.Offset() == value.Offset();
-	});
+	auto iter = std::find(m_gradientStops.begin(), m_gradientStops.end(), value);
 	return iter != m_gradientStops.end();
 }
 
@@ -72,34 +70,29 @@ int GradientStopCollection::count() const
 	return m_gradientStops.size();
 }
 
-GradientStop &GradientStopCollection::operator[](int index)
-{
-	return m_gradientStops[index];
-}
-
-const GradientStop &GradientStopCollection::operator[](int index) const
+GradientStopPtr GradientStopCollection::operator[](int index)
 {
 	return m_gradientStops[index];
 }
 
 GradientBrush::GradientBrush()
-	: GradientBrush(GradientStopCollection())
+	: GradientBrush(nullptr)
 {
 }
 
-GradientBrush::GradientBrush(const GradientStopCollection & gradientStops)
-	: GradientStops([&](GradientStopCollection v) {set(GradientStopsProperty(), v); }, [&]()->GradientStopCollection & {return get<GradientStopCollection>(GradientStopsProperty()); })
+GradientBrush::GradientBrush(GradientStopCollectionPtr gradientStops)
+	: GradientStops([&](GradientStopCollectionPtr v) {set(GradientStopsProperty(), v); }, [&]()->GradientStopCollectionPtr & {return get<GradientStopCollectionPtr>(GradientStopsProperty()); })
 {
 }
 
 DependencyProperty GradientBrush::GradientStopsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<GradientBrush, GradientStopCollection>("GradientStops", GradientStopCollection());
+	static auto dp = DependencyProperty::registerDependency<GradientBrush, GradientStopCollectionPtr>("GradientStops", nullptr);
 	return dp;
 }
 
 LinearGradientBrush::LinearGradientBrush()
-	: LinearGradientBrush(GradientStopCollection(), Point(0.0f, 0.0f), Point(1.0f, 0.0f))
+	: LinearGradientBrush(nullptr, Point(0.0f, 0.0f), Point(1.0f, 0.0f))
 {
 }
 
@@ -110,8 +103,8 @@ LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb:
 	auto xDiff = 1 / std::tanf(glm::radians(angle));
 	StartPoint = Point(0, 0);
 	EndPoint = Point(xDiff, 1);
-	GradientStops().add(GradientStop(startColor, 0.0));
-	GradientStops().add(GradientStop(endColor, 1.0));
+	GradientStops()->add(std::make_shared<GradientStop>(startColor, 0.0f));
+	GradientStops()->add(std::make_shared<GradientStop>(endColor, 1.0f));
 }
 
 LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb::Color & endColor, const nb::Point & startPoint, const nb::Point & endPoint)
@@ -120,16 +113,16 @@ LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb:
 {
 	StartPoint = startPoint;
 	EndPoint = endPoint;
-	GradientStops().add(GradientStop(startColor, 0.0));
-	GradientStops().add(GradientStop(endColor, 1.0));
+	GradientStops()->add(std::make_shared<GradientStop>(startColor, 0.0f));
+	GradientStops()->add(std::make_shared<GradientStop>(endColor, 1.0f));
 }
 
-LinearGradientBrush::LinearGradientBrush(const GradientStopCollection & gradientStops)
+LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops)
 	: LinearGradientBrush(gradientStops, Point(0.0f, 0.0f), Point(1.0f, 0.0f))
 {
 }
 
-LinearGradientBrush::LinearGradientBrush(const GradientStopCollection & gradientStops, float angle)
+LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, float angle)
 	: GradientBrush(gradientStops)
 	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
 	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })
@@ -139,7 +132,7 @@ LinearGradientBrush::LinearGradientBrush(const GradientStopCollection & gradient
 	EndPoint = Point(xDiff, 1);
 }
 
-LinearGradientBrush::LinearGradientBrush(const GradientStopCollection & gradientStops, const nb::Point & startPoint, const nb::Point & endPoint)
+LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point & startPoint, const nb::Point & endPoint)
 	: GradientBrush(gradientStops)
 	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
 	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })

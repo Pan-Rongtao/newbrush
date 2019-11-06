@@ -300,14 +300,14 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 			auto program = m_fillObj->material()->program();
 			std::vector<glm::vec4> colors;
 			std::vector<float> offsets;
-			for (auto i = 0; i != stops.count(); ++i)
+			for (auto i = 0; i != stops->count(); ++i)
 			{
-				auto stop = stops[i];
-				auto color = stop.Color();
+				auto stop = (*stops)[i];
+				auto color = stop->Color();
 				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-				offsets.push_back(stop.Offset());
+				offsets.push_back(stop->Offset());
 			}
-			m_fillObj->set("size", stops.count());
+			m_fillObj->set("size", stops->count());
 			m_fillObj->set("colors", colors);
 			m_fillObj->set("offsets", offsets);
 		}
