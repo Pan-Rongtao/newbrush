@@ -206,7 +206,7 @@ void Polygon::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
 	}
 	auto model = std::make_shared<nb::gl::Polyline>(points);
-	model->setDrawMode(GL_LINE_LOOP);
+	model->mode = GL_LINE_LOOP;
 	Renderer()->setModel(model);
 	drawContext->queue(Renderer());
 }

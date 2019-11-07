@@ -1,5 +1,6 @@
 #include "gles/Circle.h"
 #include <math.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gl;
@@ -49,5 +50,5 @@ void Circle::set(float x, float y, float a, float b, bool cartesian)
 		vertexs[i].position = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
 		vertexs[i].texCoord = glm::vec2(0.5 * cos(radian) + 0.5, cartesian ? 0.5 * sin(radian) + 0.5 : 1.0 - (0.5 * sin(radian) + 0.5));
 	}
-	translate(x, y, 0.0f);
+	matrix = glm::translate(glm::mat4x4{1.0f}, glm::vec3(x, y, 0.0f));
 }

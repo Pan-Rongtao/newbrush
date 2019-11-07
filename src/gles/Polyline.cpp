@@ -1,5 +1,6 @@
 #include "gles/Polyline.h"
 #include <opengl/GLES2/gl2.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gl;
@@ -11,7 +12,7 @@ Polyline::Polyline()
 
 Polyline::Polyline(const std::vector<glm::vec2>& points)
 {
-	setDrawMode(GL_LINE_STRIP);//GL_LINE_LOOP
+	Model::mode = GL_LINE_STRIP;
 
 	auto center = glm::vec3(0.0f);
 	if (!points.empty())
@@ -28,5 +29,5 @@ Polyline::Polyline(const std::vector<glm::vec2>& points)
 		indices.push_back(i);
 	}
 	meshes.push_back(Mesh(vertexs, indices));
-	translate(center.x, center.y, center.z);
+	matrix = glm::translate(matrix, glm::vec3(center.x, center.y, center.z));
 }

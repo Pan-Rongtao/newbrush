@@ -24,7 +24,7 @@ public:
 	Cube(float x, float y, float z, float lenght, float width, float height);
 
 private:
-	virtual void preCommands() override;
+	virtual void preprocess() override;
 };
 
 }}

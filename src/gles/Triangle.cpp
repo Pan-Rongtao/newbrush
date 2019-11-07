@@ -1,5 +1,6 @@
 #include "gles/Triangle.h"
 #include <math.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gl;
@@ -28,7 +29,7 @@ Triangle::Triangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2
 		Vertex(glm::vec3(p2, 0.0f) - c, color2) 
 	};
 	meshes.push_back(Mesh(vertexs, { 0, 1, 2 }));
-	translate(c.x, c.y, c.z);
+	matrix = glm::translate(matrix, glm::vec3(c.x, c.y, c.z));
 }
 
 glm::vec2 Triangle::center(const glm::vec2 & p0, const glm::vec2 & p1, const glm::vec2 & p2) const

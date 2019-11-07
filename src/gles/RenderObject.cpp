@@ -94,12 +94,12 @@ void RenderObject::draw() const
 	auto program = m_material->program();
 	auto textures = m_material->textures();
 	program->use();
-	m_model->preCommands();
+	m_model->preprocess();
 	//计算后的mvp，以及分开的m/v/p
 	{
-		auto m = m_model->getMatrix();
-		auto v = nb::gl::getCamera()->matrix();
-		auto p = nb::gl::getProjection()->matrix();
+		auto const &m = m_model->matrix;
+		auto const &v = nb::gl::getCamera()->matrix;
+		auto const &p = nb::gl::getProjection()->matrix;
 		auto mvp = p * v * m;
 		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
 		program->uniform(program->getUniformLocation(Program::nbMStr), m);
@@ -151,7 +151,7 @@ void RenderObject::draw() const
 			program->vertexAttributePointer(Program::nbTexCoordLocaltion, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
 		}
 
-		glDrawElements(m_model->drawMode(), (int)mesh.indices().size(), GL_UNSIGNED_SHORT, mesh.indices().data());
+		glDrawElements(m_model->mode, (int)mesh.indices.size(), GL_UNSIGNED_SHORT, mesh.indices.data());
 		if (!textures.empty())
 			textures[0]->unbind();
 	}

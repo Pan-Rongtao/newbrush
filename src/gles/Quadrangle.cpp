@@ -1,6 +1,7 @@
 #include "gles/Quadrangle.h"
 #include <array>
 #include <math.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gl;
@@ -68,5 +69,5 @@ Quadrangle::Quadrangle(const glm::vec2 & p0, const glm::vec2 & p1, const glm::ve
 		};
 		meshes.push_back(Mesh(vertexs, { 0, 1, 2, 0, 2, 3 }));
 	}
-	translate(center.x, center.y, center.z);
+	matrix = glm::translate(matrix, glm::vec3(center.x, center.y, center.z));
 }

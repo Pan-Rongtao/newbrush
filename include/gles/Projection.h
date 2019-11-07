@@ -18,9 +18,7 @@ class NB_API Projection
 public:
 	Projection();
 
-	//矩阵
-	glm::mat4x4 &matrix();
-	const glm::mat4x4 &matrix() const;
+	glm::mat4x4		matrix;
 
 	//正射投影
 	void ortho(float left, float right, float bottom, float top, float near, float far);
@@ -29,10 +27,7 @@ public:
 	//fovy：弧度
 	void perspective(float fovy, float aspect, float near, float far);
 
-	static std::shared_ptr<Projection> instance();
 
-private:
-	glm::mat4x4		m_matrix;
 };
 
 }}

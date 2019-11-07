@@ -20,19 +20,14 @@ public:
 	//构建一个摄像机，它的位置为(0.0, 0.0, 1.0)，目标点为(0.0, 0.0, 0.0)，它的上轴为(0.0, 1.0, 0.0)
 	Camera();
 
-	//获取观察矩阵
-	glm::mat4x4 &matrix();
-	const glm::mat4x4 &matrix() const;
+	glm::mat4	matrix;	//观察矩阵
 
 	//lookup
 	void lookat(const glm::vec3 &position, const glm::vec3 &target, const glm::vec3 &upVec);
 	void lookat2D(float width, float height);
 
-	glm::vec3 posotion() const;
+	glm::vec3 position() const;
 
-private:
-	glm::vec3		m_pos;
-	glm::mat4x4		m_matrix;
 };
 
 }}

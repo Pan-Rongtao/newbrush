@@ -5,25 +5,13 @@
 using namespace nb::gl;
 
 Camera::Camera()
-	: m_matrix(1)
-	, m_pos(0.0, 0.0, 1.0)
+	: matrix(1.0f)
 {
-}
-
-glm::mat4x4 &Camera::matrix()
-{
-	return m_matrix;
-}
-
-const glm::mat4x4 &Camera::matrix() const
-{
-	return m_matrix;
 }
 
 void Camera::lookat(const glm::vec3 & position, const glm::vec3 & target, const glm::vec3 & upVec)
 {
-	m_pos = position;
-	m_matrix = glm::lookAt(position, target, upVec);
+	matrix = glm::lookAt(position, target, upVec);
 }
 
 void Camera::lookat2D(float width, float height)
@@ -35,7 +23,7 @@ void Camera::lookat2D(float width, float height)
 	lookat(position, target, upVec);
 }
 
-glm::vec3 Camera::posotion() const
+glm::vec3 Camera::position() const
 {
-	return m_pos;
+	return -glm::vec3{ matrix[3].x, matrix[3].y, matrix[3].z };;
 }

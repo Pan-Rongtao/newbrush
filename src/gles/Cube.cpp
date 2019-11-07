@@ -1,5 +1,6 @@
 #include "gles/Cube.h"
 #include <GLES2/gl2.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gl;
@@ -27,10 +28,10 @@ Cube::Cube(float x, float y, float z, float lenght, float width, float height)
 		1,2,7, 1,7,4,
 		0,1,5, 1,4,5,
 		3,6,7, 3,7,2, }));
-	translate(x, y, z);
+	matrix = glm::translate(matrix, glm::vec3(x, y, z));
 }
 
-void Cube::preCommands()
+void Cube::preprocess()
 {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);

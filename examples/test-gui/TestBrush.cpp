@@ -3,7 +3,7 @@
 void TestBrush::test()
 {
 	m_window = std::make_shared<nb::gui::Window>();
-	auto rc = std::make_shared<Rectangle>();
+	auto rc = std::make_shared<Ellipse>();
 	rc->Fill = std::make_shared<SolidColorBrush>(Colors::red());
 	rc->Margin = Thickness(20);
 	m_window->Content = rc;

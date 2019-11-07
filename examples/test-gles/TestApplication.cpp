@@ -87,7 +87,7 @@ void MyApplication::drawLines()
 	ro->set(Program::nbColorModeLocationStr, 1);
 	line->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	line->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	line->setDrawMode(GL_LINES);
+	line->mode = GL_LINES;
 	m_context->queue(ro);
 }
 
@@ -96,10 +96,10 @@ void MyApplication::drawPolylines()
 	auto polyline = std::make_shared<Polyline>(std::vector<glm::vec2>{glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 100.0f), glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 00.0f)});
 	auto ro = std::make_shared<RenderObject>(polyline, std::make_shared<Material>(Programs::primitive()));
 	ro->set(Program::nbColorModeLocationStr, 1);
-	polyline->setDrawMode(GL_LINE_LOOP);
+	polyline->mode = GL_LINE_LOOP;
 	polyline->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	polyline->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	polyline->translate(10, 10, 0);
+//	polyline->translate(10, 10, 0);
 	m_context->queue(ro);
 }
 
@@ -315,12 +315,12 @@ void MyApplication::drawModel()
 	renderer->loadFromFile("e:/model/nanosuit/nanosuit.obj");
 	if (g_Original)
 	{
-		renderer->model()->scale(0.05f, 0.05f, 0.05f);
+//		renderer->model()->scale(0.05f, 0.05f, 0.05f);
 	}
 	else
 	{
-		renderer->model()->scale(10, 10, 10);
-		renderer->model()->translate(200, 200, 0);
+//		renderer->model()->scale(10, 10, 10);
+//		renderer->model()->translate(200, 200, 0);
 	}
 	//model->load("e:/model/test/spider.obj");
 	m_context->queue(renderer);
@@ -469,8 +469,8 @@ void MyApplication::onMouseMove(const nb::Window::MouseMoveEventArgs & args)
 	if (!bPress)	return;
 	for (int i = 0; i != m_context->renderObjectCount(); ++i)
 	{
-		m_context->renderObject(i)->model()->rotate((float)-(args.x - pressX), 0.0f, 1.0f, 0.0f);
-		m_context->renderObject(i)->model()->rotate((float)-(args.y - pressY), 1.0f, 0.0f, 0.0f);
+//		m_context->renderObject(i)->model()->rotate((float)-(args.x - pressX), 0.0f, 1.0f, 0.0f);
+//		m_context->renderObject(i)->model()->rotate((float)-(args.y - pressY), 1.0f, 0.0f, 0.0f);
 	}
 	pressX = args.x;
 	pressY = args.y;
@@ -484,8 +484,8 @@ void MyApplication::onKeyAction(const nb::Window::KeyEventArgs & args)
 		switch (args.key)
 		{
 		case KeyCodeE::Esc:
-			for (int i = 0; i != m_context->renderObjectCount(); ++i)
-				m_context->renderObject(i)->model()->setMatrix(glm::identity<glm::mat4x4>());
+		//	for (int i = 0; i != m_context->renderObjectCount(); ++i)
+		//		m_context->renderObject(i)->model()->setMatrix(glm::identity<glm::mat4x4>());
 			break;
 		case KeyCodeE::F1:
 		{
@@ -521,16 +521,16 @@ void MyApplication::onKeyAction(const nb::Window::KeyEventArgs & args)
 		case KeyCodeE::Space:
 			break;
 		case KeyCodeE::A:
-			m_context->renderObject(0)->model()->rotate(10, 0, 1, 0);
+//			m_context->renderObject(0)->model()->rotate(10, 0, 1, 0);
 			break;
 		case KeyCodeE::D:
-			m_context->renderObject(0)->model()->rotate(-10, 0, 1, 0);
+//			m_context->renderObject(0)->model()->rotate(-10, 0, 1, 0);
 			break;
 		case KeyCodeE::W:
-			m_context->renderObject(0)->model()->rotate(10, 1, 0, 0);
+//			m_context->renderObject(0)->model()->rotate(10, 1, 0, 0);
 			break;
 		case KeyCodeE::S:
-			m_context->renderObject(0)->model()->rotate(-10, 1, 0, 0);
+//			m_context->renderObject(0)->model()->rotate(-10, 1, 0, 0);
 			break;
 		case KeyCodeE::B:
 			break;
@@ -583,10 +583,10 @@ void MyApplication::onKeyAction(const nb::Window::KeyEventArgs & args)
 		case KeyCodeE::Q:
 			break;
 		case KeyCodeE::R:
-			m_context->renderObject(0)->model()->rotate(-10, 0, 0, 1);
+//			m_context->renderObject(0)->model()->rotate(-10, 0, 0, 1);
 			break;
 		case KeyCodeE::T:
-			m_context->renderObject(0)->model()->rotate(10, 0, 0, 1);
+//			m_context->renderObject(0)->model()->rotate(10, 0, 0, 1);
 			break;
 		case KeyCodeE::U:
 			break;
@@ -599,22 +599,22 @@ void MyApplication::onKeyAction(const nb::Window::KeyEventArgs & args)
 		case KeyCodeE::Z:
 			break;
 		case KeyCodeE::Left:
-			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0f, 0.0f, 0.0f);
+//			m_context->renderObject(0)->model()->translate(g_Original ? -0.01f : -10.0f, 0.0f, 0.0f);
 			break;
 		case KeyCodeE::Up:
-			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? 0.01f : 10.0f, 0.0f);
+//			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? 0.01f : 10.0f, 0.0f);
 			break;
 		case KeyCodeE::Right:
-			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0f, 0.0f, 0.0f);
+//			m_context->renderObject(0)->model()->translate(g_Original ? 0.01f : 10.0f, 0.0f, 0.0f);
 			break;
 		case KeyCodeE::Down:
-			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? -0.01f : -10.0f, 0.0f);
+//			m_context->renderObject(0)->model()->translate(0.0f, g_Original ? -0.01f : -10.0f, 0.0f);
 			break;
 		case KeyCodeE::Add:
-			m_context->renderObject(0)->model()->scale(2, 2, 2);
+//			m_context->renderObject(0)->model()->scale(2, 2, 2);
 			break;
 		case KeyCodeE::Sub:
-			m_context->renderObject(0)->model()->scale(0.5, 0.5, 0.5);
+//			m_context->renderObject(0)->model()->scale(0.5, 0.5, 0.5);
 			break;
 		default:
 			break;
@@ -629,7 +629,7 @@ void MyApplication::OnTick(const Timer::TickArgs & param)
 {
 	for (int i = 0; i != m_context->renderObjectCount(); ++i)
 	{
-		m_context->renderObject(i)->model()->rotate(0.5, 0, 1, 0);
+	//	m_context->renderObject(i)->model()->rotate(0.5, 0, 1, 0);
 	}
 }
 
