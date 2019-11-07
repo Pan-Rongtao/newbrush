@@ -284,7 +284,6 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 	if (args.dp == FillProperty())
 	{
 		m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr) : nullptr;
-		auto name = Fill.type().name();
 		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
 		{
 			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
@@ -326,31 +325,60 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 /////////////////
 Ellipse::Ellipse()
 {
+	PropertyChanged += std::bind(&Ellipse::onPropertyChanged, this, std::placeholders::_1);
+}
+
+void Ellipse::onPropertyChanged(const PropertyChangedArgs & args)
+{
+	if (args.dp == FillProperty())
+	{
+		m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Circle>(), nullptr) : nullptr;
+		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
+		{
+			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
+			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
+			m_fillObj->set(nb::gl::Program::nbColorModeLocationStr, 1);
+			m_fillObj->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		}
+		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
+		{
+			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
+			auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
+			auto stops = linearGradientBrush->GradientStops();
+			auto program = m_fillObj->material()->program();
+			std::vector<glm::vec4> colors;
+			std::vector<float> offsets;
+			for (auto i = 0; i != stops->count(); ++i)
+			{
+				auto stop = (*stops)[i];
+				auto color = stop->Color();
+				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+				offsets.push_back(stop->Offset());
+			}
+			m_fillObj->set("size", stops->count());
+			m_fillObj->set("colors", colors);
+			m_fillObj->set("offsets", offsets);
+		}
+		else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
+		{
+			if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
+				Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
+		}
+	}
+	else if (args.dp == StrokeProperty())
+	{
+
+	}
 }
 
 void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
-	Rect rc(Offset().x(), Offset().y(), ActualSize());
-	Renderer()->setModel(std::make_shared<gl::Circle>(static_cast<float>(rc.center().x()), static_cast<float>(rc.center().y()), static_cast<float>(rc.width() / 2), static_cast<float>(rc.height() / 2), false));
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
-	drawContext->queue(Renderer());
-
-	if (!Fill())
-		return;
-
-	if (typeid(*Fill()) == typeid(ImageBrush))
+	auto offset = worldOffset();
+	Rect rc(offset.x(), offset.y(), ActualSize());
+	if (m_fillObj)
 	{
-		auto imgbrush = std::dynamic_pointer_cast<ImageBrush>(Fill());
-		Renderer()->set(nb::gl::Program::nbColorModeLocationStr, 0);
-		if (imgbrush->Source())
-			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(imgbrush->Source()->Bm())));
-	}
-	else if (typeid(*Fill()) == typeid(SolidColorBrush))
-	{
-		auto solidbrush = std::dynamic_pointer_cast<SolidColorBrush>(Fill());
-		auto color = solidbrush->Color();
-		Renderer()->set(nb::gl::Program::nbColorModeLocationStr, 1);
-		Renderer()->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		std::dynamic_pointer_cast<gl::Circle>(m_fillObj->model())->set(rc.center().x(), rc.center().y(), rc.width() / 2, rc.height() / 2, false);
+		drawContext->queue(m_fillObj);
 	}
 }
 
