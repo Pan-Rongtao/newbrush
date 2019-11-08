@@ -25,11 +25,7 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.c
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME NbMedia)
-if(WIN32 AND NOT MINGW)
-	target_link_libraries(${LIB_NAME} core optimized freetype debug freetyped legacy_stdio_definitions.lib)
-elseif(UNIX AND NOT ANDROID)
-	target_link_libraries(${LIB_NAME} core freetype)
-endif()
+target_link_libraries(${LIB_NAME} core freetype)
 
 # 4. Project Install
 install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
