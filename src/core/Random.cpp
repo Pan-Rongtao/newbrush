@@ -181,7 +181,7 @@ std::wstring RandomS::get(uint32_t size) const
 	{
 		std::wstring ret(size, 0);
 		std::uniform_int_distribution<int>	dis;
-		dis.param(decltype(dis)::param_type(0, m_range.size() - 1));
+		dis.param(decltype(dis)::param_type(0, (int)m_range.size() - 1));
 		std::generate_n(ret.begin(), size, [&]() {return m_range[dis(g_seed)]; });
 		return ret;
 	}

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 //ÒªÇóc++11
 //#if __cplusplus < 201103L

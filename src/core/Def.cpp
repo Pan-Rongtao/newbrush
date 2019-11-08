@@ -14,7 +14,7 @@
 NB_API uint64_t nb::getTickCount()
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	return GetTickCount();
+	return GetTickCount64();
 #else
 	struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -43,17 +43,19 @@ std::vector<std::string> nb::stringSplit(const std::string & s, const std::strin
 {
 	std::vector<std::string> ret;
 	std::string sSource = s;
-	char *token = strtok((char *)sSource.data(), sSymbol.data());
+	char *p = nullptr;
+#ifdef NB_OS_FAMILY_WINDOWS
+	#define STRTOK	strtok_s
+#else
+	#define STRTOK	strtok_r
+#endif
+	auto* token = STRTOK((char*)sSource.data(), sSymbol.data(), &p);
 	while (token)
 	{
 		std::string s = token;
-		if (bSkipEmptyString && s.empty())
-		{
-			token = strtok(nullptr, sSymbol.data());
-			continue;
-		}
-		ret.push_back(std::move(s));
-		token = strtok(nullptr, sSymbol.data());
+		if (!(bSkipEmptyString && s.empty()))
+			ret.emplace_back(s);
+		token = STRTOK(nullptr, sSymbol.data(), &p);
 	}
 	return ret;
 }

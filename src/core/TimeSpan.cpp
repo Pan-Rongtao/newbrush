@@ -218,7 +218,7 @@ std::string TimeSpan::toString(const std::string & format)
 
 int64_t TimeSpan::unitsToMicros(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) const
 {
-	return days * 86400000000 + hours * 3600000000 + minutes * 60000000 + seconds * std::micro::den + milliseconds * std::milli::den + microseconds;
+	return days * 86400000000 + hours * 3600000000i64 + minutes * 60000000i64 + seconds * std::micro::den + milliseconds * std::milli::den + microseconds;
 }
 
 std::string TimeSpan::simpleToString(const std::string & format, const std::map<char, int>& char_v)
@@ -226,7 +226,7 @@ std::string TimeSpan::simpleToString(const std::string & format, const std::map<
 	auto getLastSameFlag = [&](char c, size_t beg)->size_t
 	{
 		if (beg == format.size())	beg -= 1;
-		for (int i = beg; i != format.size(); ++i)
+		for (auto i = beg; i != format.size(); ++i)
 		{
 			if (c != format[i])					return i - 1;
 			else if (i == format.size() - 1)	return i;
@@ -235,7 +235,7 @@ std::string TimeSpan::simpleToString(const std::string & format, const std::map<
 	};
 
 	std::string ret;
-	for (int i = 0; i != format.size();)
+	for (size_t i = 0; i != format.size();)
 	{
 		auto ch = format[i];
 		size_t len = 1;
@@ -244,7 +244,7 @@ std::string TimeSpan::simpleToString(const std::string & format, const std::map<
 		{
 			len = getLastSameFlag(ch, i + 1) - i + 1;
 			char f[10] = { 0 }, arr[80] = { 0 };
-			snprintf(f, sizeof(f), "%%0%dd", len);
+			snprintf(f, sizeof(f), "%%0%zud", len);
 			snprintf(arr, sizeof(arr), f, iter->second);
 			ret += arr;
 		}

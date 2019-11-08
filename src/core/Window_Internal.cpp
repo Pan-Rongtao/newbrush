@@ -31,7 +31,7 @@ Window_Internal::Window_Internal(Window *p)
 	m_hwnd = ::CreateWindowA(windowClass.lpszClassName, "", WS_TILEDWINDOW, x, y, w, h, nullptr, nullptr, m_instance, nullptr);
 	::ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	::UpdateWindow(m_hwnd);
-	::SetWindowLongPtr(m_hwnd, GWLP_USERDATA, (long)m_pW);
+	::SetWindowLongPtr(m_hwnd, GWLP_USERDATA, (LONG_PTR)m_pW);
 #elif defined NB_OS_FAMILY_UNIX
 	m_X11Display = XOpenDisplay(nullptr);
 	if (m_X11Display == nullptr)
@@ -233,7 +233,7 @@ int nb::Window_Internal::clientHeight() const
 long Window_Internal::handle() const
 {
 #ifdef NB_OS_FAMILY_WINDOWS
-	return (long)m_hwnd;
+	return (long)(long long)m_hwnd;
 #elif defined NB_OS_FAMILY_UNIX
 	return m_X11WindowID;
 #elif NB_OS == NB_OS_LINUX_ARM

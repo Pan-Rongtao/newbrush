@@ -4,7 +4,10 @@
 #include <ratio>
 
 using namespace nb;
-
+#ifdef NB_OS_FAMILY_WINDOWS
+#pragma warning(push)
+#pragma warning(disable : 4996) // forcing value to bool 'true' or 'false' (performance warning)
+#endif
 ////////////////////////////////////class Date
 Date::Date()
 	: Date(1, 1, 1)
@@ -45,7 +48,7 @@ Date Date::minValue()
 Date Date::today()
 {
 	auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-	auto Tm = std::localtime(&t);
+	auto Tm = localtime(&t);
 	return Date(Tm->tm_year + 1900, Tm->tm_mon + 1, Tm->tm_mday);
 }
 
@@ -467,7 +470,7 @@ bool Time::isMidnight() const
 
 TimeSpan Time::timeOfDay() const
 {
-	return TimeSpan::fromMicroseconds(m_hour * 3600000000 + m_minute * 60000000 + m_second * std::micro::den + m_millisecond * std::milli::den + m_microsecond);
+	return TimeSpan::fromMicroseconds(m_hour * 3600000000i64 + m_minute * 60000000i64 + m_second * std::micro::den + m_millisecond * std::milli::den + m_microsecond);
 }
 
 Time &Time::add(const TimeSpan &value) &
@@ -647,7 +650,7 @@ bool DateTime::operator <(const DateTime &other) const
 DateTime DateTime::operator+(const TimeSpan & value) const
 {
 	//构建新的ts，先自动计算出自身time与value的time合并后的day
-	TimeSpan ts(hour() + value.hours(), minute() + value.minutes(), second() + value.seconds(), millisecond() + value.milliseconds(), microsecond() + value.microseconds());
+	TimeSpan ts(hour() + value.hours(), minute() + value.minutes(), second() + value.seconds(), millisecond() + value.milliseconds(), microsecond() + (int64_t)value.microseconds());
 	//value原day数与合并ts的day的和
 	int nDaysAdd = value.days() + ts.days();
 	TimeSpan tsTime(ts.hours(), ts.minutes(), ts.seconds(), ts.milliseconds(), ts.microseconds());

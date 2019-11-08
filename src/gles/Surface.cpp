@@ -7,6 +7,7 @@
 using namespace nb::gl;
 
 Surface::Surface()
+	: m_handle(nullptr)
 {
 }
 

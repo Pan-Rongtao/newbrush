@@ -1,5 +1,5 @@
 ﻿#include "core/Point.h"
-#include <math.h>
+#include <cmath>
 
 using namespace nb;
 
