@@ -320,6 +320,14 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 	{
 
 	}
+	else if (args.dp == RadiusXProperty())
+	{
+
+	}
+	else if (args.dp == RadiusYProperty())
+	{
+
+	}
 }
 
 /////////////////

@@ -64,7 +64,7 @@ DependencyProperty TextBlock::BackgroundProperty()
 
 DependencyProperty TextBlock::FontProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont(Fonts::SimSun));
+	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"));
 	return dp;
 }
 

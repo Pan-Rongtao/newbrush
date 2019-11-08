@@ -99,9 +99,12 @@ void Fonts::initSystemFonts()
 	static bool systemFontsInit = false;
 	if (!systemFontsInit)
 	{
-		loadSystemFonts("../../resource/msyh.ttf");
-		loadSystemFonts("../../resource/simsun.ttc");
-		loadSystemFonts("../../resource/STKAITI.TTF");
+#ifdef NB_OS_FAMILY_WINDOWS
+		loadSystemFonts("C:/Windows/Fonts/msyh.ttf");
+#else
+#if NB_OS == NB_OS_LINUX
+#endif
+#endif
 		systemFontsInit = true;
 	}
 }

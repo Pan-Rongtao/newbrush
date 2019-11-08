@@ -41,11 +41,8 @@ private:
 class NB_API Fonts
 {
 public:
-	static constexpr char *MicrosoftYaHei		= "Microsoft YaHei";	//微软雅黑
-	static constexpr char *SimSun				= "SimSun";				//宋体
-	static constexpr char *STKaiti				= "STKaiti";			//华文楷体
-
 	//从名字中获取一个字体，如果没有，返回空
+	//name：字体名称，形如"Microsoft YaHei", "SimSun", "STKaiti"等
 	static std::shared_ptr<Font> getFont(const std::string &name);
 
 	//获取已存在的字体

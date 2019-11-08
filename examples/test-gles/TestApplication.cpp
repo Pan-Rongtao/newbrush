@@ -76,8 +76,8 @@ MyApplication::MyApplication()
 //	drawPhone();
 	//	drawModel();
 //	drawGlyph();
-//	drawGlyphBunch();
-	drawStrip();
+	drawGlyphBunch();
+//	drawStrip();
 }
 
 void MyApplication::drawLines()
@@ -328,7 +328,7 @@ void MyApplication::drawModel()
 
 void MyApplication::drawGlyph()
 {
-	auto glyph = GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), L'a');
+	auto glyph = GlyphFactory::getGlyph(Fonts::getFont("Microsoft YaHei"), L'a');
 	auto w = glyph->info.bm_width;
 	auto h = glyph->info.bm_height;
 	glm::vec2 p0, p1, p2, p3;
@@ -359,9 +359,9 @@ void MyApplication::drawGlyph()
 void MyApplication::drawGlyphBunch()
 {
 	auto glyphBunch = std::make_shared<GlyphBunch>();
-	glyphBunch->arrage(Fonts::getFont(Fonts::STKaiti), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrappingE::Wrap, 300);
+	glyphBunch->arrage(Fonts::getFont("Microsoft YaHei"), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrappingE::Wrap, 300);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
-	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont(Fonts::STKaiti), 'a')->texureId));
+	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont("Microsoft YaHei"), 'a')->texureId));
 	ro->set("fontColor", glm::vec4(1.0, 0.0, 0.0, 1.0));
 	m_context->queue(ro);
 }

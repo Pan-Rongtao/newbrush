@@ -30,8 +30,8 @@ Quadrangle::Quadrangle(const glm::vec2 & p0, const glm::vec2 & p1, const glm::ve
 		if (radiusY > size.y * 0.5f)	radiusY = size.y * 0.5f;
 
 		constexpr auto arcVertexCount = 20;
+		constexpr auto radianStep = M_PI_4 / (arcVertexCount - 2);
 		std::vector<Vertex> vertexs(arcVertexCount * 4);
-		constexpr auto radianStep = 2 * M_PI / (arcVertexCount - 2);
 		//4¸öÍÖÔ²ÖÐÐÄ
 		std::array<glm::vec2, 4> eclipseCenter{ glm::vec2{ radiusX - size.x * 0.5, size.y * 0.5 - radiusY }, glm::vec2{size.x * 0.5 - radiusX, size.y * 0.5 - radiusY},
 			glm::vec2{ size.x * 0.5 - radiusX, radiusY - size.y * 0.5 }, glm::vec2{ radiusX - size.x * 0.5, radiusY - size.y * 0.5 } };
