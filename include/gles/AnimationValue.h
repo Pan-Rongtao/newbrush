@@ -30,7 +30,7 @@ public:
 	void getPrevNextFramesByTime(float time, uint32_t &prevFrame, uint32_t &nextFrame)
 	{
 		uint32_t begin = 0;
-		uint32_t end = m_keyFrames.size() - 1;
+		uint32_t end = (uint32_t)m_keyFrames.size() - 1;
 
 		while (begin != end)
 		{
@@ -52,7 +52,7 @@ public:
 	//获取时间点的插值：找到上下关键帧后的线性插值
 	T getValueByTime(float time)
 	{
-		uint32_t numKeys = m_keyFrames.size();
+		auto numKeys = m_keyFrames.size();
 
 		if (numKeys < 2)
 		{
@@ -83,7 +83,7 @@ public:
 
 	T getValueByDelta(float deltaTime)
 	{
-		uint32_t numKeys = m_keyFrames.size();
+		auto numKeys = m_keyFrames.size();
 
 		if (numKeys < 2)
 		{

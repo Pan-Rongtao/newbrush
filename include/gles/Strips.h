@@ -66,8 +66,8 @@ private:
 	};
 
 	void updateVertexs();
-	float nextArrayElementInLoop(uint32_t nCurrentIndex);
-	std::vector<uint16_t> getIndices(int vertexCount) const;
+	float nextArrayElementInLoop(size_t nCurrentIndex);
+	std::vector<uint16_t> getIndices(size_t vertexCount) const;
 
 	float					m_thickness;
 	float					m_dashOffset;

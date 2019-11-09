@@ -33,7 +33,7 @@ public:
 	void dequeue(std::shared_ptr<RenderObject> renderObject);
 
 	//渲染物个数
-	int renderObjectCount() const;
+	uint32_t renderObjectCount() const;
 
 	//渲染物
 	std::shared_ptr<RenderObject> renderObject(uint32_t index);

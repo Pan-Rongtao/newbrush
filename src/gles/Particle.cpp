@@ -39,7 +39,7 @@ void ParticleMemoryPool::freeParticle(Particle * particle)
 	m_reusableParticles.push_back(particle);
 }
 
-uint32_t ParticleMemoryPool::getActiveParticleCount() const
+size_t ParticleMemoryPool::getActiveParticleCount() const
 {
 	if (m_curParticleIndex < m_particleCount)
 		return m_curParticleIndex;
@@ -66,12 +66,12 @@ void ParticleMemoryPoolManager::init(uint32_t particleSystemCount, uint32_t emit
 ParticleMemoryPool * ParticleMemoryPoolManager::getMemoryPool(uint32_t index)
 {
 	if (index >= m_memoryPools.size())
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, m_memoryPools.size());
+		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %zu)", index, m_memoryPools.size());
 
 	return m_memoryPools[index];
 }
 
-uint32_t ParticleMemoryPoolManager::getBestPoolIdForNewParticles()
+size_t ParticleMemoryPoolManager::getBestPoolIdForNewParticles()
 {
 	auto iter = std::min_element(m_memoryPools.begin(), m_memoryPools.end(), [](ParticleMemoryPool *mp0, ParticleMemoryPool *mp1) {
 		return mp0->getActiveParticleCount() < mp1->getActiveParticleCount();

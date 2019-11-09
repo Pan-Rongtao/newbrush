@@ -49,7 +49,7 @@ void ParticleEmitter::update(float deltaTime)
 	}
 
 	//if m_minParticleCount > m_particles.size(), to fix toBeEmitCount to m_minParticleCount at least
-	int diff = m_minParticleCount - m_particles.size();	//感觉这里有bug，m_particles.size()应该是toBeEmitCount才对
+	int diff = m_minParticleCount - (uint32_t)m_particles.size();	//感觉这里有bug，m_particles.size()应该是toBeEmitCount才对
 	if (diff > 0)
 	{
 		toBeEmitCount += diff;

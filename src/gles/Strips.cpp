@@ -65,7 +65,7 @@ void Strips::updateVertexs()
 {
 	std::vector<Vertex> vertexs;
 	auto offset = m_dashOffset;
-	for (auto i = 0; i != m_breaks.size() - 1; ++i)
+	for (size_t i = 0; i < m_breaks.size() - 1; ++i)
 	{
 		//构建中线线段对象
 		LineSegment centerLine(m_breaks[i], m_breaks[i + 1]);
@@ -93,13 +93,13 @@ void Strips::updateVertexs()
 	
 }
 
-float Strips::nextArrayElementInLoop(uint32_t currentIndex)
+float Strips::nextArrayElementInLoop(size_t currentIndex)
 {
 	return m_dashArray[currentIndex + 1 > m_dashArray.size() ? 0 : currentIndex + 1];
 
 }
 
-std::vector<uint16_t> Strips::getIndices(int vertexCount) const
+std::vector<uint16_t> Strips::getIndices(size_t vertexCount) const
 {
 	std::vector<uint16_t> ret(vertexCount / 4 * 6);
 	int x = 0;

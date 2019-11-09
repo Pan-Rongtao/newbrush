@@ -28,7 +28,7 @@ class ParticleMemoryPoolManager
 public:
 	static void init(uint32_t particleSystemCount, uint32_t emitterCount, uint32_t particleCount, uint32_t poolCount);
 	static ParticleMemoryPool *getMemoryPool(uint32_t index);
-	static uint32_t getBestPoolIdForNewParticles();
+	static size_t getBestPoolIdForNewParticles();
 
 private:
 	static std::vector<ParticleMemoryPool *>	m_memoryPools;
@@ -42,7 +42,7 @@ public:
 	
 	Particle *applyParticle();
 	void freeParticle(Particle *particle);
-	uint32_t getActiveParticleCount() const;
+	size_t getActiveParticleCount() const;
 
 private:
 	ParticleSystem	*m_particleSystems;

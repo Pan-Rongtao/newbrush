@@ -45,15 +45,15 @@ void Context::dequeue(std::shared_ptr<RenderObject> renderObject)
 		m_renderObjects.erase(iter);
 }
 
-int Context::renderObjectCount() const
+uint32_t Context::renderObjectCount() const
 {
-	return m_renderObjects.size();
+	return (uint32_t)m_renderObjects.size();
 }
 
 std::shared_ptr<RenderObject> Context::renderObject(uint32_t index)
 {
 	if (index >= m_renderObjects.size())
-		nbThrowException(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, m_renderObjects.size());
+		nbThrowException(std::out_of_range, "index[%d] is out of range [%d, %d)", index, 0, (int)m_renderObjects.size());
 
 	return m_renderObjects[index];
 }

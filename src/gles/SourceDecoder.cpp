@@ -31,13 +31,13 @@ void SourceDecoder::decodeOne(const std::string &source)
 	if (source.empty())
 		return;
 
-	for (unsigned int i = 0; i <= sCutMain.size() - KeywordUniformSize;)
+	for (size_t i = 0; i <= sCutMain.size() - KeywordUniformSize;)
 	{
 		std::string sSubStruct = sCutMain.substr(i, KeywordStructSize);
 		std::string sSubUniform = sCutMain.substr(i, KeywordUniformSize);
 		if (toLower(sSubStruct) == KeywordStruct)
 		{
-			int offset = i + KeywordStructSize + 1;
+			auto offset = i + KeywordStructSize + 1;
 			auto end = sCutMain.find('}', offset);
 			if (end != std::string::npos)
 			{
@@ -55,8 +55,8 @@ void SourceDecoder::decodeOne(const std::string &source)
 		else if (toLower(sSubUniform) == KeywordUniform)
 		{
 			//+6表示后6个字符肯定不是';'，被空白符和类型、变量名占位。
-			int offset = i + KeywordUniformSize + 6;
-			int end = sCutMain.find(';', offset);
+			auto offset = i + KeywordUniformSize + 6;
+			auto end = sCutMain.find(';', offset);
 			if (end != std::string::npos)
 			{
 				std::string varTypeName;
@@ -128,19 +128,19 @@ void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &va
 	std::string sDef = sVarDefineStr;
 	if (isblank(sVarDefineStr.back()))
 	{
-		for (int i = sVarDefineStr.size() - 2; i >= 0; --i)
+		for (int i = (int)sVarDefineStr.size() - 2; i >= 0; --i)
 		{
 			if (!isblank(sVarDefineStr[i]))
 			{
-				sDef = sVarDefineStr.substr(0, i + 1);
+				sDef = sVarDefineStr.substr(0, (std::size_t)i + 1);
 				break;
 			}
 		}
 	}
-	int nNameBeg = std::string::npos;
-	int nTypeBeg = std::string::npos;
-	int nTypeEnd = std::string::npos;
-	for (int i = sDef.size() - 1; i >= 0; --i)
+	auto nNameBeg = std::string::npos;
+	auto nTypeBeg = std::string::npos;
+	auto nTypeEnd = std::string::npos;
+	for (std::size_t i = sDef.size(); i-- > 0;)
 	{
 		if (nNameBeg == std::string::npos)
 		{

@@ -128,7 +128,7 @@ void Program::uniform(int location, float v)
 
 void Program::uniform(int location, const std::vector<float> &v)
 {
-	glUniform1fv(location, v.size(), v.empty() ? nullptr : v.data());
+	glUniform1fv(location, (GLsizei)v.size(), v.empty() ? nullptr : v.data());
 }
 
 void Program::uniform(int location, const glm::vec2 &vec)
@@ -138,7 +138,7 @@ void Program::uniform(int location, const glm::vec2 &vec)
 
 void Program::uniform(int location, const std::vector<glm::vec2> &v)
 {
-	glUniform2fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform2fv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::vec3 &vec)
@@ -148,7 +148,7 @@ void Program::uniform(int location, const glm::vec3 &vec)
 
 void Program::uniform(int location, const std::vector<glm::vec3> &v)
 {
-	glUniform3fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform3fv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::vec4 &vec)
@@ -158,7 +158,7 @@ void Program::uniform(int location, const glm::vec4 &vec)
 
 void Program::uniform(int location, const std::vector<glm::vec4> &v)
 {
-	glUniform4fv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform4fv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, int v)
@@ -168,7 +168,7 @@ void Program::uniform(int location, int v)
 
 void Program::uniform(int location, const std::vector<int> &v)
 {
-	glUniform1iv(location, v.size(), v.empty() ? nullptr : v.data());
+	glUniform1iv(location, (GLsizei)v.size(), v.empty() ? nullptr : v.data());
 }
 
 void Program::uniform(int location, const glm::ivec2 &vec)
@@ -178,7 +178,7 @@ void Program::uniform(int location, const glm::ivec2 &vec)
 
 void Program::uniform(int location, const std::vector<glm::ivec2> &v)
 {
-	glUniform2iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform2iv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::ivec3 &vec)
@@ -188,7 +188,7 @@ void Program::uniform(int location, const glm::ivec3 &vec)
 
 void Program::uniform(int location, const std::vector<glm::ivec3> &v)
 {
-	glUniform3iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform3iv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::ivec4 &vec)
@@ -198,7 +198,7 @@ void Program::uniform(int location, const glm::ivec4 &vec)
 
 void Program::uniform(int location, const std::vector<glm::ivec4> &v)
 {
-	glUniform4iv(location, v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniform4iv(location, (GLsizei)v.size(), v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat2x2 &matrix)
@@ -208,7 +208,7 @@ void Program::uniform(int location, const glm::mat2x2 &matrix)
 
 void Program::uniform(int location, const std::vector<glm::mat2x2> &v)
 {
-	glUniformMatrix2fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniformMatrix2fv(location, (GLsizei)v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat3x3 &matrix)
@@ -218,7 +218,7 @@ void Program::uniform(int location, const glm::mat3x3 &matrix)
 
 void Program::uniform(int location, const std::vector<glm::mat3x3> &v)
 {
-	glUniformMatrix3fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniformMatrix3fv(location, (GLsizei)v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 void Program::uniform(int location, const glm::mat4x4 &matrix)
@@ -228,7 +228,7 @@ void Program::uniform(int location, const glm::mat4x4 &matrix)
 
 void Program::uniform(int location, const std::vector<glm::mat4x4> &v)
 {
-	glUniformMatrix4fv(location, v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
+	glUniformMatrix4fv(location, (GLsizei)v.size(), GL_FALSE, v.empty() ? nullptr : glm::value_ptr(v[0]));
 }
 
 ////////////////programs
