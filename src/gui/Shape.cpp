@@ -284,7 +284,10 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 {
 	if (args.dp == FillProperty())
 	{
-		m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr) : nullptr;
+		if (!Fill())
+			m_fillObj.reset();
+		else if (!m_fillObj)
+			m_fillObj = std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Quadrangle>(), nullptr);
 		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
 		{
 			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
