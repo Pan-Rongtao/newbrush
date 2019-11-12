@@ -5,8 +5,8 @@ void TestBrush::test()
 	m_window = std::make_shared<nb::gui::Window>();
 	auto rc = std::make_shared<Rectangle>();
 	rc->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-	rc->RadiusX = -150;
-	rc->RadiusY = -50;
+	rc->RadiusX = 50;
+	rc->RadiusY = 50;
 	rc->Margin = Thickness(20);
 	m_window->Content = rc;
 	

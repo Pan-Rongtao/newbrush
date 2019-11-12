@@ -22,7 +22,7 @@ protected:
 
 private:
 	void onPropertyChanged(const PropertyChangedArgs &args);
-	void updateFillObject();
+	void updateFillObject(float width, float height, float radiusX, float radiusY);
 	void updateStrokeObject();
 };
 

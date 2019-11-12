@@ -18,8 +18,8 @@ RenderObject::RenderObject()
 {
 }
 
-RenderObject::RenderObject(bool bRenderable)
-	: RenderObject(nullptr, nullptr, bRenderable)
+RenderObject::RenderObject(std::shared_ptr<Model> model)
+	: RenderObject(model, nullptr, true)
 {
 }
 

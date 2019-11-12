@@ -29,7 +29,7 @@ public:
 	RenderObject();
 
 	//构建一个空的RenderObject，它的可渲染状态为bRenderable
-	RenderObject(bool bRenderable);
+	RenderObject(std::shared_ptr<Model> model);
 
 	//构建一个RenderObject，它的模型为model，材质为materia，可渲染状态为true
 	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material);
