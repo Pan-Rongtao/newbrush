@@ -35,7 +35,7 @@ static glm::vec3 cameraPosition(0.0, 0.0, 3.0);
 static glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 static glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
 
-bool g_Original = 0;
+bool g_Original = 1;
 
 MyApplication::MyApplication()
 {
@@ -69,14 +69,14 @@ MyApplication::MyApplication()
 //	drawLines();
 //	drawPolylines();
 //	drawTriangles();
-//	drawQuadrangles();
+	drawQuadrangles();
 //	drawEllipses();
 //	drawCubes();
 //	drawSphere();
 //	drawPhone();
 	//	drawModel();
 //	drawGlyph();
-	drawGlyphBunch();
+//	drawGlyphBunch();
 //	drawStrip();
 }
 
@@ -135,7 +135,7 @@ void MyApplication::drawTriangles()
 void MyApplication::drawQuadrangles()
 {
 	float step;
-	int objectCount = 2;
+	int objectCount = 1;
 	for(int i = 0; i != objectCount; ++i)
 	{
 		std::shared_ptr<Quadrangle> quad;
@@ -156,7 +156,7 @@ void MyApplication::drawQuadrangles()
 			p2 = { 100 + step * i, -100 + step * i };
 			p3 = { -100 + step * i, -100 + step * i };
 		}
-		quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
+		quad = std::make_shared<Quadrangle>(p1.x - p0.x, p1.y - p2.y);
 		std::shared_ptr<RenderObject> ro;
 		if (i == 0)
 		{
@@ -346,7 +346,7 @@ void MyApplication::drawGlyph()
 		p2 = { 300 + w, 0 };
 		p3 = { 300, 0 };
 	}
-	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p0, p1, p2, p3);
+	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p1.x - p0.x, p1.y - p2.y);
 	quad->meshes[0].vertexs[0].texCoord = glyph->uv[0];
 	quad->meshes[0].vertexs[1].texCoord = glyph->uv[1];
 	quad->meshes[0].vertexs[2].texCoord = glyph->uv[2];

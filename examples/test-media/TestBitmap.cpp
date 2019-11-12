@@ -26,7 +26,8 @@ void TestBitmap::test()
 	int bytes2 = bm2.bytes();
 
 	Bitmap bm4;
-	FILE *pFile = fopen("f:/pics/copy_pic.jpg", "rb");
+	FILE *pFile = nullptr;
+	fopen_s(&pFile, "f:/pics/copy_pic.jpg", "rb");
 	fseek(pFile, 0, SEEK_END);
 	int nLength = ftell(pFile);
 	unsigned char *pData = new unsigned char[nLength];

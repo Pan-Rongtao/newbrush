@@ -17,18 +17,24 @@ namespace nb{ namespace gl{
 class NB_API Quadrangle : public Model
 {
 public:
-	//构建一个矩形，它的四个顶点坐标都为0.0，颜色为0.0
+	//构建一个矩形，它的宽高为(0.0, 0.0)
 	Quadrangle();
 
-	//构建一个矩形，它的四个点是p0,p1,p2,p3
-	//它的四个顶点颜色都为0.0
-	Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3);
+	//构建一个矩形，它的宽高为(width, height)
+	Quadrangle(float width, float height);
 
-	//构建一个矩形，它的四个点是p0,p1,p2,p3；拐角弧度是radius
-	Quadrangle(const glm::vec2 &p0, const glm::vec2 &p1, const glm::vec2 &p2, const glm::vec2 &p3, float radiusX, float radiusY);
+	void setWidth(float width);
+	void setHeight(float height);
+	void setRadiuX(float radiusX);
+	void setRadiuY(float radiusY);
 	
 private:
-	glm::vec2	m_radius;
+	void update();
+
+	float	m_width;
+	float	m_height;
+	float	m_radiusX;
+	float	m_radiusY;
 };
 
 }}

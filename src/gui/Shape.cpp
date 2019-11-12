@@ -8,6 +8,7 @@
 #include "gles/Polyline.h"
 #include <opengl/GLES2/gl2.h>
 #include "gui/GradientBrush.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 using namespace nb::gui;
@@ -259,11 +260,11 @@ void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc(offset.x(), offset.y(), ActualSize());
 	if(m_fillObj)
 	{
-		m_fillObj->model()->meshes[0].vertexs[0].position = glm::vec3(rc.left(), rc.bottom(), 0);
-		m_fillObj->model()->meshes[0].vertexs[1].position = glm::vec3(rc.right(), rc.bottom(), 0);
-		m_fillObj->model()->meshes[0].vertexs[2].position = glm::vec3(rc.right(), rc.top(), 0);
-		m_fillObj->model()->meshes[0].vertexs[3].position = glm::vec3(rc.left(), rc.top(), 0);
+		std::dynamic_pointer_cast<gl::Quadrangle>(m_fillObj->model())->setWidth(rc.width());
+		std::dynamic_pointer_cast<gl::Quadrangle>(m_fillObj->model())->setHeight(rc.height());
 		drawContext->queue(m_fillObj);
+		auto c = rc.center();
+		m_fillObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 }
 
@@ -318,15 +319,16 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 	}
 	else if (args.dp == StrokeProperty())
 	{
-
 	}
 	else if (args.dp == RadiusXProperty())
 	{
-
+		if (m_fillObj)
+			std::dynamic_pointer_cast<gl::Quadrangle>(m_fillObj->model())->setRadiuX(any_cast<float>(args.value));
 	}
 	else if (args.dp == RadiusYProperty())
 	{
-
+		if (m_fillObj)
+			std::dynamic_pointer_cast<gl::Quadrangle>(m_fillObj->model())->setRadiuY(any_cast<float>(args.value));
 	}
 }
 
