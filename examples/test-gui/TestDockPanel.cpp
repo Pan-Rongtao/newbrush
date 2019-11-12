@@ -1,4 +1,5 @@
 #include "TestDockPanel.h"
+#include "gui/Rectangle.h"
 
 void TestDockPanel::test()
 {

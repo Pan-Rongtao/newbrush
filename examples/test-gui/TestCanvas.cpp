@@ -1,5 +1,6 @@
 #include "TestCanvas.h"
 #include <glm/gtx/spline.hpp>
+#include "gui/Rectangle.h"
 //#include "E:\bezier\include\bezier.h"
 
 void TestCanvas::test()

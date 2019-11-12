@@ -115,29 +115,6 @@ protected:
 
 };
 
-//矩形
-class NB_API Rectangle : public Shape
-{
-public:
-	Rectangle();
-	virtual ~Rectangle() = default;
-
-	Property_rw<float>			RadiusX;			//X弧度
-	Property_rw<float>			RadiusY;			//Y弧度
-	static DependencyProperty	RadiusXProperty();	//X弧度的依赖属性
-	static DependencyProperty	RadiusYProperty();	//Y弧度的依赖属性
-
-	virtual void onRender(std::shared_ptr<gl::Context> drawContext);
-
-protected:
-	virtual Size measureOverride(const Size &availableSize) override;
-	virtual Size arrangeOverride(const Size &finalSize) override;
-
-private:
-	void onPropertyChanged(const PropertyChangedArgs &args);
-	Size	m_availableSize;
-};
-
 //椭圆
 class NB_API Ellipse : public Shape
 {

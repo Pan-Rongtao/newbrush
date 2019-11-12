@@ -4,6 +4,7 @@
 #include "gui/ImageSource.h"
 #include "gui/Brush.h"
 #include "gui/Shape.h"
+#include "gui/Rectangle.h"
 #include <thread>
 
 using namespace nb::gui;

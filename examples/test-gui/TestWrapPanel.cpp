@@ -1,4 +1,5 @@
 #include "TestWrapPanel.h"
+#include "gui/Rectangle.h"
 
 void TestWrapPanel::test()
 {

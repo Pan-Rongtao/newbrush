@@ -2,6 +2,7 @@
 #include "../TestBase.h"
 #include "gui/GradientBrush.h"
 #include "gui/Shape.h"
+#include "gui/Rectangle.h"
 #include "gui/Window.h"
 
 using namespace nb;

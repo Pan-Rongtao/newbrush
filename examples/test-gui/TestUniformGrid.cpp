@@ -1,6 +1,7 @@
 #include "TestUniformGrid.h"
 #include "gui/Shape.h"
 #include "gui/TextBlock.h"
+#include "gui/Rectangle.h"
 
 void TestUniformGrid::test()
 {

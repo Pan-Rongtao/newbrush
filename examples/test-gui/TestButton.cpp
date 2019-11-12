@@ -1,6 +1,7 @@
 #include "TestButton.h"
 #include "gui/Image.h"
 #include "gui/Shape.h"
+#include "gui/Rectangle.h"
 #include "gui/PropertyAnimation.h"
 
 void TestButton::test()
