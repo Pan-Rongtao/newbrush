@@ -82,6 +82,7 @@ class NB_API Model
 public:
 	//构建一个空的模型
 	Model();
+	Model(const std::vector<Mesh> &_meshes);
 	Model(const Model &other);
 	Model(const Model &&other);
 	void operator = (const Model &other);

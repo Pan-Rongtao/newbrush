@@ -4,6 +4,7 @@
 #include "gles/Program.h"
 #include "gles/Context.h"
 #include "gles/Texture2D.h"
+#include "gles/Strips.h"
 #include "gui/GradientBrush.h"
 
 using namespace nb;
@@ -29,16 +30,25 @@ DependencyProperty Rectangle::RadiusYProperty()
 	return dp;
 }
 
-void Rectangle::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Rectangle::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
-	if (m_fillObj)
+	auto c = rc.center();
+	if (m_fillObject)
 	{
+		Rect fillRc{rc};
+		if (Stroke())
+			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
 		updateFillObject(rc.width(), rc.height(), RadiusX(), RadiusY());
-		drawContext->queue(m_fillObj);
-		auto c = rc.center();
-		m_fillObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+		drawContext->queue(m_fillObject);
+		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	}
+	if (m_strokeObject)
+	{
+		updateStrokeObject(rc);
+		drawContext->queue(m_strokeObject);
+	//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 }
 
@@ -56,59 +66,27 @@ void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
 {
 	if (args.dp == FillProperty())
 	{
-		if (!Fill())
-		{
-			m_fillObj.reset();
-		}
-		else if (!m_fillObj)
-		{
-			m_fillObj = std::make_shared<nb::gl::RenderObject>(std::make_shared<Model>(), nullptr);
-			m_fillObj->model()->meshes.push_back(Mesh());
-		}
-		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
-		{
-			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
-			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
-			m_fillObj->set(nb::gl::Program::nbColorModeLocationStr, 1);
-			m_fillObj->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-		}
-		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
-		{
-			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
-			auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
-			auto stops = linearGradientBrush->GradientStops();
-			auto program = m_fillObj->material()->program();
-			std::vector<glm::vec4> colors;
-			std::vector<float> offsets;
-			for (auto i = 0; i != stops->count(); ++i)
-			{
-				auto stop = (*stops)[i];
-				auto color = stop->Color();
-				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-				offsets.push_back(stop->Offset());
-			}
-			m_fillObj->set("size", stops->count());
-			m_fillObj->set("colors", colors);
-			m_fillObj->set("offsets", offsets);
-		}
-		else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
-		{
-			if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
-				Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
-		}
+		if (!Fill())				m_fillObject.reset();
+		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
 	}
 	else if (args.dp == StrokeProperty())
 	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
 
 void Rectangle::updateFillObject(float width, float height, float radiusX, float radiusY)
-{	
+{
+	if (!Fill())
+		return;
+
+	//更新model数据
 	//四个角点位置
-	auto &vertexs = m_fillObj->model()->meshes[0].vertexs;
-	auto &indices = m_fillObj->model()->meshes[0].indices;
+	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
+	auto &indices = m_fillObject->model()->meshes[0].indices;
 	bool radius = (width != 0.0f && height != 0.0f) && (radiusX != 0.0f && radiusY != 0.0f);			//是否需要弧形
-	constexpr auto connerVertexSize = 20;							//每个弧形的顶点数
+	constexpr auto connerVertexSize = 20u;							//每个弧形的顶点数
 	constexpr auto connerIndicesSize = 3 * (connerVertexSize - 2);	//每个弧形的顶点序列大小
 	constexpr auto radianStep = M_PI_2 / (connerVertexSize - 2);	//弧形单位弧度
 	vertexs.resize(radius ? connerVertexSize * 4 : 4);				//所有顶点数
@@ -127,13 +105,11 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 				if (i == 0)
 				{
 					vertexs[beg].position = center;
-					vertexs[beg].color = vertexs[0].color;
 				}
 				else
 				{
 					auto radian = radianStep * (i - 1) + radianSpan;
 					vertexs[beg + i].position = glm::vec3(_radiusX * cos(radian), _radiusY * sin(radian), 0.0) + center;
-					vertexs[beg + i].color = vertexs[0].color;
 					vertexs[beg + i].texCoord = glm::vec2(0.5 * cos(radian) + 0.5, 1.0 - (0.5 * sin(radian) + 0.5));
 				}
 				//填充顶点序列
@@ -149,7 +125,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		//左上角弧形、右上角弧形、右下角弧形、左下角弧形
 		auto connerIndex = 0u;
 		fillConner(glm::vec3{ _radiusX - width * 0.5, _radiusY - height * 0.5, 0.0f }, (float)M_PI, connerIndex++);
-		fillConner(glm::vec3{ width * 0.5 - _radiusX, _radiusY - height * 0.5, 0.0f }, (float)M_PI * 1.5, connerIndex++);
+		fillConner(glm::vec3{ width * 0.5 - _radiusX, _radiusY - height * 0.5, 0.0f }, (float)M_PI * 1.5f, connerIndex++);
 		fillConner(glm::vec3{ width * 0.5 - _radiusX, height * 0.5 - _radiusY, 0.0f }, M_PI * 0.0, connerIndex++);
 		fillConner(glm::vec3{ _radiusX - width * 0.5, height * 0.5 - _radiusY, 0.0f }, (float)M_PI * 0.5, connerIndex++);
 		//中间十字两个矩形的顶点序列
@@ -158,6 +134,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		indices[beg++] = 1; indices[beg++] = connerVertexSize * 2 + 1; indices[beg++] = connerVertexSize * 4 - 1;
 		indices[beg++] = connerVertexSize - 1; indices[beg++] = connerVertexSize + 1; indices[beg++] = connerVertexSize * 3 - 1;
 		indices[beg++] = connerVertexSize - 1; indices[beg++] = connerVertexSize * 3 - 1; indices[beg++] = connerVertexSize * 3 + 1;
+
 	}
 	else
 	{
@@ -167,8 +144,53 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
 		indices = { 0, 1, 2, 0, 2, 3 };
 	}
+
+	//更新材质
+	if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
+	{
+		m_fillObject->setMaterial(std::make_shared<Material>(Programs::primitive()));
+		auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
+		auto c = glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		m_fillObject->model()->meshes[0].unifyColor(c);
+	}
+	else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
+	{
+		m_fillObject->setMaterial(std::make_shared<nb::gl::Material>(Programs::gradientPrimitive()));
+		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
+		auto stops = linearGradientBrush->GradientStops();
+		std::vector<glm::vec4> colors;
+		std::vector<float> offsets;
+		for (auto i = 0; i != stops->count(); ++i)
+		{
+			auto stop = (*stops)[i];
+			auto color = stop->Color();
+			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			offsets.push_back(stop->Offset());
+		}
+		m_fillObject->set("size", stops->count());
+		m_fillObject->set("colors", colors);
+		m_fillObject->set("offsets", offsets);
+	}
+	else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
+	{
+		if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
+			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
+	}
 }
 
-void Rectangle::updateStrokeObject()
+void Rectangle::updateStrokeObject(const Rect &rc)
 {
+	if (!m_strokeObject)
+		return;
+
+	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset());
+
+	if (std::dynamic_pointer_cast<SolidColorBrush>(Stroke()))
+	{
+		m_strokeObject->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
+		auto color = std::dynamic_pointer_cast<SolidColorBrush>(Stroke())->Color();
+		m_strokeObject->set(nb::gl::Program::nbColorModeLocationStr, 1);
+		m_strokeObject->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+	}
 }

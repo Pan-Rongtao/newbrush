@@ -123,9 +123,16 @@ void Mesh::unifyColor(const glm::vec4 &color)
 
 ////////////////////////class Model
 Model::Model()
+	: Model(std::vector<Mesh>{})
+{
+}
+
+Model::Model(const std::vector<Mesh> &_meshes)
 	: matrix(1.0f)
+	, meshes(_meshes)
 	, mode(GL_TRIANGLES)
 {
+
 }
 
 Model::Model(const Model & other)

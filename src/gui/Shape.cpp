@@ -16,10 +16,10 @@ Shape::Shape()
 	: Fill([&](shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(FillProperty()); })
 	, Stroke([&](shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(StrokeProperty()); })
 	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float& {return get<float>(StrokeThicknessProperty()); })
-	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
-	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
-	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashCapProperty(), v); }, [&]()->std::vector<float>& {return get<std::vector<float>>(StrokeDashCapProperty()); })
-	, StrokeDashOffset([&](float v) {set(StrokeDashCapProperty(), v); }, [&]()->float& {return get<float>(StrokeDashCapProperty()); })
+	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeStartLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeStartLineCapProperty()); })
+	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeEndLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeEndLineCapProperty()); })
+	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashArrayProperty(), v); }, [&]()->std::vector<float>& {return get<std::vector<float>>(StrokeDashArrayProperty()); })
+	, StrokeDashOffset([&](float v) {set(StrokeDashOffsetProperty(), v); }, [&]()->float& {return get<float>(StrokeDashOffsetProperty()); })
 	, StrokeDashCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
 	, StrokeLineJoin([&](PenLineJoinE v) {set(StrokeLineJoinProperty(), v); }, [&]()->PenLineJoinE& {return get<PenLineJoinE>(StrokeLineJoinProperty()); })
 	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
@@ -241,20 +241,20 @@ void Ellipse::onPropertyChanged(const PropertyChangedArgs & args)
 {
 	if (args.dp == FillProperty())
 	{
-		m_fillObj = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Circle>(), nullptr) : nullptr;
+		m_fillObject = Fill() ? std::make_shared<nb::gl::RenderObject>(std::make_shared<gl::Circle>(), nullptr) : nullptr;
 		if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
 		{
-			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
+			m_fillObject->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
 			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
-			m_fillObj->set(nb::gl::Program::nbColorModeLocationStr, 1);
-			m_fillObj->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			m_fillObject->set(nb::gl::Program::nbColorModeLocationStr, 1);
+			m_fillObject->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 		}
 		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
 		{
-			m_fillObj->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
+			m_fillObject->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::gradientPrimitive()));
 			auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
 			auto stops = linearGradientBrush->GradientStops();
-			auto program = m_fillObj->material()->program();
+			auto program = m_fillObject->material()->program();
 			std::vector<glm::vec4> colors;
 			std::vector<float> offsets;
 			for (auto i = 0; i != stops->count(); ++i)
@@ -264,9 +264,9 @@ void Ellipse::onPropertyChanged(const PropertyChangedArgs & args)
 				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 				offsets.push_back(stop->Offset());
 			}
-			m_fillObj->set("size", stops->count());
-			m_fillObj->set("colors", colors);
-			m_fillObj->set("offsets", offsets);
+			m_fillObject->set("size", stops->count());
+			m_fillObject->set("colors", colors);
+			m_fillObject->set("offsets", offsets);
 		}
 		else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
 		{
@@ -284,10 +284,10 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
-	if (m_fillObj)
+	if (m_fillObject)
 	{
-		std::dynamic_pointer_cast<gl::Circle>(m_fillObj->model())->set(rc.center().x(), rc.center().y(), rc.width() / 2, rc.height() / 2, false);
-		drawContext->queue(m_fillObj);
+		std::dynamic_pointer_cast<gl::Circle>(m_fillObject->model())->set(rc.center().x(), rc.center().y(), rc.width() / 2, rc.height() / 2, false);
+		drawContext->queue(m_fillObject);
 	}
 }
 
