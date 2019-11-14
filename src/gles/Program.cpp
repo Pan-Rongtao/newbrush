@@ -240,20 +240,17 @@ std::shared_ptr<Program> Programs::primitive()
 
 	constexpr char vs[] =
 		"attribute vec4 nbPos;"
-		"attribute vec4 nbColor;"
 		"attribute vec2 nbTexCoord;"
 		"uniform mat4 nbMvp;"
-		"varying vec4 _color;"
 		"varying vec2 _texCoord;"
 		"void main()"
 		"{"
-		"	_color = nbColor;"
 		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
 		"}";
 	constexpr char fs[] =
 		"uniform bool nbColorMode;"
-		"varying vec4 _color;"
+		"uniform vec4 _color;"
 		"varying vec2 _texCoord;"
 		"uniform sampler2D sampler;"
 		"void main()"

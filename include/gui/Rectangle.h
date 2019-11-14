@@ -24,6 +24,7 @@ private:
 	void onPropertyChanged(const PropertyChangedArgs &args);
 	void updateFillObject(float width, float height, float radiusX, float radiusY);
 	void updateStrokeObject(const Rect &rc);
+	void updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush);
 };
 
 }}

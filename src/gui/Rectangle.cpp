@@ -39,8 +39,8 @@ void Rectangle::onRender(std::shared_ptr<Context> drawContext)
 	{
 		Rect fillRc{rc};
 		if (Stroke())
-			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
-		updateFillObject(rc.width(), rc.height(), RadiusX(), RadiusY());
+			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
+		updateFillObject(fillRc.width(), fillRc.height(), RadiusX(), RadiusY());
 		drawContext->queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
@@ -146,36 +146,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 	}
 
 	//¸üÐÂ²ÄÖÊ
-	if (std::dynamic_pointer_cast<SolidColorBrush>(Fill()))
-	{
-		m_fillObject->setMaterial(std::make_shared<Material>(Programs::primitive()));
-		auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
-		auto c = glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-		m_fillObject->model()->meshes[0].unifyColor(c);
-	}
-	else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
-	{
-		m_fillObject->setMaterial(std::make_shared<nb::gl::Material>(Programs::gradientPrimitive()));
-		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(Fill());
-		auto stops = linearGradientBrush->GradientStops();
-		std::vector<glm::vec4> colors;
-		std::vector<float> offsets;
-		for (auto i = 0; i != stops->count(); ++i)
-		{
-			auto stop = (*stops)[i];
-			auto color = stop->Color();
-			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-			offsets.push_back(stop->Offset());
-		}
-		m_fillObject->set("size", stops->count());
-		m_fillObject->set("colors", colors);
-		m_fillObject->set("offsets", offsets);
-	}
-	else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
-	{
-		if (std::dynamic_pointer_cast<ImageBrush>(Fill())->Source())
-			Renderer()->material()->textures().push_back(std::make_shared<gl::Texture2D>(*(std::dynamic_pointer_cast<ImageBrush>(Fill())->Source()->Bm())));
-	}
+	updateMeterial(m_fillObject, Fill());
 }
 
 void Rectangle::updateStrokeObject(const Rect &rc)
@@ -186,11 +157,46 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset());
 
-	if (std::dynamic_pointer_cast<SolidColorBrush>(Stroke()))
+	updateMeterial(m_strokeObject, Stroke());
+}
+
+void Rectangle::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush)
+{
+	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
-		m_strokeObject->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
-		auto color = std::dynamic_pointer_cast<SolidColorBrush>(Stroke())->Color();
-		m_strokeObject->set(nb::gl::Program::nbColorModeLocationStr, 1);
-		m_strokeObject->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
+		ro->set(nb::gl::Program::nbColorModeLocationStr, 1);
+		auto color = std::dynamic_pointer_cast<SolidColorBrush>(brush)->Color();
+		auto c = glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		ro->model()->meshes[0].unifyColor(c);
+		ro->set("_color", c);
+	}
+	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
+	{
+		ro->setMaterial(std::make_shared<nb::gl::Material>(Programs::gradientPrimitive()));
+		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
+		auto stops = linearGradientBrush->GradientStops();
+		std::vector<glm::vec4> colors;
+		std::vector<float> offsets;
+		for (auto i = 0; i != stops->count(); ++i)
+		{
+			auto stop = (*stops)[i];
+			auto color = stop->Color();
+			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			offsets.push_back(stop->Offset());
+		}
+		ro->set("size", stops->count());
+		ro->set("colors", colors);
+		ro->set("offsets", offsets);
+	}
+	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
+	{
+		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
+		ro->set(nb::gl::Program::nbColorModeLocationStr, 0);
+		if (std::dynamic_pointer_cast<ImageBrush>(brush)->Source())
+		{
+			auto bm = std::dynamic_pointer_cast<ImageBrush>(brush)->Source()->Bm();
+			ro->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
+		}
 	}
 }

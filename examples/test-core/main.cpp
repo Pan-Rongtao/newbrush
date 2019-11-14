@@ -9,11 +9,12 @@
 #include "TestRect.h"
 #include "TestEasingFunction.h"
 #include "TestWindow.h"
+#include "TestAny.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestRandom> test;
+		TestHandle<TestAny> test;
 		test->test();
 	}
 	catch (std::exception &e)

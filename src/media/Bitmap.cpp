@@ -34,6 +34,10 @@ Bitmap::~Bitmap()
 }
 
 Bitmap::Bitmap(const Bitmap &other)
+	: m_data(nullptr)
+	, m_width(0)
+	, m_height(0)
+	, m_channels(0)
 {
 	*this = other;
 }
