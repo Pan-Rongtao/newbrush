@@ -246,7 +246,7 @@ void Ellipse::onPropertyChanged(const PropertyChangedArgs & args)
 		{
 			m_fillObject->setMaterial(std::make_shared<nb::gl::Material>(gl::Programs::primitive()));
 			auto color = std::dynamic_pointer_cast<SolidColorBrush>(Fill())->Color();
-			m_fillObject->set(nb::gl::Program::nbColorModeLocationStr, 1);
+			m_fillObject->storeUniform(nb::gl::Program::nbColorModeLocationStr, 1);
 			m_fillObject->model()->meshes[0].unifyColor({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 		}
 		else if (std::dynamic_pointer_cast<LinearGradientBrush>(Fill()))
@@ -264,9 +264,9 @@ void Ellipse::onPropertyChanged(const PropertyChangedArgs & args)
 				colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 				offsets.push_back(stop->Offset());
 			}
-			m_fillObject->set("size", stops->count());
-			m_fillObject->set("colors", colors);
-			m_fillObject->set("offsets", offsets);
+			m_fillObject->storeUniform("size", stops->count());
+			m_fillObject->storeUniform("colors", colors);
+			m_fillObject->storeUniform("offsets", offsets);
 		}
 		else if (std::dynamic_pointer_cast<ImageBrush>(Fill()))
 		{

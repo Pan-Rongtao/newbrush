@@ -59,8 +59,8 @@ public:
 	//获取材质
 	std::shared_ptr<Material> material();
 
-	//存储变量
-	void set(const std::string &name, const Any &v);
+	//存储uniform变量，以便下次刷新使用
+	void storeUniform(const std::string &name, const Any &v);
 	
 	//绘制，重写此方法以构建自己的渲染方式
 	virtual void draw() const;

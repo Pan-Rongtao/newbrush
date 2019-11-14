@@ -240,25 +240,16 @@ std::shared_ptr<Program> Programs::primitive()
 
 	constexpr char vs[] =
 		"attribute vec4 nbPos;"
-		"attribute vec2 nbTexCoord;"
 		"uniform mat4 nbMvp;"
-		"varying vec2 _texCoord;"
 		"void main()"
 		"{"
-		"	_texCoord = nbTexCoord;"
 		"	gl_Position = nbMvp * nbPos;"
 		"}";
 	constexpr char fs[] =
-		"uniform bool nbColorMode;"
-		"uniform vec4 _color;"
-		"varying vec2 _texCoord;"
-		"uniform sampler2D sampler;"
+		"uniform vec4 color;"
 		"void main()"
 		"{"
-		"	if(nbColorMode)"
-		"		gl_FragColor = _color;"
-		"	else"
-		"		gl_FragColor = texture2D(sampler, _texCoord);"
+		"	gl_FragColor = color;"
 		"}";
 	p = compileBindLink(vs, fs);
 	return p;
@@ -288,6 +279,32 @@ std::shared_ptr<Program> Programs::gradientPrimitive()
 		"	for(int i = 2; i < size; ++i)"
 		"		color = mix(color, colors[i], smoothstep(offsets[i-1], offsets[i], y));"
 		"	gl_FragColor = color;"
+		"}";
+	p = compileBindLink(vs, fs);
+	return p;
+}
+
+std::shared_ptr<Program> Programs::image()
+{
+	static std::shared_ptr<Program> p;
+	if (p)	return p;
+
+	constexpr char vs[] =
+		"attribute vec4 nbPos;"
+		"attribute vec2 nbTexCoord;"
+		"uniform mat4 nbMvp;"
+		"varying vec2 _texCoord;"
+		"void main()"
+		"{"
+		"	_texCoord = nbTexCoord;"
+		"	gl_Position = nbMvp * nbPos;"
+		"}";
+	constexpr char fs[] =
+		"uniform sampler2D sampler;"
+		"varying vec2 _texCoord;"
+		"void main()"
+		"{"
+		"	gl_FragColor = texture2D(sampler, _texCoord);"
 		"}";
 	p = compileBindLink(vs, fs);
 	return p;

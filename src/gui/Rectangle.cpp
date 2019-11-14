@@ -165,11 +165,10 @@ void Rectangle::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::sh
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
-		ro->set(nb::gl::Program::nbColorModeLocationStr, 1);
 		auto color = std::dynamic_pointer_cast<SolidColorBrush>(brush)->Color();
 		auto c = glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		ro->model()->meshes[0].unifyColor(c);
-		ro->set("_color", c);
+		ro->storeUniform("color", c);
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
@@ -185,14 +184,13 @@ void Rectangle::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::sh
 			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 			offsets.push_back(stop->Offset());
 		}
-		ro->set("size", stops->count());
-		ro->set("colors", colors);
-		ro->set("offsets", offsets);
+		ro->storeUniform("size", stops->count());
+		ro->storeUniform("colors", colors);
+		ro->storeUniform("offsets", offsets);
 	}
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
-		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
-		ro->set(nb::gl::Program::nbColorModeLocationStr, 0);
+		ro->setMaterial(std::make_shared<Material>(Programs::image()));
 		if (std::dynamic_pointer_cast<ImageBrush>(brush)->Source())
 		{
 			auto bm = std::dynamic_pointer_cast<ImageBrush>(brush)->Source()->Bm();

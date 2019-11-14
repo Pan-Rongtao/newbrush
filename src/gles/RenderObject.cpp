@@ -81,7 +81,7 @@ std::shared_ptr<Material> RenderObject::material()
 	return m_material;
 }
 
-void RenderObject::set(const std::string & name, const Any & v)
+void RenderObject::storeUniform(const std::string & name, const Any & v)
 {
 	m_uniforms[name] = v;
 }

@@ -84,7 +84,7 @@ void MyApplication::drawLines()
 {
 	auto line = std::make_shared<Line>(0.0f, 300.0f, 200.f, 300.0f);
 	auto ro = std::make_shared<RenderObject>(line, std::make_shared<Material>(Programs::primitive()));
-	ro->set(Program::nbColorModeLocationStr, 1);
+	ro->storeUniform(Program::nbColorModeLocationStr, 1);
 	line->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	line->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 	line->mode = GL_LINES;
@@ -95,7 +95,7 @@ void MyApplication::drawPolylines()
 {
 	auto polyline = std::make_shared<Polyline>(std::vector<glm::vec2>{glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 100.0f), glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 00.0f)});
 	auto ro = std::make_shared<RenderObject>(polyline, std::make_shared<Material>(Programs::primitive()));
-	ro->set(Program::nbColorModeLocationStr, 1);
+	ro->storeUniform(Program::nbColorModeLocationStr, 1);
 	polyline->mode = GL_LINE_LOOP;
 	polyline->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 	polyline->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
@@ -126,7 +126,7 @@ void MyApplication::drawTriangles()
 		tri->meshes[0].vertexs[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
 		tri->meshes[0].vertexs[2].color = { 0.0f, 0.0f, 1.0f, 1.0f };
 		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
-		ro->set(Program::nbColorModeLocationStr, 1);
+		ro->storeUniform(Program::nbColorModeLocationStr, 1);
 		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 		m_context->queue(ro);
 	}
@@ -161,14 +161,14 @@ void MyApplication::drawQuadrangles()
 		if (i == 0)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->set(Program::nbColorModeLocationStr, 1);
+			ro->storeUniform(Program::nbColorModeLocationStr, 1);
 			//ro->setRenderable(false);
 			ro->model()->meshes[0].unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
 		}
 		if (i == 1)
 		{
 			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->set(Program::nbColorModeLocationStr, 0);
+			ro->storeUniform(Program::nbColorModeLocationStr, 0);
 		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
 			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));
@@ -181,7 +181,7 @@ void MyApplication::drawQuadrangles()
 		}
 		if (i == 2)
 		{
-			ro->set(Program::nbColorModeLocationStr, 1);
+			ro->storeUniform(Program::nbColorModeLocationStr, 1);
 		//	ro->setRenderable(false);
 		}
 		m_context->queue(ro);
@@ -198,7 +198,7 @@ void MyApplication::drawEllipses()
 		epse = std::make_shared<Circle>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
 	epse->meshes[0].unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
-	ro->set(Program::nbColorModeLocationStr, 0);
+	ro->storeUniform(Program::nbColorModeLocationStr, 0);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
 	m_context->queue(ro);
 }
@@ -242,7 +242,7 @@ void MyApplication::drawSphere()
 //	sp->setDrawMode(GL_LINE_LOOP);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(sp, std::make_shared<Material>(Programs::primitive()));
 
-	ro->set(Program::nbColorModeLocationStr, 0);
+	ro->storeUniform(Program::nbColorModeLocationStr, 0);
 	m_context->queue(ro);
 	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/world4.jpg"));
 }
@@ -277,12 +277,12 @@ void MyApplication::drawPhone()
 	//	std::shared_ptr<Ellipse> epse = std::make_shared<Ellipse>(Vec2(-0.5f, -.5f), 0.25, 0.25);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::phong()));
 	m_context->queue(ro);
-	ro->set("viewPos", cameraPosition);
-	ro->set("material.shininess", 32.0);
-	ro->set("light.direction", g_Original ? glm::vec3(1.0f, -0.0f, 3.0f) : glm::vec3(1.0f, -0.0f, -3.0f));
-	ro->set("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-	ro->set("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-	ro->set("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+	ro->storeUniform("viewPos", cameraPosition);
+	ro->storeUniform("material.shininess", 32.0);
+	ro->storeUniform("light.direction", g_Original ? glm::vec3(1.0f, -0.0f, 3.0f) : glm::vec3(1.0f, -0.0f, -3.0f));
+	ro->storeUniform("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+	ro->storeUniform("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+	ro->storeUniform("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
 	//	ro->material()->setTexture(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
 
 	std::shared_ptr<TextureCubemap> cm = std::make_shared<TextureCubemap>();
@@ -362,7 +362,7 @@ void MyApplication::drawGlyphBunch()
 	glyphBunch->arrage(Fonts::getFont("Microsoft YaHei"), 300.0f, 50.0f, "abcdefghijklmnopqrs德赛西威tuvwxyz", 1, 32, TextWrappingE::Wrap, 300);
 	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(glyphBunch, std::make_shared<Material>(Programs::glpy()));
 	ro->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Fonts::getFont("Microsoft YaHei"), 'a')->texureId));
-	ro->set("fontColor", glm::vec4(1.0, 0.0, 0.0, 1.0));
+	ro->storeUniform("fontColor", glm::vec4(1.0, 0.0, 0.0, 1.0));
 	m_context->queue(ro);
 }
 
@@ -371,7 +371,7 @@ void MyApplication::drawStrip()
 	auto strip = std::make_shared<Strips>();
 	strip->update(std::vector<glm::vec2>{ { 100, 200 }, { 300, 200 }, { 300, 400 }, { 100, 400 }, { 100, 200 } }, 10.0f, std::vector<float>{ /*1, 2*/ }, 0.0f);
 	auto ro = std::make_shared<RenderObject>(strip, std::make_shared<Material>(Programs::primitive()));
-	ro->set(Program::nbColorModeLocationStr, 1);
+	ro->storeUniform(Program::nbColorModeLocationStr, 1);
 	ro->model()->meshes[0].unifyColor(glm::vec4(0.0, 0.0, 1.0, 1.0));
 	m_context->queue(ro);
 }

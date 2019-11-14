@@ -44,10 +44,10 @@ TextBlock::TextBlock(const std::string & text)
 		if (arg.dp == ForegroundProperty())
 		{
 			auto c = any_cast<Color>(arg.value);
-			Renderer()->set("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
+			Renderer()->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 		}
 	};
-	Renderer()->set("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	Renderer()->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 DependencyProperty TextBlock::TextProperty()
