@@ -28,13 +28,11 @@ private:
 		float length() const;
 
 		//÷¥–––Èœﬂº∆À„
-		void dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points);
+		void dashing(float offset, const std::vector<float> &array, float thickness, std::vector<glm::vec2> &points, const glm::vec4 &box, std::vector<glm::vec2> &texCoords, bool innerLine);
 
 		glm::vec2	p0;
 		glm::vec2	p1;
 	};
-
-	std::vector<uint16_t> getIndices(size_t vertexCount) const;
 
 };
 

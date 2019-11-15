@@ -97,20 +97,31 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		auto _radiusX = std::fabs(radiusX) <= width * 0.5f ? std::fabs(radiusX) : width * 0.5f;
 		auto _radiusY = std::fabs(radiusY) <= height * 0.5f ? std::fabs(radiusY) : height * 0.5f;
 
-		auto fillConner = [&vertexs, &indices, &connerVertexSize, &connerIndicesSize, &_radiusX, &_radiusY, &radianStep](const glm::vec3 &center, float radianSpan, int cornnerIndex) {
+		auto fillConner = [&vertexs, &indices, &connerVertexSize, &connerIndicesSize, _radiusX, _radiusY, &radianStep, width, height](const glm::vec3 &center, float radianSpan, int cornnerIndex) 
+		{
 			auto beg = cornnerIndex * connerVertexSize;
+			auto centerTexCoord = glm::vec2();
+			switch (cornnerIndex)
+			{
+			case 0:	centerTexCoord = glm::vec2(_radiusX / width, 1 - _radiusY / height);		break;
+			case 1:	centerTexCoord = glm::vec2(1 - _radiusX / width, 1 - (_radiusY / height));	break;
+			case 2:	centerTexCoord = glm::vec2(1 - _radiusX / width, _radiusY / height);		break;
+			case 3:	centerTexCoord = glm::vec2(_radiusX / width, _radiusY / height);			break;
+			default:																			break;
+			}
 			for (auto i = 0u; i < connerVertexSize; ++i)
 			{
 				//填充顶点属性
 				if (i == 0)
 				{
 					vertexs[beg].position = center;
+					vertexs[beg].texCoord = centerTexCoord;
 				}
 				else
 				{
 					auto radian = radianStep * (i - 1) + radianSpan;
 					vertexs[beg + i].position = glm::vec3(_radiusX * cos(radian), _radiusY * sin(radian), 0.0) + center;
-					vertexs[beg + i].texCoord = glm::vec2(0.5 * cos(radian) + 0.5, 1.0 - (0.5 * sin(radian) + 0.5));
+					vertexs[beg + i].texCoord = glm::vec2(centerTexCoord.x + _radiusX / width * cos(radian), centerTexCoord.y - _radiusY / height * sin(radian));
 				}
 				//填充顶点序列
 				if (i >= 0 && i < connerVertexSize - 2)
@@ -130,18 +141,18 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		fillConner(glm::vec3{ _radiusX - width * 0.5, height * 0.5 - _radiusY, 0.0f }, (float)M_PI * 0.5, connerIndex++);
 		//中间十字两个矩形的顶点序列
 		auto beg = indices.size() - 12;
-		indices[beg++] = 1; indices[beg++] = connerVertexSize * 2 - 1; indices[beg++] = connerVertexSize * 2 + 1;
-		indices[beg++] = 1; indices[beg++] = connerVertexSize * 2 + 1; indices[beg++] = connerVertexSize * 4 - 1;
-		indices[beg++] = connerVertexSize - 1; indices[beg++] = connerVertexSize + 1; indices[beg++] = connerVertexSize * 3 - 1;
-		indices[beg++] = connerVertexSize - 1; indices[beg++] = connerVertexSize * 3 - 1; indices[beg++] = connerVertexSize * 3 + 1;
+		indices[beg++] = 1;						indices[beg++] = connerVertexSize * 2 - 1;	indices[beg++] = connerVertexSize * 2 + 1;
+		indices[beg++] = 1;						indices[beg++] = connerVertexSize * 2 + 1;	indices[beg++] = connerVertexSize * 4 - 1;
+		indices[beg++] = connerVertexSize - 1;	indices[beg++] = connerVertexSize + 1;		indices[beg++] = connerVertexSize * 3 - 1;
+		indices[beg++] = connerVertexSize - 1;	indices[beg++] = connerVertexSize * 3 - 1;	indices[beg++] = connerVertexSize * 3 + 1;
 
 	}
 	else
 	{
-		vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
-		vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
-		vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
-		vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+		vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };
+		vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };
+		vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };
+		vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };
 		indices = { 0, 1, 2, 0, 2, 3 };
 	}
 
@@ -166,9 +177,7 @@ void Rectangle::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::sh
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
 		auto color = std::dynamic_pointer_cast<SolidColorBrush>(brush)->Color();
-		auto c = glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-		ro->model()->meshes[0].unifyColor(c);
-		ro->storeUniform("color", c);
+		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
