@@ -16,9 +16,9 @@ void TestBrush::test()
 	rc->RadiusX = 50;
 	rc->RadiusY = 50;
 	rc->Margin = Thickness(50);
-	rc->Stroke = std::make_shared<SolidColorBrush>(Colors::blue());
+//	rc->Stroke = std::make_shared<SolidColorBrush>(Colors::blue());
 	rc->StrokeThickness = 30;
-//	rc->StrokeDashArray = {3, 3};
+	rc->StrokeDashArray = {3, 3};
 	rc->StrokeDashOffset = 2;
 	m_window->Content = rc;
 	

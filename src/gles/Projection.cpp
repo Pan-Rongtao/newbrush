@@ -11,7 +11,7 @@ Projection::Projection()
 
 void Projection::ortho(float left, float right, float bottom, float top, float near, float far)
 {
-	matrix = glm::ortho(left, right, bottom, top, near, far);
+	matrix = glm::ortho(left, right, bottom, top);
 }
 
 void Projection::perspective(float fovy, float aspect, float near, float far)

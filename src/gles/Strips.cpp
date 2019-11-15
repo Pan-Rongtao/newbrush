@@ -19,11 +19,11 @@ void Strips::update(const std::vector<glm::vec2>& breaks, float thickness, const
 		LineSegment centerLine(breaks[i], breaks[i + 1]);
 		glm::vec2 diff = { thickness * 0.5 * centerLine.yDiff() / centerLine.length(), thickness * 0.5 * centerLine.xDiff() / centerLine.length() };
 		auto p0 = glm::vec2(centerLine.p0.x + diff.x, centerLine.p0.y - diff.y);
-		p0.x = p0.x - diff.y;
-		p0.y = p0.y - diff.x;
+		p0.x -= diff.y;
+		p0.y -= diff.x;
 		auto p1 = glm::vec2(centerLine.p1.x + diff.x, centerLine.p1.y - diff.y);
-		p1.x = p1.x + diff.y;
-		p1.y = p1.y + diff.x;
+		p1.x += diff.y;
+		p1.y += diff.x;
 		outBreaks.push_back(p0);
 	}
 	auto xMinMax = std::minmax_element(outBreaks.begin(), outBreaks.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
@@ -98,13 +98,16 @@ void Strips::LineSegment::dashing(float offset, const std::vector<float> &array,
 	auto box_y = box.x;
 	auto box_w = std::fabs(box.z - box.x);
 	auto box_h = std::fabs(box.w - box.y);
+	auto calcTexCoor = [&box_x, &box_y, &box_w, &box_h](const glm::vec2 &p)->glm::vec2 {
+		return glm::vec2{ (p.x - box_x) / box_w, 1 - (p.y - box_y) / box_h };
+	};
 	//如果不做dash，则仅存入p0和p1
 	if (array.empty())
 	{
 		points.push_back(p0);
 		points.push_back(p1);
-		texCoords.push_back(glm::vec2{ (p0.x - box_x) / box_w, 1 - (p0.y - box_y) / box_h });
-		texCoords.push_back(glm::vec2{ (p1.x - box_x) / box_w, 1 - (p1.y - box_y) / box_h });
+		texCoords.push_back(calcTexCoor(p0));
+		texCoords.push_back(calcTexCoor(p1));
 		return;
 	}
 
@@ -135,15 +138,21 @@ void Strips::LineSegment::dashing(float offset, const std::vector<float> &array,
 	if (dashedLen == 0.0f)
 	{
 		points.push_back(p0);
+		texCoords.push_back(glm::vec2{ (p0.x - box_x) / box_w, 1 - (p0.y - box_y) / box_h });
 	}
 	else
 	{
 		if (solid)
+		{
 			points.push_back(p0);
+			texCoords.push_back(calcTexCoor(p0));
+		}
 
 		auto x = xDiff() * (dashedLen <= dashedLen ? dashedLen : totalLen) / totalLen;
 		auto y = yDiff() * (dashedLen <= dashedLen ? dashedLen : totalLen) / totalLen;
-		points.push_back(p0 + glm::vec2(x, y));
+		auto p = p0 + glm::vec2(x, y);
+		points.push_back(p);
+		texCoords.push_back(calcTexCoor(p));
 		iter = iter == array.end() - 1 ? array.begin() : iter + 1;
 	}
 
@@ -156,12 +165,16 @@ void Strips::LineSegment::dashing(float offset, const std::vector<float> &array,
 			//相似三角形计算x, y
 			auto x = xDiff() * dashedLen / totalLen;
 			auto y = yDiff() * dashedLen / totalLen;
-			points.push_back(p0 + glm::vec2(x, y));
+			auto p = p0 + glm::vec2(x, y);
+			points.push_back(p);
+			texCoords.push_back(calcTexCoor(p));
 			iter = iter == array.end() - 1 ? array.begin() : iter + 1;
 		}
 		else
 		{
-			points.push_back(p0 + glm::vec2(xDiff(), yDiff()));
+			auto p = p0 + glm::vec2(xDiff(), yDiff());
+			points.push_back(p);
+			texCoords.push_back(calcTexCoor(p));
 			break;
 		}
 	}
