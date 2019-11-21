@@ -3,14 +3,10 @@
 
 namespace nb{ namespace gui{
 
-class NB_API Polyline : public Shape
+class NB_API Ellipse : public Shape
 {
 public:
-	Polyline();
-	virtual ~Polyline() = default;
-
-	Property_rw<std::vector<Point>>	Points;				//点集合
-	static DependencyProperty		PointsProperty();	//点集合的依赖属性
+	Ellipse();
 
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
 
@@ -19,6 +15,7 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
+	void updateFillObject(float a, float b);
 	void updateStrokeObject(const Rect &rc);
 };
 

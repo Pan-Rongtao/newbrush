@@ -3,6 +3,8 @@
 #include "gui/Rectangle.h"
 #include "gui/Line.h"
 #include "gui/Polyline.h"
+#include "gui/Ellipse.h"
+#include "gui/Polygon.h"
 //#include "E:\bezier\include\bezier.h"
 
 void TestCanvas::test()

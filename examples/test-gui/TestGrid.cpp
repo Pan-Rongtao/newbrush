@@ -4,6 +4,7 @@
 #include "gui/Brush.h"
 #include "core/Color.h"
 #include "gui/TextBlock.h"
+#include "gui/Ellipse.h"
 
 using namespace nb;
 

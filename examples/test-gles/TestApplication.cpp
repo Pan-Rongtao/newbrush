@@ -10,7 +10,6 @@
 #include "gles/Model.h"
 #include "gles/Quadrangle.h"
 #include "gles/Triangle.h"
-#include "gles/Circle.h"
 #include "gles/Cube.h"
 #include "gles/Sphere.h"
 #include "gles/TextureCubemap.h"
@@ -18,8 +17,6 @@
 #include "gles/Projection.h"
 #include "gles/GlyphFactory.h"
 #include "gles/GlyphBunch.h"
-#include "gles/Line.h"
-#include "gles/Polyline.h"
 #include "gles/Strips.h"
 #include <opengl/GLES2/gl2.h>
 
@@ -78,29 +75,6 @@ MyApplication::MyApplication()
 //	drawGlyph();
 //	drawGlyphBunch();
 	drawStrip();
-}
-
-void MyApplication::drawLines()
-{
-	auto line = std::make_shared<Line>(0.0f, 300.0f, 200.f, 300.0f);
-	auto ro = std::make_shared<RenderObject>(line, std::make_shared<Material>(Programs::primitive()));
-	ro->storeUniform(Program::nbColorModeLocationStr, 1);
-	line->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
-	line->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-	line->mode = GL_LINES;
-	m_context->queue(ro);
-}
-
-void MyApplication::drawPolylines()
-{
-	auto polyline = std::make_shared<Polyline>(std::vector<glm::vec2>{glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 100.0f), glm::vec2(100.0f, 100.0f), glm::vec2(100.0f, 00.0f)});
-	auto ro = std::make_shared<RenderObject>(polyline, std::make_shared<Material>(Programs::primitive()));
-	ro->storeUniform(Program::nbColorModeLocationStr, 1);
-	polyline->mode = GL_LINE_LOOP;
-	polyline->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
-	polyline->meshes[0].vertexs[1].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-//	polyline->translate(10, 10, 0);
-	m_context->queue(ro);
 }
 
 void MyApplication::drawTriangles()
@@ -187,20 +161,6 @@ void MyApplication::drawQuadrangles()
 		m_context->queue(ro);
 	}
 
-}
-
-void MyApplication::drawEllipses()
-{
-	std::shared_ptr<Circle> epse;
-	if(g_Original)
-		epse = std::make_shared<Circle>(-0.5f, -.5f, 0.25f, 0.25f, g_Original);
-	else
-		epse = std::make_shared<Circle>(100.0f, 400.0f, 50.0f, 50.0f, g_Original);
-	epse->meshes[0].unifyColor({ 1.0f, 0.0f, 0.0f, 0.0f });
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(epse, std::make_shared<Material>(Programs::primitive()));
-	ro->storeUniform(Program::nbColorModeLocationStr, 0);
-	ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
-	m_context->queue(ro);
 }
 
 void MyApplication::drawCubes()

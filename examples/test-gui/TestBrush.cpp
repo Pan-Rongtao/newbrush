@@ -12,7 +12,7 @@ void TestBrush::test()
 	auto gs3 = std::make_shared<GradientStop>(Color(255, 0, 125, 0), 1.0f);
 	linearBrush->GradientStops = std::make_shared<GradientStopCollection>(std::vector<GradientStopPtr>{ gs0, gs1, gs2, gs3 });
 //	rc->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-//	rc->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
+	rc->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
 	rc->RadiusX = 50;
 	rc->RadiusY = 50;
 	rc->Margin = Thickness(50);
@@ -24,5 +24,5 @@ void TestBrush::test()
 	
 //	rc->Fill = linearBrush;
 //	rc->Stroke = linearBrush;
-//	rc->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/5.jpg"));
+	rc->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/5.jpg"));
 }

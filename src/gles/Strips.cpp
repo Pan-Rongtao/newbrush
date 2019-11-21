@@ -19,12 +19,12 @@ void Strips::update(const std::vector<glm::vec2>& breaks, float thickness, const
 		LineSegment centerLine(breaks[i], breaks[i + 1]);
 		glm::vec2 diff = { thickness * 0.5 * centerLine.yDiff() / centerLine.length(), thickness * 0.5 * centerLine.xDiff() / centerLine.length() };
 		auto p0 = glm::vec2(centerLine.p0.x + diff.x, centerLine.p0.y - diff.y);
-		p0.x -= diff.y;
-		p0.y -= diff.x;
-		auto p1 = glm::vec2(centerLine.p1.x + diff.x, centerLine.p1.y - diff.y);
-		p1.x += diff.y;
-		p1.y += diff.x;
 		outBreaks.push_back(p0);
+		if (i == breaks.size() - 2)
+		{
+			auto p1 = glm::vec2(centerLine.p1.x + diff.x, centerLine.p1.y - diff.y);
+			outBreaks.push_back(p1);
+		}
 	}
 	auto xMinMax = std::minmax_element(outBreaks.begin(), outBreaks.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
 	auto yMinMax = std::minmax_element(outBreaks.begin(), outBreaks.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.y > p0.y; });

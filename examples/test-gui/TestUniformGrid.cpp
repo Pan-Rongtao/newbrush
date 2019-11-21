@@ -2,6 +2,7 @@
 #include "gui/Shape.h"
 #include "gui/TextBlock.h"
 #include "gui/Rectangle.h"
+#include "gui/Ellipse.h"
 
 void TestUniformGrid::test()
 {

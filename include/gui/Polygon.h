@@ -3,11 +3,11 @@
 
 namespace nb{ namespace gui{
 
-class NB_API Polyline : public Shape
+class NB_API Polygon : public Shape
 {
 public:
-	Polyline();
-	virtual ~Polyline() = default;
+	Polygon();
+	virtual ~Polygon() = default;
 
 	Property_rw<std::vector<Point>>	Points;				//点集合
 	static DependencyProperty		PointsProperty();	//点集合的依赖属性
@@ -19,7 +19,8 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
-	void updateStrokeObject(const Rect &rc);
+	void updateFillObject();
+	void updateStrokeObject();
 };
 
 }}

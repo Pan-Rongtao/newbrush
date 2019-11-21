@@ -1,5 +1,6 @@
 #include "TestShape.h"
 #include "gui/Shape.h"
+#include "gui/Ellipse.h"
 
 void TestShape::test()
 {

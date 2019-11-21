@@ -18,12 +18,15 @@
 #include "TestShape.h"
 #include "TestBrush.h"
 #include "TestProperty.h"
+#include "TestLine.h"
+#include "TestPolyline.h"
+#include "TestEllipse.h"
 
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestBrush> test;
+		TestHandle<TestEllipse> test;
 		test->test();
 		return app.run();
 	}

@@ -11,7 +11,13 @@ using namespace nb::gui;
 Polyline::Polyline()
 	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
 {
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
+	PropertyChanged += [&](const PropertyChangedArgs & args) {
+		if (args.dp == StrokeProperty())
+		{
+			if (!Stroke())				m_strokeObject.reset();
+			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
+		}
+	};
 }
 
 DependencyProperty Polyline::PointsProperty()
@@ -23,13 +29,12 @@ DependencyProperty Polyline::PointsProperty()
 void Polyline::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 {
 	auto offset = worldOffset();
-	std::vector<glm::vec2> points;
-	for (auto const &p : Points())
+	Rect rc(offset.x(), offset.y(), ActualSize());
+	if (m_strokeObject)
 	{
-		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
+		updateStrokeObject(rc);
+		drawContext->queue(m_strokeObject);
 	}
-//	Renderer()->setModel(std::make_shared<nb::gl::Polyline>(points));
-//	drawContext->queue(Renderer());
 }
 
 Size Polyline::measureOverride(const Size & availableSize)
@@ -50,4 +55,17 @@ Size Polyline::arrangeOverride(const Size & finalSize)
 		auto sz = Size(xMinMax.second->x() - xMinMax.first->x(), yMinMax.second->y() - yMinMax.first->y());
 		return sz;
 	}
+}
+
+void Polyline::updateStrokeObject(const Rect &rc)
+{
+	if (!m_strokeObject)
+		return;
+
+	std::vector<glm::vec2> breaks;
+	for (auto const &p : Points())
+		breaks.push_back({p.x(), p.y()});
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset(), StrokeLineJoin());
+
+	updateMeterial(m_strokeObject, Stroke());
 }

@@ -15,7 +15,18 @@ Rectangle::Rectangle()
 	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
 	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
 {
-	PropertyChanged += std::bind(&Rectangle::onPropertyChanged, this, std::placeholders::_1);
+	PropertyChanged += [&](const PropertyChangedArgs &args) {
+		if (args.dp == FillProperty())
+		{
+			if (!Fill())				m_fillObject.reset();
+			else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+		}
+		else if (args.dp == StrokeProperty())
+		{
+			if (!Stroke())				m_strokeObject.reset();
+			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
+		}
+	};
 }
 
 DependencyProperty Rectangle::RadiusXProperty()
@@ -60,20 +71,6 @@ Size Rectangle::measureOverride(const Size & availableSize)
 Size Rectangle::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
-}
-
-void Rectangle::onPropertyChanged(const PropertyChangedArgs & args)
-{
-	if (args.dp == FillProperty())
-	{
-		if (!Fill())				m_fillObject.reset();
-		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
-	}
-	else if (args.dp == StrokeProperty())
-	{
-		if (!Stroke())				m_strokeObject.reset();
-		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-	}
 }
 
 void Rectangle::updateFillObject(float width, float height, float radiusX, float radiusY)

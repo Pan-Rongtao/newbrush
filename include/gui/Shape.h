@@ -42,39 +42,4 @@ protected:
 	std::shared_ptr<nb::gl::RenderObject>	m_strokeObject;
 };
 
-
-//多边形
-class NB_API Polygon : public Shape
-{
-public:
-	Polygon();
-	virtual ~Polygon() = default;
-
-	Property_rw<std::vector<Point>>	Points;				//点集合
-	static DependencyProperty		PointsProperty();	//点集合的依赖属性
-
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
-
-protected:
-	virtual Size measureOverride(const Size &availableSize) override;
-	virtual Size arrangeOverride(const Size &finalSize) override;
-
-};
-
-//椭圆
-class NB_API Ellipse : public Shape
-{
-public:
-	Ellipse();
-
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
-
-protected:
-	virtual Size measureOverride(const Size &availableSize) override;
-	virtual Size arrangeOverride(const Size &finalSize) override;
-
-private:
-	void onPropertyChanged(const PropertyChangedArgs & args);
-};
-
 }}
