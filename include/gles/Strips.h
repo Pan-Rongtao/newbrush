@@ -1,9 +1,12 @@
 #pragma once
 #include <vector>
 #include "Model.h"
+#include "../media/Media.h"
 
 namespace nb{
 namespace gl{
+
+using nb::media::PenLineJoinE;
 
 class NB_API Strips : public Model
 {
@@ -12,7 +15,7 @@ public:
 	Strips();
 
 	//
-	void update(const std::vector<glm::vec2> &breaks, float thickness, const std::vector<float> &dashArray, float offset);
+	void update(const std::vector<glm::vec2> &breaks, float thickness, const std::vector<float> &dashArray, float offset, PenLineJoinE lineJionStyle);
 
 private:
 	//œﬂ∂Œ¿‡ y = kx + b

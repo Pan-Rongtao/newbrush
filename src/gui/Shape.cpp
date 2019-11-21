@@ -7,9 +7,12 @@
 #include "gles/Polyline.h"
 #include <opengl/GLES2/gl2.h>
 #include "gui/GradientBrush.h"
+#include "gles/Texture2D.h"
+#include "gles/Program.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
+using namespace nb::gl;
 using namespace nb::gui;
 
 Shape::Shape()
@@ -86,101 +89,40 @@ DependencyProperty Shape::StrokeDashOffsetProperty()
 	return dp;
 }
 
-/////////////////
-Line::Line()
-	: X1([&](float v) {set(X1Property(), v); }, [&]()->float& {return get<float>(X1Property()); })
-	, X2([&](float v) {set(X2Property(), v); }, [&]()->float& {return get<float>(X2Property()); })
-	, Y1([&](float v) {set(Y1Property(), v); }, [&]()->float& {return get<float>(Y1Property()); })
-	, Y2([&](float v) {set(Y2Property(), v); }, [&]()->float& {return get<float>(Y2Property()); })
+void Shape::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush)
 {
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
-}
-
-DependencyProperty Line::X1Property()
-{
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
-	return dp;
-}
-
-DependencyProperty Line::X2Property()
-{
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
-	return dp;
-}
-
-DependencyProperty Line::Y1Property()
-{
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
-	return dp;
-}
-
-DependencyProperty Line::Y2Property()
-{
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
-	return dp;
-}
-
-void Line::onRender(std::shared_ptr<nb::gl::Context> drawContext)
-{
-	auto offset = worldOffset();
-	Rect rc(Point(X1(), Y1()), Point(X2(), Y2()));
-	rc.move(offset.x(), offset.y());
-	Renderer()->setModel(std::make_shared<nb::gl::Line>(rc.left(), rc.top(), rc.right(), rc.bottom()));
-	drawContext->queue(Renderer());
-}
-
-Size Line::measureOverride(const Size & availableSize)
-{
-	return availableSize;
-}
-
-Size Line::arrangeOverride(const Size & finalSize)
-{
-	return Size(std::abs(X2() - X1()), std::abs(Y2() - Y1()));
-}
-
-//////////
-Polyline::Polyline()
-	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
-{
-	Renderer()->setMaterial(std::make_shared<gl::Material>(gl::Programs::primitive()));
-}
-
-DependencyProperty Polyline::PointsProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {});
-	return dp;
-}
-
-void Polyline::onRender(std::shared_ptr<nb::gl::Context> drawContext)
-{
-	auto offset = worldOffset();
-	std::vector<glm::vec2> points;
-	for (auto const &p : Points())
+	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
-		points.push_back({ p.x() + offset.x(), p.y() + offset.y() });
+		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
+		auto color = std::dynamic_pointer_cast<SolidColorBrush>(brush)->Color();
+		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
-	Renderer()->setModel(std::make_shared<nb::gl::Polyline>(points));
-	drawContext->queue(Renderer());
-}
-
-Size Polyline::measureOverride(const Size & availableSize)
-{
-	return availableSize;
-}
-
-Size Polyline::arrangeOverride(const Size & finalSize)
-{
-	if (Points().empty())
+	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
-		return Size::zero();
+		ro->setMaterial(std::make_shared<nb::gl::Material>(Programs::gradientPrimitive()));
+		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
+		auto stops = linearGradientBrush->GradientStops();
+		std::vector<glm::vec4> colors;
+		std::vector<float> offsets;
+		for (auto i = 0; i != stops->count(); ++i)
+		{
+			auto stop = (*stops)[i];
+			auto color = stop->Color();
+			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
+			offsets.push_back(stop->Offset());
+		}
+		ro->storeUniform("size", stops->count());
+		ro->storeUniform("colors", colors);
+		ro->storeUniform("offsets", offsets);
 	}
-	else
+	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
-		auto xMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.x() > p0.x(); });
-		auto yMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.y() > p0.y(); });
-		auto sz = Size(xMinMax.second->x() - xMinMax.first->x(), yMinMax.second->y() - yMinMax.first->y());
-		return sz;
+		ro->setMaterial(std::make_shared<Material>(Programs::image()));
+		if (std::dynamic_pointer_cast<ImageBrush>(brush)->Source())
+		{
+			auto bm = std::dynamic_pointer_cast<ImageBrush>(brush)->Source()->Bm();
+			ro->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
+		}
 	}
 }
 

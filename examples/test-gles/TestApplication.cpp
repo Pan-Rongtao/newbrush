@@ -369,7 +369,7 @@ void MyApplication::drawGlyphBunch()
 void MyApplication::drawStrip()
 {
 	auto strip = std::make_shared<Strips>();
-	strip->update(std::vector<glm::vec2>{ { 100, 200 }, { 300, 200 }, { 300, 400 }, { 100, 400 }, { 100, 200 } }, 10.0f, std::vector<float>{ /*1, 2*/ }, 0.0f);
+	strip->update(std::vector<glm::vec2>{ { 100, 200 }, { 300, 200 }, { 300, 400 }, { 100, 400 }, { 100, 200 } }, 10.0f, std::vector<float>{ /*1, 2*/ }, 0.0f, PenLineJoinE::Beval);
 	auto ro = std::make_shared<RenderObject>(strip, std::make_shared<Material>(Programs::primitive()));
 	ro->storeUniform(Program::nbColorModeLocationStr, 1);
 	ro->model()->meshes[0].unifyColor(glm::vec4(0.0, 0.0, 1.0, 1.0));

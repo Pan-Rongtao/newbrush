@@ -2,26 +2,12 @@
 #include "../gui/UIElement.h"
 #include "../gui/Brush.h"
 #include "../gui/Stretch.h"
+#include "../media/Media.h"
 
 namespace nb{ namespace gui{
 
-//笔帽样式
-enum class PenLineCapE
-{
-	Flat,		//没有笔帽
-	Round,		//圆形笔帽
-	Square,		//矩形笔帽
-	Triangle,	//三角形笔帽
-};
-
-//联接样式
-enum class PenLineJoinE
-{
-	Beval,
-	Miter,
-	Round,
-};
-
+using nb::media::PenLineCapE;
+using nb::media::PenLineJoinE;
 //形状类
 class NB_API Shape : public UIElement
 {
@@ -33,7 +19,7 @@ public:
 	Property_rw<PenLineCapE>		StrokeEndLineCap;			//轮廓线条的终点笔帽样式（仅适用于Line、Polyline，其余封闭形状不生效）
 	Property_rw<std::vector<float>>	StrokeDashArray;			//虚线的间隙占位，单位为StrokeThickness，比如{1, 2}，表示虚线1，间隙2，并以此循环至长度末
 	Property_rw<float>				StrokeDashOffset;			//虚线开始的偏移（负值为左偏，正值为右偏）
-	Property_rw<PenLineCapE>		StrokeDashCap;				//虚线两端的笔帽样式（仅适用于Line、Polyline，其余封闭形状不生效）
+	Property_rw<PenLineCapE>		StrokeDashCap;				//虚线两端的笔帽样式
 	Property_rw<PenLineJoinE>		StrokeLineJoin;				//顶点联接样式
 	Property_rw<StretchE>			Stretch;					//伸缩方式
 	
@@ -50,52 +36,12 @@ public:
 
 protected:
 	Shape();
+	void updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush);
 
 	std::shared_ptr<nb::gl::RenderObject>	m_fillObject;
 	std::shared_ptr<nb::gl::RenderObject>	m_strokeObject;
 };
 
-//线
-class NB_API Line : public Shape
-{
-public:
-	Line();
-	virtual ~Line() = default;
-
-	Property_rw<float>			X1;				//X1
-	Property_rw<float>			X2;				//X2
-	Property_rw<float>			Y1;				//Y1
-	Property_rw<float>			Y2;				//Y2
-	static DependencyProperty	X1Property();	//X1的依赖属性
-	static DependencyProperty	X2Property();	//X2的依赖属性
-	static DependencyProperty	Y1Property();	//Y1的依赖属性
-	static DependencyProperty	Y2Property();	//Y2的依赖属性
-
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
-
-protected:
-	virtual Size measureOverride(const Size &availableSize) override;
-	virtual Size arrangeOverride(const Size &finalSize) override;
-
-};
-
-//多线段
-class NB_API Polyline : public Shape
-{
-public:
-	Polyline();
-	virtual ~Polyline() = default;
-
-	Property_rw<std::vector<Point>>	Points;				//点集合
-	static DependencyProperty		PointsProperty();	//点集合的依赖属性
-
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
-
-protected:
-	virtual Size measureOverride(const Size &availableSize) override;
-	virtual Size arrangeOverride(const Size &finalSize) override;
-
-};
 
 //多边形
 class NB_API Polygon : public Shape

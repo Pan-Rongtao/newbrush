@@ -9,7 +9,7 @@ Strips::Strips()
 {
 }
 
-void Strips::update(const std::vector<glm::vec2>& breaks, float thickness, const std::vector<float>& dashArray, float offset)
+void Strips::update(const std::vector<glm::vec2>& breaks, float thickness, const std::vector<float>& dashArray, float offset, PenLineJoinE lineJionStyle)
 {
 	std::vector<Vertex> vertexs;
 	//计算外接矩形
