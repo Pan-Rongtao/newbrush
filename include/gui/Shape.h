@@ -8,7 +8,6 @@ namespace nb{ namespace gui{
 
 using nb::media::PenLineCapE;
 using nb::media::PenLineJoinE;
-//ÐÎ×´Àà
 class NB_API Shape : public UIElement
 {
 public:

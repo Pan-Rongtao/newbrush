@@ -21,12 +21,13 @@
 #include "TestLine.h"
 #include "TestPolyline.h"
 #include "TestEllipse.h"
+#include "TestPolygon.h"
 
 int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestEllipse> test;
+		TestHandle<TestPolygon> test;
 		test->test();
 		return app.run();
 	}

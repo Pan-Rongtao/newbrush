@@ -44,7 +44,7 @@ void Polygon::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
 		updateFillObject();
 		drawContext->queue(m_fillObject);
-		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+		//m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 	if (m_strokeObject)
 	{
@@ -79,13 +79,21 @@ void Polygon::updateFillObject()
 	if (!Fill())
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
-	auto indices = m_fillObject->model()->meshes[0].indices;
+	auto &indices = m_fillObject->model()->meshes[0].indices;
 	vertexs.resize(Points().size());
-	indices.resize((vertexs.size() - 2) * 3);
-	for (auto i = 0u; i++ < vertexs.size();)
+	for (auto i = 0u; i < vertexs.size(); ++i)
 	{
 		vertexs[i].position = { Points()[i].x(), Points()[i].y(), 0.0f };
 	}
+	indices.resize((vertexs.size() - 2) * 3);
+	for (auto i = 0u; i < vertexs.size() - 2; ++i)
+	{
+		int base = 3 * i;
+		indices[base] = 0;
+		indices[base + 1] = i + 1;
+		indices[base + 2] = i + 2;
+	}
+	updateMeterial(m_fillObject, Fill());
 }
 
 void Polygon::updateStrokeObject()

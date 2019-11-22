@@ -1,8 +1,8 @@
-#include "TestEllipse.h"
-#include "gui/Ellipse.h"
+#include "TestPolygon.h"
+#include "gui/Polygon.h"
 #include "gui/GradientBrush.h"
 
-void TestEllipse::test()
+void TestPolygon::test()
 {
 	m_window = std::make_shared<nb::gui::Window>();
 	auto linearBrush = std::make_shared<LinearGradientBrush>();
@@ -12,14 +12,12 @@ void TestEllipse::test()
 	auto gs2 = std::make_shared<GradientStop>(Color(255, 0, 0, 255), 0.66f);
 	auto gs3 = std::make_shared<GradientStop>(Color(255, 0, 125, 0), 1.0f);
 	linearBrush->GradientStops = std::make_shared<GradientStopCollection>(std::vector<GradientStopPtr>{ gs0, gs1, gs2, gs3 });
-	auto ep = std::make_shared<Ellipse>();
-	ep->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-	ep->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
-	ep->Stroke = std::make_shared<SolidColorBrush>(Colors::blue());
-	ep->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/5.jpg"));
-	ep->Stroke = linearBrush;
-	ep->StrokeThickness = 50;
-	ep->StrokeDashArray = {};
-//	ep->Margin = 100;
-	m_window->Content = ep;
+	auto pl = std::make_shared<Polygon>();
+	pl->Points = { { 0,0 },{ 100,0 }, { 100,100 },{ 0,100 }};
+	pl->Fill = std::make_shared<SolidColorBrush>(Colors::red());
+	pl->StrokeThickness = 20;
+	//pl->Stroke = std::make_shared<SolidColorBrush>(Colors::red());
+	//pl->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/5.jpg"));
+	//pl->Stroke = linearBrush;
+	m_window->Content = pl;
 }

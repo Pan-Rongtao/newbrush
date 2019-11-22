@@ -12,7 +12,7 @@ using namespace nb::gui;
 
 //椭圆的点计算公式为：x = a * cos(α); y = b * sin(α)
 //顶点越多越圆滑
-constexpr int vertexCount = 50;
+constexpr int vertexCount = 200;
 
 Ellipse::Ellipse()
 {
@@ -60,16 +60,18 @@ void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	{
 		Rect fillRc{ rc };
 		if (Stroke())
-			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
+			fillRc.reset(rc.left() - StrokeThickness(), rc.top() - StrokeThickness(), rc.width() - StrokeThickness() * 2, rc.height() - StrokeThickness() * 2);
 		updateFillObject(fillRc.width() * 0.5f, fillRc.height() * 0.5f);
 		drawContext->queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 	if (m_strokeObject)
 	{
-		updateStrokeObject(rc);
+		Rect StrokeRc{ rc };
+		StrokeRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
+		updateStrokeObject(StrokeRc);
 		drawContext->queue(m_strokeObject);
-		//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+		m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 }
 
@@ -109,7 +111,16 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 	if (!m_strokeObject)
 		return;
 
-	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };
+	std::vector<glm::vec2> breaks;
+	constexpr auto radianStep = 2 * M_PI / (vertexCount - 2);
+	for (int i = 1; i != vertexCount; ++i)
+	{
+		auto radian = radianStep * i;
+		float a = rc.width() * 0.5f;
+		float b = rc.height() * 0.5f;
+		auto p = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
+		breaks.push_back(p);
+	}
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset(), StrokeLineJoin());
 
 	updateMeterial(m_strokeObject, Stroke());
