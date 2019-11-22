@@ -1,8 +1,7 @@
 #pragma once
-#include "Brush.h"
+#include "../media/Brush.h"
 
 namespace nb{
-namespace gui{
 
 class NB_API GradientStop : public DependencyObject
 {
@@ -67,4 +66,4 @@ public:
 };
 using LinearGradientBrushPtr = std::shared_ptr<LinearGradientBrush>;
 
-}}
+}

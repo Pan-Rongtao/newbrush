@@ -1,5 +1,5 @@
 ﻿#include "gui/Canvas.h"
-#include "gui/DependencyProperty.h"
+#include "core/DependencyProperty.h"
 
 using namespace nb;
 using namespace nb::gui;

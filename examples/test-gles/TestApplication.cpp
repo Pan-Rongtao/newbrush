@@ -8,8 +8,6 @@
 #include "gles/Shader.h"
 #include "gles/RenderObject.h"
 #include "gles/Model.h"
-#include "gles/Quadrangle.h"
-#include "gles/Triangle.h"
 #include "gles/Cube.h"
 #include "gles/Sphere.h"
 #include "gles/TextureCubemap.h"
@@ -75,92 +73,6 @@ MyApplication::MyApplication()
 //	drawGlyph();
 //	drawGlyphBunch();
 	drawStrip();
-}
-
-void MyApplication::drawTriangles()
-{
-	int objectCount = 1;
-	for(int i = 0; i != objectCount; ++i)
-	{
-		std::shared_ptr<Triangle> tri;
-		if (g_Original)
-		{
-			float step = 0.3f;
-			tri = std::make_shared<Triangle>(glm::vec2(-1.5f + step * i, 1.5f), glm::vec2(-1.7f + step * i, -0.3f), glm::vec2(0.4f + step * i, -0.3f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		}
-		else
-		{
-			float step = 50.0f;
-			tri = std::make_shared<Triangle>(glm::vec2(200.0f + step * i, 50.0f), glm::vec2(100 + step * i, 200.0f), glm::vec2(300.0f + step * i, 200.0f), glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		}
-		tri->meshes[0].vertexs[0].texCoord = { 0.5f, 1.0f };
-		tri->meshes[0].vertexs[1].texCoord = { 0.0f, 0.0f };
-		tri->meshes[0].vertexs[2].texCoord = { 1.0f, 0.0f };
-		tri->meshes[0].vertexs[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
-		tri->meshes[0].vertexs[1].color = { 0.0f, 1.0f, 0.0f, 1.0f };
-		tri->meshes[0].vertexs[2].color = { 0.0f, 0.0f, 1.0f, 1.0f };
-		std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(tri, std::make_shared<Material>(Programs::primitive()));
-		ro->storeUniform(Program::nbColorModeLocationStr, 1);
-		ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/pics/cubemap/1/front.png"));
-		m_context->queue(ro);
-	}
-}
-
-void MyApplication::drawQuadrangles()
-{
-	float step;
-	int objectCount = 1;
-	for(int i = 0; i != objectCount; ++i)
-	{
-		std::shared_ptr<Quadrangle> quad;
-		glm::vec2 p0, p1, p2, p3;
-		if (g_Original)
-		{
-			step = 0.3f;
-			p0 = { -0.5f + step * i, -0.5f + step * i };
-			p1 = { 0.5f + step * i, -0.5f + step * i };
-			p2 = { 0.5f + step * i, 0.5f + step * i };
-			p3 = { -0.5f + step * i, 0.5f + step * i };
-		}
-		else
-		{
-			step = 100;
-			p0 = { -100 + step * i, 100 + step * i };
-			p1 = { 100 + step * i, 100 + step * i };
-			p2 = { 100 + step * i, -100 + step * i };
-			p3 = { -100 + step * i, -100 + step * i };
-		}
-		quad = std::make_shared<Quadrangle>(p1.x - p0.x, p1.y - p2.y);
-		std::shared_ptr<RenderObject> ro;
-		if (i == 0)
-		{
-			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->storeUniform(Program::nbColorModeLocationStr, 1);
-			//ro->setRenderable(false);
-			ro->model()->meshes[0].unifyColor({ 0.0f, 0.0f, 1.0f, 1.0f });
-		}
-		if (i == 1)
-		{
-			ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::primitive()));
-			ro->storeUniform(Program::nbColorModeLocationStr, 0);
-		//	ro->model()->meshes()[0].unifyColor(Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-			ro->material()->textures().push_back(std::make_shared<Texture2D>("e:/Pics/5.jpg"));
-		//	ro->model()->meshes()[0].setPositionAt(0, Vec3(0, m_window->height(), 0));
-		//	ro->model()->meshes()[0].setPositionAt(1, Vec3(m_window->width(), m_window->height(), 0));
-		//	ro->model()->meshes()[0].setPositionAt(2, Vec3(m_window->width(), 0, 0));
-		//	ro->model()->meshes()[0].setPositionAt(3, Vec3(0, 0, 0));
-		//	auto glypTexture = std::make_shared<TextureGlyphAtlas>(m_font, L"abcdefghijklmnopqrst");
-		//	ro->material()->textures().push_back(glypTexture);
-		//	ro->setRenderable(false);
-		}
-		if (i == 2)
-		{
-			ro->storeUniform(Program::nbColorModeLocationStr, 1);
-		//	ro->setRenderable(false);
-		}
-		m_context->queue(ro);
-	}
-
 }
 
 void MyApplication::drawCubes()
@@ -284,36 +196,6 @@ void MyApplication::drawModel()
 	}
 	//model->load("e:/model/test/spider.obj");
 	m_context->queue(renderer);
-}
-
-void MyApplication::drawGlyph()
-{
-	auto glyph = GlyphFactory::getGlyph(Fonts::getFont("Microsoft YaHei"), L'a');
-	auto w = glyph->info.bm_width;
-	auto h = glyph->info.bm_height;
-	glm::vec2 p0, p1, p2, p3;
-	if (g_Original)
-	{
-		p0 = { -0.5f, -0.5f };
-		p1 = { 0.5f, -0.5f };
-		p2 = { 0.5f, 0.5f };
-		p3 = { -0.5f, 0.5f };
-	}
-	else
-	{
-		p0 = { 300, h };
-		p1 = { 300 + w, h };
-		p2 = { 300 + w, 0 };
-		p3 = { 300, 0 };
-	}
-	std::shared_ptr<Quadrangle> quad = std::make_shared<Quadrangle>(p1.x - p0.x, p1.y - p2.y);
-	quad->meshes[0].vertexs[0].texCoord = glyph->uv[0];
-	quad->meshes[0].vertexs[1].texCoord = glyph->uv[1];
-	quad->meshes[0].vertexs[2].texCoord = glyph->uv[2];
-	quad->meshes[0].vertexs[3].texCoord = glyph->uv[3];
-	std::shared_ptr<RenderObject> ro = std::make_shared<RenderObject>(quad, std::make_shared<Material>(Programs::glpy()));
-	ro->material()->textures().push_back(std::make_shared<Texture2D>(glyph->texureId));
-	m_context->queue(ro);
 }
 
 void MyApplication::drawGlyphBunch()

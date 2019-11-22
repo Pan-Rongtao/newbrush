@@ -1,14 +1,12 @@
 #pragma once
-#include "../core/Def.h"
-#include "../gui/Property.h"
+#include "../core/Property.h"
+#include "../core/DependencyObject.h"
 #include "../core/Size.h"
 #include "../core/Rect.h"
 #include "../gui/Thickness.h"
 #include "../gles/RenderObject.h"
-#include "../gui/AnimationTimeline.h"
-#include "gui/DependencyObject.h"
-#include "gui/Style.h"
-#include "gui/VisualStateMachine.h"
+#include "../gui/Style.h"
+#include "../gui/VisualStateMachine.h"
 #include "../gui/RoutedEvent.h"
 
 namespace nb{

@@ -3,11 +3,10 @@
 #include "core/Window.h"
 #include "gles/Window.h"
 #include "gles/Projection.h"
-#include "gles/Camera.h"
 #include "gui/Application.h"
 #include "WindowCollections.h"
-#include "../src/gles/EglMaster.h"
 #include "gui/VisualTreeHelper.h"
+#include "media/ImageSource.h"
 
 using namespace nb;
 using namespace nb::gl;

@@ -1,11 +1,10 @@
 #include "TestWindow.h"
 #include "gles/Application.h"
 #include "gui/Image.h"
-#include "gui/ImageSource.h"
-#include "gui/Brush.h"
+#include "media/ImageSource.h"
+#include "media/Brush.h"
 #include "gui/Shape.h"
 #include "gui/Rectangle.h"
-#include <thread>
 
 using namespace nb::gui;
 void TestWindow::test()

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../gui/Property.h"
+#include "../core/Property.h"
 #include "../core/Event.h"
 #include "../gui/ContentControl.h"
 #include "../gles/Context.h"
@@ -11,7 +11,9 @@ namespace nb{ namespace gl{
 	class Surface;
 }}
 
-namespace nb{ namespace gui {
+namespace nb{
+class ImageSource;
+namespace gui {
 
 class NB_API Window : public ContentControl
 {

@@ -1,7 +1,4 @@
 #include "gui/Panel.h"
-#include "gles/Quadrangle.h"
-#include "gles/Material.h"
-#include "gles/Program.h"
 #include "gles/Context.h"
 
 using namespace nb;

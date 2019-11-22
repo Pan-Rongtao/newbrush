@@ -1,7 +1,6 @@
 #include "gui/TextBlock.h"
 #include <codecvt>
 #include "media/Font.h"
-#include "gles/Quadrangle.h"
 #include "gles/GlyphFactory.h"
 #include "gles/Context.h"
 #include "gles/Model.h"

@@ -1,5 +1,5 @@
 #include "TestModel.h"
-#include "gles/Quadrangle.h"
+#include "gles/Model.h"
 
 using namespace nb;
 using namespace nb::gl;

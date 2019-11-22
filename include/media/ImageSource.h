@@ -11,13 +11,11 @@
 **	
 ********************************************************/
 #pragma once
-#include "../gui/Property.h"
-#include "../gui/DependencyObject.h"
+#include "../core/Property.h"
+#include "../core/DependencyObject.h"
 
 namespace nb{
 class Bitmap;
-
-namespace gui{
 
 class NB_API ImageSource : public DependencyObject
 {
@@ -33,4 +31,4 @@ public:
 	
 };
 
-}}
+}

@@ -13,7 +13,7 @@ public:
 
 protected:
 	NoneCopyable() = default;
-	~NoneCopyable() = default;
+	virtual ~NoneCopyable() = default;
 };
 
 }

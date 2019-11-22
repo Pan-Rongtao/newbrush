@@ -1,10 +1,12 @@
 #include "TestGrid.h"
 #include "gui/Shape.h"
 #include "gui/Rectangle.h"
-#include "gui/Brush.h"
 #include "core/Color.h"
 #include "gui/TextBlock.h"
 #include "gui/Ellipse.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 using namespace nb;
 

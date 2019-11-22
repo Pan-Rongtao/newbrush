@@ -1,9 +1,8 @@
-#include "gui/GradientBrush.h"
+#include "media/GradientBrush.h"
 #include <algorithm>
 #include "glm/glm.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 GradientStop::GradientStop()
 	: GradientStop(nb::Color(), 0.0f)

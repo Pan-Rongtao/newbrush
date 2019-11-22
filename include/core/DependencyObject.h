@@ -1,11 +1,9 @@
 #pragma once
 #include "../core/Event.h"
 #include "../core/Any.h"
-#include "../gui/DependencyProperty.h"
-#include "../gui/RoutedEvent.h"
+#include "../core/DependencyProperty.h"
 
 namespace nb {
-namespace gui{
 
 using std::shared_ptr;
 
@@ -16,7 +14,9 @@ public:
 	void set(const DependencyProperty &dp, const T &value) &
 	{
 		if (dp.defaultValue().type() != typeid(value))
+		{
 			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
+		}
 
 		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
 		if (iter == m_propertys.end())
@@ -40,13 +40,15 @@ public:
 	void set(const DependencyProperty &dp, const Any &value) &
 	{
 		if (dp.defaultValue().type() != value.type())
+		{
 			nbThrowException(std::logic_error, "value must be type of [%s]", dp.defaultValue().type().name());
+		}
 
 		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
 		if (iter == m_propertys.end())
 		{
 			m_propertys[dp.hash()] = { value, false };
-				PropertyChanged.dispatch({ dp, value });
+			PropertyChanged.dispatch({ dp, value });
 		}
 		else
 		{
@@ -60,8 +62,9 @@ public:
 	{
 		auto iter = std::find_if(m_propertys.begin(), m_propertys.end(), [&dp](const std::pair<size_t, std::pair<Any, bool>> &p) { return p.first == dp.hash(); });
 		if (iter == m_propertys.end())
+		{
 			m_propertys[dp.hash()] = { dp.defaultValue(), false };
-
+		}
 		return any_cast<T>(m_propertys[dp.hash()].first);
 	}
 	
@@ -74,4 +77,4 @@ private:
 
 using DependencyObjectPtr = std::shared_ptr<DependencyObject>;
 
-}}
+}

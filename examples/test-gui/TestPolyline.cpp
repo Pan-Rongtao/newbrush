@@ -1,6 +1,8 @@
 #include "TestPolyline.h"
 #include "gui/Polyline.h"
-#include "gui/GradientBrush.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestPolyline::test()
 {

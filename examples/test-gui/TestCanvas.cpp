@@ -5,7 +5,9 @@
 #include "gui/Polyline.h"
 #include "gui/Ellipse.h"
 #include "gui/Polygon.h"
-//#include "E:\bezier\include\bezier.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestCanvas::test()
 {

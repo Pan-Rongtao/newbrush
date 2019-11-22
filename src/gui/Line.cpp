@@ -3,7 +3,7 @@
 #include "gles/Strips.h"
 #include "gles/Texture2D.h"
 #include "gles/Context.h"
-#include "gui/GradientBrush.h"
+#include "media/GradientBrush.h"
 
 using namespace nb;
 using namespace nb::gl;

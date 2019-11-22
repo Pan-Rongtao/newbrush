@@ -18,8 +18,6 @@ class MyApplication : public nb::gl::Application
 public:
 	MyApplication();
 
-	void drawTriangles();
-	void drawQuadrangles();
 	void drawCubes();
 	void drawSphere();
 	void drawPhone();

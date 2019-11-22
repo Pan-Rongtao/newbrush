@@ -2,9 +2,9 @@
 #include "../gui/UIElement.h"
 
 namespace nb{
+class Brush;
 namespace gui{
 
-class Brush;
 class NB_API Panel : public UIElement
 {
 public:

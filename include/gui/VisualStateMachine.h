@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
-#include "../gui/Property.h"
+#include "../core/Property.h"
 #include "../core/TimeSpan.h"
 #include "../core/Easing.h"
 #include "Storyboard.h"
-#include "../gui/DependencyObject.h"
+#include "../core/DependencyObject.h"
 
 namespace nb{
 namespace gui{

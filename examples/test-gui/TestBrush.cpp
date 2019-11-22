@@ -1,4 +1,7 @@
 #include "TestBrush.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestBrush::test()
 {

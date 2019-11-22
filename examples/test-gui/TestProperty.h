@@ -1,6 +1,6 @@
 #pragma once
 #include "../TestBase.h"
-#include <gui/Property.h>
+#include <core/Property.h>
 #include <core/Size.h>
 
 using namespace nb;

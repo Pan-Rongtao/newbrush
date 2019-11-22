@@ -1,5 +1,4 @@
 ﻿#include "gui/ContentControl.h"
-#include "gles/Quadrangle.h"
 #include "gles/Context.h"
 
 using namespace nb;

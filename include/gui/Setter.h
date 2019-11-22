@@ -1,7 +1,7 @@
 #pragma once
 #include "../core/Any.h"
-#include "../gui/Property.h"
-#include "../gui/DependencyProperty.h"
+#include "../core/Property.h"
+#include "../core/DependencyProperty.h"
 
 namespace nb{
 namespace gui{

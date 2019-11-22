@@ -1,4 +1,5 @@
 #include "TestBinding.h"
+#include "media/SolidColorBrush.h"
 
 void TestBinding::test()
 {

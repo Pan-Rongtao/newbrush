@@ -1,10 +1,11 @@
 #pragma once
 #include "../gui/UIElement.h"
-#include "../gui/Brush.h"
 #include "../gui/Stretch.h"
 #include "../media/Media.h"
 
-namespace nb{ namespace gui{
+namespace nb{
+class Brush;
+namespace gui{
 
 using nb::media::PenLineCapE;
 using nb::media::PenLineJoinE;

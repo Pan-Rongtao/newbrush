@@ -2,11 +2,9 @@
 #include "gles/Program.h"
 #include "gles/Context.h"
 #include "gles/Texture2D.h"
-#include <opengl/GLES2/gl2.h>
-#include "gui/GradientBrush.h"
-#include "gles/Texture2D.h"
-#include "gles/Program.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 using namespace nb;
 using namespace nb::gl;

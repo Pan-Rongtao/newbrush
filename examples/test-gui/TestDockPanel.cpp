@@ -1,5 +1,8 @@
 #include "TestDockPanel.h"
 #include "gui/Rectangle.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestDockPanel::test()
 {

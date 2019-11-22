@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Timeline.h"
 #include "../core/Easing.h"
-#include "../gui/DependencyProperty.h"
+#include "../core/DependencyProperty.h"
 
 namespace nb{
 namespace gui{

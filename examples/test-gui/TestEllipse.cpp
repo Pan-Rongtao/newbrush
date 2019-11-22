@@ -1,6 +1,8 @@
 #include "TestEllipse.h"
 #include "gui/Ellipse.h"
-#include "gui/GradientBrush.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestEllipse::test()
 {

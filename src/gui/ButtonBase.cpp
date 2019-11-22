@@ -1,5 +1,6 @@
 #include "gui/ButtonBase.h"
 
+using namespace nb;
 using namespace nb::gui;
 
 ButtonBase::ButtonBase()

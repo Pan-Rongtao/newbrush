@@ -1,10 +1,7 @@
-﻿#include "gui/ImageSource.h"
-#include "gles/Texture2D.h"
-#include "core/Size.h"
+﻿#include "media/ImageSource.h"
+#include "media/Bitmap.h"
 
 using namespace nb;
-using namespace nb::gui;
-using namespace nb::gl;
 
 ImageSource::ImageSource()
 	: ImageSource("")

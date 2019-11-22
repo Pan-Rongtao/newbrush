@@ -1,6 +1,9 @@
 #include "TestButton.h"
 #include "gui/Image.h"
 #include "gui/Shape.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 #include "gui/Rectangle.h"
 #include "gui/PropertyAnimation.h"
 

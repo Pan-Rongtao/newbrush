@@ -51,5 +51,4 @@ private:
 	std::function<T()>		m_getter;
 };
 
-
 }

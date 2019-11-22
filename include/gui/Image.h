@@ -14,9 +14,9 @@
 #include "Stretch.h"
 
 namespace nb{
+class ImageSource;
 namespace gui{
 
-class ImageSource;
 class NB_API Image : public UIElement
 {
 public:

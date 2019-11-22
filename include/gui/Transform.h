@@ -1,5 +1,5 @@
 #pragma once
-#include "../gui/DependencyObject.h"
+#include "../core/DependencyObject.h"
 
 namespace nb {
 namespace gui {

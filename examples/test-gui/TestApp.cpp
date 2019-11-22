@@ -2,6 +2,7 @@
 #include "gui/Image.h"
 #include "gui/Shape.h"
 #include "core/Color.h"
+#include "media/ImageSource.h"
 
 using namespace nb;
 using namespace nb::gui;

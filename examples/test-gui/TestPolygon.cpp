@@ -1,6 +1,8 @@
 #include "TestPolygon.h"
 #include "gui/Polygon.h"
-#include "gui/GradientBrush.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestPolygon::test()
 {

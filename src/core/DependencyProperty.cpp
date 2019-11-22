@@ -1,11 +1,10 @@
-#include "gui/DependencyProperty.h"
+#include "core/DependencyProperty.h"
 
 using namespace nb;
-using namespace nb::gui;
 
-std::map<std::shared_ptr<UIElement>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;
+std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;
 
-void DependencyProperty::registerAttached(std::shared_ptr<UIElement> element, const std::string & property_name, const Any & property_v)
+void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Any & property_v)
 {
 	auto iter = m_attProperties.find(element);
 	if (iter == m_attProperties.end())
@@ -22,7 +21,7 @@ void DependencyProperty::registerAttached(std::shared_ptr<UIElement> element, co
 	}
 }
 
-Any DependencyProperty::findAttached(std::shared_ptr<UIElement> element, const std::string & property_name)
+Any DependencyProperty::findAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name)
 {
 	auto iter = m_attProperties.find(element);
 	if (iter == m_attProperties.end())

@@ -1,11 +1,8 @@
 #include "gui/Rectangle.h"
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include "gles/Program.h"
 #include "gles/Context.h"
-#include "gles/Texture2D.h"
 #include "gles/Strips.h"
-#include "gui/GradientBrush.h"
 
 using namespace nb;
 using namespace nb::gl;

@@ -1,6 +1,8 @@
 #include "TestLine.h"
 #include "gui/Line.h"
-#include "gui/GradientBrush.h"
+#include "media/SolidColorBrush.h"
+#include "media/GradientBrush.h"
+#include "media/ImageBrush.h"
 
 void TestLine::test()
 {

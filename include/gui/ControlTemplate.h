@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../gui/Property.h"
+#include "../core/Property.h"
 #include "UIElement.h"
 #include "../gui/Trigger.h"
 

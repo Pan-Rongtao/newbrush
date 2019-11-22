@@ -1,9 +1,11 @@
 #include "gui/BindingMaster.h"
-#include "gui/DependencyObject.h"
+#include "core/DependencyObject.h"
+#include "gui/Binding.h"
 
+using namespace nb;
 using namespace nb::gui;
 
-std::map<BindingPtr, std::pair<DependencyObjectPtr, DependencyProperty>>	BindingMaster::g_bindingmap;
+std::map<std::shared_ptr<Binding>, std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>>	BindingMaster::g_bindingmap;
 
 #ifdef NB_OS_FAMILY_WINDOWS
 #pragma warning(push)
@@ -32,7 +34,7 @@ void syncTargetValueData(DependencyObjectPtr target, const DependencyProperty & 
 #pragma warning(pop)
 #endif
 
-void BindingMaster::addBinding(DependencyObjectPtr target, const DependencyProperty & dp, BindingPtr bd)
+void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, std::shared_ptr<Binding> bd)
 {
 	auto source = std::dynamic_pointer_cast<ObjectData>(bd->source());
 	auto path = bd->path();

@@ -3,10 +3,9 @@
 #include "gles/RenderObject.h"
 #include "gles/Model.h"
 #include "gles/Material.h"
-#include "gles/Quadrangle.h"
 #include "gles/Program.h"
 #include "gles/Texture2D.h"
-#include "gui/ImageSource.h"
+#include "media/ImageSource.h"
 
 using namespace nb;
 using namespace nb::gl;
@@ -37,7 +36,7 @@ void Image::onRender(std::shared_ptr<nb::gl::Context> drawContext)
 	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
-	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
+//	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
 	drawContext->queue(Renderer());
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "../gui/UIElement.h"
-#include "../gui/Brush.h"
 #include "../gles/Model.h"
 #include "../media/Font.h"
 #include "../media/GlyphMetrics.h"
@@ -10,7 +9,9 @@ namespace nb{ namespace gl{
 	class GlyphBunch;
 }}
 
-namespace nb{ namespace gui{
+namespace nb{
+class Brush;
+namespace gui{
 
 enum class TextAlignmentE
 {
