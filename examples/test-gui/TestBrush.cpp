@@ -21,11 +21,11 @@ void TestBrush::test()
 	rc->Margin = Thickness(50);
 	rc->Stroke = std::make_shared<SolidColorBrush>(Colors::blue());
 	rc->StrokeThickness = 30;
-	rc->StrokeDashArray = {3, 3};
+	rc->StrokeDashArray = std::vector<float>{3.0f, 3.0f};
 	rc->StrokeDashOffset = 2;
 	m_window->Content = rc;
 	
 //	rc->Fill = linearBrush;
 //	rc->Stroke = linearBrush;
-	rc->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/5.jpg"));
+	rc->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/5.jpg"));
 }

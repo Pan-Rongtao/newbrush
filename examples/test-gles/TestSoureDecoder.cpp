@@ -2,7 +2,6 @@
 #include "gles/SourceDecoder.h"
 #include "gles/Program.h"
 #include "gles/Shader.h"
-#include "gles/Application.h"
 #include "gles/Egl.h"
 #include "gles/Window.h"
 #include <vector>

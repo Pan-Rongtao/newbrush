@@ -1,5 +1,4 @@
 #include "TestWindow.h"
-#include "gles/Application.h"
 #include "gui/Image.h"
 #include "media/ImageSource.h"
 #include "media/Brush.h"

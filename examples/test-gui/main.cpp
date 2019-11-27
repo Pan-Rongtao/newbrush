@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestPolygon> test;
+		TestHandle<TestBrush> test;
 		test->test();
 		return app.run();
 	}

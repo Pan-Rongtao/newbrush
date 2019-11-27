@@ -1,5 +1,4 @@
 ﻿#include "TestEgl.h"
-#include "TestApplication.h"
 #include "TestConfigure.h"
 #include "TestModel.h"
 #include "TestTexture2D.h"
@@ -7,11 +6,8 @@
 
 int main(int argc, char* argv[])
 {
-	std::vector<int> vt0;
-	std::vector<int> vt1;
-	bool b = vt0 == vt1;
 	try{
-		TestHandle<TestApplication> test;
+		TestHandle<TestTexture2D> test;
 		test->test();
 	}
 	catch (std::exception &e)
