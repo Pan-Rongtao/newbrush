@@ -22,6 +22,33 @@
 #include "TestPolyline.h"
 #include "TestEllipse.h"
 #include "TestPolygon.h"
+#include "GLES2/gl2.h"
+/*
+int main(int argc, char *argv[])
+{
+	bool b = glfwInit();
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	auto m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
+	glfwMakeContextCurrent(m_implWindow);
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	auto e = glGetError();
+
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	while (true)
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(m_implWindow);
+		glfwWaitEvents();
+	}
+	return 0;
+}
+*/
 
 int main(int argc, char *argv[])
 {

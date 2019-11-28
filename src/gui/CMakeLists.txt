@@ -25,7 +25,7 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/*.h" "*.h" "*.c
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME NbGui)
-target_link_libraries(${LIB_NAME} core media gles)
+target_link_libraries(${LIB_NAME} core media gles glfw3)
 
 # 4. Project Install
 install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})

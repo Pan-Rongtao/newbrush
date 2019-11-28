@@ -3,14 +3,9 @@
 #include "../core/Event.h"
 #include "../gui/ContentControl.h"
 #include "../gles/Context.h"
-#include "../core/Window.h"
+#include "../gui/Gui.h"
 
-namespace nb{ namespace gl{
-	class Window;
-	class Context;
-	class Surface;
-}}
-
+struct GLFWwindow;
 namespace nb{
 class ImageSource;
 namespace gui {
@@ -40,7 +35,6 @@ public:
 	Property_rw<float>						Top;					//顶位置
 	Property_rw<std::string>				Title;					//标题
 	Property_rw<shared_ptr<ImageSource>>	Icon;					//图标（未实现，难点）
-	Property_rw<shared_ptr<gl::Surface>>	DrawSurface;			//
 	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
 	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
 	static DependencyProperty				TopmostProperty();		//置顶的依赖属性
@@ -48,7 +42,6 @@ public:
 	static DependencyProperty				TopProperty();			//顶位置的依赖属性
 	static DependencyProperty				TitleProperty();		//标题的依赖属性
 	static DependencyProperty				IconProperty();			//图标的依赖属性
-	static DependencyProperty				DrawSurfaceProperty();	//
 
 	static shared_ptr<gl::Context>			drawContext;
 
@@ -69,17 +62,25 @@ private:
 	void onWidthChanged(const float &_old, const float &_new);
 	void onHeightChanged(const float &_old, const float &_new);
 
-	void onNativeWindowResize(const nb::Window::ResizeArgs &args);
-	void onNativeWindowMouseEnter(const nb::Window::MouseEnterEventArgs &args);
-	void onNativeWindowMouseLeave(const nb::Window::MouseLeaveEventArgs &args);
-	void onNativeWindowMouseMove(const nb::Window::MouseMoveEventArgs &args);
-	void onNativeWindowMouseLeftButton(const nb::Window::MouseLeftButtonEventArgs &args);
-	void onNativeWindowMouseRightButton(const nb::Window::MouseRightButtonEventArgs &args);
-	void onNativeWindowMouseMiddleButton(const nb::Window::MouseMiddleButtonEventArgs &args);
-	void onNativeWindowMouseWheel(const nb::Window::MouseWheelEventArgs &args);
-	void onNativeWindowKeyAction(const nb::Window::KeyEventArgs &args);
+	void posCallback(int x, int y);
+	void sizeCallback(int width, int height);
+	void frameBufferSizeCallback(int width, int height);
+	void mouseButtonCallback(int button, int action, int mods);
+	void cusorPosCallback(double x, double y);
+	void cusorPosEnterCallback(int entered);
+	void scrollCallback(double x, double y);
+	void keyCallback(int key, int scancode, int action, int mods);
+	void focusCallback(int focused);
+	void refreshCallback();
+	void closeCallback();
 
-	std::shared_ptr<nb::gl::Window>		m_glWindow;
+	static void init();
+	static void deinit();
+	bool shouldClose() const;
+	void swapBuffers() const;
+	static void waitEvent();
+	GLFWwindow		*m_implWindow;
+	friend class Application;
 };
 
 }}

@@ -1,10 +1,8 @@
 ﻿#include "gui/Window.h"
+#include "GLFW/glfw3.h"
 #include "gles/Egl.h"
-#include "core/Window.h"
-#include "gles/Window.h"
 #include "gles/Projection.h"
 #include "gui/Application.h"
-#include "WindowCollections.h"
 #include "gui/VisualTreeHelper.h"
 #include "media/ImageSource.h"
 
@@ -12,8 +10,8 @@ using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 
-std::shared_ptr<nb::gl::Context> nb::gui::Window::drawContext = nullptr;
-nb::gui::Window::Window()
+std::shared_ptr<nb::gl::Context> Window::drawContext = nullptr;
+Window::Window()
 	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE& {return get<WindowStateE>(WindowStateProperty()); })
 	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE& {return get<WindowStyleE>(WindowStyleProperty()); })
 	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]()->bool& {return get<bool>(TopmostProperty()); })
@@ -21,63 +19,69 @@ nb::gui::Window::Window()
 	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float& {return get<float>(TopProperty()); })
 	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string& {return get<std::string>(TitleProperty()); })
 	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->shared_ptr<ImageSource>& {return get<shared_ptr<ImageSource>>(IconProperty()); })
-	, DrawSurface([&](shared_ptr<gl::Surface> v) {set(DrawSurfaceProperty(), v); }, [&]()->shared_ptr<gl::Surface>& {return get<shared_ptr<gl::Surface>>(DrawSurfaceProperty()); })
-	, m_glWindow(std::make_shared<nb::gl::Window>(800, 600))
+	, m_implWindow(nullptr)
 {
-	drawContext = std::make_shared<nb::gl::Context>(nb::gl::getConfigure());
-	Left = (float)m_glWindow->x();
-	Top = (float)m_glWindow->y();
-	Width = (float)m_glWindow->width();
-	Height = (float)m_glWindow->height();
+	drawContext = std::make_shared<nb::gl::Context>();
+	m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
+	int x, y, w, h;
+	glfwGetWindowPos(m_implWindow, &x, &y);
+	glfwGetWindowSize(m_implWindow, &w, &h);
+	//一定不能去掉下面四句（需要在回调生效前设置）以便不触发回调，否则会更新layout，而此时Width或Height是NAN
+	Left = (float)x;
+	Top = (float)y;
+	Width = (float)w;
+	Height = (float)h;
+	glfwSetWindowUserPointer(m_implWindow, this);
+	glfwSetWindowPosCallback(m_implWindow, [](GLFWwindow*w, int x, int y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->posCallback(x, y); });
+	glfwSetWindowSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
+	glfwSetFramebufferSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
+	glfwSetMouseButtonCallback(m_implWindow, [](GLFWwindow*w, int button, int action, int mods) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->mouseButtonCallback(button, action, mods); });
+	glfwSetCursorPosCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->cusorPosCallback(x, y); });
+	glfwSetCursorEnterCallback(m_implWindow, [](GLFWwindow*w, int entered) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->cusorPosEnterCallback(entered); });
+	glfwSetScrollCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->scrollCallback(x, y); });
+	glfwSetKeyCallback(m_implWindow, [](GLFWwindow*w, int key, int scancode, int action, int mods) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->keyCallback(key, scancode, action, mods); });
+	glfwSetWindowFocusCallback(m_implWindow, [](GLFWwindow*w, int focused) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->focusCallback(focused); });
+	glfwSetWindowRefreshCallback(m_implWindow, [](GLFWwindow*w) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->refreshCallback(); });
+	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
 
-	m_glWindow->ResizeEvent += std::bind(&Window::onNativeWindowResize, this, std::placeholders::_1);
-	m_glWindow->MouseEnterEvent += std::bind(&Window::onNativeWindowMouseEnter, this, std::placeholders::_1);
-	m_glWindow->MouseLeaveEvent += std::bind(&Window::onNativeWindowMouseLeave, this, std::placeholders::_1);
-	m_glWindow->MouseMoveEvent += std::bind(&Window::onNativeWindowMouseMove, this, std::placeholders::_1);
-	m_glWindow->MouseLeftButtonEvent += std::bind(&Window::onNativeWindowMouseLeftButton, this, std::placeholders::_1);
-	m_glWindow->MouseRightButtonEvent += std::bind(&Window::onNativeWindowMouseRightButton, this, std::placeholders::_1);
-	m_glWindow->MouseMiddleButtonEvent += std::bind(&Window::onNativeWindowMouseMiddleButton, this, std::placeholders::_1);
-	m_glWindow->MouseWheelEvent += std::bind(&Window::onNativeWindowMouseWheel, this, std::placeholders::_1);
-	m_glWindow->KeyEvent += std::bind(&Window::onNativeWindowKeyAction, this, std::placeholders::_1);
-
-	WindowCollections::Windows.push_back(this);
-	DrawSurface = std::make_shared<nb::gl::WindowSurface>(m_glWindow->width(), m_glWindow->height(), m_glWindow->handle());
-	nb::gl::makeCurrent(DrawSurface(), DrawSurface(), drawContext);
-	onNativeWindowResize({ (int)Width(), (int)Height() });
+	glfwMakeContextCurrent(m_implWindow);
+	sizeCallback(Width(), Height());
+	Application::current()->windows().push_back(this);
 }
 
-nb::gui::Window::~Window()
+Window::~Window()
 {
-	auto iter = std::find(WindowCollections::Windows.begin(), WindowCollections::Windows.end(), this);
-	if (iter != WindowCollections::Windows.end())
-		WindowCollections::Windows.erase(iter);
+	auto iter = std::find(Application::current()->windows().begin(), Application::current()->windows().end(), this);
+	if (iter != Application::current()->windows().end())
+		Application::current()->windows().erase(iter);
+	glfwDestroyWindow(m_implWindow);
 }
 
-void nb::gui::Window::active()
+void Window::active()
 {
-	m_glWindow->active();
+	glfwFocusWindow(m_implWindow);
 }
 
-void nb::gui::Window::show()
+void Window::show()
 {
-	m_glWindow->show(true);
+	glfwShowWindow(m_implWindow);
 }
 
-void nb::gui::Window::hide()
+void Window::hide()
 {
-	m_glWindow->show(false);
+	glfwHideWindow(m_implWindow);
 }
 
-void nb::gui::Window::close()
+void Window::close()
 {
-	m_glWindow = nullptr;
+	glfwSetWindowShouldClose(m_implWindow, 1);
 }
 
-Size nb::gui::Window::measureOverride(const Size & availableSize)
+Size Window::measureOverride(const Size & availableSize)
 {
 	if (Content())
 	{
-		Content()->measure({ (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight() });
+		Content()->measure({ Width(), Height() });
 		//return Content()->DesiredSize;
 		return availableSize;
 	}
@@ -87,16 +91,16 @@ Size nb::gui::Window::measureOverride(const Size & availableSize)
 	}
 }
 
-Size nb::gui::Window::arrangeOverride(const Size & finalSize)
+Size Window::arrangeOverride(const Size & finalSize)
 {
 	if (Content())
 	{
-		Content()->arrage(Rect(0.0, 0.0, (float)m_glWindow->clientWidth(), (float)m_glWindow->clientHeight()));
+		Content()->arrage(Rect(0.0, 0.0, Width(), Height()));
 	}
 	return finalSize;
 }
 
-void loopTest(int x, int y, std::shared_ptr<nb::gl::Window> w, UIElement *e, std::vector<UIElement *> &hits)
+void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector<UIElement *> &hits)
 {
 	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
 	{
@@ -118,175 +122,196 @@ void loopTest(int x, int y, std::shared_ptr<nb::gl::Window> w, UIElement *e, std
 	}
 };
 
-std::vector<UIElement *> nb::gui::Window::hitElements(int x, int y) const
+std::vector<UIElement *> Window::hitElements(int x, int y) const
 {
 	std::vector<UIElement *> hits;
-	loopTest(x, y, m_glWindow, const_cast<nb::gui::Window *>(this), hits);
+	//loopTest(x, y, m_glWindow, const_cast<Window *>(this), hits);
 	return hits;
 }
 
-void nb::gui::Window::onWindowStateChanged(const WindowStateE & _old, const WindowStateE & _new)
+void Window::onWindowStateChanged(const WindowStateE & _old, const WindowStateE & _new)
 {
-	m_glWindow->setWindowState(_new);
+	//m_glWindow->setWindowState(_new);
 }
 
-void nb::gui::Window::onWindowStyleChanged(const WindowStyleE & _old, const WindowStyleE & _new)
+void Window::onWindowStyleChanged(const WindowStyleE & _old, const WindowStyleE & _new)
 {
-	m_glWindow->setWindowStyle(_new);
+	//m_glWindow->setWindowStyle(_new);
 }
 
-void nb::gui::Window::onTopmostChanged(const bool & _old, const bool & _new)
+void Window::onTopmostChanged(const bool & _old, const bool & _new)
 {
-	m_glWindow->setTopMost(_new);
+	//m_glWindow->setTopMost(_new);
 }
 
-void nb::gui::Window::onLeftChanged(const float & _old, const float & _new)
+void Window::onLeftChanged(const float & _old, const float & _new)
 {
-	m_glWindow->setX((int)_new);
+	int x, y;
+	glfwGetWindowPos(m_implWindow, &x, &y);
+	glfwSetWindowPos(m_implWindow, _new, y);
 }
 
-void nb::gui::Window::onTopChanged(const float & _old, const float & _new)
+void Window::onTopChanged(const float & _old, const float & _new)
 {
-	m_glWindow->setY((int)_new);
+	int x, y;
+	glfwGetWindowPos(m_implWindow, &x, &y);
+	glfwSetWindowPos(m_implWindow, x, _new);
 }
 
-void nb::gui::Window::onWidthChanged(const float & _old, const float & _new)
+void Window::onWidthChanged(const float & _old, const float & _new)
 {
-	m_glWindow->setWidth((int)_new);
+	int w, h;
+	glfwGetWindowSize(m_implWindow, &w, &h);
+	glfwSetWindowSize(m_implWindow, _new, h);
 }
 
-void nb::gui::Window::onHeightChanged(const float & _old, const float & _new)
+void Window::onHeightChanged(const float & _old, const float & _new)
 {
-	m_glWindow->setHeight((int)_new);
+	int w, h;
+	glfwGetWindowSize(m_implWindow, &w, &h);
+	glfwSetWindowSize(m_implWindow, w, _new);
 }
 
-void nb::gui::Window::onNativeWindowResize(const nb::Window::ResizeArgs & args)
+void Window::posCallback(int x, int y)
 {
-	auto w = (float)m_glWindow->clientWidth();
-	auto h = m_glWindow->clientHeight();
-	auto ratio = w / h;
-	nb::gl::getProjection()->ortho(0.0f, (float)w, (float)h, 0.0f, 1000.0f, -1000.0f);
-	nb::gl::viewport(0, 0, m_glWindow->clientWidth(), m_glWindow->clientHeight());
-	Width = (float)args.width;
-	Height = (float)args.height;
+}
+
+void Window::sizeCallback(int width, int height)
+{
+	nb::gl::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
+	nb::gl::viewport(0, 0, width, height);
+	Width = width;
+	Height = height;
 	updateLayout();
 }
 
-void nb::gui::Window::onNativeWindowMouseEnter(const nb::Window::MouseEnterEventArgs & args)
+void Window::frameBufferSizeCallback(int width, int height)
 {
 }
 
-void nb::gui::Window::onNativeWindowMouseLeave(const nb::Window::MouseLeaveEventArgs & args)
+void Window::mouseButtonCallback(int button, int action, int mods)
 {
-}
-
-void nb::gui::Window::onNativeWindowMouseMove(const nb::Window::MouseMoveEventArgs & args)
-{
-	auto hits = hitElements(args.x, args.y);
-	for (auto e : hits)
+	if (button == GLFW_MOUSE_BUTTON_1)
 	{
-		e->MouseEnter.dispatch({});
-		e->onMouseEnter();
-		e->MouseMove.dispatch({});
-		e->onMouseMove();
-	}
-}
-
-void nb::gui::Window::onNativeWindowMouseLeftButton(const nb::Window::MouseLeftButtonEventArgs & args)
-{
-	auto hits = hitElements(args.x, args.y);
-	if (args.pressed)
-	{
+		double x, y;
+		glfwGetCursorPos(m_implWindow, &x, &y);
+		auto hits = hitElements(x, y);
 		for (auto e : hits)
 		{
-			e->MouseLeftButtonDown.dispatch({});
-			e->MouseDown.dispatch({});
-			e->onMouseLeftButtonDown();
-			e->onMouseDown();
-		}
-	}
-	else
-	{
-		for (auto e : hits)
-		{
-			e->MouseLeftButtonUp.dispatch({});
-			e->MouseUp.dispatch({});
-			e->onMouseLeftButtonUp();
-			e->onMouseUp();
+			e->MouseEnter.dispatch({});
+			e->onMouseEnter();
+			e->MouseMove.dispatch({});
+			e->onMouseMove();
 		}
 	}
 }
 
-void nb::gui::Window::onNativeWindowMouseRightButton(const nb::Window::MouseRightButtonEventArgs & args)
+void Window::cusorPosCallback(double x, double y)
 {
 }
 
-void nb::gui::Window::onNativeWindowMouseMiddleButton(const nb::Window::MouseMiddleButtonEventArgs & args)
+void Window::cusorPosEnterCallback(int entered)
 {
 }
 
-void nb::gui::Window::onNativeWindowMouseWheel(const nb::Window::MouseWheelEventArgs & args)
+void Window::scrollCallback(double x, double y)
 {
 }
 
-void nb::gui::Window::onNativeWindowKeyAction(const nb::Window::KeyEventArgs & args)
+void Window::keyCallback(int key, int scancode, int action, int mods)
 {
 }
 
-void nb::gui::Window::onTitleChanged(const std::string & _old, const std::string & _new)
+void Window::focusCallback(int focused)
 {
-	m_glWindow->setTitle(_new);
 }
 
-void nb::gui::Window::onIconChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
+void Window::refreshCallback()
+{
+}
+
+void Window::closeCallback()
+{
+}
+
+void Window::init()
+{
+	glfwSetErrorCallback([](int error, const char*str) {printf("error:%s\n", str); });
+	glfwInit();
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+}
+
+void Window::deinit()
+{
+	glfwTerminate();
+}
+
+bool Window::shouldClose() const
+{
+	return glfwWindowShouldClose(m_implWindow) != 0;
+}
+
+void Window::swapBuffers() const
+{
+	glfwSwapBuffers(m_implWindow);
+}
+
+void Window::waitEvent()
+{
+	glfwWaitEvents();
+}
+
+void Window::onTitleChanged(const std::string & _old, const std::string & _new)
+{
+	glfwSetWindowTitle(m_implWindow, _new.data());
+}
+
+void Window::onIconChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
 {
 
 }
 
-DependencyProperty nb::gui::Window::WindowStateProperty()
+DependencyProperty Window::WindowStateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal);
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::WindowStyleProperty()
+DependencyProperty Window::WindowStyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox);
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::TopmostProperty()
+DependencyProperty Window::TopmostProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false);
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::LeftProperty()
+DependencyProperty Window::LeftProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0);
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::TopProperty()
+DependencyProperty Window::TopProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0);
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::TitleProperty()
+DependencyProperty Window::TitleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string());
 	return dp;
 }
 
-DependencyProperty nb::gui::Window::IconProperty()
+DependencyProperty Window::IconProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
-	return dp;
-}
-
-DependencyProperty nb::gui::Window::DrawSurfaceProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<gl::Surface>>("DrawSurface", nullptr);
 	return dp;
 }

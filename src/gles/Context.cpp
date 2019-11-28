@@ -8,19 +8,19 @@
 using namespace nb;
 using namespace nb::gl;
 
-Context::Context(std::shared_ptr<Configure> configure)
+Context::Context()
 {
-	if (!gl::getDisplay())
+/*	if (!gl::getDisplay())
 		nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
 
 	EGLint contextAttr[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-	m_handle = eglCreateContext(gl::getDisplay()->handle(), configure->handle(), 0, contextAttr);
+	m_handle = eglCreateContext(gl::getDisplay()->handle(), configure->handle(), 0, contextAttr);*/
 	EglMaster::contexts().push_back(this);
 }
 
 Context::~Context()
 {
-	eglDestroyContext(gl::getDisplay()->handle(), m_handle);
+/*	eglDestroyContext(gl::getDisplay()->handle(), m_handle);*/
 	auto &contexts = EglMaster::contexts();
 	auto iter = std::find(contexts.begin(), contexts.end(), this);
 	if (iter != contexts.end())

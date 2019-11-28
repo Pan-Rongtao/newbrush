@@ -8,7 +8,6 @@
 #include "TestEvent.h"
 #include "TestRect.h"
 #include "TestEasingFunction.h"
-#include "TestWindow.h"
 #include "TestAny.h"
 
 int main(int argc, char *argv[])

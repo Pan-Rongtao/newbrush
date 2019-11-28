@@ -131,9 +131,6 @@ unsigned int Texture2D::height() const
 
 int Texture2D::maxWidthSupported()
 {
-	if (!nb::gl::getContext())
-		nbThrowException(std::logic_error, "context not set, use nb::gl::makeCurrent to set Context");
-
 	int nRet = 0;
 	glEnable(GL_TEXTURE_2D);
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &nRet);

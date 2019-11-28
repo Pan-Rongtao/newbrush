@@ -102,9 +102,6 @@ Texture::Texture()
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
 	{
-		if (!getDisplay())
-			nbThrowException(std::logic_error, "gl init needed, use nb::gl::initialize to init.");
-		else if (!getConfigure())
 			nbThrowException(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
 	}
 }

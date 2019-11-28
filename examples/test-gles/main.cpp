@@ -1,6 +1,4 @@
-﻿#include "TestEgl.h"
-#include "TestConfigure.h"
-#include "TestModel.h"
+﻿#include "TestModel.h"
 #include "TestTexture2D.h"
 #include "TestSoureDecoder.h"
 

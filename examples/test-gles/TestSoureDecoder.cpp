@@ -3,14 +3,13 @@
 #include "gles/Program.h"
 #include "gles/Shader.h"
 #include "gles/Egl.h"
-#include "gles/Window.h"
 #include <vector>
 
 using namespace nb::gl;
 
 void TestSoureDecoder::test()
 {
-	nb::gl::initialize(std::make_shared<Display>(Display::defaultx()));
+/*	nb::gl::initialize(std::make_shared<Display>(Display::defaultx()));
 	nb::gl::setConfigure(std::make_shared<Configure>(Configure::fromSystemRecommend(0)));
 	auto window = std::make_shared<Window>();
 	auto surface = std::make_shared<WindowSurface>(window->width(), window->height(), window->handle());
@@ -26,5 +25,5 @@ void TestSoureDecoder::test()
 
 	for(auto const &one : uniforms)
 		printf("%s:%d\n", one.first.data(), one.second);
-
+		*/
 }

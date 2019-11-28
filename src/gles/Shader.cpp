@@ -79,7 +79,7 @@ VertexShader::VertexShader(const std::string &source)
 {
 	m_shaderHandle = glCreateShader(GL_VERTEX_SHADER);
 	if (m_shaderHandle == 0)
-		nbThrowException(std::logic_error, "glCreateShader fail, make sure has call gl::makeCurrent. glGetError[%d]", glGetError());
+		nbThrowException(std::logic_error, "glCreateShader fail, make sure has make current context. glGetError[%d]", glGetError());
 }
 
 /////
@@ -93,5 +93,5 @@ FragmentShader::FragmentShader(const std::string &source)
 {
 	m_shaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
 	if(m_shaderHandle == 0)
-		nbThrowException(std::runtime_error, "glCreateShader fail, glGetError[%d]", glGetError());
+		nbThrowException(std::logic_error, "glCreateShader fail, make sure has make current context. glGetError[%d]", glGetError());
 }
