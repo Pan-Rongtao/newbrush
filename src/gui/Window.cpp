@@ -45,7 +45,7 @@ Window::Window()
 	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
 
 	glfwMakeContextCurrent(m_implWindow);
-	sizeCallback(Width(), Height());
+	sizeCallback((int)Width(), (int)Height());
 	Application::current()->windows().push_back(this);
 }
 
@@ -148,28 +148,28 @@ void Window::onLeftChanged(const float & _old, const float & _new)
 {
 	int x, y;
 	glfwGetWindowPos(m_implWindow, &x, &y);
-	glfwSetWindowPos(m_implWindow, _new, y);
+	glfwSetWindowPos(m_implWindow, (int)_new, y);
 }
 
 void Window::onTopChanged(const float & _old, const float & _new)
 {
 	int x, y;
 	glfwGetWindowPos(m_implWindow, &x, &y);
-	glfwSetWindowPos(m_implWindow, x, _new);
+	glfwSetWindowPos(m_implWindow, x, (int)_new);
 }
 
 void Window::onWidthChanged(const float & _old, const float & _new)
 {
 	int w, h;
 	glfwGetWindowSize(m_implWindow, &w, &h);
-	glfwSetWindowSize(m_implWindow, _new, h);
+	glfwSetWindowSize(m_implWindow, (int)_new, h);
 }
 
 void Window::onHeightChanged(const float & _old, const float & _new)
 {
 	int w, h;
 	glfwGetWindowSize(m_implWindow, &w, &h);
-	glfwSetWindowSize(m_implWindow, w, _new);
+	glfwSetWindowSize(m_implWindow, w, (int)_new);
 }
 
 void Window::posCallback(int x, int y)
@@ -180,8 +180,8 @@ void Window::sizeCallback(int width, int height)
 {
 	nb::gl::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
 	nb::gl::viewport(0, 0, width, height);
-	Width = width;
-	Height = height;
+	Width = (float)width;
+	Height = (float)height;
 	updateLayout();
 }
 
@@ -195,7 +195,7 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 	{
 		double x, y;
 		glfwGetCursorPos(m_implWindow, &x, &y);
-		auto hits = hitElements(x, y);
+		auto hits = hitElements((int)x, (int)y);
 		for (auto e : hits)
 		{
 			e->MouseEnter.dispatch({});

@@ -7,7 +7,7 @@
 #include "../gles/RenderObject.h"
 #include "../gui/Style.h"
 #include "../gui/VisualStateMachine.h"
-#include "../gui/RoutedEvent.h"
+#include "../core/RoutedEvent.h"
 
 namespace nb{
 namespace gl{

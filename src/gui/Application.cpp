@@ -11,6 +11,7 @@ using namespace nb::gui;
 
 Application *Application::g_app = nullptr;
 Application::Application()
+	: m_mainWindow(nullptr)
 {
 	if (g_app)
 		nbThrowException(std::logic_error, "create tow application");
@@ -32,6 +33,18 @@ Application *Application::current()
 std::vector<gui::Window*> &Application::windows()
 {
 	return m_windows;
+}
+
+void Application::setMainWindow(Window * w)
+{
+	auto iter = std::find(m_windows.begin(), m_windows.end(), w);
+	if (iter != m_windows.end())
+		m_mainWindow = w;
+}
+
+Window * Application::mainWindow()
+{
+	return m_mainWindow ? m_mainWindow : (m_windows.empty() ? nullptr : m_windows[0]);
 }
 
 int Application::run()
@@ -60,6 +73,14 @@ int Application::run()
 		printf("other exception\r\n");
 	}
 	return 1;
+}
+
+void Application::shutdown()
+{
+}
+
+void Application::shutdown(int exitCode)
+{
 }
 
 void Application::render()
