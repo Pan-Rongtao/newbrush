@@ -151,10 +151,13 @@ enum class KeyStateE : uint8_t
 	Toggled,	//以切换
 };
 
-class InputEventArgs : public RoutedEventArgs
+struct InputEventArgs : public RoutedEventArgs
 {
 public:
+	InputEventArgs(int timestamp);
 	int		Timestamp;		//事件发生的时间
 };
+
+class InputEventHandler
 
 }
