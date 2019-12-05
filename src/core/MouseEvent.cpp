@@ -4,18 +4,18 @@ using namespace nb;
 
 MouseEventArgs::MouseEventArgs(int timestamp)
 	: InputEventArgs(timestamp)
-	, LeftButton(MouseButtonState::Released)
-	, MiddleButton(MouseButtonState::Released)
-	, RightButton(MouseButtonState::Released)
+	, LeftButton(MouseButtonStateE::Released)
+	, MiddleButton(MouseButtonStateE::Released)
+	, RightButton(MouseButtonStateE::Released)
 {
 }
 
-Point nb::MouseEventArgs::getPosition()
+Point MouseEventArgs::getPosition(std::shared_ptr<InputElement> relativeTo)
 {
 	return nb::Point();
 }
 
-MouseButtonEventArgs::MouseButtonEventArgs(int timestamp, MouseButton button)
+MouseButtonEventArgs::MouseButtonEventArgs(int timestamp, MouseButtonE button)
 	: MouseEventArgs(timestamp)
 	, ChangedButton(button)
 	, ButtonState()

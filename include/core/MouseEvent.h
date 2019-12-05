@@ -4,47 +4,48 @@
 
 namespace nb {
 
-enum class MouseButton : uint8_t
+enum class MouseButtonE : uint8_t
 {
-	Left,
-	Middle,
-	Right,
+	Left,		//左按钮
+	Middle,		//中间按钮
+	Right,		//右按钮
 };
 
-enum class MouseButtonState : uint8_t
+enum class MouseButtonStateE : uint8_t
 {
-	Released,
-	Pressed,
+	Released,	//已释放
+	Pressed,	//已压下
 };
 
-class MouseEventArgs : public InputEventArgs
+class InputElement;
+class NB_API MouseEventArgs : public InputEventArgs
 {
 public:
 	MouseEventArgs(int timestamp);
 
-	nb::Point getPosition();
+	nb::Point getPosition(std::shared_ptr<InputElement> relativeTo);			//获取光标相对于指定元素的位置
 
-	MouseButtonState	LeftButton;
-	MouseButtonState	MiddleButton;
-	MouseButtonState	RightButton;
+	MouseButtonStateE	LeftButton;		//左按钮状态
+	MouseButtonStateE	MiddleButton;	//中间按钮状态
+	MouseButtonStateE	RightButton;	//右按钮状态
 };
 
-class MouseButtonEventArgs : public MouseEventArgs
+class NB_API MouseButtonEventArgs : public MouseEventArgs
 {
 public:
-	MouseButtonEventArgs(int timestamp, MouseButton button);
+	MouseButtonEventArgs(int timestamp, MouseButtonE button);
 
-	MouseButton			ChangedButton;
-	MouseButtonState	ButtonState;
-	int					ClickCount;
+	MouseButtonE		ChangedButton;	//触发的按钮
+	MouseButtonStateE	ButtonState;	//按钮状态
+	int					ClickCount;		//点击次数，可处理单击、双击、三击的判定
 };
 
-class MouseWheelEventArgs : public MouseEventArgs
+class NB_API MouseWheelEventArgs : public MouseEventArgs
 {
 public:
 	MouseWheelEventArgs(int timestamp, int delta);
 
-	int	Delta;
+	int	Delta;							//滚动值
 };
 
 }

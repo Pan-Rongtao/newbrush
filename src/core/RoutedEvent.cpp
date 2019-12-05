@@ -4,8 +4,9 @@ using namespace nb;
 
 RoutedEvent::RoutedEvent()
 	: m_hash(0)
+	, m_routingStrategy(RoutingStrategyE::bubble)
 	, m_ownerType(typeid(nullptr))
-	, m_handleTyp(typeid(nullptr))
+	, m_argsType(typeid(nullptr))
 {
 }
 
@@ -17,6 +18,16 @@ std::string RoutedEvent::name() const
 std::size_t RoutedEvent::hash() const
 {
 	return m_hash;
+}
+
+std::type_index RoutedEvent::ownerType() const
+{
+	return m_ownerType;
+}
+
+std::type_index RoutedEvent::argsType() const
+{
+	return m_argsType;
 }
 
 RoutingStrategyE RoutedEvent::routingStrategy() const
@@ -39,27 +50,14 @@ RoutedEventArgs::RoutedEventArgs()
 {
 }
 
-RoutedEventArgs::RoutedEventArgs(RoutedEvent event)
-	: m_event(event)
+RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent)
+	: RoutedEventArgs(routedEvent, Object())
 {
 }
 
-void RoutedEventArgs::setHandled(bool handled)
-{
-	m_handled = handled;
-}
-
-bool RoutedEventArgs::handled() const
-{
-	return m_handled;
-}
-
-void RoutedEventArgs::setRoutedEvent(const RoutedEvent & event)
-{
-	m_event = event;
-}
-
-RoutedEvent RoutedEventArgs::routedEvent() const
-{
-	return m_event;
+RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source)
+	: Handled(false)
+	, Event(routedEvent)
+	, Source(source)
+{ 
 }

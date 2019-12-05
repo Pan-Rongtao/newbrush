@@ -20,3 +20,28 @@ KeyboardFocusChangedEventArgs::KeyboardFocusChangedEventArgs(int timestamp, std:
 	, NewFocus(newFocus)
 {
 }
+
+KeyStateE Keyboard::getKeyState(KeyE key)
+{
+	return KeyStateE();
+}
+
+bool Keyboard::isKeyDown(KeyE key)
+{
+	return false;
+}
+
+bool Keyboard::isKeyUp(KeyE key)
+{
+	return false;
+}
+
+bool Keyboard::isKeyToggled(KeyE key)
+{
+	return false;
+}
+
+std::shared_ptr<InputElement> Keyboard::focus(std::shared_ptr<InputElement> element)
+{
+	return std::shared_ptr<InputElement>();
+}

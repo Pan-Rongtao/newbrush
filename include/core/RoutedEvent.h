@@ -3,7 +3,7 @@
 #include <typeindex>
 #include <functional>
 #include <map>
-#include "../core/Def.h"
+#include "../core/Object.h"
 
 namespace nb{
 
@@ -21,6 +21,8 @@ public:
 
 	std::string name() const;
 	std::size_t hash() const;
+	std::type_index ownerType() const;
+	std::type_index argsType() const;
 	RoutingStrategyE routingStrategy() const;
 
 	bool operator ==(const RoutedEvent &other) const;
@@ -31,7 +33,7 @@ private:
 	std::string			m_name;
 	RoutingStrategyE	m_routingStrategy;
 	std::type_index		m_ownerType;
-	std::type_index		m_handleTyp;
+	std::type_index		m_argsType;
 	friend class RoutedEventManager;
 };
 
@@ -39,68 +41,56 @@ class NB_API RoutedEventArgs
 {
 public:
 	RoutedEventArgs();
-	RoutedEventArgs(RoutedEvent event);
+	RoutedEventArgs(const RoutedEvent &routedEvent);
+	RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source);
+	virtual ~RoutedEventArgs() = default;
 
-	//已处理标志
-	void setHandled(bool handled);
-	bool handled() const;
-
-	//路由事件
-	void setRoutedEvent(const RoutedEvent &event);
-	RoutedEvent routedEvent() const;
-
-private:
-	bool		m_handled;
-	RoutedEvent	m_event;
-	//Object	m_originalSource;
-	//Object	m_source;
+	bool		Handled;
+	RoutedEvent	Event;
+	Object		OriginalSource;
+	Object		Source;
 };
 
-//template<class ArgsT>
+template<class ArgsT>
 class NB_API RoutedEventHandler
 {
 public:
-	RoutedEventHandler(std::function<void(RoutedEventArgs)> callback)
-		: m_callback(std::make_shared<std::function<void(RoutedEventArgs)>>(std::move(callback)))
-	{
-	}
-	void invoke(const RoutedEventArgs &args)
-	{
-		(*m_callback)(args);
-	}
-	bool operator ==(const RoutedEventHandler &other) const
-	{
-		return m_callback == other.m_callback;
-	}
+	using CB = std::function<void(const ArgsT &)>;
+	RoutedEventHandler(CB callback) : m_callback(std::make_shared<CB>(std::move(callback))) { }
+
+	void invoke(const ArgsT &args)									{ (*m_callback)(args); }
+	bool operator ==(const RoutedEventHandler<ArgsT> &other) const	{ return !(operator!=(other)); }
+	bool operator !=(const RoutedEventHandler<ArgsT> &other) const	{ return m_callback != other.m_callback; }
 
 private:
-	std::shared_ptr<std::function<void(RoutedEventArgs)>>	m_callback;
+	std::shared_ptr<CB>	m_callback;
 };
+
 
 class NB_API RoutedEventManager
 {
 public:
-	template<class ownerType, class handlerType>
-	void registerRoutedEvent(const std::string &name, RoutingStrategyE routingStrategy = RoutingStrategyE::bubble)
+	template<class OwnerType, class EventArgsType>
+	static const RoutedEvent registerRoutedEvent(const std::string &name, RoutingStrategyE routingStrategy = RoutingStrategyE::bubble)
 	{
-		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "handlerType must be DependencyObject or it's derived type.");
+		static std::map<std::size_t, RoutedEvent>	m_routedEvents;
+		//	static_assert(std::is_base_of<Object, ownerType>::value, "handlerType must be DependencyObject or it's derived type.");
 
 		std::hash<std::string> _shash;
-		auto hash = typeid(ownerType).hash_code() ^ _shash(name);
-		if(m_routedEvents.find(hash) != m_routedEvents.end())
-			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(ownerType).name());
+		auto hash = typeid(OwnerType).hash_code() ^ _shash(name);
+		if (m_routedEvents.find(hash) != m_routedEvents.end())
+			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
 
 		RoutedEvent e;
+		e.m_hash = hash;
 		e.m_name = name;
 		e.m_routingStrategy = routingStrategy;
-		e.m_ownerType = std::type_index(typeid(ownerType));
-		e.m_handleTyp = std::type_index(typeid(handlerType));
+		e.m_ownerType = std::type_index(typeid(OwnerType));
+		e.m_argsType = std::type_index(typeid(EventArgsType));
 		m_routedEvents[hash] = e;
 		return e;
 	}
 
-private:
-	static std::map<std::size_t, RoutedEvent>	m_routedEvents;
 };
 
 }

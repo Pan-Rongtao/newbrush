@@ -117,9 +117,9 @@ public:
 	void arrage(const Rect &finalRect);
 	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
 
-	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
+/*	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
-	void raiseEvent(const RoutedEventArgs &args);
+	void raiseEvent(const RoutedEventArgs &args);*/
 	
 	struct MouseEnterArgs {};
 	Event<MouseEnterArgs>							MouseEnter;
@@ -173,7 +173,7 @@ protected:
 private:
 	void onPropertyChanged(const PropertyChangedArgs &args);
 
-	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
+//	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };
 
 using UIElementPtr = std::shared_ptr<UIElement>;
