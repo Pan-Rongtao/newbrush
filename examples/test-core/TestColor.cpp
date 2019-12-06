@@ -6,9 +6,6 @@
 using namespace nb;
 void TestColor::test()
 {
-	Singleton<Color>::instance();
-	Singleton<Color>::instance();
-	  
 	Color c1;
 	Color c2(255, 0, 0);
 	Color c3(125, 0, 255, 0);

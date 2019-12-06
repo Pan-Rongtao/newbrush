@@ -24,7 +24,7 @@ public:
 			m_propertys[dp.hash()] = { value, false };
 			if (value != any_cast<T>(dp.defaultValue()))
 			{
-				PropertyChanged.dispatch({ dp, value });
+				PropertyChanged.invoke({ dp, value });
 			}
 		}
 		else
@@ -32,7 +32,7 @@ public:
 			if (value != any_cast<T>(iter->second.first))
 			{
 				iter->second.first = value;
-				PropertyChanged.dispatch({ dp, value });
+				PropertyChanged.invoke({ dp, value });
 			}
 		}
 	}
@@ -48,12 +48,12 @@ public:
 		if (iter == m_propertys.end())
 		{
 			m_propertys[dp.hash()] = { value, false };
-			PropertyChanged.dispatch({ dp, value });
+			PropertyChanged.invoke({ dp, value });
 		}
 		else
 		{
 			iter->second.first = value;
-			PropertyChanged.dispatch({ dp, value });
+			PropertyChanged.invoke({ dp, value });
 		}
 	}
 

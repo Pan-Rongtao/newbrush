@@ -34,7 +34,7 @@ void Timeline::begin()
 {
 	m_begTick = (uint64_t)(nb::getTickCount() + BeginTime().totalMilliseconds());
 	set(StateProperty(), StateE::Active);
-	StateChangedEvent.dispatch({ State() });
+	StateChangedEvent.invoke({ State() });
 	m_timer.start();
 }
 
@@ -81,13 +81,13 @@ void Timeline::onTick(const Timer::TickArgs & args)
 	if (curTicks >= m_begTick)
 	{
 		auto progress = std::min<float>(1.0f, float((curTicks - m_begTick) / Duration().totalMilliseconds()));
-		ProgressEvent.dispatch({ progress });
+		ProgressEvent.invoke({ progress });
 		if (curTicks >= endTicks)
 		{
 			set(StateProperty(), StateE::Stopped);
-			StateChangedEvent.dispatch({ State() });
+			StateChangedEvent.invoke({ State() });
 			m_timer.stop();
-			CompleteEvent.dispatch({});
+			CompleteEvent.invoke({});
 		}
 	}
 }

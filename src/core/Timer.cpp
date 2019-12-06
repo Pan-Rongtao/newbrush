@@ -76,7 +76,7 @@ void Timer::driveInLoop()
 		{
 			Timer *timer = iter->second;
 			m_onDispatching = true;			//标记以使记录在dispatch期间调用stop()/remove()的timer，供是否重新add该timer提供判断依据
-			timer->TickEvent.dispatch({});
+			timer->TickEvent.invoke({});
 			m_onDispatching = false;
 			iter = remove(timer);
 			// 假如timer是单次触发模式，或者在dispatch期间已经被stop，不再将此timer重新加入到队列中

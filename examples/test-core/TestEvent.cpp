@@ -8,7 +8,7 @@ void TestEvent::test()
 	h = sender.Timeout.addHandler(std::bind(&TestEvent::onTimeout, this, std::placeholders::_1));
 	//sender.Timeout.removeHandler(h);
 	//sender.Timeout.clear();
-	sender.Timeout.dispatch({ 1, 2.2f, "yes" });
+	sender.Timeout.invoke({ 1, 2.2f, "yes" });
 	printf("----------------test event-----------------\n\n");
 }
 

@@ -59,7 +59,7 @@ void ButtonBase::onLeftButtonUp()
 {
 	if (IsPressed())
 	{
-		Click.dispatch({});
+		Click.invoke({});
 		set(IsPressedProperty(), false);
 	}
 }

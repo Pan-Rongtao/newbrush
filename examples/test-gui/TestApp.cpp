@@ -5,32 +5,46 @@
 #include "gui/Rectangle.h"
 #include "media/ImageSource.h"
 #include "media/SolidColorBrush.h"
+#include "core/Log.h"
 
 using namespace nb;
 using namespace nb::gui;
+void MyApp::onActivated(const EventArgs & args)
+{
+	Log::info("onActivated.");
+}
+
+void MyApp::onDeactivated(EventArgs & args)
+{
+	Log::info("onDeactivated.");
+}
+
+void MyApp::onExit(const ExitEventArgs & args)
+{
+	Log::info("onExit: exitCode=%d.", args.exitCode);
+}
+
+void MyApp::onLoadCompleted(const EventArgs & args)
+{
+	Log::info("onLoadCompleted.");
+}
+
+void MyApp::onSessionEnding(const SessionEndingCancelEventArgs & args)
+{
+	Log::info("onSessionEnding: reason=%d", args.reason);
+}
+
+void MyApp::onStartUp(const StartupEventArgs & args)
+{
+	Log::info("onStartUp.");
+}
+
 void TestApp::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
-#if 0
-	auto image = std::make_shared<Image>();
-	image->Source = std::make_shared<ImageSource>("e:/Pics/5.jpg");
-	image->Margin = Thickness(20);
-	image->Stretch = StretchE::Uniform;
-	m_window->Content = image;
-#else
-	auto rect = std::make_shared<Rectangle>();
-	rect->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
-	rect->Margin = Thickness(100);
-	rect->MinHeight = 1;
-	rect->Height = 10.0f;
-	m_window->Content = rect;
-#endif
+	auto w0 = std::make_shared<Window>();
 
-/*	auto ellipse = std::make_shared<nb::gui::Ellipse>();
-	//ellipse->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
-	ellipse->Fill = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/3.jpg"));
-	m_window.Content = ellipse;*/
-
-//	m_window.Content()->Margin = Thickness(300, 200, 300, 200);
-
+	MyApp app;
+	app.Startup += [](const StartupEventArgs &args) {Log::info("Startup Event."); };
+	char *argv[10] = { "1", "2", "3" };
+	app.run(3, argv);
 }

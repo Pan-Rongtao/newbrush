@@ -5,12 +5,16 @@
 #include "gui/Application.h"
 #include "gui/VisualTreeHelper.h"
 #include "media/ImageSource.h"
+#include "gui/WindowCollection.h"
+#include "core/Singleton.h"
 
 using namespace nb;
 using namespace nb::gl;
 using namespace nb::gui;
 
 std::shared_ptr<nb::gl::Context> Window::drawContext = nullptr;
+static bool	g_windowSystemInitialized = false;
+
 Window::Window()
 	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE& {return get<WindowStateE>(WindowStateProperty()); })
 	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE& {return get<WindowStyleE>(WindowStyleProperty()); })
@@ -21,6 +25,8 @@ Window::Window()
 	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->shared_ptr<ImageSource>& {return get<shared_ptr<ImageSource>>(IconProperty()); })
 	, m_implWindow(nullptr)
 {
+	init();
+
 	drawContext = std::make_shared<nb::gl::Context>();
 	m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
 	int x, y, w, h;
@@ -46,14 +52,13 @@ Window::Window()
 
 	glfwMakeContextCurrent(m_implWindow);
 	sizeCallback((int)Width(), (int)Height());
-	Application::current()->windows().push_back(this);
+	//Application::current()->windows().push_back(this);
+	Singleton<WindowCollection>::get()->push(this);
 }
 
 Window::~Window()
 {
-	auto iter = std::find(Application::current()->windows().begin(), Application::current()->windows().end(), this);
-	if (iter != Application::current()->windows().end())
-		Application::current()->windows().erase(iter);
+	Singleton<WindowCollection>::get()->erase(this);
 	glfwDestroyWindow(m_implWindow);
 }
 
@@ -198,9 +203,9 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 		auto hits = hitElements((int)x, (int)y);
 		for (auto e : hits)
 		{
-			e->MouseEnter.dispatch({});
+			e->MouseEnter.invoke({});
 			e->onMouseEnter();
-			e->MouseMove.dispatch({});
+			e->MouseMove.invoke({});
 			e->onMouseMove();
 		}
 	}
@@ -232,21 +237,28 @@ void Window::refreshCallback()
 
 void Window::closeCallback()
 {
+	CancelEventArgs args;
+	onClosing(args);
+	glfwDestroyWindow(m_implWindow);
 }
 
 void Window::init()
 {
+	if (g_windowSystemInitialized)	return;
+
 	glfwSetErrorCallback([](int error, const char*str) {printf("error:%s\n", str); });
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	g_windowSystemInitialized = true;
 }
 
 void Window::deinit()
 {
 	glfwTerminate();
+	g_windowSystemInitialized = false;
 }
 
 bool Window::shouldClose() const
@@ -314,4 +326,44 @@ DependencyProperty Window::IconProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
 	return dp;
+}
+
+void Window::onActivated(const EventArgs & args)
+{
+	Activated.invoke({ args });
+}
+
+void Window::onDeactivated(const EventArgs & args)
+{
+	Deactivated.invoke({ args });
+}
+
+void Window::onClosed(const EventArgs & args)
+{
+	Closed.invoke({ args });
+}
+
+void Window::onClosing(const CancelEventArgs & args)
+{
+	Closing.invoke({ args });
+}
+
+void Window::onLocationChanged(const EventArgs & args)
+{
+	LocationChanged.invoke({ args });
+}
+
+void Window::onStateChanged(const EventArgs & args)
+{
+	StateChanged.invoke({ args });
+}
+
+void Window::onSourceInitiallized(const EventArgs & args)
+{
+	SourceInitiallized.invoke({ args });
+}
+
+void Window::onContentRendered(const EventArgs & args)
+{
+	ContentRendered.invoke({ args });
 }

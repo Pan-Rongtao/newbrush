@@ -1,40 +1,51 @@
 ﻿#pragma once
+#include "../core/Def.h"
 #include <unordered_map>
 #include <functional>
 
 namespace nb{
 
 template<class ArgsT>
-class Event
+class NB_API Event
 {
+	using CallBack = std::function<void(const ArgsT &)>;
+	using CallBackContainer = std::unordered_map<int, CallBack>;
 public:
-	int addHandler(std::function<void(const ArgsT &args)> callback)
+	Event() : m_callbacks(nullptr) {}
+	~Event() { delete m_callbacks; }
+
+	int addHandler(CallBack callback)
 	{
+		if (!m_callbacks) m_callbacks = new CallBackContainer();
+
 		static int i = 0;
-		m_callbacks.insert({ i++, callback });
+		m_callbacks->insert({ i++, callback });
 		return i - 1;
 	}
 
 	void removeHandler(int handler)
 	{
-		auto iter = m_callbacks.find(handler);
-		if(iter != m_callbacks.end())
-			m_callbacks.erase(handler);
+		if (!m_callbacks)	return;
+		auto iter = m_callbacks->find(handler);
+		if(iter != m_callbacks->end())
+			m_callbacks->erase(handler);
 	}
 
 	void clear()
 	{
-		m_callbacks.clear();
+		if (!m_callbacks)	return;
+		m_callbacks->clear();
 	}
 
-	void dispatch(const ArgsT &args)
+	void invoke(const ArgsT &args)
 	{
-		for (const auto &callback : m_callbacks)
+		if (!m_callbacks)	return;
+		for (const auto &callback : *m_callbacks)
 			if (callback.second)
 				callback.second(args);
 	}
 
-	void operator += (std::function<void(const ArgsT &args)> callback)
+	void operator += (CallBack callback)
 	{
 		addHandler(callback);
 	}
@@ -45,7 +56,7 @@ public:
 	}
 
 private:
-	std::unordered_map<int, std::function<void(const ArgsT &)>>	m_callbacks;
+	CallBackContainer *m_callbacks;
 };
 
 }

@@ -28,7 +28,7 @@ template<class T>
 class NB_API Singleton
 {
 public:
-	static T *instance()
+	static T *get()
 	{
 		static T *t = nullptr;
 		if(!t)	t = new T();
@@ -40,7 +40,7 @@ template<class T>
 class SingletonS
 {
 public:
-	static T *instance()
+	static T *get()
 	{
 		static T *t = nullptr;
 		static std::mutex lock;

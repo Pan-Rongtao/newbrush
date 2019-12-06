@@ -19,9 +19,9 @@ namespace gui{
 
 enum class VisibilityE
 {
-	Hidden,
-	Visible,
-	Collapsed,
+	Hidden,		//不要显示的元素，但是，保留空间中的元素格式（参与排版策略等）
+	Visible,	//显示组件
+	Collapsed,	//不要显示元素，并且不希望它的保留空间
 };
 
 enum class HorizontalAlignmentE

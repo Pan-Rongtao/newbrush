@@ -96,7 +96,7 @@ public:
 				if(p.lock()->m_parent.lock())
 					path = p.lock()->name() + "." + path;
 			}
-			ValueChanged.dispatch({ p.lock() , path });
+			ValueChanged.invoke({ p.lock() , path });
 		}
 	}
 	T &get() { return any_cast<T>(m_v); }

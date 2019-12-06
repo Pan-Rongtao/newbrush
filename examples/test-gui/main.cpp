@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-	try{
+/*	try{
 		Application app;
 		TestHandle<TestBrush> test;
 		test->test();
-		return app.run();
+		return app.run(argc, argv);
 	}
 	catch (std::exception &e)
 	{
@@ -67,5 +67,8 @@ int main(int argc, char *argv[])
 		printf("other exception.\r\n");
 	}
 
+	return 0;	*/
+	TestHandle<TestApp> test;
+	test->test();
 	return 0;
 }

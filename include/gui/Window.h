@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../core/Property.h"
 #include "../core/Event.h"
+#include "../core/EventArgs.h"
 #include "../gui/ContentControl.h"
 #include "../gles/Context.h"
 #include "../gui/Gui.h"
@@ -16,13 +17,13 @@ public:
 	Window();
 	virtual ~Window();
 
-	//激活，针对未显示的窗口不产生影响
+	//显示并激活窗口到前台
 	void active();
 
-	//显示，并不保证激活到前台
+	//使Visibility变成Visible，但不保证激活到前台。比如当窗口处于最小化状态时
 	void show();
 
-	//隐藏
+	//隐藏窗口
 	void hide();
 
 	//关闭/销毁窗口
@@ -45,7 +46,25 @@ public:
 
 	static shared_ptr<gl::Context>			drawContext;
 
+	Event<EventArgs>						Activated;				//当窗口成为前台窗口时发生
+	Event<EventArgs>						Deactivated;			//当窗口成为后台窗口时发生
+	Event<EventArgs>						Closed;					//当窗口将关闭时发生
+	Event<CancelEventArgs>					Closing;				//调用close后发生，可取消关闭窗口
+	Event<EventArgs>						LocationChanged;		//位置发生变化时发生
+	Event<EventArgs>						StateChanged;			//WindowState更改时发生
+	Event<EventArgs>						SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
+	Event<EventArgs>						ContentRendered;		//当窗口的内容呈现后发生
+
 protected:
+	virtual void onActivated(const EventArgs &args);
+	virtual void onDeactivated(const EventArgs &args);
+	virtual void onClosed(const EventArgs &args);
+	virtual void onClosing(const CancelEventArgs &args);
+	virtual void onLocationChanged(const EventArgs &args);
+	virtual void onStateChanged(const EventArgs &args);
+	virtual void onSourceInitiallized(const EventArgs &args);
+	virtual void onContentRendered(const EventArgs &args);
+
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
@@ -79,6 +98,7 @@ private:
 	bool shouldClose() const;
 	void swapBuffers() const;
 	static void waitEvent();
+
 	GLFWwindow		*m_implWindow;
 	friend class Application;
 };
