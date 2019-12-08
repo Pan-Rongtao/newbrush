@@ -4,16 +4,15 @@ namespace nb{
 
 enum class WindowStateE
 {
-	Normal,
-	Maximized,
-	Minimized,
-	FullScreen,
+	Normal,		//还原
+	Maximized,	//最大化
+	Minimized,	//最小化
 };
 
 enum class WindowStyleE
 {
-	None,
-	Fixed,
+	None,		//仅工作区可见
+	Fixed,		//
 	SizeBox,
 };
 

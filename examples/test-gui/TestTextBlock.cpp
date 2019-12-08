@@ -43,7 +43,7 @@ void TestTextBlock::onCompleted(const Timeline::CompleteArgs & args)
 {
 	m_text->Text = "123";
 	return;
-	m_window->WindowState = WindowStateE::FullScreen;
+	m_window->WindowState = WindowStateE::Maximized;
 	m_window->WindowStyle = WindowStyleE::None;
 	m_window->Topmost = false;
 	std::this_thread::sleep_for(std::chrono::seconds(2));

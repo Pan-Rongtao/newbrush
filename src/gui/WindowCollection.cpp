@@ -4,6 +4,8 @@ using namespace nb;
 
 void nb::WindowCollection::push(gui::Window * w)
 {
+	if (m_windows.empty())
+		m_mainWindow = w;
 	m_windows.push_back(w);
 }
 
@@ -12,7 +14,9 @@ void nb::WindowCollection::erase(gui::Window * w)
 	auto iter = std::find(m_windows.begin(), m_windows.end(), w);
 	if (iter != m_windows.end())
 	{
+		auto isMainWindow = *iter == m_mainWindow;
 		m_windows.erase(iter);
+		WindowClosed.invoke({ isMainWindow });
 	}
 }
 
@@ -21,9 +25,12 @@ std::vector<gui::Window*>& nb::WindowCollection::windows()
 	return m_windows;
 }
 
-gui::Window * nb::WindowCollection::operator[](size_t index)
+void WindowCollection::setMainWindow(gui::Window * w)
 {
-	if(index >= m_windows.size())
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, m_windows.size());
-	return m_windows[index];
+	m_mainWindow = w;
+}
+
+gui::Window * WindowCollection::mainWindow()
+{
+	return m_mainWindow;
 }

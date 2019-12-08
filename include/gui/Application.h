@@ -63,9 +63,11 @@ protected:
 
 private:
 	void render();
+	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 
 	ShutdownModeE		m_shutdownMode;
-	Window				*m_mainWindow;
+	int					m_exitCode;
+	bool				m_exitFlag;
 	static Application	*g_app;
 };
 

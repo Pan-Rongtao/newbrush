@@ -9,10 +9,10 @@
 #include "core/Singleton.h"
 
 using namespace nb;
-using namespace nb::gl;
-using namespace nb::gui;
+using namespace gl;
+using namespace gui;
 
-std::shared_ptr<nb::gl::Context> Window::drawContext = nullptr;
+std::shared_ptr<gl::Context> Window::drawContext = nullptr;
 static bool	g_windowSystemInitialized = false;
 
 Window::Window()
@@ -27,7 +27,7 @@ Window::Window()
 {
 	init();
 
-	drawContext = std::make_shared<nb::gl::Context>();
+	drawContext = std::make_shared<gl::Context>();
 	m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
 	int x, y, w, h;
 	glfwGetWindowPos(m_implWindow, &x, &y);
@@ -38,28 +38,30 @@ Window::Window()
 	Width = (float)w;
 	Height = (float)h;
 	glfwSetWindowUserPointer(m_implWindow, this);
-	glfwSetWindowPosCallback(m_implWindow, [](GLFWwindow*w, int x, int y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->posCallback(x, y); });
-	glfwSetWindowSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
-	glfwSetFramebufferSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
-	glfwSetMouseButtonCallback(m_implWindow, [](GLFWwindow*w, int button, int action, int mods) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->mouseButtonCallback(button, action, mods); });
-	glfwSetCursorPosCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->cusorPosCallback(x, y); });
-	glfwSetCursorEnterCallback(m_implWindow, [](GLFWwindow*w, int entered) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->cusorPosEnterCallback(entered); });
-	glfwSetScrollCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->scrollCallback(x, y); });
-	glfwSetKeyCallback(m_implWindow, [](GLFWwindow*w, int key, int scancode, int action, int mods) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->keyCallback(key, scancode, action, mods); });
-	glfwSetWindowFocusCallback(m_implWindow, [](GLFWwindow*w, int focused) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->focusCallback(focused); });
-	glfwSetWindowRefreshCallback(m_implWindow, [](GLFWwindow*w) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->refreshCallback(); });
-	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<gui::Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
+	glfwSetWindowPosCallback(m_implWindow, [](GLFWwindow*w, int x, int y) { static_cast<Window *>(glfwGetWindowUserPointer(w))->posCallback(x, y); });
+	glfwSetWindowSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
+	glfwSetFramebufferSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
+	glfwSetMouseButtonCallback(m_implWindow, [](GLFWwindow*w, int button, int action, int mods) { static_cast<Window *>(glfwGetWindowUserPointer(w))->mouseButtonCallback(button, action, mods); });
+	glfwSetCursorPosCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<Window *>(glfwGetWindowUserPointer(w))->cusorPosCallback(x, y); });
+	glfwSetCursorEnterCallback(m_implWindow, [](GLFWwindow*w, int entered) { static_cast<Window *>(glfwGetWindowUserPointer(w))->cusorPosEnterCallback(entered); });
+	glfwSetScrollCallback(m_implWindow, [](GLFWwindow*w, double x, double y) { static_cast<Window *>(glfwGetWindowUserPointer(w))->scrollCallback(x, y); });
+	glfwSetKeyCallback(m_implWindow, [](GLFWwindow*w, int key, int scancode, int action, int mods) { static_cast<Window *>(glfwGetWindowUserPointer(w))->keyCallback(key, scancode, action, mods); });
+	glfwSetWindowFocusCallback(m_implWindow, [](GLFWwindow*w, int focused) { static_cast<Window *>(glfwGetWindowUserPointer(w))->focusCallback(focused); });
+	glfwSetWindowRefreshCallback(m_implWindow, [](GLFWwindow*w) { static_cast<Window *>(glfwGetWindowUserPointer(w))->refreshCallback(); });
+	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
+	glfwSetWindowIconifyCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
+	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
 
-	glfwMakeContextCurrent(m_implWindow);
 	sizeCallback((int)Width(), (int)Height());
-	//Application::current()->windows().push_back(this);
 	Singleton<WindowCollection>::get()->push(this);
+
+	PropertyChanged += std::bind(&Window::onPropertyChanged, this, std::placeholders::_1);
 }
 
 Window::~Window()
 {
+	destroyWindow();
 	Singleton<WindowCollection>::get()->erase(this);
-	glfwDestroyWindow(m_implWindow);
 }
 
 void Window::active()
@@ -79,7 +81,10 @@ void Window::hide()
 
 void Window::close()
 {
-	glfwSetWindowShouldClose(m_implWindow, 1);
+	if (m_onDispatching)	return;
+	m_onDispatching = true;
+	closeCallback();
+	m_onDispatching = false;
 }
 
 Size Window::measureOverride(const Size & availableSize)
@@ -134,57 +139,54 @@ std::vector<UIElement *> Window::hitElements(int x, int y) const
 	return hits;
 }
 
-void Window::onWindowStateChanged(const WindowStateE & _old, const WindowStateE & _new)
+void Window::onPropertyChanged(const PropertyChangedArgs & arg)
 {
-	//m_glWindow->setWindowState(_new);
-}
-
-void Window::onWindowStyleChanged(const WindowStyleE & _old, const WindowStyleE & _new)
-{
-	//m_glWindow->setWindowStyle(_new);
-}
-
-void Window::onTopmostChanged(const bool & _old, const bool & _new)
-{
-	//m_glWindow->setTopMost(_new);
-}
-
-void Window::onLeftChanged(const float & _old, const float & _new)
-{
-	int x, y;
-	glfwGetWindowPos(m_implWindow, &x, &y);
-	glfwSetWindowPos(m_implWindow, (int)_new, y);
-}
-
-void Window::onTopChanged(const float & _old, const float & _new)
-{
-	int x, y;
-	glfwGetWindowPos(m_implWindow, &x, &y);
-	glfwSetWindowPos(m_implWindow, x, (int)_new);
-}
-
-void Window::onWidthChanged(const float & _old, const float & _new)
-{
-	int w, h;
-	glfwGetWindowSize(m_implWindow, &w, &h);
-	glfwSetWindowSize(m_implWindow, (int)_new, h);
-}
-
-void Window::onHeightChanged(const float & _old, const float & _new)
-{
-	int w, h;
-	glfwGetWindowSize(m_implWindow, &w, &h);
-	glfwSetWindowSize(m_implWindow, w, (int)_new);
+	if (arg.dp == WindowStateProperty())
+	{
+		auto state = any_cast<WindowStateE>(arg.value);
+		switch (state)
+		{
+		case WindowStateE::Normal:		glfwRestoreWindow(m_implWindow);	break;
+		case WindowStateE::Maximized:	glfwMaximizeWindow(m_implWindow);	break;
+		case WindowStateE::Minimized:	glfwIconifyWindow(m_implWindow);	break;
+		default:															break;
+		}
+	}
+	else if (arg.dp == WindowStyleProperty())
+	{
+	}
+	else if (arg.dp == TopmostProperty())
+	{
+		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, any_cast<bool>(arg.value));
+	}
+	else if (arg.dp == LeftProperty() || arg.dp == TopProperty())
+	{
+		glfwSetWindowPos(m_implWindow, (int)Left(), (int)Top());
+	}
+	else if (arg.dp == TitleProperty())
+	{
+		glfwSetWindowTitle(m_implWindow, any_cast<std::string>(arg.value).data());
+	}
+	else if (arg.dp == IconProperty())
+	{
+		auto bm = any_cast<std::shared_ptr<ImageSource>>(arg.value)->Bm();
+		GLFWimage img;
+		img.width = bm->width();
+		img.height = bm->height();
+		img.pixels = (unsigned char *)bm->data();
+		glfwSetWindowIcon(m_implWindow, 1, &img);
+	}
 }
 
 void Window::posCallback(int x, int y)
 {
+	LocationChanged.invoke({});
 }
 
 void Window::sizeCallback(int width, int height)
 {
-	nb::gl::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
-	nb::gl::viewport(0, 0, width, height);
+	gl::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
+	gl::viewport(0, 0, width, height);
 	Width = (float)width;
 	Height = (float)height;
 	updateLayout();
@@ -239,7 +241,22 @@ void Window::closeCallback()
 {
 	CancelEventArgs args;
 	onClosing(args);
-	glfwDestroyWindow(m_implWindow);
+	if (!args.cancel)
+	{
+		destroyWindow();                                                                 
+		onClosed(args);
+		Singleton<WindowCollection>::get()->erase(this);
+	}
+}
+
+void Window::iconifyCallback(int iconified)
+{
+	StateChanged.invoke({});
+}
+
+void Window::maximizeCallback(GLFWwindow * window, int maximized)
+{
+	StateChanged.invoke({});
 }
 
 void Window::init()
@@ -261,29 +278,26 @@ void Window::deinit()
 	g_windowSystemInitialized = false;
 }
 
-bool Window::shouldClose() const
+void Window::destroyWindow()
 {
-	return glfwWindowShouldClose(m_implWindow) != 0;
+	if (!m_implWindow)
+		return;
+	glfwDestroyWindow(m_implWindow);
+	m_implWindow = nullptr;
+	if (Singleton<WindowCollection>::get()->windows().empty())
+		deinit();
 }
 
 void Window::swapBuffers() const
 {
+	glfwMakeContextCurrent(m_implWindow);
 	glfwSwapBuffers(m_implWindow);
 }
 
 void Window::waitEvent()
 {
-	glfwWaitEvents();
-}
-
-void Window::onTitleChanged(const std::string & _old, const std::string & _new)
-{
-	glfwSetWindowTitle(m_implWindow, _new.data());
-}
-
-void Window::onIconChanged(const std::shared_ptr<ImageSource>& _old, const std::shared_ptr<ImageSource>& _new)
-{
-
+	if (g_windowSystemInitialized)
+		glfwWaitEvents();
 }
 
 DependencyProperty Window::WindowStateProperty()

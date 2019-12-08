@@ -54,6 +54,9 @@ public:
 	Event<EventArgs>						StateChanged;			//WindowState更改时发生
 	Event<EventArgs>						SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
 	Event<EventArgs>						ContentRendered;		//当窗口的内容呈现后发生
+	
+	void swapBuffers() const;
+	static void waitEvent();
 
 protected:
 	virtual void onActivated(const EventArgs &args);
@@ -70,16 +73,7 @@ protected:
 
 private:
 	std::vector<UIElement *> hitElements(int x, int y) const;
-
-	void onWindowStateChanged(const WindowStateE &_old, const WindowStateE &_new);
-	void onWindowStyleChanged(const WindowStyleE &_old, const WindowStyleE &_new);
-	void onTopmostChanged(const bool &_old, const bool &_new);
-	void onLeftChanged(const float &_old, const float &_new);
-	void onTopChanged(const float &_old, const float &_new);
-	void onTitleChanged(const std::string &_old, const std::string &_new);
-	void onIconChanged(const std::shared_ptr<ImageSource> &_old, const std::shared_ptr<ImageSource> &_new);
-	void onWidthChanged(const float &_old, const float &_new);
-	void onHeightChanged(const float &_old, const float &_new);
+	void onPropertyChanged(const PropertyChangedArgs &arg);
 
 	void posCallback(int x, int y);
 	void sizeCallback(int width, int height);
@@ -92,15 +86,16 @@ private:
 	void focusCallback(int focused);
 	void refreshCallback();
 	void closeCallback();
+	void iconifyCallback(int iconified);
+	void maximizeCallback(GLFWwindow* window, int maximized);
 
 	static void init();
 	static void deinit();
-	bool shouldClose() const;
-	void swapBuffers() const;
-	static void waitEvent();
+
+	void destroyWindow();
 
 	GLFWwindow		*m_implWindow;
-	friend class Application;
+	bool	m_onDispatching{ false };
 };
 
 }}

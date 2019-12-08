@@ -8,7 +8,7 @@ namespace nb{
 template<class ArgsT>
 class NB_API Event
 {
-	using CallBack = std::function<void(const ArgsT &)>;
+	using CallBack = std::function<void(ArgsT &)>;
 	using CallBackContainer = std::unordered_map<int, CallBack>;
 public:
 	Event() : m_callbacks(nullptr) {}
@@ -37,12 +37,16 @@ public:
 		m_callbacks->clear();
 	}
 
+	void invoke(ArgsT &args)
+	{
+		invoke(const_cast<const ArgsT &>(args));
+	}
 	void invoke(const ArgsT &args)
 	{
 		if (!m_callbacks)	return;
 		for (const auto &callback : *m_callbacks)
 			if (callback.second)
-				callback.second(args);
+				callback.second(const_cast<ArgsT &>(args));
 	}
 
 	void operator += (CallBack callback)

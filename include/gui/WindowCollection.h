@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include "../core/Def.h"
+#include "../core/Event.h"
+#include "../core/EventArgs.h"
 
 namespace nb {
 namespace gui{
@@ -16,10 +17,16 @@ public:
 	void push(gui::Window *w);
 	void erase(gui::Window *w);
 	std::vector<gui::Window *> &windows();
-	gui::Window * operator[](size_t index);
+
+	void setMainWindow(gui::Window *w);
+	gui::Window *mainWindow();
+
+	struct WindowClosedEventArgs	{ bool isMain; };
+	Event<WindowClosedEventArgs>	WindowClosed;
 
 private:
 	std::vector<gui::Window *>	m_windows;
+	gui::Window					*m_mainWindow;
 };
 
 }

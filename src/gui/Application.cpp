@@ -13,18 +13,17 @@ using namespace nb::gui;
 Application *Application::g_app = nullptr;
 Application::Application()
 	: m_shutdownMode(ShutdownModeE::OnLastWindowClose)
-	, m_mainWindow(nullptr)
+	, m_exitCode(std::numeric_limits<int>::min())
+	, m_exitFlag(false)
 {
 	if (g_app)
 		nbThrowException(std::logic_error, "create tow application");
-
 	g_app = this;
-	Window::init();
+	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
 }
 
 Application::~Application()
 {
-	Window::deinit();
 }
 
 Application *Application::current()
@@ -49,14 +48,12 @@ const WindowCollection &Application::windows() const
 
 void Application::setMainWindow(Window * w)
 {
-	auto iter = std::find(Singleton<WindowCollection>::get()->windows().begin(), Singleton<WindowCollection>::get()->windows().end(), w);
-	if (iter != Singleton<WindowCollection>::get()->windows().end())
-		m_mainWindow = w;
+	Singleton<WindowCollection>::get()->setMainWindow(w);
 }
 
 Window * Application::mainWindow()
 {
-	return m_mainWindow ? m_mainWindow : (Singleton<WindowCollection>::get()->windows().empty() ? nullptr : Singleton<WindowCollection>::get()->windows()[0]);
+	return Singleton<WindowCollection>::get()->mainWindow();
 }
 
 int Application::run(int argc, char *argv[])
@@ -73,7 +70,7 @@ int Application::run(int argc, char *argv[])
 	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
 	try
 	{
-		while (true)
+		while (!m_exitFlag)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			Timer::driveInLoop();
@@ -90,7 +87,7 @@ int Application::run(int argc, char *argv[])
 	}
 	catch (std::exception &e)	{ UnhandledException.invoke({ e }); }
 	catch (...)					{ UnhandledExtraException.invoke({}); }
-	return 1;
+	return 0;
 }
 
 void Application::shutdown()
@@ -100,8 +97,9 @@ void Application::shutdown()
 
 void Application::shutdown(int exitCode)
 {
-	Window::deinit();
-	onExit(ExitEventArgs{ exitCode });
+	m_exitCode = exitCode;
+	for (auto const &w : Singleton<WindowCollection>::get()->windows())
+		w->close();
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -149,5 +147,21 @@ void Application::render()
 		frames = 0;
 		k = kk;
 		Log::info("fps:%.2f", fps);
+	}
+}
+
+void Application::onWindowClosed(const WindowCollection::WindowClosedEventArgs & args)
+{
+	auto mode = shutdownMode();
+	if ((mode == ShutdownModeE::OnLastWindowClose && Singleton<WindowCollection>::get()->windows().empty())
+		|| (mode == ShutdownModeE::OnMainWindowClose && args.isMain))
+	{
+		onExit({ 0 });
+		m_exitFlag = true;
+	}
+	else if(mode == ShutdownModeE::OnExplicitShutdown && Singleton<WindowCollection>::get()->windows().empty() && m_exitCode != std::numeric_limits<int>::min())
+	{
+		onExit({ m_exitCode });
+		m_exitFlag = true;
 	}
 }
