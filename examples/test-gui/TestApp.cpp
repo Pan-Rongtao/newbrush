@@ -88,7 +88,7 @@ public:
 void TestApp::test()
 {
 	MyApp app;
-	app.setShutdownMode(ShutdownModeE::OnMainWindowClose);
+	app.setShutdownMode(ShutdownModeE::OnExplicitShutdown);
 	app.Startup += [](const StartupEventArgs &args) {Log::info("App Startup Event."); };
 	app.Exit += [](const ExitEventArgs &args) {Log::info("App exit Event. exitCode=%d", args.exitCode); };
 	char *argv[10] = { "1", "2", "3" };

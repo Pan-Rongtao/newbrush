@@ -66,7 +66,6 @@ private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 
 	ShutdownModeE		m_shutdownMode;
-	int					m_exitCode;
 	bool				m_exitFlag;
 	static Application	*g_app;
 };

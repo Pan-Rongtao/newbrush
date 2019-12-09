@@ -13,7 +13,6 @@ using namespace nb::gui;
 Application *Application::g_app = nullptr;
 Application::Application()
 	: m_shutdownMode(ShutdownModeE::OnLastWindowClose)
-	, m_exitCode(std::numeric_limits<int>::min())
 	, m_exitFlag(false)
 {
 	if (g_app)
@@ -97,13 +96,11 @@ void Application::shutdown()
 
 void Application::shutdown(int exitCode)
 {
-	m_exitCode = exitCode;
+	m_exitFlag = true;
 	for (auto const &w : Singleton<WindowCollection>::get()->windows())
 		w->_close(false);
 	Singleton<WindowCollection>::get()->windows().clear();
-	onExit({ m_exitCode });
-	m_exitFlag = true;
-
+	onExit({ exitCode });
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -158,12 +155,9 @@ void Application::onWindowClosed(const WindowCollection::WindowClosedEventArgs &
 {
 	auto mode = shutdownMode();
 	if ((mode == ShutdownModeE::OnLastWindowClose && Singleton<WindowCollection>::get()->windows().empty())
-		|| (mode == ShutdownModeE::OnMainWindowClose && args.isMain))
+		|| (mode == ShutdownModeE::OnMainWindowClose && args.isMain)
+		|| (mode == ShutdownModeE::OnExplicitShutdown && Singleton<WindowCollection>::get()->windows().empty() && m_exitFlag))
 	{
 		shutdown();
-	}
-	else if(mode == ShutdownModeE::OnExplicitShutdown && Singleton<WindowCollection>::get()->windows().empty() && m_exitCode != std::numeric_limits<int>::min())
-	{
-		shutdown(m_exitCode);
 	}
 }
