@@ -99,7 +99,11 @@ void Application::shutdown(int exitCode)
 {
 	m_exitCode = exitCode;
 	for (auto const &w : Singleton<WindowCollection>::get()->windows())
-		w->close();
+		w->_close(false);
+	Singleton<WindowCollection>::get()->windows().clear();
+	onExit({ m_exitCode });
+	m_exitFlag = true;
+
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -156,12 +160,10 @@ void Application::onWindowClosed(const WindowCollection::WindowClosedEventArgs &
 	if ((mode == ShutdownModeE::OnLastWindowClose && Singleton<WindowCollection>::get()->windows().empty())
 		|| (mode == ShutdownModeE::OnMainWindowClose && args.isMain))
 	{
-		onExit({ 0 });
-		m_exitFlag = true;
+		shutdown();
 	}
 	else if(mode == ShutdownModeE::OnExplicitShutdown && Singleton<WindowCollection>::get()->windows().empty() && m_exitCode != std::numeric_limits<int>::min())
 	{
-		onExit({ m_exitCode });
-		m_exitFlag = true;
+		shutdown(m_exitCode);
 	}
 }

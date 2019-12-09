@@ -81,10 +81,7 @@ void Window::hide()
 
 void Window::close()
 {
-	if (m_onDispatching)	return;
-	m_onDispatching = true;
-	closeCallback();
-	m_onDispatching = false;
+	_close(true);
 }
 
 Size Window::measureOverride(const Size & availableSize)
@@ -131,6 +128,22 @@ void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector
 		}
 	}
 };
+
+void Window::_close(bool eraseFromCollection)
+{
+	if (m_onDispatching)	return;
+	m_onDispatching = true;
+	CancelEventArgs args;
+	onClosing(args);
+	if (!args.cancel)
+	{
+		destroyWindow();
+		onClosed(args);
+		if(eraseFromCollection)
+			Singleton<WindowCollection>::get()->erase(this);
+	}
+	m_onDispatching = false;
+}
 
 std::vector<UIElement *> Window::hitElements(int x, int y) const
 {
@@ -239,14 +252,7 @@ void Window::refreshCallback()
 
 void Window::closeCallback()
 {
-	CancelEventArgs args;
-	onClosing(args);
-	if (!args.cancel)
-	{
-		destroyWindow();                                                                 
-		onClosed(args);
-		Singleton<WindowCollection>::get()->erase(this);
-	}
+	close();
 }
 
 void Window::iconifyCallback(int iconified)

@@ -72,6 +72,7 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
+	void _close(bool eraseFromCollection);
 	std::vector<UIElement *> hitElements(int x, int y) const;
 	void onPropertyChanged(const PropertyChangedArgs &arg);
 
@@ -95,7 +96,8 @@ private:
 	void destroyWindow();
 
 	GLFWwindow		*m_implWindow;
-	bool	m_onDispatching{ false };
+	bool			m_onDispatching{ false };
+	friend class Application;
 };
 
 }}

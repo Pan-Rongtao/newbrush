@@ -88,7 +88,7 @@ public:
 void TestApp::test()
 {
 	MyApp app;
-	app.setShutdownMode(ShutdownModeE::OnExplicitShutdown);
+	app.setShutdownMode(ShutdownModeE::OnMainWindowClose);
 	app.Startup += [](const StartupEventArgs &args) {Log::info("App Startup Event."); };
 	app.Exit += [](const ExitEventArgs &args) {Log::info("App exit Event. exitCode=%d", args.exitCode); };
 	char *argv[10] = { "1", "2", "3" };
@@ -97,10 +97,10 @@ void TestApp::test()
 	auto w0 = std::make_shared<MyWindow>();
 	w0->Title = "window0";
 	//w0->Icon = std::make_shared<ImageSource>("e:/Pics/3.jpg");
-	w0->Closed += [&app](const EventArgs &args) {Log::info("closed event."); app.shutdown(); };
+	w0->Closed += [&app](const EventArgs &args) {Log::info("closed event."); /*app.shutdown();*/ };
 	w0->Closing += [](CancelEventArgs &args) { args.cancel = false; Log::info("closing event. cancel=%s", args.cancel ? "true" : "false");  };
-	//auto w1 = std::make_shared<MyWindow>();
-	//w1->Title = "window1";
+	auto w1 = std::make_shared<MyWindow>();
+	w1->Title = "window1";
 
 
 	app.run(3, argv);
