@@ -2,7 +2,7 @@
 #include "gles/RenderObject.h"
 #include "gles/Strips.h"
 #include "gles/Texture2D.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "media/GradientBrush.h"
 
 using namespace nb;
@@ -41,7 +41,7 @@ DependencyProperty Line::Y2Property()
 	return dp;
 }
 
-void Line::onRender(std::shared_ptr<Context> drawContext)
+void Line::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(Point(X1(), Y1()), Point(X2(), Y2()));
@@ -49,7 +49,7 @@ void Line::onRender(std::shared_ptr<Context> drawContext)
 	if (m_strokeObject)
 	{
 		updateStrokeObject(rc);
-		drawContext->queue(m_strokeObject);
+		drawContext.queue(m_strokeObject);
 	}
 }
 

@@ -14,7 +14,7 @@ public:
 	static DependencyProperty	RadiusXProperty();	//X弧度的依赖属性
 	static DependencyProperty	RadiusYProperty();	//Y弧度的依赖属性
 
-	virtual void onRender(std::shared_ptr<Context> drawContext) override;
+	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

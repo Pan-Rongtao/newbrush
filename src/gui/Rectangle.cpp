@@ -1,7 +1,7 @@
 #include "gui/Rectangle.h"
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "gles/Strips.h"
 
 using namespace nb;
@@ -37,7 +37,7 @@ DependencyProperty Rectangle::RadiusYProperty()
 	return dp;
 }
 
-void Rectangle::onRender(std::shared_ptr<Context> drawContext)
+void Rectangle::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
@@ -48,13 +48,13 @@ void Rectangle::onRender(std::shared_ptr<Context> drawContext)
 		if (Stroke())
 			fillRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
 		updateFillObject(fillRc.width(), fillRc.height(), RadiusX(), RadiusY());
-		drawContext->queue(m_fillObject);
+		drawContext.queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 	if (m_strokeObject)
 	{
 		updateStrokeObject(rc);
-		drawContext->queue(m_strokeObject);
+		drawContext.queue(m_strokeObject);
 	//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 }

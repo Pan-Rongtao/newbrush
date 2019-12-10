@@ -62,7 +62,6 @@ protected:
 	virtual void onStartUp(const StartupEventArgs &args);
 
 private:
-	void render();
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
 

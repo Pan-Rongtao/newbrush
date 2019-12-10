@@ -2,7 +2,7 @@
 #include <codecvt>
 #include "media/Font.h"
 #include "gles/GlyphFactory.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "gles/Model.h"
 #include "gles/Material.h"
 #include "gles/Texture2D.h"
@@ -160,11 +160,11 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing(), LineHeight(), TextWrapping(), ActualSize().width());
 }
 
-void TextBlock::onRender(std::shared_ptr<Context> drawContext)
+void TextBlock::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	auto x = offset.x();
 	auto y = offset.y();
 	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing(), LineHeight(), TextWrapping(), ActualSize().width());
-	drawContext->queue(Renderer());
+	drawContext.queue(Renderer());
 }

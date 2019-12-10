@@ -1,8 +1,6 @@
 #include "gui/Application.h"
 #include "core/Timer.h"
 #include "gui/Window.h"
-#include "gles/Egl.h"
-#include "../gles/EglMaster.h"
 #include "core/Log.h"
 #include <GLES2/gl2.h>
 #include "core/Singleton.h"
@@ -131,24 +129,6 @@ void Application::onSessionEnding(const SessionEndingCancelEventArgs & args)
 void Application::onStartUp(const StartupEventArgs & args)
 {
 	Startup.invoke(args);
-}
-
-void Application::render()
-{
-	static int frames = 0;
-	static uint64_t k = nb::getTickCount();
-	for (auto const &context : EglMaster::contexts())
-		context->draw();
-
-	++frames;
-	uint64_t kk = nb::getTickCount();
-	if (kk - k >= 2000)
-	{
-		float fps = frames * 1000.0f / (kk - k);
-		frames = 0;
-		k = kk;
-		Log::info("fps:%.2f", fps);
-	}
 }
 
 void Application::onWindowClosed(const WindowCollection::WindowClosedEventArgs & args)

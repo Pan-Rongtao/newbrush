@@ -1,7 +1,7 @@
 #include "gui/Ellipse.h"
 #include <math.h>
 #include "gles/Program.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "gles/Texture2D.h"
 #include "gles/Strips.h"
 #include <glm/gtc/matrix_transform.hpp>
@@ -50,7 +50,7 @@ Ellipse::Ellipse()
 	};
 }
 
-void Ellipse::onRender(std::shared_ptr<nb::Context> drawContext)
+void Ellipse::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
@@ -61,7 +61,7 @@ void Ellipse::onRender(std::shared_ptr<nb::Context> drawContext)
 		if (Stroke())
 			fillRc.reset(rc.left() - StrokeThickness(), rc.top() - StrokeThickness(), rc.width() - StrokeThickness() * 2, rc.height() - StrokeThickness() * 2);
 		updateFillObject(fillRc.width() * 0.5f, fillRc.height() * 0.5f);
-		drawContext->queue(m_fillObject);
+		drawContext.queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 	if (m_strokeObject)
@@ -69,7 +69,7 @@ void Ellipse::onRender(std::shared_ptr<nb::Context> drawContext)
 		Rect StrokeRc{ rc };
 		StrokeRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
 		updateStrokeObject(StrokeRc);
-		drawContext->queue(m_strokeObject);
+		drawContext.queue(m_strokeObject);
 		m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}
 }

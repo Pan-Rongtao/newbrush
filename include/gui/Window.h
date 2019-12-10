@@ -3,7 +3,7 @@
 #include "../core/Event.h"
 #include "../core/EventArgs.h"
 #include "../gui/ContentControl.h"
-#include "../gles/Context.h"
+#include "../gles/Viewport2D.h"
 #include "../gui/Gui.h"
 
 struct GLFWwindow;
@@ -44,8 +44,6 @@ public:
 	static DependencyProperty				TitleProperty();		//标题的依赖属性
 	static DependencyProperty				IconProperty();			//图标的依赖属性
 
-	static shared_ptr<Context>				drawContext;
-
 	Event<EventArgs>						Activated;				//当窗口成为前台窗口时发生
 	Event<EventArgs>						Deactivated;			//当窗口成为后台窗口时发生
 	Event<EventArgs>						Closed;					//当窗口将关闭时发生
@@ -57,6 +55,8 @@ public:
 	
 	void swapBuffers() const;
 	static void waitEvent();
+
+	static Viewport2D drawContext;
 
 protected:
 	virtual void onActivated(const EventArgs &args);
@@ -97,6 +97,7 @@ private:
 
 	GLFWwindow		*m_implWindow;
 	bool			m_onDispatching{ false };
+
 	friend class Application;
 };
 

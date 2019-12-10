@@ -17,9 +17,11 @@
 **	
 ********************************************************/
 #pragma once
-#include "../core/EnumFlags.h"
-#include "glm/glm.hpp"
 #include <vector>
+#include "glm/glm.hpp"
+#include "../core/EnumFlags.h"
+#include "../gles/Camera.h"
+#include "../gles/Projection.h"
 
 namespace nb{
 
@@ -94,7 +96,7 @@ public:
 
 	//视线命中测试
 	//xNormalized,yNormalized：标准化坐标[-1.0, 1.0]
-	virtual bool sightHitTest(float xNormalized, float yNormalized) const;
+	virtual bool sightHitTest(const Camera &camera, const Projection &projection, float xNormalized, float yNormalized) const;
 
 	//正交命中测试
 	//x,y：坐标

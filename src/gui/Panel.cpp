@@ -1,5 +1,5 @@
 #include "gui/Panel.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 
 using namespace nb;
 using namespace nb::gui;
@@ -24,7 +24,7 @@ DependencyProperty Panel::BackgroundProperty()
 	return dp;
 }
 
-void Panel::onRender(std::shared_ptr<Context> drawContext)
+void Panel::onRender(Viewport2D & drawContext)
 {
 	for (auto child : m_children)
 	{

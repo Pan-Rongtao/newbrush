@@ -2,7 +2,6 @@
 #include "gles/SourceDecoder.h"
 #include "gles/Program.h"
 #include "gles/Shader.h"
-#include "gles/Egl.h"
 #include <vector>
 
 using namespace nb;

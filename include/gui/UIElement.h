@@ -10,7 +10,7 @@
 #include "../core/RoutedEvent.h"
 
 namespace nb{
-	class Context;
+	class Viewport2D;
 }
 
 namespace nb{
@@ -116,7 +116,7 @@ public:
 
 	void measure(const Size &availabelSize);
 	void arrage(const Rect &finalRect);
-	virtual void onRender(std::shared_ptr<nb::Context> drawContext);
+	virtual void onRender(Viewport2D & drawContext);
 
 /*	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);

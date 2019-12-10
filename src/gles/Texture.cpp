@@ -1,7 +1,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include "gles/Texture.h"
-#include "gles/Egl.h"
 #include "core/Log.h"
 
 using namespace nb;

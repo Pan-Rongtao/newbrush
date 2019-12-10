@@ -1,8 +1,5 @@
 #include "gles/RenderObject.h"
 #include <GLES2/gl2.h>
-#include "gles/Camera.h"
-#include "gles/Projection.h"
-#include "gles/Egl.h"
 #include "core/Log.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
@@ -85,7 +82,7 @@ void RenderObject::storeUniform(const std::string & name, const Any & v)
 	m_uniforms[name] = v;
 }
 
-void RenderObject::draw() const
+void RenderObject::draw(const Camera &camera, const Projection &projection) const
 {
 	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_material || !m_material->program())
 		return;
@@ -97,8 +94,8 @@ void RenderObject::draw() const
 	//计算后的mvp，以及分开的m/v/p
 	{
 		auto const &m = m_model->matrix;
-		auto const &v = nb::getCamera()->matrix;
-		auto const &p = nb::getProjection()->matrix;
+		auto const &v = camera.matrix;
+		auto const &p = projection.matrix;
 		auto mvp = p * v * m;
 		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
 		program->uniform(program->getUniformLocation(Program::nbMStr), m);

@@ -5,7 +5,6 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/ext/matrix_projection.hpp>
-#include "gles/Egl.h"
 
 using namespace nb;
 
@@ -168,14 +167,15 @@ void Model::preprocess()
 }
 
 //https://stackoverflow.com/questions/29997209/opengl-c-mouse-ray-picking-glmunproject
-bool Model::sightHitTest(float xNormalized, float yNormalized) const
+bool Model::sightHitTest(const Camera &camera, const Projection &projection, float xNormalized, float yNormalized) const
 {
-	glm::mat4 invVP = glm::inverse(nb::getProjection()->matrix * nb::getCamera()->matrix);
+	glm::mat4 invVP = glm::inverse(projection.matrix * camera.matrix);
 	glm::vec4 screenPos = glm::vec4(xNormalized, -yNormalized, 1.0f, 1.0f);
 	glm::vec4 worldPos = invVP * screenPos;
-	glm::vec3 raypos = nb::getCamera()->position();
+	glm::vec3 raypos = camera.position();
 	glm::vec3 raydir = glm::normalize(glm::vec3(worldPos));
 	return intersect(raypos, raydir);
+	return false;
 }
 
 bool Model::orthoHitTest(float x, float y) const

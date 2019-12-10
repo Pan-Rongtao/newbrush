@@ -397,7 +397,7 @@ void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 	}
 }
 
-void UIElement::onRender(std::shared_ptr<Context> drawContext)
+void UIElement::onRender(Viewport2D & drawContext)
 {
 }
 /*

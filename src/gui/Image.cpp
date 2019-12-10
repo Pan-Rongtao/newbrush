@@ -1,5 +1,5 @@
 ﻿#include "gui/Image.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "gles/RenderObject.h"
 #include "gles/Model.h"
 #include "gles/Material.h"
@@ -29,14 +29,14 @@ Image::Image()
 
 }
 
-void Image::onRender(std::shared_ptr<Context> drawContext)
+void Image::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
-	drawContext->queue(Renderer());
+	drawContext.queue(Renderer());
 }
 
 DependencyProperty Image::SourceProperty()

@@ -13,7 +13,7 @@ public:
 	Property_rw<shared_ptr<UIElement>>	Content;			//内容
 	static DependencyProperty			ContentProperty();	//内容依赖属性
 	
-	virtual void onRender(std::shared_ptr<Context> drawContext) override;
+	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

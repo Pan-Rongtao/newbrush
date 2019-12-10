@@ -69,7 +69,7 @@ public:
 	static DependencyProperty		TextDecorationProperty();
 
 
-	virtual void onRender(std::shared_ptr<nb::Context> drawContext) override;
+	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

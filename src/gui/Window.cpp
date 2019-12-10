@@ -1,19 +1,17 @@
 ﻿#include "gui/Window.h"
 #include "GLFW/glfw3.h"
-#include "gles/Egl.h"
 #include "gles/Projection.h"
 #include "gui/Application.h"
 #include "gui/VisualTreeHelper.h"
 #include "media/ImageSource.h"
 #include "gui/WindowCollection.h"
 #include "core/Singleton.h"
-#include "../gles/EglMaster.h"
 #include "core/Log.h"
 
 using namespace nb;
 using namespace gui;
 
-std::shared_ptr<Context> Window::drawContext = nullptr;
+Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
 
 Window::Window()
@@ -28,7 +26,6 @@ Window::Window()
 {
 	init();
 
-	drawContext = std::make_shared<Context>();
 	m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
 	int x, y, w, h;
 	glfwGetWindowPos(m_implWindow, &x, &y);
@@ -200,8 +197,8 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-	nb::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
-	nb::viewport(0, 0, width, height);
+	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
+	drawContext.viewport(0, 0, width, height);
 	Width = (float)width;
 	Height = (float)height;
 	updateLayout();
@@ -246,7 +243,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 
 void Window::focusCallback(int focused)
 {
-	Focusable = focused;
+//	Focusable = focused;
 }
 
 void Window::refreshCallback()
@@ -258,8 +255,7 @@ void Window::refreshCallback()
 
 		static int frames = 0;
 		static uint64_t k = nb::getTickCount();
-		for (auto const &context : EglMaster::contexts())
-			context->draw();
+		drawContext.draw();
 
 		++frames;
 		uint64_t kk = nb::getTickCount();

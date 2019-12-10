@@ -1,6 +1,5 @@
 #include "TestTexture2D.h"
 #include "gles/Texture2D.h"
-#include "gles/Egl.h"
 
 using namespace nb;
 

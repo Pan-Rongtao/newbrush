@@ -1,6 +1,6 @@
 #include "gui/Polyline.h"
 #include "gles/Program.h"
-#include "gles/Context.h"
+#include "gles/Viewport2D.h"
 #include "gles/Texture2D.h"
 #include "gles/Strips.h"
 
@@ -25,14 +25,14 @@ DependencyProperty Polyline::PointsProperty()
 	return dp;
 }
 
-void Polyline::onRender(std::shared_ptr<Context> drawContext)
+void Polyline::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());
 	if (m_strokeObject)
 	{
 		updateStrokeObject(rc);
-		drawContext->queue(m_strokeObject);
+		drawContext.queue(m_strokeObject);
 	}
 }
 

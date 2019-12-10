@@ -16,12 +16,14 @@
 #include "../core/Any.h"
 #include "../gles/Model.h"
 #include "../gles/Material.h"
+#include "../gles/Camera.h"
+#include "../gles/Projection.h"
 
 struct aiNode;
 struct aiMesh;
 struct aiScene;
 namespace nb{
-
+	
 class NB_API RenderObject
 {
 public:
@@ -63,7 +65,7 @@ public:
 	void storeUniform(const std::string &name, const Any &v);
 	
 	//绘制，重写此方法以构建自己的渲染方式
-	virtual void draw() const;
+	virtual void draw(const Camera &camera, const Projection &projection) const;
 
 private:
 	void loopNode(aiNode * node, const aiScene * scene);

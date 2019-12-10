@@ -12,7 +12,7 @@ public:
 	Property_rw<std::vector<Point>>	Points;				//点集合
 	static DependencyProperty		PointsProperty();	//点集合的依赖属性
 
-	virtual void onRender(std::shared_ptr<nb::Context> drawContext) override;
+	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
