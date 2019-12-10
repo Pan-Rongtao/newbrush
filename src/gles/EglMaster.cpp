@@ -1,7 +1,7 @@
 #include "EglMaster.h"
 #include "gles/Context.h"
 
-using namespace nb::gl;
+using namespace nb;
 
 std::vector<Context *>& EglMaster::contexts()
 {

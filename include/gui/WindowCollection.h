@@ -23,6 +23,8 @@ public:
 
 	struct WindowClosedEventArgs	{ bool isMain; };
 	Event<WindowClosedEventArgs>	WindowClosed;
+	struct WindowFocusEventArgs		{ bool focused; };
+	Event<WindowFocusEventArgs>		WindowFocus;
 
 private:
 	std::vector<gui::Window *>	m_windows;

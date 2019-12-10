@@ -64,6 +64,7 @@ protected:
 private:
 	void render();
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
+	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
 
 	ShutdownModeE		m_shutdownMode;
 	bool				m_exitFlag;

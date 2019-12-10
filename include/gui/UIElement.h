@@ -10,9 +10,8 @@
 #include "../core/RoutedEvent.h"
 
 namespace nb{
-namespace gl{
 	class Context;
-}}
+}
 
 namespace nb{
 namespace gui{
@@ -61,6 +60,7 @@ public:
 	Property_rw<VisibilityE>					Visibility;				//可视
 	Property_rw<float>							Opacity;				//不透明度
 	Property_rw<bool>							Focusable;				//是否可用焦点
+	Property_rw<bool>							IsFocused;				//是否具有焦点
 	Property_rw<float>							Width;					//设定宽
 	Property_rw<float>							Height;					//设定高
 	Property_rw<float>							MinWidth;				//最小宽
@@ -75,13 +75,14 @@ public:
 	Property_rw<HorizontalAlignmentE>			HorizontalAlignment;	//横向对齐方式
 	Property_rw<VerticalAlignmentE>				VerticalAlignment;		//纵向对齐方式
 	Property_rw<FlowDirectionE>					FlowDirection;			//
-	Property_r<shared_ptr<gl::RenderObject>>	Renderer;				//渲染物
+	Property_r<shared_ptr<RenderObject>>		Renderer;				//渲染物
 	Property_rw<shared_ptr<Style>>				style;					//风格
 	Property_rw<shared_ptr<VisualStateMachine>>	StateMachine;
 
 	static DependencyProperty					VisibilityProperty();	//可视的依赖属性
 	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性
 	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性
+	static DependencyProperty					IsFocusedProperty();	//是否可用焦点的依赖属性
 	static DependencyProperty 					WidthProperty();		//设定宽的依赖属性
 	static DependencyProperty 					HeightProperty();		//设定高的依赖属性
 	static DependencyProperty 					MinWidthProperty();		//最小宽的依赖属性
@@ -115,7 +116,7 @@ public:
 
 	void measure(const Size &availabelSize);
 	void arrage(const Rect &finalRect);
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext);
+	virtual void onRender(std::shared_ptr<nb::Context> drawContext);
 
 /*	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);

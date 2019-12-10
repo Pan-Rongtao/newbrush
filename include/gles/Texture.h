@@ -27,7 +27,7 @@
 #include "glm/glm.hpp"
 #include "../media/Bitmap.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 //class TextureWrapping
 class NB_API TextureWrapping
@@ -154,4 +154,4 @@ protected:
 	unsigned int		m_handle;
 };
 
-}}
+}

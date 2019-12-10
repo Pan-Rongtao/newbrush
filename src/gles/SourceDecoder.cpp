@@ -1,7 +1,7 @@
 #include "gles/SourceDecoder.h"
 #include "glm/glm.hpp"
 
-using namespace nb::gl;
+using namespace nb;
 
 constexpr char		KeywordMain[]		= "main";
 constexpr char		KeywordUniform[]	= "uniform";

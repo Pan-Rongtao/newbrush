@@ -7,7 +7,6 @@
 #include "media/ImageBrush.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 Shape::Shape()
@@ -84,7 +83,7 @@ DependencyProperty Shape::StrokeDashOffsetProperty()
 	return dp;
 }
 
-void Shape::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush)
+void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Brush> brush)
 {
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
@@ -94,7 +93,7 @@ void Shape::updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
-		ro->setMaterial(std::make_shared<nb::gl::Material>(Programs::gradientPrimitive()));
+		ro->setMaterial(std::make_shared<Material>(Programs::gradientPrimitive()));
 		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
 		auto stops = linearGradientBrush->GradientStops();
 		std::vector<glm::vec4> colors;

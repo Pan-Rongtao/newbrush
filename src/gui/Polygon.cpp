@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 Polygon::Polygon()
@@ -32,7 +31,7 @@ DependencyProperty Polygon::PointsProperty()
 	return dp;
 }
 
-void Polygon::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Polygon::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());

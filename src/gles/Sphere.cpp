@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gl;
 //«Ú∂•µ„À„∑®Õ¯÷∑£∫
 //https://www.jianshu.com/p/123c5884f635;
 //https://blog.csdn.net/martin20150405/article/details/53888204

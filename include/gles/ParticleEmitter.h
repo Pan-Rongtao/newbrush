@@ -11,7 +11,7 @@
 #include "AnimationValue.h"
 #include "glm/glm.hpp"
 
-namespace nb { namespace gl {
+namespace nb {
 	
 enum class ParticleFacingTypeE
 {
@@ -116,4 +116,4 @@ private:
 	uint32_t						m_endVert;
 };
 
-}}
+}

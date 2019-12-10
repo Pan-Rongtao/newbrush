@@ -7,12 +7,13 @@
 #include "media/ImageSource.h"
 #include "gui/WindowCollection.h"
 #include "core/Singleton.h"
+#include "../gles/EglMaster.h"
+#include "core/Log.h"
 
 using namespace nb;
-using namespace gl;
 using namespace gui;
 
-std::shared_ptr<gl::Context> Window::drawContext = nullptr;
+std::shared_ptr<Context> Window::drawContext = nullptr;
 static bool	g_windowSystemInitialized = false;
 
 Window::Window()
@@ -27,7 +28,7 @@ Window::Window()
 {
 	init();
 
-	drawContext = std::make_shared<gl::Context>();
+	drawContext = std::make_shared<Context>();
 	m_implWindow = glfwCreateWindow(800, 600, "newbrush", nullptr, nullptr);
 	int x, y, w, h;
 	glfwGetWindowPos(m_implWindow, &x, &y);
@@ -52,6 +53,7 @@ Window::Window()
 	glfwSetWindowIconifyCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
 	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
 
+	glfwMakeContextCurrent(m_implWindow);
 	sizeCallback((int)Width(), (int)Height());
 	Singleton<WindowCollection>::get()->push(this);
 
@@ -198,8 +200,8 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-	gl::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
-	gl::viewport(0, 0, width, height);
+	nb::getProjection()->ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
+	nb::viewport(0, 0, width, height);
 	Width = (float)width;
 	Height = (float)height;
 	updateLayout();
@@ -244,10 +246,32 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 
 void Window::focusCallback(int focused)
 {
+	Focusable = focused;
 }
 
 void Window::refreshCallback()
 {
+	glfwMakeContextCurrent(m_implWindow);
+	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	{
+
+		static int frames = 0;
+		static uint64_t k = nb::getTickCount();
+		for (auto const &context : EglMaster::contexts())
+			context->draw();
+
+		++frames;
+		uint64_t kk = nb::getTickCount();
+		if (kk - k >= 2000)
+		{
+			float fps = frames * 1000.0f / (kk - k);
+			frames = 0;
+			k = kk;
+			Log::info("fps:%.2f", fps);
+		}
+	}
+	glfwSwapBuffers(m_implWindow);
 }
 
 void Window::closeCallback()
@@ -297,6 +321,8 @@ void Window::destroyWindow()
 void Window::swapBuffers() const
 {
 	glfwMakeContextCurrent(m_implWindow);
+//	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glfwSwapBuffers(m_implWindow);
 }
 

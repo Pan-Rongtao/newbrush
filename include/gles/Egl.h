@@ -4,8 +4,7 @@
 #include "Camera.h"
 #include "Projection.h"
 
-namespace nb{ namespace gl
-{
+namespace nb{
 	//设置摄像机
 	NB_API void setCamera(std::shared_ptr<Camera> camera);
 
@@ -21,4 +20,4 @@ namespace nb{ namespace gl
 	//设置视口大小
 	NB_API void viewport(int x, int y, unsigned int width, unsigned height);
 
-}}
+}

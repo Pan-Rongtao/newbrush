@@ -24,7 +24,7 @@ DependencyProperty ContentControl::ContentProperty()
 	return dp;
 }
 
-void ContentControl::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void ContentControl::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围

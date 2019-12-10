@@ -18,7 +18,7 @@
 #include "../core/Def.h"
 #include <string>
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Shader
 {
@@ -74,4 +74,4 @@ public:
 
 };
 
-}}
+}

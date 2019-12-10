@@ -11,7 +11,7 @@
 #pragma once
 #include "Model.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Sphere : public Model
 {
@@ -24,4 +24,4 @@ private:
 
 };
 
-}}
+}

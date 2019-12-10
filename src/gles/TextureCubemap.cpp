@@ -3,7 +3,6 @@
 #include "media/Bitmap.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 TextureCubemap::TextureCubemap()
 {

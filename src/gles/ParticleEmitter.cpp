@@ -2,7 +2,7 @@
 #include "gles/Particle.h"
 #include "glm/gtc/random.hpp"
 
-using namespace nb::gl;
+using namespace nb;
 
 ParticleEmitter::ParticleEmitter()
 	: m_minParticleCount(0)

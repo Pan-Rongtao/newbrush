@@ -11,7 +11,6 @@
 #endif
 
 using namespace nb;
-using namespace nb::gl;
 
 RenderObject::RenderObject()
 	: RenderObject(nullptr, nullptr, true)
@@ -98,8 +97,8 @@ void RenderObject::draw() const
 	//计算后的mvp，以及分开的m/v/p
 	{
 		auto const &m = m_model->matrix;
-		auto const &v = nb::gl::getCamera()->matrix;
-		auto const &p = nb::gl::getProjection()->matrix;
+		auto const &v = nb::getCamera()->matrix;
+		auto const &p = nb::getProjection()->matrix;
 		auto mvp = p * v * m;
 		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
 		program->uniform(program->getUniformLocation(Program::nbMStr), m);

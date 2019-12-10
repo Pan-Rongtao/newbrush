@@ -2,13 +2,13 @@
 #include "gui/Window.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 UIElement::UIElement()
 	: Visibility([&](VisibilityE v) {set(VisibilityProperty(), v); }, [&]()->VisibilityE& {return get<VisibilityE>(VisibilityProperty()); })
 	, Opacity([&](float v) {set(OpacityProperty(), v); }, [&]()->float& {return get<float>(OpacityProperty()); })
 	, Focusable([&](bool v) {set(FocusableProperty(), v); }, [&]()->bool& {return get<bool>(FocusableProperty()); })
+	, IsFocused([&](bool v) {set(IsFocusedProperty(), v); }, [&]()->bool& {return get<bool>(IsFocusedProperty()); })
 	, Width([&](float v) {set(WidthProperty(), v); }, [&]()->float& {return get<float>(WidthProperty()); })
 	, Height([&](float v) {set(HeightProperty(), v); }, [&]()->float& {return get<float>(HeightProperty()); })
 	, MinWidth([&](float v) {set(MinWidthProperty(), v); }, [&]()->float& {return get<float>(MinWidthProperty()); })
@@ -46,6 +46,12 @@ DependencyProperty UIElement::OpacityProperty()
 DependencyProperty UIElement::FocusableProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true);
+	return dp;
+}
+
+DependencyProperty UIElement::IsFocusedProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("IsFocused", false);
 	return dp;
 }
 
@@ -391,7 +397,7 @@ void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 	}
 }
 
-void UIElement::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void UIElement::onRender(std::shared_ptr<Context> drawContext)
 {
 }
 /*

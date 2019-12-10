@@ -2,7 +2,7 @@
 #include "core/Def.h"
 #include <vector>
 
-namespace nb {namespace gl{
+namespace nb {
 class Context;
 class WindowSurface;
 class NB_API EglMaster
@@ -13,4 +13,4 @@ public:
 
 };
 
-}}
+}

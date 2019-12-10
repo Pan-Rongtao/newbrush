@@ -11,7 +11,7 @@
 #include "../core/Def.h"
 #include "glm/glm.hpp"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Projection
 {
@@ -30,4 +30,4 @@ public:
 
 };
 
-}}
+}

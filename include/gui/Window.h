@@ -44,7 +44,7 @@ public:
 	static DependencyProperty				TitleProperty();		//标题的依赖属性
 	static DependencyProperty				IconProperty();			//图标的依赖属性
 
-	static shared_ptr<gl::Context>			drawContext;
+	static shared_ptr<Context>				drawContext;
 
 	Event<EventArgs>						Activated;				//当窗口成为前台窗口时发生
 	Event<EventArgs>						Deactivated;			//当窗口成为后台窗口时发生

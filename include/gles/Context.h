@@ -12,7 +12,7 @@
 #include "../core/Def.h"
 #include <vector>
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class Configure;
 class RenderObject;
@@ -46,4 +46,4 @@ private:
 	std::vector<std::shared_ptr<RenderObject>>	m_renderObjects;
 };
 
-}}
+}

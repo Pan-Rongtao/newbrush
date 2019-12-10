@@ -16,7 +16,7 @@
 #include "glm/glm.hpp"
 #include <map>
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class VertexShader;
 class FragmentShader;
@@ -149,4 +149,4 @@ private:
 	static std::shared_ptr<Program> compileBindLink(const std::string &vs, const std::string &fs);
 };
 
-}}
+}

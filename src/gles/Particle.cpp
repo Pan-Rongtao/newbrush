@@ -1,7 +1,7 @@
 #include "gles/Particle.h"
 #include "gles/ParticleEmitter.h"
 
-using namespace nb::gl;
+using namespace nb;
 
 ParticleMemoryPool::ParticleMemoryPool(uint32_t particleSystemCount, uint32_t emitterCount, uint32_t particleCount)
 	: m_particleSystemsCount(particleSystemCount)

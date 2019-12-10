@@ -5,7 +5,7 @@
 #include "gles/Egl.h"
 #include <vector>
 
-using namespace nb::gl;
+using namespace nb;
 
 void TestSoureDecoder::test()
 {

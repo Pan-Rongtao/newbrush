@@ -3,7 +3,6 @@
 #include "gles/GlyphFactory.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 GlyphBunch::GlyphBunch()
 	: m_width(0.0f)

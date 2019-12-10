@@ -2,7 +2,7 @@
 #include "../media/GlyphMetrics.h"
 #include "glm/glm.hpp"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 struct Glyph
 {
@@ -18,4 +18,4 @@ public:
 
 };
 
-}}
+}

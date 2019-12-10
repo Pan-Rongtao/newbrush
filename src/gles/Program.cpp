@@ -4,7 +4,7 @@
 #include <cstring>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace nb::gl;
+using namespace nb;
 
 Program::Program()
 	: Program(nullptr, nullptr)

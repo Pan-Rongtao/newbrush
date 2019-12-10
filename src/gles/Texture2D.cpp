@@ -3,7 +3,6 @@
 #include "gles/Egl.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 Texture2D::Texture2D()
 {

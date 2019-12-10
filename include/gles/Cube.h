@@ -11,7 +11,7 @@
 #pragma once
 #include "Model.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 //一个mesh，mesh有8个顶点，36个顶点序列
 class NB_API Cube : public Model
@@ -27,4 +27,4 @@ private:
 	virtual void preprocess() override;
 };
 
-}}
+}

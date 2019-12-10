@@ -2,7 +2,7 @@
 #include <numeric>
 #include <GLES2/gl2.h>
 
-using namespace nb::gl;
+using namespace nb;
 
 Strips::Strips()
 	: Model(std::vector<Mesh>{ Mesh() })

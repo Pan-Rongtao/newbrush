@@ -36,10 +36,10 @@ public:
 
 protected:
 	Shape();
-	void updateMeterial(std::shared_ptr<nb::gl::RenderObject> ro, std::shared_ptr<Brush> brush);
+	void updateMeterial(std::shared_ptr<nb::RenderObject> ro, std::shared_ptr<Brush> brush);
 
-	std::shared_ptr<nb::gl::RenderObject>	m_fillObject;
-	std::shared_ptr<nb::gl::RenderObject>	m_strokeObject;
+	std::shared_ptr<RenderObject>	m_fillObject;
+	std::shared_ptr<RenderObject>	m_strokeObject;
 };
 
 }}

@@ -5,7 +5,6 @@
 #include "gles/Strips.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 Rectangle::Rectangle()

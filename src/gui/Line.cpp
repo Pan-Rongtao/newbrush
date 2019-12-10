@@ -6,7 +6,6 @@
 #include "media/GradientBrush.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 Line::Line()
@@ -42,7 +41,7 @@ DependencyProperty Line::Y2Property()
 	return dp;
 }
 
-void Line::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Line::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(Point(X1(), Y1()), Point(X2(), Y2()));

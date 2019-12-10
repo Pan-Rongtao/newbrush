@@ -9,7 +9,6 @@
 #include "gles/GlyphBunch.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 TextBlock::TextBlock()
@@ -161,7 +160,7 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing(), LineHeight(), TextWrapping(), ActualSize().width());
 }
 
-void TextBlock::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void TextBlock::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	auto x = offset.x();

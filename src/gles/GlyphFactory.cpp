@@ -11,7 +11,6 @@
 #include FT_FREETYPE_H
 
 using namespace nb;
-using namespace nb::gl;
 
 class TextureGlyphAtlas;
 static std::vector<TextureGlyphAtlas *>	g_glyphAtlas;

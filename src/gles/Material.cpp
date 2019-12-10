@@ -1,7 +1,7 @@
 #include "gles/Material.h"
 #include "gles/Program.h"
 
-using namespace nb::gl;
+using namespace nb;
 
 Material::Material()
 {

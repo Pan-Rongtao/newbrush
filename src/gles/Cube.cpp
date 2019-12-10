@@ -3,7 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gl;
 
 Cube::Cube()
 	: Cube(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)

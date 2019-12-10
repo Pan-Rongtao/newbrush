@@ -6,7 +6,7 @@
 #include "AnimationValue.h"
 #include "glm/glm.hpp"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class Particle;
 class ParticleSystem;
@@ -86,4 +86,4 @@ public:
 	float						textureFrameTimeVar;//??
 };
 
-}}
+}

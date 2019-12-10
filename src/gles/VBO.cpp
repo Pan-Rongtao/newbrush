@@ -1,7 +1,7 @@
 #include <GLES2/gl2.h>
 #include "gles/VBO.h"
 
-using namespace nb::gl;
+using namespace nb;
 
 VBO::VBO()
 {

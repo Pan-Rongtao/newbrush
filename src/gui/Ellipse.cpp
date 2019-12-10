@@ -7,7 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 //椭圆的点计算公式为：x = a * cos(α); y = b * sin(α)
@@ -51,7 +50,7 @@ Ellipse::Ellipse()
 	};
 }
 
-void Ellipse::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Ellipse::onRender(std::shared_ptr<nb::Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());

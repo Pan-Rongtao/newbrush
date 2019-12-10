@@ -18,7 +18,7 @@ public:
 	static DependencyProperty	Y1Property();	//Y1的依赖属性
 	static DependencyProperty	Y2Property();	//Y2的依赖属性
 
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<nb::Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

@@ -6,7 +6,6 @@
 #include "EglMaster.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 Context::Context()
 {

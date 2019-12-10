@@ -2,7 +2,7 @@
 #include "gles/Texture2D.h"
 #include "gles/Egl.h"
 
-using namespace nb::gl;
+using namespace nb;
 
 void TestTexture2D::test()
 {

@@ -19,7 +19,7 @@
 #pragma once
 #include "Texture2D.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API TextureMipmap : public Texture2D
 {
@@ -32,4 +32,4 @@ public:
 	~TextureMipmap();
 };
 
-}}
+}

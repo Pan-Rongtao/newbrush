@@ -8,7 +8,6 @@
 #include "gles/Egl.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 //class Vertex
 Vertex::Vertex()
@@ -171,10 +170,10 @@ void Model::preprocess()
 //https://stackoverflow.com/questions/29997209/opengl-c-mouse-ray-picking-glmunproject
 bool Model::sightHitTest(float xNormalized, float yNormalized) const
 {
-	glm::mat4 invVP = glm::inverse(nb::gl::getProjection()->matrix * nb::gl::getCamera()->matrix);
+	glm::mat4 invVP = glm::inverse(nb::getProjection()->matrix * nb::getCamera()->matrix);
 	glm::vec4 screenPos = glm::vec4(xNormalized, -yNormalized, 1.0f, 1.0f);
 	glm::vec4 worldPos = invVP * screenPos;
-	glm::vec3 raypos = nb::gl::getCamera()->position();
+	glm::vec3 raypos = nb::getCamera()->position();
 	glm::vec3 raydir = glm::normalize(glm::vec3(worldPos));
 	return intersect(raypos, raydir);
 }

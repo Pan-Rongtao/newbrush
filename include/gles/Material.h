@@ -16,7 +16,7 @@
 #include "Program.h"
 #include "Texture.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Material
 {
@@ -45,4 +45,4 @@ private:
 	std::vector<std::shared_ptr<Texture>>	m_textures;
 };
 
-}}
+}

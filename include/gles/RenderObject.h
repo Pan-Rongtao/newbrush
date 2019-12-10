@@ -20,7 +20,7 @@
 struct aiNode;
 struct aiMesh;
 struct aiScene;
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API RenderObject
 {
@@ -75,4 +75,4 @@ private:
 	std::map<std::string, Any>	m_uniforms;
 };
 
-}}
+}

@@ -4,12 +4,9 @@
 #include "../media/Font.h"
 #include "../media/GlyphMetrics.h"
 
-namespace nb{ namespace gl{
-	class RenderObject;
-	class GlyphBunch;
-}}
-
 namespace nb{
+class RenderObject;
+class GlyphBunch;
 class Brush;
 namespace gui{
 
@@ -72,7 +69,7 @@ public:
 	static DependencyProperty		TextDecorationProperty();
 
 
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<nb::Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
@@ -81,7 +78,7 @@ protected:
 	void onTextChanged(const std::string &_old, const std::string &_new);
 	void onForegroundChanged(const Color &_old, const Color &_new);
 
-	std::shared_ptr<gl::GlyphBunch>	m_glyphBunch;
+	std::shared_ptr<GlyphBunch>	m_glyphBunch;
 };
 
 }}

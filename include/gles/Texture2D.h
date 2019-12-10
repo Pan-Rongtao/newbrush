@@ -16,7 +16,7 @@
 #include "Texture.h"
 #include "media/Bitmap.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Texture2D : public Texture
 {
@@ -83,4 +83,4 @@ private:
 	unsigned int		m_height;
 };
 
-}}
+}

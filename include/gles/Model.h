@@ -21,7 +21,7 @@
 #include "glm/glm.hpp"
 #include <vector>
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API Vertex
 {
@@ -109,4 +109,4 @@ private:
 
 };
 
-}}
+}

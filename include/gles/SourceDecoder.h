@@ -3,7 +3,7 @@
 #include <string>
 #include "../core/Def.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API SourceDecoder
 {
@@ -54,4 +54,4 @@ private:
 	std::map<std::string, std::map<std::string, VarTypeE>>	m_structDefines;
 };
 
-} }
+}

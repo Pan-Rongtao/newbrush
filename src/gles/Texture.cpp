@@ -5,7 +5,6 @@
 #include "core/Log.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 //class TexutreWrapping
 TextureWrapping::TextureWrapping()

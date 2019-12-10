@@ -4,7 +4,6 @@
 #include "../media/Media.h"
 
 namespace nb{
-namespace gl{
 
 using nb::media::PenLineJoinE;
 
@@ -39,4 +38,4 @@ private:
 
 };
 
-}}
+}

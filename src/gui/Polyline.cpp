@@ -5,7 +5,6 @@
 #include "gles/Strips.h"
 
 using namespace nb;
-using namespace nb::gl;
 using namespace nb::gui;
 
 Polyline::Polyline()
@@ -26,7 +25,7 @@ DependencyProperty Polyline::PointsProperty()
 	return dp;
 }
 
-void Polyline::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Polyline::onRender(std::shared_ptr<Context> drawContext)
 {
 	auto offset = worldOffset();
 	Rect rc(offset.x(), offset.y(), ActualSize());

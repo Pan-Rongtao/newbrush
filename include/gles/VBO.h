@@ -12,7 +12,7 @@
 #pragma once
 #include "../core/Def.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API VBO
 {
@@ -42,4 +42,4 @@ private:
 	uint32_t		m_nBytes;
 };
 
-}}
+}

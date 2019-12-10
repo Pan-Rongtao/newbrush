@@ -1,7 +1,7 @@
 #pragma once
 #include "RenderObject.h"
 
-namespace nb { namespace gl {
+namespace nb {
 
 class NB_API ParticleVertexBuffer : public RenderObject
 {
@@ -15,4 +15,4 @@ private:
 };
 
 
-}}
+}

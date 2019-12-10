@@ -2,7 +2,6 @@
 #include "gles/Model.h"
 
 using namespace nb;
-using namespace nb::gl;
 
 void TestModel::test()
 {

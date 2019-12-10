@@ -24,7 +24,7 @@ DependencyProperty Panel::BackgroundProperty()
 	return dp;
 }
 
-void Panel::onRender(std::shared_ptr<nb::gl::Context> drawContext)
+void Panel::onRender(std::shared_ptr<Context> drawContext)
 {
 	for (auto child : m_children)
 	{

@@ -16,7 +16,7 @@ public:
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);
 
-	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<Context> drawContext) override;
 
 protected:
 	Panel();

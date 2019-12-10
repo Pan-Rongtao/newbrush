@@ -28,7 +28,7 @@ public:
 	static DependencyProperty				SourceProperty();	//源的依赖属性
 	static DependencyProperty				StretchProperty();	//伸缩方式的依赖属性
 
-	virtual void onRender(std::shared_ptr<gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

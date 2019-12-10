@@ -19,6 +19,7 @@ Application::Application()
 		nbThrowException(std::logic_error, "create tow application");
 	g_app = this;
 	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
+	Singleton<WindowCollection>::get()->WindowFocus += std::bind(&Application::onWindowFocused, this, std::placeholders::_1);
 }
 
 Application::~Application()
@@ -73,14 +74,13 @@ int Application::run(int argc, char *argv[])
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			Timer::driveInLoop();
-			render();
-			for (auto const &w : Singleton<WindowCollection>::get()->windows())
+		/*	for (auto const &w : Singleton<WindowCollection>::get()->windows())
 			{
 				if (w->Visibility == VisibilityE::Visible)
 				{
 					w->swapBuffers();
 				}
-			}
+			}*/
 			Window::waitEvent();
 		}
 	}
@@ -137,7 +137,7 @@ void Application::render()
 {
 	static int frames = 0;
 	static uint64_t k = nb::getTickCount();
-	for (auto const &context : gl::EglMaster::contexts())
+	for (auto const &context : EglMaster::contexts())
 		context->draw();
 
 	++frames;
@@ -159,5 +159,17 @@ void Application::onWindowClosed(const WindowCollection::WindowClosedEventArgs &
 		|| (mode == ShutdownModeE::OnExplicitShutdown && Singleton<WindowCollection>::get()->windows().empty() && m_exitFlag))
 	{
 		shutdown();
+	}
+}
+
+void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs & args)
+{
+	if (args.focused)
+	{
+
+	}
+	else
+	{
+
 	}
 }

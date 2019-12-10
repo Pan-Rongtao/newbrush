@@ -1,7 +1,7 @@
 #include "gles/Shader.h"
 #include <GLES2/gl2.h>
 
-using namespace nb::gl;
+using namespace nb;
 
 Shader::Shader()
 	: m_shaderHandle(0)

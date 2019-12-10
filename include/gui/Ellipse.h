@@ -8,7 +8,7 @@ class NB_API Ellipse : public Shape
 public:
 	Ellipse();
 
-	virtual void onRender(std::shared_ptr<nb::gl::Context> drawContext) override;
+	virtual void onRender(std::shared_ptr<nb::Context> drawContext) override;
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

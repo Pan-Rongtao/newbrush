@@ -3,7 +3,7 @@
 #include <string>
 #include "media/GlyphMetrics.h"
 
-namespace nb{ namespace gl{
+namespace nb{
 
 class NB_API GlyphBunch : public Model
 {
@@ -22,4 +22,4 @@ private:
 	float			m_height;
 };
 
-}}
+}

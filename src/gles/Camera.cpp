@@ -2,7 +2,7 @@
 #include <math.h>
 #include "glm/gtc/matrix_transform.hpp"
 
-using namespace nb::gl;
+using namespace nb;
 
 Camera::Camera()
 	: matrix(1.0f)
