@@ -10,7 +10,7 @@ DockPanel::DockPanel()
 
 void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
 {
-	if (containsChild(element))
+	if (m_children.contains(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyDock, dock);
 }
 
@@ -33,11 +33,11 @@ DependencyProperty DockPanel::LastChildFillProperty()
 Size DockPanel::measureOverride(const Size & availableSize)
 {
 	Size remainSize = availableSize;
-	for (int i = 0; i != m_children.size(); ++i)
+	for (int i = 0; i != m_children.count(); ++i)
 	{
-		auto const &child = m_children.at(i);
+		auto const &child = m_children.childAt(i);
 		Size childMeasureSize;
-		if (LastChildFill() && (i == m_children.size() - 1))
+		if (LastChildFill() && (i == m_children.count() - 1))
 		{
 			childMeasureSize = remainSize;
 		}
@@ -67,12 +67,12 @@ Size DockPanel::measureOverride(const Size & availableSize)
 Size DockPanel::arrangeOverride(const Size & finalSize)
 {
 	Rect remainRect(0.0f, 0.0f, finalSize);
-	for (int i = 0; i != m_children.size(); ++i)
+	for (int i = 0; i != m_children.count(); ++i)
 	{
-		auto child = m_children.at(i);
+		auto child = m_children.childAt(i);
 		Size childDesiredSize = child->DesiredSize();
 		Rect childArrageRect;
-		if (LastChildFill() && (i == m_children.size() - 1))
+		if (LastChildFill() && (i == m_children.count() - 1))
 		{
 			childArrageRect = remainRect;
 		}

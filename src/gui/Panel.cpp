@@ -6,6 +6,8 @@ using namespace nb::gui;
 
 Panel::Panel()
 	: Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BackgroundProperty()); })
+	, Children([&]()->UIElementCollection & {return m_children; })
+	, m_children(this)
 {
 }
 
@@ -26,8 +28,9 @@ DependencyProperty Panel::BackgroundProperty()
 
 void Panel::onRender(Viewport2D & drawContext)
 {
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		child->onRender(drawContext);
 	}
 }

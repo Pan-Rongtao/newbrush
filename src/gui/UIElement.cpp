@@ -26,6 +26,7 @@ UIElement::UIElement()
 	, Renderer([&]() {return get<shared_ptr<RenderObject>>(RendererProperty()); })
 	, style([&](shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]()->shared_ptr<Style>& {return get<shared_ptr<Style>>(StyleProperty()); })
 	, StateMachine([&](shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]()->shared_ptr<VisualStateMachine>& {return get<shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
+	, m_parent(nullptr)
 {
 	set(RendererProperty(), std::make_shared<RenderObject>());
 	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
@@ -157,68 +158,15 @@ DependencyProperty UIElement::StateMachineProperty()
 	return dp;
 }
 
-uint32_t UIElement::childCount() const
+void UIElement::setParent(UIElement *element)
 {
-	return m_children.size();
+	m_parent = element;
 }
 
-void UIElement::addChild(std::shared_ptr<UIElement> child)
-{
-	insertChild(childCount(), child);
-}
-
-void UIElement::insertChild(uint32_t index, std::shared_ptr<UIElement> child)
-{
-	if (index > childCount())
-		nbThrowException(std::out_of_range, "index");
-
-	m_children.insert(m_children.begin() + index, child);
-	try {
-		child->m_parent = shared_from_this();
-	}catch(...){
-		nbThrowException(std::runtime_error, "parent must be a std::shared object.");
-	}
-}
-
-void UIElement::removeChild(std::shared_ptr<UIElement> child)
-{
-	auto iter = std::find(m_children.begin(), m_children.end(), child);
-	if (iter != m_children.end())
-	{
-		m_children.erase(iter);
-		return;
-	}
-}
-
-void UIElement::removeChild(uint32_t index, uint32_t count)
-{
-	if(index >= childCount())
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, childCount());
-	auto end = index + count < childCount() ? m_children.begin() + index + count : m_children.end();
-	m_children.erase(m_children.begin() + index, end);
-}
-
-void UIElement::clearChild()
-{
-	m_children.clear();
-}
-
-std::shared_ptr<UIElement> UIElement::childAt(uint32_t index)
-{
-	if (index >= childCount())
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d]", index, childCount());
-	return m_children[index];
-}
-
-bool UIElement::containsChild(std::shared_ptr<UIElement> element) const
-{
-	return std::find(m_children.begin(), m_children.end(), element) != m_children.end();
-}
-
-std::shared_ptr<UIElement> UIElement::getRoot()
+UIElement *UIElement::getRoot()
 {
 	try {
-		std::shared_ptr<UIElement> ret = shared_from_this();
+		auto ret = this;
 		while (ret->m_parent)
 		{
 			ret = ret->m_parent;
@@ -233,7 +181,7 @@ std::shared_ptr<UIElement> UIElement::getRoot()
 Point UIElement::worldOffset()
 {
 	try {
-		std::shared_ptr<UIElement> p = shared_from_this();
+		auto p = this;
 		Point ret;
 		do {
 			ret += p->Offset();

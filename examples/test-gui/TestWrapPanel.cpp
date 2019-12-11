@@ -54,14 +54,14 @@ void TestWrapPanel::test()
 	auto rc7 = std::make_shared<Rectangle>();
 	rc7->Fill = std::make_shared<SolidColorBrush>(Colors::yellowGreen());
 
-	wp->addChild(rc0);
-	wp->addChild(rc1);
-	wp->addChild(rc2);
-	wp->addChild(rc3);
-	wp->addChild(rc4);
-	wp->addChild(rc5);
-	wp->addChild(rc6);
-	wp->addChild(rc7);
+	wp->Children().add(rc0);
+	wp->Children().add(rc1);
+	wp->Children().add(rc2);
+	wp->Children().add(rc3);
+	wp->Children().add(rc4);
+	wp->Children().add(rc5);
+	wp->Children().add(rc6);
+	wp->Children().add(rc7);
 
 	//m_window.Width = 599;
 	m_window->Content = wp;

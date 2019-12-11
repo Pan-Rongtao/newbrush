@@ -33,10 +33,10 @@ void TestStackPanel::test()
 	rc3->Width = 100;
 	rc3->Height = 100;
 
-	sp->addChild(rc0);
-	sp->addChild(rc1);
-	sp->addChild(rc2);
-	sp->addChild(rc3);
+	sp->Children().add(rc0);
+	sp->Children().add(rc1);
+	sp->Children().add(rc2);
+	sp->Children().add(rc3);
 
 	m_window->Content = sp;
 }

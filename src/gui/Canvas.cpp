@@ -10,7 +10,7 @@ Canvas::Canvas()
 
 void Canvas::setLeft(std::shared_ptr<UIElement> element, float left)
 {
-	if (containsChild(element))
+	if (m_children.contains(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyLeft, left);
 }
 
@@ -22,7 +22,7 @@ float Canvas::getLeft(std::shared_ptr<UIElement> element)
 
 void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
 {
-	if (containsChild(element))
+	if (m_children.contains(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyRight, right);
 }
 
@@ -34,7 +34,7 @@ float Canvas::getRight(std::shared_ptr<UIElement> element)
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
 {
-	if (containsChild(element))
+	if (m_children.contains(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyTop, top);
 }
 
@@ -46,7 +46,7 @@ float Canvas::getTop(std::shared_ptr<UIElement> element)
 
 void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
 {
-	if (containsChild(element))
+	if (m_children.contains(element))
 		DependencyProperty::registerAttached(element, AttachedPropertyBottom, bottom);
 }
 
@@ -59,8 +59,9 @@ float Canvas::getBottom(std::shared_ptr<UIElement> element)
 //位设置宽高则默认为0
 Size Canvas::measureOverride(const Size & availableSize)
 {
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		child->measure(Size((std::isnan(child->Width()) ? 0.0f : child->Width()), (std::isnan(child->Height()) ? 0.0f : child->Height())));
 	}
 	return availableSize;
@@ -68,8 +69,9 @@ Size Canvas::measureOverride(const Size & availableSize)
 
 Size Canvas::arrangeOverride(const Size & finalSize)
 {
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		auto x = getLeft(child);
 		auto y = getTop(child);
 		if (std::isnan(x))	x = 0.0;

@@ -139,7 +139,7 @@ DependencyProperty Grid::ColumnDefinitionsProperty()
 }
 void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
 {
-	if ((row > 0 && row < RowDefinitions().size()) && containsChild(element))
+	if ((row > 0 && row < RowDefinitions().size()) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyRow, row);
 	}
@@ -153,7 +153,7 @@ uint32_t Grid::getRow(std::shared_ptr<UIElement> element)
 
 void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
 {
-	if ((col > 0 && col < ColumnDefinitions().size()) && containsChild(element))
+	if ((col > 0 && col < ColumnDefinitions().size()) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyColumn, col);
 	}
@@ -167,7 +167,7 @@ uint32_t Grid::getColumn(std::shared_ptr<UIElement> element)
 
 void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
 {
-	if ((rowSpan >= 1 && rowSpan <= RowDefinitions().size()) && containsChild(element))
+	if ((rowSpan >= 1 && rowSpan <= RowDefinitions().size()) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyRowSpan, rowSpan);
 	}
@@ -181,7 +181,7 @@ uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
 
 void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
 {
-	if ((colSpan <= ColumnDefinitions().size()) && colSpan >= 1 && containsChild(element))
+	if ((colSpan <= ColumnDefinitions().size()) && colSpan >= 1 && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyColumnSpan, colSpan);
 	}
@@ -219,8 +219,9 @@ Size Grid::measureOverride(const Size & availableSize)
 			case GridUnitType::Auto:
 			{
 				auto maxLenghtOfRowOrCol = 0.0f;
-				for (auto child : m_children)
+				for (auto i = 0u; i < m_children.count(); ++i)
 				{
+					auto child = m_children.childAt(i);
 					auto childRowOrCol = isRowdefinition ? getRow(child) : getColumn(child);
 					auto x = isRowdefinition ? (std::isnan(child->Height()) ? 0.0f : child->Height()) : (std::isnan(child->Height()) ? 0.0f : child->Height());
 					if(childRowOrCol == i && x > maxLenghtOfRowOrCol)
@@ -266,8 +267,9 @@ Size Grid::measureOverride(const Size & availableSize)
 	//计算出所有网格单元的像素宽高，并测量children
 	m_pixcelWidthsForEachCols = calcPixcelLenghts(false);
 	m_pixcelHeightsForEachRows = calcPixcelLenghts(true);
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		auto rowOfChild = getRow(child);
 		auto colOfChild = getColumn(child);
 		auto rowSpan = getRowSpan(child);
@@ -286,8 +288,9 @@ Size Grid::measureOverride(const Size & availableSize)
 //以m_pixcelWidthsForEachCols和m_pixcelHeightsForEachRows对Children进行arrage
 Size Grid::arrangeOverride(const Size & finalSize)
 {
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		auto rowOfChild = getRow(child);
 		auto colOfChild = getColumn(child);
 		rowOfChild = nb::clamp<int>(0, RowDefinitions().size(), rowOfChild);

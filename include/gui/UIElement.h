@@ -101,16 +101,8 @@ public:
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性
 
-	uint32_t childCount() const;
-	void addChild(std::shared_ptr<UIElement> child);
-	void insertChild(uint32_t index, std::shared_ptr<UIElement> child);
-	void removeChild(std::shared_ptr<UIElement> child);
-	void removeChild(uint32_t index, uint32_t count = 1);
-	void clearChild();
-	std::shared_ptr<UIElement> childAt(uint32_t index);
-	bool containsChild(std::shared_ptr<UIElement> element) const;
-
-	std::shared_ptr<UIElement> getRoot();
+	void setParent(UIElement *element);
+	UIElement *getRoot();
 	Point worldOffset();
 	void updateLayout();
 
@@ -168,8 +160,7 @@ public:
 	virtual void onMouseWheel(int delta);
 
 protected:
-	std::shared_ptr<UIElement>								m_parent;
-	std::vector<std::shared_ptr<UIElement>>					m_children;
+	UIElement	*m_parent;
 
 private:
 	void onPropertyChanged(const PropertyChangedArgs &args);

@@ -7,10 +7,10 @@ using namespace nb::gui;
 
 uint32_t VisualTreeHelper::getChildCount(UIElement *element)
 {
-	return element->childCount();
+	return 1;// element->childCount();
 }
 
 UIElement *VisualTreeHelper::getChild(UIElement *element, uint32_t childIndex)
 {
-	return element->childAt(childIndex).get();
+	return element;// element->childAt(childIndex).get();
 }

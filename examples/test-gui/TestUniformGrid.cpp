@@ -44,12 +44,12 @@ void TestUniformGrid::test()
 
 	auto text = std::make_shared<TextBlock>("abcdefg");
 	
-	uniformGrid->addChild(rc0);
-	uniformGrid->addChild(rc1);
-	uniformGrid->addChild(rc2);
-	uniformGrid->addChild(rc3);
-	uniformGrid->addChild(es0);
-	uniformGrid->addChild(text);
+	uniformGrid->Children().add(rc0);
+	uniformGrid->Children().add(rc1);
+	uniformGrid->Children().add(rc2);
+	uniformGrid->Children().add(rc3);
+	uniformGrid->Children().add(es0);
+	uniformGrid->Children().add(text);
 	
 	m_window->Content = uniformGrid;
 }

@@ -31,11 +31,10 @@ void TestDockPanel::test()
 //	rc3->Height = 100;
 //	rc3->HorizontalAlignment = HorizontalAlignmentE::Left;
 
-	cv->addChild(rc0);
-	cv->addChild(rc1);
-	cv->addChild(rc2);
-	cv->addChild(rc3);
-	
+	cv->Children().add(rc0);
+	cv->Children().add(rc1);
+	cv->Children().add(rc2);
+	cv->Children().add(rc3);
 	cv->setDock(rc0, DockE::Top);
 	cv->setDock(rc1, DockE::Left);
 	cv->setDock(rc2, DockE::Right);

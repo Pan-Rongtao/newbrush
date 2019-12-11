@@ -61,8 +61,9 @@ DependencyProperty StackPanel::ViewportHeightProperty()
 Size StackPanel::measureOverride(const Size & availableSize)
 {
 	Size childMeasureSize;
-	for (auto const &child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		childMeasureSize.width() = std::isnan(child->Width()) ? 0.0f : child->Width();
 		childMeasureSize.height() = std::isnan(child->Height()) ? 0.0f : child->Height();
 		child->measure(childMeasureSize);
@@ -76,8 +77,9 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
 	auto x = 0.0f, y = 0.0f;
-	for (auto child : m_children)
+	for (auto i = 0u; i < m_children.count(); ++i)
 	{
+		auto child = m_children.childAt(i);
 		if (Orientation() == OrientationE::Horizontal)
 		{
 			child->arrage(Rect(x, y, child->DesiredSize().width(), DesiredSize().height()));

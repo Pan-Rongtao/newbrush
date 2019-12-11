@@ -11,8 +11,7 @@ ContentControl::ContentControl()
 		if (arg.dp == ContentControl::ContentProperty()) 
 		{
 			auto content = any_cast<std::shared_ptr<UIElement>>(arg.value);
-			if (childCount() == 0)	addChild(content);
-			else					m_children[0] = content;
+			content->setParent(this);
 		}
 	};
 }
