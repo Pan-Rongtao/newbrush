@@ -1,6 +1,7 @@
 #pragma once
 #include "../TestBase.h"
 #include "core/RoutedEvent.h"
+#include "core/EventArgs.h"
 #include "core/Any.h"
 
 using namespace nb;

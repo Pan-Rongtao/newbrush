@@ -217,10 +217,10 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 		auto hits = hitElements((int)x, (int)y);
 		for (auto e : hits)
 		{
-			e->MouseEnter.invoke({});
-			e->onMouseEnter();
-			e->MouseMove.invoke({});
-			e->onMouseMove();
+		//	e->MouseEnter.invoke({});
+		//	e->onMouseEnter();
+		//	e->MouseMove.invoke({});
+		//	e->onMouseMove();
 		}
 	}
 }

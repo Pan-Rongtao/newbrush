@@ -101,6 +101,111 @@ public:
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性
 
+	Event<DependencyPropertyChangedEventArgs>	IsEnableChanged;
+	Event<DependencyPropertyChangedEventArgs>	IsHitTestVisibleChanged;
+	Event<DependencyPropertyChangedEventArgs>	IsVisibleChanged;
+	Event<EventArgs>							LayoutUpdated;
+	Event<MouseEventArgs>						GotMouseCapture;
+	Event<MouseEventArgs>						LostMouseCapture;
+	Event<TouchEventArgs>						GotTouchCapture;
+	Event<TouchEventArgs>						LostTouchCapture;
+	Event<DependencyPropertyChangedEventArgs>	FocusableChanged;
+	Event<RoutedEventArgs>						LostFocus;
+	Event<RoutedEventArgs>						GotFocus;
+	Event<DragEventArgs>						PreviewDragEnter;
+	Event<DragEventArgs>						DragEnter;
+	Event<DragEventArgs>						PreviewDragLeave;
+	Event<DragEventArgs>						DragLeave;
+	Event<DragEventArgs>						PreviewDragOver;
+	Event<DragEventArgs>						DragOver;
+	Event<DragEventArgs>						PreviewDrop;
+	Event<DragEventArgs>						Drop;
+	Event<DependencyPropertyChangedEventArgs>	IsKeyboardFocusedChanged;
+	Event<KeyboardFocusChangedEventArgs>		PreviewGotKeyboardFocus;
+	Event<KeyboardFocusChangedEventArgs>		GotKeyboardFocus;
+	Event<KeyboardFocusChangedEventArgs>		PreviewLostKeyboardFocus;
+	Event<KeyboardFocusChangedEventArgs>		LostKeyboardFocus;
+	Event<KeyEventArgs>							PreviewKeyDown;
+	Event<KeyEventArgs>							KeyDown;
+	Event<KeyEventArgs>							PreviewKeyUp;
+	Event<KeyEventArgs>							KeyUp;
+	Event<MouseEventArgs>						MouseEnter;
+	Event<MouseEventArgs>						MouseLeave;
+	Event<MouseButtonEventArgs>					PreviewMouseDown;
+	Event<MouseButtonEventArgs>					MouseDown;
+	Event<MouseButtonEventArgs>					PreviewMouseLeftButtonDown;
+	Event<MouseButtonEventArgs>					MouseLeftButtonDown;
+	Event<MouseButtonEventArgs>					PreviewMouseLeftButtonUp;
+	Event<MouseButtonEventArgs>					MouseLeftButtonUp;
+	Event<MouseEventArgs>						PreviewMouseMove;
+	Event<MouseEventArgs>						MouseMove;
+	Event<MouseButtonEventArgs>					PreviewMouseRightButtonDown;
+	Event<MouseButtonEventArgs>					MouseRightButtonDown;
+	Event<MouseButtonEventArgs>					PreviewMouseRightButtonUp;
+	Event<MouseButtonEventArgs>					MouseRightButtonUp;
+	Event<MouseButtonEventArgs>					PreviewMouseUp;
+	Event<MouseButtonEventArgs>					MouseUp;
+	Event<MouseWheelEventArgs>					PreviewMouseWheel;
+	Event<MouseWheelEventArgs>					MouseWheel;
+	Event<TouchEventArgs>						PreviewTouchEnter;
+	Event<TouchEventArgs>						TouchEnter;
+	Event<TouchEventArgs>						PreviewTouchLeave;
+	Event<TouchEventArgs>						TouchLeave;
+	Event<TouchEventArgs>						PreviewTouchDown;
+	Event<TouchEventArgs>						TouchDown;
+	Event<TouchEventArgs>						PreviewTouchMove;
+	Event<TouchEventArgs>						TouchMove;
+	Event<TouchEventArgs>						PreviewTouchUp;
+	Event<TouchEventArgs>						TouchUp;
+
+	static RoutedEvent							DragEnterEvent();
+	static RoutedEvent							DragLeaveEvent();
+	static RoutedEvent							DragOverEvent();
+	static RoutedEvent							DropEvent();
+	static RoutedEvent							GotFocusEvent();
+	static RoutedEvent							GotKeyboardFocusEvent();
+	static RoutedEvent							GotMouseCaptureEvent();
+	static RoutedEvent							KeyDownEvent();
+	static RoutedEvent							KeyUpEvent();
+	static RoutedEvent							LostFocusEvent();
+	static RoutedEvent							LostKeyboardFocusEvent();
+	static RoutedEvent							LostMouseCaptureEvent();
+	static RoutedEvent							LostTouchCaptureEvent();
+	static RoutedEvent							MouseDownEvent();
+	static RoutedEvent							MouseEnterEvent();
+	static RoutedEvent							MouseLeaveEvent();
+	static RoutedEvent							MouseLeftButtonDownEvent();
+	static RoutedEvent							MouseLeftButtonUpEvent();
+	static RoutedEvent							MouseMoveEvent();
+	static RoutedEvent							MouseRightButtonDownEvent();
+	static RoutedEvent							MouseRightButtonUpEvent();
+	static RoutedEvent							MouseUpEvent();
+	static RoutedEvent							MouseWheelEvent();
+	static RoutedEvent							PreviewDragEnterEvent();
+	static RoutedEvent							PreviewDragLeaveEvent();
+	static RoutedEvent							PreviewDragOverEvent();
+	static RoutedEvent							PreviewDropEvent();
+	static RoutedEvent							PreviewGotKeyboardFocusEvent();
+	static RoutedEvent							PreviewKeyDownEvent();
+	static RoutedEvent							PreviewKeyUpEvent();
+	static RoutedEvent							PreviewLostKeyboardFocusEvent();
+	static RoutedEvent							PreviewMouseDownEvent();
+	static RoutedEvent							PreviewMouseLeftButtonDownEvent();
+	static RoutedEvent							PreviewMouseLeftButtonUpEvent();
+	static RoutedEvent							PreviewMouseMoveEvent();
+	static RoutedEvent							PreviewMouseRightButtonDownEvent();
+	static RoutedEvent							PreviewMouseRightButtonUpEvent();
+	static RoutedEvent							PreviewMouseUpEvent();
+	static RoutedEvent							PreviewMouseWheelEvent();
+	static RoutedEvent							PreviewTouchDownEvent();
+	static RoutedEvent							PreviewTouchMoveEvent();
+	static RoutedEvent							PreviewTouchUpEvent();
+	static RoutedEvent							TouchDownEvent();
+	static RoutedEvent							TouchEnterEvent();
+	static RoutedEvent							TouchLeaveEvent();
+	static RoutedEvent							TouchMoveEvent();
+	static RoutedEvent							TouchUpEvent();
+
 	void setParent(UIElement *element);
 	UIElement *getRoot();
 	Point worldOffset();
@@ -109,42 +214,45 @@ public:
 	void measure(const Size &availabelSize);
 	void arrage(const Rect &finalRect);
 	virtual void onRender(Viewport2D & drawContext);
-
-/*	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
-	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
-	void raiseEvent(const RoutedEventArgs &args);*/
+	template<class ArgsT>
+	void addHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> &handler)
+	{
+		if (event.argsType() != typeid(ArgsT))
+			nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", event.name().data(), event.argsType().name());
+		m_eventHandlers[event.hash()].push_back(handler);
+	}
+	template<class ArgsT>
+	void removeHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> handler)
+	{
+		auto iter = m_eventHandlers.find(event.hash());
+		if (iter != m_eventHandlers.end())
+		{
+			auto &handlers = iter->second;
+			auto iterHandler = std::find(handlers.begin(), handlers.end(), handler);
+			if (iterHandler != handlers.end())
+				handlers.erase(iterHandler);
+		}
+	}
+	template<class ArgsT>
+	void raiseEvent(const ArgsT &args)
+	{
+		auto iter = m_eventHandlers.find(args.Event.hash());
+		if (iter != m_eventHandlers.end())
+		{
+			for (auto &h : iter->second)
+			{
+				RoutedEventHandler<ArgsT> hxx(nullptr);
+				try {
+					auto hx = any_cast<RoutedEventHandler<ArgsT>>(h);
+				}
+				catch (...) {
+					nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", args.Event.name().data(), args.Event.argsType().name());
+				}
+				hx.invoke(args);
+			}
+		}
+	}
 	
-	struct MouseEnterArgs {};
-	Event<MouseEnterArgs>							MouseEnter;
-
-	struct MouseLeaveArgs {};
-	Event<MouseLeaveArgs>							MouseLeave;
-
-	struct MouseMoveArgs {};
-	Event<MouseMoveArgs>							MouseMove;
-
-	struct MouseDownArgs {};
-	Event<MouseDownArgs>							MouseDown;
-
-	struct MouseUpArgs {};
-	Event<MouseUpArgs>								MouseUp;
-
-	struct MouseLeftButtonDownArgs {};
-	Event<MouseLeftButtonDownArgs>					MouseLeftButtonDown;
-
-	struct MouseLeftButtonUpArgs {}; 
-	Event<MouseLeftButtonUpArgs>					MouseLeftButtonUp;
-
-	struct MouseRightButtonDownArgs {};
-	Event<MouseRightButtonDownArgs>					MouseRightButtonDown;
-
-	struct MouseRightButtonUpArgs {};
-	Event<MouseRightButtonUpArgs>					MouseRightButtonUp;
-
-	struct MouseWheelArgs {};
-	Event<MouseWheelArgs>							MouseWheel;
-	
-
 public:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);

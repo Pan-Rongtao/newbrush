@@ -348,31 +348,285 @@ void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 void UIElement::onRender(Viewport2D & drawContext)
 {
 }
-/*
-void UIElement::addHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+
+RoutedEvent UIElement::DragEnterEvent()
 {
-	m_eventHandlers[event.hash()].push_back(handler);
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("DragEnter", RoutingStrategyE::bubble);
+	return e;
 }
 
-void UIElement::removeHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+RoutedEvent UIElement::DragLeaveEvent()
 {
-	auto iter = m_eventHandlers.find(event.hash());
-	if (iter != m_eventHandlers.end())
-	{
-		auto &handlers = iter->second;
-		auto iterHandler = std::find(handlers.begin(), handlers.end(), handler);
-		if (iterHandler != handlers.end())
-			handlers.erase(iterHandler);
-	}
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("DragLeave", RoutingStrategyE::bubble);
+	return e;
 }
 
-void UIElement::raiseEvent(const RoutedEventArgs & args)
+RoutedEvent UIElement::DragOverEvent()
 {
-	auto iter = m_eventHandlers.find(args.Event.hash());
-	if (iter != m_eventHandlers.end())
-	{
-		for (auto &h : iter->second)
-			h.invoke(args);
-	}
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("DragOver", RoutingStrategyE::bubble);
+	return e;
 }
-*/
+
+RoutedEvent UIElement::DropEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("Drop", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::GotFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, RoutedEventArgs>("GotFocus", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::GotKeyboardFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyboardFocusChangedEventArgs>("GotKeyboardFocus", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::LostKeyboardFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyboardFocusChangedEventArgs>("LostKeyboardFocus", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::GotMouseCaptureEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("GotMouseCapture", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::KeyDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyEventArgs>("KeyDown", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::KeyUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyEventArgs>("KeyUp", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::LostFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, RoutedEventArgs>("LostFocus", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::LostMouseCaptureEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("LostMouseCapture", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::LostTouchCaptureEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("LostTouchCapture", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseDown", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseEnterEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("MouseEnter", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseLeaveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("MouseLeave", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseLeftButtonDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseLeftButtonDown", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseLeftButtonUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseLeftButtonUp", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseMoveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("MouseLeftButtonUp", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseRightButtonDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseRightButtonDown", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseRightButtonUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseRightButtonUp", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("MouseUp", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::MouseWheelEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseWheelEventArgs>("MouseWheel", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewDragEnterEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("PreviewDragEnter", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewDragLeaveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("PreviewDragLeave", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewDragOverEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("PreviewDragOver", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewDropEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, DragEventArgs>("PreviewDrop", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewGotKeyboardFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyboardFocusChangedEventArgs>("PreviewGotKeyboardFocus", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewLostKeyboardFocusEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyboardFocusChangedEventArgs>("PreviewLostKeyboardFocus", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewKeyDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyEventArgs>("PreviewKeyDown", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewKeyUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, KeyEventArgs>("PreviewKeyUp", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseDown", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseLeftButtonDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseLeftButtonDown", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseLeftButtonUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseLeftButtonUp", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseMoveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("PreviewMouseMove", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseRightButtonDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseRightButtonDown", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseRightButtonUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseRightButtonUp", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseButtonEventArgs>("PreviewMouseUp", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewMouseWheelEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseWheelEventArgs>("PreviewMouseWheel", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewTouchDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("PreviewTouchDown", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewTouchMoveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("PreviewTouchMove", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::PreviewTouchUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("PreviewTouchUp", RoutingStrategyE::tunnel);
+	return e;
+}
+
+RoutedEvent UIElement::TouchDownEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchDown", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::TouchEnterEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchEnter", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::TouchLeaveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchLeave", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::TouchMoveEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchMove", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::TouchUpEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchUp", RoutingStrategyE::bubble);
+	return e;
+}

@@ -37,20 +37,6 @@ private:
 	friend class RoutedEventManager;
 };
 
-class NB_API RoutedEventArgs
-{
-public:
-	RoutedEventArgs();
-	RoutedEventArgs(const RoutedEvent &routedEvent);
-	RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source);
-	virtual ~RoutedEventArgs() = default;
-
-	bool		Handled;
-	RoutedEvent	Event;
-	Object		OriginalSource;
-	Object		Source;
-};
-
 template<class ArgsT>
 class NB_API RoutedEventHandler
 {

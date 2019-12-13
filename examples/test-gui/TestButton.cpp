@@ -47,13 +47,13 @@ void TestButton::test()
 //	m_btn->Width = 100;
 }
 
-void TestButton::onBtnMouseLeftButtonDown(const Button::MouseLeftButtonDownArgs & args)
+void TestButton::onBtnMouseLeftButtonDown(const MouseButtonEventArgs & args)
 {
 	printf("onBtnMouseLeftButtonDown\n");
 	m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 }
 
-void TestButton::onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs & args)
+void TestButton::onBtnMouseLeftButtonUp(const MouseButtonEventArgs & args)
 {
 	printf("onBtnMouseLeftButtonUp\n");
 	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);

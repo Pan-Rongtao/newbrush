@@ -44,20 +44,3 @@ bool RoutedEvent::operator!=(const RoutedEvent & other) const
 {
 	return m_hash != other.m_hash;
 }
-
-RoutedEventArgs::RoutedEventArgs()
-	: RoutedEventArgs(RoutedEvent())
-{
-}
-
-RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent)
-	: RoutedEventArgs(routedEvent, Object())
-{
-}
-
-RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source)
-	: Handled(false)
-	, Event(routedEvent)
-	, Source(source)
-{ 
-}

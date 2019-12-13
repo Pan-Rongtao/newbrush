@@ -75,7 +75,7 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 
 void Polygon::updateFillObject()
 {
-	if (!Fill())
+	if (!Fill() || Points().size() < 2)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
 	auto &indices = m_fillObject->model()->meshes[0].indices;

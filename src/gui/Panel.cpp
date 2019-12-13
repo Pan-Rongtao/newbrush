@@ -6,7 +6,7 @@ using namespace nb::gui;
 
 Panel::Panel()
 	: Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BackgroundProperty()); })
-	, Children([&]()->UIElementCollection & {return m_children; })
+	, Children([&](UIElementCollection v) {m_children = v; }, [&]()->UIElementCollection & {return m_children; })
 	, m_children(this)
 {
 }

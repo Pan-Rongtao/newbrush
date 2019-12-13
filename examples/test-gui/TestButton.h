@@ -10,8 +10,8 @@ class TestButton : public TestBase
 public:
 	void test();
 
-	void onBtnMouseLeftButtonDown(const Button::MouseLeftButtonDownArgs &args);
-	void onBtnMouseLeftButtonUp(const Button::MouseLeftButtonUpArgs &args);
+	void onBtnMouseLeftButtonDown(const MouseButtonEventArgs &args);
+	void onBtnMouseLeftButtonUp(const MouseButtonEventArgs &args);
 	void onBtnClick(const Button::ClickArgs &args);
 
 	std::shared_ptr<Button> m_btn;

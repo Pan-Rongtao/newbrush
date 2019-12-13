@@ -2,6 +2,7 @@
 #include "../core/Def.h"
 #include <unordered_map>
 #include <functional>
+#include "../core/EventArgs.h"
 
 namespace nb{
 

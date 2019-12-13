@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestBrush> test;
+		TestHandle<TestCanvas> test;
 		test->test();
 		return app.run(argc, argv);
 	}

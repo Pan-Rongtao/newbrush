@@ -1,5 +1,4 @@
 #include "TestRoutedEvent.h"
-#include "core/MouseEvent.h"
 
 RoutedEvent TT::ClickEvent()
 {

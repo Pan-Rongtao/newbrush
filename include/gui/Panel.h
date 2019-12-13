@@ -12,7 +12,7 @@ public:
 	virtual ~Panel() = default;
 
 	Property_rw<shared_ptr<Brush>>	Background;				//背景
-	Property_r<UIElementCollection>	Children;				//子元素集合
+	Property_rw<UIElementCollection>	Children;				//子元素集合
 	static DependencyProperty		BackgroundProperty();	//背景的依赖属性
 
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
