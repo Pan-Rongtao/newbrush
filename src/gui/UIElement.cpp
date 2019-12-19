@@ -297,44 +297,254 @@ Size UIElement::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-void UIElement::onMouseEnter()
+void UIElement::onDragEnter(const DragEventArgs & args)
 {
+	DragEnter.invoke(args);
 }
 
-void UIElement::onMouseLeave()
+void UIElement::onDragLeave(const DragEventArgs & args)
 {
+	DragLeave.invoke(args);
 }
 
-void UIElement::onMouseDown()
+void UIElement::onDragOver(const DragEventArgs & args)
 {
+	DragOver.invoke(args);
 }
 
-void UIElement::onMouseUp()
+void UIElement::onDrop(const DragEventArgs & args)
 {
+	Drop.invoke(args);
 }
 
-void UIElement::onMouseLeftButtonDown()
+void UIElement::onGotFocus(const RoutedEventArgs & args)
 {
+	GotFocus.invoke(args);
 }
 
-void UIElement::onMouseLeftButtonUp()
+void UIElement::onGotKeyboardFocus(const KeyboardFocusChangedEventArgs & args)
 {
+	GotKeyboardFocus.invoke(args);
 }
 
-void UIElement::onMouseRightButtonDown()
+void UIElement::onGotMouseCapture(const MouseEventArgs & args)
 {
+	GotMouseCapture.invoke(args);
 }
 
-void UIElement::onMouseRightButtonUp()
+void UIElement::onGotTouchCapture(const TouchEventArgs & args)
 {
+	GotTouchCapture.invoke(args);
 }
 
-void UIElement::onMouseMove()
+void UIElement::onKeyDown(const KeyEventArgs & args)
 {
+	KeyDown.invoke(args);
 }
 
-void UIElement::onMouseWheel(int delta)
+void UIElement::onKeyUp(const KeyEventArgs & args)
 {
+	KeyUp.invoke(args);
+}
+
+void UIElement::onLostFocus(const RoutedEventArgs & args)
+{
+	LostFocus.invoke(args);
+}
+
+void UIElement::onLostKeyboardFocus(const KeyboardFocusChangedEventArgs & args)
+{
+	LostKeyboardFocus.invoke(args);
+}
+
+void UIElement::onLostMouseCapture(const MouseEventArgs & args)
+{
+	LostMouseCapture.invoke(args);
+}
+
+void UIElement::onLostTouchCapture(const TouchEventArgs & args)
+{
+	LostTouchCapture.invoke(args);
+}
+
+void UIElement::onMouseEnter(const MouseEventArgs & args)
+{
+	MouseEnter.invoke(args);
+}
+
+void UIElement::onMouseLeave(const MouseEventArgs & args)
+{
+	MouseLeave.invoke(args);
+}
+
+void UIElement::onMouseDown(const MouseButtonEventArgs & args)
+{
+	MouseDown.invoke(args);
+}
+
+void UIElement::onMouseUp(const MouseButtonEventArgs & args)
+{
+	MouseUp.invoke(args);
+}
+
+void UIElement::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
+{
+	MouseLeftButtonDown.invoke(args);
+}
+
+void UIElement::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
+{
+	MouseLeftButtonUp.invoke(args);
+}
+
+void UIElement::onMouseRightButtonDown(const MouseButtonEventArgs & args)
+{
+	MouseRightButtonDown.invoke(args);
+}
+
+void UIElement::onMouseRightButtonUp(const MouseButtonEventArgs & args)
+{
+	MouseRightButtonUp.invoke(args);
+}
+
+void UIElement::onMouseMove(const MouseButtonEventArgs & args)
+{
+	MouseMove.invoke(args);
+}
+
+void UIElement::onMouseWheel(const MouseWheelEventArgs & args)
+{
+	MouseWheel.invoke(args);
+}
+
+void UIElement::onTouchDown(const TouchEventArgs & args)
+{
+	TouchDown.invoke(args);
+}
+
+void UIElement::onTouchEnter(const TouchEventArgs & args)
+{
+	TouchEnter.invoke(args);
+}
+
+void UIElement::onTouchLeave(const TouchEventArgs & args)
+{
+	TouchLeave.invoke(args);
+}
+
+void UIElement::onTouchMove(const TouchEventArgs & args)
+{
+	TouchMove.invoke(args);
+}
+
+void UIElement::onTouchUp(const TouchEventArgs & args)
+{
+	TouchUp.invoke(args);
+}
+
+void UIElement::onPreviewDragEnter(const DragEventArgs & args)
+{
+	PreviewDragEnter.invoke(args);
+}
+
+void UIElement::onPreviewDragLeave(const DragEventArgs & args)
+{
+	PreviewDragLeave.invoke(args);
+}
+
+void UIElement::onPreviewDragOver(const DragEventArgs & args)
+{
+	PreviewDragOver.invoke(args);
+}
+
+void UIElement::onPreviewDrop(const DragEventArgs & args)
+{
+	PreviewDrop.invoke(args);
+}
+
+void UIElement::onPreviewGotKeyboardFocus(const KeyboardFocusChangedEventArgs & args)
+{
+	PreviewGotKeyboardFocus.invoke(args);
+}
+
+void UIElement::onPreviewKeyDown(const KeyEventArgs & args)
+{
+	PreviewKeyDown.invoke(args);
+}
+
+void UIElement::onPreviewKeyUp(const KeyEventArgs & args)
+{
+	PreviewKeyUp.invoke(args);
+}
+
+void UIElement::onPreviewLostKeyboardFocus(const KeyboardFocusChangedEventArgs & args)
+{
+	PreviewLostKeyboardFocus.invoke(args);
+}
+
+void UIElement::onPreviewMouseDown(const MouseButtonEventArgs & args)
+{
+	PreviewMouseDown.invoke(args);
+}
+
+void UIElement::onPreviewMouseUp(const MouseButtonEventArgs & args)
+{
+	PreviewMouseUp.invoke(args);
+}
+
+void UIElement::onPreviewMouseLeftButtonDown(const MouseButtonEventArgs & args)
+{
+	PreviewMouseLeftButtonDown.invoke(args);
+}
+
+void UIElement::onPreviewMouseLeftButtonUp(const MouseButtonEventArgs & args)
+{
+	PreviewMouseLeftButtonUp.invoke(args);
+}
+
+void UIElement::onPreviewMouseRightButtonDown(const MouseButtonEventArgs & args)
+{
+	PreviewMouseRightButtonDown.invoke(args);
+}
+
+void UIElement::onPreviewMouseRightButtonUp(const MouseButtonEventArgs & args)
+{
+	PreviewMouseRightButtonUp.invoke(args);
+}
+
+void UIElement::onPreviewMouseMove(const MouseButtonEventArgs & args)
+{
+	PreviewMouseMove.invoke(args);
+}
+
+void UIElement::onPreviewMouseWheel(const MouseWheelEventArgs & args)
+{
+	PreviewMouseWheel.invoke(args);
+}
+
+void UIElement::onPreviewTouchDown(const TouchEventArgs & args)
+{
+	PreviewTouchDown.invoke(args);
+}
+
+void UIElement::onPreviewTouchEnter(const TouchEventArgs & args)
+{
+	PreviewTouchEnter.invoke(args);
+}
+
+void UIElement::onPreviewTouchLeave(const TouchEventArgs & args)
+{
+	PreviewTouchLeave.invoke(args);
+}
+
+void UIElement::onPreviewTouchMove(const TouchEventArgs & args)
+{
+	PreviewTouchMove.invoke(args);
+}
+
+void UIElement::onPreviewTouchUp(const TouchEventArgs & args)
+{
+	PreviewTouchUp.invoke(args);
 }
 
 void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
@@ -347,6 +557,24 @@ void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
 
 void UIElement::onRender(Viewport2D & drawContext)
 {
+}
+
+RoutedEvent UIElement::LoadedEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, RoutedEventArgs>("Loaded", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::UnloadedEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, RoutedEventArgs>("Unloaded", RoutingStrategyE::bubble);
+	return e;
+}
+
+RoutedEvent UIElement::SizeChangedEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, SizeChangedEventArgs>("SizeChanged", RoutingStrategyE::bubble);
+	return e;
 }
 
 RoutedEvent UIElement::DragEnterEvent()

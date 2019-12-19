@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../gui/Timeline.h"
+#include "../media/Timeline.h"
 #include "../core/Property.h"
 
 namespace nb{

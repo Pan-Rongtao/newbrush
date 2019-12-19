@@ -101,6 +101,11 @@ public:
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性
 
+	Event<EventArgs>							Initialized;
+	Event<RoutedEventArgs>						Loaded;
+	Event<RoutedEventArgs>						Unloaded;
+	Event<SizeChangedEventArgs>					SizeChanged;
+
 	Event<DependencyPropertyChangedEventArgs>	IsEnableChanged;
 	Event<DependencyPropertyChangedEventArgs>	IsHitTestVisibleChanged;
 	Event<DependencyPropertyChangedEventArgs>	IsVisibleChanged;
@@ -158,6 +163,9 @@ public:
 	Event<TouchEventArgs>						PreviewTouchUp;
 	Event<TouchEventArgs>						TouchUp;
 
+	static RoutedEvent							LoadedEvent();
+	static RoutedEvent							UnloadedEvent();
+	static RoutedEvent							SizeChangedEvent();
 	static RoutedEvent							DragEnterEvent();
 	static RoutedEvent							DragLeaveEvent();
 	static RoutedEvent							DragOverEvent();
@@ -256,18 +264,60 @@ public:
 public:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);
-	virtual void onMouseEnter();
-	virtual void onMouseLeave();
-	virtual void onMouseDown();
-	virtual void onMouseUp();
-	virtual void onMouseLeftButtonDown();
-	virtual void onMouseLeftButtonUp();
-	virtual void onMouseRightButtonDown();
-	virtual void onMouseRightButtonUp();
-	virtual void onMouseMove();
-	virtual void onMouseWheel(int delta);
 
 protected:
+	virtual void onDragEnter(const DragEventArgs &args);
+	virtual void onDragLeave(const DragEventArgs &args);
+	virtual void onDragOver(const DragEventArgs &args);
+	virtual void onDrop(const DragEventArgs &args);
+	virtual void onGotFocus(const RoutedEventArgs &args);
+	virtual void onGotKeyboardFocus(const KeyboardFocusChangedEventArgs &args);
+	virtual void onGotMouseCapture(const MouseEventArgs &args);
+	virtual void onGotTouchCapture(const TouchEventArgs &args);
+	virtual void onKeyDown(const KeyEventArgs &args);
+	virtual void onKeyUp(const KeyEventArgs &args);
+	virtual void onLostFocus(const RoutedEventArgs &args);
+	virtual void onLostKeyboardFocus(const KeyboardFocusChangedEventArgs &args);
+	virtual void onLostMouseCapture(const MouseEventArgs &args);
+	virtual void onLostTouchCapture(const TouchEventArgs &args);
+	virtual void onMouseEnter(const MouseEventArgs &args);
+	virtual void onMouseLeave(const MouseEventArgs &args);
+	virtual void onMouseDown(const MouseButtonEventArgs &args);
+	virtual void onMouseUp(const MouseButtonEventArgs &args);
+	virtual void onMouseLeftButtonDown(const MouseButtonEventArgs &args);
+	virtual void onMouseLeftButtonUp(const MouseButtonEventArgs &args);
+	virtual void onMouseRightButtonDown(const MouseButtonEventArgs &args);
+	virtual void onMouseRightButtonUp(const MouseButtonEventArgs &args);
+	virtual void onMouseMove(const MouseButtonEventArgs &args);
+	virtual void onMouseWheel(const MouseWheelEventArgs &args);
+	virtual void onTouchDown(const TouchEventArgs &args);
+	virtual void onTouchEnter(const TouchEventArgs &args);
+	virtual void onTouchLeave(const TouchEventArgs &args);
+	virtual void onTouchMove(const TouchEventArgs &args);
+	virtual void onTouchUp(const TouchEventArgs &args);
+	//preview
+	virtual void onPreviewDragEnter(const DragEventArgs &args);
+	virtual void onPreviewDragLeave(const DragEventArgs &args);
+	virtual void onPreviewDragOver(const DragEventArgs &args);
+	virtual void onPreviewDrop(const DragEventArgs &args);
+	virtual void onPreviewGotKeyboardFocus(const KeyboardFocusChangedEventArgs &args);
+	virtual void onPreviewKeyDown(const KeyEventArgs &args);
+	virtual void onPreviewKeyUp(const KeyEventArgs &args);
+	virtual void onPreviewLostKeyboardFocus(const KeyboardFocusChangedEventArgs &args);
+	virtual void onPreviewMouseDown(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseUp(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseLeftButtonDown(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseLeftButtonUp(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseRightButtonDown(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseRightButtonUp(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseMove(const MouseButtonEventArgs &args);
+	virtual void onPreviewMouseWheel(const MouseWheelEventArgs &args);
+	virtual void onPreviewTouchDown(const TouchEventArgs &args);
+	virtual void onPreviewTouchEnter(const TouchEventArgs &args);
+	virtual void onPreviewTouchLeave(const TouchEventArgs &args);
+	virtual void onPreviewTouchMove(const TouchEventArgs &args);
+	virtual void onPreviewTouchUp(const TouchEventArgs &args);
+
 	UIElement	*m_parent;
 
 private:

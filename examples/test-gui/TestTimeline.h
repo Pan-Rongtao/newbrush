@@ -1,6 +1,6 @@
 #pragma once
 #include "../TestBase.h"
-#include "gui/Timeline.h"
+#include "media/Timeline.h"
 
 using namespace nb;
 using namespace nb::gui;

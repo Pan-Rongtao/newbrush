@@ -2,7 +2,7 @@
 #include "gui/Canvas.h"
 #include "gui/Window.h"
 #include "gui/Shape.h"
-#include "gui/PropertyAnimation.h"
+#include "media/PropertyAnimation.h"
 
 using namespace nb;
 using namespace nb::gui;

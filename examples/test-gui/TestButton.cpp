@@ -5,7 +5,7 @@
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
 #include "gui/Rectangle.h"
-#include "gui/PropertyAnimation.h"
+#include "media/PropertyAnimation.h"
 
 void TestButton::test()
 {

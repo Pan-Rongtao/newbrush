@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "gui/Window.h"
 #include "gui/Grid.h"
-#include "gui/PropertyAnimation.h"
+#include "media/PropertyAnimation.h"
 
 using namespace nb::gui;
 class TestGrid : public TestBase

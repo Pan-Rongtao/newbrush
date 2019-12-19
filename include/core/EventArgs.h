@@ -1,5 +1,6 @@
 #pragma once
 #include "../core/Point.h"
+#include "../core/Size.h"
 #include "../core/RoutedEvent.h"
 #include "../core/EnumFlags.h"
 #include "../core/Any.h"
@@ -282,9 +283,17 @@ struct NB_API TouchEventArgs : public InputEventArgs
 	Point getTouchPoint() const;
 };
 
-struct NB_API DragEventArgs : public RoutedEvent
+struct NB_API DragEventArgs : public RoutedEventArgs
 {
 
+};
+
+struct SizeChangedEventArgs : public RoutedEventArgs
+{
+	Size previousSize;
+	Size newSize;
+	bool widthChanged;
+	bool HeightChanged;
 };
 
 struct NB_API DependencyPropertyChangedEventArgs

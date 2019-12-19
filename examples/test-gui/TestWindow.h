@@ -1,8 +1,8 @@
 #pragma once
 #include "../TestBase.h"
 #include "gui/Window.h"
-#include "gui/PropertyAnimation.h"
-#include "gui/Timeline.h"
+#include "media/PropertyAnimation.h"
+#include "media/Timeline.h"
 #include "core/Timer.h"
 
 using namespace nb;

@@ -38,6 +38,7 @@ void TestCanvas::test()
 	es0->Fill = std::make_shared<SolidColorBrush>(Colors::floralWhite());
 	es0->Width = 100;
 	es0->Height = 100;
+	auto w = es0->Width;
 
 	auto line0 = std::make_shared<Line>();
 	line0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());

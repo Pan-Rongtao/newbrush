@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "core/Point.h"
 #include "core/Color.h"
-#include "gui/PropertyAnimation.h"
+#include "media/PropertyAnimation.h"
 
 using namespace nb;
 using namespace nb::gui;

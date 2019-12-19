@@ -57,7 +57,7 @@ void TestBinding::test()
 	m_dataRoot->insertChild(std::make_shared<ValueData<Thickness>>("margin", Thickness()));
 	m_dataRoot->insertChild(std::make_shared<ValueData<std::shared_ptr<Brush>>>("background", nullptr));
 
-	BindingMaster::addBinding(m_text, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "bool"));
+	BindingMaster::addBinding(m_text, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "focus"));
 	BindingMaster::addBinding(m_text, TextBlock::WidthProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
 	BindingMaster::addBinding(m_text, TextBlock::HeightProperty(), std::make_shared<Binding>(m_dataRoot, "double"));
 	BindingMaster::addBinding(m_text, TextBlock::FontWeightProperty(), std::make_shared<Binding>(m_dataRoot, "long"));

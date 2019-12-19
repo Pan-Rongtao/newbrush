@@ -1,6 +1,6 @@
 #pragma once
 #include "../TestBase.h"
-#include "gui/PropertyAnimationUsingKeyFrames.h"
+#include "media/PropertyAnimationUsingKeyFrames.h"
 
 using namespace nb;
 using namespace nb::gui;

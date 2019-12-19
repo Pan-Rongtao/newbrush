@@ -1,6 +1,6 @@
 #include "TestStoryboard.h"
-#include "gui/AnimationTimeline.h"
-#include "gui/PropertyAnimation.h"
+#include "media/AnimationTimeline.h"
+#include "media/PropertyAnimation.h"
 
 TestStoryboard::TestStoryboard()
 	: Width(nullptr, nullptr)

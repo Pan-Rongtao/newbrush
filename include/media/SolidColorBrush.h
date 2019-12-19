@@ -11,6 +11,7 @@ public:
 
 	Property_rw<nb::Color>		Color;				//ÑÕÉ«
 	static DependencyProperty	ColorProperty();	//ÑÕÉ«ÒÀÀµÊôĞÔ
+
 };
 
 }
