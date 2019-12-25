@@ -14,6 +14,17 @@ class NB_API Event
 public:
 	Event() : m_callbacks(nullptr) {}
 	~Event() { delete m_callbacks; }
+	Event(const Event &other)
+		: m_callbacks(nullptr)
+	{
+		*this = other;
+	}
+	void operator = (const Event &other)
+	{
+		CallBackContainer *pNew = other.m_callbacks ? new CallBackContainer(*(other.m_callbacks)) : nullptr;
+		delete m_callbacks;
+		m_callbacks = pNew;
+	}
 
 	int addHandler(CallBack callback)
 	{
