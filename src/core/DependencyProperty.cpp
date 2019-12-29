@@ -60,6 +60,15 @@ const DependencyProperty & DependencyProperty::registerDependency(const std::str
 	return dp;
 }
 
+struct UnsetValueInternal
+{
+	std::string	_name;
+};
+const Any & nb::DependencyProperty::unsetValue()
+{
+	return UnsetValueInternal{ "DependencyProperty.UnsetValue" };
+}
+
 DependencyProperty::DependencyProperty(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
 	: m_name(name)
 	, m_propertyType(propertyType)
