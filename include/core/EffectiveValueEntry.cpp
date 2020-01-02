@@ -23,6 +23,17 @@ EffectiveValueEntry::EffectiveValueEntry(const DependencyProperty & dp, FullValu
 {
 }
 
+void EffectiveValueEntry::setBaseValue(const Any & value) &
+{
+	auto modifiedValue = ensureModifiedValue();
+	modifiedValue.BaseValue = value;
+}
+
+Any EffectiveValueEntry::baseValue() const
+{
+	return any_cast<ModifiedValue>(m_value).BaseValue;
+}
+
 void EffectiveValueEntry::setExpressionValue(const Any & value)
 {
 /*	if (value.type() == DependencyProperty::unsetValue().type())
@@ -50,7 +61,7 @@ void EffectiveValueEntry::setCoercedValue(const Any & value, const Any &baseValu
 		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");
 
 	auto modifiedValue = ensureModifiedValue();
-	modifiedValue.AnimatedValue = value;
+	modifiedValue.BaseValue = value;
 	m_source.addFlags(IsCoerced);
 	if(coerceWithCurrentValue)
 	{

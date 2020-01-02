@@ -296,9 +296,9 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 	bool HeightChanged;
 };
 
-struct NB_API DependencyPropertyChangedEventArgs
+struct DependencyPropertyChangedEventArgs
 {
-	DependencyProperty	property;
+	DependencyProperty	xxx;
 	Any					oldValue;
 	Any					newValue;
 };

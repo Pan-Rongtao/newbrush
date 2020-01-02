@@ -1,13 +1,14 @@
 #pragma once
+#include <functional>
 #include <string>
 #include <map>
 #include <typeindex>
 #include "../core/Any.h"
-#include "../core/PropertyMetadata.h"
 
 namespace nb{
 
 class DependencyObject;
+class PropertyMetadata;
 using ValidateValueCallback = std::function<bool(const Any &value)>;
 class NB_API DependencyProperty final
 {
@@ -53,16 +54,28 @@ public:
 	//propertyType：属性值类型
 	//ownerType：属性宿主类型
 	//异常：std::logic_error已经注册过同类型属性
-	static const DependencyProperty &registerDependency(const std::string & name, std::type_index propertyType, std::type_index ownerType);
-	static const DependencyProperty &registerDependency(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata);
-	static const DependencyProperty &registerDependency(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
+	template<class ownerType, class propertyType>
+	static DependencyProperty registerDependency(const std::string & name, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+	{
+		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "registerDependency<ownerType, propertyType> : ownerType must be DependencyObject or a derived type.");
+
+		std::hash<std::string> _shash;
+		auto hash = typeid(ownerType).hash_code() ^ _shash(name);
+		if (g_dependencyProperties.find(hash) != g_dependencyProperties.end())
+			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(ownerType).name());
+
+		DependencyProperty dp(name, propertyType, ownerType, metadata, validateValueCallback);
+		dp.m_hash = hash;
+		g_dependencyProperties.insert({ hash, dp });
+		return dp;
+	}
 
 
-	static const Any &unsetValue();
+	static Any unsetValue();
 
 private:
 	DependencyProperty(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
-	static const DependencyProperty &registerCommon(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
+	static DependencyProperty registerCommon(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
 	static std::shared_ptr<PropertyMetadata> autoGeneratePropertyMetadata(std::type_index propertyType, ValidateValueCallback validateValueCallback, const std::string &name, std::type_index ownerType);
 
 	std::string							m_name;

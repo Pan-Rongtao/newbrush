@@ -6,6 +6,7 @@
 namespace nb {
 
 class DependencyObject;
+
 class PropertyMetadata
 {
 	using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs)>;

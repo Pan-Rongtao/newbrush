@@ -47,6 +47,8 @@ public:
 	EffectiveValueEntry(const DependencyProperty &dp, BaseValueSourceInternalE valueSource);
 	EffectiveValueEntry(const DependencyProperty &dp, FullValueSourceE fullValueSource);
 
+	void setBaseValue(const Any &value) &;
+	Any baseValue() const;
 	void setExpressionValue(const Any &value);
 	void setAnimatedValue(const Any &value);
 	void setCoercedValue(const Any &value, const Any &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue);
@@ -54,7 +56,7 @@ public:
 private:
 	ModifiedValue ensureModifiedValue();
 
-	short				m_propertyIndex;
+	size_t				m_propertyIndex;
 	Any					m_value;
 	EnumFlags<FullValueSourceE>	m_source;
 };

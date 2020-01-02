@@ -2,11 +2,6 @@
 
 using namespace nb;
 
-void DependencyObject::setValue(const DependencyObject & dp, const Any & value)
+void DependencyObject::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-}
-
-Any DependencyObject::getValue(const DependencyObject & dp) const
-{
-	return Any();
 }
