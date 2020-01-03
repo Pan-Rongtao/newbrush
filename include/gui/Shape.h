@@ -12,8 +12,8 @@ using nb::media::PenLineJoinE;
 class NB_API Shape : public UIElement
 {
 public:
-	Property_rw<shared_ptr<Brush>>	Fill;						//填充画刷（仅封闭形状如rectangle、eclipse、polygon生效，line等不生效）
-	Property_rw<shared_ptr<Brush>>	Stroke;						//轮廓画刷
+	Property_rw<std::shared_ptr<Brush>>	Fill;						//填充画刷（仅封闭形状如rectangle、eclipse、polygon生效，line等不生效）
+	Property_rw<std::shared_ptr<Brush>>	Stroke;						//轮廓画刷
 	Property_rw<float>				StrokeThickness;			//轮廓宽度
 	Property_rw<PenLineCapE>		StrokeStartLineCap;			//轮廓线条的起点笔帽样式（仅适用于Line、Polyline，其余封闭形状不生效）
 	Property_rw<PenLineCapE>		StrokeEndLineCap;			//轮廓线条的终点笔帽样式（仅适用于Line、Polyline，其余封闭形状不生效）

@@ -23,13 +23,12 @@ UIElement::UIElement()
 	, HorizontalAlignment([&](HorizontalAlignmentE v) {set(HorizontalAlignmentProperty(), v); }, [&]()->HorizontalAlignmentE& {return get<HorizontalAlignmentE>(HorizontalAlignmentProperty()); })
 	, VerticalAlignment([&](VerticalAlignmentE v) {set(VerticalAlignmentProperty(), v); }, [&]()->VerticalAlignmentE& {return get<VerticalAlignmentE>(VerticalAlignmentProperty()); })
 	, FlowDirection([&](FlowDirectionE v) {set(FlowDirectionProperty(), v); }, [&]()->FlowDirectionE& {return get<FlowDirectionE>(FlowDirectionProperty()); })
-	, Renderer([&]() {return get<shared_ptr<RenderObject>>(RendererProperty()); })
-	, style([&](shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]()->shared_ptr<Style>& {return get<shared_ptr<Style>>(StyleProperty()); })
-	, StateMachine([&](shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]()->shared_ptr<VisualStateMachine>& {return get<shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
+	, Renderer([&]() {return get<std::shared_ptr<RenderObject>>(RendererProperty()); })
+	, style([&](std::shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]()->std::shared_ptr<Style>& {return get<std::shared_ptr<Style>>(StyleProperty()); })
+	, StateMachine([&](std::shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]()->std::shared_ptr<VisualStateMachine>& {return get<std::shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
 	, m_parent(nullptr)
 {
 	set(RendererProperty(), std::make_shared<RenderObject>());
-	PropertyChanged += std::bind(&UIElement::onPropertyChanged, this, std::placeholders::_1);
 }
 
 DependencyProperty UIElement::VisibilityProperty()
@@ -142,19 +141,19 @@ DependencyProperty UIElement::FlowDirectionProperty()
 
 DependencyProperty UIElement::RendererProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<RenderObject>>("Renderer", nullptr);
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<RenderObject>>("Renderer", nullptr);
 	return dp;
 }
 
 DependencyProperty UIElement::StyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<Style>>("Style", std::make_shared<Style>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", std::make_shared<Style>());
 	return dp;
 }
 
 DependencyProperty UIElement::StateMachineProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
 	return dp;
 }
 
@@ -295,6 +294,14 @@ Size UIElement::measureOverride(const Size & availableSize)
 Size UIElement::arrangeOverride(const Size & finalSize)
 {
 	return finalSize;
+}
+
+void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty())
+	{
+		updateLayout();
+	}
 }
 
 void UIElement::onDragEnter(const DragEventArgs & args)
@@ -545,14 +552,6 @@ void UIElement::onPreviewTouchMove(const TouchEventArgs & args)
 void UIElement::onPreviewTouchUp(const TouchEventArgs & args)
 {
 	PreviewTouchUp.invoke(args);
-}
-
-void UIElement::onPropertyChanged(const PropertyChangedArgs & args)
-{
-	if (args.dp == UIElement::WidthProperty() || args.dp == UIElement::HeightProperty())
-	{
-		updateLayout();
-	}
 }
 
 void UIElement::onRender(Viewport2D & drawContext)

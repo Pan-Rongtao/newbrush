@@ -35,7 +35,7 @@ public:
 	Property_rw<float>						Left;					//左位置
 	Property_rw<float>						Top;					//顶位置
 	Property_rw<std::string>				Title;					//标题
-	Property_rw<shared_ptr<ImageSource>>	Icon;					//图标（未实现，难点）
+	Property_rw<std::shared_ptr<ImageSource>>	Icon;					//图标（未实现，难点）
 	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
 	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
 	static DependencyProperty				TopmostProperty();		//置顶的依赖属性
@@ -59,6 +59,8 @@ public:
 	static Viewport2D drawContext;
 
 protected:
+	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
+
 	virtual void onActivated(const EventArgs &args);
 	virtual void onDeactivated(const EventArgs &args);
 	virtual void onClosed(const EventArgs &args);
@@ -74,7 +76,6 @@ protected:
 private:
 	void _close(bool eraseFromCollection);
 	std::vector<UIElement *> hitElements(int x, int y) const;
-	void onPropertyChanged(const PropertyChangedArgs &arg);
 
 	void posCallback(int x, int y);
 	void sizeCallback(int width, int height);

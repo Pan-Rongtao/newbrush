@@ -17,7 +17,7 @@ public:
 	VisualState(const std::string &name, std::shared_ptr<Storyboard> sb = nullptr);
 
 	Property_rw<std::string>			Name;					//名字
-	Property_rw<shared_ptr<Storyboard>>	Storyboard;				//故事板
+	Property_rw<std::shared_ptr<Storyboard>>	Storyboard;				//故事板
 	static DependencyProperty			NameProperty();			//名字的依赖属性
 	static DependencyProperty			StoryboardProperty();	//故事板的依赖属性
 };
@@ -30,7 +30,7 @@ public:
 	Property_rw<std::string>			From;				//起始状态
 	Property_rw<std::string>			To;					//目标状态
 	Property_rw<TimeSpan>				Duration;			//持续时间
-	Property_rw<shared_ptr<Storyboard>>	Storyboard;			//故事板
+	Property_rw<std::shared_ptr<Storyboard>>	Storyboard;			//故事板
 	//Property_rw<shared_ptr<EasingBase>>	Easing;			//缓动函数
 
 	static DependencyProperty			FromProperty();		//起始状态的依赖属性
@@ -47,8 +47,8 @@ public:
 	VisualStateGroup(const std::string &name, const std::vector<std::shared_ptr<VisualState>> &states);
 
 	Property_rw<std::string>							Name;					//名字
-	Property_rw<std::vector<shared_ptr<VisualState>>>	States;					//状态集合
-	Property_r<shared_ptr<VisualState>>					CurrentState;			//当前状态
+	Property_rw<std::vector<std::shared_ptr<VisualState>>>	States;					//状态集合
+	Property_r<std::shared_ptr<VisualState>>					CurrentState;			//当前状态
 	Property_r<std::vector<VisualTransition>>			Transitions;			//过度
 	static DependencyProperty							NameProperty();			//名字的依赖属性
 	static DependencyProperty							StatesProperty();		//状态集合的依赖属性

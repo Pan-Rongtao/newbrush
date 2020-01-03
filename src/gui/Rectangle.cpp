@@ -11,18 +11,6 @@ Rectangle::Rectangle()
 	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
 	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArgs &args) {
-		if (args.dp == FillProperty())
-		{
-			if (!Fill())				m_fillObject.reset();
-			else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
-		}
-		else if (args.dp == StrokeProperty())
-		{
-			if (!Stroke())				m_strokeObject.reset();
-			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-		}
-	};
 }
 
 DependencyProperty Rectangle::RadiusXProperty()
@@ -56,6 +44,20 @@ void Rectangle::onRender(Viewport2D & drawContext)
 		updateStrokeObject(rc);
 		drawContext.queue(m_strokeObject);
 	//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	}
+}
+
+void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == FillProperty())
+	{
+		if (!Fill())				m_fillObject.reset();
+		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+	}
+	else if (args.property == StrokeProperty())
+	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
 

@@ -5,7 +5,7 @@ using namespace nb;
 using namespace nb::gui;
 
 Panel::Panel()
-	: Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BackgroundProperty()); })
+	: Background([&](std::shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
 	, Children([&](UIElementCollection v) {m_children = v; }, [&]()->UIElementCollection & {return m_children; })
 	, m_children(this)
 {
@@ -22,7 +22,7 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 
 DependencyProperty Panel::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Panel, shared_ptr<Brush>>("Background", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Panel, std::shared_ptr<Brush>>("Background", nullptr);
 	return dp;
 }
 

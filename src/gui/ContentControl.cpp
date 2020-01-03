@@ -4,16 +4,8 @@ using namespace nb;
 using namespace nb::gui;
 
 ContentControl::ContentControl()
-	: Content([&](shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]()->shared_ptr<UIElement>& {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
+	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]()->std::shared_ptr<UIElement>& {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArgs &arg) 
-	{
-		if (arg.dp == ContentControl::ContentProperty()) 
-		{
-			auto content = any_cast<std::shared_ptr<UIElement>>(arg.value);
-			content->setParent(this);
-		}
-	};
 }
 
 DependencyProperty ContentControl::ContentProperty()
@@ -32,6 +24,15 @@ void ContentControl::onRender(Viewport2D & drawContext)
 //	drawContext.queue(Renderer());
 	if (Content())
 		Content()->onRender(drawContext);
+}
+
+void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == ContentControl::ContentProperty())
+	{
+		auto content = any_cast<std::shared_ptr<UIElement>>(args.newValue);
+		content->setParent(this);
+	}
 }
 
 Size ContentControl::measureOverride(const Size & availableSize)

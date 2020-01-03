@@ -116,13 +116,13 @@ DependencyProperty ColumnDefinition::MaxWidthProperty()
 
 DependencyProperty ColumnDefinition::ActualWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, float>("ActualWidth", 0.0, true);
+	static auto dp = DependencyProperty::registerDependency<ColumnDefinition, float>("ActualWidth", 0.0);
 	return dp;
 }
 
 Grid::Grid()
-	: RowDefinitions([&](std::vector<shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]()->std::vector<shared_ptr<RowDefinition>>& {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
-	, ColumnDefinitions([&](std::vector<shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]()->std::vector<shared_ptr<ColumnDefinition>>& {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
+	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<RowDefinition>>& {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
+	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<ColumnDefinition>>& {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
 {
 }
 

@@ -14,7 +14,6 @@ Line::Line()
 	, Y1([&](float v) {set(Y1Property(), v); }, [&]()->float& {return get<float>(Y1Property()); })
 	, Y2([&](float v) {set(Y2Property(), v); }, [&]()->float& {return get<float>(Y2Property()); })
 {
-	PropertyChanged += std::bind(&Line::onPropertyChanged, this, std::placeholders::_1);
 }
 
 DependencyProperty Line::X1Property()
@@ -53,6 +52,15 @@ void Line::onRender(Viewport2D & drawContext)
 	}
 }
 
+void Line::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == StrokeProperty())
+	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
+	}
+}
+
 Size Line::measureOverride(const Size & availableSize)
 {
 	return availableSize;
@@ -61,15 +69,6 @@ Size Line::measureOverride(const Size & availableSize)
 Size Line::arrangeOverride(const Size & finalSize)
 {
 	return Size(std::abs(X2() - X1()), std::abs(Y2() - Y1()));
-}
-
-void Line::onPropertyChanged(const PropertyChangedArgs & args)
-{
-	if (args.dp == StrokeProperty())
-	{
-		if (!Stroke())				m_strokeObject.reset();
-		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-	}
 }
 
 void Line::updateStrokeObject(const Rect &rc)

@@ -114,8 +114,8 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-	Property_rw<std::vector<shared_ptr<RowDefinition>>>		RowDefinitions;				//行定义
-	Property_rw<std::vector<shared_ptr<ColumnDefinition>>>	ColumnDefinitions;			//列定义
+	Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;				//行定义
+	Property_rw<std::vector<std::shared_ptr<ColumnDefinition>>>	ColumnDefinitions;			//列定义
 	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
 	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
 

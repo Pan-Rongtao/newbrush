@@ -15,39 +15,6 @@ constexpr int vertexCount = 200;
 
 Ellipse::Ellipse()
 {
-	PropertyChanged += [&](const PropertyChangedArgs & args) {
-		if (args.dp == FillProperty())
-		{
-			if (!Fill())
-			{
-				m_fillObject.reset();
-			}
-			else if (!m_fillObject)
-			{
-				auto getIndices = []()->std::vector<uint16_t> {
-					constexpr auto count = 3 * (vertexCount - 1);
-					std::vector<uint16_t> indices(count);
-					for (int i = 0; i != vertexCount - 2; ++i)
-					{
-						int base = 3 * i;
-						indices[base] = 0;
-						indices[base + 1] = i + 1;
-						indices[base + 2] = i + 2;
-					}
-					indices[count - 3] = 0;
-					indices[count - 2] = vertexCount - 1;
-					indices[count - 1] = 1;
-					return indices;
-				};
-				m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh(std::vector<Vertex>(vertexCount), getIndices()) }));
-			}
-		}
-		else if (args.dp == StrokeProperty())
-		{
-			if (!Stroke())				m_strokeObject.reset();
-			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-		}
-	};
 }
 
 void Ellipse::onRender(Viewport2D & drawContext)
@@ -71,6 +38,41 @@ void Ellipse::onRender(Viewport2D & drawContext)
 		updateStrokeObject(StrokeRc);
 		drawContext.queue(m_strokeObject);
 		m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	}
+}
+
+void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == FillProperty())
+	{
+		if (!Fill())
+		{
+			m_fillObject.reset();
+		}
+		else if (!m_fillObject)
+		{
+			auto getIndices = []()->std::vector<uint16_t> {
+				constexpr auto count = 3 * (vertexCount - 1);
+				std::vector<uint16_t> indices(count);
+				for (int i = 0; i != vertexCount - 2; ++i)
+				{
+					int base = 3 * i;
+					indices[base] = 0;
+					indices[base + 1] = i + 1;
+					indices[base + 2] = i + 2;
+				}
+				indices[count - 3] = 0;
+				indices[count - 2] = vertexCount - 1;
+				indices[count - 1] = 1;
+				return indices;
+			};
+			m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh(std::vector<Vertex>(vertexCount), getIndices()) }));
+		}
+	}
+	else if (args.property == StrokeProperty())
+	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
 

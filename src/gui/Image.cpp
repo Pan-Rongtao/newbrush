@@ -11,22 +11,10 @@ using namespace nb;
 using namespace nb::gui;
 
 Image::Image()
-	: Source([&](shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->shared_ptr<ImageSource>& {return get<shared_ptr<ImageSource>>(SourceProperty()); })
+	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource>& {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
 	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
 {
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::primitive()));
-	PropertyChanged += [&](const PropertyChangedArgs &arg)
-	{
-		if (arg.dp == SourceProperty())
-		{
-			Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
-		}
-		else if (arg.dp == StretchProperty())
-		{
-			set(StretchProperty(), any_cast<StretchE>(arg.value));
-		}
-	};
-
 }
 
 void Image::onRender(Viewport2D & drawContext)
@@ -41,7 +29,7 @@ void Image::onRender(Viewport2D & drawContext)
 
 DependencyProperty Image::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, shared_ptr<ImageSource>>("Source", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr);
 	return dp;
 }
 
@@ -49,6 +37,18 @@ DependencyProperty Image::StretchProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
 	return dp;
+}
+
+void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == SourceProperty())
+	{
+		Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
+	}
+	else if (args.property == StretchProperty())
+	{
+		set(StretchProperty(), any_cast<StretchE>(args.newValue));
+	}
 }
 
 Size Image::measureOverride(const Size & availableSize)

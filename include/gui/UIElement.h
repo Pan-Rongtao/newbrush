@@ -75,9 +75,9 @@ public:
 	Property_rw<HorizontalAlignmentE>			HorizontalAlignment;	//横向对齐方式
 	Property_rw<VerticalAlignmentE>				VerticalAlignment;		//纵向对齐方式
 	Property_rw<FlowDirectionE>					FlowDirection;			//
-	Property_r<shared_ptr<RenderObject>>		Renderer;				//渲染物
-	Property_rw<shared_ptr<Style>>				style;					//风格
-	Property_rw<shared_ptr<VisualStateMachine>>	StateMachine;
+	Property_r<std::shared_ptr<RenderObject>>		Renderer;				//渲染物
+	Property_rw<std::shared_ptr<Style>>				style;					//风格
+	Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
 
 	static DependencyProperty					VisibilityProperty();	//可视的依赖属性
 	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性
@@ -266,6 +266,8 @@ public:
 	virtual Size arrangeOverride(const Size &finalSize);
 
 protected:
+	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
+
 	virtual void onDragEnter(const DragEventArgs &args);
 	virtual void onDragLeave(const DragEventArgs &args);
 	virtual void onDragOver(const DragEventArgs &args);
@@ -321,7 +323,6 @@ protected:
 	UIElement	*m_parent;
 
 private:
-	void onPropertyChanged(const PropertyChangedArgs &args);
 
 //	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };

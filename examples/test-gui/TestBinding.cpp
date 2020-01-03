@@ -5,7 +5,7 @@ void TestBinding::test()
 {
 	m_window = std::make_shared<gui::Window>();
 	m_text = std::make_shared<TextBlock>();
-	m_text->PropertyChanged += [](const TextBlock::PropertyChangedArgs &args)
+/*	m_text->PropertyChanged += [](const TextBlock::PropertyChangedArgs &args)
 	{
 		if (args.value.type() == typeid(bool))						printf("[%s]=%s\n", args.dp.name().data(), any_cast<bool>(args.value) ? "true" : "false");
 		else if(args.value.type() == typeid(float))					printf("[%s]=%.2f\n", args.dp.name().data(), any_cast<float>(args.value));
@@ -36,7 +36,7 @@ void TestBinding::test()
 			printf("[%s] is changed, type[%s]\n", args.dp.name().data(), args.value.type().name());
 		}
 	};
-
+	*/
 	m_dataRoot = std::make_shared<ObjectData>("root");
 	m_dataRoot->insertChild(std::make_shared<ValueData<bool>>("bool", false));
 	m_dataRoot->insertChild(std::make_shared<ValueData<float>>("float", 1.0f));

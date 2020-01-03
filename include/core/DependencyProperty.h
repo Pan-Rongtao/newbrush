@@ -9,7 +9,33 @@ namespace nb{
 
 class DependencyObject;
 class PropertyMetadata;
+struct DependencyPropertyChangedEventArgs;
+using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs *)>;
+using CoerceValueCallback = std::function<Any(DependencyObject *, Any)>;
 using ValidateValueCallback = std::function<bool(const Any &value)>;
+
+class NB_API PropertyMetadata
+{
+public:
+	//构建一个PropertyMetadata
+	//defaulValue：默认值
+	//propertyChangedCallback：属性已改变回调
+	//coerceValueCallback：属性值矫正回调
+	PropertyMetadata(const Any &defaulValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
+
+	void setDefaultValue(const Any &value) &;
+	Any defaultValue() const;
+	bool isSealed() const;
+	PropertyChangedCallback propertyChangedCallback();
+	CoerceValueCallback coerceValueCallback();
+
+private:
+	Any						m_defaultValue;
+	PropertyChangedCallback	m_propertyChangedCallback;
+	CoerceValueCallback		m_coerceValueCallback;
+};
+
+
 class NB_API DependencyProperty final
 {
 public:
@@ -55,28 +81,27 @@ public:
 	//ownerType：属性宿主类型
 	//异常：std::logic_error已经注册过同类型属性
 	template<class ownerType, class propertyType>
-	static DependencyProperty registerDependency(const std::string & name, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+	static const DependencyProperty &registerDependency(const std::string &name, const propertyType &defaultValue, 
+		PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
 	{
-		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "registerDependency<ownerType, propertyType> : ownerType must be DependencyObject or a derived type.");
+		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
+		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
 
 		std::hash<std::string> _shash;
-		auto hash = typeid(ownerType).hash_code() ^ _shash(name);
-		if (g_dependencyProperties.find(hash) != g_dependencyProperties.end())
+		auto _hash = typeid(ownerType).hash_code() ^ _shash(name);
+		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
+		DependencyProperty dp(name, typeid(ownerType), typeid(propertyType), metadata, validateValueCallback, _hash);
+		auto p = g_dependencyProperties.insert({ _hash, dp });
+		if (!p.second)
 			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(ownerType).name());
 
-		DependencyProperty dp(name, propertyType, ownerType, metadata, validateValueCallback);
-		dp.m_hash = hash;
-		g_dependencyProperties.insert({ hash, dp });
-		return dp;
+		return p.first->second;
 	}
-
-
+	
 	static Any unsetValue();
 
 private:
-	DependencyProperty(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
-	static DependencyProperty registerCommon(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
-	static std::shared_ptr<PropertyMetadata> autoGeneratePropertyMetadata(std::type_index propertyType, ValidateValueCallback validateValueCallback, const std::string &name, std::type_index ownerType);
+	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
 
 	std::string							m_name;
 	std::type_index						m_propertyType;
@@ -85,7 +110,6 @@ private:
 	ValidateValueCallback				m_validateValueCallback;
 	size_t								m_hash;
 
-	static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 	static std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Any>>	m_attProperties;
 };
 

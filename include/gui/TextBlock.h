@@ -41,8 +41,8 @@ public:
 
 	//fontstyle有啥用
 	Property_rw<std::string>		Text;			//文本内容
-	Property_rw<shared_ptr<Brush>>	Background;		//背景
-	Property_rw<shared_ptr<Font>>	Font;			//字体
+	Property_rw<std::shared_ptr<Brush>>	Background;		//背景
+	Property_rw<std::shared_ptr<Font>>	Font;			//字体
 	Property_rw<float>				FontSize;		//字体大小
 	Property_rw<int>				FontWeight;		//字体权重
 	Property_rw<Color>				Foreground;		//字体前景
@@ -72,6 +72,7 @@ public:
 	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
+	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 

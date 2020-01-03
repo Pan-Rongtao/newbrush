@@ -21,7 +21,7 @@ Window::Window()
 	, Left([&](float v) {set(LeftProperty(), v); }, [&]()->float& {return get<float>(LeftProperty()); })
 	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float& {return get<float>(TopProperty()); })
 	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string& {return get<std::string>(TitleProperty()); })
-	, Icon([&](shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->shared_ptr<ImageSource>& {return get<shared_ptr<ImageSource>>(IconProperty()); })
+	, Icon([&](std::shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->std::shared_ptr<ImageSource>& {return get<std::shared_ptr<ImageSource>>(IconProperty()); })
 	, m_implWindow(nullptr)
 {
 	init();
@@ -54,7 +54,6 @@ Window::Window()
 	sizeCallback((int)Width(), (int)Height());
 	Singleton<WindowCollection>::get()->push(this);
 
-	PropertyChanged += std::bind(&Window::onPropertyChanged, this, std::placeholders::_1);
 }
 
 Window::~Window()
@@ -149,45 +148,6 @@ std::vector<UIElement *> Window::hitElements(int x, int y) const
 	std::vector<UIElement *> hits;
 	//loopTest(x, y, m_glWindow, const_cast<Window *>(this), hits);
 	return hits;
-}
-
-void Window::onPropertyChanged(const PropertyChangedArgs & arg)
-{
-	if (arg.dp == WindowStateProperty())
-	{
-		auto state = any_cast<WindowStateE>(arg.value);
-		switch (state)
-		{
-		case WindowStateE::Normal:		glfwRestoreWindow(m_implWindow);	break;
-		case WindowStateE::Maximized:	glfwMaximizeWindow(m_implWindow);	break;
-		case WindowStateE::Minimized:	glfwIconifyWindow(m_implWindow);	break;
-		default:															break;
-		}
-	}
-	else if (arg.dp == WindowStyleProperty())
-	{
-	}
-	else if (arg.dp == TopmostProperty())
-	{
-		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, any_cast<bool>(arg.value));
-	}
-	else if (arg.dp == LeftProperty() || arg.dp == TopProperty())
-	{
-		glfwSetWindowPos(m_implWindow, (int)Left(), (int)Top());
-	}
-	else if (arg.dp == TitleProperty())
-	{
-		glfwSetWindowTitle(m_implWindow, any_cast<std::string>(arg.value).data());
-	}
-	else if (arg.dp == IconProperty())
-	{
-		auto bm = any_cast<std::shared_ptr<ImageSource>>(arg.value)->Bm();
-		GLFWimage img;
-		img.width = bm->width();
-		img.height = bm->height();
-		img.pixels = (unsigned char *)bm->data();
-		glfwSetWindowIcon(m_implWindow, 1, &img);
-	}
 }
 
 void Window::posCallback(int x, int y)
@@ -366,8 +326,47 @@ DependencyProperty Window::TitleProperty()
 
 DependencyProperty Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
+	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
 	return dp;
+}
+
+void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == WindowStateProperty())
+	{
+		auto state = any_cast<WindowStateE>(args.newValue);
+		switch (state)
+		{
+		case WindowStateE::Normal:		glfwRestoreWindow(m_implWindow);	break;
+		case WindowStateE::Maximized:	glfwMaximizeWindow(m_implWindow);	break;
+		case WindowStateE::Minimized:	glfwIconifyWindow(m_implWindow);	break;
+		default:															break;
+		}
+	}
+	else if (args.property == WindowStyleProperty())
+	{
+	}
+	else if (args.property == TopmostProperty())
+	{
+		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, any_cast<bool>(args.newValue));
+	}
+	else if (args.property == LeftProperty() || args.property == TopProperty())
+	{
+		glfwSetWindowPos(m_implWindow, (int)Left(), (int)Top());
+	}
+	else if (args.property == TitleProperty())
+	{
+		glfwSetWindowTitle(m_implWindow, any_cast<std::string>(args.newValue).data());
+	}
+	else if (args.property == IconProperty())
+	{
+		auto bm = any_cast<std::shared_ptr<ImageSource>>(args.newValue)->Bm();
+		GLFWimage img;
+		img.width = bm->width();
+		img.height = bm->height();
+		img.pixels = (unsigned char *)bm->data();
+		glfwSetWindowIcon(m_implWindow, 1, &img);
+	}
 }
 
 void Window::onActivated(const EventArgs & args)

@@ -10,13 +10,6 @@ using namespace nb::gui;
 Polyline::Polyline()
 	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArgs & args) {
-		if (args.dp == StrokeProperty())
-		{
-			if (!Stroke())				m_strokeObject.reset();
-			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-		}
-	};
 }
 
 DependencyProperty Polyline::PointsProperty()
@@ -33,6 +26,15 @@ void Polyline::onRender(Viewport2D & drawContext)
 	{
 		updateStrokeObject(rc);
 		drawContext.queue(m_strokeObject);
+	}
+}
+
+void Polyline::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == StrokeProperty())
+	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
 

@@ -14,7 +14,7 @@ public:
 
 	void begin();
 
-	Property_rw<std::vector<shared_ptr<Timeline>>>		Children;
+	Property_rw<std::vector<std::shared_ptr<Timeline>>>		Children;
 	static DependencyProperty	ChildrenProperty();
 };
 

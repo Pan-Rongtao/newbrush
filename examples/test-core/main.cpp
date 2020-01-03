@@ -10,11 +10,12 @@
 #include "TestEasingFunction.h"
 #include "TestAny.h"
 #include "TestRoutedEvent.h"
+#include "TestDependencyProperty.h"
 
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestRoutedEvent> test;
+		TestHandle<TestDependencyProperty> test;
 		test->test();
 	}
 	catch (std::exception &e)

@@ -9,7 +9,7 @@ ImageBrush::ImageBrush()
 }
 
 ImageBrush::ImageBrush(std::shared_ptr<ImageSource> imgSource)
-	: Source([&](shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->shared_ptr<ImageSource> & {return get<shared_ptr<ImageSource>>(SourceProperty()); })
+	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource> & {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
 {
 	auto bm = imgSource->Bm();
 	//由于img->Bm()使用的是std::shared，在执行Source =时，将调用ImageBrush::SourceProperty()中的std::make_shared<ImageSource>()，将bm重置为null

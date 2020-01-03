@@ -29,10 +29,10 @@ class NB_API KeyFrame : public DependencyObject
 public:
 	KeyFrame() : KeyFrame(T(), TimeSpan(), std::make_shared<LinearEase>()) {}
 	KeyFrame(const T &value, const TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
-	KeyFrame(const T &value, const TimeSpan &keyTime, shared_ptr<EasingBase> easing) 
+	KeyFrame(const T &value, const TimeSpan &keyTime, std::shared_ptr<EasingBase> easing)
 		: Value([&](T v) { set(ValueProperty(), v); }, [&]()->T& {return get<T>(ValueProperty()); })
 		, KeyTime([&](TimeSpan v) { set(KeyTimeProperty(), v); }, [&]()->TimeSpan& {return get<TimeSpan>(KeyTimeProperty()); })
-		, Easing([&](shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->shared_ptr<EasingBase>& {return get<shared_ptr<EasingBase>>(EasingProperty()); })
+		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase>& {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
 	{
 		KeyTime = keyTime;
 		Value = value;
@@ -44,10 +44,10 @@ public:
 
 	Property_rw<T>						Value;
 	Property_rw<TimeSpan>				KeyTime;
-	Property_rw<shared_ptr<EasingBase>>	Easing;
+	Property_rw<std::shared_ptr<EasingBase>>	Easing;
 	static DependencyProperty	ValueProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, T>("Value", T()); return dp; }
 	static DependencyProperty	KeyTimeProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, TimeSpan>("KeyTime", TimeSpan()); return dp; }
-	static DependencyProperty	EasingProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, shared_ptr<EasingBase>>("Easing", std::make_shared<LinearEase>()); return dp; }
+	static DependencyProperty	EasingProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, std::shared_ptr<EasingBase>>("Easing", std::make_shared<LinearEase>()); return dp; }
 };
 
 template<class T>
@@ -55,18 +55,18 @@ class NB_API PropertyAnimationUsingKeyFrames : public AnimationTimeline<T>
 {
 public:
 	PropertyAnimationUsingKeyFrames()
-		: KeyFrames([&](std::set<shared_ptr<KeyFrame<T>>> v) { set(KeyFramesProperty(), v); }, [&]()->std::set<shared_ptr<KeyFrame<T>>>& {return get<std::set<shared_ptr<KeyFrame<T>>>>(KeyFramesProperty()); })
+		: KeyFrames([&](std::set<std::shared_ptr<KeyFrame<T>>> v) { set(KeyFramesProperty(), v); }, [&]()->std::set<std::shared_ptr<KeyFrame<T>>>& {return get<std::set<std::shared_ptr<KeyFrame<T>>>>(KeyFramesProperty()); })
 	{}
 
-	Property_rw<std::set<shared_ptr<KeyFrame<T>>>>	KeyFrames;
-	static DependencyProperty	KeyFramesProperty() { static auto dp = DependencyProperty::registerDependency<PropertyAnimationUsingKeyFrames, std::set<shared_ptr<KeyFrame<T>>>>("KeyFrames", {}); return dp; }
+	Property_rw<std::set<std::shared_ptr<KeyFrame<T>>>>	KeyFrames;
+	static DependencyProperty	KeyFramesProperty() { static auto dp = DependencyProperty::registerDependency<PropertyAnimationUsingKeyFrames, std::set<std::shared_ptr<KeyFrame<T>>>>("KeyFrames", {}); return dp; }
 
 protected:
 	virtual void progressing(float progress) override
 	{
 		if (!TargetProperty || KeyFrames().empty())	return;
 		//根据ticks获取当前frame，找不到表示超出了范围
-		auto getCurrentFrame = [&](int64_t ticks)->std::set<shared_ptr<KeyFrame<T>>>::iterator
+		auto getCurrentFrame = [&](int64_t ticks)->std::set<std::shared_ptr<KeyFrame<T>>>::iterator
 		{
 			for (auto iter = KeyFrames().begin(); iter != KeyFrames().end(); ++iter)
 			{

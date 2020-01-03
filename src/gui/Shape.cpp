@@ -10,8 +10,8 @@ using namespace nb;
 using namespace nb::gui;
 
 Shape::Shape()
-	: Fill([&](shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(FillProperty()); })
-	, Stroke([&](shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(StrokeProperty()); })
+	: Fill([&](std::shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(FillProperty()); })
+	, Stroke([&](std::shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(StrokeProperty()); })
 	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float& {return get<float>(StrokeThicknessProperty()); })
 	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeStartLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeStartLineCapProperty()); })
 	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeEndLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeEndLineCapProperty()); })
@@ -25,7 +25,7 @@ Shape::Shape()
 
 DependencyProperty Shape::FillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Fill", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Shape, std::shared_ptr<Brush>>("Fill", nullptr);
 	return dp;
 }
 
@@ -37,7 +37,7 @@ DependencyProperty Shape::StretchProperty()
 
 DependencyProperty Shape::StrokeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, shared_ptr<Brush>>("Stroke", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Shape, std::shared_ptr<Brush>>("Stroke", nullptr);
 	return dp;
 }
 

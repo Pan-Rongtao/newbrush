@@ -4,14 +4,14 @@ using namespace nb;
 using namespace nb::gui;
 
 Control::Control()
-	: Background([&](shared_ptr<Brush> v) { set(BackgroundProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BackgroundProperty()); })
-	, BorderBrush([&](shared_ptr<Brush> v) { set(BorderBrushProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BorderBrushProperty()); })
+	: Background([&](std::shared_ptr<Brush> v) { set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
+	, BorderBrush([&](std::shared_ptr<Brush> v) { set(BorderBrushProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(BorderBrushProperty()); })
 	, BorderThickness([&](Thickness v) {set(BorderThicknessProperty(), v); }, [&]()->Thickness& {return get<Thickness>(BorderThicknessProperty()); })
 	, Padding([&](Thickness v) {set(PaddingProperty(), v); }, [&]()->Thickness& {return get<Thickness>(PaddingProperty()); })
 	, HorizontalContentAlignment([&](HorizontalAlignmentE v) {set(HorizontalContentAlignmentProperty(), v); }, [&]()->HorizontalAlignmentE &{return get<HorizontalAlignmentE>(HorizontalContentAlignmentProperty());})
 	, VerticalContentAlignment([&](VerticalAlignmentE v) {set(VerticalContentAlignmentProperty(), v); }, [&]()->VerticalAlignmentE& {return get<VerticalAlignmentE>(VerticalContentAlignmentProperty()); })
 	, TabIndex([&](int v) {set(TabIndexProperty(), v); }, [&]()->int& {return get<int>(TabIndexProperty()); })
-	, Template([&](shared_ptr<ControlTemplate> v) {set(TemplateProperty(), v); }, [&]()->shared_ptr<ControlTemplate>& {return get<shared_ptr<ControlTemplate>>(TemplateProperty()); })
+	, Template([&](std::shared_ptr<ControlTemplate> v) {set(TemplateProperty(), v); }, [&]()->std::shared_ptr<ControlTemplate>& {return get<std::shared_ptr<ControlTemplate>>(TemplateProperty()); })
 {
 }
 

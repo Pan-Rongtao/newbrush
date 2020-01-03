@@ -18,8 +18,8 @@ TextBlock::TextBlock()
 
 TextBlock::TextBlock(const std::string & text)
 	: Text([&](std::string v) {set(TextProperty(), v); }, [&]()->std::string& {return get<std::string>(TextProperty()); })
-	, Background([&](shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->shared_ptr<Brush>& {return get<shared_ptr<Brush>>(BackgroundProperty()); })
-	, Font([&](shared_ptr<nb::Font> v) {set(FontProperty(), v); }, [&]()->shared_ptr<nb::Font>& {return get<shared_ptr<nb::Font>>(FontProperty()); })
+	, Background([&](std::shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
+	, Font([&](std::shared_ptr<nb::Font> v) {set(FontProperty(), v); }, [&]()->std::shared_ptr<nb::Font>& {return get<std::shared_ptr<nb::Font>>(FontProperty()); })
 	, FontSize([&](float v) {set(FontSizeProperty(), v); }, [&]()->float& {return get<float>(FontSizeProperty()); })
 	, FontWeight([&](int v) {set(FontWeightProperty(), v); }, [&]()->int& {return get<int>(FontWeightProperty()); })
 	, Foreground([&](Color v) {set(ForegroundProperty(), v); }, [&]()->Color& {return get<Color>(ForegroundProperty()); })
@@ -37,14 +37,6 @@ TextBlock::TextBlock(const std::string & text)
 	Renderer()->setModel(m_glyphBunch);
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::glpy()));
 	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Font(), L'a')->texureId));
-	PropertyChanged += [&](const PropertyChangedArgs &arg)
-	{
-		if (arg.dp == ForegroundProperty())
-		{
-			auto c = any_cast<Color>(arg.value);
-			Renderer()->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
-		}
-	};
 	Renderer()->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
@@ -56,13 +48,13 @@ DependencyProperty TextBlock::TextProperty()
 
 DependencyProperty TextBlock::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<Brush>>("Background", nullptr);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Brush>>("Background", nullptr);
 	return dp;
 }
 
 DependencyProperty TextBlock::FontProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"));
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"));
 	return dp;
 }
 
@@ -124,6 +116,15 @@ DependencyProperty TextBlock::TextDecorationProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<TextBlock, TextDecorationE>("TextDecoration", TextDecorationE::Baseline);
 	return dp;
+}
+
+void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == ForegroundProperty())
+	{
+		auto c = any_cast<Color>(args.newValue);
+		Renderer()->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
+	}
 }
 
 Size TextBlock::measureOverride(const Size & availableSize)

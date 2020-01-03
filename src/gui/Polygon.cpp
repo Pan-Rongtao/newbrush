@@ -11,18 +11,6 @@ using namespace nb::gui;
 Polygon::Polygon()
 	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
 {
-	PropertyChanged += [&](const PropertyChangedArgs &args) {
-		if (args.dp == FillProperty())
-		{
-			if (!Fill())				m_fillObject.reset();
-			else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
-		}
-		else if (args.dp == StrokeProperty())
-		{
-			if (!Stroke())				m_strokeObject.reset();
-			else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-		}
-	};
 }
 
 DependencyProperty Polygon::PointsProperty()
@@ -50,6 +38,20 @@ void Polygon::onRender(Viewport2D & drawContext)
 		updateStrokeObject();
 		drawContext.queue(m_strokeObject);
 		//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	}
+}
+
+void Polygon::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	if (args.property == FillProperty())
+	{
+		if (!Fill())				m_fillObject.reset();
+		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+	}
+	else if (args.property == StrokeProperty())
+	{
+		if (!Stroke())				m_strokeObject.reset();
+		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
 

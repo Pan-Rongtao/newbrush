@@ -40,7 +40,7 @@ enum BaseValueSourceInternalE : int8_t
 	Local = 11,
 };
 
-class EffectiveValueEntry
+class NB_API EffectiveValueEntry
 {
 public:
 	EffectiveValueEntry(const DependencyProperty &dp);

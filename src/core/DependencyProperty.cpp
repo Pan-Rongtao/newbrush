@@ -1,9 +1,39 @@
 #include "core/DependencyProperty.h"
-#include "core/PropertyMetadata.h"
 
 using namespace nb;
 
-std::map<std::size_t, DependencyProperty> DependencyProperty::g_dependencyProperties;
+PropertyMetadata::PropertyMetadata(const Any & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
+	: m_defaultValue(defaulValue)
+	, m_propertyChangedCallback(propertyChangedCallback)
+	, m_coerceValueCallback(coerceValueCallback)
+{
+}
+
+void PropertyMetadata::setDefaultValue(const Any & value) &
+{
+	m_defaultValue = value;
+}
+
+Any PropertyMetadata::defaultValue() const
+{
+	return m_defaultValue;
+}
+
+bool PropertyMetadata::isSealed() const
+{
+	return false;
+}
+
+PropertyChangedCallback PropertyMetadata::propertyChangedCallback()
+{
+	return m_propertyChangedCallback;
+}
+
+CoerceValueCallback PropertyMetadata::coerceValueCallback()
+{
+	return m_coerceValueCallback;
+}
+
 std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;
 
 void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Any & property_v)
@@ -50,46 +80,14 @@ Any DependencyProperty::unsetValue()
 	return staticUnsetValue;
 }
 
-DependencyProperty::DependencyProperty(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+DependencyProperty::DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash)
 	: m_name(name)
-	, m_propertyType(propertyType)
 	, m_ownerType(ownerType)
+	, m_propertyType(propertyType)
 	, m_metadata(metadata)
 	, m_validateValueCallback(validateValueCallback)
-	, m_hash(0)
+	, m_hash(hash)
 {
-}
-
-DependencyProperty DependencyProperty::registerCommon(const std::string & name, std::type_index propertyType, std::type_index ownerType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
-{
-	if(propertyType != metadata->defaultValue().type())
-
-	std::hash<std::string> _shash;
-	auto hash = typeid(ownerType).hash_code() ^ _shash(name);
-	if (g_dependencyProperties.find(hash) != g_dependencyProperties.end())
-	{
-		nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), ownerType.name());
-	}
-	if (!metadata)
-	{
-		metadata = autoGeneratePropertyMetadata(propertyType, validateValueCallback, name, ownerType);
-	}
-	else
-	{
-		if(!metadata->defaultValueWasSet())
-		{
-			metadata = autoGeneratePropertyMetadata(propertyType, validateValueCallback, name, ownerType);
-		}
-	}
-	DependencyProperty dp(name, propertyType, ownerType, metadata, validateValueCallback);
-	dp.m_hash = hash;
-	g_dependencyProperties.insert({hash, dp});
-	return dp;
-}
-
-std::shared_ptr<PropertyMetadata> DependencyProperty::autoGeneratePropertyMetadata(std::type_index propertyType, ValidateValueCallback validateValueCallback, const std::string & name, std::type_index ownerType)
-{
-	auto ret = std::make_shared<PropertyMetadata>();
 }
 
 const std::string &DependencyProperty::name() const
@@ -109,7 +107,7 @@ std::type_index DependencyProperty::propertyType() const
 
 std::shared_ptr<PropertyMetadata> DependencyProperty::defaultMetadata() const
 {
-	return std::shared_ptr<PropertyMetadata>();
+	return m_metadata;
 }
 
 bool DependencyProperty::readOnly() const

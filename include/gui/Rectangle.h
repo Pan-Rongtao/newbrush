@@ -17,6 +17,7 @@ public:
 	virtual void onRender(Viewport2D & drawContext) override;
 
 protected:
+	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 

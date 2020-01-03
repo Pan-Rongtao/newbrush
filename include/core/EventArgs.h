@@ -298,7 +298,7 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 
 struct DependencyPropertyChangedEventArgs
 {
-	DependencyProperty	xxx;
+	DependencyProperty	property;
 	Any					oldValue;
 	Any					newValue;
 };
