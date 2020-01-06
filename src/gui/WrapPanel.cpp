@@ -5,9 +5,9 @@ using namespace nb;
 using namespace nb::gui;
 
 WrapPanel::WrapPanel()
-	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE& {return get<OrientationE>(OrientationProperty()); })
-	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]()->float& {return get<float>(ItemWidthProperty()); })
-	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]()->float& {return get<float>(ItemHeightProperty()); })
+	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE {return get<OrientationE>(OrientationProperty()); })
+	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]()->float {return get<float>(ItemWidthProperty()); })
+	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]()->float {return get<float>(ItemHeightProperty()); })
 {
 }
 

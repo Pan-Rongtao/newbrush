@@ -4,7 +4,7 @@ using namespace nb;
 using namespace nb::gui;
 
 StackPanel::StackPanel()
-	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE& {return get<OrientationE>(OrientationProperty()); })
+	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE {return get<OrientationE>(OrientationProperty()); })
 	, ExtentWidth([&]() {return get<float>(ExtentWidthProperty()); })
 	, ExtentHeight([&]() {return get<float>(ExtentHeightProperty()); })
 	, HorizontalOffset([&]() {return get<float>(HorizontalOffsetProperty()); })

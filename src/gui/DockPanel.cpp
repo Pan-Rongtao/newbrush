@@ -4,7 +4,7 @@ using namespace nb;
 using namespace nb::gui;
 
 DockPanel::DockPanel()
-	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]()->bool& {return get<bool>(LastChildFillProperty()); })
+	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]()->bool {return get<bool>(LastChildFillProperty()); })
 {
 }
 

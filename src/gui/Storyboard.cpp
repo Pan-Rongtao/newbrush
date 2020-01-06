@@ -9,7 +9,7 @@ Storyboard::Storyboard()
 }
 
 Storyboard::Storyboard(const TimeSpan & duration, const std::vector<std::shared_ptr<Timeline>>& propertyAnamations)
-	: Children([&](std::vector<std::shared_ptr<Timeline>> v) {set(ChildrenProperty(), v); }, [&]()->std::vector<std::shared_ptr<Timeline>>& {return get<std::vector<std::shared_ptr<Timeline>>>(ChildrenProperty()); })
+	: Children([&](std::vector<std::shared_ptr<Timeline>> v) {set(ChildrenProperty(), v); }, [&]()->std::vector<std::shared_ptr<Timeline>> {return get<std::vector<std::shared_ptr<Timeline>>>(ChildrenProperty()); })
 {
 	Duration = duration;
 	Children = propertyAnamations;

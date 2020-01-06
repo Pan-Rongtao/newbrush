@@ -1,5 +1,6 @@
 #include "TestAny.h"
 #include "core/Any.h"
+#include <memory>
 
 void TestAny::test()
 {

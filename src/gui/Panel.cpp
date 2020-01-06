@@ -5,7 +5,7 @@ using namespace nb;
 using namespace nb::gui;
 
 Panel::Panel()
-	: Background([&](std::shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
+	: Background([&](std::shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
 	, Children([&](UIElementCollection v) {m_children = v; }, [&]()->UIElementCollection & {return m_children; })
 	, m_children(this)
 {

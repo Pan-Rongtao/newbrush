@@ -9,7 +9,7 @@ using namespace nb;
 using namespace nb::gui;
 
 Polygon::Polygon()
-	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
+	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point> {return get<std::vector<Point>>(PointsProperty()); })
 {
 }
 
@@ -68,8 +68,9 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 	}
 	else
 	{
-		auto xMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.x() > p0.x(); });
-		auto yMinMax = std::minmax_element(Points().begin(), Points().end(), [](const Point &p0, const Point &p1) { return p1.y() > p0.y(); });
+		auto ps = Points();
+		auto xMinMax = std::minmax_element(ps.begin(), ps.end(), [](const Point &p0, const Point &p1) { return p1.x() > p0.x(); });
+		auto yMinMax = std::minmax_element(ps.begin(), ps.end(), [](const Point &p0, const Point &p1) { return p1.y() > p0.y(); });
 		auto sz = Size(xMinMax.second->x() - xMinMax.first->x(), yMinMax.second->y() - yMinMax.first->y());
 		return sz;
 	}

@@ -8,7 +8,7 @@ using namespace nb;
 using namespace nb::gui;
 
 Polyline::Polyline()
-	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point>& {return get<std::vector<Point>>(PointsProperty()); })
+	: Points([&](std::vector<Point> v) {set(PointsProperty(), v); }, [&]()->std::vector<Point> {return get<std::vector<Point>>(PointsProperty()); })
 {
 }
 

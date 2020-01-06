@@ -4,7 +4,7 @@ using namespace nb;
 using namespace nb::gui;
 
 ContentControl::ContentControl()
-	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]()->std::shared_ptr<UIElement>& {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
+	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]()->std::shared_ptr<UIElement> {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
 {
 }
 

@@ -9,7 +9,7 @@ ImageSource::ImageSource()
 }
 
 ImageSource::ImageSource(const std::string & uri)
-	: Bm([&](std::shared_ptr<Bitmap> v) { set(BmProperty(), v); }, [&]()->std::shared_ptr<Bitmap>& {return get<std::shared_ptr<Bitmap>>(BmProperty()); })
+	: Bm([&](std::shared_ptr<Bitmap> v) { set(BmProperty(), v); }, [&]()->std::shared_ptr<Bitmap> {return get<std::shared_ptr<Bitmap>>(BmProperty()); })
 {
 	Bm()->load(uri);
 }

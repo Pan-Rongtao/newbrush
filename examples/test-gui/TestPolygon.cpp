@@ -16,7 +16,8 @@ void TestPolygon::test()
 	linearBrush->GradientStops = std::make_shared<GradientStopCollection>(std::vector<GradientStopPtr>{ gs0, gs1, gs2, gs3 });
 	auto pl = std::make_shared<Polygon>();
 	pl->Points = { { 0,0 },{ 100,0 }, { 100,100 },{ 0,100 }};
-	pl->Fill = std::make_shared<SolidColorBrush>(Colors::red());
+	//pl->Fill = std::make_shared<SolidColorBrush>(Colors::red());
+	pl->Fill = linearBrush;
 	pl->StrokeThickness = 20;
 	//pl->Stroke = std::make_shared<SolidColorBrush>(Colors::red());
 	//pl->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/5.jpg"));

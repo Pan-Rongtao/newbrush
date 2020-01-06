@@ -57,7 +57,9 @@ private:
 	ModifiedValue ensureModifiedValue();
 
 	size_t				m_propertyIndex;
-	Any					m_value;
+	Any		BaseValue;
+	Any		AnimatedValue;
+	Any		CoercedValue;
 	EnumFlags<FullValueSourceE>	m_source;
 };
 

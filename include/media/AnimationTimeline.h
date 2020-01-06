@@ -12,7 +12,7 @@ class NB_API AnimationTimeline : public Timeline
 public:
 	AnimationTimeline()
 		: TargetProperty(nullptr)
-		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase>& {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
+		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase> {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
 	{
 		ProgressEvent += [&](const Timeline::ProgressArgs &args) {	progressing(args.progress);	};
 	}

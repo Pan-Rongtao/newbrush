@@ -11,8 +11,8 @@ using namespace nb;
 using namespace nb::gui;
 
 Image::Image()
-	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource>& {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
-	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
+	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource> {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
+	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE {return get<StretchE>(StretchProperty()); })
 {
 	Renderer()->setMaterial(std::make_shared<Material>(Programs::primitive()));
 }

@@ -2,7 +2,7 @@
 
 void TestDependencyProperty::test()
 {
-	set(BoolPoperty(), false);
+	set(BoolPoperty(), 0);
 	set(IntProperty(), 111);
 	set(FloatProperty(), 222.222f);
 	set(DoubleProperty(), 333.333);

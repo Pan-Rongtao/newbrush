@@ -8,7 +8,7 @@ SolidColorBrush::SolidColorBrush()
 }
 
 SolidColorBrush::SolidColorBrush(const nb::Color &color)
-	: Color([&](nb::Color v) { set(ColorProperty(), v); }, [&]()->nb::Color & {return get<nb::Color>(ColorProperty()); })
+	: Color([&](nb::Color v) { set(ColorProperty(), v); }, [&]()->nb::Color {return get<nb::Color>(ColorProperty()); })
 {
 	Color = color;
 }

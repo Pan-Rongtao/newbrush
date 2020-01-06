@@ -4,7 +4,7 @@ using namespace nb;
 using namespace nb::gui;
 
 ButtonBase::ButtonBase()
-	: ClickMode([&](ClickModeE v) {set(ClickModeProperty(), v); }, [&]()->ClickModeE& {return get<ClickModeE>(ClickModeProperty()); })
+	: ClickMode([&](ClickModeE v) {set(ClickModeProperty(), v); }, [&]()->ClickModeE {return get<ClickModeE>(ClickModeProperty()); })
 	, IsPressed([&]() {return get<bool>(IsPressedProperty()); })
 {
 }

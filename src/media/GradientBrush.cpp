@@ -10,8 +10,8 @@ GradientStop::GradientStop()
 }
 
 GradientStop::GradientStop(const nb::Color & color, float offset)
-	: Color([&](nb::Color v) {set(ColorProperty(), v); }, [&]()->nb::Color& {return get<nb::Color>(ColorProperty()); })
-	, Offset([&](float v) {set(OffsetPropert(), v); }, [&]()->float& {return get<float>(OffsetPropert()); })
+	: Color([&](nb::Color v) {set(ColorProperty(), v); }, [&]()->nb::Color {return get<nb::Color>(ColorProperty()); })
+	, Offset([&](float v) {set(OffsetPropert(), v); }, [&]()->float {return get<float>(OffsetPropert()); })
 {
 	Color = color;
 	Offset = offset;
@@ -80,7 +80,7 @@ GradientBrush::GradientBrush()
 }
 
 GradientBrush::GradientBrush(GradientStopCollectionPtr gradientStops)
-	: GradientStops([&](GradientStopCollectionPtr v) {set(GradientStopsProperty(), v); }, [&]()->GradientStopCollectionPtr & {return get<GradientStopCollectionPtr>(GradientStopsProperty()); })
+	: GradientStops([&](GradientStopCollectionPtr v) {set(GradientStopsProperty(), v); }, [&]()->GradientStopCollectionPtr {return get<GradientStopCollectionPtr>(GradientStopsProperty()); })
 {
 }
 
@@ -96,8 +96,8 @@ LinearGradientBrush::LinearGradientBrush()
 }
 
 LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb::Color & endColor, float angle)
-	: StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
-	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })
+	: StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point {return get<Point>(StartPointProperty()); })
+	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point {return get<Point>(EndPointProperty()); })
 {
 	auto xDiff = 1 / std::tanf(glm::radians(angle));
 	StartPoint = Point(0, 0);
@@ -107,8 +107,8 @@ LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb:
 }
 
 LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb::Color & endColor, const nb::Point & startPoint, const nb::Point & endPoint)
-	: StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
-	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })
+	: StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point {return get<Point>(StartPointProperty()); })
+	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point {return get<Point>(EndPointProperty()); })
 {
 	StartPoint = startPoint;
 	EndPoint = endPoint;
@@ -123,8 +123,8 @@ LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops
 
 LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, float angle)
 	: GradientBrush(gradientStops)
-	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
-	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })
+	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point {return get<Point>(StartPointProperty()); })
+	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point {return get<Point>(EndPointProperty()); })
 {
 	auto xDiff = 1 / std::tanf(glm::radians(angle));
 	StartPoint = Point(0, 0);
@@ -133,8 +133,8 @@ LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops
 
 LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point & startPoint, const nb::Point & endPoint)
 	: GradientBrush(gradientStops)
-	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point& {return get<Point>(StartPointProperty()); })
-	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point& {return get<Point>(EndPointProperty()); })
+	, StartPoint([&](Point v) {set(StartPointProperty(), v); }, [&]()->Point {return get<Point>(StartPointProperty()); })
+	, EndPoint([&](Point v) {set(EndPointProperty(), v); }, [&]()->Point {return get<Point>(EndPointProperty()); })
 {
 	StartPoint = startPoint;
 	EndPoint = endPoint;

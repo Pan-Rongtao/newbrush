@@ -9,8 +9,8 @@ VisualState::VisualState()
 }
 
 VisualState::VisualState(const std::string & name, std::shared_ptr<gui::Storyboard> sb)
-	: Name([&](std::string v) { set(NameProperty(), v); }, [&]()->std::string& {return get<std::string>(NameProperty()); })
-	, Storyboard([&](std::shared_ptr<gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]()->std::shared_ptr<gui::Storyboard>& {return get<std::shared_ptr<gui::Storyboard>>(StoryboardProperty()); })
+	: Name([&](std::string v) { set(NameProperty(), v); }, [&]()->std::string {return get<std::string>(NameProperty()); })
+	, Storyboard([&](std::shared_ptr<gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]()->std::shared_ptr<gui::Storyboard> {return get<std::shared_ptr<gui::Storyboard>>(StoryboardProperty()); })
 {
 	Name = name;
 	Storyboard = sb;
@@ -29,10 +29,10 @@ DependencyProperty VisualState::StoryboardProperty()
 }
 
 VisualTransition::VisualTransition()
-	: From([&](std::string v) { set(FromProperty(), v); }, [&]()->std::string& {return get<std::string>(FromProperty()); })
-	, To([&](std::string v) { set(ToProperty(), v); }, [&]()->std::string& {return get<std::string>(ToProperty()); })
-	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]()->TimeSpan& {return get<TimeSpan>(DurationProperty()); })
-	, Storyboard([&](std::shared_ptr<gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]()->std::shared_ptr<gui::Storyboard>& {return get<std::shared_ptr<gui::Storyboard>>(StoryboardProperty()); })
+	: From([&](std::string v) { set(FromProperty(), v); }, [&]()->std::string {return get<std::string>(FromProperty()); })
+	, To([&](std::string v) { set(ToProperty(), v); }, [&]()->std::string {return get<std::string>(ToProperty()); })
+	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(DurationProperty()); })
+	, Storyboard([&](std::shared_ptr<gui::Storyboard> v) { set(StoryboardProperty(), v); }, [&]()->std::shared_ptr<gui::Storyboard> {return get<std::shared_ptr<gui::Storyboard>>(StoryboardProperty()); })
 	//, Easing([&](shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]() {return get<shared_ptr<EasingBase>>(EasingProperty()); })
 {
 }
@@ -73,8 +73,8 @@ VisualStateGroup::VisualStateGroup(const std::string & name)
 }
 
 VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<std::shared_ptr<VisualState>>& states)
-	: Name([&](std::string v) { set(NameProperty(), v); }, [&]()->std::string& {return get<std::string>(NameProperty()); })
-	, States([&](std::vector<std::shared_ptr<VisualState>> v) { set(StatesProperty(), v); }, [&]()->std::vector<std::shared_ptr<VisualState>>& {return get<std::vector<std::shared_ptr<VisualState>>>(StatesProperty()); })
+	: Name([&](std::string v) { set(NameProperty(), v); }, [&]()->std::string {return get<std::string>(NameProperty()); })
+	, States([&](std::vector<std::shared_ptr<VisualState>> v) { set(StatesProperty(), v); }, [&]()->std::vector<std::shared_ptr<VisualState>> {return get<std::vector<std::shared_ptr<VisualState>>>(StatesProperty()); })
 	, CurrentState([&]() {return get<std::shared_ptr<VisualState>>(CurrentStateProperty()); })
 	, Transitions([&]() {return get<std::vector<VisualTransition>>(TransitionsProperty()); })
 {

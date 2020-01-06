@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <typeindex>
+#include "../core/Def.h"
 #include "../core/Any.h"
 
 namespace nb{

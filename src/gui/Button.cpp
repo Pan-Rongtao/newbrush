@@ -4,8 +4,8 @@ using namespace nb;
 using namespace nb::gui;
 
 Button::Button()
-	: IsCancel([&](bool v) { set(IsCancelProperty(), v); }, [&]()->bool& {return get<bool>(IsCancelProperty()); })
-	, IsDefault([&](bool v) { set(IsDefaultProperty(), v); }, [&]()->bool& {return get<bool>(IsDefaultProperty()); })
+	: IsCancel([&](bool v) { set(IsCancelProperty(), v); }, [&]()->bool {return get<bool>(IsCancelProperty()); })
+	, IsDefault([&](bool v) { set(IsDefaultProperty(), v); }, [&]()->bool {return get<bool>(IsDefaultProperty()); })
 {
 }
 

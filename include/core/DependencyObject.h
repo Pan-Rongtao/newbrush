@@ -120,7 +120,7 @@ public:
 	//如果未存储有该属性的值，则返回defaultValue
 	//反之，返回该存储值
 	template<class T>
-	T &get(const DependencyProperty &dp) const
+	T get(const DependencyProperty &dp) const
 	{
 		auto iter = m_valueEntrys.find(dp.globalIndex());
 		if (iter == m_valueEntrys.end())
@@ -129,7 +129,8 @@ public:
 		}
 		else
 		{
-			return any_cast<T>(iter->second.baseValue());
+			auto x = iter->second.baseValue();
+			return any_cast<T>(x);
 		}
 	}
 

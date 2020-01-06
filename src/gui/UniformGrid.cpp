@@ -4,9 +4,9 @@ using namespace nb;
 using namespace nb::gui;
 
 UniformGrid::UniformGrid()
-	: Rows([&](int v) {set(RowsProperty(), v); }, [&]()->int& {return get<int>(RowsProperty()); })
-	, Columns([&](int v) {set(ColumnsProperty(), v); }, [&]()->int& {return get<int>(ColumnsProperty()); })
-	, FirstColumn([&](int v) {set(FirstColumnProperty(), v); }, [&]()->int& {return get<int>(FirstColumnProperty()); })
+	: Rows([&](int v) {set(RowsProperty(), v); }, [&]()->int {return get<int>(RowsProperty()); })
+	, Columns([&](int v) {set(ColumnsProperty(), v); }, [&]()->int {return get<int>(ColumnsProperty()); })
+	, FirstColumn([&](int v) {set(FirstColumnProperty(), v); }, [&]()->int {return get<int>(FirstColumnProperty()); })
 {
 }
 

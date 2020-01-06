@@ -8,8 +8,8 @@ using namespace nb;
 using namespace nb::gui;
 
 Rectangle::Rectangle()
-	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float& {return get<float>(RadiusXProperty()); })
-	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float& {return get<float>(RadiusYProperty()); })
+	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float {return get<float>(RadiusXProperty()); })
+	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float {return get<float>(RadiusYProperty()); })
 {
 }
 

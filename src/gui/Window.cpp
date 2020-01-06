@@ -15,13 +15,13 @@ Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
 
 Window::Window()
-	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE& {return get<WindowStateE>(WindowStateProperty()); })
-	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE& {return get<WindowStyleE>(WindowStyleProperty()); })
-	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]()->bool& {return get<bool>(TopmostProperty()); })
-	, Left([&](float v) {set(LeftProperty(), v); }, [&]()->float& {return get<float>(LeftProperty()); })
-	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float& {return get<float>(TopProperty()); })
-	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string& {return get<std::string>(TitleProperty()); })
-	, Icon([&](std::shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->std::shared_ptr<ImageSource>& {return get<std::shared_ptr<ImageSource>>(IconProperty()); })
+	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE {return get<WindowStateE>(WindowStateProperty()); })
+	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE {return get<WindowStyleE>(WindowStyleProperty()); })
+	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]()->bool {return get<bool>(TopmostProperty()); })
+	, Left([&](float v) {set(LeftProperty(), v); }, [&]()->float {return get<float>(LeftProperty()); })
+	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float {return get<float>(TopProperty()); })
+	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string {return get<std::string>(TitleProperty()); })
+	, Icon([&](std::shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->std::shared_ptr<ImageSource> {return get<std::shared_ptr<ImageSource>>(IconProperty()); })
 	, m_implWindow(nullptr)
 {
 	init();

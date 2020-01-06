@@ -10,16 +10,16 @@ using namespace nb;
 using namespace nb::gui;
 
 Shape::Shape()
-	: Fill([&](std::shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(FillProperty()); })
-	, Stroke([&](std::shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->std::shared_ptr<Brush>& {return get<std::shared_ptr<Brush>>(StrokeProperty()); })
-	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float& {return get<float>(StrokeThicknessProperty()); })
-	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeStartLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeStartLineCapProperty()); })
-	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeEndLineCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeEndLineCapProperty()); })
-	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashArrayProperty(), v); }, [&]()->std::vector<float>& {return get<std::vector<float>>(StrokeDashArrayProperty()); })
-	, StrokeDashOffset([&](float v) {set(StrokeDashOffsetProperty(), v); }, [&]()->float& {return get<float>(StrokeDashOffsetProperty()); })
-	, StrokeDashCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE& {return get<PenLineCapE>(StrokeDashCapProperty()); })
-	, StrokeLineJoin([&](PenLineJoinE v) {set(StrokeLineJoinProperty(), v); }, [&]()->PenLineJoinE& {return get<PenLineJoinE>(StrokeLineJoinProperty()); })
-	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE& {return get<StretchE>(StretchProperty()); })
+	: Fill([&](std::shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(FillProperty()); })
+	, Stroke([&](std::shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(StrokeProperty()); })
+	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float {return get<float>(StrokeThicknessProperty()); })
+	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeStartLineCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeStartLineCapProperty()); })
+	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeEndLineCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeEndLineCapProperty()); })
+	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashArrayProperty(), v); }, [&]()->std::vector<float> {return get<std::vector<float>>(StrokeDashArrayProperty()); })
+	, StrokeDashOffset([&](float v) {set(StrokeDashOffsetProperty(), v); }, [&]()->float {return get<float>(StrokeDashOffsetProperty()); })
+	, StrokeDashCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeDashCapProperty()); })
+	, StrokeLineJoin([&](PenLineJoinE v) {set(StrokeLineJoinProperty(), v); }, [&]()->PenLineJoinE {return get<PenLineJoinE>(StrokeLineJoinProperty()); })
+	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE {return get<StretchE>(StretchProperty()); })
 {
 }
 

@@ -19,12 +19,12 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration)
 }
 
 Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const RepeatBehavior & repeatBehavior)
-	: BeginTime([&](TimeSpan v) { set(BeginTimeProperty(), v); }, [&]()->TimeSpan& {return get<TimeSpan>(BeginTimeProperty()); })
-	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]()->TimeSpan& {return get<TimeSpan>(DurationProperty()); })
-	, FillBehavior([&](FillBehaviorE v) { set(FillBehaviorProperty(), v); }, [&]()->FillBehaviorE& {return get<FillBehaviorE>(FillBehaviorProperty()); })
-	, AutoReverse([&](bool v) { set(AutoReverseProperty(), v); }, [&]()->bool& {return get<bool>(AutoReverseProperty()); })
-	, Repeat([&](RepeatBehavior v) { set(RepeatProperty(), v); }, [&]()->RepeatBehavior& {return get<RepeatBehavior>(RepeatProperty()); })
-	, State([&]()->StateE& {return get<StateE>(StateProperty()); })
+	: BeginTime([&](TimeSpan v) { set(BeginTimeProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(BeginTimeProperty()); })
+	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(DurationProperty()); })
+	, FillBehavior([&](FillBehaviorE v) { set(FillBehaviorProperty(), v); }, [&]()->FillBehaviorE {return get<FillBehaviorE>(FillBehaviorProperty()); })
+	, AutoReverse([&](bool v) { set(AutoReverseProperty(), v); }, [&]()->bool {return get<bool>(AutoReverseProperty()); })
+	, Repeat([&](RepeatBehavior v) { set(RepeatProperty(), v); }, [&]()->RepeatBehavior {return get<RepeatBehavior>(RepeatProperty()); })
+	, State([&]()->StateE {return get<StateE>(StateProperty()); })
 {
 	m_timer.setInterval(1);
 	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);

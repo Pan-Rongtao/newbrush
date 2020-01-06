@@ -30,9 +30,9 @@ public:
 	KeyFrame() : KeyFrame(T(), TimeSpan(), std::make_shared<LinearEase>()) {}
 	KeyFrame(const T &value, const TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
 	KeyFrame(const T &value, const TimeSpan &keyTime, std::shared_ptr<EasingBase> easing)
-		: Value([&](T v) { set(ValueProperty(), v); }, [&]()->T& {return get<T>(ValueProperty()); })
-		, KeyTime([&](TimeSpan v) { set(KeyTimeProperty(), v); }, [&]()->TimeSpan& {return get<TimeSpan>(KeyTimeProperty()); })
-		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase>& {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
+		: Value([&](T v) { set(ValueProperty(), v); }, [&]()->T {return get<T>(ValueProperty()); })
+		, KeyTime([&](TimeSpan v) { set(KeyTimeProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(KeyTimeProperty()); })
+		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase> {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
 	{
 		KeyTime = keyTime;
 		Value = value;
@@ -55,7 +55,7 @@ class NB_API PropertyAnimationUsingKeyFrames : public AnimationTimeline<T>
 {
 public:
 	PropertyAnimationUsingKeyFrames()
-		: KeyFrames([&](std::set<std::shared_ptr<KeyFrame<T>>> v) { set(KeyFramesProperty(), v); }, [&]()->std::set<std::shared_ptr<KeyFrame<T>>>& {return get<std::set<std::shared_ptr<KeyFrame<T>>>>(KeyFramesProperty()); })
+		: KeyFrames([&](std::set<std::shared_ptr<KeyFrame<T>>> v) { set(KeyFramesProperty(), v); }, [&]()->std::set<std::shared_ptr<KeyFrame<T>>> {return get<std::set<std::shared_ptr<KeyFrame<T>>>>(KeyFramesProperty()); })
 	{}
 
 	Property_rw<std::set<std::shared_ptr<KeyFrame<T>>>>	KeyFrames;

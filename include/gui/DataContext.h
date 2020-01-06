@@ -99,8 +99,8 @@ public:
 			ValueChanged.invoke({ p.lock() , path });
 		}
 	}
-	T &get() { return any_cast<T>(m_v); }
-	const T &get() const { return any_cast<T>(m_v); }
+	T get() { return any_cast<T>(m_v); }
+	const T get() const { return any_cast<T>(m_v); }
 
 	virtual Any getAny() const override { return m_v; }
 

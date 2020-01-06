@@ -32,9 +32,9 @@ public:
 	PropertyAnimation(const T &to) : PropertyAnimation(T(), to, TimeSpan(), nullptr) {}
 	PropertyAnimation(const T &from, const T &to) : PropertyAnimation(from, to, TimeSpan(), nullptr) {}
 	PropertyAnimation(const T &from, const T &to, const TimeSpan &duration, Property_rw<T> *target)
-		: From([&](T v) {set(FromProperty(), v); }, [&]()->T & {return get<T>(FromProperty()); })
-		, To([&](T v) {set(ToProperty(), v); }, [&]()->T & {return get<T>(ToProperty()); })
-		, By([&](T v) {set(ByProperty(), v); }, [&]()->T & {return get<T>(ByProperty()); })
+		: From([&](T v) {set(FromProperty(), v); }, [&]()->T  {return get<T>(FromProperty()); })
+		, To([&](T v) {set(ToProperty(), v); }, [&]()->T  {return get<T>(ToProperty()); })
+		, By([&](T v) {set(ByProperty(), v); }, [&]()->T  {return get<T>(ByProperty()); })
 	{
 		From = from;
 		To = to;
@@ -70,7 +70,8 @@ void PropertyAnimation<Color>::progressing(float progress)
 	int r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
 	int g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
 	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
-	(*TargetProperty)().setRgb(r, g, b);
+	//set<Color>(*TargetProperty, Color(r, g, b));
+	//(*TargetProperty)().setRgb(r, g, b);
 }
 
 }

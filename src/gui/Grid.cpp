@@ -57,9 +57,9 @@ GridLength GridLength::automate()
 }
 
 RowDefinition::RowDefinition()
-	: Height([&](GridLength v) {set(RowDefinition::HeightProperty(), v); }, [&]()->GridLength& {return get<GridLength>(RowDefinition::HeightProperty()); })
-	, MinHeight([&](GridLength v) {set(RowDefinition::MinHeightProperty(), v); }, [&]()->GridLength& {return get<GridLength>(RowDefinition::MinHeightProperty()); })
-	, MaxHeight([&](GridLength v) {set(RowDefinition::MaxHeightProperty(), v); }, [&]()->GridLength& {return get<GridLength>(RowDefinition::MaxHeightProperty()); })
+	: Height([&](GridLength v) {set(RowDefinition::HeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::HeightProperty()); })
+	, MinHeight([&](GridLength v) {set(RowDefinition::MinHeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::MinHeightProperty()); })
+	, MaxHeight([&](GridLength v) {set(RowDefinition::MaxHeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::MaxHeightProperty()); })
 	, ActualHeight([&]() {return get<float>(ActualHeightProperty()); })
 {
 }
@@ -89,9 +89,9 @@ DependencyProperty RowDefinition::ActualHeightProperty()
 }
 
 ColumnDefinition::ColumnDefinition()
-	: Width([&](GridLength v) {set(ColumnDefinition::WidthProperty(), v); }, [&]()->GridLength& {return get<GridLength>(ColumnDefinition::WidthProperty()); })
-	, MinWidth([&](GridLength v) {set(ColumnDefinition::MinWidthProperty(), v); }, [&]()->GridLength& {return get<GridLength>(ColumnDefinition::MinWidthProperty()); })
-	, MaxWidth([&](GridLength v) {set(ColumnDefinition::MaxWidthProperty(), v); }, [&]()->GridLength& {return get<GridLength>(ColumnDefinition::MaxWidthProperty()); })
+	: Width([&](GridLength v) {set(ColumnDefinition::WidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::WidthProperty()); })
+	, MinWidth([&](GridLength v) {set(ColumnDefinition::MinWidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::MinWidthProperty()); })
+	, MaxWidth([&](GridLength v) {set(ColumnDefinition::MaxWidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::MaxWidthProperty()); })
 	, ActualWidth([&]() {return get<float>(ActualWidthProperty()); })
 {
 }
@@ -121,8 +121,8 @@ DependencyProperty ColumnDefinition::ActualWidthProperty()
 }
 
 Grid::Grid()
-	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<RowDefinition>>& {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
-	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<ColumnDefinition>>& {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
+	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<RowDefinition>> {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
+	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<ColumnDefinition>> {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
 {
 }
 
