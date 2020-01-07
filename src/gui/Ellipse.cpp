@@ -132,9 +132,9 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 	}
 	auto strokeThickness = get<float>(StrokeThicknessProperty());
 	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffst = get<float>(StrokeDashOffsetProperty());
+	auto strokeDashOffset = get<float>(StrokeDashOffsetProperty());
 	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
-	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffst, strokeLineJoin);
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
 	auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
 	updateMeterial(m_strokeObject, stroke);

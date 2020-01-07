@@ -87,10 +87,10 @@ void Line::updateStrokeObject(const Rect &rc)
 	auto y2 = get<float>(Y2Property());
 	auto strokeThickness = get<float>(StrokeThicknessProperty());
 	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffst = get<float>(StrokeDashOffsetProperty());
+	auto strokeDashOffset = get<float>(StrokeDashOffsetProperty());
 	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
 	std::vector<glm::vec2> breaks{ glm::vec2(x1, y1), glm::vec2(x2, y2) };
-	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffst, strokeLineJoin);
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
 	auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);

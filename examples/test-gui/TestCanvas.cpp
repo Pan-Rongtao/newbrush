@@ -15,40 +15,39 @@ void TestCanvas::test()
 	auto cv = std::make_shared<Canvas>();
 
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-	rc0->Width = 100;
-	rc0->Height = 100;
+	rc0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc0->set(Shape::WidthProperty(), 100);
+	rc0->set(Shape::HeightProperty(), 100);
 
 	auto rc1 = std::make_shared<Rectangle>();
-	rc1->Fill = std::make_shared<SolidColorBrush>(Colors::green());
-	rc1->Width = 100;
-	rc1->Height = 100;
+	rc1->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
+	rc1->set(Shape::WidthProperty(), 100);
+	rc1->set(Shape::HeightProperty(), 100);
 
 	auto rc2 = std::make_shared<Rectangle>();
-	rc2->Fill = std::make_shared<SolidColorBrush>(Colors::blue());
-	rc2->Width = 100;
-	rc2->Height = 100;
+	rc2->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	rc2->set(Shape::WidthProperty(), 100);
+	rc2->set(Shape::HeightProperty(), 100);
 
 	auto rc3 = std::make_shared<Rectangle>();
-	rc3->Fill = std::make_shared<SolidColorBrush>(Colors::firebrick());
-	rc3->Width = 100;
-	rc3->Height = 100;
+	rc3->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
+	rc3->set(Shape::WidthProperty(), 100);
+	rc3->set(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->Fill = std::make_shared<SolidColorBrush>(Colors::floralWhite());
-	es0->Width = 100;
-	es0->Height = 100;
-	auto w = es0->Width;
+	es0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
+	es0->set(Shape::WidthProperty(), 100);
+	es0->set(Shape::HeightProperty(), 100);
 
 	auto line0 = std::make_shared<Line>();
-	line0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
-	line0->X1 = 100;
-	line0->Y1 = 100;
-	line0->X2 = 200;
-	line0->Y2 = 200;
+	line0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
+	line0->set(Line::X1Property(), 100);
+	line0->set(Line::Y1Property(), 100);
+	line0->set(Line::X2Property(), 200);
+	line0->set(Line::Y2Property(), 200);
 
 	auto pl0 = std::make_shared<Polyline>();
-	pl0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	pl0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
 	std::vector<Point> points;// { Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
 	for (float i = 0.0f; i <= 1.000001; i += 0.01f)
 	{
@@ -58,12 +57,12 @@ void TestCanvas::test()
 	//	points.push_back({p.x, p.y});
 	}
 
-	pl0->Points = std::vector<Point>(points);
+	pl0->set(Polyline::PointsProperty(), std::vector<Point>(points));
 
 	auto pg0 = std::make_shared<Polygon>();
-	pg0->Fill = std::make_shared<SolidColorBrush>(Colors::darkBlue());
+	pg0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
 	//std::vector<Point> points{ Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
-	pg0->Points = std::vector<Point>(points);
+	pg0->set(Polyline::PointsProperty(), std::vector<Point>(points));
 	/*
 	doubleAni.From = 800;
 	doubleAni.To = 1000;
@@ -77,14 +76,14 @@ void TestCanvas::test()
 	doubleAni.begin();
 	*/
 
-	cv->Children().add(rc0);
+/*	cv->Children().add(rc0);
 	cv->Children().add(rc1);
 	cv->Children().add(rc2);
 	cv->Children().add(rc3);
 	cv->Children().add(es0);
 	cv->Children().add(line0);
 	cv->Children().add(pl0);
-	cv->Children().add(pg0);
+	cv->Children().add(pg0);*/
 	cv->setLeft(rc0, 100);
 	cv->setTop(rc0, 100);
 	cv->setLeft(rc1, 200);
@@ -102,7 +101,7 @@ void TestCanvas::test()
 	cv->setLeft(pg0, 200);
 	cv->setTop(pg0, 10);
 
-	m_window->Content = cv;
+	m_window->set(Window::ContentProperty(), cv);
 	
 }
 

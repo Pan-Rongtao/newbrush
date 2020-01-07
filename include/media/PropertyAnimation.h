@@ -50,10 +50,10 @@ protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
 	virtual void progressing(float progress) override
 	{
-		if (!TargetProperty)	return;
+/*		if (!TargetProperty)	return;
 
 		decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
-		*TargetProperty = From() + (To() - From()) * ft;
+		*TargetProperty = From() + (To() - From()) * ft;*/
 	}
 };
 
@@ -61,12 +61,12 @@ protected:
 template<>
 void PropertyAnimation<Color>::progressing(float progress)
 {
-	if (!TargetProperty)	return;
+/*	if (!TargetProperty)	return;
 
 	decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
 	int r = (int)((int)From().red() + ft * ((int)To().red() - (int)From().red()));
 	int g = (int)((int)From().green() + ft * ((int)To().green() - (int)From().green()));
-	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));
+	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));*/
 	//set<Color>(*TargetProperty, Color(r, g, b));
 	//(*TargetProperty)().setRgb(r, g, b);
 }
