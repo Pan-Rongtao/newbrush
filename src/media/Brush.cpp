@@ -3,7 +3,6 @@
 using namespace nb;
 
 Brush::Brush()
-	: Opacity([&](float v) { set(OpacityProperty(), v); }, [&](){return get<float>(OpacityProperty()); })
 {
 }
 

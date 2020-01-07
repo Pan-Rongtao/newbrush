@@ -20,13 +20,18 @@ Ellipse::Ellipse()
 void Ellipse::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	Rect rc(offset.x(), offset.y(), ActualSize());
+	auto actualSize = get<Size>(ActualSizeProperty());
+	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
+	auto strokeThickness = get<float>(StrokeThicknessProperty());
 	if (m_fillObject)
 	{
 		Rect fillRc{ rc };
-		if (Stroke())
-			fillRc.reset(rc.left() - StrokeThickness(), rc.top() - StrokeThickness(), rc.width() - StrokeThickness() * 2, rc.height() - StrokeThickness() * 2);
+		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		if (stroke)
+		{
+			fillRc.reset(rc.left() - strokeThickness, rc.top() - strokeThickness, rc.width() - strokeThickness * 2, rc.height() - strokeThickness * 2);
+		}
 		updateFillObject(fillRc.width() * 0.5f, fillRc.height() * 0.5f);
 		drawContext.queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
@@ -34,7 +39,7 @@ void Ellipse::onRender(Viewport2D & drawContext)
 	if (m_strokeObject)
 	{
 		Rect StrokeRc{ rc };
-		StrokeRc.reset(rc.left() - StrokeThickness() * 0.5f, rc.top() - StrokeThickness() * 0.5f, rc.width() - StrokeThickness(), rc.height() - StrokeThickness());
+		StrokeRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
 		updateStrokeObject(StrokeRc);
 		drawContext.queue(m_strokeObject);
 		m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
@@ -45,7 +50,8 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == FillProperty())
 	{
-		if (!Fill())
+		auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+		if (!fill)
 		{
 			m_fillObject.reset();
 		}
@@ -71,7 +77,8 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == StrokeProperty())
 	{
-		if (!Stroke())				m_strokeObject.reset();
+		auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
@@ -88,7 +95,8 @@ Size Ellipse::arrangeOverride(const Size & finalSize)
 
 void Ellipse::updateFillObject(float a, float b)
 {
-	if (!Fill())
+	auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+	if (!fill)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
 	//中心点
@@ -104,7 +112,7 @@ void Ellipse::updateFillObject(float a, float b)
 	}
 
 	//更新材质
-	updateMeterial(m_fillObject, Fill());
+	updateMeterial(m_fillObject, fill);
 }
 
 void Ellipse::updateStrokeObject(const Rect &rc)
@@ -122,7 +130,12 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 		auto p = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
 		breaks.push_back(p);
 	}
-	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset(), StrokeLineJoin());
+	auto strokeThickness = get<float>(StrokeThicknessProperty());
+	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
+	auto strokeDashOffst = get<float>(StrokeDashOffsetProperty());
+	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffst, strokeLineJoin);
 
-	updateMeterial(m_strokeObject, Stroke());
+	auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+	updateMeterial(m_strokeObject, stroke);
 }

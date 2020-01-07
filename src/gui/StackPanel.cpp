@@ -4,13 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 StackPanel::StackPanel()
-	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE {return get<OrientationE>(OrientationProperty()); })
-	, ExtentWidth([&]() {return get<float>(ExtentWidthProperty()); })
-	, ExtentHeight([&]() {return get<float>(ExtentHeightProperty()); })
-	, HorizontalOffset([&]() {return get<float>(HorizontalOffsetProperty()); })
-	, VerticalOffset([&]() {return get<float>(VerticalOffsetProperty()); })
-	, ViewportWidth([&]() {return get<float>(ViewportWidthProperty()); })
-	, ViewportHeight([&]() {return get<float>(ViewportHeightProperty()); })
 {
 }
 
@@ -64,10 +57,12 @@ Size StackPanel::measureOverride(const Size & availableSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		childMeasureSize.width() = std::isnan(child->Width()) ? 0.0f : child->Width();
-		childMeasureSize.height() = std::isnan(child->Height()) ? 0.0f : child->Height();
+		auto childWidth = child->get<float>(WidthProperty());
+		auto childHeight = child->get<float>(HeightProperty());
+		childMeasureSize.width() = std::isnan(childWidth) ? 0.0f : childWidth;
+		childMeasureSize.height() = std::isnan(childHeight) ? 0.0f : childHeight;
 		child->measure(childMeasureSize);
-		auto sz = child->DesiredSize();
+		auto sz = child->get<Size>(DesiredSizeProperty());
 		bool b = false;
 	}
 	return availableSize;
@@ -80,19 +75,21 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		if (Orientation() == OrientationE::Horizontal)
+		auto desiredSize = child->get<Size>(DesiredSizeProperty());
+		auto orientation = get<OrientationE>(OrientationProperty());
+		if (orientation == OrientationE::Horizontal)
 		{
-			child->arrage(Rect(x, y, child->DesiredSize().width(), DesiredSize().height()));
-			x += child->DesiredSize().width();
-			ret.width() += child->DesiredSize().width();
-			ret.height() = std::max(ret.height(), child->DesiredSize().height());
+			child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
+			x += desiredSize.width();
+			ret.width() += desiredSize.width();
+			ret.height() = std::max(ret.height(), desiredSize.height());
 		}
 		else
 		{
-			child->arrage(Rect(x, y, DesiredSize().width(), child->DesiredSize().height()));
-			y += child->DesiredSize().height();
-			ret.width() = std::max(ret.width(), child->DesiredSize().width()); 
-			ret.height() += child->DesiredSize().height();
+			child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
+			y += desiredSize.height();
+			ret.width() = std::max(ret.width(), desiredSize.width());
+			ret.height() += desiredSize.height();
 		}
 	}
 	return finalSize;

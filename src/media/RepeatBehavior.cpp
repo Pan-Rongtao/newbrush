@@ -9,14 +9,10 @@ RepeatBehavior::RepeatBehavior()
 }
 
 RepeatBehavior::RepeatBehavior(int count)
-	: Count([&]() {return get<int>(CountProperty()); })
-	, Duration([&]() {return get<TimeSpan>(DurationProperty()); })
 {
 }
 
 RepeatBehavior::RepeatBehavior(const TimeSpan & ts)
-	: Count([&]() {return get<int>(CountProperty()); })
-	, Duration([&]() {return get<TimeSpan>(DurationProperty()); })
 {
 }
 

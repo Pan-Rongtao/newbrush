@@ -19,12 +19,6 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration)
 }
 
 Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const RepeatBehavior & repeatBehavior)
-	: BeginTime([&](TimeSpan v) { set(BeginTimeProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(BeginTimeProperty()); })
-	, Duration([&](TimeSpan v) { set(DurationProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(DurationProperty()); })
-	, FillBehavior([&](FillBehaviorE v) { set(FillBehaviorProperty(), v); }, [&]()->FillBehaviorE {return get<FillBehaviorE>(FillBehaviorProperty()); })
-	, AutoReverse([&](bool v) { set(AutoReverseProperty(), v); }, [&]()->bool {return get<bool>(AutoReverseProperty()); })
-	, Repeat([&](RepeatBehavior v) { set(RepeatProperty(), v); }, [&]()->RepeatBehavior {return get<RepeatBehavior>(RepeatProperty()); })
-	, State([&]()->StateE {return get<StateE>(StateProperty()); })
 {
 	m_timer.setInterval(1);
 	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);
@@ -32,9 +26,10 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const 
 
 void Timeline::begin()
 {
-	m_begTick = (uint64_t)(nb::getTickCount() + BeginTime().totalMilliseconds());
+	auto beginTime = get<TimeSpan>(BeginTimeProperty());
+	m_begTick = (uint64_t)(nb::getTickCount() + beginTime.totalMilliseconds());
 	set(StateProperty(), StateE::Active);
-	StateChangedEvent.invoke({ State() });
+	StateChangedEvent.invoke({ StateE::Active });
 	m_timer.start();
 }
 
@@ -76,16 +71,17 @@ DependencyProperty Timeline::StateProperty()
 
 void Timeline::onTick(const Timer::TickArgs & args)
 {
-	auto endTicks = m_begTick + Duration().totalMilliseconds();
+	auto duration = get<TimeSpan>(DurationProperty());
+	auto endTicks = m_begTick + duration.totalMilliseconds();
 	auto curTicks = nb::getTickCount();
 	if (curTicks >= m_begTick)
 	{
-		auto progress = std::min<float>(1.0f, float((curTicks - m_begTick) / Duration().totalMilliseconds()));
+		auto progress = std::min<float>(1.0f, float((curTicks - m_begTick) / duration.totalMilliseconds()));
 		ProgressEvent.invoke({ progress });
 		if (curTicks >= endTicks)
 		{
 			set(StateProperty(), StateE::Stopped);
-			StateChangedEvent.invoke({ State() });
+			StateChangedEvent.invoke({ StateE::Stopped });
 			m_timer.stop();
 			CompleteEvent.invoke({});
 		}

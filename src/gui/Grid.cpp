@@ -57,10 +57,6 @@ GridLength GridLength::automate()
 }
 
 RowDefinition::RowDefinition()
-	: Height([&](GridLength v) {set(RowDefinition::HeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::HeightProperty()); })
-	, MinHeight([&](GridLength v) {set(RowDefinition::MinHeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::MinHeightProperty()); })
-	, MaxHeight([&](GridLength v) {set(RowDefinition::MaxHeightProperty(), v); }, [&]()->GridLength {return get<GridLength>(RowDefinition::MaxHeightProperty()); })
-	, ActualHeight([&]() {return get<float>(ActualHeightProperty()); })
 {
 }
 
@@ -89,10 +85,6 @@ DependencyProperty RowDefinition::ActualHeightProperty()
 }
 
 ColumnDefinition::ColumnDefinition()
-	: Width([&](GridLength v) {set(ColumnDefinition::WidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::WidthProperty()); })
-	, MinWidth([&](GridLength v) {set(ColumnDefinition::MinWidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::MinWidthProperty()); })
-	, MaxWidth([&](GridLength v) {set(ColumnDefinition::MaxWidthProperty(), v); }, [&]()->GridLength {return get<GridLength>(ColumnDefinition::MaxWidthProperty()); })
-	, ActualWidth([&]() {return get<float>(ActualWidthProperty()); })
 {
 }
 
@@ -120,10 +112,7 @@ DependencyProperty ColumnDefinition::ActualWidthProperty()
 	return dp;
 }
 
-Grid::Grid()
-	: RowDefinitions([&](std::vector<std::shared_ptr<RowDefinition>> v) {set(RowDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<RowDefinition>> {return get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()); })
-	, ColumnDefinitions([&](std::vector<std::shared_ptr<ColumnDefinition>> v) {set(ColumnDefinitionsProperty(), v); }, [&]()->std::vector<std::shared_ptr<ColumnDefinition>> {return get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()); })
-{
+Grid::Grid(){
 }
 
 DependencyProperty Grid::RowDefinitionsProperty()
@@ -139,7 +128,8 @@ DependencyProperty Grid::ColumnDefinitionsProperty()
 }
 void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
 {
-	if ((row > 0 && row < RowDefinitions().size()) && m_children.contains(element))
+	auto rows = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()).size();
+	if ((row > 0 && row < rows) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyRow, row);
 	}
@@ -153,7 +143,8 @@ uint32_t Grid::getRow(std::shared_ptr<UIElement> element)
 
 void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
 {
-	if ((col > 0 && col < ColumnDefinitions().size()) && m_children.contains(element))
+	auto cols = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()).size();
+	if ((col > 0 && col < cols) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyColumn, col);
 	}
@@ -167,7 +158,8 @@ uint32_t Grid::getColumn(std::shared_ptr<UIElement> element)
 
 void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
 {
-	if ((rowSpan >= 1 && rowSpan <= RowDefinitions().size()) && m_children.contains(element))
+	auto rows = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()).size();
+	if ((rowSpan >= 1 && rowSpan <= rows) && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyRowSpan, rowSpan);
 	}
@@ -181,7 +173,8 @@ uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
 
 void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
 {
-	if ((colSpan <= ColumnDefinitions().size()) && colSpan >= 1 && m_children.contains(element))
+	auto cols = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()).size();
+	if ((colSpan <= cols) && colSpan >= 1 && m_children.contains(element))
 	{
 		DependencyProperty::registerAttached(element, AttachedPropertyColumnSpan, colSpan);
 	}
@@ -200,14 +193,14 @@ Size Grid::measureOverride(const Size & availableSize)
 {
 	auto calcPixcelLenghts = [&](bool isRowdefinition)->std::vector<float>
 	{
-		auto rows = RowDefinitions().size();
-		auto cols = ColumnDefinitions().size();
-		std::vector<float> rowOrColUnitsPixcelLenghts(isRowdefinition ? rows : cols, NAN);
+		auto rowDefinitions = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
+		auto colDefinitions = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+		std::vector<float> rowOrColUnitsPixcelLenghts(isRowdefinition ? rowDefinitions.size() : colDefinitions.size(), NAN);
 		auto verifiedCount = 0u;
 		//第一次循环把非Start的像素长度确定下来
 		for (auto i = 0u; i != rowOrColUnitsPixcelLenghts.size(); ++i)
 		{
-			auto lenght = isRowdefinition ? RowDefinitions()[i]->Height() : ColumnDefinitions()[i]->Width();
+			auto lenght = isRowdefinition ? rowDefinitions[i]->get<GridLength>(RowDefinition::HeightProperty()) : colDefinitions[i]->get<GridLength>(ColumnDefinition::WidthProperty());
 			switch (lenght.gridUnitType())
 			{
 			case GridUnitType::Pixcel:
@@ -223,7 +216,8 @@ Size Grid::measureOverride(const Size & availableSize)
 				{
 					auto child = m_children.childAt(i);
 					auto childRowOrCol = isRowdefinition ? getRow(child) : getColumn(child);
-					auto x = isRowdefinition ? (std::isnan(child->Height()) ? 0.0f : child->Height()) : (std::isnan(child->Height()) ? 0.0f : child->Height());
+					auto childHeight = child->get<float>(HeightProperty());
+					auto x = isRowdefinition ? (std::isnan(childHeight) ? 0.0f : childHeight) : (std::isnan(childHeight) ? 0.0f : childHeight);
 					if(childRowOrCol == i && x > maxLenghtOfRowOrCol)
 						maxLenghtOfRowOrCol = x;
 				}
@@ -246,7 +240,9 @@ Size Grid::measureOverride(const Size & availableSize)
 					verifiedLeghtPixcels += rowOrColUnitsPixcelLenghts[i];
 				else
 				{
-					auto lenght = isRowdefinition ? RowDefinitions()[i]->Height() : ColumnDefinitions()[i]->Width();
+					auto rowDefinitions = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
+					auto colDefinitions = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+					auto lenght = isRowdefinition ? rowDefinitions[i]->get<GridLength>(RowDefinition::HeightProperty()) : colDefinitions[i]->get<GridLength>(ColumnDefinition::WidthProperty());
 					remainStars += lenght.value();
 				}
 			}
@@ -256,8 +252,12 @@ Size Grid::measureOverride(const Size & availableSize)
 			{
 				if (std::isnan(rowOrColUnitsPixcelLenghts[i]))
 				{
-					rowOrColUnitsPixcelLenghts[i] = isRowdefinition ? (RowDefinitions()[i]->Height().value() / remainStars * remainPixcels) : 
-						(ColumnDefinitions()[i]->Width().value() / remainStars * remainPixcels);
+					auto rowDefinitions = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
+					auto colDefinitions = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+					auto rowHeight = rowDefinitions[i]->get<GridLength>(RowDefinition::HeightProperty());
+					auto colWidth = colDefinitions[i]->get<GridLength>(ColumnDefinition::WidthProperty());
+					rowOrColUnitsPixcelLenghts[i] = isRowdefinition ? (rowHeight.value() / remainStars * remainPixcels) :
+						(colWidth.value() / remainStars * remainPixcels);
 				}
 			}
 		}
@@ -293,8 +293,10 @@ Size Grid::arrangeOverride(const Size & finalSize)
 		auto child = m_children.childAt(i);
 		auto rowOfChild = getRow(child);
 		auto colOfChild = getColumn(child);
-		rowOfChild = nb::clamp<int>(0, RowDefinitions().size(), rowOfChild);
-		colOfChild = nb::clamp<int>(0u, ColumnDefinitions().size(), colOfChild);
+		auto rowDefinitions = get<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
+		auto colDefinitions = get<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+		rowOfChild = nb::clamp<int>(0, rowDefinitions.size(), rowOfChild);
+		colOfChild = nb::clamp<int>(0u, colDefinitions.size(), colOfChild);
 		auto rowSpan = getRowSpan(child);
 		auto colSpan = getColumnSpan(child);
 		auto x = std::accumulate(m_pixcelWidthsForEachCols.begin(), m_pixcelWidthsForEachCols.begin() + colOfChild, 0.0f);

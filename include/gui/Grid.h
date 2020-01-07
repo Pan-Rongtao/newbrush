@@ -61,10 +61,6 @@ public:
 	RowDefinition();
 	~RowDefinition() = default;
 
-	Property_rw<GridLength>		Height;					//设定高
-	Property_rw<GridLength>		MinHeight;				//最小高
-	Property_rw<GridLength>		MaxHeight;				//最大高
-	Property_r<float>			ActualHeight;			//实际高
 	static DependencyProperty	HeightProperty();		//高的依赖属性
 	static DependencyProperty	MinHeightProperty();	//最小高的依赖属性
 	static DependencyProperty	MaxHeightProperty();	//最大高的依赖属性
@@ -79,10 +75,6 @@ public:
 	ColumnDefinition();
 	~ColumnDefinition() = default;
 
-	Property_rw<GridLength>		Width;					//设定宽
-	Property_rw<GridLength>		MinWidth;				//最小宽
-	Property_rw<GridLength>		MaxWidth;				//最大宽
-	Property_r<float>			ActualWidth;			//实际宽
 	static DependencyProperty	WidthProperty();		//设定宽的依赖属性
 	static DependencyProperty	MinWidthProperty();		//最小宽的依赖属性
 	static DependencyProperty	MaxWidthProperty();		//最大宽的依赖属性
@@ -114,8 +106,6 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-	Property_rw<std::vector<std::shared_ptr<RowDefinition>>>		RowDefinitions;				//行定义
-	Property_rw<std::vector<std::shared_ptr<ColumnDefinition>>>	ColumnDefinitions;			//列定义
 	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
 	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
 

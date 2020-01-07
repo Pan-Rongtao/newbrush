@@ -9,10 +9,6 @@ using namespace nb;
 using namespace nb::gui;
 
 Line::Line()
-	: X1([&](float v) {set(X1Property(), v); }, [&]()->float {return get<float>(X1Property()); })
-	, X2([&](float v) {set(X2Property(), v); }, [&]()->float {return get<float>(X2Property()); })
-	, Y1([&](float v) {set(Y1Property(), v); }, [&]()->float {return get<float>(Y1Property()); })
-	, Y2([&](float v) {set(Y2Property(), v); }, [&]()->float {return get<float>(Y2Property()); })
 {
 }
 
@@ -43,7 +39,11 @@ DependencyProperty Line::Y2Property()
 void Line::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	Rect rc(Point(X1(), Y1()), Point(X2(), Y2()));
+	auto x1 = get<float>(X1Property());
+	auto x2 = get<float>(X2Property());
+	auto y1 = get<float>(Y1Property());
+	auto y2 = get<float>(Y2Property());
+	Rect rc(Point(x1, y1), Point(x2, y2));
 	rc.move(offset.x(), offset.y());
 	if (m_strokeObject)
 	{
@@ -56,7 +56,8 @@ void Line::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == StrokeProperty())
 	{
-		if (!Stroke())				m_strokeObject.reset();
+		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 }
@@ -68,7 +69,11 @@ Size Line::measureOverride(const Size & availableSize)
 
 Size Line::arrangeOverride(const Size & finalSize)
 {
-	return Size(std::abs(X2() - X1()), std::abs(Y2() - Y1()));
+	auto x1 = get<float>(X1Property());
+	auto x2 = get<float>(X2Property());
+	auto y1 = get<float>(Y1Property());
+	auto y2 = get<float>(Y2Property());
+	return Size(std::abs(x2 - x1), std::abs(y2 - y1));
 }
 
 void Line::updateStrokeObject(const Rect &rc)
@@ -76,8 +81,17 @@ void Line::updateStrokeObject(const Rect &rc)
 	if (!m_strokeObject)
 		return;
 
-	std::vector<glm::vec2> breaks{ glm::vec2(X1(), Y1()), glm::vec2(X2(), Y2()) };
-	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, StrokeThickness(), StrokeDashArray(), StrokeDashOffset(), StrokeLineJoin());
+	auto x1 = get<float>(X1Property());
+	auto x2 = get<float>(X2Property());
+	auto y1 = get<float>(Y1Property());
+	auto y2 = get<float>(Y2Property());
+	auto strokeThickness = get<float>(StrokeThicknessProperty());
+	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
+	auto strokeDashOffst = get<float>(StrokeDashOffsetProperty());
+	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
+	std::vector<glm::vec2> breaks{ glm::vec2(x1, y1), glm::vec2(x2, y2) };
+	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffst, strokeLineJoin);
 
-	updateMeterial(m_strokeObject, Stroke());
+	auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+	updateMeterial(m_strokeObject, stroke);
 }

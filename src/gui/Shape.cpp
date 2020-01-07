@@ -10,16 +10,6 @@ using namespace nb;
 using namespace nb::gui;
 
 Shape::Shape()
-	: Fill([&](std::shared_ptr<Brush> v) {set(FillProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(FillProperty()); })
-	, Stroke([&](std::shared_ptr<Brush> v) {set(StrokeProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(StrokeProperty()); })
-	, StrokeThickness([&](float v) {set(StrokeThicknessProperty(), v); }, [&]()->float {return get<float>(StrokeThicknessProperty()); })
-	, StrokeStartLineCap([&](PenLineCapE v) {set(StrokeStartLineCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeStartLineCapProperty()); })
-	, StrokeEndLineCap([&](PenLineCapE v) {set(StrokeEndLineCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeEndLineCapProperty()); })
-	, StrokeDashArray([&](std::vector<float> v) {set(StrokeDashArrayProperty(), v); }, [&]()->std::vector<float> {return get<std::vector<float>>(StrokeDashArrayProperty()); })
-	, StrokeDashOffset([&](float v) {set(StrokeDashOffsetProperty(), v); }, [&]()->float {return get<float>(StrokeDashOffsetProperty()); })
-	, StrokeDashCap([&](PenLineCapE v) {set(StrokeDashCapProperty(), v); }, [&]()->PenLineCapE {return get<PenLineCapE>(StrokeDashCapProperty()); })
-	, StrokeLineJoin([&](PenLineJoinE v) {set(StrokeLineJoinProperty(), v); }, [&]()->PenLineJoinE {return get<PenLineJoinE>(StrokeLineJoinProperty()); })
-	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE {return get<StretchE>(StretchProperty()); })
 {
 }
 
@@ -88,22 +78,24 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
-		auto color = std::dynamic_pointer_cast<SolidColorBrush>(brush)->Color();
+		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
+		auto color = solidColorBrush->get<Color>(SolidColorBrush::ColorProperty());
 		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::gradientPrimitive()));
 		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
-		auto stops = linearGradientBrush->GradientStops();
+		auto stops = linearGradientBrush->get<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
 		std::vector<glm::vec4> colors;
 		std::vector<float> offsets;
 		for (auto i = 0; i != stops->count(); ++i)
 		{
 			auto stop = (*stops)[i];
-			auto color = stop->Color();
+			auto color = stop->get<Color>(GradientStop::ColorProperty());
+			auto offset = stop->get<float>(GradientStop::OffsetPropert());
 			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-			offsets.push_back(stop->Offset());
+			offsets.push_back(offset);
 		}
 		ro->storeUniform("size", stops->count());
 		ro->storeUniform("colors", colors);
@@ -112,9 +104,10 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::image()));
-		if (std::dynamic_pointer_cast<ImageBrush>(brush)->Source())
+		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->get<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
+		if (source)
 		{
-			auto bm = std::dynamic_pointer_cast<ImageBrush>(brush)->Source()->Bm();
+			auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 			ro->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
 		}
 	}

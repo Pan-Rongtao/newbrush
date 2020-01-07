@@ -24,18 +24,7 @@ class NB_API StackPanel : public Panel
 public:
 	StackPanel();
 	virtual ~StackPanel() = default;
-
-	Property_rw<OrientationE>	Orientation;				//方向
-	Property_r<float>			ExtentWidth;				//外部宽
-	Property_r<float>			ExtentHeight;				//外部高
-	Property_r<float>			HorizontalOffset;			//横向偏移量
-	Property_r<float>			VerticalOffset;				//纵向偏移量
-	Property_r<float>			ViewportWidth;				//视口宽
-	Property_r<float>			ViewportHeight;				//视口高
-	//Property_rw<Scrollview>	ScrollOwner;
-	//Property_rw<bool>			CanHorizontallyScroll;
-	//Property_rw<bool>			CanVerticallyScroll;
-
+	
 	static DependencyProperty	OrientationProperty();		//方向的依赖属性
 	static DependencyProperty	ExtentWidthProperty();		//外部宽的依赖属性
 	static DependencyProperty	ExtentHeightProperty();		//外部高的依赖属性

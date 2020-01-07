@@ -17,27 +17,16 @@ TextBlock::TextBlock()
 }
 
 TextBlock::TextBlock(const std::string & text)
-	: Text([&](std::string v) {set(TextProperty(), v); }, [&]()->std::string {return get<std::string>(TextProperty()); })
-	, Background([&](std::shared_ptr<Brush> v) {set(BackgroundProperty(), v); }, [&]()->std::shared_ptr<Brush> {return get<std::shared_ptr<Brush>>(BackgroundProperty()); })
-	, Font([&](std::shared_ptr<nb::Font> v) {set(FontProperty(), v); }, [&]()->std::shared_ptr<nb::Font> {return get<std::shared_ptr<nb::Font>>(FontProperty()); })
-	, FontSize([&](float v) {set(FontSizeProperty(), v); }, [&]()->float {return get<float>(FontSizeProperty()); })
-	, FontWeight([&](int v) {set(FontWeightProperty(), v); }, [&]()->int {return get<int>(FontWeightProperty()); })
-	, Foreground([&](Color v) {set(ForegroundProperty(), v); }, [&]()->Color {return get<Color>(ForegroundProperty()); })
-	, LineHeight([&](float v) {set(LineHeightProperty(), v); }, [&]()->float {return get<float>(LineHeightProperty()); })
-	, CharSpacing([&](float v) {set(CharSpacingProperty(), v); }, [&]()->float {return get<float>(CharSpacingProperty()); })
-	, Padding([&](Thickness v) {set(PaddingProperty(), v); }, [&]()->Thickness {return get<Thickness>(PaddingProperty()); })
-	, TextAlignment([&](TextAlignmentE v) {set(TextAlignmentProperty(), v); }, [&]()->TextAlignmentE {return get<TextAlignmentE>(TextAlignmentProperty()); })
-	, TextTrimming([&](TextTrimmingE v) {set(TextTrimmingProperty(), v); }, [&]()->TextTrimmingE {return get<TextTrimmingE>(TextTrimmingProperty()); })
-	, TextWrapping([&](TextWrappingE v) {set(TextWrappingProperty(), v); }, [&]()->TextWrappingE {return get<TextWrappingE>(TextWrappingProperty()); })
-	, TextDecoration([&](TextDecorationE v) {set(TextWrappingProperty(), v); }, [&]()->TextDecorationE {return get<TextDecorationE>(TextWrappingProperty()); })
-	, m_glyphBunch(std::make_shared<GlyphBunch>())
+	: m_glyphBunch(std::make_shared<GlyphBunch>())
 {
-	Text = text;
-	LineHeight = (float)(Font()->size());
-	Renderer()->setModel(m_glyphBunch);
-	Renderer()->setMaterial(std::make_shared<Material>(Programs::glpy()));
-	Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(Font(), L'a')->texureId));
-	Renderer()->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	set(TextProperty(), text);
+	auto font = get<std::shared_ptr<Font>>(FontProperty());
+	set(LineHeightProperty(), (float)(font->size()));
+	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	renderer->setModel(m_glyphBunch);
+	renderer->setMaterial(std::make_shared<Material>(Programs::glpy()));
+	renderer->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
+	renderer->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 DependencyProperty TextBlock::TextProperty()
@@ -123,27 +112,34 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	if (args.property == ForegroundProperty())
 	{
 		auto c = any_cast<Color>(args.newValue);
-		Renderer()->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
+		auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+		renderer->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}
 }
 
 Size TextBlock::measureOverride(const Size & availableSize)
 {
-	return Size(availableSize.width() - Padding().left() - Padding().right(), availableSize.height() - Padding().top() - Padding().bottom());
+	auto padding = get<Thickness>(PaddingProperty());
+	return Size(availableSize.width() - padding.left() - padding.right(), availableSize.height() - padding.top() - padding.bottom());
 }
 
 Size TextBlock::arrangeOverride(const Size & finalSize)
 {
-	switch (TextWrapping())
+	auto textWrapping = get<TextWrappingE>(TextWrappingProperty());
+	auto font = get<std::shared_ptr<Font>>(FontProperty());
+	auto text = get<std::string>(TextProperty());
+	float charSpacing = get<float>(CharSpacingProperty());
+	float lineHeight = get<float>(LineHeightProperty());
+	switch (textWrapping)
 	{
 	case TextWrappingE::NoWrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), TextWrappingE::NoWrap, -1);
+		Size sz = GlyphMetrics::measureGlyphAltas(font, text, charSpacing, lineHeight, TextWrappingE::NoWrap, -1);
 		return sz;
 	}
 	case TextWrappingE::Wrap:
 	{
-		Size sz = GlyphMetrics::measureGlyphAltas(Font(), Text(), CharSpacing(), LineHeight(), TextWrappingE::Wrap, finalSize.width());
+		Size sz = GlyphMetrics::measureGlyphAltas(font, text, charSpacing, lineHeight, TextWrappingE::Wrap, finalSize.width());
 		return sz;
 	}
 	case TextWrappingE::WrapWithOverflow:
@@ -158,7 +154,13 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 {
 	auto x = 0.0f;// Offset().x();
 	auto y = 0.0f;// Offset().y();
-	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing(), LineHeight(), TextWrapping(), ActualSize().width());
+	auto font = get<std::shared_ptr<Font>>(FontProperty());
+	auto text = get<std::string>(TextProperty());
+	float charSpacing = get<float>(CharSpacingProperty());
+	float lineHeight = get<float>(LineHeightProperty());
+	auto textWrapping = get<TextWrappingE>(TextWrappingProperty());
+	auto actualSize = get<Size>(ActualSizeProperty());
+	m_glyphBunch->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 }
 
 void TextBlock::onRender(Viewport2D & drawContext)
@@ -166,6 +168,13 @@ void TextBlock::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto x = offset.x();
 	auto y = offset.y();
-	m_glyphBunch->arrage(Font(), x, y, Text(), CharSpacing(), LineHeight(), TextWrapping(), ActualSize().width());
-	drawContext.queue(Renderer());
+	auto font = get<std::shared_ptr<Font>>(FontProperty());
+	auto text = get<std::string>(TextProperty());
+	float charSpacing = get<float>(CharSpacingProperty());
+	float lineHeight = get<float>(LineHeightProperty());
+	auto textWrapping = get<TextWrappingE>(TextWrappingProperty());
+	auto actualSize = get<Size>(ActualSizeProperty());
+	m_glyphBunch->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
+	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	drawContext.queue(renderer);
 }

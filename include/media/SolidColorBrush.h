@@ -9,7 +9,6 @@ public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const nb::Color &color);
 
-	Property_rw<nb::Color>		Color;				//ÑÕÉ«
 	static DependencyProperty	ColorProperty();	//ÑÕÉ«ÒÀÀµÊôĞÔ
 
 };

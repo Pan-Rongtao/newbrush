@@ -40,20 +40,6 @@ public:
 	explicit TextBlock(const std::string &content);
 
 	//fontstyle有啥用
-	Property_rw<std::string>		Text;			//文本内容
-	Property_rw<std::shared_ptr<Brush>>	Background;		//背景
-	Property_rw<std::shared_ptr<Font>>	Font;			//字体
-	Property_rw<float>				FontSize;		//字体大小
-	Property_rw<int>				FontWeight;		//字体权重
-	Property_rw<Color>				Foreground;		//字体前景
-	Property_rw<float>				LineHeight;		//行间距
-	Property_rw<float>				CharSpacing;	//字间距
-	Property_rw<Thickness>			Padding;		//内距
-	Property_rw<TextAlignmentE>		TextAlignment;	//文本排列方式
-	Property_rw<TextTrimmingE>		TextTrimming;	//文本溢出决策
-	Property_rw<TextWrappingE>		TextWrapping;	//文本换行
-	Property_rw<TextDecorationE>	TextDecoration;	//文本修饰
-
 	static DependencyProperty		TextProperty();
 	static DependencyProperty		BackgroundProperty();
 	static DependencyProperty		FontProperty();

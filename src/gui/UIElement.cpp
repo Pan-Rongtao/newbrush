@@ -5,28 +5,7 @@ using namespace nb;
 using namespace nb::gui;
 
 UIElement::UIElement()
-	: Visibility([&](VisibilityE v) {set(VisibilityProperty(), v); }, [&]()->VisibilityE {return get<VisibilityE>(VisibilityProperty()); })
-	, Opacity([&](float v) {set(OpacityProperty(), v); }, [&]()->float {return get<float>(OpacityProperty()); })
-	, Focusable([&](bool v) {set(FocusableProperty(), v); }, [&]()->bool {return get<bool>(FocusableProperty()); })
-	, IsFocused([&](bool v) {set(IsFocusedProperty(), v); }, [&]()->bool {return get<bool>(IsFocusedProperty()); })
-	, Width([&](float v) {set(WidthProperty(), v); }, [&]()->float {return get<float>(WidthProperty()); })
-	, Height([&](float v) {set(HeightProperty(), v); }, [&]()->float {return get<float>(HeightProperty()); })
-	, MinWidth([&](float v) {set(MinWidthProperty(), v); }, [&]()->float {return get<float>(MinWidthProperty()); })
-	, MinHeight([&](float v) {set(MinHeightProperty(), v); }, [&]()->float {return get<float>(MinHeightProperty()); })
-	, MaxWidth([&](float v) {set(MaxWidthProperty(), v); }, [&]()->float {return get<float>(MaxWidthProperty()); })
-	, MaxHeight([&](float v) {set(MaxHeightProperty(), v); }, [&]()->float {return get<float>(MaxHeightProperty()); })
-	, DesiredSize([&]() {return get<Size>(DesiredSizeProperty()); })
-	, ActualSize([&]() {return get<Size>(ActualSizeProperty()); })
-	, RenderSize([&](Size v) {set(RenderSizeProperty(), v); }, [&]()->Size {return get<Size>(RenderSizeProperty()); })
-	, Offset([&](Point v) {set(OffsetProperty(), v); }, [&]()->Point {return get<Point>(OffsetProperty()); })
-	, Margin([&](Thickness v) {set(MarginProperty(), v); }, [&]()->Thickness {return get<Thickness>(MarginProperty()); })
-	, HorizontalAlignment([&](HorizontalAlignmentE v) {set(HorizontalAlignmentProperty(), v); }, [&]()->HorizontalAlignmentE {return get<HorizontalAlignmentE>(HorizontalAlignmentProperty()); })
-	, VerticalAlignment([&](VerticalAlignmentE v) {set(VerticalAlignmentProperty(), v); }, [&]()->VerticalAlignmentE {return get<VerticalAlignmentE>(VerticalAlignmentProperty()); })
-	, FlowDirection([&](FlowDirectionE v) {set(FlowDirectionProperty(), v); }, [&]()->FlowDirectionE {return get<FlowDirectionE>(FlowDirectionProperty()); })
-	, Renderer([&]() {return get<std::shared_ptr<RenderObject>>(RendererProperty()); })
-	, style([&](std::shared_ptr<Style> v) {set(StyleProperty(), v); }, [&]()->std::shared_ptr<Style> {return get<std::shared_ptr<Style>>(StyleProperty()); })
-	, StateMachine([&](std::shared_ptr<VisualStateMachine> v) {set(StateMachineProperty(), v); }, [&]()->std::shared_ptr<VisualStateMachine> {return get<std::shared_ptr<VisualStateMachine>>(StateMachineProperty()); })
-	, m_parent(nullptr)
+	: m_parent(nullptr)
 {
 	set(RendererProperty(), std::make_shared<RenderObject>());
 }
@@ -183,7 +162,8 @@ Point UIElement::worldOffset()
 		auto p = this;
 		Point ret;
 		do {
-			ret += p->Offset();
+			auto offset = p->get<float>(OffsetProperty());
+			ret += offset;
 		} while ((p->m_parent) && (p = p->m_parent));
 		return ret;
 	}
@@ -197,35 +177,46 @@ void UIElement::updateLayout()
 	auto root = getRoot();
 	if (!root)	return;
 
-	root->measure({ root->Width(), root->Height() });
-	root->arrage(Rect(0, 0, root->DesiredSize()));
+	auto rootWidth = root->get<float>(WidthProperty());
+	auto rootHeight = root->get<float>(HeightProperty());
+	auto rootDesiredSize = root->get<Size>(DesiredSizeProperty());
+	root->measure({ rootWidth, rootHeight });
+	root->arrage(Rect(0, 0, rootDesiredSize));
 	root->onRender(gui::Window::drawContext);
 }
 
 void UIElement::measure(const Size & availabelSize)
 {
 	//如果不可见或两次measure参数一致，忽略
-	if ((Visibility != VisibilityE::Visible))
+	auto visibility = get<VisibilityE>(VisibilityProperty());
+	if (visibility != VisibilityE::Visible)
 		return;
 
+	auto margin = get<Thickness>(MarginProperty());
+	auto width = get<float>(WidthProperty());
+	auto height = get<float>(HeightProperty());
+	auto minWidth = get<float>(MinWidthProperty());
+	auto minHeight = get<float>(MinHeightProperty());
+	auto maxWidth = get<float>(MaxWidthProperty());
+	auto maxHeight = get<float>(MaxHeightProperty());
 	//减去magin计算出本来的constrainedSize
-	auto constrainedSize = Size(availabelSize.width() - Margin().left() - Margin().right(), availabelSize.height() - Margin().top() - Margin().bottom());
+	auto constrainedSize = Size(availabelSize.width() - margin.left() - margin.right(), availabelSize.height() - margin.top() - margin.bottom());
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
-	constrainedSize.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? constrainedSize.width() : Width());
-	constrainedSize.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? constrainedSize.height() : Height());
+	constrainedSize.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? constrainedSize.width() : width);
+	constrainedSize.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? constrainedSize.height() : height);
 
 	//measureOverride返回控件期望大小desiredSizeTemp，需要调整到保证在(Min, Max)区间
 	//如果手动设置了Width，调整Width到(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
 	auto desiredSizeTemp = measureOverride(constrainedSize);
-	desiredSizeTemp.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? desiredSizeTemp.width(): Width());
-	desiredSizeTemp.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? desiredSizeTemp.height() : Height());
+	desiredSizeTemp.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? desiredSizeTemp.width(): width);
+	desiredSizeTemp.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? desiredSizeTemp.height() : height);
 
 	//由于child不关注和计算magin，因此需重新+margin
-	desiredSizeTemp += Size(Margin().left() + Margin().right(), Margin().top() + Margin().bottom());
+	desiredSizeTemp += Size(margin.left() + margin.right(), margin.top() + margin.bottom());
 	//保证在（0, availabelSize)区间
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
@@ -235,52 +226,63 @@ void UIElement::measure(const Size & availabelSize)
 void UIElement::arrage(const Rect & finalRect)
 {
 	//如果不可见或两次arrage参数一致，忽略
-	if ((Visibility != VisibilityE::Visible))
+	auto visibility = get<VisibilityE>(VisibilityProperty());
+	if (visibility != VisibilityE::Visible)
 		return;
 
+	auto margin = get<Thickness>(MarginProperty());
+	auto width = get<float>(WidthProperty());
+	auto height = get<float>(HeightProperty());
+	auto minWidth = get<float>(MinWidthProperty());
+	auto minHeight = get<float>(MinHeightProperty());
+	auto maxWidth = get<float>(MaxWidthProperty());
+	auto maxHeight = get<float>(MaxHeightProperty());
+	auto desiredSize = get<Size>(DesiredSizeProperty());
 	//减去magin计算出本来的arrangeSize以及clientSize
-	auto arrangeSize = Size(finalRect.width() - Margin().left() - Margin().right(), finalRect.height() - Margin().top() - Margin().bottom());
+	auto arrangeSize = Size(finalRect.width() - margin.left() - margin.right(), finalRect.height() - margin.top() - margin.bottom());
 	auto clientSize = arrangeSize;
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	if (HorizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(DesiredSize().width());
-	if (VerticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(DesiredSize().height());
+	auto horizontalAlignment = get<HorizontalAlignmentE>(HorizontalAlignmentProperty());
+	auto verticalAlignment = get<VerticalAlignmentE>(VerticalAlignmentProperty());
+	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(desiredSize.width());
+	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(desiredSize.height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
 	//同样的规则应用于Height
-	arrangeSize.width() = nb::clamp<float>(MinWidth(), MaxWidth(), std::isnan(Width()) ? arrangeSize.width() : Width());
-	arrangeSize.height() = nb::clamp<float>(MinHeight(), MaxHeight(), std::isnan(Height()) ? arrangeSize.height() : Height());
+	arrangeSize.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? arrangeSize.width() : width);
+	arrangeSize.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? arrangeSize.height() : height);
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
-	RenderSize = innerInkSize;
-	auto ss = RenderSize();
+	set(RenderSizeProperty(), innerInkSize);
+	auto renderSize = get<Size>(RenderSizeProperty());
 	//裁剪，保证innerInkSize在Max之内
-	if (std::isnan(Width()))
-		if (innerInkSize.width() > MaxWidth())	innerInkSize.width() = MaxWidth();
-	if (std::isnan(Height()))
-		if (innerInkSize.height() > MaxHeight())	innerInkSize.height() = MaxHeight();
-	Size clipInkSize(std::min(innerInkSize.width(), Width()), std::min(innerInkSize.height(), Height()));
+	if (std::isnan(width))
+		if (innerInkSize.width() > maxWidth)	innerInkSize.width() = maxWidth;
+	if (std::isnan(height))
+		if (innerInkSize.height() > maxHeight)	innerInkSize.height() = maxHeight;
+	Size clipInkSize(std::min(innerInkSize.width(), width), std::min(innerInkSize.height(), height));
 
 	float offsetX = 0.0f, offsetY = 0.0f;
-	switch (HorizontalAlignment())
+	switch (horizontalAlignment)
 	{
-	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + Margin().left();														break;
-	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
-	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - Margin().right() - RenderSize().width();							break;
-	default:							offsetX = RenderSize().width() >= clientSize.width() ? finalRect.left() + Margin().left() : finalRect.x() + Margin().left() + (clientSize.width() - RenderSize().width()) / 2;	break;
+	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + margin.left();													break;
+	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left() + (clientSize.width() - renderSize.width()) / 2;	break;
+	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right() - renderSize.width();							break;
+	default:							offsetX = renderSize.width() >= clientSize.width() ? finalRect.left() + margin.left() : finalRect.x() + margin.left() + (clientSize.width() - renderSize.width()) / 2;	break;
 	}
-	switch (VerticalAlignment())
+	switch (verticalAlignment)
 	{
-	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + Margin().top();														break;
-	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
-	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - Margin().bottom() - RenderSize().height());		break;
-	default:							offsetY = RenderSize().height() >= clientSize.height() ? finalRect.top() + Margin().top() : finalRect.y() + Margin().top() + (clientSize.height() - RenderSize().height()) / 2;	break;
+	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + margin.top();														break;
+	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top() + (clientSize.height() - renderSize.height()) / 2;	break;
+	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom() - renderSize.height());		break;
+	default:							offsetY = renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top() : finalRect.y() + margin.top() + (clientSize.height() - renderSize.height()) / 2;	break;
 	}
 	set(OffsetProperty(), Point(offsetX, offsetY));
-	set(ActualSizeProperty(), RenderSize());
+	set(ActualSizeProperty(), renderSize);
 	//裁剪
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();

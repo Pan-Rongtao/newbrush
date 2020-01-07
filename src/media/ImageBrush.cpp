@@ -9,14 +9,13 @@ ImageBrush::ImageBrush()
 }
 
 ImageBrush::ImageBrush(std::shared_ptr<ImageSource> imgSource)
-	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource> {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
 {
-	auto bm = imgSource->Bm();
+	auto bm = imgSource->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 	//由于img->Bm()使用的是std::shared，在执行Source =时，将调用ImageBrush::SourceProperty()中的std::make_shared<ImageSource>()，将bm重置为null
 	//使得最终执行Source = imgSource后的bm为null，该问题目前无解，暂时用保存bm副本的方式
 	auto bmx = std::make_shared<Bitmap>(*bm);
-	Source = imgSource;
-	imgSource->Bm() = bmx;
+	set(SourceProperty(), imgSource);
+	imgSource->set(ImageSource::BmProperty(), bmx);
 }
 
 DependencyProperty ImageBrush::SourceProperty()

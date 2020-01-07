@@ -9,9 +9,9 @@ class NB_API RepeatButton : public Button
 public:
 	RepeatButton();
 	virtual ~RepeatButton();
-
+	/*
 	Property_rw<int>		Delay;
-	Property_rw<int>		Interval;
+	Property_rw<int>		Interval;*/
 	
 private:
 	Timer	m_timer;

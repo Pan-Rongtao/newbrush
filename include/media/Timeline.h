@@ -40,12 +40,6 @@ public:
 
 	void begin();
 
-	Property_rw<TimeSpan>		BeginTime;			//开始时间	
-	Property_rw<TimeSpan>		Duration;			//持续时间
-	Property_rw<FillBehaviorE>	FillBehavior;		//完成后的动作
-	Property_rw<bool>			AutoReverse;		//是否自动反向
-	Property_rw<RepeatBehavior>	Repeat;				//重复方式
-	Property_r<StateE>			State;				//状态
 	static DependencyProperty	BeginTimeProperty();//是否是“取消”按钮依赖属性
 	static DependencyProperty	DurationProperty();	//是否是“默认”按钮依赖属性
 	static DependencyProperty	FillBehaviorProperty();	//是否是“取消”按钮依赖属性

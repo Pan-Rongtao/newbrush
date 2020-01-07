@@ -4,9 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 UniformGrid::UniformGrid()
-	: Rows([&](int v) {set(RowsProperty(), v); }, [&]()->int {return get<int>(RowsProperty()); })
-	, Columns([&](int v) {set(ColumnsProperty(), v); }, [&]()->int {return get<int>(ColumnsProperty()); })
-	, FirstColumn([&](int v) {set(FirstColumnProperty(), v); }, [&]()->int {return get<int>(FirstColumnProperty()); })
 {
 }
 
@@ -46,7 +43,9 @@ Size UniformGrid::arrangeOverride(const Size & finalSize)
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = finalSize.width() / rowsColums.second;
 	auto cellHeight = finalSize.height() / rowsColums.first;
-	auto firstCol = (Columns() < 0 || FirstColumn() < 0 || FirstColumn() >= Columns()) ? 0 : FirstColumn();
+	auto cols = get<int>(ColumnsProperty());
+	auto firstColumn = get<int>(FirstColumnProperty());
+	auto firstCol = (cols < 0 || firstColumn < 0 || firstColumn >= cols) ? 0 : firstColumn;
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
@@ -61,31 +60,33 @@ Size UniformGrid::arrangeOverride(const Size & finalSize)
 
 std::pair<int, int> UniformGrid::calcRowsColums() const
 {
-	int32_t rows, cols;
-	if (Rows() <= 0)
+	std::pair<int, int> ret;
+	auto rows = get<int>(RowsProperty());
+	auto cols = get<int>(ColumnsProperty());
+	if (rows <= 0)
 	{
-		if (Columns() <= 0)
+		if (cols <= 0)
 		{
-			rows = (int)std::ceil(sqrt(m_children.count()));
-			cols = rows;
+			ret.first = (int)std::ceil(sqrt(m_children.count()));
+			ret.second = ret.first;
 		}
 		else
 		{
-			cols = Columns();
-			rows = (int)std::ceil(m_children.count() / (double)cols);
+			ret.second = cols;
+			ret.first = (int)std::ceil(m_children.count() / (double)cols);
 		}
 	}
 	else
 	{
-		rows = Rows();
-		if (Columns() <= 0)
+		ret.first = rows;
+		if (cols <= 0)
 		{
-			cols = (int)std::ceil(m_children.count() / (double)rows);
+			ret.second = (int)std::ceil(m_children.count() / (double)rows);
 		}
 		else
 		{
-			cols = Columns();
+			ret.second = cols;
 		}
 	}
-	return{ rows, cols };
+	return ret;
 }

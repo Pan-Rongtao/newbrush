@@ -26,7 +26,6 @@ public:
 	float width() const;
 	float heigth() const;
 
-	Property_rw<std::shared_ptr<Bitmap>> 	Bm;				//位图
 	static DependencyProperty				BmProperty();	//位图的依赖属性
 	
 };

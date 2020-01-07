@@ -4,7 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 ContentControl::ContentControl()
-	: Content([&](std::shared_ptr<UIElement> v) { set(ContentProperty(), v); }, [&]()->std::shared_ptr<UIElement> {return get<std::shared_ptr<UIElement>>(ContentProperty()); })
 {
 }
 
@@ -17,13 +16,15 @@ DependencyProperty ContentControl::ContentProperty()
 void ContentControl::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
+	auto actualSize = get<Size>(ActualSizeProperty());
+	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
 //	drawContext.queue(Renderer());
-	if (Content())
-		Content()->onRender(drawContext);
+	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	if (content)
+		content->onRender(drawContext);
 }
 
 void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
@@ -37,9 +38,10 @@ void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs 
 
 Size ContentControl::measureOverride(const Size & availableSize)
 {
-	if (Content())
+	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	if (content)
 	{
-		Content()->measure(availableSize);
+		content->measure(availableSize);
 		//return Content()->DesiredSize;
 		return availableSize;
 	}
@@ -51,10 +53,11 @@ Size ContentControl::measureOverride(const Size & availableSize)
 
 Size ContentControl::arrangeOverride(const Size & finalSize)
 {
-	if (Content())
+	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	if (content)
 	{
 		//Content()->arrage(Rect(0.0, 0.0, DesiredSize));
-		Content()->arrage(Rect(0.0, 0.0, finalSize));
+		content->arrage(Rect(0.0, 0.0, finalSize));
 	}
 	return finalSize;
 }

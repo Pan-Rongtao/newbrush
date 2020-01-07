@@ -10,12 +10,12 @@ public:
 	RangeBase();
 	virtual ~RangeBase();
 
-public:
+public:/*
 	Property_rw<float>			Value;
 	Property_rw<float>			Maximum;
 	Property_rw<float>			Minimum;
 	Property_rw<float>			SmallChange;
-	Property_rw<float>			LargeChange;
+	Property_rw<float>			LargeChange;*/
 			
 protected:
 	virtual void OnValueChanged(float fOldValue, float fNewValue);

@@ -10,7 +10,6 @@ public:
 	explicit ContentControl();
 	virtual ~ContentControl() = default;
 
-	Property_rw<std::shared_ptr<UIElement>>	Content;			//内容
 	static DependencyProperty			ContentProperty();	//内容依赖属性
 	
 	virtual void onRender(Viewport2D & drawContext) override;

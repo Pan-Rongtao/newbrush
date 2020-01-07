@@ -15,14 +15,7 @@ Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
 
 Window::Window()
-	: WindowState([&](WindowStateE v) {set(WindowStateProperty(), v); }, [&]()->WindowStateE {return get<WindowStateE>(WindowStateProperty()); })
-	, WindowStyle([&](WindowStyleE v) {set(WindowStyleProperty(), v); }, [&]()->WindowStyleE {return get<WindowStyleE>(WindowStyleProperty()); })
-	, Topmost([&](bool v) {set(TopmostProperty(), v); }, [&]()->bool {return get<bool>(TopmostProperty()); })
-	, Left([&](float v) {set(LeftProperty(), v); }, [&]()->float {return get<float>(LeftProperty()); })
-	, Top([&](float v) {set(TopProperty(), v); }, [&]()->float {return get<float>(TopProperty()); })
-	, Title([&](std::string v) {set(TitleProperty(), v); }, [&]()->std::string {return get<std::string>(TitleProperty()); })
-	, Icon([&](std::shared_ptr<ImageSource> v) {set(IconProperty(), v); }, [&]()->std::shared_ptr<ImageSource> {return get<std::shared_ptr<ImageSource>>(IconProperty()); })
-	, m_implWindow(nullptr)
+	: m_implWindow(nullptr)
 {
 	init();
 
@@ -31,10 +24,10 @@ Window::Window()
 	glfwGetWindowPos(m_implWindow, &x, &y);
 	glfwGetWindowSize(m_implWindow, &w, &h);
 	//一定不能去掉下面四句（需要在回调生效前设置）以便不触发回调，否则会更新layout，而此时Width或Height是NAN
-	Left = (float)x;
-	Top = (float)y;
-	Width = (float)w;
-	Height = (float)h;
+	set(LeftProperty(), (float)x);
+	set(TopProperty(), (float)y);
+	set(WidthProperty(), (float)w);
+	set(HeightProperty(), (float)h);
 	glfwSetWindowUserPointer(m_implWindow, this);
 	glfwSetWindowPosCallback(m_implWindow, [](GLFWwindow*w, int x, int y) { static_cast<Window *>(glfwGetWindowUserPointer(w))->posCallback(x, y); });
 	glfwSetWindowSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
@@ -51,7 +44,7 @@ Window::Window()
 	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
 
 	glfwMakeContextCurrent(m_implWindow);
-	sizeCallback((int)Width(), (int)Height());
+	sizeCallback((int)w, (int)h);
 	Singleton<WindowCollection>::get()->push(this);
 
 }
@@ -84,9 +77,12 @@ void Window::close()
 
 Size Window::measureOverride(const Size & availableSize)
 {
-	if (Content())
+	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	if (content)
 	{
-		Content()->measure({ Width(), Height() });
+		auto w = get<float>(WidthProperty());
+		auto h = get<float>(HeightProperty());
+		content->measure({ w, h });
 		//return Content()->DesiredSize;
 		return availableSize;
 	}
@@ -98,9 +94,12 @@ Size Window::measureOverride(const Size & availableSize)
 
 Size Window::arrangeOverride(const Size & finalSize)
 {
-	if (Content())
+	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	if (content)
 	{
-		Content()->arrage(Rect(0.0, 0.0, Width(), Height()));
+		auto w = get<float>(WidthProperty());
+		auto h = get<float>(HeightProperty());
+		content->arrage(Rect(0.0, 0.0, w, h));
 	}
 	return finalSize;
 }
@@ -118,8 +117,13 @@ void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector
 	{
 		auto child = VisualTreeHelper::getChild(e, i);
 		if (!child)	continue;
-		if (hit(child->Renderer()))
+
+		auto childRenderer = child->get<std::shared_ptr<RenderObject>>(UIElement::RendererProperty());
+		if (hit(childRenderer))
+		{
 			hits.push_back(child);
+		}
+
 		if (VisualTreeHelper::getChildCount(child) > 0)
 		{
 			loopTest(x, y, w, child, hits);
@@ -159,8 +163,8 @@ void Window::sizeCallback(int width, int height)
 {
 	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
 	drawContext.viewport(0, 0, width, height);
-	Width = (float)width;
-	Height = (float)height;
+	set(WidthProperty(), (float)width);
+	set(HeightProperty(), (float)height);
 	updateLayout();
 }
 
@@ -352,7 +356,7 @@ void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == LeftProperty() || args.property == TopProperty())
 	{
-		glfwSetWindowPos(m_implWindow, (int)Left(), (int)Top());
+		glfwSetWindowPos(m_implWindow, (int)get<float>(LeftProperty()), (int)get<float>(TopProperty()));
 	}
 	else if (args.property == TitleProperty())
 	{
@@ -360,7 +364,7 @@ void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == IconProperty())
 	{
-		auto bm = any_cast<std::shared_ptr<ImageSource>>(args.newValue)->Bm();
+		auto bm = any_cast<std::shared_ptr<ImageSource>>(args.newValue)->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 		GLFWimage img;
 		img.width = bm->width();
 		img.height = bm->height();

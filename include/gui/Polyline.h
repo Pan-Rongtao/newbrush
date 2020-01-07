@@ -9,7 +9,6 @@ public:
 	Polyline();
 	virtual ~Polyline() = default;
 
-	Property_rw<std::vector<Point>>	Points;				//点集合
 	static DependencyProperty		PointsProperty();	//点集合的依赖属性
 
 	virtual void onRender(Viewport2D & drawContext) override;

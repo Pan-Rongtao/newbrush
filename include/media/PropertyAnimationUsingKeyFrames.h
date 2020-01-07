@@ -30,9 +30,6 @@ public:
 	KeyFrame() : KeyFrame(T(), TimeSpan(), std::make_shared<LinearEase>()) {}
 	KeyFrame(const T &value, const TimeSpan &keyTime) : KeyFrame(value, keyTime, std::make_shared<LinearEase>()) {}
 	KeyFrame(const T &value, const TimeSpan &keyTime, std::shared_ptr<EasingBase> easing)
-		: Value([&](T v) { set(ValueProperty(), v); }, [&]()->T {return get<T>(ValueProperty()); })
-		, KeyTime([&](TimeSpan v) { set(KeyTimeProperty(), v); }, [&]()->TimeSpan {return get<TimeSpan>(KeyTimeProperty()); })
-		, Easing([&](std::shared_ptr<EasingBase> v) { set(EasingProperty(), v); }, [&]()->std::shared_ptr<EasingBase> {return get<std::shared_ptr<EasingBase>>(EasingProperty()); })
 	{
 		KeyTime = keyTime;
 		Value = value;
@@ -42,9 +39,6 @@ public:
 	bool operator ==(const KeyFrame<T> &other) const { return KeyTime() == other.KeyTime(); }
 	bool operator !=(const KeyFrame<T> &other) const { return KeyTime() != other.KeyTime(); }
 
-	Property_rw<T>						Value;
-	Property_rw<TimeSpan>				KeyTime;
-	Property_rw<std::shared_ptr<EasingBase>>	Easing;
 	static DependencyProperty	ValueProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, T>("Value", T()); return dp; }
 	static DependencyProperty	KeyTimeProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, TimeSpan>("KeyTime", TimeSpan()); return dp; }
 	static DependencyProperty	EasingProperty() { static auto dp = DependencyProperty::registerDependency<KeyFrame, std::shared_ptr<EasingBase>>("Easing", std::make_shared<LinearEase>()); return dp; }
@@ -55,10 +49,8 @@ class NB_API PropertyAnimationUsingKeyFrames : public AnimationTimeline<T>
 {
 public:
 	PropertyAnimationUsingKeyFrames()
-		: KeyFrames([&](std::set<std::shared_ptr<KeyFrame<T>>> v) { set(KeyFramesProperty(), v); }, [&]()->std::set<std::shared_ptr<KeyFrame<T>>> {return get<std::set<std::shared_ptr<KeyFrame<T>>>>(KeyFramesProperty()); })
 	{}
 
-	Property_rw<std::set<std::shared_ptr<KeyFrame<T>>>>	KeyFrames;
 	static DependencyProperty	KeyFramesProperty() { static auto dp = DependencyProperty::registerDependency<PropertyAnimationUsingKeyFrames, std::set<std::shared_ptr<KeyFrame<T>>>>("KeyFrames", {}); return dp; }
 
 protected:

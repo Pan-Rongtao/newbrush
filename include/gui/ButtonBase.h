@@ -17,8 +17,6 @@ public:
 	ButtonBase();
 	virtual ~ButtonBase() = default;
 
-	Property_rw<ClickModeE>		ClickMode;				//点击模式，指定何种模式引发click的发生
-	Property_r<bool>			IsPressed;				//是否压下
 	static DependencyProperty	ClickModeProperty();	//点击模式的依赖属性
 	static DependencyProperty	IsPressedProperty();	//是否压下的依赖属性
 

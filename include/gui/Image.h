@@ -23,8 +23,6 @@ public:
 	Image();
 	virtual ~Image() = default;
 
-	Property_rw<std::shared_ptr<ImageSource>>	Source;				//源
-	Property_rw<StretchE>					Stretch;			//伸缩方式
 	static DependencyProperty				SourceProperty();	//源的依赖属性
 	static DependencyProperty				StretchProperty();	//伸缩方式的依赖属性
 

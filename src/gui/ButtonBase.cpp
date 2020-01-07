@@ -4,8 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 ButtonBase::ButtonBase()
-	: ClickMode([&](ClickModeE v) {set(ClickModeProperty(), v); }, [&]()->ClickModeE {return get<ClickModeE>(ClickModeProperty()); })
-	, IsPressed([&]() {return get<bool>(IsPressedProperty()); })
 {
 }
 
@@ -57,7 +55,8 @@ void ButtonBase::onLeftButtonDown()
 
 void ButtonBase::onLeftButtonUp()
 {
-	if (IsPressed())
+	auto pressed = get<bool>(IsPressedProperty());
+	if (pressed)
 	{
 		Click.invoke({});
 		set(IsPressedProperty(), false);

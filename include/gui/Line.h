@@ -9,10 +9,6 @@ public:
 	Line();
 	virtual ~Line() = default;
 
-	Property_rw<float>			X1;				//X1
-	Property_rw<float>			X2;				//X2
-	Property_rw<float>			Y1;				//Y1
-	Property_rw<float>			Y2;				//Y2
 	static DependencyProperty	X1Property();	//X1的依赖属性
 	static DependencyProperty	X2Property();	//X2的依赖属性
 	static DependencyProperty	Y1Property();	//Y1的依赖属性

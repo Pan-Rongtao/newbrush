@@ -42,9 +42,6 @@ public:
 		TargetProperty = target;
 	}
 
-	Property_rw<T>				From;
-	Property_rw<T>				To;
-	Property_rw<T>				By;
 	static DependencyProperty	FromProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("From", T()); return dp; }
 	static DependencyProperty	ToProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("To", T()); return dp; }
 	static DependencyProperty	ByProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("By", T()); return dp; }

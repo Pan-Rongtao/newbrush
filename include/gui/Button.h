@@ -10,10 +10,8 @@ public:
 	Button();
 	virtual ~Button() = default;
 
-	Property_rw<bool>			IsCancel;			//是否是“取消”按钮，用户可以通过按ESC键激活“取消”按钮
-	Property_rw<bool>			IsDefault;			//是否是“默认”按钮，用户可以通过按Enter键激活“默认”按钮
-	static DependencyProperty	IsCancelProperty();	//是否是“取消”按钮依赖属性
-	static DependencyProperty	IsDefaultProperty();//是否是“默认”按钮依赖属性
+	static DependencyProperty	IsCancelProperty();	//是否是“取消”按钮依赖属性，用户可以通过按ESC键激活“取消”按钮
+	static DependencyProperty	IsDefaultProperty();//是否是“默认”按钮依赖属性，用户可以通过按Enter键激活“默认”按钮
 
 protected:
 	virtual void onMouseDown();

@@ -23,7 +23,6 @@ public:
 	void setDock(std::shared_ptr<UIElement> element, DockE dock);
 	DockE getDock(std::shared_ptr<UIElement> element);
 
-	Property_rw<bool>			LastChildFill;				//Ä©ÔªËØÌîÂú
 	static DependencyProperty	LastChildFillProperty();	//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
 
 protected:

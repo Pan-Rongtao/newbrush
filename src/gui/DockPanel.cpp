@@ -4,7 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 DockPanel::DockPanel()
-	: LastChildFill([&](bool v) {set(LastChildFillProperty(), v); }, [&]()->bool {return get<bool>(LastChildFillProperty()); })
 {
 }
 
@@ -37,7 +36,8 @@ Size DockPanel::measureOverride(const Size & availableSize)
 	{
 		auto const &child = m_children.childAt(i);
 		Size childMeasureSize;
-		if (LastChildFill() && (i == m_children.count() - 1))
+		auto lastChildFill = get<bool>(LastChildFillProperty());
+		if (lastChildFill && (i == m_children.count() - 1))
 		{
 			childMeasureSize = remainSize;
 		}
@@ -46,7 +46,8 @@ Size DockPanel::measureOverride(const Size & availableSize)
 			auto dock = getDock(child);
 			if (dock == DockE::Left || dock == DockE::Right)
 			{
-				auto width = std::isnan(child->Width()) ? 0.0f : child->Width();
+				auto childWidth = child->get<float>(WidthProperty());
+				auto width = std::isnan(childWidth) ? 0.0f : childWidth;
 				auto height = remainSize.height();
 				childMeasureSize.reset(width, height);
 				remainSize.width() -= childMeasureSize.width();
@@ -54,7 +55,8 @@ Size DockPanel::measureOverride(const Size & availableSize)
 			else
 			{
 				auto width = remainSize.width();
-				auto height = std::isnan(child->Height()) ? 0.0f : child->Height();
+				auto childHeight = child->get<float>(HeightProperty());
+				auto height = std::isnan(childHeight) ? 0.0f : childHeight;
 				childMeasureSize.reset(width, height);
 				remainSize.height() -= childMeasureSize.height();
 			}
@@ -70,9 +72,10 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 	for (int i = 0; i != m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		Size childDesiredSize = child->DesiredSize();
+		auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
 		Rect childArrageRect;
-		if (LastChildFill() && (i == m_children.count() - 1))
+		auto lastChildFill = get<bool>(LastChildFillProperty());
+		if (lastChildFill && (i == m_children.count() - 1))
 		{
 			childArrageRect = remainRect;
 		}
@@ -83,29 +86,41 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 			switch (dock)
 			{
 			case DockE::Left:
-				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
+			{
+				auto childWidth = child->get<float>(WidthProperty());
+				w = std::isnan(childWidth) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
 				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetLeft(childDesiredSize.width());
 				break;
+			}
 			case DockE::Right:
-				w = std::isnan(child->Width()) ? remainRect.width() : childDesiredSize.width();
+			{
+				auto childWidth = child->get<float>(WidthProperty());
+				w = std::isnan(childWidth) ? remainRect.width() : childDesiredSize.width();
 				h = remainRect.height();
 				childArrageRect = Rect(remainRect.right() - childDesiredSize.width(), remainRect.y(), w, h);
 				remainRect.moveOffsetRight(-childDesiredSize.width());
 				break;
+			}
 			case DockE::Top:
+			{
+				auto childHeight = child->get<float>(HeightProperty());
 				w = remainRect.width();
-				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
+				h = std::isnan(childHeight) ? remainRect.height() : childDesiredSize.height();
 				childArrageRect = Rect(remainRect.leftTop(), w, h);
 				remainRect.moveOffsetTop(childDesiredSize.height());
 				break;
+			}
 			case DockE::Bottom:
+			{
+				auto childHeight = child->get<float>(HeightProperty());
 				w = remainRect.width();
-				h = std::isnan(child->Height()) ? remainRect.height() : childDesiredSize.height();
+				h = std::isnan(childHeight) ? remainRect.height() : childDesiredSize.height();
 				childArrageRect = Rect(remainRect.x(), remainRect.bottom() - childDesiredSize.height(), w, h);
 				remainRect.moveOffsetBottom(-childDesiredSize.height());
 				break;
+			}
 			default:
 				break;
 			}

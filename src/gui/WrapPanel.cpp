@@ -5,9 +5,6 @@ using namespace nb;
 using namespace nb::gui;
 
 WrapPanel::WrapPanel()
-	: Orientation([&](OrientationE v) {set(OrientationProperty(), v); }, [&]()->OrientationE {return get<OrientationE>(OrientationProperty()); })
-	, ItemWidth([&](float v) {set(ItemWidthProperty(), v); }, [&]()->float {return get<float>(ItemWidthProperty()); })
-	, ItemHeight([&](float v) {set(ItemHeightProperty(), v); }, [&]()->float {return get<float>(ItemHeightProperty()); })
 {
 }
 
@@ -37,8 +34,12 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		childMeasureSize.width() = !std::isnan(ItemWidth()) ? ItemWidth() : !std::isnan(child->Width()) ? child->Width() : 0.0f;
-		childMeasureSize.height() = !std::isnan(ItemHeight()) ? ItemHeight() : !std::isnan(child->Height()) ? child->Height() : 0.0f;
+		auto childWidth = child->get<float>(WidthProperty());
+		auto childHeight = child->get<float>(HeightProperty());
+		auto itemWidth = get<float>(ItemWidthProperty());
+		auto itemHeight = get<float>(ItemHeightProperty());
+		childMeasureSize.width() = !std::isnan(itemWidth) ? itemWidth : !std::isnan(childWidth) ? childWidth : 0.0f;
+		childMeasureSize.height() = !std::isnan(itemHeight) ? itemHeight : !std::isnan(childHeight) ? childHeight : 0.0f;
 		child->measure(childMeasureSize);
 	}
 	return availableSize;
@@ -62,26 +63,30 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			auto child = m_children.childAt(i);
 			auto one = 0.0f;
 			auto maxLen = 0.0f;
-			if (Orientation() == OrientationE::Horizontal)
+			auto orientation = get<OrientationE>(OrientationProperty());
+			auto itemWidth = get<float>(ItemWidthProperty());
+			auto itemHeight = get<float>(ItemHeightProperty());
+			auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+			if (orientation == OrientationE::Horizontal)
 			{
 				maxLen = finalSize.width();
-				one = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
+				one = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 			}
 			else
 			{
 				maxLen = finalSize.height();
-				one = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
+				one = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 			}
 
 			if (sum + one <= maxLen)
 			{
 				ret.back().first = i;
-				ret.back().second = std::max<float>(ret.back().second, Orientation() == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width());
+				ret.back().second = std::max<float>(ret.back().second, orientation == OrientationE::Horizontal ? childDesiredSize.height() : childDesiredSize.width());
 				sum += one;
 			}
 			else
 			{
-				ret.push({ i, (Orientation() == OrientationE::Horizontal ? child->DesiredSize().height() : child->DesiredSize().width()) });
+				ret.push({ i, (orientation == OrientationE::Horizontal ? childDesiredSize.height() : childDesiredSize.width()) });
 				sum = one;
 			}
 		}
@@ -91,26 +96,30 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	auto x = 0.0f;
 	auto y = 0.0f;
 	Rect arrangeRect;
-	if (Orientation() == OrientationE::Horizontal)
+	auto orientation = get<OrientationE>(OrientationProperty());
+	auto itemWidth = get<float>(ItemWidthProperty());
+	auto itemHeight = get<float>(ItemHeightProperty());
+	if (orientation == OrientationE::Horizontal)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
 		//否则，需要先计算每一行的最高item作为那一行的高度
-		if (!std::isnan(ItemHeight()))
+		if (!std::isnan(itemHeight))
 		{
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto w = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
+				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
 				{
-					arrangeRect.reset(x, y, w, ItemHeight());
+					arrangeRect.reset(x, y, w, itemHeight);
 					x += w;
 				}
 				else
 				{
-					y += ItemHeight();
-					arrangeRect.reset(0.0, y, w, ItemHeight());
+					y += itemHeight;
+					arrangeRect.reset(0.0, y, w, itemHeight);
 					x = w;
 				}
 				child->arrage(arrangeRect);
@@ -122,7 +131,8 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto w = !std::isnan(ItemWidth()) ? ItemWidth() : child->DesiredSize().width();
+				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				if (i <= linesInfo.front().first)
 				{
 					arrangeRect.reset(x, y, w, linesInfo.front().second);
@@ -143,22 +153,23 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	{
 		//指定了ItemWidth，则每一列高度为ItemWidth
 		//否则，需要先计算每一列的最宽item作为那一列的宽度
-		if (!std::isnan(ItemWidth()))
+		if (!std::isnan(itemWidth))
 		{
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto h = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
+				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
 				{
-					arrangeRect.reset(x, y, ItemWidth(), h);
+					arrangeRect.reset(x, y, itemWidth, h);
 					y += h;
 				}
 				else
 				{
-					x += ItemWidth();
-					arrangeRect.reset(x, 0.0f, ItemWidth(), h);
+					x += itemWidth;
+					arrangeRect.reset(x, 0.0f, itemWidth, h);
 					y = h;
 				}
 				child->arrage(arrangeRect);
@@ -170,7 +181,8 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto h = !std::isnan(ItemHeight()) ? ItemHeight() : child->DesiredSize().height();
+				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				if (i <= linesInfo.front().first)
 				{
 					arrangeRect.reset(x, y, linesInfo.front().second, h);

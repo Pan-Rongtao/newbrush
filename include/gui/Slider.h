@@ -10,10 +10,10 @@ public:
 	virtual ~Slider() = default;
 
 public:
-	Property_rw<int>				Delay;
+	/*Property_rw<int>				Delay;
 	Property_rw<int>				Interval;
 	Property_rw<OrientationE>		Orientation;
-	Property_rw<bool>				IsDirectionReversed;
+	Property_rw<bool>				IsDirectionReversed;*/
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

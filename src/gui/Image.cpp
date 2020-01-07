@@ -11,20 +11,21 @@ using namespace nb;
 using namespace nb::gui;
 
 Image::Image()
-	: Source([&](std::shared_ptr<ImageSource> v) {set(SourceProperty(), v); }, [&]()->std::shared_ptr<ImageSource> {return get<std::shared_ptr<ImageSource>>(SourceProperty()); })
-	, Stretch([&](StretchE v) {set(StretchProperty(), v); }, [&]()->StretchE {return get<StretchE>(StretchProperty()); })
 {
-	Renderer()->setMaterial(std::make_shared<Material>(Programs::primitive()));
+	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	renderer->setMaterial(std::make_shared<Material>(Programs::primitive()));
 }
 
 void Image::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	Rect rc(offset.x(), offset.y(), ActualSize());//UIElement未做裁剪，所以render区域可能会超出范围
+	auto actualSize = get<Size>(ActualSizeProperty());
+	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
-	drawContext.queue(Renderer());
+	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	drawContext.queue(renderer);
 }
 
 DependencyProperty Image::SourceProperty()
@@ -43,7 +44,10 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == SourceProperty())
 	{
-		Renderer()->material()->textures().push_back(std::make_shared<Texture2D>(*Source()->Bm()));
+		auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+		auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
+		auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+		renderer->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
 	}
 	else if (args.property == StretchProperty())
 	{
@@ -54,16 +58,21 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
-	return Size(std::max<float>(availableSize.width(), (float)Source()->Bm()->width()), std::max<float>(availableSize.height(), (float)Source()->Bm()->height()));
+	auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+	return Size(std::max<float>(availableSize.width(), (float)bm->width()), std::max<float>(availableSize.height(), (float)bm->height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
 {
-	switch (Stretch())
+	auto stretch = get<StretchE>(StretchProperty());
+	auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+	switch (stretch)
 	{
 	case StretchE::Origion:
 	{
-		return Size((float)Source()->Bm()->width(), (float)Source()->Bm()->height());
+		return Size((float)bm->width(), (float)bm->height());
 	}
 	case StretchE::Fill:
 	{
@@ -72,7 +81,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 	case StretchE::Uniform:
 	{
 		Size sz;
-		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto pixelRatio = source->width() / source->heigth();
 		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{
@@ -87,7 +96,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 	case StretchE::UniformToFill:
 	{
 		Size sz;
-		auto pixelRatio = Source()->width() / Source()->heigth();
+		auto pixelRatio = source->width() / source->heigth();
 		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{

@@ -30,7 +30,7 @@ public:
 	void scrollToVerticalOffset(float offset);
 
 public:
-	Property_rw<bool>		CanContentScroll;
+	/*Property_rw<bool>		CanContentScroll;
 	Property_rw<bool>		HorizontalScrollBarVisibility;
 	Property_rw<bool>		HorizontalScrollBarEnabled;
 	Property_rw<bool>		VerticalScrollBarVisibility;
@@ -39,7 +39,7 @@ public:
 	Property_rw<float>	VerticalOffset;
 	Property_rw<float>	PanningDeceleration;
 	Property_rw<float>	ScrollableWidth;
-	Property_rw<float>	ScrollableHeight;
+	Property_rw<float>	ScrollableHeight;*/
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

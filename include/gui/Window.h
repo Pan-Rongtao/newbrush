@@ -29,13 +29,6 @@ public:
 	//关闭/销毁窗口
 	void close();
 
-	Property_rw<WindowStateE>				WindowState;			//窗口状态
-	Property_rw<WindowStyleE>				WindowStyle;			//窗口样式
-	Property_rw<bool>						Topmost;				//置顶
-	Property_rw<float>						Left;					//左位置
-	Property_rw<float>						Top;					//顶位置
-	Property_rw<std::string>				Title;					//标题
-	Property_rw<std::shared_ptr<ImageSource>>	Icon;					//图标（未实现，难点）
 	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
 	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
 	static DependencyProperty				TopmostProperty();		//置顶的依赖属性

@@ -4,16 +4,6 @@ using namespace nb;
 using namespace nb::gui;
 
 ScrollViewer::ScrollViewer()
-	: CanContentScroll(nullptr, nullptr)
-	, HorizontalScrollBarVisibility(nullptr, nullptr)
-	, HorizontalScrollBarEnabled(nullptr, nullptr)
-	, VerticalScrollBarVisibility(nullptr, nullptr)
-	, VerticalScrollBarEnabled(nullptr, nullptr)
-	, HorizontalOffset(nullptr, nullptr)
-	, VerticalOffset(nullptr, nullptr)
-	, PanningDeceleration(nullptr, nullptr)
-	, ScrollableWidth(nullptr, nullptr)
-	, ScrollableHeight(nullptr, nullptr)
 {
 
 }

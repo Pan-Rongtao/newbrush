@@ -57,28 +57,6 @@ public:
 	UIElement();
 	virtual ~UIElement() = default;
 
-	Property_rw<VisibilityE>					Visibility;				//可视
-	Property_rw<float>							Opacity;				//不透明度
-	Property_rw<bool>							Focusable;				//是否可用焦点
-	Property_rw<bool>							IsFocused;				//是否具有焦点
-	Property_rw<float>							Width;					//设定宽
-	Property_rw<float>							Height;					//设定高
-	Property_rw<float>							MinWidth;				//最小宽
-	Property_rw<float>							MinHeight;				//最小高
-	Property_rw<float>							MaxWidth;				//最大宽
-	Property_rw<float>							MaxHeight;				//最大高
-	Property_r<Size>							DesiredSize;			//期望尺寸
-	Property_r<Size>							ActualSize;				//实际尺寸
-	Property_rw<Size>							RenderSize;				//渲染尺寸
-	Property_rw<Point>							Offset;					//相对父偏移量
-	Property_rw<Thickness>						Margin;					//边缘
-	Property_rw<HorizontalAlignmentE>			HorizontalAlignment;	//横向对齐方式
-	Property_rw<VerticalAlignmentE>				VerticalAlignment;		//纵向对齐方式
-	Property_rw<FlowDirectionE>					FlowDirection;			//
-	Property_r<std::shared_ptr<RenderObject>>		Renderer;				//渲染物
-	Property_rw<std::shared_ptr<Style>>				style;					//风格
-	Property_rw<std::shared_ptr<VisualStateMachine>>	StateMachine;
-
 	static DependencyProperty					VisibilityProperty();	//可视的依赖属性
 	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性
 	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性
