@@ -2,11 +2,14 @@
 
 class A
 {
-
+public:
+	virtual ~A() {}
+	int a{ 1 };
 };
 class B : public A
 {
-
+public:
+	int b{ 2 };
 };
 
 void TestDependencyProperty::test()
@@ -24,7 +27,11 @@ void TestDependencyProperty::test()
 	set(WStringProperty(), std::wstring(L"def"));
 	set(PointProperty(), Point(2, 2));
 	set(PointProperty(), Point(2, 2));
-	set(SharedPtrProperty(), std::make_shared<B>());
+
+	std::shared_ptr<A> b = std::make_shared<B>();
+	set(SharedPtrProperty(), b);
+	auto ret = get<std::shared_ptr<A>>(SharedPtrProperty());
+	auto bx = std::dynamic_pointer_cast<B>(ret);
 }
 
 DependencyProperty TestDependencyProperty::BoolPoperty()
