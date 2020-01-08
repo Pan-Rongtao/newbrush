@@ -8,15 +8,15 @@
 using namespace nb::gui;
 void TestWindow::test()
 {
-	Title = "Newbrush´°¿Ú²âÊÔ";
+	set(TitleProperty(), std::string("Newbrush´°¿Ú²âÊÔ"));
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->Width = 100;
-	rc0->Height = 100;
-	rc0->HorizontalAlignment = HorizontalAlignmentE::Stretch;
-	this->Content = rc0;
+	rc0->set(UIElement::WidthProperty(), 100);
+	rc0->set(UIElement::HeightProperty(), 100);
+	rc0->set(UIElement::HorizontalAlignmentProperty(), HorizontalAlignmentE::Stretch);
+	set(ContentProperty(), rc0);
 //	this->Topmost = true;
 
-
+	/*
 	doubleAni.From = this->Top();
 	doubleAni.To = this->Top() + 100;
 	doubleAni.Easing = std::make_shared<PowerEase>();
@@ -27,7 +27,7 @@ void TestWindow::test()
 	doubleAni.CompleteEvent += std::bind(&TestWindow::onCompleted, this, std::placeholders::_1);
 //	doubleAni.TargetProperty = &this->Top;
 	doubleAni.begin();
-
+	*/
 	m_timer.TickEvent.addHandler(std::bind(&TestWindow::onTick, this, std::placeholders::_1));
 	m_timer.start(1500);
 }

@@ -9,7 +9,7 @@ TestPropertyAnimation::TestPropertyAnimation()
 
 void TestPropertyAnimation::test()
 {
-	doubleAni.From = 100;
+/*	doubleAni.From = 100;
 	doubleAni.To = 200;
 	doubleAni.Easing = std::make_shared<ElasticEase>();
 	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
@@ -40,7 +40,7 @@ void TestPropertyAnimation::test()
 	colorAni.CompleteEvent += std::bind(&TestPropertyAnimation::onCompleted, this, std::placeholders::_1);
 	colorAni.TargetProperty = &Background;
 	colorAni.begin();
-	
+	*/
 }
 
 void TestPropertyAnimation::onStateChanged(const Timeline::StateChangedArgs & args)

@@ -5,15 +5,15 @@ void TestTextBlock::test()
 {
 	m_window = std::make_shared<nb::gui::Window>();
 	m_text = std::make_shared<TextBlock>();
-	m_text->Text = "abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	m_text->set(TextBlock::TextProperty(), std::string("abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
 //	m_text->Text = "12345";
-	m_text->VerticalAlignment = VerticalAlignmentE::Top;
-	m_text->HorizontalAlignment = HorizontalAlignmentE::Right;
-	m_text->Padding = 0.0f;
+	m_text->set(TextBlock::VerticalAlignmentProperty(), VerticalAlignmentE::Top);
+	m_text->set(TextBlock::HorizontalAlignmentProperty(), HorizontalAlignmentE::Right);
+	m_text->set(TextBlock::PaddingProperty(), 0.0f);
 //	m_text->Width = 400;
-	m_text->CharSpacing = 1.0f;
-	m_text->TextWrapping = TextWrappingE::Wrap;
-	m_window->Content = m_text;
+	m_text->set(TextBlock::CharSpacingProperty(), 1.0f);
+	m_text->set(TextBlock::TextWrappingProperty(), TextWrappingE::Wrap);
+	m_window->set(Window::ContentProperty(), m_text);
 
 //	colorAni.From = m_text->Foreground();
 //	colorAni.To = Color(255, 0, 10);
@@ -41,16 +41,4 @@ void TestTextBlock::onProgress(const Timeline::ProgressArgs & args)
 
 void TestTextBlock::onCompleted(const Timeline::CompleteArgs & args)
 {
-	m_text->Text = "123";
-	return;
-	m_window->WindowState = WindowStateE::Maximized;
-	m_window->WindowStyle = WindowStyleE::None;
-	m_window->Topmost = false;
-	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window->WindowStyle = WindowStyleE::Fixed;
-	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window->WindowStyle = WindowStyleE::None;
-	std::this_thread::sleep_for(std::chrono::seconds(2));
-	m_window->WindowStyle = WindowStyleE::SizeBox;
-	printf("onCompleted.\n");
 }

@@ -2,7 +2,7 @@
 
 void TestPropertyAnimationUsingKeyFrames::test()
 {
-	doubleAni.BeginTime = TimeSpan::fromSeconds(0);
+/*	doubleAni.BeginTime = TimeSpan::fromSeconds(0);
 	doubleAni.Duration = TimeSpan::fromSeconds(5);
 	doubleAni.StateChangedEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onStateChanged, this, std::placeholders::_1);
 	doubleAni.ProgressEvent += std::bind(&TestPropertyAnimationUsingKeyFrames::onProgress, this, std::placeholders::_1);
@@ -12,7 +12,7 @@ void TestPropertyAnimationUsingKeyFrames::test()
 	doubleAni.KeyFrames().insert(std::make_shared<KeyFrame<double>>(20.0, TimeSpan(0, 0, 1)));
 	auto x = doubleAni.KeyFrames().size();
 	doubleAni.TargetProperty = &Width;
-	doubleAni.begin();
+	doubleAni.begin();*/
 
 }
 

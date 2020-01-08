@@ -15,7 +15,6 @@
 #include "TestUniformGrid.h"
 #include "TestButton.h"
 #include "TestBinding.h"
-#include "TestShape.h"
 #include "TestBrush.h"
 #include "TestProperty.h"
 #include "TestLine.h"

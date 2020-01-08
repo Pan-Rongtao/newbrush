@@ -56,7 +56,7 @@ public:
 protected:
 	virtual void progressing(float progress) override
 	{
-		if (!TargetProperty || KeyFrames().empty())	return;
+/*		if (!TargetProperty || KeyFrames().empty())	return;
 		//根据ticks获取当前frame，找不到表示超出了范围
 		auto getCurrentFrame = [&](int64_t ticks)->std::set<std::shared_ptr<KeyFrame<T>>>::iterator
 		{
@@ -83,7 +83,7 @@ protected:
 			decltype(progress) ft = (decltype(progress))curFrame->Easing()->easeInCore(progress);
 			//auto ft = curFrame.Easing()->easeInCore(t);
 			*TargetProperty = fromValue + (toValue - fromValue) * ft;
-		}
+		}*/
 	}
 };
 

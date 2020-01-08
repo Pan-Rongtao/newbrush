@@ -18,15 +18,15 @@ void TestGrid::test()
 	auto rowdef0 = std::make_shared<RowDefinition>();
 	//rowdef0->Height = 200;
 	//rowdef0->Height = GridLength(1, GridLength::GridUnitType::Star);
-	rowdef0->Height = GridLength::automate();
+	rowdef0->set(UIElement::HeightProperty(), GridLength::automate());
 	auto rowdef1 = std::make_shared<RowDefinition>();
 	//rowdef1->Height = 200;
-	rowdef1->Height = GridLength(GridUnitType::Star, 2);
+	rowdef1->set(UIElement::HeightProperty(), GridLength(GridUnitType::Star, 2));
 	auto rowdef2 = std::make_shared<RowDefinition>();
-	rowdef2->Height = GridLength(GridUnitType::Star, 3);
-	grid->RowDefinitions().push_back(rowdef0);
-	grid->RowDefinitions().push_back(rowdef1);
-	grid->RowDefinitions().push_back(rowdef2);
+	rowdef2->set(UIElement::HeightProperty(), GridLength(GridUnitType::Star, 3));
+//	grid->RowDefinitions().push_back(rowdef0);
+//	grid->RowDefinitions().push_back(rowdef1);
+//	grid->RowDefinitions().push_back(rowdef2);
 
 	auto coldef0 = std::make_shared<ColumnDefinition>();
 	//coldef0->Width = 100;
@@ -34,45 +34,45 @@ void TestGrid::test()
 	//coldef1->Width = 100;
 	auto coldef2 = std::make_shared<ColumnDefinition>();
 	//coldef2->Width = 100;
-	grid->ColumnDefinitions().push_back(coldef0);
-	grid->ColumnDefinitions().push_back(coldef1);
-	grid->ColumnDefinitions().push_back(coldef2);
+//	grid->ColumnDefinitions().push_back(coldef0);
+//	grid->ColumnDefinitions().push_back(coldef1);
+//	grid->ColumnDefinitions().push_back(coldef2);
 
 
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-	rc0->Width = 50;
-	rc0->Height = 50;
+	rc0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc0->set(Shape::WidthProperty(), 50);
+	rc0->set(Shape::HeightProperty(), 50);
 //	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
 
 	auto rc1 = std::make_shared<Rectangle>();
-	rc1->Fill = std::make_shared<SolidColorBrush>(Colors::green());
+	rc1->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
 //	rc1->Width = 100;
 //	rc1->Height = 100;
 
 	auto rc2 = std::make_shared<Rectangle>();
-	rc2->Fill = std::make_shared<SolidColorBrush>(Colors::blue());
+	rc2->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 //	rc2->Width = 100;
 //	rc2->Height = 100;
 
 	auto rc3 = std::make_shared<Rectangle>();
-	rc3->Fill = std::make_shared<SolidColorBrush>(Colors::firebrick());
-	rc3->Width = 100;
-	rc3->Height = 100;
+	rc3->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
+	rc3->set(Shape::WidthProperty(), 100);
+	rc3->set(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->Fill = std::make_shared<SolidColorBrush>(Colors::floralWhite());
+	es0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
 //	es0->Width = 100;
 //	es0->Height = 100;
 
 	auto text = std::make_shared<TextBlock>("abcdefg");
 
-	grid->Children().add(rc0);
+/*	grid->Children().add(rc0);
 	grid->Children().add(rc1);
 	grid->Children().add(rc2);
 	grid->Children().add(rc3);
 	grid->Children().add(es0);
-	grid->Children().add(text);
+	grid->Children().add(text);*/
 	grid->setRow(rc0, 0);
 	grid->setColumn(rc0, 0);
 	grid->setRow(rc1, 1);
@@ -99,5 +99,5 @@ void TestGrid::test()
 	//doubleAni.TargetProperty = &m_window->Width;
 	//doubleAni.begin();
 
-	m_window->Content = grid;
+	m_window->set(Window::ContentProperty(), grid);
 }

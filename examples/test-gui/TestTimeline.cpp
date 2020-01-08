@@ -2,13 +2,13 @@
 
 void TestTimeline::test()
 {
-	m_tl.BeginTime = TimeSpan::fromSeconds(1);
+/*	m_tl.BeginTime = TimeSpan::fromSeconds(1);
 	m_tl.Duration = TimeSpan::fromSeconds(1);
 	m_tl.StateChangedEvent += std::bind(&TestTimeline::onStateChanged, this, std::placeholders::_1);
 	m_tl.ProgressEvent += std::bind(&TestTimeline::onProgress, this, std::placeholders::_1);
 	m_tl.CompleteEvent += std::bind(&TestTimeline::onCompleted, this, std::placeholders::_1);
 	m_tl.begin();
-
+	*/
 }
 
 void TestTimeline::onStateChanged(const Timeline::StateChangedArgs & args)

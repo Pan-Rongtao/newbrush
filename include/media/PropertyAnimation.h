@@ -32,14 +32,7 @@ public:
 	PropertyAnimation(const T &to) : PropertyAnimation(T(), to, TimeSpan(), nullptr) {}
 	PropertyAnimation(const T &from, const T &to) : PropertyAnimation(from, to, TimeSpan(), nullptr) {}
 	PropertyAnimation(const T &from, const T &to, const TimeSpan &duration, Property_rw<T> *target)
-		: From([&](T v) {set(FromProperty(), v); }, [&]()->T  {return get<T>(FromProperty()); })
-		, To([&](T v) {set(ToProperty(), v); }, [&]()->T  {return get<T>(ToProperty()); })
-		, By([&](T v) {set(ByProperty(), v); }, [&]()->T  {return get<T>(ByProperty()); })
 	{
-		From = from;
-		To = to;
-		Duration = duration;
-		TargetProperty = target;
 	}
 
 	static DependencyProperty	FromProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("From", T()); return dp; }

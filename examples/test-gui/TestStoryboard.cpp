@@ -18,9 +18,9 @@ void TestStoryboard::test()
 //		printf("onProgress:%f, width=%f\n", args.progress, Width());
 //	};
 //	doubleAni->TargetProperty = &Width;
-	m_storyboard.Children().push_back(doubleAni);
-	m_storyboard.Duration = TimeSpan(0, 0, 2);
-	m_storyboard.begin();
+//	m_storyboard.Children().push_back(doubleAni);
+//	m_storyboard.Duration = TimeSpan(0, 0, 2);
+//	m_storyboard.begin();
 
 	m_storyboard.ProgressEvent += [&](const Timeline::ProgressArgs &args) 
 	{
