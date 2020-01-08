@@ -15,6 +15,7 @@ public:
 	static DependencyProperty FloatProperty();
 	static DependencyProperty DoubleProperty();
 	static DependencyProperty StringProperty();
+	static DependencyProperty WStringProperty();
 	static DependencyProperty PointProperty();
 	static DependencyProperty SharedPtrProperty();
 

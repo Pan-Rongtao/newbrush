@@ -74,7 +74,7 @@
 //支持构造函数为单字符串参数的exception类型（宏的方式是最优解，因为要打印__FUNCTION__，做成函数是无法输出正确的__FUNCTION__的）
 #define nbThrowException(exception, argfmt, ...) \
 do{\
-	char buffer[256] = {0}; \
+	char buffer[512] = {0}; \
 	std::string file = __FILE__;\
 	size_t n = std::string::npos;\
 	if (((n = file.rfind('/')) != std::string::npos) || ((n = file.rfind('\\')) != std::string::npos))\

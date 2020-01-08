@@ -25,7 +25,7 @@ public:
 	}
 
 protected:
-	void _set(const DependencyProperty & dp, const Var &defaultValue, const Var &setValue, bool isValueChanged);
+	void _set(const DependencyProperty & dp, const Var &defaultValue, const Var &setValue);
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args);
 
 private:

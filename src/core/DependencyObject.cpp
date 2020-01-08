@@ -4,98 +4,102 @@ using namespace nb;
 
 void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 {
-	auto defaultValue = dp.defaultMetadata()->defaultValue();
-	auto defaultValueType = std::type_index(defaultValue.type());
-	auto setValueType = std::type_index(value.type());
+	auto propertyType = dp.propertyType();
 	Var fixSetValue;
 	try {
-		if (defaultValueType == typeid(bool))
+		if (propertyType == value.type())
 		{
-			fixSetValue = value.extract<bool>();
+			fixSetValue = value;
 		}
-		else if (defaultValueType == typeid(double))
+		else if (propertyType == typeid(bool))
 		{
-			fixSetValue = value.extract<float>();
+			fixSetValue = value.convert<bool>();
 		}
-		else if (defaultValueType == typeid(float))
+		else if (propertyType == typeid(double))
 		{
-			fixSetValue = value.extract<float>();
+			fixSetValue = value.convert<double>();
 		}
-		else if (defaultValueType == typeid(int))
+		else if (propertyType == typeid(float))
+		{
+			fixSetValue = value.convert<float>();
+		}
+		else if (propertyType == typeid(int))
 		{
 			fixSetValue = value.extract<int>();
 		}
-		else if (defaultValueType == typeid(unsigned int))
+		else if (propertyType == typeid(unsigned int))
 		{
 			fixSetValue = value.extract<unsigned int>();
 		}
-		else if (defaultValue.isString())
+		else if (propertyType == typeid(std::string))
 		{
 			fixSetValue = value.extract<std::string>();
 		}
-		else if (defaultValueType == typeid(short))
+		else if (propertyType == typeid(std::wstring))
+		{
+			fixSetValue = value.extract<std::wstring>();
+		}
+		else if (propertyType == typeid(short))
 		{
 			fixSetValue = value.extract<short>();
 		}
-		else if (defaultValueType == typeid(unsigned short))
+		else if (propertyType == typeid(unsigned short))
 		{
 			fixSetValue = value.extract<unsigned short>();
 		}
-		else if (defaultValueType == typeid(char))
+		else if (propertyType == typeid(char))
 		{
 			fixSetValue = value.extract<char>();
 		}
-		else if (defaultValueType == typeid(signed char))
+		else if (propertyType == typeid(signed char))
 		{
 			fixSetValue = value.extract<signed char>();
 		}
-		else if (defaultValueType == typeid(unsigned char))
+		else if (propertyType == typeid(unsigned char))
 		{
 			fixSetValue = value.extract<unsigned char>();
 		}
-		else if (defaultValueType == typeid(wchar_t))
+		else if (propertyType == typeid(wchar_t))
 		{
 			fixSetValue = value.extract<wchar_t>();
 		}
-		else if (defaultValueType == typeid(char16_t))
+		else if (propertyType == typeid(char16_t))
 		{
 			fixSetValue = value.extract<char16_t>();
 		}
-		else if (defaultValueType == typeid(char32_t))
+		else if (propertyType == typeid(char32_t))
 		{
 			fixSetValue = value.extract<char32_t>();
 		}
-		else if (defaultValueType == typeid(long))
+		else if (propertyType == typeid(long))
 		{
 			fixSetValue = value.extract<long>();
 		}
-		else if (defaultValueType == typeid(unsigned long))
+		else if (propertyType == typeid(unsigned long))
 		{
 			fixSetValue = value.extract<unsigned long>();
 		}
-		else if (defaultValueType == typeid(long long))
+		else if (propertyType == typeid(long long))
 		{
 			fixSetValue = value.extract<unsigned long long>();
 		}
-		else if (defaultValueType == typeid(long double))
+		else if (propertyType == typeid(long double))
 		{
 			fixSetValue = value.extract<long double>();
 		}
 		else
 		{
-			if (dp.propertyType() != typeid(value))
-			{
-				nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), typeid(value).name());
-			}
+			fixSetValue = value;
+		//	nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
 		}
 	}
 	catch (...)
 	{
-		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), typeid(value).name());
+		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
 	}
 
-	bool isValueChanged = fixSetValue == defaultValue;
-	_set(dp, defaultValue, fixSetValue, isValueChanged);
+	auto defaultValue = dp.defaultMetadata()->defaultValue();
+	_set(dp, defaultValue, fixSetValue);
 }
 
 Var DependencyObject::get(const DependencyProperty & dp) const
@@ -112,12 +116,18 @@ Var DependencyObject::get(const DependencyProperty & dp) const
 	}
 }
 
-void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultValue, const Var & setValue, bool isValueChanged)
+void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultValue, const Var & setValue)
 {
+	bool equalDefault = false;
+	try {
+		equalDefault = setValue == defaultValue;
+	}
+	catch (...) {}	//异常表示无法比较，则视为非普通类型
+	
 	auto iterFind = m_valueEntrys.find(dp.globalIndex());
 	if (iterFind == m_valueEntrys.end())
 	{
-		if (!isValueChanged)
+		if (!equalDefault)
 		{
 			EffectiveValueEntry newEntry(dp);
 			newEntry.setBaseValue(setValue);
@@ -127,14 +137,23 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 	}
 	else
 	{
-		if (isValueChanged)
+		if (equalDefault)
 		{
 			m_valueEntrys.erase(iterFind);
 		}
 		else
 		{
-			iterFind->second.setBaseValue(setValue);
-			onPropertyChanged({ dp, defaultValue, setValue });
+			auto changed = true;
+			try {
+				changed = iterFind->second.baseValue() != setValue;
+			}
+			catch (...) {}	//异常表示无法比较，则视为非普通类型
+
+			if (changed)
+			{
+				iterFind->second.setBaseValue(setValue);
+				onPropertyChanged({ dp, defaultValue, setValue });
+			}
 		}
 	}
 }
