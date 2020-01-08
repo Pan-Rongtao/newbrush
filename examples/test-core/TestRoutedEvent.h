@@ -2,7 +2,7 @@
 #include "../TestBase.h"
 #include "core/RoutedEvent.h"
 #include "core/EventArgs.h"
-#include "core/Any.h"
+#include "Poco/Dynamic/Var.h"
 
 using namespace nb;
 
@@ -41,7 +41,7 @@ public:
 			for (auto &h : iter->second)
 			{
 				try {
-					auto hxx = any_cast<RoutedEventHandler<ArgsT>>(h);
+					auto hxx = h.extract<RoutedEventHandler<ArgsT>>();
 					hxx.invoke(args);
 				}
 				catch (...) {
@@ -51,7 +51,7 @@ public:
 		}
 	}
 
-	std::map<size_t, std::vector<Any>>	m_eventHandlers;
+	std::map<size_t, std::vector<Var>>	m_eventHandlers;
 
 
 	static RoutedEvent ClickEvent();

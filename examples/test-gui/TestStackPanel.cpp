@@ -6,7 +6,7 @@
 
 void TestStackPanel::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 
 	auto sp = std::make_shared<StackPanel>();
 //	sp->Orientation = OrientationE::Vertical;

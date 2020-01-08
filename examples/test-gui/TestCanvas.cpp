@@ -11,7 +11,7 @@
 
 void TestCanvas::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	auto cv = std::make_shared<Canvas>();
 
 	auto rc0 = std::make_shared<Rectangle>();

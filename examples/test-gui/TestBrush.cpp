@@ -5,7 +5,7 @@
 
 void TestBrush::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	auto rc = std::make_shared<Rectangle>();
 	auto linearBrush = std::make_shared<LinearGradientBrush>();
 	auto stops = std::vector<GradientStop>();

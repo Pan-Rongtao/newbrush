@@ -73,18 +73,14 @@ public:
 	Array(const Array& copy);
 		/// Creates an Array by copying another one.
 
-#ifdef POCO_ENABLE_CPP11
-
 	Array(Array&& other);
 		/// Move constructor
 
-	Array& operator=(Array&& other);
-		/// Move assignment operator.
-
-#endif // POCO_ENABLE_CPP11
-
 	Array& operator=(const Array& other);
 		/// Assignment operator.
+
+	Array& operator=(Array&& other);
+		/// Move assignment operator.
 
 	virtual ~Array();
 		/// Destroys the Array.
@@ -172,10 +168,10 @@ public:
 		return value;
 	}
 
-	void add(const Dynamic::Var& value);
+	Array& add(const Dynamic::Var& value);
 		/// Add the given value to the array
 
-	void set(unsigned int index, const Dynamic::Var& value);
+	Array& set(unsigned int index, const Dynamic::Var& value);
 		/// Update the element on the given index to specified value
 
 	void stringify(std::ostream& out, unsigned int indent = 0, int step = -1) const;
@@ -264,18 +260,20 @@ inline bool Array::isArray(ConstIterator& it) const
 }
 
 
-inline void Array::add(const Dynamic::Var& value)
+inline Array& Array::add(const Dynamic::Var& value)
 {
 	_values.push_back(value);
 	_modified = true;
+	return *this;
 }
 
 
-inline void Array::set(unsigned int index, const Dynamic::Var& value)
+inline Array& Array::set(unsigned int index, const Dynamic::Var& value)
 {
 	if (index >= _values.size()) _values.resize(index + 1);
 	_values[index] = value;
 	_modified = true;
+	return *this;
 }
 
 

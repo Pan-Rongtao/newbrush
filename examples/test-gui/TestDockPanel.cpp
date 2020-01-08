@@ -6,7 +6,7 @@
 
 void TestDockPanel::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	auto cv = std::make_shared<DockPanel>();
 	cv->set(DockPanel::LastChildFillProperty(), true);
 

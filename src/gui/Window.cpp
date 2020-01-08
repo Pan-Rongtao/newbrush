@@ -338,7 +338,7 @@ void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == WindowStateProperty())
 	{
-		auto state = any_cast<WindowStateE>(args.newValue);
+		auto state = args.newValue.extract<WindowStateE>();
 		switch (state)
 		{
 		case WindowStateE::Normal:		glfwRestoreWindow(m_implWindow);	break;
@@ -352,7 +352,7 @@ void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == TopmostProperty())
 	{
-		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, any_cast<bool>(args.newValue));
+		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, args.newValue.extract<bool>());
 	}
 	else if (args.property == LeftProperty() || args.property == TopProperty())
 	{
@@ -360,11 +360,12 @@ void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == TitleProperty())
 	{
-		glfwSetWindowTitle(m_implWindow, any_cast<std::string>(args.newValue).data());
+		glfwSetWindowTitle(m_implWindow, args.newValue.extract<std::string>().data());
 	}
 	else if (args.property == IconProperty())
 	{
-		auto bm = any_cast<std::shared_ptr<ImageSource>>(args.newValue)->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+		auto source = args.newValue.extract<std::shared_ptr<ImageSource>>();
+		auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 		GLFWimage img;
 		img.width = bm->width();
 		img.height = bm->height();

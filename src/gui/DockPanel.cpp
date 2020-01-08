@@ -16,7 +16,7 @@ void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
 DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyDock);
-	return v.empty() ? DockE::Left : any_cast<DockE>(v);
+	return v.isEmpty() ? DockE::Left : v.extract<DockE>();
 }
 
 DependencyProperty DockPanel::LastChildFillProperty()

@@ -31,7 +31,7 @@ void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs 
 {
 	if (args.property == ContentControl::ContentProperty())
 	{
-		auto content = any_cast<std::shared_ptr<UIElement>>(args.newValue);
+		auto content = args.newValue.extract<std::shared_ptr<UIElement>>();
 		content->setParent(this);
 	}
 }

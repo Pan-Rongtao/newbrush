@@ -8,7 +8,6 @@
 #include "TestEvent.h"
 #include "TestRect.h"
 #include "TestEasingFunction.h"
-#include "TestAny.h"
 #include "TestRoutedEvent.h"
 #include "TestDependencyProperty.h"
 

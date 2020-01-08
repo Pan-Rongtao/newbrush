@@ -20,20 +20,20 @@ EffectiveValueEntry::EffectiveValueEntry(const DependencyProperty & dp, FullValu
 {
 }
 
-void EffectiveValueEntry::setBaseValue(const Any & value) &
+void EffectiveValueEntry::setBaseValue(const Var & value) &
 {
 //	auto modifiedValue = ensureModifiedValue();
 //	modifiedValue.BaseValue = value;
 	BaseValue = value;
 }
 
-Any EffectiveValueEntry::baseValue() const
+Var EffectiveValueEntry::baseValue() const
 {
 //	return any_cast<ModifiedValue>(m_value).BaseValue;
 	return BaseValue;
 }
 
-void EffectiveValueEntry::setExpressionValue(const Any & value)
+void EffectiveValueEntry::setExpressionValue(const Var & value)
 {
 /*	if (value.type() == DependencyProperty::unsetValue().type())
 		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");
@@ -44,7 +44,7 @@ void EffectiveValueEntry::setExpressionValue(const Any & value)
 	//
 }
 
-void EffectiveValueEntry::setAnimatedValue(const Any & value)
+void EffectiveValueEntry::setAnimatedValue(const Var & value)
 {
 	if (value.type() == DependencyProperty::unsetValue().type())
 		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");
@@ -54,7 +54,7 @@ void EffectiveValueEntry::setAnimatedValue(const Any & value)
 	m_source.addFlags(IsAnimated);
 }
 
-void EffectiveValueEntry::setCoercedValue(const Any & value, const Any &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue)
+void EffectiveValueEntry::setCoercedValue(const Var & value, const Var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue)
 {
 	if (value.type() == DependencyProperty::unsetValue().type())
 		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");

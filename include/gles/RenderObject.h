@@ -13,17 +13,18 @@
 ********************************************************/
 #pragma once
 #include <string>
-#include "../core/Any.h"
 #include "../gles/Model.h"
 #include "../gles/Material.h"
 #include "../gles/Camera.h"
 #include "../gles/Projection.h"
+#include "Poco/Dynamic/Var.h"
 
 struct aiNode;
 struct aiMesh;
 struct aiScene;
 namespace nb{
 	
+using Poco::Dynamic::Var;
 class NB_API RenderObject
 {
 public:
@@ -62,7 +63,7 @@ public:
 	std::shared_ptr<Material> material();
 
 	//存储uniform变量，以便下次刷新使用
-	void storeUniform(const std::string &name, const Any &v);
+	void storeUniform(const std::string &name, const Var &v);
 	
 	//绘制，重写此方法以构建自己的渲染方式
 	virtual void draw(const Camera &camera, const Projection &projection) const;
@@ -74,7 +75,7 @@ private:
 	bool						m_renderable;
 	std::shared_ptr<Model>		m_model;
 	std::shared_ptr<Material>	m_material;
-	std::map<std::string, Any>	m_uniforms;
+	std::map<std::string, Var>	m_uniforms;
 };
 
 }

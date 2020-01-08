@@ -24,6 +24,7 @@
 
 namespace Poco {
 
+
 class Timespan;
 
 
@@ -31,7 +32,7 @@ class Foundation_API Timestamp
 	/// A Timestamp stores a monotonic* time value
 	/// with (theoretical) microseconds resolution.
 	/// Timestamps can be compared with each other
-	/// and simple arithmetics are supported.
+	/// and simple arithmetic is supported.
 	///
 	/// [*] Note that Timestamp values are only monotonic as
 	/// long as the systems's clock is monotonic as well
@@ -42,15 +43,15 @@ class Foundation_API Timestamp
 	/// based and thus independent of the timezone
 	/// in effect on the system.
 	///
-	/// The internal reference time is the Unix epoch, 
+	/// The internal reference time is the Unix epoch,
 	/// midnight, January 1, 1970.
 {
 public:
-	typedef Int64 TimeVal; 
+	typedef Int64 TimeVal;
 		/// Monotonic UTC time value in microsecond resolution,
 		/// with base time midnight, January 1, 1970.
 		
-	typedef Int64 UtcTimeVal; 
+	typedef Int64 UtcTimeVal;
 		/// Monotonic UTC time value in 100 nanosecond resolution,
 		/// with base time midnight, October 15, 1582.
 		

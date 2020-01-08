@@ -3,7 +3,7 @@
 
 void TestTextBlock::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	m_text = std::make_shared<TextBlock>();
 	m_text->set(TextBlock::TextProperty(), std::string("abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
 //	m_text->Text = "12345";

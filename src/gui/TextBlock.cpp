@@ -111,7 +111,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == ForegroundProperty())
 	{
-		auto c = any_cast<Color>(args.newValue);
+		auto c = args.newValue.extract<Color>();
 		auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
 		renderer->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}

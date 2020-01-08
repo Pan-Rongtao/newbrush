@@ -9,7 +9,7 @@
 
 void TestUniformGrid::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 
 	auto uniformGrid = std::make_shared<UniformGrid>();
 	uniformGrid->set(UniformGrid::RowsProperty(), 8);

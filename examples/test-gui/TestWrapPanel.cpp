@@ -6,7 +6,7 @@
 
 void TestWrapPanel::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 
 	auto wp = std::make_shared<WrapPanel>();
 	wp->set(WrapPanel::OrientationProperty(), OrientationE::Horizontal);

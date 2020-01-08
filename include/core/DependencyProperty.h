@@ -4,16 +4,18 @@
 #include <map>
 #include <typeindex>
 #include "../core/Def.h"
-#include "../core/Any.h"
+#include "Poco/Dynamic/Var.h"
 
 namespace nb{
+
+using Poco::Dynamic::Var;
 
 class DependencyObject;
 class PropertyMetadata;
 struct DependencyPropertyChangedEventArgs;
 using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs *)>;
-using CoerceValueCallback = std::function<Any(DependencyObject *, Any)>;
-using ValidateValueCallback = std::function<bool(const Any &value)>;
+using CoerceValueCallback = std::function<Var(DependencyObject *, Var)>;
+using ValidateValueCallback = std::function<bool(const Var &value)>;
 
 class NB_API PropertyMetadata
 {
@@ -22,16 +24,16 @@ public:
 	//defaulValue：默认值
 	//propertyChangedCallback：属性已改变回调
 	//coerceValueCallback：属性值矫正回调
-	PropertyMetadata(const Any &defaulValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
+	PropertyMetadata(const Var &defaulValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
 
-	void setDefaultValue(const Any &value) &;
-	Any defaultValue() const;
+	void setDefaultValue(const Var &value) &;
+	Var defaultValue() const;
 	bool isSealed() const;
 	PropertyChangedCallback propertyChangedCallback();
 	CoerceValueCallback coerceValueCallback();
 
 private:
-	Any						m_defaultValue;
+	Var						m_defaultValue;
 	PropertyChangedCallback	m_propertyChangedCallback;
 	CoerceValueCallback		m_coerceValueCallback;
 };
@@ -68,13 +70,13 @@ public:
 	//element：目标元素
 	//property_name：属性名
 	//property_v：属性值
-	static void registerAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name, const Any &property_v);
+	static void registerAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name, const Var &property_v);
 
 	
-	//查询依赖属性值，如果查询不到，将返回一个空的Any
+	//查询依赖属性值，如果查询不到，将返回一个空的Var
 	//element：目标元素
 	//property_name：属性名
-	static Any findAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name);
+	static Var findAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name);
 
 	//注册依赖属性
 	//name：属性名
@@ -99,7 +101,7 @@ public:
 		return p.first->second;
 	}
 	
-	static Any unsetValue();
+	static Var unsetValue();
 
 private:
 	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
@@ -111,7 +113,7 @@ private:
 	ValidateValueCallback				m_validateValueCallback;
 	size_t								m_hash;
 
-	static std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Any>>	m_attProperties;
+	static std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	m_attProperties;
 };
 
 }

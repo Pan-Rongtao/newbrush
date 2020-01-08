@@ -2,7 +2,7 @@
 #include <map>
 #include "../core/Def.h"
 #include "../core/Event.h"
-#include "../core/Any.h"
+#include "Poco/Dynamic/Var.h"
 
 namespace nb{ 
 namespace gui{
@@ -63,7 +63,7 @@ class NB_API ValueDataBase : public DataContext, public std::enable_shared_from_
 {
 public:
 	virtual const std::type_info &type() const { return typeid(void); }
-	virtual Any getAny() const { return Any(); }
+	virtual Var getAny() const { return Var(); }
 
 	struct ValueChangedArgs { std::shared_ptr<DataContext> root; std::string path; };
 	Event<ValueChangedArgs>		ValueChanged;		//值改变事件
@@ -85,7 +85,7 @@ public:
 
 	void set(const T &v)
 	{
-		if (v != any_cast<T>(m_v))
+		if (v != m_v.extract<T>())
 		{
 			m_v = v;
 			std::string path = name();
@@ -99,10 +99,10 @@ public:
 			ValueChanged.invoke({ p.lock() , path });
 		}
 	}
-	T get() { return any_cast<T>(m_v); }
-	const T get() const { return any_cast<T>(m_v); }
+	T get() { return m_v.extract<T>(); }
+	const T get() const { return m_v.extract<T>(); }
 
-	virtual Any getAny() const override { return m_v; }
+	virtual Var getAny() const override { return m_v; }
 
 	virtual const std::type_info &type() const override { return typeid(T); }
 
@@ -111,7 +111,7 @@ public:
 	bool operator == (const T &v) const { return !(operator!=(v)); }
 
 private:
-	Any	m_v;
+	Var	m_v;
 };
 
 

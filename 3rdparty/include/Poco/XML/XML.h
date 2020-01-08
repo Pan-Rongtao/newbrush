@@ -24,14 +24,14 @@
 
 
 //
-// The following block is the standard way of creating macros which make exporting 
+// The following block is the standard way of creating macros which make exporting
 // from a DLL simpler. All files within this DLL are compiled with the XML_EXPORTS
 // symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
+// that uses this DLL. This way any other project whose source files include this file see
 // XML_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 //
-#if defined(_WIN32) && defined(POCO_DLL)
+#if defined(POCO_COMPILER_MSVC) && defined(POCO_DLL)
 	#if defined(XML_EXPORTS)
 		#define XML_API __declspec(dllexport)
 	#else
@@ -52,7 +52,7 @@
 //
 // Automatically link XML library.
 //
-#if defined(_MSC_VER)
+#if defined(POCO_COMPILER_MSVC)
 	#if !defined(POCO_NO_AUTOMATIC_LIBS) && !defined(XML_EXPORTS)
 		#pragma comment(lib, "PocoXML" POCO_LIB_SUFFIX)
 	#endif

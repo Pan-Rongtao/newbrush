@@ -3,8 +3,8 @@
 #include "../core/Size.h"
 #include "../core/RoutedEvent.h"
 #include "../core/EnumFlags.h"
-#include "../core/Any.h"
 #include "../core/DependencyProperty.h"
+#include "Poco/Dynamic/Var.h"
 
 namespace nb {
 	
@@ -299,8 +299,8 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 struct DependencyPropertyChangedEventArgs
 {
 	DependencyProperty	property;
-	Any					oldValue;
-	Any					newValue;
+	Var					oldValue;
+	Var					newValue;
 };
 
 }

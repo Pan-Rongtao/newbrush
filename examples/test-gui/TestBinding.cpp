@@ -3,7 +3,7 @@
 
 void TestBinding::test()
 {
-	m_window = std::make_shared<gui::Window>();
+	m_window = std::make_shared<Window>();
 	m_text = std::make_shared<TextBlock>();
 /*	m_text->PropertyChanged += [](const TextBlock::PropertyChangedArgs &args)
 	{

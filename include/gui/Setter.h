@@ -1,7 +1,7 @@
 #pragma once
-#include "../core/Any.h"
 #include "../core/Property.h"
 #include "../core/DependencyProperty.h"
+#include "Poco/Dynamic/Var.h"
 
 namespace nb{
 namespace gui{
@@ -10,7 +10,7 @@ class NB_API Setter
 {
 public:
 	DependencyProperty	property;	//属性
-	Any					value;		//属性值
+	Var					value;		//属性值
 };
 
 

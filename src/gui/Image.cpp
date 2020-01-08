@@ -51,7 +51,7 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == StretchProperty())
 	{
-		set(StretchProperty(), any_cast<StretchE>(args.newValue));
+		set(StretchProperty(), args.newValue.extract<StretchE>());
 	}
 }
 

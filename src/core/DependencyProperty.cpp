@@ -2,19 +2,19 @@
 
 using namespace nb;
 
-PropertyMetadata::PropertyMetadata(const Any & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
+PropertyMetadata::PropertyMetadata(const Var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
 	: m_defaultValue(defaulValue)
 	, m_propertyChangedCallback(propertyChangedCallback)
 	, m_coerceValueCallback(coerceValueCallback)
 {
 }
 
-void PropertyMetadata::setDefaultValue(const Any & value) &
+void PropertyMetadata::setDefaultValue(const Var & value) &
 {
 	m_defaultValue = value;
 }
 
-Any PropertyMetadata::defaultValue() const
+Var PropertyMetadata::defaultValue() const
 {
 	return m_defaultValue;
 }
@@ -34,14 +34,14 @@ CoerceValueCallback PropertyMetadata::coerceValueCallback()
 	return m_coerceValueCallback;
 }
 
-std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Any>>	DependencyProperty::m_attProperties;
+std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	DependencyProperty::m_attProperties;
 
-void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Any & property_v)
+void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Var & property_v)
 {
 	auto iter = m_attProperties.find(element);
 	if (iter == m_attProperties.end())
 	{
-		std::map<std::string, Any> mapNameV;
+		std::map<std::string, Var> mapNameV;
 		mapNameV[property_name] = property_v;
 		m_attProperties[element] = mapNameV;
 	}
@@ -53,18 +53,18 @@ void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> elem
 	}
 }
 
-Any DependencyProperty::findAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name)
+Var DependencyProperty::findAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name)
 {
 	auto iter = m_attProperties.find(element);
 	if (iter == m_attProperties.end())
 	{
-		return Any();
+		return Var();
 	}
 	else
 	{
 		auto iterInner = iter->second.find(property_name);
 		if (iterInner == iter->second.end())
-			return Any();
+			return Var();
 		else
 			return iterInner->second;
 	}
@@ -75,7 +75,7 @@ struct UnsetValueInternal
 	std::string	_name;
 };
 static UnsetValueInternal staticUnsetValue{ "DependencyProperty.UnsetValue" };
-Any DependencyProperty::unsetValue()
+Var DependencyProperty::unsetValue()
 {
 	return staticUnsetValue;
 }

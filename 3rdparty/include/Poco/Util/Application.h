@@ -82,8 +82,7 @@ class Util_API Application: public Subsystem
 	/// If loadConfiguration() has never been called, application.configDir will be equal to application.dir.
 	///
 	/// The POCO_APP_MAIN macro can be used to implement main(argc, argv).
-	/// If POCO has been built with POCO_WIN32_UTF8, POCO_APP_MAIN supports
-	/// Unicode command line arguments.
+	/// POCO_APP_MAIN supports Unicode command line arguments.
 {
 public:
 	typedef std::vector<std::string> ArgVec;
@@ -140,7 +139,7 @@ public:
 		/// Note that as of release 1.3.7, init() no longer
 		/// calls initialize(). This is now called from run().
 
-#if defined(POCO_WIN32_UTF8) && !defined(POCO_NO_WSTRING)
+#if defined (POCO_OS_FAMILY_WINDOWS) && !defined(POCO_NO_WSTRING)
 	void init(int argc, wchar_t* argv[]);
 		/// Processes the application's command line arguments
 		/// and sets the application's properties (e.g.,
@@ -187,7 +186,7 @@ public:
 		/// by the .ini file and the .xml file.
 		///
 		/// If the application is built in debug mode (the _DEBUG preprocessor
-		/// macro is defined) and the base name of the appication executable
+		/// macro is defined) and the base name of the application executable
 		/// ends with a 'd', a config file without the 'd' ending its base name is
 		/// also found.
 		///
@@ -242,7 +241,10 @@ public:
 		/// Returns the full command path used to invoke the application.
 
 	LayeredConfiguration& config() const;
-		/// Returns the application's configuration.
+		/// Returns the application's configuration reference.
+
+	LayeredConfiguration::Ptr configPtr() const;
+		/// Returns the application's configuration smart pointer.
 
 	Poco::Logger& logger() const;
 		/// Returns the application's logger.
@@ -374,19 +376,21 @@ private:
 	bool findAppConfigFile(const std::string& appName, const std::string& extension, Poco::Path& path) const;
 	bool findAppConfigFile(const Path& basePath, const std::string& appName, const std::string& extension, Poco::Path& path) const;
 
-	typedef Poco::AutoPtr<LayeredConfiguration> ConfigPtr;
+	typedef LayeredConfiguration::Ptr ConfigPtr;
+	typedef Poco::Logger::Ptr LoggerPtr;
 
-	ConfigPtr       _pConfig;
-	SubsystemVec    _subsystems;
-	bool            _initialized;
-	std::string     _command;
-	ArgVec          _argv;
-	ArgVec          _unprocessedArgs;
-	OptionSet       _options;
-	bool            _unixOptions;
-	Poco::Logger*   _pLogger;
-	Poco::Timestamp _startTime;
-	bool            _stopOptionsProcessing;
+	ConfigPtr         _pConfig;
+	SubsystemVec      _subsystems;
+	bool              _initialized;
+	std::string       _command;
+	ArgVec            _argv;
+	ArgVec            _unprocessedArgs;
+	OptionSet         _options;
+	bool              _unixOptions;
+	Logger*           _pLogger;
+	Poco::Timestamp   _startTime;
+	bool              _stopOptionsProcessing;
+	int               _loadedConfigs;
 
 #if defined(POCO_OS_FAMILY_UNIX) && !defined(POCO_VXWORKS)
 	std::string _workingDirAtLaunch;
@@ -429,7 +433,14 @@ inline bool Application::initialized() const
 
 inline LayeredConfiguration& Application::config() const
 {
+	poco_assert(!_pConfig.isNull());
 	return *const_cast<LayeredConfiguration*>(_pConfig.get());
+}
+
+
+inline LayeredConfiguration::Ptr Application::configPtr() const
+{
+	return _pConfig;
 }
 
 
@@ -468,9 +479,9 @@ inline const Poco::Timestamp& Application::startTime() const
 inline Poco::Timespan Application::uptime() const
 {
 	Poco::Timestamp now;
-	Poco::Timespan uptime = now - _startTime;
+	Poco::Timespan ret = now - _startTime;
 
-	return uptime;
+	return ret;
 }
 
 
@@ -480,7 +491,7 @@ inline Poco::Timespan Application::uptime() const
 //
 // Macro to implement main()
 //
-#if defined(_WIN32) && defined(POCO_WIN32_UTF8) && !defined(POCO_NO_WSTRING)
+#if defined(POCO_OS_FAMILY_WINDOWS) && !defined(POCO_NO_WSTRING)
 	#define POCO_APP_MAIN(App) \
 	int wmain(int argc, wchar_t** argv)		\
 	{										\
@@ -495,7 +506,8 @@ inline Poco::Timespan Application::uptime() const
 			return Poco::Util::Application::EXIT_CONFIG;\
 		}									\
 		return pApp->run();					\
-	}
+	}										\
+	POCO_WMAIN_WRAPPER()
 #elif defined(POCO_VXWORKS)
 	#define POCO_APP_MAIN(App) \
 	int pocoAppMain(const char* appName, ...) \

@@ -3,7 +3,7 @@
 using namespace nb;
 using namespace nb::gui;
 
-void ResourceDictionary::add(const std::string & key, const Any & v)
+void ResourceDictionary::add(const std::string & key, const Var & v)
 {
 	if (m_resmap.find(key) == m_resmap.end())
 		nbThrowException(std::logic_error, "[%s] already exists.", key.data());
@@ -21,14 +21,14 @@ void ResourceDictionary::clear()
 	m_resmap.clear();
 }
 
-Any & ResourceDictionary::find(const std::string & key)
+Var & ResourceDictionary::find(const std::string & key)
 {
-	static Any s_a;
+	static Var s_a;
 	auto iter = m_resmap.find(key);
 	return iter == m_resmap.end() ? s_a : iter->second;
 }
 
-const Any & ResourceDictionary::find(const std::string & key) const
+const Var & ResourceDictionary::find(const std::string & key) const
 {
 	return const_cast<ResourceDictionary *>(this)->find(key);
 }

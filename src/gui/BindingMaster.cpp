@@ -7,33 +7,6 @@ using namespace nb::gui;
 
 std::map<std::shared_ptr<Binding>, std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>>	BindingMaster::g_bindingmap;
 
-#ifdef NB_OS_FAMILY_WINDOWS
-#pragma warning(push)
-#pragma warning(disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
-#endif
-template<class T>
-void syncTargetValueData(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, ValueDataBasePtr bindingData)
-{
-	if (bindingData->type() == typeid(int8_t))			target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<int8_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(int16_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<int16_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(int32_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<int32_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(int64_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<int64_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(uint8_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<uint8_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(uint16_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<uint16_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(uint32_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<uint32_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(uint64_t))	target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<uint64_t>>(bindingData)->get());
-	else if (bindingData->type() == typeid(bool))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<bool>>(bindingData)->get());
-	else if (bindingData->type() == typeid(float))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<float>>(bindingData)->get());
-	else if (bindingData->type() == typeid(double))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<double>>(bindingData)->get());
-	else if (bindingData->type() == typeid(long))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<long>>(bindingData)->get());
-	else if (bindingData->type() == typeid(unsigned long))		target->set<T>(dp, (T)std::dynamic_pointer_cast<ValueData<unsigned long>>(bindingData)->get());
-	else nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", bindingData->type().name(), dp.propertyType().name());
-}
-
-#ifdef NB_OS_FAMILY_WINDOWS
-#pragma warning(pop)
-#endif
-
 void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, std::shared_ptr<Binding> bd)
 {
 	auto source = std::dynamic_pointer_cast<ObjectData>(bd->source());
@@ -60,40 +33,9 @@ void BindingMaster::onBingingDataChanged(const ValueDataBase::ValueChangedArgs &
 		auto dp = iter->second.second;
 		auto propertyType = dp.propertyType();
 
-		if (propertyType == bindingData->type())	target->set(dp, bindingData->getAny());
-		else if (propertyType == typeid(int8_t))	syncTargetValueData<int8_t>(target, dp, bindingData);
-		else if (propertyType == typeid(int16_t))	syncTargetValueData<int16_t>(target, dp, bindingData);
-		else if (propertyType == typeid(int32_t))	syncTargetValueData<int32_t>(target, dp, bindingData);
-		else if (propertyType == typeid(int64_t))	syncTargetValueData<int64_t>(target, dp, bindingData);
-		else if (propertyType == typeid(uint8_t))	syncTargetValueData<uint8_t>(target, dp, bindingData);
-		else if (propertyType == typeid(uint16_t))	syncTargetValueData<uint16_t>(target, dp, bindingData);
-		else if (propertyType == typeid(uint32_t))	syncTargetValueData<uint32_t>(target, dp, bindingData);
-		else if (propertyType == typeid(uint64_t))	syncTargetValueData<uint64_t>(target, dp, bindingData);
-		else if (propertyType == typeid(bool))		syncTargetValueData<bool>(target, dp, bindingData);
-		else if (propertyType == typeid(float))		syncTargetValueData<float>(target, dp, bindingData);
-		else if (propertyType == typeid(double))	syncTargetValueData<double>(target, dp, bindingData);
-		else if (propertyType == typeid(long))		syncTargetValueData<long>(target, dp, bindingData);
-		else if (propertyType == typeid(unsigned long))	syncTargetValueData<unsigned long>(target, dp, bindingData);
-		else if (propertyType == typeid(std::string))
-		{
-			std::string s;
-			if (bindingData->type() == typeid(int8_t))			s = std::to_string(std::dynamic_pointer_cast<ValueData<int8_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(int16_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int16_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(int32_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int32_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(int64_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<int64_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(uint8_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint8_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(uint16_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint16_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(uint32_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint32_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(uint64_t))	s = std::to_string(std::dynamic_pointer_cast<ValueData<uint64_t>>(bindingData)->get());
-			else if (bindingData->type() == typeid(bool))		s = std::to_string(std::dynamic_pointer_cast<ValueData<bool>>(bindingData)->get());
-			else if (bindingData->type() == typeid(float))		s = std::to_string(std::dynamic_pointer_cast<ValueData<float>>(bindingData)->get());
-			else if (bindingData->type() == typeid(double))		s = std::to_string(std::dynamic_pointer_cast<ValueData<double>>(bindingData)->get());
-			else if (bindingData->type() == typeid(long))		s = std::to_string(std::dynamic_pointer_cast<ValueData<long>>(bindingData)->get());
-			else if (bindingData->type() == typeid(unsigned long))s = std::to_string(std::dynamic_pointer_cast<ValueData<unsigned long>>(bindingData)->get());
-			else nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", bindingData->type().name(), propertyType.name());
-			target->set(dp, s);
-		}
-		else
+		try {
+			target->set(dp, bindingData->getAny());
+		}catch(...)
 		{
 			nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", bindingData->type().name(), propertyType.name());
 		}

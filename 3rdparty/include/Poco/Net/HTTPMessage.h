@@ -111,7 +111,7 @@ public:
 	const std::string& getContentType() const;
 		/// Returns the content type for this message.
 		///
-		/// If no Content-Type header is present, 
+		/// If no Content-Type header is present,
 		/// returns UNKNOWN_CONTENT_TYPE.	
 
 	void setKeepAlive(bool keepAlive);
@@ -139,6 +139,7 @@ public:
 	static const std::string CONTENT_TYPE;
 	static const std::string TRANSFER_ENCODING;
 	static const std::string CONNECTION;
+	static const std::string PROXY_CONNECTION;
 	
 	static const std::string CONNECTION_KEEP_ALIVE;
 	static const std::string CONNECTION_CLOSE;
@@ -153,13 +154,16 @@ protected:
 		/// Creates the HTTPMessage and sets
 		/// the version.
 
+	HTTPMessage(const HTTPMessage& other);
+		/// Copy constructor.
+
+	HTTPMessage& operator = (const HTTPMessage& other);
+		/// Assignment operator.
+
 	virtual ~HTTPMessage();
 		/// Destroys the HTTPMessage.
 	
 private:
-	HTTPMessage(const HTTPMessage&);
-	HTTPMessage& operator = (const HTTPMessage&);
-	
 	std::string _version;
 };
 

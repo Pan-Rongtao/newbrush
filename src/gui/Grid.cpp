@@ -138,7 +138,7 @@ void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
 uint32_t Grid::getRow(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyRow);
-	return v.empty() ? 0 : any_cast<uint32_t>(v);
+	return v.isEmpty() ? 0 : v.extract<uint32_t>();
 }
 
 void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
@@ -153,7 +153,7 @@ void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
 uint32_t Grid::getColumn(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumn);
-	return v.empty() ? 0 : any_cast<uint32_t>(v);
+	return v.isEmpty() ? 0 : v.extract<uint32_t>();
 }
 
 void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
@@ -168,7 +168,7 @@ void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
 uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyRowSpan);
-	return v.empty() ? 1 : any_cast<uint32_t>(v);
+	return v.isEmpty() ? 0 : v.extract<uint32_t>();
 }
 
 void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
@@ -183,7 +183,7 @@ void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
 uint32_t Grid::getColumnSpan(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumnSpan);
-	return v.empty() ? 1 : any_cast<uint32_t>(v);
+	return v.isEmpty() ? 0 : v.extract<uint32_t>();
 }
 
 //规则：每次根据RowDefinitions和ColumnDefinitions把每个网格单元的像素尺寸计算出来：

@@ -104,7 +104,7 @@ private:
 	void stripComments(std::string& json);
 	bool checkError();
 
-	struct json_stream* _pJSON;
+	json_stream*  _pJSON;
 	Handler::Ptr _pHandler;
 	int          _depth;
 	char         _decimalPoint;

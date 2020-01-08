@@ -12,7 +12,7 @@ using namespace nb;
 
 void TestGrid::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	auto grid = std::make_shared<Grid>();
 	
 	auto rowdef0 = std::make_shared<RowDefinition>();

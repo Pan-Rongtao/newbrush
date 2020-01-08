@@ -6,7 +6,7 @@
 
 void TestPolyline::test()
 {
-	m_window = std::make_shared<nb::gui::Window>();
+	m_window = std::make_shared<Window>();
 	auto linearBrush = std::make_shared<LinearGradientBrush>();
 	auto stops = std::vector<GradientStop>();
 	auto gs0 = std::make_shared<GradientStop>(Color(255, 255, 255, 255), 0.0f);

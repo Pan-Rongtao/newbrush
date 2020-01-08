@@ -26,7 +26,7 @@ Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const 
 
 void Timeline::begin()
 {
-	auto beginTime = get<TimeSpan>(BeginTimeProperty());
+	auto beginTime = get(BeginTimeProperty()).extract<TimeSpan>();
 	m_begTick = (uint64_t)(nb::getTickCount() + beginTime.totalMilliseconds());
 	set(StateProperty(), StateE::Active);
 	StateChangedEvent.invoke({ StateE::Active });
