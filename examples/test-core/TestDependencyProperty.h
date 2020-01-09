@@ -5,7 +5,7 @@
 
 using namespace nb;
 
-class TestDependencyProperty : public TestBase, public DependencyObject
+class TestDependencyProperty : public TestBase, public DependencyObject	//²»ÄÜ»»Î»ÖÃ
 {
 public:
 	void test();

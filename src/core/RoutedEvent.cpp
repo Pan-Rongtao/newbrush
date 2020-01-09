@@ -2,14 +2,6 @@
 
 using namespace nb;
 
-RoutedEvent::RoutedEvent()
-	: m_hash(0)
-	, m_routingStrategy(RoutingStrategyE::bubble)
-	, m_ownerType(typeid(nullptr))
-	, m_argsType(typeid(nullptr))
-{
-}
-
 std::string RoutedEvent::name() const
 {
 	return m_name;
@@ -43,4 +35,18 @@ bool RoutedEvent::operator==(const RoutedEvent & other) const
 bool RoutedEvent::operator!=(const RoutedEvent & other) const
 {
 	return m_hash != other.m_hash;
+}
+
+RoutedEvent RoutedEvent::invalid()
+{
+	return RoutedEvent("", typeid(void), typeid(void), RoutingStrategyE::bubble, 0);
+}
+
+RoutedEvent::RoutedEvent(const std::string & name, std::type_index ownerType, std::type_index eventArgsType, RoutingStrategyE routingStrategy, std::size_t hash)
+	: m_name(name)
+	, m_ownerType(ownerType)
+	, m_argsType(eventArgsType)
+	, m_routingStrategy(routingStrategy)
+	, m_hash(hash)
+{
 }

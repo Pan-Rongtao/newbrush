@@ -6,7 +6,7 @@
 
 namespace nb {
 
-class NB_API DependencyObject
+class NB_API DependencyObject : public Object
 {
 public:
 	//…Ë÷√ Ù–‘÷µ

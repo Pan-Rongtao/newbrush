@@ -14,7 +14,7 @@
 int main(int argc, char *argv[])
 {
 	try {
-		TestHandle<TestDependencyProperty> test;
+		TestHandle<TestRoutedEvent> test;
 		test->test();
 	}
 	catch (std::exception &e)

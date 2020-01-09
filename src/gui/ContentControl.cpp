@@ -9,7 +9,7 @@ ContentControl::ContentControl()
 
 DependencyProperty ContentControl::ContentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content", std::make_shared<UIElement>());
+	static auto dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content", nullptr);
 	return dp;
 }
 

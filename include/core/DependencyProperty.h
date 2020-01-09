@@ -82,21 +82,29 @@ public:
 	//name：属性名
 	//propertyType：属性值类型
 	//ownerType：属性宿主类型
+	//异常：std::invalid_argument [name]参数为空
 	//异常：std::logic_error已经注册过同类型属性
-	template<class ownerType, class propertyType>
-	static const DependencyProperty &registerDependency(const std::string &name, const propertyType &defaultValue, 
+	template<class OwnerType, class PropertyType>
+	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue,
 		PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
 	{
 		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
-		static_assert(std::is_base_of<DependencyObject, ownerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
+		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
+
+		if (name.empty())
+		{
+			nbThrowException(std::invalid_argument, "'name' is empty.");
+		}
 
 		std::hash<std::string> _shash;
-		auto _hash = typeid(ownerType).hash_code() ^ _shash(name);
+		auto _hash = typeid(OwnerType).hash_code() ^ _shash(name);
 		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
-		DependencyProperty dp(name, typeid(ownerType), typeid(propertyType), metadata, validateValueCallback, _hash);
+		DependencyProperty dp(name, typeid(OwnerType), typeid(PropertyType), metadata, validateValueCallback, _hash);
 		auto p = g_dependencyProperties.insert({ _hash, dp });
 		if (!p.second)
-			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(ownerType).name());
+		{
+			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
+		}
 
 		return p.first->second;
 	}

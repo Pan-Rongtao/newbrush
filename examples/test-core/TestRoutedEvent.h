@@ -6,7 +6,7 @@
 
 using namespace nb;
 
-class TT
+class TT : public Object
 {
 public:
 

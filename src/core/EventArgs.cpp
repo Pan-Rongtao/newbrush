@@ -3,18 +3,19 @@
 using namespace nb;
 
 RoutedEventArgs::RoutedEventArgs()
-	: RoutedEventArgs(RoutedEvent())
+	: RoutedEventArgs(RoutedEvent::invalid())
 {
 }
 
 RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent)
-	: RoutedEventArgs(routedEvent, Object())
+	: RoutedEventArgs(routedEvent, nullptr)
 {
 }
 
-RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source)
+RoutedEventArgs::RoutedEventArgs(const RoutedEvent &routedEvent, Object *source)
 	: Handled(false)
 	, Event(routedEvent)
+	, OriginalSource(nullptr)
 	, Source(source)
 {
 }

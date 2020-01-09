@@ -57,27 +57,27 @@ public:
 	UIElement();
 	virtual ~UIElement() = default;
 
-	static DependencyProperty					VisibilityProperty();	//可视的依赖属性
-	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性
-	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性
-	static DependencyProperty					IsFocusedProperty();	//是否可用焦点的依赖属性
-	static DependencyProperty 					WidthProperty();		//设定宽的依赖属性
-	static DependencyProperty 					HeightProperty();		//设定高的依赖属性
-	static DependencyProperty 					MinWidthProperty();		//最小宽的依赖属性
-	static DependencyProperty 					MinHeightProperty();	//最小高的依赖属性
-	static DependencyProperty 					MaxWidthProperty();		//最大宽的依赖属性
-	static DependencyProperty 					MaxHeightProperty();	//最大高的依赖属性
-	static DependencyProperty 					DesiredSizeProperty();	//期望尺寸的依赖属性
-	static DependencyProperty 					ActualSizeProperty();	//实际尺寸的依赖属性
-	static DependencyProperty 					RenderSizeProperty();	//渲染尺寸的依赖属性
-	static DependencyProperty 					OffsetProperty();		//相对父偏移量的依赖属性
-	static DependencyProperty 					MarginProperty();		//边缘的依赖属性
-	static DependencyProperty 					HorizontalAlignmentProperty();	//横向对齐方式的依赖属性
-	static DependencyProperty 					VerticalAlignmentProperty();	//纵向对齐方式的依赖属性
-	static DependencyProperty 					FlowDirectionProperty();		//
-	static DependencyProperty 					RendererProperty();		//渲染物的依赖属性
-	static DependencyProperty 					StyleProperty();		//风格的依赖属性
-	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性
+	static DependencyProperty					VisibilityProperty();	//可视的依赖属性（bool）
+	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性（float）
+	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性（bool）
+	static DependencyProperty					IsFocusedProperty();	//是否可用焦点的依赖属性（bool）
+	static DependencyProperty 					WidthProperty();		//设定宽的依赖属性（float）
+	static DependencyProperty 					HeightProperty();		//设定高的依赖属性（float）
+	static DependencyProperty 					MinWidthProperty();		//最小宽的依赖属性（float）
+	static DependencyProperty 					MinHeightProperty();	//最小高的依赖属性（float）
+	static DependencyProperty 					MaxWidthProperty();		//最大宽的依赖属性（float）
+	static DependencyProperty 					MaxHeightProperty();	//最大高的依赖属性（float）
+	static DependencyProperty 					DesiredSizeProperty();	//期望尺寸的依赖属性（Size）
+	static DependencyProperty 					ActualSizeProperty();	//实际尺寸的依赖属性（Size）
+	static DependencyProperty 					RenderSizeProperty();	//渲染尺寸的依赖属性（Size）
+	static DependencyProperty 					OffsetProperty();		//相对父偏移量的依赖属性（float）
+	static DependencyProperty 					MarginProperty();		//边缘的依赖属性（Thickness）
+	static DependencyProperty 					HorizontalAlignmentProperty();	//横向对齐方式的依赖属性（HorizontalAlignmentE）
+	static DependencyProperty 					VerticalAlignmentProperty();	//纵向对齐方式的依赖属性（VerticalAlignmentE）
+	static DependencyProperty 					FlowDirectionProperty();		//流向的依赖属性（FlowDirectionE）
+	static DependencyProperty 					RendererProperty();		//渲染物的依赖属性（std::shared_ptr<RenderObject>）
+	static DependencyProperty 					StyleProperty();		//风格的依赖属性（std::shared_ptr<Style>)
+	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
 
 	Event<EventArgs>							Initialized;
 	Event<RoutedEventArgs>						Loaded;

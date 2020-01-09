@@ -14,6 +14,7 @@ void TestRoutedEvent::test()
 	}));
 
 	MouseButtonEventArgs args(1000, MouseButtonE::Left);
+	args.OriginalSource = &t;
 	args.Event = TT::ClickEvent();
 	t.raiseEvent(args);
 }

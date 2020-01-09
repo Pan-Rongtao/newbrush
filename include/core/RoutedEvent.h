@@ -17,8 +17,6 @@ enum class RoutingStrategyE
 class NB_API RoutedEvent
 {
 public:
-	RoutedEvent();
-
 	std::string name() const;
 	std::size_t hash() const;
 	std::type_index ownerType() const;
@@ -28,7 +26,11 @@ public:
 	bool operator ==(const RoutedEvent &other) const;
 	bool operator !=(const RoutedEvent &other) const;
 
+	static RoutedEvent invalid();
+
 private:
+	RoutedEvent(const std::string & name, std::type_index ownerType, std::type_index eventArgsType, RoutingStrategyE routingStrategy, std::size_t hash);
+
 	std::size_t			m_hash{0};
 	std::string			m_name;
 	RoutingStrategyE	m_routingStrategy;
@@ -57,24 +59,26 @@ class NB_API RoutedEventManager
 {
 public:
 	template<class OwnerType, class EventArgsType>
-	static const RoutedEvent registerRoutedEvent(const std::string &name, RoutingStrategyE routingStrategy = RoutingStrategyE::bubble)
+	static const RoutedEvent &registerRoutedEvent(const std::string &name, RoutingStrategyE routingStrategy = RoutingStrategyE::bubble)
 	{
 		static std::map<std::size_t, RoutedEvent>	m_routedEvents;
 		//	static_assert(std::is_base_of<Object, ownerType>::value, "handlerType must be DependencyObject or it's derived type.");
 
-		std::hash<std::string> _shash;
-		auto hash = typeid(OwnerType).hash_code() ^ _shash(name);
-		if (m_routedEvents.find(hash) != m_routedEvents.end())
-			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
+		if (name.empty())
+		{
+			nbThrowException(std::invalid_argument, "'name' is empty.");
+		}
 
-		RoutedEvent e;
-		e.m_hash = hash;
-		e.m_name = name;
-		e.m_routingStrategy = routingStrategy;
-		e.m_ownerType = std::type_index(typeid(OwnerType));
-		e.m_argsType = std::type_index(typeid(EventArgsType));
-		m_routedEvents[hash] = e;
-		return e;
+		std::hash<std::string> _shash;
+		auto _hash = typeid(OwnerType).hash_code() ^ _shash(name);
+		RoutedEvent e(name, typeid(OwnerType), typeid(EventArgsType), routingStrategy, _hash);
+		auto p = m_routedEvents.insert({ _hash, e });
+		if (!p.second)
+		{
+			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
+		}
+
+		return p.first->second;
 	}
 
 };

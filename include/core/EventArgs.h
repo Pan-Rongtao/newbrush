@@ -190,13 +190,13 @@ class NB_API RoutedEventArgs : public EventArgs
 public:
 	RoutedEventArgs();
 	RoutedEventArgs(const RoutedEvent &routedEvent);
-	RoutedEventArgs(const RoutedEvent &routedEvent, const Object &source);
+	RoutedEventArgs(const RoutedEvent &routedEvent, Object *source);
 	virtual ~RoutedEventArgs() = default;
 
 	bool		Handled;
 	RoutedEvent	Event;
-	Object		OriginalSource;
-	Object		Source;
+	Object		*OriginalSource;
+	Object		*Source;
 };
 
 struct NB_API InputEventArgs : public RoutedEventArgs
