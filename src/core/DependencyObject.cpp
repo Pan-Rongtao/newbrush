@@ -2,6 +2,8 @@
 
 using namespace nb;
 
+//wchar_t、chart16_t、long double等这些不被视为number，所以无法转成number类型（bool、char、int、short、float、double等）
+//因此wchar_t这些类型都是用extract而不是convert
 void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 {
 	auto propertyType = dp.propertyType();
@@ -25,39 +27,39 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 		}
 		else if (propertyType == typeid(int))
 		{
-			fixSetValue = value.extract<int>();
+			fixSetValue = value.convert<int>();
 		}
 		else if (propertyType == typeid(unsigned int))
 		{
-			fixSetValue = value.extract<unsigned int>();
+			fixSetValue = value.convert<unsigned int>();
 		}
 		else if (propertyType == typeid(std::string))
 		{
-			fixSetValue = value.extract<std::string>();
+			fixSetValue = value.convert<std::string>();
 		}
 		else if (propertyType == typeid(std::wstring))
 		{
-			fixSetValue = value.extract<std::wstring>();
+			fixSetValue = value.convert<std::wstring>();
 		}
 		else if (propertyType == typeid(short))
 		{
-			fixSetValue = value.extract<short>();
+			fixSetValue = value.convert<short>();
 		}
 		else if (propertyType == typeid(unsigned short))
 		{
-			fixSetValue = value.extract<unsigned short>();
+			fixSetValue = value.convert<unsigned short>();
 		}
 		else if (propertyType == typeid(char))
 		{
-			fixSetValue = value.extract<char>();
+			fixSetValue = value.convert<char>();
 		}
 		else if (propertyType == typeid(signed char))
 		{
-			fixSetValue = value.extract<signed char>();
+			fixSetValue = value.convert<signed char>();
 		}
 		else if (propertyType == typeid(unsigned char))
 		{
-			fixSetValue = value.extract<unsigned char>();
+			fixSetValue = value.convert<unsigned char>();
 		}
 		else if (propertyType == typeid(wchar_t))
 		{
@@ -73,27 +75,27 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 		}
 		else if (propertyType == typeid(long))
 		{
-			fixSetValue = value.extract<long>();
+			fixSetValue = value.convert<long>();
 		}
 		else if (propertyType == typeid(unsigned long))
 		{
-			fixSetValue = value.extract<unsigned long>();
+			fixSetValue = value.convert<unsigned long>();
 		}
 		else if (propertyType == typeid(long long))
 		{
-			fixSetValue = value.extract<unsigned long long>();
+			fixSetValue = value.convert<unsigned long long>();
 		}
 		else if (propertyType == typeid(long double))
 		{
 			fixSetValue = value.extract<long double>();
 		}
-		else
-		{
-			fixSetValue = value;
-		//	nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
-		}
 	}
 	catch (...)
+	{
+		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
+	}
+
+	if(fixSetValue.isEmpty())
 	{
 		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
 	}
@@ -160,4 +162,10 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 
 void DependencyObject::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
+	auto metadata = args.property.defaultMetadata();
+	if (metadata->propertyChangedCallback())
+	{
+		DependencyPropertyChangedEventArgs *p = const_cast<DependencyPropertyChangedEventArgs *>(&args);
+		metadata->propertyChangedCallback()(this, p);
+	}
 }

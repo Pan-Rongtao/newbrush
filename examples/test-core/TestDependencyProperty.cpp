@@ -14,7 +14,7 @@ public:
 
 void TestDependencyProperty::test()
 {
-	set(BoolPoperty(), 0);
+	set(BoolPoperty(), (float)0);
 	set(BoolPoperty(), 1);
 	set(IntProperty(), 111);
 	set(IntProperty(), 111);
@@ -22,9 +22,9 @@ void TestDependencyProperty::test()
 	set(DoubleProperty(), 333.333);
 	std::string s = std::string("abc");
 	char axx[] = "abc";
-	set(StringProperty(), axx);
+	set(StringProperty(), std::wstring(L"DD"));
 	set(StringProperty(), "def");
-	set(WStringProperty(), std::wstring(L"def"));
+	set(WStringProperty(), std::string("def"));
 	set(PointProperty(), Point(2, 2));
 	set(PointProperty(), Point(2, 2));
 
@@ -36,7 +36,10 @@ void TestDependencyProperty::test()
 
 DependencyProperty TestDependencyProperty::BoolPoperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TestDependencyProperty, bool>("Bool", true);
+	static auto dp = DependencyProperty::registerDependency<TestDependencyProperty, bool>("Bool", true, [](DependencyObject *dp, DependencyPropertyChangedEventArgs *args) {
+		auto tdp = dynamic_cast<TestDependencyProperty *>(dp);
+		printf("%s changed from %d to %d\n", args->property.name().data(), args->oldValue.extract<bool>(), args->newValue.extract<bool>());
+	});
 	return dp;
 }
 
