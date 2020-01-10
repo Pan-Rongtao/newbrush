@@ -35,7 +35,7 @@ public:
 class DataTrigger : public TriggerBase
 {
 public:
-	BindingPtr				binding;	//绑定
+	std::shared_ptr<Binding>binding;	//绑定
 	Var						value;		//触发的绑定值
 	std::vector<Setter>		setters;	//条件成立后执行的setters
 };

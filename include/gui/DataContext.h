@@ -2,33 +2,48 @@
 #include <map>
 #include "../core/Def.h"
 #include "../core/Event.h"
+#include "Poco/JSON/Object.h"
+#include "Poco/JSON/Array.h"
 #include "Poco/Dynamic/Var.h"
 
 namespace nb{ 
 namespace gui{
 
-class NB_API DataContext
+class NB_API DataObject
 {
 public:
-	virtual ~DataContext() = default;
+	DataObject(const std::string &name);
+	virtual ~DataObject() = default;
 
-	//名字
-	void setName(const std::string &name);
+	//设置名字
+	//异常：与兄弟节点重名
+	void setName(const std::string &name) &;
 	std::string name() const;
 
-	std::weak_ptr<DataContext>	m_parent;
-protected:
-	DataContext(const std::string &name);
+	//获取值
+	Var get(const std::string &key) const;
+
+	//获取所有子节点的键值
+	void getKeys(std::vector<std::string> &keys) const;
+	std::vector<std::string> getKeys() const;
+
+	//是否有名为key的子节点
+	bool has(const std::string &key) const;
+
+	//子节点个数
+	std::size_t childCount() const;
+
+	//设置子节点的值，如果该子节点不存在，自动创建
+	void set(const std::string &key, const Var &value) &;
+
+	//移除子节点
+	void remove(const std::string &key) &;
 
 private:
-	std::string					m_name;
+	std::string			m_name;
+	DataObject			*m_parent;
+	Poco::JSON::Object	m_obj;
 };
-using DataContextPtr = std::shared_ptr<DataContext>;
-
-class ObjectData;
-using ObjectDataPtr = std::shared_ptr<ObjectData>;
-using ChildernContainer = std::map<std::string, DataContextPtr>;
-using ChildConstIterator = ChildernContainer::const_iterator;
 
 class NB_API ObjectData : public DataContext, public std::enable_shared_from_this<ObjectData>
 {

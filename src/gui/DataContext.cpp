@@ -3,25 +3,54 @@
 using namespace nb;
 using namespace nb::gui;
 
-DataContext::DataContext(const std::string & name)
+DataObject::DataObject(const std::string & name)
 	: m_name(name)
 {
 }
 
-void DataContext::setName(const std::string & name)
+void DataObject::setName(const std::string &name) &
 {
 	m_name = name;
 }
 
-std::string DataContext::name() const
+std::string DataObject::name() const
 {
 	return m_name;
 }
 
-
-ObjectData::ObjectData(const std::string & name)
-	: DataContext(name)
+Var DataObject::get(const std::string & key) const
 {
+	return m_obj.get(key);
+}
+
+void DataObject::getKeys(std::vector<std::string>& keys) const
+{
+	m_obj.getNames(keys);
+}
+
+std::vector<std::string> DataObject::getKeys() const
+{
+	return m_obj.getNames();
+}
+
+bool DataObject::has(const std::string & key) const
+{
+	return m_obj.has(key);
+}
+
+std::size_t DataObject::childCount() const
+{
+	return m_obj.size();
+}
+
+void DataObject::set(const std::string & key, const Var & value) &
+{
+	m_obj.set(key, value);
+}
+
+void DataObject::remove(const std::string & key) &
+{
+	m_obj.remove(key);
 }
 
 void ObjectData::insertChild(DataContextPtr child)

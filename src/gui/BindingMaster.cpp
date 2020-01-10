@@ -20,7 +20,7 @@ void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const D
 
 void BindingMaster::onBingingDataChanged(const ValueDataBase::ValueChangedArgs & args)
 {
-	auto iter = std::find_if(g_bindingmap.begin(), g_bindingmap.end(), [&args](const std::pair<BindingPtr, std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>> &p)
+	auto iter = std::find_if(g_bindingmap.begin(), g_bindingmap.end(), [&args](const std::pair<std::shared_ptr<Binding>, std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>> &p)
 	{
 		return p.first->source() == args.root && p.first->path() == args.path;
 	});
