@@ -222,20 +222,39 @@ public:
 	template<class ArgsT>
 	void raiseEvent(const ArgsT &args)
 	{
-		auto iter = m_eventHandlers.find(args.Event.hash());
-		if (iter != m_eventHandlers.end())
-		{
-			for (auto &h : iter->second)
+		auto fireElementEvents = [&args](UIElement *element) {
+			auto const &eventHandles = element->m_eventHandlers;
+			auto iter = eventHandles.find(args.Event.hash());
+			if (iter != eventHandles.end())
 			{
-				RoutedEventHandler<ArgsT> hxx(nullptr);
-				try {
-					auto hx = any_cast<RoutedEventHandler<ArgsT>>(h);
+				for (auto &h : iter->second)
+				{
+					RoutedEventHandler<ArgsT> hxx(nullptr);
+					try {
+						hxx = h.extract<RoutedEventHandler<ArgsT>>();
+					}
+					catch (...) {
+						nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", args.Event.name().data(), args.Event.argsType().name());
+					}
+					hxx.invoke(args);
 				}
-				catch (...) {
-					nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", args.Event.name().data(), args.Event.argsType().name());
-				}
-				hx.invoke(args);
 			}
+		};
+
+		if (args.Event.routingStrategy() == RoutingStrategyE::bubble)
+		{
+			auto pElement = this;
+			do {
+				fireElementEvents(pElement);
+			} while ((pElement->m_parent) && (pElement = pElement->m_parent));
+		}
+		else if (args.Event.routingStrategy() == RoutingStrategyE::bubble)
+		{
+
+		}
+		else
+		{
+
 		}
 	}
 	
@@ -302,7 +321,7 @@ protected:
 
 private:
 
-//	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
+	std::map<size_t, std::vector<Var>>	m_eventHandlers;
 };
 
 using UIElementPtr = std::shared_ptr<UIElement>;
