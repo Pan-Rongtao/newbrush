@@ -18,9 +18,9 @@ std::string DataObject::name() const
 	return m_name;
 }
 
-Var DataObject::get(const std::string & key) const
+DataVar DataObject::get(const std::string & key) const
 {
-	return m_obj.get(key);
+	return m_obj.get(key).extract<DataVar>();
 }
 
 void DataObject::getKeys(std::vector<std::string>& keys) const
@@ -43,9 +43,10 @@ std::size_t DataObject::childCount() const
 	return m_obj.size();
 }
 
-void DataObject::set(const std::string & key, const Var & value) &
+void DataObject::set(const std::string & key, const DataVar & value) &
 {
-	m_obj.set(key, value);
+	auto x = m_obj.set(key, value);
+	m_obj.get(key).extract<DataVar>().parent = this;
 }
 
 void DataObject::remove(const std::string & key) &
