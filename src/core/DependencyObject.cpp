@@ -85,6 +85,10 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 		}
 		else if (propertyType == typeid(long long))
 		{
+			fixSetValue = value.convert<long long>();
+		}
+		else if (propertyType == typeid(unsigned long long))
+		{
 			fixSetValue = value.convert<unsigned long long>();
 		}
 		else if (propertyType == typeid(long double))
@@ -143,23 +147,25 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 	}
 	else
 	{
+		auto changed = true;
+		auto oldValue = iterFind->second.baseValue();
+		try {
+			changed = oldValue != setValue;
+		}
+		catch (...) {}	//异常表示无法比较，则视为非普通类型
+
 		if (equalDefault)
 		{
 			m_valueEntrys.erase(iterFind);
 		}
 		else
 		{
-			auto changed = true;
-			try {
-				changed = iterFind->second.baseValue() != setValue;
-			}
-			catch (...) {}	//异常表示无法比较，则视为非普通类型
+			iterFind->second.setBaseValue(setValue);
+		}
 
-			if (changed)
-			{
-				iterFind->second.setBaseValue(setValue);
-				onPropertyChanged({ dp, defaultValue, setValue });
-			}
+		if (changed)
+		{
+			onPropertyChanged({ dp, oldValue, setValue });
 		}
 	}
 }

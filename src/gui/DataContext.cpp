@@ -3,96 +3,120 @@
 using namespace nb;
 using namespace nb::gui;
 
-DataObject::DataObject(const std::string & name)
-	: m_name(name)
+DataContext * DataContext::getRoot() const
+{
+	auto p = const_cast<DataContext *>(this);
+	do
+	{
+	} while (p->parent && (p = p->parent));
+	return dynamic_cast<DataContext *>(p);
+}
+
+std::string DataContext::getAbsPath() const
+{
+	auto p = this;
+	std::string path;
+	do
+	{
+		path = p->name + "." + path;
+	} while (p->parent && (p = p->parent));
+	path.pop_back();
+	return path;
+}
+
+std::string DataContext::getPath() const
+{
+	auto p = this;
+	std::string path;
+	do
+	{
+		path = p->name + "." + path;
+	} while (p->parent && p->parent->parent && (p = p->parent));
+	path.pop_back();
+	return path;
+}
+
+void DataContext::set(const Var &value) &
 {
 }
 
-void DataObject::setName(const std::string &name) &
+Var DataContext::get() const
 {
-	m_name = name;
+	return Var();
 }
 
-std::string DataObject::name() const
+std::shared_ptr<DataContext> DataContext::lookup(const std::string & path) const
 {
-	return m_name;
+	return nullptr;
 }
 
-DataVar DataObject::get(const std::string & key) const
+const std::type_info & DataContext::type() const
 {
-	return m_obj.get(key).extract<DataVar>();
+	return typeid(DataContext);
 }
 
-void DataObject::getKeys(std::vector<std::string>& keys) const
+DataContext::DataContext(const std::string & _name)
+	: name(_name)
+	, parent(nullptr)
 {
-	m_obj.getNames(keys);
 }
 
-std::vector<std::string> DataObject::getKeys() const
+DataObject::DataObject(const std::string &name)
+	: DataContext(name)
 {
-	return m_obj.getNames();
 }
 
-bool DataObject::has(const std::string & key) const
+void DataObject::add(std::shared_ptr<DataContext> child) &
 {
-	return m_obj.has(key);
+	auto ret = m_children.insert(std::make_pair(child->name, child));
+	if (!ret.second)
+	{
+		nbThrowException(std::runtime_error, "[%s] is already exists in [%s]", child->name.data(), this->name.data());
+	}
+	child->parent = this;
 }
 
-std::size_t DataObject::childCount() const
-{
-	return m_obj.size();
-}
-
-void DataObject::set(const std::string & key, const DataVar & value) &
-{
-	auto x = m_obj.set(key, value);
-	m_obj.get(key).extract<DataVar>().parent = this;
-}
-
-void DataObject::remove(const std::string & key) &
-{
-	m_obj.remove(key);
-}
-
-void ObjectData::insertChild(DataContextPtr child)
-{
-	m_children.insert(std::make_pair(child->name(), child));
-	child->m_parent = shared_from_this();
-}
-
-void ObjectData::removeChild(const std::string & childName)
+void DataObject::remove(const std::string & childName) &
 {
 	auto iter = m_children.find(childName);
 	if (iter != m_children.end())
+	{
 		m_children.erase(iter);
+	}
 }
 
-bool ObjectData::hasChild(const std::string & childName) &
+bool DataObject::has(const std::string & childName) const
 {
 	return m_children.find(childName) != m_children.end();
 }
 
-DataContextPtr ObjectData::getChild(const std::string & childName)
+std::shared_ptr<DataContext> DataObject::get(const std::string & childName) const
 {
 	auto iter = m_children.find(childName);
 	return iter == m_children.end() ? nullptr : iter->second;
 }
 
-DataContextPtr ObjectData::lookup(const std::string & path)
+std::shared_ptr<DataObject> DataObject::getObject(const std::string & childName) const
+{
+	auto x = get(childName);
+	auto p = std::dynamic_pointer_cast<DataObject>(x);
+	return p;
+}
+
+std::shared_ptr<DataContext> DataObject::lookup(const std::string & path) const
 {
 	auto pathSegments = nb::stringSplit(path, ".", false);
-	auto obj = shared_from_this();
+	auto obj = this;
 	for (int32_t i = 0; i != pathSegments.size(); ++i)
 	{
 		const std::string &sKey = pathSegments[i];
 		if (i == pathSegments.size() - 1)
 		{
-			return obj->getChild(sKey);
+			return obj->get(sKey);
 		}
 		else
 		{
-			auto child = obj->getChild(sKey);
-			obj = std::dynamic_pointer_cast<ObjectData>(child);
+			obj = obj->getObject(sKey).get();
 			if (!obj)
 				return nullptr;
 		}
@@ -100,7 +124,12 @@ DataContextPtr ObjectData::lookup(const std::string & path)
 	return nullptr;
 }
 
-DataContextPtr ObjectData::operator [](const std::string &name)
+const std::type_info & DataObject::type() const
 {
-	return getChild(name);
+	return typeid(DataObject);
+}
+
+std::shared_ptr<DataObject> nb::gui::DataObject::gen(const std::string & name)
+{
+	return std::make_shared<DataObject>(name);
 }

@@ -36,7 +36,7 @@ void Binding::setSource(std::shared_ptr<DataContext> source) &
 	m_source = source;
 }
 
-DataContextPtr Binding::source() const
+std::shared_ptr<DataContext> Binding::source() const
 {
 	return m_source;
 }

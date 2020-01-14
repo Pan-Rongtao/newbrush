@@ -49,6 +49,11 @@ public:
 		m_callbacks->clear();
 	}
 
+	std::size_t size() const
+	{
+		return m_callbacks ? m_callbacks->size() : 0;
+	}
+
 	void invoke(ArgsT &args)
 	{
 		invoke(const_cast<const ArgsT &>(args));

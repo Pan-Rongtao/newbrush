@@ -81,6 +81,9 @@ DependencyProperty TestDependencyProperty::PointProperty()
 
 DependencyProperty TestDependencyProperty::SharedPtrProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TestDependencyProperty, std::shared_ptr<A>>("SharedPtr", nullptr);
+	static auto dp = DependencyProperty::registerDependency<TestDependencyProperty, std::shared_ptr<A>>("SharedPtr", nullptr, [](DependencyObject *dp, DependencyPropertyChangedEventArgs *args) {
+		auto tdp = dynamic_cast<TestDependencyProperty *>(dp);
+		printf("%s changed\n", args->property.name().data());
+	});
 	return dp;
 }

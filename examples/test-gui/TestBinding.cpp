@@ -3,8 +3,8 @@
 
 void TestBinding::test()
 {
-	m_window = std::make_shared<Window>();
-	m_text = std::make_shared<TextBlock>();
+//	m_window = std::make_shared<Window>();
+	m_text = std::make_shared<UIElement>();
 /*	m_text->PropertyChanged += [](const TextBlock::PropertyChangedArgs &args)
 	{
 		if (args.value.type() == typeid(bool))						printf("[%s]=%s\n", args.dp.name().data(), any_cast<bool>(args.value) ? "true" : "false");
@@ -37,50 +37,75 @@ void TestBinding::test()
 		}
 	};
 	*/
-	m_dataRoot = std::make_shared<ObjectData>("root");
-	m_dataRoot->insertChild(std::make_shared<ValueData<bool>>("bool", false));
-	m_dataRoot->insertChild(std::make_shared<ValueData<float>>("float", 1.0f));
-	m_dataRoot->insertChild(std::make_shared<ValueData<double>>("double", 2.0));
-	m_dataRoot->insertChild(std::make_shared<ValueData<long>>("long", 3));
-	m_dataRoot->insertChild(std::make_shared<ValueData<unsigned long>>("unsigned long", 4));
-	m_dataRoot->insertChild(std::make_shared<ValueData<int8_t>>("int8_t", 11));
-	m_dataRoot->insertChild(std::make_shared<ValueData<int16_t>>("int16_t", 22));
-	m_dataRoot->insertChild(std::make_shared<ValueData<int32_t>>("int32_t", 33));
-	m_dataRoot->insertChild(std::make_shared<ValueData<int64_t>>("int64_t", 44));
-	m_dataRoot->insertChild(std::make_shared<ValueData<uint8_t>>("uint8_t", 111));
-	m_dataRoot->insertChild(std::make_shared<ValueData<uint16_t>>("uint16_t", 222));
-	m_dataRoot->insertChild(std::make_shared<ValueData<uint32_t>>("uint32_t", 333));
-	m_dataRoot->insertChild(std::make_shared<ValueData<uint64_t>>("uint64_t", 444));
-	m_dataRoot->insertChild(std::make_shared<ValueData<std::string>>("string", ""));
-	m_dataRoot->insertChild(std::make_shared<ValueData<VisibilityE>>("visible", VisibilityE::Hidden));
-	m_dataRoot->insertChild(std::make_shared<ValueData<Point>>("offset", Point()));
-	m_dataRoot->insertChild(std::make_shared<ValueData<Thickness>>("margin", Thickness()));
-	m_dataRoot->insertChild(std::make_shared<ValueData<std::shared_ptr<Brush>>>("background", nullptr));
+	m_dataRoot = DataObject::gen("root");
+	m_dataRoot->add(VarData<bool>::gen("bool", false));
+	m_dataRoot->add(VarData<char>::gen("char", 'a'));
+	m_dataRoot->add(VarData<signed char>::gen("signed char", 'b'));
+	m_dataRoot->add(VarData<unsigned char>::gen("unsigned char", 'c'));
+	m_dataRoot->add(VarData<wchar_t>::gen("wchar_t", 1));
+	m_dataRoot->add(VarData<char16_t>::gen("char16_t", 2));
+	m_dataRoot->add(VarData<char32_t>::gen("char32_t", 3));
+	m_dataRoot->add(VarData<short>::gen("short", 4));
+	m_dataRoot->add(VarData<unsigned short>::gen("unsigned short", 5));
+	m_dataRoot->add(VarData<int>::gen("int", 6));
+	m_dataRoot->add(VarData<unsigned int>::gen("unsigned int", 7));
+	m_dataRoot->add(VarData<long>::gen("long", 8));
+	m_dataRoot->add(VarData<unsigned long>::gen("unsigned long", 9));
+	m_dataRoot->add(VarData<long long>::gen("long long", 10));
+	m_dataRoot->add(VarData<unsigned long long>::gen("unsigned long long", 11));
+	m_dataRoot->add(VarData<float>::gen("float", 1.0f));
+	m_dataRoot->add(VarData<double>::gen("double", 2.0));
+	m_dataRoot->add(VarData<long double>::gen("long double", 3.0));
+	m_dataRoot->add(VarData<std::string>::gen("string", ""));
+	m_dataRoot->add(VarData<std::wstring>::gen("wstring", L""));
+	m_dataRoot->add(VarData<VisibilityE>::gen("visible", VisibilityE::Hidden));
+	m_dataRoot->add(VarData<Point>::gen("point", Point()));
+	m_dataRoot->add(VarData<Thickness>::gen("margin", Thickness()));
+	m_dataRoot->add(VarData<std::shared_ptr<Brush>>::gen("brush", nullptr));
 
-	BindingMaster::addBinding(m_text, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "focus"));
+	auto obj = DataObject::gen("obj");
+	obj->add(VarData<float>::gen("x", 100.0));
+	m_dataRoot->add(obj);
+
+	BindingMaster::addBinding(m_text, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "bool"));
 	BindingMaster::addBinding(m_text, TextBlock::WidthProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
 	BindingMaster::addBinding(m_text, TextBlock::HeightProperty(), std::make_shared<Binding>(m_dataRoot, "double"));
 	BindingMaster::addBinding(m_text, TextBlock::FontWeightProperty(), std::make_shared<Binding>(m_dataRoot, "long"));
 	BindingMaster::addBinding(m_text, TextBlock::MinWidthProperty(), std::make_shared<Binding>(m_dataRoot, "unsigned long"));
-	BindingMaster::addBinding(m_text, TextBlock::OpacityProperty(), std::make_shared<Binding>(m_dataRoot, "int8_t"));
+	BindingMaster::addBinding(m_text, TextBlock::OpacityProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
 	BindingMaster::addBinding(m_text, TextBlock::VisibilityProperty(), std::make_shared<Binding>(m_dataRoot, "visible"));
-	BindingMaster::addBinding(m_text, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "offset"));
+	BindingMaster::addBinding(m_text, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "point"));
 	BindingMaster::addBinding(m_text, TextBlock::MarginProperty(), std::make_shared<Binding>(m_dataRoot, "margin"));
-	BindingMaster::addBinding(m_text, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "background"));
-	BindingMaster::addBinding(m_text, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "uint64_t"));
+	BindingMaster::addBinding(m_text, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "brush"));
+	BindingMaster::addBinding(m_text, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));
 
-	auto boolv = std::dynamic_pointer_cast<ValueData<bool>>((*m_dataRoot)["bool"]);
-	boolv->set(true);
-	boolv->set(false);
-	std::dynamic_pointer_cast<ValueData<float>>((*m_dataRoot)["float"])->set(108.3f);
-	std::dynamic_pointer_cast<ValueData<double>>((*m_dataRoot)["double"])->set(118.3);
-	std::dynamic_pointer_cast<ValueData<long>>((*m_dataRoot)["long"])->set(120);
-	std::dynamic_pointer_cast<ValueData<unsigned long>>((*m_dataRoot)["unsigned long"])->set(121);
-	std::dynamic_pointer_cast<ValueData<int8_t>>((*m_dataRoot)["int8_t"])->set((int8_t)255);
-	std::dynamic_pointer_cast<ValueData<VisibilityE>>((*m_dataRoot)["visible"])->set(VisibilityE::Collapsed);
-	std::dynamic_pointer_cast<ValueData<Point>>((*m_dataRoot)["offset"])->set(Point(1, 2));
-	std::dynamic_pointer_cast<ValueData<Thickness>>((*m_dataRoot)["margin"])->set(Thickness(1, 2, 3, 4));
-	std::dynamic_pointer_cast<ValueData<std::shared_ptr<Brush>>>((*m_dataRoot)["background"])->set(std::make_shared<SolidColorBrush>(Colors::red()));
-	auto x = std::dynamic_pointer_cast<ValueData<uint64_t>>((*m_dataRoot)["uint64_t"]);
-	x->set(112233);
+	m_dataRoot->get("bool")->set(true);
+	m_dataRoot->get("char")->set('x');
+	m_dataRoot->get("signed char")->set('y');
+	m_dataRoot->get("unsigned char")->set('z');
+	m_dataRoot->get("wchar_t")->set(wchar_t(11));
+	m_dataRoot->get("char16_t")->set(char16_t(22));
+	m_dataRoot->get("char32_t")->set(char32_t(33));
+	m_dataRoot->get("short")->set(44);
+	m_dataRoot->get("unsigned short")->set(55);
+	m_dataRoot->get("int")->set(66);
+	m_dataRoot->get("unsigned int")->set(77);
+	m_dataRoot->get("long")->set(88);
+	m_dataRoot->get("unsigned long")->set(99);
+	m_dataRoot->get("long long")->set(111);
+	m_dataRoot->get("unsigned long long")->set(222);
+	m_dataRoot->get("float")->set(5.55);
+	m_dataRoot->get("double")->set(6.66);
+	m_dataRoot->get("long double")->set((long double)7.77);
+	m_dataRoot->get("string")->set("desay");
+	m_dataRoot->get("wstring")->set("sv");
+	m_dataRoot->get("visible")->set(VisibilityE::Visible);
+	m_dataRoot->get("point")->set(Point(1.0, 1.0));
+	m_dataRoot->get("margin")->set(Thickness(10));
+	std::shared_ptr<Brush> brush = std::make_shared<SolidColorBrush>(Colors::red());
+	m_dataRoot->get("brush")->set(brush);
+	m_dataRoot->getObject("obj")->get("x")->set(123.00);
+
+	auto e = m_text->get<VisibilityE>(UIElement::VisibilityProperty());
+	auto e1 = m_text->get<std::string>(TextBlock::TextProperty());
 }

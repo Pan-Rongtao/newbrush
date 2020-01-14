@@ -14,7 +14,7 @@ class TestBinding : public TestBase
 public:
 	void test();
 
-	std::shared_ptr<gui::Window>	m_window;
-	std::shared_ptr<TextBlock>	m_text;
-	ObjectDataPtr				m_dataRoot;
+	std::shared_ptr<Window>		m_window;
+	std::shared_ptr<UIElement>	m_text;
+	std::shared_ptr<DataObject>	m_dataRoot;
 };

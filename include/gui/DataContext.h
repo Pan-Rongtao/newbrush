@@ -9,49 +9,117 @@
 namespace nb{ 
 namespace gui{
 
-class NB_API DataVar : public Poco::Dynamic::Var
+class NB_API DataContext
 {
 public:
-	DataObject *parent;
+	virtual ~DataContext() = default;
+
+	virtual void set(const Var &value) &;
+	virtual Var get() const;
+	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const;
+	virtual const std::type_info &type() const;
+
+	struct ValueChangedArgs { DataContext *root; std::string path; };
+	Event<ValueChangedArgs>		ValueChanged;		//值改变事件
+	
+protected:
+	DataContext(const std::string &_name);
+
+private:
+	DataContext *getRoot() const;
+	std::string getAbsPath() const;
+	std::string getPath() const;
+
+	std::string	name;
+	DataContext *parent;
+	friend class DataObject;
+	template<class T> friend class VarData;
 };
 
-class NB_API DataObject
+class NB_API DataObject : public DataContext
 {
 public:
 	DataObject(const std::string &name);
-	virtual ~DataObject() = default;
 
-	//设置名字
-	//异常：与兄弟节点重名
-	void setName(const std::string &name) &;
-	std::string name() const;
+	//添加一个子节点
+	void add(std::shared_ptr<DataContext> child) &;
 
-	//获取值
-	DataVar get(const std::string &key) const;
+	//删除一个子节点
+	void remove(const std::string & childName) &;
 
-	//获取所有子节点的键值
-	void getKeys(std::vector<std::string> &keys) const;
-	std::vector<std::string> getKeys() const;
+	//是否有子节点
+	bool has(const std::string & childName) const;
 
-	//是否有名为key的子节点
-	bool has(const std::string &key) const;
+	//获取子节点，不存在返回空
+	std::shared_ptr<DataContext> get(const std::string &childName) const;
+	std::shared_ptr<DataObject> getObject(const std::string &childName) const;
 
-	//子节点个数
-	std::size_t childCount() const;
+	//按路径查询节点
+	//path：形如"a.b.c"，表示查找基于当前节点下的a/b/c节点
+	//找不到返回空
+	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const override;
 
-	//设置子节点的值，如果该子节点不存在，自动创建
-	void set(const std::string &key, const DataVar &value) &;
+	virtual const std::type_info &type() const;
 
-	//移除子节点
-	void remove(const std::string &key) &;
-
-	struct ValueChangedArgs { std::shared_ptr<DataContext> root; std::string path; };
-	Event<ValueChangedArgs>		ValueChanged;		//值改变事件
+	static std::shared_ptr<DataObject> gen(const std::string &name);
 
 private:
-	std::string			m_name;
-	DataObject			*m_parent;
-	Poco::JSON::Object	m_obj;
+	std::map<std::string, std::shared_ptr<DataContext>>	m_children;
 };
+
+template<class T>
+class VarData : public DataContext
+{
+public:
+	VarData(const std::string &name, const T &v = T())
+		: DataContext(name)
+		, m_v(v)
+	{
+	}
+
+	void set(const T &v)
+	{
+		set(Var(T));
+	}
+
+	virtual void set(const Var &v) &
+	{
+		auto root = getRoot();
+		auto path = getPath();
+		if (m_v.type() == v.type())
+		{
+			m_v = v;
+			root->ValueChanged.invoke({ root, path });
+		}
+		else
+		{
+			bool bEqual = false;
+			try {
+				bEqual = m_v == v;
+			}
+			catch (...) {
+				nbThrowException(std::logic_error, "should set for [%s] with [%s] but not [%s].", getAbsPath().data(), m_v.type().name(), v.type().name());
+			}
+
+			if (!bEqual)
+			{
+				m_v = v;
+				root->ValueChanged.invoke({ root, path });
+			}
+		}
+	}
+	virtual Var get() const override { return m_v; }
+
+	virtual const std::type_info &type() const override { return typeid(T); }
+
+	static std::shared_ptr<VarData<T>> gen(const std::string &name, const T &v = T())
+	{
+		return std::make_shared<VarData<T>>(name, v);
+	}
+
+private:
+	Var	m_v;
+};
+
 
 }}

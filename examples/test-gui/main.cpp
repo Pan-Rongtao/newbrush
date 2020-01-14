@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 {
 	try{
 		Application app;
-		TestHandle<TestUIElement> test;
+		TestHandle<TestBinding> test;
 		test->test();
 		return app.run(argc, argv);
 	}
