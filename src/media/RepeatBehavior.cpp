@@ -1,29 +1,63 @@
 #include "media/RepeatBehavior.h"
 
 using namespace nb;
-using namespace nb::gui;
 
-RepeatBehavior::RepeatBehavior()
-	: RepeatBehavior(1)
+RepeatBehavior::RepeatBehavior(float count)
+	: m_type(Type::Counter)
+	, m_count(count)
 {
 }
 
-RepeatBehavior::RepeatBehavior(int count)
+RepeatBehavior::RepeatBehavior(const TimeSpan & duration)
+	: m_type(Type::Duration)
+	, m_duration(duration)
 {
 }
 
-RepeatBehavior::RepeatBehavior(const TimeSpan & ts)
+RepeatBehavior RepeatBehavior::fromCount(float count)
 {
+	return RepeatBehavior(count);
+}
+
+RepeatBehavior RepeatBehavior::fromDuration(const TimeSpan & duration)
+{
+	return RepeatBehavior(duration);
 }
 
 RepeatBehavior RepeatBehavior::forever()
 {
-	RepeatBehavior rb;
+	RepeatBehavior rb(0.0f);
+	rb.m_type = Type::Forever;
 	return rb;
 }
 
-void RepeatBehavior::operator =(const RepeatBehavior &other)
+bool RepeatBehavior::isForever() const
 {
+	return m_type == Type::Forever;
+}
+
+bool RepeatBehavior::hasCount() const
+{
+	return m_type == Type::Counter;
+}
+
+float RepeatBehavior::getCount() const
+{
+	if (!hasCount())
+		nbThrowException(std::logic_error, "not a count RepeatBehavior");
+	return m_count;
+}
+
+bool RepeatBehavior::hasDuration() const
+{
+	return m_type == Type::Duration;
+}
+
+TimeSpan RepeatBehavior::getDuration() const
+{
+	if (!hasDuration())
+		nbThrowException(std::logic_error, "not a duration RepeatBehavior");
+	return m_duration;
 }
 
 bool RepeatBehavior::operator==(const RepeatBehavior & other) const
@@ -33,19 +67,12 @@ bool RepeatBehavior::operator==(const RepeatBehavior & other) const
 
 bool RepeatBehavior::operator!=(const RepeatBehavior & other) const
 {
-	return false;// m_count != other.m_count || m_duration != other.m_duration || m_hasCount != other.m_hasCount || m_hasDuration != other.m_hasDuration;
+	if (m_type != other.m_type)
+	{
+		return false;
+	}
+	else
+	{
+		return m_type == Type::Forever ? true : (m_type == Type::Counter ? getCount() == other.getCount() : getDuration() == other.getDuration());
+	}
 }
-
-DependencyProperty RepeatBehavior::CountProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, int>("Count", 0);
-	return dp;
-}
-
-DependencyProperty RepeatBehavior::DurationProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<RepeatBehavior, TimeSpan>("Duration", TimeSpan());
-	return dp;
-}
-
-	

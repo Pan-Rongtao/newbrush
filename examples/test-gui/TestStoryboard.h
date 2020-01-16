@@ -1,6 +1,6 @@
 #pragma once
 #include "../TestBase.h"
-#include "gui/Storyboard.h"
+#include "media/Storyboard.h"
 
 using namespace nb;
 using namespace nb::gui;
@@ -13,6 +13,5 @@ public:
 	void test();
 
 private:
-	Property_rw<double> Width;
 	Storyboard	m_storyboard;
 };

@@ -1,87 +1,160 @@
 ﻿#include "media/Timeline.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Timeline::Timeline()
 	: Timeline(TimeSpan(), TimeSpan(), RepeatBehavior(RepeatBehavior(1)))
 {
 }
 
-Timeline::Timeline(const TimeSpan & beginTime)
-	: Timeline(beginTime, TimeSpan(), RepeatBehavior(RepeatBehavior(1)))
+Timeline::Timeline(const TimeSpan & _beginTime)
+	: Timeline(_beginTime, TimeSpan(), RepeatBehavior(RepeatBehavior(1)))
 {
 }
 
-Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration)
-	: Timeline(beginTime, duration, RepeatBehavior(RepeatBehavior(1)))
+Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration)
+	: Timeline(_beginTime, _duration, RepeatBehavior(RepeatBehavior(1)))
 {
 }
 
-Timeline::Timeline(const TimeSpan & beginTime, const TimeSpan & duration, const RepeatBehavior & repeatBehavior)
+Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration, const RepeatBehavior & _repeatBehavior)
+	: m_beginTime(_beginTime)
+	, m_duration(_duration)
+	, m_autoReversel(false)
+	, m_fillBehavior(FillBehaviorE::HoldEnd)
+	, m_repeatBehavior(_repeatBehavior)
+	, m_state(StateE::Stopped)
+	, m_timer(1)
 {
-	m_timer.setInterval(1);
 	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);
 }
 
 void Timeline::begin()
 {
-	auto beginTime = get(BeginTimeProperty()).extract<TimeSpan>();
-	m_begTick = (uint64_t)(nb::getTickCount() + beginTime.totalMilliseconds());
-	set(StateProperty(), StateE::Active);
-	StateChangedEvent.invoke({ StateE::Active });
+	m_startTick = (uint64_t)(nb::getTickCount() + m_beginTime.totalMilliseconds());
+	m_state = StateE::Active;
+	StateChangedEvent.invoke({ });
 	m_timer.start();
 }
 
-DependencyProperty Timeline::BeginTimeProperty()
+void Timeline::setBeginTime(const TimeSpan & beginTime) &
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, TimeSpan>("BeginTime", TimeSpan());
-	return dp;
+	m_beginTime = beginTime;
 }
 
-DependencyProperty Timeline::DurationProperty()
+const TimeSpan & Timeline::beginTime() const
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, TimeSpan>("Background", TimeSpan());
-	return dp;
+	return m_beginTime;
 }
 
-DependencyProperty Timeline::FillBehaviorProperty()
+void Timeline::setDuration(const TimeSpan & duration) &
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, TimeSpan>("Background", TimeSpan());
-	return dp;
+	m_duration = duration;
 }
 
-DependencyProperty Timeline::AutoReverseProperty()
+const TimeSpan & Timeline::duration() const
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, TimeSpan>("Background", TimeSpan());
-	return dp;
+	return m_duration;
 }
 
-DependencyProperty Timeline::RepeatProperty()
+void Timeline::setAutoReversel(bool autoReversel) &
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, RepeatBehavior>("Repeat", RepeatBehavior());
-	return dp;
+	m_autoReversel = autoReversel;
 }
 
-DependencyProperty Timeline::StateProperty()
+bool Timeline::autoReversel() const
 {
-	static auto dp = DependencyProperty::registerDependency<Timeline, StateE>("State", StateE::Stopped);
-	return dp;
+	return m_autoReversel;
+}
+
+void Timeline::setFillBehavior(FillBehaviorE fillBehavior) &
+{
+	m_fillBehavior = fillBehavior;
+}
+
+Timeline::FillBehaviorE Timeline::fillBehavior() const
+{
+	return m_fillBehavior;
+}
+
+void Timeline::setRepeatBehavior(const RepeatBehavior & repeatBehavior) &
+{
+	m_repeatBehavior = repeatBehavior;
+}
+
+RepeatBehavior Timeline::repeatBehavior() const
+{
+	return m_repeatBehavior;
+}
+
+Timeline::StateE Timeline::currentState() const
+{
+	return m_state;
+}
+
+TimeSpan Timeline::getCurrentTime() const
+{
+	return TimeSpan::fromMilliseconds((int)(getCurrentProgress() * m_duration.totalMilliseconds()));
+}
+
+float Timeline::getCurrentProgress() const
+{
+	if (m_state == StateE::Stopped)
+	{
+		return 0.0f;
+	}
+	else
+	{
+		auto passingTicks = nb::getTickCount() - m_startTick;
+		auto progress = 0.0;
+		auto dir = std::lldiv(passingTicks, (uint64_t)m_duration.totalMilliseconds());
+		if (!autoReversel())
+		{
+			progress = dir.rem;
+		}
+		else
+		{
+			progress = (dir.quot % 2 == 0) ? dir.rem : 1.0 - dir.rem;
+		}
+		return (float)progress;
+	}
+}
+
+uint64_t Timeline::calcFillingTicks()
+{
+	auto ticks = 0.0;
+	if (m_repeatBehavior.hasCount())
+	{
+		auto oneLoop = duration().totalMilliseconds();
+		//如果自动逆动画，则一圈变成两倍长度
+		if (autoReversel())
+		{
+			oneLoop *= 2;
+		}
+		ticks = oneLoop * m_repeatBehavior.getCount();
+	}
+	else if (m_repeatBehavior.hasDuration())
+	{
+		ticks = m_repeatBehavior.getDuration().totalMilliseconds();
+	}
+	else
+	{
+		ticks = std::numeric_limits<double>::max();
+	}
+	return (uint64_t)ticks;
 }
 
 void Timeline::onTick(const Timer::TickArgs & args)
 {
-	auto duration = get<TimeSpan>(DurationProperty());
-	auto endTicks = m_begTick + duration.totalMilliseconds();
 	auto curTicks = nb::getTickCount();
-	if (curTicks >= m_begTick)
+	auto endTicks = m_startTick + calcFillingTicks();
+	if (curTicks >= m_startTick)
 	{
-		auto progress = std::min<float>(1.0f, float((curTicks - m_begTick) / duration.totalMilliseconds()));
-		ProgressEvent.invoke({ progress });
+		ProgressEvent.invoke({});
 		if (curTicks >= endTicks)
 		{
-			set(StateProperty(), StateE::Stopped);
-			StateChangedEvent.invoke({ StateE::Stopped });
+			m_state = StateE::Filling;
+			StateChangedEvent.invoke({ });
 			m_timer.stop();
 			CompleteEvent.invoke({});
 		}

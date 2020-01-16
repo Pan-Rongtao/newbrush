@@ -3,7 +3,7 @@
 #include "../core/Property.h"
 #include "../core/TimeSpan.h"
 #include "../core/Easing.h"
-#include "Storyboard.h"
+#include "../media/Storyboard.h"
 #include "../core/DependencyObject.h"
 
 namespace nb{

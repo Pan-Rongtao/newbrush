@@ -19,8 +19,8 @@ public:
 	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const;
 	virtual const std::type_info &type() const;
 
-	struct ValueChangedArgs { DataContext *root; std::string path; };
-	Event<ValueChangedArgs>		ValueChanged;		//值改变事件
+	struct ValueChangedArgs	{ DataContext *root; std::string path; };
+	Event<ValueChangedArgs>	ValueChanged;		//值改变事件
 	
 protected:
 	DataContext(const std::string &_name);
@@ -33,7 +33,7 @@ private:
 	std::string	name;
 	DataContext *parent;
 	friend class DataObject;
-	template<class T> friend class VarData;
+	template<class T> friend class DataVar;
 };
 
 class NB_API DataObject : public DataContext
@@ -68,10 +68,10 @@ private:
 };
 
 template<class T>
-class VarData : public DataContext
+class DataVar : public DataContext
 {
 public:
-	VarData(const std::string &name, const T &v = T())
+	DataVar(const std::string &name, const T &v = T())
 		: DataContext(name)
 		, m_v(v)
 	{
@@ -112,14 +112,37 @@ public:
 
 	virtual const std::type_info &type() const override { return typeid(T); }
 
-	static std::shared_ptr<VarData<T>> gen(const std::string &name, const T &v = T())
+	static std::shared_ptr<DataVar<T>> gen(const std::string &name, const T &v = T())
 	{
-		return std::make_shared<VarData<T>>(name, v);
+		return std::make_shared<DataVar<T>>(name, v);
 	}
 
 private:
 	Var	m_v;
 };
 
+class NB_API DataArray : public DataContext
+{
+public:
+	DataArray(const std::string &name);
+
+	void setTemplate(std::shared_ptr<DataObject> temp);
+
+	const std::shared_ptr<DataObject> &getTemplate() const;
+
+	void addItem(std::shared_ptr<DataObject> item);
+
+	void removeItem(std::size_t index);
+
+	std::shared_ptr<DataObject> item(std::size_t index);
+
+	size_t itemCount() const;
+
+	static std::shared_ptr<DataArray> gen(const std::string &name);
+
+private:
+	std::vector<std::shared_ptr<DataObject>>	m_items;
+	std::shared_ptr<DataObject>					m_template;
+};
 
 }}

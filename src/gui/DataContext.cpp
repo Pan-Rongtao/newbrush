@@ -68,6 +68,11 @@ DataObject::DataObject(const std::string &name)
 
 void DataObject::add(std::shared_ptr<DataContext> child) &
 {
+	if (!child)
+	{
+		nbThrowException(std::invalid_argument, "child is nullptr.");
+	}
+
 	auto ret = m_children.insert(std::make_pair(child->name, child));
 	if (!ret.second)
 	{
@@ -129,7 +134,58 @@ const std::type_info & DataObject::type() const
 	return typeid(DataObject);
 }
 
-std::shared_ptr<DataObject> nb::gui::DataObject::gen(const std::string & name)
+std::shared_ptr<DataObject> DataObject::gen(const std::string & name)
 {
 	return std::make_shared<DataObject>(name);
+}
+
+DataArray::DataArray(const std::string & name)
+	: DataContext(name)
+{
+}
+
+void DataArray::setTemplate(std::shared_ptr<DataObject> temp)
+{
+	if (!temp)
+	{
+		nbThrowException(std::invalid_argument, "temp is nullptr.");
+	}
+
+	m_template = temp;
+}
+
+const std::shared_ptr<DataObject> &DataArray::getTemplate() const
+{
+	return m_template;
+}
+
+void DataArray::addItem(std::shared_ptr<DataObject> item)
+{
+	m_items.push_back(item);
+}
+
+void DataArray::removeItem(std::size_t index)
+{
+	if (index >= itemCount())
+	{
+		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %d)", index, itemCount());
+	}
+	m_items.erase(m_items.begin() + index);
+}
+
+std::shared_ptr<DataObject> DataArray::item(std::size_t index)
+{
+	if (index >= itemCount())
+		return nullptr;
+	return m_items[index];
+}
+
+size_t DataArray::itemCount() const
+{
+	return m_items.size();
+}
+
+std::shared_ptr<DataArray> DataArray::gen(const std::string & name)
+{
+	return std::make_shared<DataArray>(name);
 }

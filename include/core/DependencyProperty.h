@@ -110,6 +110,7 @@ public:
 	}
 	
 	static Var unsetValue();
+	static DependencyProperty invalidProperty();
 
 private:
 	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);

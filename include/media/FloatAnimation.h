@@ -21,23 +21,10 @@
 #include "../core/Easing.h"
 
 namespace nb{
-namespace gui{
 
-//内置类型属性动画
-template<class T>
-class NB_API PropertyAnimation : public AnimationTimeline<T>
+class NB_API PropertyAnimation : public AnimationTimeline
 {
 public:
-	PropertyAnimation() : PropertyAnimation(T(), T(), TimeSpan(), nullptr) {}
-	PropertyAnimation(const T &to) : PropertyAnimation(T(), to, TimeSpan(), nullptr) {}
-	PropertyAnimation(const T &from, const T &to) : PropertyAnimation(from, to, TimeSpan(), nullptr) {}
-	PropertyAnimation(const T &from, const T &to, const TimeSpan &duration, Property_rw<T> *target)
-	{
-	}
-
-	static DependencyProperty	FromProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("From", T()); return dp; }
-	static DependencyProperty	ToProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("To", T()); return dp; }
-	static DependencyProperty	ByProperty() { static auto dp = DependencyProperty::registerDependency<AnimationTimeline, T>("By", T()); return dp; }
 
 protected:
 	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
@@ -51,9 +38,9 @@ protected:
 };
 
 //特化Color
-template<>
-void PropertyAnimation<Color>::progressing(float progress)
-{
+//template<>
+//void PropertyAnimation<Color>::progressing(float progress)
+//{
 /*	if (!TargetProperty)	return;
 
 	decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
@@ -62,7 +49,6 @@ void PropertyAnimation<Color>::progressing(float progress)
 	int b = (int)((int)From().blue() + ft * ((int)To().blue() - (int)From().blue()));*/
 	//set<Color>(*TargetProperty, Color(r, g, b));
 	//(*TargetProperty)().setRgb(r, g, b);
-}
+//}
 
-}
 }

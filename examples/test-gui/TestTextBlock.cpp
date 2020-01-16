@@ -26,7 +26,7 @@ void TestTextBlock::test()
 ////	colorAni.TargetProperty = &m_text->Foreground;
 //	colorAni.begin();
 }
-
+/*
 void TestTextBlock::onStateChanged(const Timeline::StateChangedArgs & args)
 {
 	printf("onStateChanged:%d\n", args.state);
@@ -42,3 +42,4 @@ void TestTextBlock::onProgress(const Timeline::ProgressArgs & args)
 void TestTextBlock::onCompleted(const Timeline::CompleteArgs & args)
 {
 }
+*/

@@ -80,6 +80,12 @@ Var DependencyProperty::unsetValue()
 	return staticUnsetValue;
 }
 
+DependencyProperty DependencyProperty::invalidProperty()
+{
+	static DependencyProperty dp("", typeid(void), typeid(void), nullptr, nullptr, 0);
+	return dp;
+}
+
 DependencyProperty::DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash)
 	: m_name(name)
 	, m_ownerType(ownerType)

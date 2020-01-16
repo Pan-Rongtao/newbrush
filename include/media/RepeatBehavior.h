@@ -1,26 +1,55 @@
 #pragma once
-#include "../core/Property.h"
 #include "../core/TimeSpan.h"
-#include "../core/DependencyObject.h"
 
 namespace nb{
-namespace gui{
 
-class NB_API RepeatBehavior : public DependencyObject
+class NB_API RepeatBehavior
 {
 public:
-	RepeatBehavior();
-	RepeatBehavior(int count);
-	RepeatBehavior(const TimeSpan &ts);
+	//构建一个次数循环器
+	//异常：std::out_of_range
+	RepeatBehavior(float count);
+
+	//构建一个时间循环器
+	//异常：ts为负值
+	RepeatBehavior(const TimeSpan &duration);
+
+	//构建次数循环器
+	static RepeatBehavior fromCount(float count);
+
+	//构建时间段循环器
+	static RepeatBehavior fromDuration(const TimeSpan &duration);
+
+	//构建永久循环器
 	static RepeatBehavior forever();
 
-	void operator =(const RepeatBehavior &other);
+	//是否是永久循环
+	bool isForever() const;
+
+	//获取循环次数
+	//异常：std::logic_error，不是一个次数循环器
+	bool hasCount() const;
+	float getCount() const;
+
+	//获取时间长度
+	//如果不是时间循环器，返回false
+	bool hasDuration() const;
+	TimeSpan getDuration() const;
+
 	bool operator ==(const RepeatBehavior &other) const;
 	bool operator !=(const RepeatBehavior &other) const;
 
-	static DependencyProperty	CountProperty();	//重复次数的依赖属性
-	static DependencyProperty	DurationProperty();	//持续时间的依赖属性
+private:
+	enum class Type : char
+	{
+		Counter,
+		Duration,
+		Forever,
+	};
 
+	Type		m_type;
+	float		m_count;
+	TimeSpan	m_duration;
 };
 
-}}
+}

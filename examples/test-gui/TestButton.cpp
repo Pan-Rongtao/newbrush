@@ -5,11 +5,10 @@
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
 #include "gui/Rectangle.h"
-#include "media/PropertyAnimation.h"
 
 void TestButton::test()
 {
-	m_btn = std::make_shared<Button>();
+/*	m_btn = std::make_shared<Button>();
 	m_btn->MouseLeftButtonDown += std::bind(&TestButton::onBtnMouseLeftButtonDown, this, std::placeholders::_1);
 	m_btn->MouseLeftButtonUp += std::bind(&TestButton::onBtnMouseLeftButtonUp, this, std::placeholders::_1);
 	m_btn->Click += std::bind(&TestButton::onBtnClick, this, std::placeholders::_1);

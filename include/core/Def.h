@@ -79,7 +79,7 @@ do{\
 	size_t n = std::string::npos;\
 	if (((n = file.rfind('/')) != std::string::npos) || ((n = file.rfind('\\')) != std::string::npos))\
 		file = file.substr(n + 1);\
-	snprintf(buffer, sizeof(buffer), "(%s)(%s line %d) throw an [%s].\r\n\twhat: " argfmt "\r\n", __FUNCTION__, file.data(), __LINE__, typeid(exception).name(), ##__VA_ARGS__); \
+	snprintf(buffer, sizeof(buffer), "[%s, line %d, %s] throw an '%s'.\r\n\twhat: " argfmt "\r\n", file.data(), __LINE__, __FUNCTION__, typeid(exception).name(), ##__VA_ARGS__); \
 	throw exception(buffer);\
 }while(0)
 

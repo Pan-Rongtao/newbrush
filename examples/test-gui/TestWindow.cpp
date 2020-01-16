@@ -31,7 +31,7 @@ void TestWindow::test()
 	m_timer.TickEvent.addHandler(std::bind(&TestWindow::onTick, this, std::placeholders::_1));
 	m_timer.start(1500);
 }
-
+/*
 void TestWindow::onStateChanged(const Timeline::StateChangedArgs & args)
 {
 	printf("onStateChanged:%d\n", args.state);
@@ -48,7 +48,7 @@ void TestWindow::onCompleted(const Timeline::CompleteArgs & args)
 {
 	printf("onCompleted.\n");
 }
-
+*/
 void TestWindow::onTick(const Timer::TickArgs & args)
 {
 	static int i = 0;

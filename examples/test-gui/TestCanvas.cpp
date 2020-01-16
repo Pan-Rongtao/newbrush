@@ -105,19 +105,19 @@ void TestCanvas::test()
 	
 }
 
-void TestCanvas::onStateChanged(const Timeline::StateChangedArgs & args)
+void TestCanvas::onStateChanged(const EventArgs & args)
 {
-	printf("onStateChanged:%d\n", args.state);
+//	printf("onStateChanged:%d\n", args.state);
 }
 
-void TestCanvas::onProgress(const Timeline::ProgressArgs & args)
+void TestCanvas::onProgress(const EventArgs & args)
 {
 	//	printf("onProgress:%f, width=%f\n", args.progress, m_window.Width());
 	//printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
 	//	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
 }
 
-void TestCanvas::onCompleted(const Timeline::CompleteArgs & args)
+void TestCanvas::onCompleted(const EventArgs & args)
 {
 	printf("onCompleted.\n");
 }
