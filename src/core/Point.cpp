@@ -38,7 +38,10 @@ bool Point::operator == (const Point &p) const
 
 bool Point::operator != (const Point &p) const
 {
-	return m_x != p.x() || m_y != p.y();
+	auto floatEqual = [](float a, float b)->bool {
+		return fabs(a - b) <= 1e-6;
+	};
+	return !floatEqual(m_x, p.x()) || !floatEqual(m_y, p.y());
 }
 
 Point Point::operator + (const Point &p) const

@@ -14,7 +14,6 @@ public:
 
 	void begin();
 
-	static DependencyProperty	ChildrenProperty();
 };
 
 }}

@@ -178,7 +178,7 @@ enum class ReasonSessionEnding
 	Shutdown,				//由于用户关机引发的会话终止
 };
 
-struct EventArgs {};
+struct EventArgs { Object *sender; };
 struct UnhandledExceptionEventArgs { std::exception e; };
 struct ExitEventArgs { int exitCode; };
 struct CancelEventArgs : public EventArgs { bool cancel{ false }; };

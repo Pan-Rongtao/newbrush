@@ -3,12 +3,12 @@
 using namespace nb;
 
 Timeline::Timeline()
-	: Timeline(TimeSpan(), TimeSpan(), RepeatBehavior(RepeatBehavior(1)))
+	: Timeline(TimeSpan(), TimeSpan::fromSeconds(1), RepeatBehavior(RepeatBehavior(1)))
 {
 }
 
 Timeline::Timeline(const TimeSpan & _beginTime)
-	: Timeline(_beginTime, TimeSpan(), RepeatBehavior(RepeatBehavior(1)))
+	: Timeline(_beginTime, TimeSpan::fromSeconds(1), RepeatBehavior(RepeatBehavior(1)))
 {
 }
 
@@ -18,27 +18,29 @@ Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration)
 }
 
 Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration, const RepeatBehavior & _repeatBehavior)
-	: m_beginTime(_beginTime)
-	, m_duration(_duration)
+	: m_state(StateE::Stopped)
 	, m_autoReversel(false)
 	, m_fillBehavior(FillBehaviorE::HoldEnd)
 	, m_repeatBehavior(_repeatBehavior)
-	, m_state(StateE::Stopped)
 	, m_timer(1)
 {
-	m_timer.TickEvent += std::bind(&Timeline::onTick, this, std::placeholders::_1);
+	setBeginTime(_beginTime);
+	setDuration(_duration);
+	m_timer.Tick += std::bind(&Timeline::onTick, this, std::placeholders::_1);
 }
 
 void Timeline::begin()
 {
 	m_startTick = (uint64_t)(nb::getTickCount() + m_beginTime.totalMilliseconds());
 	m_state = StateE::Active;
-	StateChangedEvent.invoke({ });
+	StateChanged.invoke({ this });
 	m_timer.start();
 }
 
 void Timeline::setBeginTime(const TimeSpan & beginTime) &
 {
+	if (beginTime < TimeSpan::zero())
+		nbThrowException(std::invalid_argument, "beginTime is negative[%s]", beginTime.toString().data());
 	m_beginTime = beginTime;
 }
 
@@ -49,6 +51,8 @@ const TimeSpan & Timeline::beginTime() const
 
 void Timeline::setDuration(const TimeSpan & duration) &
 {
+	if (duration < TimeSpan::zero())
+		nbThrowException(std::invalid_argument, "duration is negative[%s]", duration.toString().data());
 	m_duration = duration;
 }
 
@@ -120,6 +124,18 @@ float Timeline::getCurrentProgress() const
 	}
 }
 
+void Timeline::onStateChanged()
+{
+}
+
+void Timeline::onProcessing()
+{
+}
+
+void Timeline::onCompleted()
+{
+}
+
 uint64_t Timeline::calcFillingTicks()
 {
 	auto ticks = 0.0;
@@ -144,19 +160,22 @@ uint64_t Timeline::calcFillingTicks()
 	return (uint64_t)ticks;
 }
 
-void Timeline::onTick(const Timer::TickArgs & args)
+void Timeline::onTick(const EventArgs & args)
 {
 	auto curTicks = nb::getTickCount();
 	auto endTicks = m_startTick + calcFillingTicks();
 	if (curTicks >= m_startTick)
 	{
-		ProgressEvent.invoke({});
+		Process.invoke({ this });
+		onProcessing();
 		if (curTicks >= endTicks)
 		{
 			m_state = StateE::Filling;
-			StateChangedEvent.invoke({ });
+			StateChanged.invoke({ this });
+			onStateChanged();
 			m_timer.stop();
-			CompleteEvent.invoke({});
+			Completed.invoke({ this });
+			onCompleted();
 		}
 	}
 }

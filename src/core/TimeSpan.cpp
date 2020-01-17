@@ -197,12 +197,12 @@ TimeSpan &TimeSpan::sub(const TimeSpan &other) &
 	return add(-other);
 }
 
-std::string TimeSpan::toString()
+std::string TimeSpan::toString() const
 {
 	return toString("d.HH:mm:ss.fff.ggg");
 }
 
-std::string TimeSpan::toString(const std::string & format)
+std::string TimeSpan::toString(const std::string & format) const
 {
 	std::map<char, int> char_v = {
 		{ 'd', std::abs(days()) },

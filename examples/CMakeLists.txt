@@ -6,10 +6,7 @@ project(examples)
 
 # 3. Sub Projects
 
-add_subdirectory(test-core)
-add_subdirectory(test-media)
-add_subdirectory(test-gles)
-add_subdirectory(test-gui)
+add_subdirectory(newbrush-tests)
 
 
 # 5. Project Install

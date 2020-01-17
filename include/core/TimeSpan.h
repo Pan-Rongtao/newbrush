@@ -120,8 +120,8 @@ public:
 	//f|ff|fff：毫秒的字段
 	//g|gg|ggg：微秒的字段
 	//示例：d-H:m:ss.fff.g
-	std::string toString();
-	std::string toString(const std::string &format);
+	std::string toString() const;
+	std::string toString(const std::string &format) const;
 
 private:
 	//最小刻度ms与单位(d, h, m, s, ms, mis)的转换

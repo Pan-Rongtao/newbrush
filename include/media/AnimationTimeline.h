@@ -8,14 +8,22 @@ namespace nb{
 class NB_API AnimationTimeline : public Timeline
 {
 public:
-	AnimationTimeline();
 	virtual ~AnimationTimeline() = default;
 
-	DependencyProperty target;
+	void setTarget(std::weak_ptr<DependencyObject> target) &;
+	std::weak_ptr<DependencyObject> target() const;
+
+	void setTargetProperty(const DependencyProperty &property) &;
+	const DependencyProperty &targetProperty() const;
 
 protected:
-	virtual void progressing(float progress) = 0;
+	AnimationTimeline();
 
+	virtual void onStateChanged() override;
+
+private:
+	std::weak_ptr<DependencyObject>	m_target;
+	DependencyProperty				m_property;
 };
 
 }

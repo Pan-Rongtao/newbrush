@@ -6,7 +6,7 @@
 
 namespace nb {
 
-class NB_API Timer
+class NB_API Timer : public Object
 {
 public:
 	//构建一个定时器，它的间隔为1000ms，单次触发模式为false
@@ -39,8 +39,7 @@ public:
 	static void driveInLoop();
 
 	//Tick事件
-	struct TickArgs {};
-	Event<TickArgs> TickEvent;
+	Event<EventArgs> Tick;
 
 private:
 	static void add(Timer *timer);

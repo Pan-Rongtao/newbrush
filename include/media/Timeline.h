@@ -1,13 +1,11 @@
 ﻿#pragma once
-#include "../core/Property.h"
 #include "../core/TimeSpan.h"
 #include "../core/Timer.h"
 #include "RepeatBehavior.h"
-#include "../core/DependencyObject.h"
 
 namespace nb{
 
-class NB_API Timeline : public DependencyObject
+class NB_API Timeline : public Object
 {
 public:
 	//
@@ -31,6 +29,8 @@ public:
 	};
 
 public:
+	//构建一个时间线
+	//异常：std::invalid_argument，beginTime为负值，duration为负值
 	Timeline();
 	Timeline(const TimeSpan &beginTime);
 	Timeline(const TimeSpan &beginTime, const TimeSpan &duration);
@@ -41,14 +41,14 @@ public:
 	void begin();
 
 	//设置动画延时开始的时间
-	//异常：beginTime为负数
+	//异常：std::invalid_argumentbeginTime为负数
 	void setBeginTime(const TimeSpan &beginTime) &;
 
 	//获取动画延迟开始的时间
 	const TimeSpan &beginTime() const;
 	
 	//设置动画时长
-	//异常：beginTime为负数
+	//异常：std::invalid_argumentbeginTime为负数
 	void setDuration(const TimeSpan &duration) &;
 
 	//获取动画时长
@@ -75,13 +75,18 @@ public:
 	//获取当前进度
 	float getCurrentProgress() const;
 		
-	Event<EventArgs>	StateChangedEvent;	//状态改变
-	Event<EventArgs>	ProgressEvent;		//进度事件
-	Event<EventArgs>	CompleteEvent;		//完成事件
+	Event<EventArgs>	StateChanged;	//状态改变
+	Event<EventArgs>	Process;		//进度事件
+	Event<EventArgs>	Completed;		//完成事件
+
+protected:
+	virtual void onStateChanged();
+	virtual void onProcessing();
+	virtual void onCompleted();
 
 private:
 	uint64_t calcFillingTicks();
-	void onTick(const Timer::TickArgs &args);
+	void onTick(const EventArgs &args);
 
 	StateE			m_state;
 	TimeSpan		m_beginTime;

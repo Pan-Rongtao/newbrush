@@ -22,19 +22,32 @@
 
 namespace nb{
 
-class NB_API PropertyAnimation : public AnimationTimeline
+class NB_API FloatAnimation : public AnimationTimeline
 {
 public:
+	FloatAnimation();
+	FloatAnimation(float to, const TimeSpan &duration);
+	FloatAnimation(float from, float to, const TimeSpan &duration);
 
+	void setFrom(float from) &;
+	float from() const;
+
+	void setTo(float to) &;
+	float to() const;
+
+	void setEasingFunction(std::shared_ptr<EasingBase> easing);
+	std::shared_ptr<EasingBase> easingFunction() const;
+	
 protected:
-	//要求属性必须实现了operator +, operator -, operator *，否则需要使用模板特化特性来重写
-	virtual void progressing(float progress) override
-	{
-/*		if (!TargetProperty)	return;
+	virtual void onStateChanged();
+	virtual void onProcessing() override;
 
-		decltype(progress) ft = (decltype(progress))Easing()->easeInCore(progress);
-		*TargetProperty = From() + (To() - From()) * ft;*/
-	}
+private:
+	float						m_from;
+	float						m_to;
+	float						m_actualFrom;
+	float						m_actualTo;
+	std::shared_ptr<EasingBase>	m_easingFunction;
 };
 
 //特化Color
