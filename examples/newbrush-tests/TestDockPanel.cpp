@@ -1,12 +1,18 @@
-#include "TestDockPanel.h"
 #include "gui/Rectangle.h"
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/DockPanel.h"
+#include "gui/Window.h"
+#include "gui/Shape.h"
+#include "catch2/catch.hpp"
 
-void TestDockPanel::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::DockPanel", "[DockPanel]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 	auto cv = std::make_shared<DockPanel>();
 	cv->set(DockPanel::LastChildFillProperty(), true);
 

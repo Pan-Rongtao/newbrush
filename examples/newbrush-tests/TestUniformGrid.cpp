@@ -1,4 +1,3 @@
-#include "TestUniformGrid.h"
 #include "gui/Shape.h"
 #include "gui/TextBlock.h"
 #include "gui/Rectangle.h"
@@ -6,10 +5,16 @@
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/UniformGrid.h"
+#include "gui/Window.h"
+#include "catch2/catch.hpp"
 
-void TestUniformGrid::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::UniformGrid", "[UniformGrid]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 
 	auto uniformGrid = std::make_shared<UniformGrid>();
 	uniformGrid->set(UniformGrid::RowsProperty(), 8);

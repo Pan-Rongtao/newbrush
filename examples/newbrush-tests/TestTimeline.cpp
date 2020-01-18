@@ -1,7 +1,7 @@
-#include "TestTimeline.h"
 #include "catch2/catch.hpp"
 #include "media/Timeline.h"
 
+using namespace nb;
 
 TEST_CASE("test Timeline", "[Timeline]")
 {
@@ -14,17 +14,17 @@ TEST_CASE("test Timeline", "[Timeline]")
 		tl.begin();
 	}
 }
-
+/*
 void TestTimeline::test()
 {
-/*	m_tl.BeginTime = TimeSpan::fromSeconds(1);
+	m_tl.BeginTime = TimeSpan::fromSeconds(1);
 	m_tl.Duration = TimeSpan::fromSeconds(1);
 	m_tl.StateChangedEvent += std::bind(&TestTimeline::onStateChanged, this, std::placeholders::_1);
 	m_tl.ProgressEvent += std::bind(&TestTimeline::onProgress, this, std::placeholders::_1);
 	m_tl.CompleteEvent += std::bind(&TestTimeline::onCompleted, this, std::placeholders::_1);
 	m_tl.begin();
-	*/
-}
+	
+}*/
 /*
 void TestTimeline::onStateChanged(const Timeline::StateChangedArgs & args)
 {

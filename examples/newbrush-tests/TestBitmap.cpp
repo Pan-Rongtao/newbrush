@@ -1,10 +1,10 @@
-#include "TestBitmap.h"
 #include "media/Bitmap.h"
-#include "core/Size.h"
 #include <stdio.h>
+#include "catch2/catch.hpp"
 
 using namespace nb;
-void TestBitmap::test()
+
+TEST_CASE("nb::Bitmap", "[Bitmap]")
 {
 	Bitmap bmttt;
 	bmttt.load("e:/Pics/4.jpg");
@@ -24,7 +24,7 @@ void TestBitmap::test()
 	int h2 = bm2.height();
 	int bpp2 = bm2.channels();
 	int bytes2 = bm2.bytes();
-
+	/*
 	Bitmap bm4;
 	FILE *pFile = nullptr;
 	fopen_s(&pFile, "f:/pics/copy_pic.jpg", "rb");
@@ -40,7 +40,7 @@ void TestBitmap::test()
 
 	bm4.scale(200, bm4.height());
 	bm4.save("f:/scalew200.bmp");
-
+	*/
 	Bitmap bm33("f:/flower.png");
 	int w33 = bm33.width();
 	int w34 = bm33.height();

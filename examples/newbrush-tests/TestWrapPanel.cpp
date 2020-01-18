@@ -1,12 +1,18 @@
-#include "TestWrapPanel.h"
 #include "gui/Rectangle.h"
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/Window.h"
+#include "gui/Shape.h"
+#include "gui/WrapPanel.h"
+#include "catch2/catch.hpp"
 
-void TestWrapPanel::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::WrapPanel", "[WrapPanel]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 
 	auto wp = std::make_shared<WrapPanel>();
 	wp->set(WrapPanel::OrientationProperty(), OrientationE::Horizontal);

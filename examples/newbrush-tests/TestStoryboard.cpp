@@ -1,11 +1,11 @@
-#include "TestStoryboard.h"
 #include "media/AnimationTimeline.h"
+#include "media/Storyboard.h"
+#include "catch2/catch.hpp"
 
-TestStoryboard::TestStoryboard()
-{
-}
+using namespace nb;
+using namespace nb::gui;
 
-void TestStoryboard::test()
+TEST_CASE("Test nb::Storyboard", "[Storyboard]")
 {
 //	auto doubleAni = std::make_shared<PropertyAnimation<double>>(/*-122*/);
 //	doubleAni->From = 200;

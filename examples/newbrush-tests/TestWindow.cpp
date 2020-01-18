@@ -1,19 +1,24 @@
-#include "TestWindow.h"
 #include "gui/Image.h"
 #include "media/ImageSource.h"
 #include "media/Brush.h"
 #include "gui/Shape.h"
 #include "gui/Rectangle.h"
+#include "gui/Window.h"
+#include "core/Timer.h"
+#include "catch2/catch.hpp"
 
+using namespace nb;
 using namespace nb::gui;
-void TestWindow::test()
+
+TEST_CASE("Test nb::Window", "[Window]")
 {
-	set(TitleProperty(), std::string("Newbrush´°¿Ú²âÊÔ"));
-	auto rc0 = std::make_shared<Rectangle>();
+	auto w = std::make_shared<Window>();
+	w->set(Window::TitleProperty(), std::string("Newbrushçª—å£æµ‹è¯•"));
+	std::shared_ptr<UIElement> rc0 = std::make_shared<Rectangle>();
 	rc0->set(UIElement::WidthProperty(), 100);
 	rc0->set(UIElement::HeightProperty(), 100);
 	rc0->set(UIElement::HorizontalAlignmentProperty(), HorizontalAlignmentE::Stretch);
-	set(ContentProperty(), rc0);
+	w->set(Window::ContentProperty(), rc0);
 //	this->Topmost = true;
 
 	/*
@@ -28,8 +33,38 @@ void TestWindow::test()
 //	doubleAni.TargetProperty = &this->Top;
 	doubleAni.begin();
 	*/
-	m_timer.Tick.addHandler(std::bind(&TestWindow::onTick, this, std::placeholders::_1));
-	m_timer.start(1500);
+	Timer timer;
+	timer.Tick += [&w](const EventArgs &args) {	
+		static int i = 0;
+		if (i == 0)
+		{
+			w->hide();
+		}
+		else if (i == 1)
+		{
+			w->show();
+		}
+		else if (i == 2)
+		{
+			//	w->hide();
+		}
+		else if (i == 3)
+		{
+			w->active();
+		}
+		else
+		{
+			((Timer *)(args.sender))->stop();
+		}
+		++i;
+	};
+	timer.start(1500);
+
+	while (true)
+	{
+		Window::waitEvent();
+		Timer::driveInLoop();
+	}
 }
 /*
 void TestWindow::onStateChanged(const Timeline::StateChangedArgs & args)
@@ -49,28 +84,3 @@ void TestWindow::onCompleted(const Timeline::CompleteArgs & args)
 	printf("onCompleted.\n");
 }
 */
-void TestWindow::onTick(const EventArgs & args)
-{
-	static int i = 0;
-	if (i == 0)
-	{
-		this->hide();
-	}
-	else if(i == 1)
-	{
-		this->show();
-	}
-	else if (i == 2)
-	{
-	//	this->hide();
-	}
-	else if (i == 3)
-	{
-		this->active();
-	}
-	else
-	{
-		m_timer.stop();
-	}
-	++i;
-}

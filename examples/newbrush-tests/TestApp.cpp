@@ -1,4 +1,5 @@
-#include "TestApp.h"
+#include "gui/Application.h"
+#include "gui/Window.h"
 #include "gui/Image.h"
 #include "gui/Shape.h"
 #include "core/Color.h"
@@ -6,39 +7,42 @@
 #include "media/ImageSource.h"
 #include "media/SolidColorBrush.h"
 #include "core/Log.h"
+#include "catch2/catch.hpp"
 
 using namespace nb;
 using namespace nb::gui;
-void MyApp::onActivated(const EventArgs & args)
-{
-	Log::info("MyApp::onActivated.");
-}
 
-void MyApp::onDeactivated(EventArgs & args)
+class MyApp : public Application
 {
-	Log::info("MyApp::onDeactivated.");
-}
+public:
 
-void MyApp::onExit(const ExitEventArgs & args)
-{
-	Log::info("MyApp::onExit: exitCode=%d.", args.exitCode);
-	Application::onExit(args);
-}
-
-void MyApp::onLoadCompleted(const EventArgs & args)
-{
-	Log::info("MyApp::onLoadCompleted.");
-}
-
-void MyApp::onSessionEnding(const SessionEndingCancelEventArgs & args)
-{
-	Log::info("MyApp::onSessionEnding: reason=%d", args.reason);
-}
-
-void MyApp::onStartUp(const StartupEventArgs & args)
-{
-	Log::info("MyApp::onStartUp.");
-}
+protected:
+	virtual void onActivated(const EventArgs &args) override
+	{
+		Log::info("MyApp::onActivated.");
+	}
+	virtual void onDeactivated(EventArgs &args) override
+	{
+		Log::info("MyApp::onDeactivated.");
+	}
+	virtual void onExit(const ExitEventArgs &args) override
+	{
+		Log::info("MyApp::onExit: exitCode=%d.", args.exitCode);
+		Application::onExit(args);
+	}
+	virtual void onLoadCompleted(const EventArgs &args) override
+	{
+		Log::info("MyApp::onLoadCompleted.");
+	}
+	virtual void onSessionEnding(const SessionEndingCancelEventArgs &args) override
+	{
+		Log::info("MyApp::onSessionEnding: reason=%d", args.reason);
+	}
+	virtual void onStartUp(const StartupEventArgs &args) override
+	{
+		Log::info("MyApp::onStartUp.");
+	}
+};
 
 class MyWindow : public Window
 {
@@ -85,10 +89,10 @@ public:
 	}
 };
 
-void TestApp::test()
+TEST_CASE("Test nb::Application", "[Application]")
 {
 	MyApp app;
-	app.setShutdownMode(ShutdownModeE::OnExplicitShutdown);
+	app.setShutdownMode(ShutdownModeE::OnLastWindowClose);
 	app.Startup += [](const StartupEventArgs &args) {Log::info("App Startup Event."); };
 	app.Exit += [](const ExitEventArgs &args) {Log::info("App exit Event. exitCode=%d", args.exitCode); };
 	char *argv[10] = { "1", "2", "3" };

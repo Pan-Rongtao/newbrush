@@ -1,4 +1,3 @@
-#include "TestGrid.h"
 #include "gui/Shape.h"
 #include "gui/Rectangle.h"
 #include "core/Color.h"
@@ -7,12 +6,16 @@
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/Window.h"
+#include "gui/Grid.h"
+#include "catch2/catch.hpp"
 
 using namespace nb;
+using namespace nb::gui;
 
-void TestGrid::test()
+TEST_CASE("Test nb::Grid", "[Grid]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 	auto grid = std::make_shared<Grid>();
 	
 	auto rowdef0 = std::make_shared<RowDefinition>();

@@ -1,12 +1,19 @@
-#include "TestStackPanel.h"
+
 #include "gui/Rectangle.h"
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/StackPanel.h"
+#include "gui/Window.h"
+#include "gui/Shape.h"
+#include "catch2/catch.hpp"
 
-void TestStackPanel::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::StackPanel", "[StackPanel]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 
 	auto sp = std::make_shared<StackPanel>();
 //	sp->Orientation = OrientationE::Vertical;

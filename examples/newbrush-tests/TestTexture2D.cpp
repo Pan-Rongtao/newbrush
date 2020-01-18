@@ -1,9 +1,9 @@
-#include "TestTexture2D.h"
 #include "gles/Texture2D.h"
+#include "catch2/catch.hpp"
 
 using namespace nb;
 
-void TestTexture2D::test()
+TEST_CASE("Test nb::Texture2D", "[Texture2D]")
 {
 /*	nb::gl::initialize(std::make_shared<Display>(Display::defaultx()));
 	nb::gl::setConfigure(std::make_shared<Configure>(Configure::fromSystemRecommend(0)));

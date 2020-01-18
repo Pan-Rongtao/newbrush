@@ -1,8 +1,9 @@
-#include "TestSize.h"
 #include "core/Size.h"
+#include "catch2/catch.hpp"
 
 using namespace nb;
-void TestSize::test()
+
+TEST_CASE("Test nb::Size", "[Size]")
 {
 	/////////////////////Size
 	Size size1;

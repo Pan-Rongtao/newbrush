@@ -1,43 +1,18 @@
-#include "TestBinding.h"
 #include "media/SolidColorBrush.h"
+#include "gui/Binding.h"
+#include "gui/BindingMaster.h"
+#include "gui/DataContext.h"
+#include "gui/TextBlock.h"
+#include "catch2/catch.hpp"
 
-void TestBinding::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::Binding", "[Binding]")
 {
-//	m_window = std::make_shared<Window>();
-	m_text = std::make_shared<UIElement>();
-/*	m_text->PropertyChanged += [](const TextBlock::PropertyChangedArgs &args)
-	{
-		if (args.value.type() == typeid(bool))						printf("[%s]=%s\n", args.dp.name().data(), any_cast<bool>(args.value) ? "true" : "false");
-		else if(args.value.type() == typeid(float))					printf("[%s]=%.2f\n", args.dp.name().data(), any_cast<float>(args.value));
-		else if (args.value.type() == typeid(double))				printf("[%s]=%.2f\n", args.dp.name().data(), any_cast<double>(args.value));
-		else if (args.value.type() == typeid(long))					printf("[%s]=%d\n", args.dp.name().data(), any_cast<long>(args.value));
-		else if (args.value.type() == typeid(unsigned long))		printf("[%s]=%d\n", args.dp.name().data(), any_cast<unsigned long>(args.value));
-		else if (args.value.type() == typeid(int8_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<int8_t>(args.value));
-		else if (args.value.type() == typeid(int16_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<int16_t>(args.value));
-		else if (args.value.type() == typeid(int32_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<int32_t>(args.value));
-		else if (args.value.type() == typeid(int64_t))				printf("[%s]=%lld\n", args.dp.name().data(), any_cast<int64_t>(args.value));
-		else if (args.value.type() == typeid(uint8_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<uint8_t>(args.value));
-		else if (args.value.type() == typeid(uint16_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<uint16_t>(args.value));
-		else if (args.value.type() == typeid(uint32_t))				printf("[%s]=%d\n", args.dp.name().data(), any_cast<uint32_t>(args.value));
-		else if (args.value.type() == typeid(uint64_t))				printf("[%s]=%lld\n", args.dp.name().data(), any_cast<uint64_t>(args.value));
-		else if (args.value.type() == typeid(std::string))			printf("[%s]=%s\n", args.dp.name().data(), any_cast<std::string>(args.value).data());
-		else if(args.value.type() == typeid(Point))
-		{
-			auto v = any_cast<Point>(args.value);
-			printf("[%s]=(%.2f, %.2f)\n", args.dp.name().data(), v.x(), v.y());
-		}
-		else if (args.value.type() == typeid(Thickness))
-		{
-			auto v = any_cast<Thickness>(args.value);
-			printf("[%s]=(%.2f, %.2f, %.2f, %.2f)\n", args.dp.name().data(), v.left(), v.top(), v.right(), v.bottom());
-		}
-		else
-		{
-			printf("[%s] is changed, type[%s]\n", args.dp.name().data(), args.value.type().name());
-		}
-	};
-	*/
-	m_dataRoot = DataObject::gen("root");
+	auto m_element = std::make_shared<UIElement>();
+
+	auto m_dataRoot = DataObject::gen("root");
 	m_dataRoot->add(DataVar<bool>::gen("bool", false));
 	m_dataRoot->add(DataVar<char>::gen("char", 'a'));
 	m_dataRoot->add(DataVar<signed char>::gen("signed char", 'b'));
@@ -65,6 +40,7 @@ void TestBinding::test()
 
 	auto obj = DataObject::gen("obj");
 	obj->add(DataVar<float>::gen("x", 100.0));
+	m_dataRoot->add(obj);
 
 	auto array = DataArray::gen("array");
 	auto temp = DataObject::gen("template");
@@ -81,17 +57,17 @@ void TestBinding::test()
 	item0->add(DataVar<std::string>::gen("w", "yes"));
 	array->addItem(item0);
 
-	BindingMaster::addBinding(m_text, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "bool"));
-	BindingMaster::addBinding(m_text, TextBlock::WidthProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
-	BindingMaster::addBinding(m_text, TextBlock::HeightProperty(), std::make_shared<Binding>(m_dataRoot, "double"));
-	BindingMaster::addBinding(m_text, TextBlock::FontWeightProperty(), std::make_shared<Binding>(m_dataRoot, "long"));
-	BindingMaster::addBinding(m_text, TextBlock::MinWidthProperty(), std::make_shared<Binding>(m_dataRoot, "unsigned long"));
-	BindingMaster::addBinding(m_text, TextBlock::OpacityProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
-	BindingMaster::addBinding(m_text, TextBlock::VisibilityProperty(), std::make_shared<Binding>(m_dataRoot, "visible"));
-	BindingMaster::addBinding(m_text, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "point"));
-	BindingMaster::addBinding(m_text, TextBlock::MarginProperty(), std::make_shared<Binding>(m_dataRoot, "margin"));
-	BindingMaster::addBinding(m_text, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "brush"));
-	BindingMaster::addBinding(m_text, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));
+	BindingMaster::addBinding(m_element, TextBlock::FocusableProperty(), std::make_shared<Binding>(m_dataRoot, "bool"));
+	BindingMaster::addBinding(m_element, TextBlock::WidthProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
+	BindingMaster::addBinding(m_element, TextBlock::HeightProperty(), std::make_shared<Binding>(m_dataRoot, "double"));
+	BindingMaster::addBinding(m_element, TextBlock::FontWeightProperty(), std::make_shared<Binding>(m_dataRoot, "long"));
+	BindingMaster::addBinding(m_element, TextBlock::MinWidthProperty(), std::make_shared<Binding>(m_dataRoot, "unsigned long"));
+	BindingMaster::addBinding(m_element, TextBlock::OpacityProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
+	BindingMaster::addBinding(m_element, TextBlock::VisibilityProperty(), std::make_shared<Binding>(m_dataRoot, "visible"));
+	BindingMaster::addBinding(m_element, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "point"));
+	BindingMaster::addBinding(m_element, TextBlock::MarginProperty(), std::make_shared<Binding>(m_dataRoot, "margin"));
+	BindingMaster::addBinding(m_element, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "brush"));
+	BindingMaster::addBinding(m_element, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));
 
 	m_dataRoot->get("bool")->set(true);
 	m_dataRoot->get("char")->set('x');
@@ -120,6 +96,6 @@ void TestBinding::test()
 	m_dataRoot->get("brush")->set(brush);
 	m_dataRoot->getObject("obj")->get("x")->set(123.00);
 
-	auto e = m_text->get<VisibilityE>(UIElement::VisibilityProperty());
-	auto e1 = m_text->get<std::string>(TextBlock::TextProperty());
+	auto e = m_element->get<VisibilityE>(UIElement::VisibilityProperty());
+	auto e1 = m_element->get<std::string>(TextBlock::TextProperty());
 }

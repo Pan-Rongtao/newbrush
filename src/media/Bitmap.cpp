@@ -117,11 +117,11 @@ bool Bitmap::save(const std::string &path, uint32_t quality) const
 {
 	/*bmp, png, jpeg, tga*/
 	int n = 0;
-	if(std::regex_match(path, std::regex("*.png")))
+	if(std::regex_match(path, std::regex("(.*)(.png)")))
 		n = stbi_write_png(path.data(), m_width, m_height, m_channels, m_data, 0);
-	else if (std::regex_match(path, std::regex("*.jpeg")) || std::regex_match(path, std::regex("*.jpg")))
+	else if (std::regex_match(path, std::regex("(.*)(.jpg)")) || std::regex_match(path, std::regex("(.*)(.jpeg)")))
 		n = stbi_write_jpg(path.data(), m_width, m_height, m_channels, m_data, quality);
-	else if (std::regex_match(path, std::regex("*.tga")))
+	else if (std::regex_match(path, std::regex("(.*)(.tga)")))
 		n = stbi_write_tga(path.data(), m_width, m_height, m_channels, m_data);
 	else
 		n = stbi_write_bmp(path.data(), m_width, m_height, m_channels, m_data);

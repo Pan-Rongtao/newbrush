@@ -1,4 +1,3 @@
-#include "TestCanvas.h"
 #include <glm/gtx/spline.hpp>
 #include "gui/Rectangle.h"
 #include "gui/Line.h"
@@ -8,9 +7,17 @@
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/Canvas.h"
+#include "gui/Window.h"
+#include "gui/Shape.h"
+#include "catch2/catch.hpp"
 
-void TestCanvas::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::Canvas", "[Canvas]")
 {
+	std::shared_ptr<nb::gui::Window> m_window;
 	m_window = std::make_shared<Window>();
 	auto cv = std::make_shared<Canvas>();
 
@@ -41,7 +48,7 @@ void TestCanvas::test()
 
 	auto line0 = std::make_shared<Line>();
 	line0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
-	line0->set(Line::X1Property(), 100);
+	line0->set(Line::X1Property(), 100); 
 	line0->set(Line::Y1Property(), 100);
 	line0->set(Line::X2Property(), 200);
 	line0->set(Line::Y2Property(), 200);
@@ -101,23 +108,6 @@ void TestCanvas::test()
 	cv->setLeft(pg0, 200);
 	cv->setTop(pg0, 10);
 
-	m_window->set(Window::ContentProperty(), cv);
+	m_window->set(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(cv));
 	
-}
-
-void TestCanvas::onStateChanged(const EventArgs & args)
-{
-//	printf("onStateChanged:%d\n", args.state);
-}
-
-void TestCanvas::onProgress(const EventArgs & args)
-{
-	//	printf("onProgress:%f, width=%f\n", args.progress, m_window.Width());
-	//printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
-	//	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
-}
-
-void TestCanvas::onCompleted(const EventArgs & args)
-{
-	printf("onCompleted.\n");
 }

@@ -1,12 +1,16 @@
-#include "TestPolyline.h"
 #include "gui/Polyline.h"
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
+#include "gui/Window.h"
+#include "catch2/catch.hpp"
 
-void TestPolyline::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::Polyline", "[Polyline]")
 {
-	m_window = std::make_shared<Window>();
+	auto m_window = std::make_shared<Window>();
 	auto linearBrush = std::make_shared<LinearGradientBrush>();
 	auto stops = std::vector<GradientStop>();
 	auto gs0 = std::make_shared<GradientStop>(Color(255, 255, 255, 255), 0.0f);

@@ -1,12 +1,12 @@
-#include "TestSoureDecoder.h"
 #include "gles/SourceDecoder.h"
 #include "gles/Program.h"
 #include "gles/Shader.h"
 #include <vector>
+#include "catch2/catch.hpp"
 
 using namespace nb;
 
-void TestSoureDecoder::test()
+TEST_CASE("Test nb::SourceDecoder", "[SourceDecoder]")
 {
 /*	nb::gl::initialize(std::make_shared<Display>(Display::defaultx()));
 	nb::gl::setConfigure(std::make_shared<Configure>(Configure::fromSystemRecommend(0)));

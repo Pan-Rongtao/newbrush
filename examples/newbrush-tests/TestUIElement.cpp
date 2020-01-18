@@ -1,9 +1,12 @@
-#include "TestUIElement.h"
+#include "gui/UIElement.h"
+#include "catch2/catch.hpp"
 
 using namespace nb;
-void TestUIElement::test()
+using namespace nb::gui;
+
+TEST_CASE("Test nb::UIElement", "[UIElement]")
 {
-	m_uielement = std::make_shared<UIElement>();
+	auto m_uielement = std::make_shared<UIElement>();
 	m_uielement->addHandler(UIElement::MouseDownEvent(), RoutedEventHandler<MouseButtonEventArgs>([](const MouseButtonEventArgs &args) {
 		auto x = args.ButtonState;
 	}));

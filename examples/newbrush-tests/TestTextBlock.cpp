@@ -1,10 +1,15 @@
-#include "TestTextBlock.h"
 #include <thread>
+#include "gui/Window.h"
+#include "gui/TextBlock.h"
+#include "catch2/catch.hpp"
 
-void TestTextBlock::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::TextBlock", "[TextBlock]")
 {
-	m_window = std::make_shared<Window>();
-	m_text = std::make_shared<TextBlock>();
+	auto m_window = std::make_shared<Window>();
+	auto m_text = std::make_shared<TextBlock>();
 	m_text->set(TextBlock::TextProperty(), std::string("abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
 //	m_text->Text = "12345";
 	m_text->set(TextBlock::VerticalAlignmentProperty(), VerticalAlignmentE::Top);

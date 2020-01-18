@@ -1,6 +1,9 @@
-#include "TestFont.h"
+#include "media/Font.h"
+#include "catch2/catch.hpp"
 
-void TestFont::test()
+using namespace nb;
+
+TEST_CASE("Test nb::Font", "[Font]")
 {
 	for (auto font : Fonts::systemFonts())
 	{

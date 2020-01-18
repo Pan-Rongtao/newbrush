@@ -1,8 +1,3 @@
-#include "../TestBase.h"
-#include "TestTimer.h"
-#include "TestRoutedEvent.h"
-#include "TestDependencyProperty.h"
-
 #define CATCH_CONFIG_MAIN
 #include "catch2/catch.hpp"
 

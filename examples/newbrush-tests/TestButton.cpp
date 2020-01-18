@@ -1,13 +1,20 @@
-#include "TestButton.h"
 #include "gui/Image.h"
 #include "gui/Shape.h"
 #include "media/SolidColorBrush.h"
 #include "media/GradientBrush.h"
 #include "media/ImageBrush.h"
 #include "gui/Rectangle.h"
+#include "gui/Button.h"
+#include "gui/Window.h"
+#include "catch2/catch.hpp"
 
-void TestButton::test()
+using namespace nb;
+using namespace nb::gui;
+
+TEST_CASE("Test nb::Button", "[Button]")
 {
+	std::shared_ptr<Button> m_btn;
+	std::shared_ptr<nb::gui::Window> m_window;
 /*	m_btn = std::make_shared<Button>();
 	m_btn->MouseLeftButtonDown += std::bind(&TestButton::onBtnMouseLeftButtonDown, this, std::placeholders::_1);
 	m_btn->MouseLeftButtonUp += std::bind(&TestButton::onBtnMouseLeftButtonUp, this, std::placeholders::_1);
@@ -46,19 +53,19 @@ void TestButton::test()
 //	m_btn->Width = 100;
 }
 
-void TestButton::onBtnMouseLeftButtonDown(const MouseButtonEventArgs & args)
+void onBtnMouseLeftButtonDown(const MouseButtonEventArgs & args)
 {
 	printf("onBtnMouseLeftButtonDown\n");
 //	m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 }
 
-void TestButton::onBtnMouseLeftButtonUp(const MouseButtonEventArgs & args)
+void onBtnMouseLeftButtonUp(const MouseButtonEventArgs & args)
 {
 	printf("onBtnMouseLeftButtonUp\n");
 //	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
 }
 
-void TestButton::onBtnClick(const Button::ClickArgs & args)
+void onBtnClick(const Button::ClickArgs & args)
 {
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 	printf("onBtnClick\n");
