@@ -23,6 +23,7 @@ Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration, cons
 	, m_fillBehavior(FillBehaviorE::HoldEnd)
 	, m_repeatBehavior(_repeatBehavior)
 	, m_timer(1)
+	, m_startTick(0)
 {
 	setBeginTime(_beginTime);
 	setDuration(_duration);
@@ -34,6 +35,7 @@ void Timeline::begin()
 	m_startTick = (uint64_t)(nb::getTickCount() + m_beginTime.totalMilliseconds());
 	m_state = StateE::Active;
 	StateChanged.invoke({ this });
+	onStateChanged();
 	m_timer.start();
 }
 
@@ -103,25 +105,29 @@ TimeSpan Timeline::getCurrentTime() const
 
 float Timeline::getCurrentProgress() const
 {
-	if (m_state == StateE::Stopped)
+	if (m_startTick == 0)
 	{
 		return 0.0f;
 	}
-	else
+
+	auto durationTicks = (uint64_t)m_duration.totalMilliseconds();
+	auto passingTicks = nb::getTickCount() - m_startTick;
+	if (durationTicks == 0)
 	{
-		auto passingTicks = nb::getTickCount() - m_startTick;
-		auto progress = 0.0;
-		auto dir = std::lldiv(passingTicks, (uint64_t)m_duration.totalMilliseconds());
-		if (!autoReversel())
-		{
-			progress = dir.rem;
-		}
-		else
-		{
-			progress = (dir.quot % 2 == 0) ? dir.rem : 1.0 - dir.rem;
-		}
-		return (float)progress;
+		return 0.0f;
 	}
+	else if (passingTicks == durationTicks)
+	{
+		return 1.0f;
+	}
+
+	auto div = std::lldiv(passingTicks, durationTicks);
+	auto progress = (double)div.rem / (double)durationTicks;
+	if (autoReversel() && div.quot % 2 == 1)
+	{
+		progress = 1.0 - progress;
+	}
+	return (float)progress;
 }
 
 void Timeline::onStateChanged()
@@ -163,17 +169,22 @@ uint64_t Timeline::calcFillingTicks()
 void Timeline::onTick(const EventArgs & args)
 {
 	auto curTicks = nb::getTickCount();
-	auto endTicks = m_startTick + calcFillingTicks();
+	auto fillingTicks = calcFillingTicks();
+	auto endTicks = m_startTick + fillingTicks;
 	if (curTicks >= m_startTick)
 	{
-		Process.invoke({ this });
-		onProcessing();
+		if (fillingTicks != 0)
+		{
+			//不要换顺序
+			onProcessing();
+			Process.invoke({ this });
+		}
 		if (curTicks >= endTicks)
 		{
+			m_timer.stop();
 			m_state = StateE::Filling;
 			StateChanged.invoke({ this });
 			onStateChanged();
-			m_timer.stop();
 			Completed.invoke({ this });
 			onCompleted();
 		}

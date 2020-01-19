@@ -63,6 +63,8 @@ public:
 	//¼ìÑé»Øµ÷
 	ValidateValueCallback validateValueCallback() const;
 
+	bool isInvalid() const;
+
 	bool operator == (const DependencyProperty &other) const;
 	bool operator != (const DependencyProperty &other) const;
 	

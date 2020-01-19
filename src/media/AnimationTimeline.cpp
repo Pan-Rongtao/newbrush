@@ -29,12 +29,9 @@ AnimationTimeline::AnimationTimeline()
 
 void AnimationTimeline::onStateChanged()
 {
-	if (!m_target.lock())
+	if (currentState() == StateE::Active)
 	{
-		nbThrowException(std::runtime_error, "not specified target dependencyObject for animation");
-	}
-	if (m_property == DependencyProperty::invalidProperty())
-	{
-		nbThrowException(std::runtime_error, "not specified target dependency property for animation");
+		if (!m_target.lock())		nbThrowException(std::runtime_error, "not specified target dependencyObject for animation");
+		if (m_property.isInvalid())	nbThrowException(std::runtime_error, "not specified target dependency property for animation");
 	}
 }

@@ -26,8 +26,8 @@ class NB_API FloatAnimation : public AnimationTimeline
 {
 public:
 	FloatAnimation();
-	FloatAnimation(float to, const TimeSpan &duration);
-	FloatAnimation(float from, float to, const TimeSpan &duration);
+	FloatAnimation(float to);
+	FloatAnimation(float from, float to);
 
 	void setFrom(float from) &;
 	float from() const;
@@ -39,8 +39,9 @@ public:
 	std::shared_ptr<EasingBase> easingFunction() const;
 	
 protected:
-	virtual void onStateChanged();
+	virtual void onStateChanged() override;
 	virtual void onProcessing() override;
+
 
 private:
 	float						m_from;
@@ -48,6 +49,42 @@ private:
 	float						m_actualFrom;
 	float						m_actualTo;
 	std::shared_ptr<EasingBase>	m_easingFunction;
+};
+
+class NB_API FloatKeyFrame
+{
+public:
+	FloatKeyFrame(const TimeSpan &keyTime, float value);
+
+	void setKeyTime(const TimeSpan &keyTime) &;
+	const TimeSpan &keyTime() const;
+
+	void setValue(float value) &;
+	float value() const;
+
+	void setEasing(std::shared_ptr<EasingBase> easing) &;
+	std::shared_ptr<EasingBase> easing() const;
+
+private:
+	TimeSpan					m_keyTime;
+	float						m_value;
+	std::shared_ptr<EasingBase>	m_easing;
+};
+
+class NB_API FloatAnimationUsingKeyFrames : public AnimationTimeline
+{
+public:
+	FloatAnimationUsingKeyFrames();
+	FloatAnimationUsingKeyFrames(const std::set<FloatKeyFrame> &keyFrames);
+
+	void setKeyFrames(const std::set<FloatKeyFrame> &keyFrames) &;
+	const std::set<FloatKeyFrame> keyFrames() const;
+
+protected:
+	virtual void onProcessing() override;
+
+private:
+	std::set<FloatKeyFrame>	m_keyFrames;
 };
 
 //特化Color

@@ -140,3 +140,8 @@ bool DependencyProperty::operator != (const DependencyProperty &other) const
 {
 	return m_hash != other.m_hash;
 }
+
+bool DependencyProperty::isInvalid() const
+{
+	return *this == invalidProperty();
+}

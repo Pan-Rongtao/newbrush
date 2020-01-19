@@ -29,7 +29,7 @@ public:
 	};
 
 public:
-	//构建一个时间线
+	//构建一个时间线，默认beginTime为0，默认duration为1s，默认repeatBehavior为1次
 	//异常：std::invalid_argument，beginTime为负值，duration为负值
 	Timeline();
 	Timeline(const TimeSpan &beginTime);
