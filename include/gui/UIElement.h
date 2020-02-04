@@ -3,7 +3,7 @@
 #include "../core/DependencyObject.h"
 #include "../core/Size.h"
 #include "../core/Rect.h"
-#include "../gui/Thickness.h"
+#include "../media/Thickness.h"
 #include "../gles/RenderObject.h"
 #include "../gui/Style.h"
 #include "../gui/VisualStateMachine.h"

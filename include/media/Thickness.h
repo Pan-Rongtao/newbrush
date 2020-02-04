@@ -13,7 +13,7 @@
 #pragma once
 #include "../core/Def.h"
 
-namespace nb{ namespace gui{
+namespace nb{
 
 class NB_API Thickness
 {
@@ -49,4 +49,4 @@ private:
 	float	m_fBottom;
 };
 
-}}
+}

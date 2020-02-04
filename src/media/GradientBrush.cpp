@@ -17,13 +17,13 @@ GradientStop::GradientStop(const nb::Color & color, float offset)
 
 DependencyProperty GradientStop::ColorProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<GradientStop, nb::Color>("Color", nb::Color(), false);
+	static auto dp = DependencyProperty::registerDependency<GradientStop, nb::Color>("Color", nb::Color());
 	return dp;
 }
 
 DependencyProperty GradientStop::OffsetPropert()
 {
-	static auto dp = DependencyProperty::registerDependency<GradientStop, float>("Offset", 0.0f, false);
+	static auto dp = DependencyProperty::registerDependency<GradientStop, float>("Offset", 0.0f);
 	return dp;
 }
 

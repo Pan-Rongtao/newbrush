@@ -1,5 +1,6 @@
-﻿#include "gui/Thickness.h"
-using namespace nb::gui;
+﻿#include "media/Thickness.h"
+
+using namespace nb;
 
 Thickness::Thickness()
 	: m_fLeft(0)

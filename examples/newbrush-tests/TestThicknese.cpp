@@ -1,7 +1,7 @@
-#include "gui/Thickness.h"
+#include "media/Thickness.h"
 #include "catch2/catch.hpp"
 
-using namespace nb::gui;
+using namespace nb;
 
 TEST_CASE("Test nb::Thickness", "[Thickness]")
 {

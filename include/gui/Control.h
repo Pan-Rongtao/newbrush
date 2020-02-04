@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "../gui/UIElement.h"
 #include "../gui/ControlTemplate.h"
-#include "../gui/Thickness.h"
 
 namespace nb{
 class Brush;
