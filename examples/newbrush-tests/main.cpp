@@ -28,8 +28,9 @@ DoubleAnimationUsingKeyFrames doubleAnimationUsingKeyFrames;
 PointAnimationUsingKeyFrames pointAnimationUsingKeyFrames;
 SizeAnimationUsingKeyFrames sizeAnimationUsingKeyFrames;
 RectAnimationUsingKeyFrames rectAnimationUsingKeyFrames;
-StringAnimationUsingKeyFrames stringAnimationUsingKeyFrames;
 ThicknessAnimationUsingKeyFrames thickneseAnimationUsingKeyFrames;
+StringAnimationUsingKeyFrames stringAnimationUsingKeyFrames;
+ColorAnimationUsingKeyFrames colorAnimationUsingKeyFrames;
 /*
 TEST_CASE("1: All test cases reside in other .cpp files (empty)", "[multi-file:1]") 
 {

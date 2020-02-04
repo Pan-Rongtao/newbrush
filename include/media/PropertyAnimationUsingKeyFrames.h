@@ -129,6 +129,48 @@ template<> void PropertyAnimationUsingKeyFrames<Size>::onProcessing()
 		target().lock()->set(targetProperty(), Size());
 	}
 }
+template<> void PropertyAnimationUsingKeyFrames<Rect>::onProcessing()
+{
+	if (!target().lock() || m_keyFrames.empty())
+		return;
+
+	auto progress = getCurrentProgress();
+	auto ticks = (int64_t)(duration().totalMilliseconds() * getCurrentProgress());
+	auto curFrameIter = getCurrentFrame(ticks);
+	if (curFrameIter != m_keyFrames.end())
+	{
+		auto curFrame = *curFrameIter;
+		auto prevFrameIter = (curFrameIter == m_keyFrames.begin()) ? m_keyFrames.end() : --curFrameIter;
+		auto fromValue = (prevFrameIter == m_keyFrames.end()) ? curFrame.value() : (*prevFrameIter).value();
+		auto toValue = curFrame.value();
+		auto curFrameEasing = curFrame.easing() ? curFrame.easing() : std::make_shared<LinearEase>();
+		auto easingProgress = curFrameEasing->easeInCore(progress);
+		//decltype(fromValue) value = fromValue + (toValue - fromValue) * easingProgress;
+		target().lock()->set(targetProperty(), Rect());
+	}
+}
+
+template<> void PropertyAnimationUsingKeyFrames<Color>::onProcessing()
+{
+	if (!target().lock() || m_keyFrames.empty())
+		return;
+
+	auto progress = getCurrentProgress();
+	auto ticks = (int64_t)(duration().totalMilliseconds() * getCurrentProgress());
+	auto curFrameIter = getCurrentFrame(ticks);
+	if (curFrameIter != m_keyFrames.end())
+	{
+		auto curFrame = *curFrameIter;
+		auto prevFrameIter = (curFrameIter == m_keyFrames.begin()) ? m_keyFrames.end() : --curFrameIter;
+		auto fromValue = (prevFrameIter == m_keyFrames.end()) ? curFrame.value() : (*prevFrameIter).value();
+		auto toValue = curFrame.value();
+		auto curFrameEasing = curFrame.easing() ? curFrame.easing() : std::make_shared<LinearEase>();
+		auto easingProgress = curFrameEasing->easeInCore(progress);
+		//decltype(fromValue) value = fromValue + (toValue - fromValue) * easingProgress;
+		target().lock()->set(targetProperty(), Rect());
+	}
+}
+
 template<> void PropertyAnimationUsingKeyFrames<Thickness>::onProcessing()
 {
 	if (!target().lock() || m_keyFrames.empty())
@@ -171,27 +213,6 @@ template<> void PropertyAnimationUsingKeyFrames<std::string>::onProcessing()
 	}
 }
 
-template<> void PropertyAnimationUsingKeyFrames<Rect>::onProcessing()
-{
-	if (!target().lock() || m_keyFrames.empty())
-		return;
-
-	auto progress = getCurrentProgress();
-	auto ticks = (int64_t)(duration().totalMilliseconds() * getCurrentProgress());
-	auto curFrameIter = getCurrentFrame(ticks);
-	if (curFrameIter != m_keyFrames.end())
-	{
-		auto curFrame = *curFrameIter;
-		auto prevFrameIter = (curFrameIter == m_keyFrames.begin()) ? m_keyFrames.end() : --curFrameIter;
-		auto fromValue = (prevFrameIter == m_keyFrames.end()) ? curFrame.value() : (*prevFrameIter).value();
-		auto toValue = curFrame.value();
-		auto curFrameEasing = curFrame.easing() ? curFrame.easing() : std::make_shared<LinearEase>();
-		auto easingProgress = curFrameEasing->easeInCore(progress);
-		//decltype(fromValue) value = fromValue + (toValue - fromValue) * easingProgress;
-		target().lock()->set(targetProperty(), Rect());
-	}
-}
-
 using BoolAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<bool>;
 using Int8AnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<int8_t>;
 using Int16AnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<int16_t>;
@@ -202,7 +223,8 @@ using DoubleAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<double>;
 using PointAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<Point>;
 using SizeAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<Size>;
 using RectAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<Rect>;
-using StringAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<std::string>;
 using ThicknessAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<Thickness>;
+using ColorAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<Color>;
+using StringAnimationUsingKeyFrames = PropertyAnimationUsingKeyFrames<std::string>;
 
 }

@@ -164,8 +164,8 @@ using Int64Animation = PropertyAnimation<int64_t>;
 using FloatAnimation = PropertyAnimation<float>;
 using DoubleAnimation = PropertyAnimation<double>;
 using PointAnimation = PropertyAnimation<Point>;
-using RectAnimation = PropertyAnimation<Rect>;
 using SizeAnimation = PropertyAnimation<Size>;
+using RectAnimation = PropertyAnimation<Rect>;
 using ThicknessAnimation = PropertyAnimation<Thickness>;
 using ColorAnimation = PropertyAnimation<Color>;
 
