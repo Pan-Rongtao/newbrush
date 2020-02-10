@@ -8,7 +8,7 @@ TEST_CASE("test Timeline", "[Timeline]")
 	SECTION("timeline1")
 	{
 		Timeline tl1;
-		tl1.setBeginTime(TimeSpan::fromSeconds(1));
+		tl1.setBeginTime(TimeSpan::fromSeconds(0));
 		tl1.setDuration(TimeSpan::fromSeconds(1));
 		CHECK(tl1.getCurrentTime() == TimeSpan::zero());
 		CHECK(tl1.getCurrentProgress() == 0);
@@ -24,6 +24,9 @@ TEST_CASE("test Timeline", "[Timeline]")
 			auto time = tl->getCurrentTime();
 			auto progress = tl->getCurrentProgress();
 			printf("timeline procesing: time[%s], progress[%.5f]\n", time.toString().data(), progress);
+		};
+		tl1.Completed += [](const EventArgs &args) {
+			printf("timeline complete\n");
 		};
 		tl1.begin();
 		

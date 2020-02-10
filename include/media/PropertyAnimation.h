@@ -11,8 +11,8 @@ class NB_API PropertyAnimation : public AnimationTimeline
 {
 public:
 	PropertyAnimation() : m_from(T()), m_to(T()), m_hasSetFrom(false), m_hasSetTo(false) { }
-	PropertyAnimation(T to) : m_from(T()), m_from(to), m_hasSetFrom(false), m_hasSetTo(true) { }
-	PropertyAnimation(T from, T to) : m_from(from) , m_to(from), m_hasSetFrom(false), m_hasSetTo(false) { }
+	PropertyAnimation(T to) : m_from(T()), m_to(to), m_hasSetFrom(false), m_hasSetTo(true) { }
+	PropertyAnimation(T from, T to) : m_from(from) , m_to(to), m_hasSetFrom(true), m_hasSetTo(true) { }
 
 	void setFrom(T from) & { m_from = from; m_hasSetFrom = true; }
 	T from() const { return m_from; }
@@ -29,10 +29,13 @@ protected:
 		AnimationTimeline::onStateChanged();
 		if (currentState() == Timeline::StateE::Active)
 		{
-			m_actualFrom = m_hasSetFrom ? target().lock()->get<T>(targetProperty()) : m_from;
-			m_actualTo = m_hasSetFrom ? m_actualFrom : m_to;
-		//	if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated from value for animation.");
-		//	if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated to value for animation.");
+			try {
+				m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<T>(targetProperty());
+			}
+			catch (...) {
+				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().propertyType().name());
+			}
+			m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		}
 	}
 	virtual void onProcessing() override
@@ -64,10 +67,10 @@ void PropertyAnimation<float>::onStateChanged()
 	AnimationTimeline::onStateChanged();
 	if (currentState() == Timeline::StateE::Active)
 	{
-		m_actualFrom = m_hasSetFrom ? target().lock()->get<float>(targetProperty()) : m_from;
-		m_actualTo = m_hasSetFrom ? m_actualFrom : m_to;
-		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated from value for animation.");
-		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated to value for animation.");
+		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<float>(targetProperty());
+		m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
+		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated 'from value' for animation.");
+		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated 'to value' for animation.");
 	}
 }
 template<>
@@ -76,10 +79,10 @@ void PropertyAnimation<double>::onStateChanged()
 	AnimationTimeline::onStateChanged();
 	if (currentState() == Timeline::StateE::Active)
 	{
-		m_actualFrom = m_hasSetFrom ? target().lock()->get<float>(targetProperty()) : m_from;
-		m_actualTo = m_hasSetFrom ? m_actualFrom : m_to;
-		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated from value for animation.");
-		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated to value for animation.");
+		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<double>(targetProperty());
+		m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
+		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated 'from value' for animation.");
+		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated 'to value' for animation.");
 	}
 }
 template<>
