@@ -1,4 +1,4 @@
-#include "core/Random.h"
+#include "newbrush/core/Random.h"
 #include <set>
 #include <codecvt>
 #include "../Encoding.h"

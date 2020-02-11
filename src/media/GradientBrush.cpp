@@ -1,4 +1,4 @@
-#include "media/GradientBrush.h"
+#include "newbrush/media/GradientBrush.h"
 #include <algorithm>
 #include "glm/glm.hpp"
 

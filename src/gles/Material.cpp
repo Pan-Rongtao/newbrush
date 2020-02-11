@@ -1,5 +1,5 @@
-#include "gles/Material.h"
-#include "gles/Program.h"
+#include "newbrush/gles/Material.h"
+#include "newbrush/gles/Program.h"
 
 using namespace nb;
 

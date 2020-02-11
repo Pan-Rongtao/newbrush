@@ -1,4 +1,4 @@
-#include "gles/Strips.h"
+#include "newbrush/gles/Strips.h"
 #include <numeric>
 #include <GLES2/gl2.h>
 

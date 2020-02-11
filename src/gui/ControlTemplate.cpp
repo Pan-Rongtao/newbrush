@@ -1,4 +1,4 @@
-﻿#include "gui/ControlTemplate.h"
+﻿#include "newbrush/gui/ControlTemplate.h"
 
 using namespace nb::gui;
 

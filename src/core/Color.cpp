@@ -1,6 +1,6 @@
 ﻿#include <algorithm>
 #include <math.h>
-#include "core/Color.h"
+#include "newbrush/core/Color.h"
 #include <regex>
 
 using namespace nb;

@@ -1,4 +1,4 @@
-#include "gui/ResourceDictionary.h"
+#include "newbrush/gui/ResourceDictionary.h"
 
 using namespace nb;
 using namespace nb::gui;

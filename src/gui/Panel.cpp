@@ -1,5 +1,5 @@
-#include "gui/Panel.h"
-#include "gles/Viewport2D.h"
+#include "newbrush/gui/Panel.h"
+#include "newbrush/gles/Viewport2D.h"
 
 using namespace nb;
 using namespace nb::gui;

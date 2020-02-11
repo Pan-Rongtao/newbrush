@@ -1,4 +1,4 @@
-#include "core/EffectiveValueEntry.h"
+#include "newbrush/core/EffectiveValueEntry.h"
 
 using namespace nb;
 

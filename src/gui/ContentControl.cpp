@@ -1,4 +1,4 @@
-﻿#include "gui/ContentControl.h"
+﻿#include "newbrush/gui/ContentControl.h"
 
 using namespace nb;
 using namespace nb::gui;

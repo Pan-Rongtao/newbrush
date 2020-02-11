@@ -1,5 +1,5 @@
 #include <GLES2/gl2.h>
-#include "gles/VBO.h"
+#include "newbrush/gles/VBO.h"
 
 using namespace nb;
 

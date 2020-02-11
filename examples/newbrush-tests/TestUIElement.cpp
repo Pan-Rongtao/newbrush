@@ -1,4 +1,4 @@
-#include "gui/UIElement.h"
+#include "newbrush/gui/UIElement.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

@@ -1,9 +1,9 @@
-#include "gui/Ellipse.h"
+#include "newbrush/gui/Ellipse.h"
 #include <math.h>
-#include "gles/Program.h"
-#include "gles/Viewport2D.h"
-#include "gles/Texture2D.h"
-#include "gles/Strips.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/Strips.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;

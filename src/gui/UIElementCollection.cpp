@@ -1,5 +1,5 @@
-#include "gui/UIElementCollection.h"
-#include "gui/UIElement.h"
+#include "newbrush/gui/UIElementCollection.h"
+#include "newbrush/gui/UIElement.h"
 
 using namespace nb::gui;
 

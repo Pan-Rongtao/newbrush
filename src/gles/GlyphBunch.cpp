@@ -1,6 +1,6 @@
-#include "gles/GlyphBunch.h"
+#include "newbrush/gles/GlyphBunch.h"
 #include <codecvt>
-#include "gles/GlyphFactory.h"
+#include "newbrush/gles/GlyphFactory.h"
 
 using namespace nb;
 

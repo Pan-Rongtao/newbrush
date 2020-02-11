@@ -1,4 +1,4 @@
-#include "core/DependencyObject.h"
+#include "newbrush/core/DependencyObject.h"
 
 using namespace nb;
 

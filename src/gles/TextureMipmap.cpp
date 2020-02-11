@@ -1,5 +1,5 @@
 #include <GLES2/gl2.h>
-#include "gles/TextureMipmap.h"
+#include "newbrush/gles/TextureMipmap.h"
 
 using namespace nb;
 

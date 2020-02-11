@@ -1,4 +1,4 @@
-#include "core/DependencyProperty.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 

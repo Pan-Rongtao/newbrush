@@ -1,12 +1,12 @@
-﻿#include "gui/Window.h"
+﻿#include "newbrush/gui/Window.h"
+#include "newbrush/gles/Projection.h"
+#include "newbrush/gui/Application.h"
+#include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/media/ImageSource.h"
+#include "newbrush/gui/WindowCollection.h"
+#include "newbrush/core/Singleton.h"
+#include "newbrush/core/Log.h"
 #include "GLFW/glfw3.h"
-#include "gles/Projection.h"
-#include "gui/Application.h"
-#include "gui/VisualTreeHelper.h"
-#include "media/ImageSource.h"
-#include "gui/WindowCollection.h"
-#include "core/Singleton.h"
-#include "core/Log.h"
 
 using namespace nb;
 using namespace gui;

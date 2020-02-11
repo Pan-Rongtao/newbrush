@@ -1,4 +1,4 @@
-﻿#include "gui/WrapPanel.h"
+﻿#include "newbrush/gui/WrapPanel.h"
 #include <queue>
 
 using namespace nb;

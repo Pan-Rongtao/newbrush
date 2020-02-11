@@ -1,4 +1,4 @@
-﻿#include "core/Size.h"
+﻿#include "newbrush/core/Size.h"
 #include <algorithm>
 #include <math.h>
 

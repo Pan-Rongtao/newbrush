@@ -1,9 +1,9 @@
-#include "gui/Line.h"
-#include "gles/RenderObject.h"
-#include "gles/Strips.h"
-#include "gles/Texture2D.h"
-#include "gles/Viewport2D.h"
-#include "media/GradientBrush.h"
+#include "newbrush/gui/Line.h"
+#include "newbrush/gles/RenderObject.h"
+#include "newbrush/gles/Strips.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/media/GradientBrush.h"
 
 using namespace nb;
 using namespace nb::gui;

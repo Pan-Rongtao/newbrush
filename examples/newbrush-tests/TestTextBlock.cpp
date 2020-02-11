@@ -1,6 +1,6 @@
 #include <thread>
-#include "gui/Window.h"
-#include "gui/TextBlock.h"
+#include "newbrush/gui/Window.h"
+#include "newbrush/gui/TextBlock.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

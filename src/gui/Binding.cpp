@@ -1,5 +1,5 @@
-#include "gui/Binding.h"
-#include "gui/DataContext.h"
+#include "newbrush/gui/Binding.h"
+#include "newbrush/gui/DataContext.h"
 
 using namespace nb;
 using namespace nb::gui;

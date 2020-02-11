@@ -1,5 +1,5 @@
-#include "gles/Viewport2D.h"
-#include "gles/RenderObject.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/RenderObject.h"
 #include <GLES2/gl2.h>
 
 using namespace nb;

@@ -1,4 +1,4 @@
-#include "core/Easing.h"
+#include "newbrush/core/Easing.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

@@ -1,7 +1,7 @@
-#include "gui/VisualTreeHelper.h"
-#include "gui/Panel.h"
-#include "gui/UIElement.h"
-#include "gui/ContentControl.h"
+#include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/gui/Panel.h"
+#include "newbrush/gui/UIElement.h"
+#include "newbrush/gui/ContentControl.h"
 
 using namespace nb::gui;
 

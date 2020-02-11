@@ -1,4 +1,4 @@
-﻿#include "media/Bitmap.h"
+﻿#include "newbrush/media/Bitmap.h"
 #include <regex>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION

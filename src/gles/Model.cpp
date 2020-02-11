@@ -1,4 +1,4 @@
-#include "gles/Model.h"
+#include "newbrush/gles/Model.h"
 #include <GLES2/gl2.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>

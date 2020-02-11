@@ -1,8 +1,8 @@
-#include "gui/Polyline.h"
-#include "gles/Program.h"
-#include "gles/Viewport2D.h"
-#include "gles/Texture2D.h"
-#include "gles/Strips.h"
+#include "newbrush/gui/Polyline.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/Strips.h"
 
 using namespace nb;
 using namespace nb::gui;

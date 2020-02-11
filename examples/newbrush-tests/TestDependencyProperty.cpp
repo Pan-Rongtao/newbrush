@@ -1,4 +1,4 @@
-#include "core/DependencyObject.h"
+#include "newbrush/core/DependencyObject.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

@@ -1,6 +1,6 @@
-﻿#include "gles/TextureCubemap.h"
+﻿#include "newbrush/gles/TextureCubemap.h"
 #include <GLES2/gl2.h>
-#include "media/Bitmap.h"
+#include "newbrush/media/Bitmap.h"
 
 using namespace nb;
 

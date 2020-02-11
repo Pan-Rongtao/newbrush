@@ -1,5 +1,5 @@
-#include "media/AnimationTimeline.h"
-#include "media/Storyboard.h"
+#include "newbrush/media/AnimationTimeline.h"
+#include "newbrush/media/Storyboard.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

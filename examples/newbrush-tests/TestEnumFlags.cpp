@@ -1,4 +1,4 @@
-#include "core/EnumFlags.h"
+#include "newbrush/core/EnumFlags.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

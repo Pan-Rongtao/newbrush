@@ -1,6 +1,6 @@
-#include "gles/SourceDecoder.h"
-#include "gles/Program.h"
-#include "gles/Shader.h"
+#include "newbrush/gles/SourceDecoder.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Shader.h"
 #include <vector>
 #include "catch2/catch.hpp"
 

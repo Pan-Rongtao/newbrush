@@ -1,10 +1,10 @@
-#include "gui/Shape.h"
-#include "gles/Program.h"
-#include "gles/Viewport2D.h"
-#include "gles/Texture2D.h"
-#include "media/SolidColorBrush.h"
-#include "media/GradientBrush.h"
-#include "media/ImageBrush.h"
+#include "newbrush/gui/Shape.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/media/SolidColorBrush.h"
+#include "newbrush/media/GradientBrush.h"
+#include "newbrush/media/ImageBrush.h"
 
 using namespace nb;
 using namespace nb::gui;

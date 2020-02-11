@@ -1,4 +1,4 @@
-#include "core/Def.h"
+#include "newbrush/core/Def.h"
 #include <sstream>
 #include <thread>
 #ifdef NB_OS_FAMILY_WINDOWS

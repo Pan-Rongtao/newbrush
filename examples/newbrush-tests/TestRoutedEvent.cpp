@@ -1,6 +1,5 @@
-#include "core/RoutedEvent.h"
-#include "core/EventArgs.h"
-#include "Poco/Dynamic/Var.h"
+#include "newbrush/core/RoutedEvent.h"
+#include "newbrush/core/EventArgs.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

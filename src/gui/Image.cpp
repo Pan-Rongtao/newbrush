@@ -1,11 +1,11 @@
-﻿#include "gui/Image.h"
-#include "gles/Viewport2D.h"
-#include "gles/RenderObject.h"
-#include "gles/Model.h"
-#include "gles/Material.h"
-#include "gles/Program.h"
-#include "gles/Texture2D.h"
-#include "media/ImageSource.h"
+﻿#include "newbrush/gui/Image.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/RenderObject.h"
+#include "newbrush/gles/Model.h"
+#include "newbrush/gles/Material.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/media/ImageSource.h"
 
 using namespace nb;
 using namespace nb::gui;

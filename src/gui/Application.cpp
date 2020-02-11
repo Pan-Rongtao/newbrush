@@ -1,9 +1,9 @@
-#include "gui/Application.h"
-#include "core/Timer.h"
-#include "gui/Window.h"
-#include "core/Log.h"
+#include "newbrush/gui/Application.h"
+#include "newbrush/core/Timer.h"
+#include "newbrush/gui/Window.h"
+#include "newbrush/core/Log.h"
 #include <GLES2/gl2.h>
-#include "core/Singleton.h"
+#include "newbrush/core/Singleton.h"
 
 using namespace nb;
 using namespace nb::gui;

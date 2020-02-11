@@ -1,4 +1,4 @@
-#include "gles/Model.h"
+#include "newbrush/gles/Model.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

@@ -1,5 +1,5 @@
-﻿#include "gui/Grid.h"
-#include "core/DependencyProperty.h"
+﻿#include "newbrush/gui/Grid.h"
+#include "newbrush/core/DependencyProperty.h"
 #include <numeric>
 
 using namespace nb;

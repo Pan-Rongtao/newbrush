@@ -1,6 +1,6 @@
-#include "gles/RenderObject.h"
+#include "newbrush/gles/RenderObject.h"
 #include <GLES2/gl2.h>
-#include "core/Log.h"
+#include "newbrush/core/Log.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"

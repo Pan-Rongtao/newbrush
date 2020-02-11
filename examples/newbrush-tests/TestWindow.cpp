@@ -1,10 +1,10 @@
-#include "gui/Image.h"
-#include "media/ImageSource.h"
-#include "media/Brush.h"
-#include "gui/Shape.h"
-#include "gui/Rectangle.h"
-#include "gui/Window.h"
-#include "core/Timer.h"
+#include "newbrush/gui/Image.h"
+#include "newbrush/media/ImageSource.h"
+#include "newbrush/media/Brush.h"
+#include "newbrush/gui/Shape.h"
+#include "newbrush/gui/Rectangle.h"
+#include "newbrush/gui/Window.h"
+#include "newbrush/core/Timer.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

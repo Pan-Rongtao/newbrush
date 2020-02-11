@@ -1,5 +1,5 @@
-#include "media/ImageBrush.h"
-#include "media/Bitmap.h"
+#include "newbrush/media/ImageBrush.h"
+#include "newbrush/media/Bitmap.h"
 
 using namespace nb;
 

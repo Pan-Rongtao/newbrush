@@ -1,10 +1,10 @@
-#include "media/GlyphMetrics.h"
+#include "newbrush/media/GlyphMetrics.h"
 #include <codecvt>
 #include <freetype/ft2build.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftbitmap.h>
 #include FT_FREETYPE_H
-#include "media/Font.h"
+#include "newbrush/media/Font.h"
 
 using namespace nb;
 

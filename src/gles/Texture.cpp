@@ -1,7 +1,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include "gles/Texture.h"
-#include "core/Log.h"
+#include "newbrush/gles/Texture.h"
+#include "newbrush/core/Log.h"
 
 using namespace nb;
 

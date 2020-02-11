@@ -1,5 +1,5 @@
 #include <GLES2/gl2.h>
-#include "gles/Texture2D.h"
+#include "newbrush/gles/Texture2D.h"
 
 using namespace nb;
 

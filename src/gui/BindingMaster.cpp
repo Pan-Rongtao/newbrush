@@ -1,6 +1,6 @@
-#include "gui/BindingMaster.h"
-#include "core/DependencyObject.h"
-#include "gui/Binding.h"
+#include "newbrush/gui/BindingMaster.h"
+#include "newbrush/core/DependencyObject.h"
+#include "newbrush/gui/Binding.h"
 
 using namespace nb;
 using namespace nb::gui;

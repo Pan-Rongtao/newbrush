@@ -1,5 +1,5 @@
-#include "gles/Particle.h"
-#include "gles/ParticleEmitter.h"
+#include "newbrush/gles/Particle.h"
+#include "newbrush/gles/ParticleEmitter.h"
 
 using namespace nb;
 

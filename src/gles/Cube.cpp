@@ -1,4 +1,4 @@
-#include "gles/Cube.h"
+#include "newbrush/gles/Cube.h"
 #include <GLES2/gl2.h>
 #include <glm/gtc/matrix_transform.hpp>
 

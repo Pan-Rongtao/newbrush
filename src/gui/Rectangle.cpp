@@ -1,8 +1,8 @@
-#include "gui/Rectangle.h"
+#include "newbrush/gui/Rectangle.h"
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include "gles/Viewport2D.h"
-#include "gles/Strips.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/Strips.h"
 
 using namespace nb;
 using namespace nb::gui;

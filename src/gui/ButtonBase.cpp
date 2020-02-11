@@ -1,4 +1,4 @@
-#include "gui/ButtonBase.h"
+#include "newbrush/gui/ButtonBase.h"
 
 using namespace nb;
 using namespace nb::gui;

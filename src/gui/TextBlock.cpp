@@ -1,12 +1,12 @@
-#include "gui/TextBlock.h"
+#include "newbrush/gui/TextBlock.h"
 #include <codecvt>
-#include "media/Font.h"
-#include "gles/GlyphFactory.h"
-#include "gles/Viewport2D.h"
-#include "gles/Model.h"
-#include "gles/Material.h"
-#include "gles/Texture2D.h"
-#include "gles/GlyphBunch.h"
+#include "newbrush/media/Font.h"
+#include "newbrush/gles/GlyphFactory.h"
+#include "newbrush/gles/Viewport2D.h"
+#include "newbrush/gles/Model.h"
+#include "newbrush/gles/Material.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/GlyphBunch.h"
 
 using namespace nb;
 using namespace nb::gui;

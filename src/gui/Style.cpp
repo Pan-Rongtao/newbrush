@@ -1,4 +1,4 @@
-#include "gui/Style.h"
+#include "newbrush/gui/Style.h"
 
 using namespace nb;
 using namespace nb::gui;

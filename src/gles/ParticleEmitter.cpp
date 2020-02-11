@@ -1,5 +1,5 @@
-#include "gles/ParticleEmitter.h"
-#include "gles/Particle.h"
+#include "newbrush/gles/ParticleEmitter.h"
+#include "newbrush/gles/Particle.h"
 #include "glm/gtc/random.hpp"
 
 using namespace nb;

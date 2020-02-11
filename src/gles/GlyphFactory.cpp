@@ -1,13 +1,13 @@
-#include "gles/GlyphFactory.h"
+#include "newbrush/gles/GlyphFactory.h"
 #include <map>
 #include <vector>
-#include "gles/Texture2D.h"
+#include "newbrush/gles/Texture2D.h"
 #include <opengl/GLES2/gl2.h>
 #include <freetype/ft2build.h>
 #include <freetype/ftglyph.h>
 #include <freetype/ftbitmap.h>
-#include "core/Log.h"
-#include "media/Font.h"
+#include "newbrush/core/Log.h"
+#include "newbrush/media/Font.h"
 #include FT_FREETYPE_H
 
 using namespace nb;

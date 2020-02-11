@@ -1,4 +1,4 @@
-﻿#include "gui/StackPanel.h"
+﻿#include "newbrush/gui/StackPanel.h"
 
 using namespace nb;
 using namespace nb::gui;
