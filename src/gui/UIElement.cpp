@@ -200,7 +200,7 @@ void UIElement::measure(const Size & availabelSize)
 	auto maxWidth = get<float>(MaxWidthProperty());
 	auto maxHeight = get<float>(MaxHeightProperty());
 	//减去magin计算出本来的constrainedSize
-	auto constrainedSize = Size(availabelSize.width() - margin.left() - margin.right(), availabelSize.height() - margin.top() - margin.bottom());
+	auto constrainedSize = Size(availabelSize.width() - margin.left - margin.right, availabelSize.height() - margin.top - margin.bottom);
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, constrainedSize.width())
 	//同样的规则应用于Height
@@ -216,7 +216,7 @@ void UIElement::measure(const Size & availabelSize)
 	desiredSizeTemp.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? desiredSizeTemp.height() : height);
 
 	//由于child不关注和计算magin，因此需重新+margin
-	desiredSizeTemp += Size(margin.left() + margin.right(), margin.top() + margin.bottom());
+	desiredSizeTemp += Size(margin.left + margin.right, margin.top + margin.bottom);
 	//保证在（0, availabelSize)区间
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
@@ -239,7 +239,7 @@ void UIElement::arrage(const Rect & finalRect)
 	auto maxHeight = get<float>(MaxHeightProperty());
 	auto desiredSize = get<Size>(DesiredSizeProperty());
 	//减去magin计算出本来的arrangeSize以及clientSize
-	auto arrangeSize = Size(finalRect.width() - margin.left() - margin.right(), finalRect.height() - margin.top() - margin.bottom());
+	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
@@ -269,17 +269,17 @@ void UIElement::arrage(const Rect & finalRect)
 	float offsetX = 0.0f, offsetY = 0.0f;
 	switch (horizontalAlignment)
 	{
-	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + margin.left();													break;
-	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left() + (clientSize.width() - renderSize.width()) / 2;	break;
-	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right() - renderSize.width();							break;
-	default:							offsetX = renderSize.width() >= clientSize.width() ? finalRect.left() + margin.left() : finalRect.x() + margin.left() + (clientSize.width() - renderSize.width()) / 2;	break;
+	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + margin.left;													break;
+	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left + (clientSize.width() - renderSize.width()) / 2;	break;
+	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right - renderSize.width();							break;
+	default:							offsetX = renderSize.width() >= clientSize.width() ? finalRect.left() + margin.left : finalRect.x() + margin.left + (clientSize.width() - renderSize.width()) / 2;	break;
 	}
 	switch (verticalAlignment)
 	{
-	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + margin.top();														break;
-	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top() + (clientSize.height() - renderSize.height()) / 2;	break;
-	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom() - renderSize.height());		break;
-	default:							offsetY = renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top() : finalRect.y() + margin.top() + (clientSize.height() - renderSize.height()) / 2;	break;
+	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + margin.top;														break;
+	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top + (clientSize.height() - renderSize.height()) / 2;	break;
+	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - renderSize.height());		break;
+	default:							offsetY = renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top : finalRect.y() + margin.top + (clientSize.height() - renderSize.height()) / 2;	break;
 	}
 	set(OffsetProperty(), Point(offsetX, offsetY));
 	set(ActualSizeProperty(), renderSize);

@@ -100,7 +100,7 @@ void Fonts::initSystemFonts()
 	if (!systemFontsInit)
 	{
 #ifdef NB_OS_FAMILY_WINDOWS
-		loadSystemFonts("C:/Windows/Fonts/msyh.ttf");
+		loadSystemFonts("C:/Windows/Fonts/msyh.ttc");
 #else
 #if NB_OS == NB_OS_LINUX
 #endif

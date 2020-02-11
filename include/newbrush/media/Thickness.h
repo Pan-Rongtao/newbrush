@@ -20,10 +20,9 @@ class NB_API Thickness
 public:
 	Thickness();
 	Thickness(float uniform);
-	Thickness(float left, float top, float right, float bottom);
-	Thickness(const Thickness &other);
+	Thickness(float _left, float _top, float _right, float _bottom);
 
-	void operator = (const Thickness &other);
+	void reset(float _left, float _top, float _right, float _bottom);
 
 	bool operator == (const Thickness &other) const;
 	bool operator != (const Thickness &other) const;
@@ -31,22 +30,13 @@ public:
 	void operator -= (float f);
 	Thickness operator + (float f) const;
 	void operator += (float f);
+	Thickness operator * (float f) const;
+	void operator *= (float f);
 
-	void reset(float left, float top, float right, float bottom);
-	float &left();
-	const float &left() const;
-	float &top();
-	const float &top() const;
-	float &right();
-	const float &right() const;
-	float &bottom();
-	const float &bottom() const;
-
-private:
-	float	m_fLeft;
-	float	m_fTop;
-	float	m_fRight;
-	float	m_fBottom;
+	float	left;
+	float	top;
+	float	right;
+	float	bottom;
 };
 
 }

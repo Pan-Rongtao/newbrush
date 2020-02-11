@@ -33,7 +33,7 @@ protected:
 				m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<T>(targetProperty());
 			}
 			catch (...) {
-				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().propertyType().name());
+				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().name().data());
 			}
 			m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		}
@@ -46,7 +46,7 @@ protected:
 
 		auto progress = getCurrentProgress();
 		auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
-		auto ft = easing->easeInCore(progress);
+		auto ft = (float)easing->easeInCore(progress);
 		auto value = m_actualFrom + (m_actualTo - m_actualFrom) * ft;
 		target().lock()->set(targetProperty(), value);
 	}
@@ -85,50 +85,6 @@ void PropertyAnimation<double>::onStateChanged()
 		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated 'to value' for animation.");
 	}
 }
-template<>
-void PropertyAnimation<Point>::onProcessing()
-{
-	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
-		return;
-
-	auto progress = getCurrentProgress();
-	auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
-	auto ft = easing->easeInCore(progress);
-	//	int r = (int)((int)m_from.red() + ft * ((int)m_to.red() - (int)m_from.red()));
-	//	int g = (int)((int)m_from.green() + ft * ((int)m_to.green() - (int)m_from.green()));
-	//	int b = (int)((int)m_from.blue() + ft * ((int)m_to.blue() - (int)m_from.blue()));
-	target().lock()->set(targetProperty(), Point());
-}
-template<> void PropertyAnimation<Size>::onProcessing()
-{
-	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
-		return;
-
-	auto progress = getCurrentProgress();
-	auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
-	auto ft = easing->easeInCore(progress);
-	//	int r = (int)((int)m_from.red() + ft * ((int)m_to.red() - (int)m_from.red()));
-	//	int g = (int)((int)m_from.green() + ft * ((int)m_to.green() - (int)m_from.green()));
-	//	int b = (int)((int)m_from.blue() + ft * ((int)m_to.blue() - (int)m_from.blue()));
-	target().lock()->set(targetProperty(), Size());
-}
-
-template<>void PropertyAnimation<Rect>::onProcessing()
-{
-	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
-		return;
-
-	auto progress = getCurrentProgress();
-	auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
-	auto ft = easing->easeInCore(progress);
-	//	int r = (int)((int)m_from.red() + ft * ((int)m_to.red() - (int)m_from.red()));
-	//	int g = (int)((int)m_from.green() + ft * ((int)m_to.green() - (int)m_from.green()));
-	//	int b = (int)((int)m_from.blue() + ft * ((int)m_to.blue() - (int)m_from.blue()));
-	target().lock()->set(targetProperty(), Rect());
-}
 
 template<> void PropertyAnimation<Color>::onProcessing()
 {
@@ -142,9 +98,26 @@ template<> void PropertyAnimation<Color>::onProcessing()
 	int r = (int)((int)m_from.red() + ft * ((int)m_to.red() - (int)m_from.red()));
 	int g = (int)((int)m_from.green() + ft * ((int)m_to.green() - (int)m_from.green()));
 	int b = (int)((int)m_from.blue() + ft * ((int)m_to.blue() - (int)m_from.blue()));
+	r = clamp(0, 255, r);
+	g = clamp(0, 255, g);
+	b = clamp(0, 255, b);
 	target().lock()->set(targetProperty(), Color(r, g, b));
 }
+template<>void PropertyAnimation<Rect>::onProcessing()
+{
+	AnimationTimeline::onProcessing();
+	if (!target().lock() || targetProperty().isInvalid())
+		return;
 
+	auto progress = getCurrentProgress();
+	auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
+	auto ft = (float)easing->easeInCore(progress);
+	auto x = m_from.x() + (m_to.x() - m_from.x()) * ft;
+	auto y = m_from.y() + (m_to.y() - m_from.y()) * ft;
+	auto w = m_from.width() + (m_to.width() - m_from.width()) * ft;
+	auto h = m_from.height() + (m_to.height() - m_from.height()) * ft;
+	target().lock()->set(targetProperty(), Rect(x, y, w, h));
+}
 template<> void PropertyAnimation<Thickness>::onProcessing()
 {
 	AnimationTimeline::onProcessing();
@@ -153,11 +126,12 @@ template<> void PropertyAnimation<Thickness>::onProcessing()
 
 	auto progress = getCurrentProgress();
 	auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
-	auto ft = easing->easeInCore(progress);
-	//	int r = (int)((int)m_from.red() + ft * ((int)m_to.red() - (int)m_from.red()));
-	//	int g = (int)((int)m_from.green() + ft * ((int)m_to.green() - (int)m_from.green()));
-	//	int b = (int)((int)m_from.blue() + ft * ((int)m_to.blue() - (int)m_from.blue()));
-	target().lock()->set(targetProperty(), Thickness());
+	auto ft = (float)easing->easeInCore(progress);
+	auto l = m_from.left + (m_to.left - m_from.left) * ft;
+	auto r = m_from.right + (m_to.right - m_from.right) * ft;
+	auto t = m_from.top + (m_to.top - m_from.top) * ft;
+	auto b = m_from.bottom + (m_to.bottom - m_from.bottom) * ft;
+	target().lock()->set(targetProperty(), Thickness(l, t, r, b));
 }
 
 using Int8Animation = PropertyAnimation<int8_t>;
@@ -168,8 +142,8 @@ using FloatAnimation = PropertyAnimation<float>;
 using DoubleAnimation = PropertyAnimation<double>;
 using PointAnimation = PropertyAnimation<Point>;
 using SizeAnimation = PropertyAnimation<Size>;
+using ColorAnimation = PropertyAnimation<Color>;
 using RectAnimation = PropertyAnimation<Rect>;
 using ThicknessAnimation = PropertyAnimation<Thickness>;
-using ColorAnimation = PropertyAnimation<Color>;
 
 }

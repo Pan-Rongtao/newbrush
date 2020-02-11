@@ -15,11 +15,6 @@ TEST_CASE("Test nb::Thickness", "[Thickness]")
 
 	bool b2 = tk2 != tk1;
 
-	tk.left() += 1;
-	tk.top() += 2;
-	tk.right() += 3;
-	tk.bottom() += 4;
-
 	tk = tk - 5;
 	tk = tk + 1;
 	tk -= 4;

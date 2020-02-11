@@ -3,44 +3,34 @@
 using namespace nb;
 
 Thickness::Thickness()
-	: m_fLeft(0)
-	, m_fTop(0)
-	, m_fRight(0)
-	, m_fBottom(0)
+	: Thickness(0, 0, 0, 0)
 {
 }
 
 Thickness::Thickness(float uniform)
+	: Thickness(uniform, uniform, uniform, uniform)
 {
-	reset(uniform, uniform, uniform, uniform);
 }
 
-Thickness::Thickness(float left, float top, float right, float bottom)
+Thickness::Thickness(float _left, float _top, float _right, float _bottom)
+	: left(_left)
+	, top(_top)
+	, right(_right)
+	, bottom(_bottom)
 {
-	reset(left, top, right, bottom);
 }
 
-Thickness::Thickness(const Thickness &other)
+void Thickness::reset(float _left, float _top, float _right, float _bottom)
 {
-	reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
-}
-
-void Thickness::reset(float left, float top, float right, float bottom)
-{
-	m_fLeft = left;
-	m_fTop = top;
-	m_fRight = right;
-	m_fBottom = bottom;
-}
-
-void Thickness::operator = (const Thickness &other)
-{
-	reset(other.m_fLeft, other.m_fTop, other.m_fRight, other.m_fBottom);
+	left = _left;
+	top = _top;
+	right = _right;
+	bottom = _bottom;
 }
 
 bool Thickness::operator == (const Thickness &other) const
 {
-	return m_fLeft == other.m_fLeft && m_fTop == other.m_fTop && m_fRight == other.m_fRight && m_fBottom == other.m_fBottom;
+	return left == other.left && top == other.top && right == other.right && bottom == other.bottom;
 }
 
 bool Thickness::operator != (const Thickness &other) const
@@ -50,7 +40,7 @@ bool Thickness::operator != (const Thickness &other) const
 
 Thickness Thickness::operator - (float f) const
 {
-	return Thickness(m_fLeft - f, m_fTop - f, m_fRight - f, m_fBottom - f);
+	return Thickness(left - f, top - f, right - f, bottom - f);
 }
 
 void Thickness::operator -= (float f)
@@ -60,7 +50,7 @@ void Thickness::operator -= (float f)
 
 Thickness Thickness::operator + (float f) const
 {
-	return Thickness(m_fLeft + f, m_fTop + f, m_fRight + f, m_fBottom + f);
+	return Thickness(left + f, top + f, right + f, bottom + f);
 }
 
 void Thickness::operator += (float f)
@@ -68,42 +58,12 @@ void Thickness::operator += (float f)
 	operator = (operator +(f));
 }
 
-float &Thickness::left()
+Thickness Thickness::operator * (float f) const
 {
-	return m_fLeft;
+	return Thickness(left * f, top * f, right * f, bottom * f);
 }
 
-const float &Thickness::left() const
+void Thickness::operator *= (float f)
 {
-	return m_fLeft;
-}
-
-float &Thickness::top()
-{
-	return m_fTop;
-}
-
-const float &Thickness::top() const
-{
-	return m_fTop;
-}
-
-float &Thickness::right()
-{
-	return m_fRight;
-}
-
-const float &Thickness::right() const
-{
-	return m_fRight;
-}
-
-float &Thickness::bottom()
-{
-	return m_fBottom;
-}
-
-const float &Thickness::bottom() const
-{
-	return m_fBottom;
+	operator = (operator *(f));
 }

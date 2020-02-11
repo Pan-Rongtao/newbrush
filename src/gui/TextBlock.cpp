@@ -120,7 +120,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 Size TextBlock::measureOverride(const Size & availableSize)
 {
 	auto padding = get<Thickness>(PaddingProperty());
-	return Size(availableSize.width() - padding.left() - padding.right(), availableSize.height() - padding.top() - padding.bottom());
+	return Size(availableSize.width() - padding.left - padding.right, availableSize.height() - padding.top - padding.bottom);
 }
 
 Size TextBlock::arrangeOverride(const Size & finalSize)
