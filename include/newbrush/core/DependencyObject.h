@@ -18,7 +18,10 @@ public:
 	template<class T>
 	T get(const DependencyProperty &dp) const
 	{
-		return get(dp).extract<T>();
+		try {
+			return get(dp).extract<T>();
+		}
+		catch (...) { nbThrowException(std::logic_error, "should use get<%s> instead of get<%s> for [%s]", dp.propertyType().name(), typeid(T).name(), dp.name().data()); }
 	}
 
 protected:

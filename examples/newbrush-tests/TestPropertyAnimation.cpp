@@ -6,6 +6,21 @@
 using namespace nb;
 using namespace nb::gui;
 
+class MyObject : public DependencyObject
+{
+public:
+	static DependencyProperty ForegroundProperty()
+	{
+		static auto dp = DependencyProperty::registerDependency<MyObject, Color>("Foreground", Color());
+		return dp;
+	}
+	static DependencyProperty RectProperty()
+	{
+		static auto dp = DependencyProperty::registerDependency<MyObject, Rect>("Rect", Rect());
+		return dp;
+	}
+};
+
 TEST_CASE("test Int8Animation", "[Int8Animation]")
 {
 	auto ui = std::make_shared<UIElement>();
@@ -269,20 +284,6 @@ TEST_CASE("test SizeAnimation", "[SizeAnimation]")
 	}
 }
 
-class MyObject : public DependencyObject
-{
-public:
-	static DependencyProperty ForegroundProperty()
-	{
-		static auto dp = DependencyProperty::registerDependency<MyObject, Color>("Foreground", Color());
-		return dp;
-	}
-	static DependencyProperty RectProperty()
-	{
-		static auto dp = DependencyProperty::registerDependency<MyObject, Rect>("Rect", Rect());
-		return dp;
-	}
-};
 TEST_CASE("test ColorAnimation", "[ColorAnimation]")
 {
 	auto ui = std::make_shared<MyObject>();
