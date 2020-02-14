@@ -8,7 +8,7 @@ VisualState::VisualState()
 {
 }
 
-VisualState::VisualState(const std::string & name, std::shared_ptr<gui::Storyboard> sb)
+VisualState::VisualState(const std::string & name, std::shared_ptr<Storyboard> sb)
 {
 	set(NameProperty(), name);
 	set(StoryboardProperty(), sb);
@@ -22,7 +22,7 @@ DependencyProperty VisualState::NameProperty()
 
 DependencyProperty VisualState::StoryboardProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<VisualState, std::shared_ptr<gui::Storyboard>>("Storyboard", nullptr);
+	static auto dp = DependencyProperty::registerDependency<VisualState, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
 	return dp;
 }
 
@@ -50,7 +50,7 @@ DependencyProperty VisualTransition::DurationProperty()
 
 DependencyProperty VisualTransition::StoryboardProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<gui::Storyboard>>("Storyboard", nullptr);
+	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
 	return dp;
 }
 

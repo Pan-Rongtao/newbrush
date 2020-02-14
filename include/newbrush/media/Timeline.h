@@ -5,6 +5,23 @@
 
 namespace nb{
 
+class NB_API Duration
+{
+public:
+	Duration(const TimeSpan &ts);
+	Duration(const Duration &other);
+	void operator =(const Duration &other);
+
+	static Duration automatic();
+
+	bool hasTimeSpan() const;
+	TimeSpan timeSpan() const;
+
+private:
+	Duration();
+	TimeSpan	*m_ts;
+};
+
 class NB_API Timeline : public Object
 {
 public:
@@ -33,12 +50,13 @@ public:
 	//异常：std::invalid_argument，beginTime为负值，duration为负值
 	Timeline();
 	Timeline(const TimeSpan &beginTime);
-	Timeline(const TimeSpan &beginTime, const TimeSpan &duration);
-	Timeline(const TimeSpan &beginTime, const TimeSpan &duration, const RepeatBehavior &repeatBehavior);
+	Timeline(const TimeSpan &beginTime, const Duration &duration);
+	Timeline(const TimeSpan &beginTime, const Duration &duration, const RepeatBehavior &repeatBehavior);
 	virtual ~Timeline() = default;
 
 	//开始
 	void begin();
+	void stop();
 
 	//设置动画延时开始的时间
 	//异常：std::invalid_argumentbeginTime为负数
@@ -49,10 +67,11 @@ public:
 	
 	//设置动画时长
 	//异常：std::invalid_argumentbeginTime为负数
-	void setDuration(const TimeSpan &duration) &;
+	void setDuration(const Duration &duration) &;
 
 	//获取动画时长
-	const TimeSpan &duration() const;
+	const Duration &duration() const;
+	virtual TimeSpan getActualDurationTimespan() const;
 
 	//自动反向动画
 	void setAutoReversel(bool autoReversel) &;
@@ -90,7 +109,7 @@ private:
 
 	StateE			m_state;
 	TimeSpan		m_beginTime;
-	TimeSpan		m_duration;
+	Duration		m_duration;
 	bool			m_autoReversel;
 	FillBehaviorE	m_fillBehavior;
 	RepeatBehavior	m_repeatBehavior;

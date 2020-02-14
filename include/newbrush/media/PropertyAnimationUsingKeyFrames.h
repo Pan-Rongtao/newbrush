@@ -86,7 +86,7 @@ protected:
 			return;
 
 		auto progress = getCurrentProgress();
-		auto ticks = (int64_t)(duration().totalMilliseconds() * progress);
+		auto ticks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 		auto curFrameIter = getCurrentFrame(ticks);
 		if (curFrameIter != m_keyFrames.end())
 		{
@@ -114,7 +114,7 @@ template<> void PropertyAnimationUsingKeyFrames<bool>::onProcessing()
 		return;
 
 	auto progress = getCurrentProgress();
-	auto curTicks = (int64_t)(duration().totalMilliseconds() * progress);
+	auto curTicks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 	for (auto iter = m_keyFrames.begin(); iter != m_keyFrames.end(); ++iter)
 	{
 		auto k = (*iter).keyTime().totalMilliseconds();
@@ -139,7 +139,7 @@ template<> void PropertyAnimationUsingKeyFrames<std::string>::onProcessing()
 		return;
 
 	auto progress = getCurrentProgress();
-	auto curTicks = (int64_t)(duration().totalMilliseconds() * progress);
+	auto curTicks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 	for (auto iter = m_keyFrames.begin(); iter != m_keyFrames.end(); ++iter)
 	{
 		auto k = (*iter).keyTime().totalMilliseconds();
@@ -163,7 +163,7 @@ template<> void PropertyAnimationUsingKeyFrames<Color>::onProcessing()
 		return;
 
 	auto progress = getCurrentProgress();
-	auto ticks = (int64_t)(duration().totalMilliseconds() * progress);
+	auto ticks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 	auto curFrameIter = getCurrentFrame(ticks);
 	if (curFrameIter != m_keyFrames.end())
 	{
@@ -192,7 +192,7 @@ template<> void PropertyAnimationUsingKeyFrames<Rect>::onProcessing()
 		return;
 
 	auto progress = getCurrentProgress();
-	auto ticks = (int64_t)(duration().totalMilliseconds() * progress);
+	auto ticks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 	auto curFrameIter = getCurrentFrame(ticks);
 	if (curFrameIter != m_keyFrames.end())
 	{
@@ -219,7 +219,7 @@ template<> void PropertyAnimationUsingKeyFrames<Thickness>::onProcessing()
 		return;
 
 	auto progress = getCurrentProgress();
-	auto ticks = (int64_t)(duration().totalMilliseconds() * progress);
+	auto ticks = (int64_t)(getActualDurationTimespan().totalMilliseconds() * progress);
 	auto curFrameIter = getCurrentFrame(ticks);
 	if (curFrameIter != m_keyFrames.end())
 	{

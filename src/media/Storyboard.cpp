@@ -1,23 +1,40 @@
 ﻿#include "newbrush/media/Storyboard.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Storyboard::Storyboard()
-	: Storyboard(TimeSpan(), {})
 {
+	Completed += [&](const EventArgs &args) {
+		for (auto child : m_children)
+		{
+			child->stop();
+		}
+	};
 }
 
-Storyboard::Storyboard(const TimeSpan & duration, const std::vector<std::shared_ptr<Timeline>>& propertyAnamations)
+std::vector<std::shared_ptr<Timeline>>& Storyboard::children()
 {
-//	set(DurationProperty(), duration);
-//	set(ChildrenProperty(), propertyAnamations);
+	return m_children;
 }
 
 void Storyboard::begin()
 {
-//	auto children = get<std::vector<std::shared_ptr<Timeline>>>(ChildrenProperty());
-//	for (auto const &animation : children)
-//		animation->begin();
-//	Timeline::begin();
+	Timeline::begin();
+	for (auto const &animation : m_children)
+		animation->begin();
+}
+
+TimeSpan Storyboard::getActualDurationTimespan() const
+{
+	if (duration().hasTimeSpan())
+	{
+		return duration().timeSpan();
+	}
+	else
+	{
+		auto iter = std::max_element(m_children.begin(), m_children.end(), [](std::shared_ptr<Timeline> tl0, std::shared_ptr<Timeline> tl1) {
+			return tl0->getActualDurationTimespan() > tl1->getActualDurationTimespan();
+		});
+		return (*iter)->getActualDurationTimespan();
+	}
 }

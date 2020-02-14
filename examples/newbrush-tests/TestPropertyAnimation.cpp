@@ -154,6 +154,7 @@ TEST_CASE("test FloatAnimation", "[FloatAnimation]")
 	auto ui = std::make_shared<UIElement>();
 	FloatAnimation animation;// (0.0, 100.0);
 	animation.setFrom(100.0f);
+	animation.setDuration(TimeSpan::fromSeconds(2));
 	animation.setTarget(ui);
 	animation.setTargetProperty(UIElement::WidthProperty());
 	animation.setAutoReversel(true);

@@ -2,41 +2,85 @@
 
 using namespace nb;
 
+Duration::Duration(const TimeSpan & ts)
+	: m_ts(new TimeSpan(ts))
+{
+	if (ts < TimeSpan::zero())
+		nbThrowException(std::invalid_argument, "duration is negative[%s]", ts.toString().data());
+}
+
+Duration::Duration(const Duration & other)
+	: m_ts(new TimeSpan(*other.m_ts))
+{
+}
+
+void Duration::operator=(const Duration & other)
+{
+	delete m_ts;
+	m_ts = new TimeSpan(*other.m_ts);
+}
+
+Duration Duration::automatic()
+{
+	return Duration();
+}
+
+bool Duration::hasTimeSpan() const
+{
+	return m_ts != nullptr;
+}
+
+TimeSpan Duration::timeSpan() const
+{
+	if (!hasTimeSpan())	nbThrowException(std::logic_error, "doesn't has TimeSpan.");
+	return *m_ts;
+}
+
+Duration::Duration()
+	: m_ts(nullptr)
+{
+}
+
 Timeline::Timeline()
-	: Timeline(TimeSpan(), TimeSpan::fromSeconds(1), RepeatBehavior(RepeatBehavior(1)))
+	: Timeline(TimeSpan(), Duration::automatic(), RepeatBehavior(1))
 {
 }
 
 Timeline::Timeline(const TimeSpan & _beginTime)
-	: Timeline(_beginTime, TimeSpan::fromSeconds(1), RepeatBehavior(RepeatBehavior(1)))
+	: Timeline(_beginTime, Duration::automatic(), RepeatBehavior(1))
 {
 }
 
-Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration)
-	: Timeline(_beginTime, _duration, RepeatBehavior(RepeatBehavior(1)))
+Timeline::Timeline(const TimeSpan & _beginTime, const Duration & _duration)
+	: Timeline(_beginTime, _duration, RepeatBehavior(1))
 {
 }
 
-Timeline::Timeline(const TimeSpan & _beginTime, const TimeSpan & _duration, const RepeatBehavior & _repeatBehavior)
+Timeline::Timeline(const TimeSpan & _beginTime, const Duration & _duration, const RepeatBehavior & _repeatBehavior)
 	: m_state(StateE::Stopped)
 	, m_autoReversel(false)
 	, m_fillBehavior(FillBehaviorE::HoldEnd)
 	, m_repeatBehavior(_repeatBehavior)
 	, m_timer(1)
 	, m_startTick(0)
+	, m_duration(Duration::automatic())
 {
 	setBeginTime(_beginTime);
-	setDuration(_duration);
 	m_timer.Tick += std::bind(&Timeline::onTick, this, std::placeholders::_1);
 }
 
 void Timeline::begin()
 {
-	m_startTick = (uint64_t)(nb::getTickCount() + m_beginTime.totalMilliseconds());
+	m_startTick = (uint64_t)(getTickCount() + m_beginTime.totalMilliseconds());
 	m_state = StateE::Active;
 	StateChanged.invoke({ this });
 	onStateChanged();
 	m_timer.start();
+}
+
+void Timeline::stop()
+{
+	m_timer.stop();
 }
 
 void Timeline::setBeginTime(const TimeSpan & beginTime) &
@@ -51,14 +95,12 @@ const TimeSpan & Timeline::beginTime() const
 	return m_beginTime;
 }
 
-void Timeline::setDuration(const TimeSpan & duration) &
+void Timeline::setDuration(const Duration & duration) &
 {
-	if (duration < TimeSpan::zero())
-		nbThrowException(std::invalid_argument, "duration is negative[%s]", duration.toString().data());
 	m_duration = duration;
 }
 
-const TimeSpan & Timeline::duration() const
+const Duration & Timeline::duration() const
 {
 	return m_duration;
 }
@@ -100,7 +142,7 @@ Timeline::StateE Timeline::currentState() const
 
 TimeSpan Timeline::getCurrentTime() const
 {
-	return TimeSpan::fromMilliseconds((int)(getCurrentProgress() * m_duration.totalMilliseconds()));
+	return TimeSpan::fromMilliseconds((int)(getCurrentProgress() * getActualDurationTimespan().totalMilliseconds()));
 }
 
 float Timeline::getCurrentProgress() const
@@ -110,8 +152,8 @@ float Timeline::getCurrentProgress() const
 		return 0.0f;
 	}
 
-	auto durationTicks = (uint64_t)m_duration.totalMilliseconds();
-	auto passingTicks = nb::getTickCount() - m_startTick;
+	auto durationTicks = (uint64_t)getActualDurationTimespan().totalMilliseconds();
+	auto passingTicks = getTickCount() - m_startTick;
 	if (durationTicks == 0)
 	{
 		return 0.0f;
@@ -142,12 +184,17 @@ void Timeline::onCompleted()
 {
 }
 
+TimeSpan Timeline::getActualDurationTimespan() const
+{
+	return m_duration.hasTimeSpan() ? m_duration.timeSpan() : TimeSpan(0, 0, 1);
+}
+
 uint64_t Timeline::calcFillingTicks()
 {
 	auto ticks = 0.0;
 	if (m_repeatBehavior.hasCount())
 	{
-		auto oneLoop = duration().totalMilliseconds();
+		auto oneLoop = getActualDurationTimespan().totalMilliseconds();
 		//如果自动逆动画，则一圈变成两倍长度
 		if (autoReversel())
 		{
@@ -168,7 +215,7 @@ uint64_t Timeline::calcFillingTicks()
 
 void Timeline::onTick(const EventArgs & args)
 {
-	auto curTicks = nb::getTickCount();
+	auto curTicks = getTickCount();
 	auto fillingTicks = calcFillingTicks();
 	auto endTicks = m_startTick + fillingTicks;
 	if (curTicks >= m_startTick)
