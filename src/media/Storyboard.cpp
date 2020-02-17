@@ -33,7 +33,7 @@ TimeSpan Storyboard::getActualDurationTimespan() const
 	else
 	{
 		auto iter = std::max_element(m_children.begin(), m_children.end(), [](std::shared_ptr<Timeline> tl0, std::shared_ptr<Timeline> tl1) {
-			return tl0->getActualDurationTimespan() > tl1->getActualDurationTimespan();
+			return tl1->getActualDurationTimespan() > tl0->getActualDurationTimespan();
 		});
 		return (*iter)->getActualDurationTimespan();
 	}
