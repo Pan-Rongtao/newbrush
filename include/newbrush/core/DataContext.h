@@ -2,12 +2,9 @@
 #include <map>
 #include "newbrush/core/Def.h"
 #include "newbrush/core/Event.h"
-#include "Poco/JSON/Object.h"
-#include "Poco/JSON/Array.h"
 #include "Poco/Dynamic/Var.h"
 
-namespace nb{ 
-namespace gui{
+namespace nb{
 
 class NB_API DataContext
 {
@@ -145,4 +142,4 @@ private:
 	std::shared_ptr<DataObject>					m_template;
 };
 
-}}
+}

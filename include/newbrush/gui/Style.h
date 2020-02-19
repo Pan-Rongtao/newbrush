@@ -7,6 +7,7 @@
 namespace nb{
 namespace gui{
 
+class UIElement;
 class NB_API Style
 {
 public:
@@ -14,32 +15,34 @@ public:
 	Style();
 
 	//构建一个目标类型为targetType的样式
-	Style(const std::type_index &targetType);
+	Style(std::type_index targetType);
 	
-	//构建一个目标类型为targetType的样式，它继承于baseOn
-	Style(const std::type_index &targetType, std::shared_ptr<Style> baseOn);
-
 	//目标类型
-	void setTargetType(const std::type_index &targetType);
+	void setTargetType(std::type_index targetType);
 	std::type_index targetType() const;
 
-	//继承的样式
-	void setBaseOn(std::shared_ptr<Style> baseOn);
-	std::shared_ptr<Style> baseOn() const;
-
 	//设置器集合
-	std::vector<Setter> &setters();
+	std::vector<SetterBasePtr> &setters();
 
 	//触发器集合
-	std::vector<TriggerBase> &triggers();
+	std::vector<TriggerBasePtr> &triggers();
 
 	
 private:
 	std::type_index				m_targetType;
-	std::shared_ptr<Style>		m_baseOn;
-	std::vector<Setter>			m_setters;
-	std::vector<TriggerBase>	m_triggers;
+	std::vector<SetterBasePtr>	m_setters;
+	std::vector<TriggerBasePtr>	m_triggers;
 
+};
+
+class NB_API StyleHelpler
+{
+public:
+	static void updateStyle(UIElement *uie, std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle);
+
+private:
+	static void processSetters(UIElement * uie, std::shared_ptr<Style> style);
+	static void processTriggers(UIElement * uie, std::shared_ptr<Style> style);
 };
 
 }

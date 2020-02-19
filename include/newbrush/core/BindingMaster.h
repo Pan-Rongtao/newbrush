@@ -1,12 +1,9 @@
 #pragma once
 #include <map>
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/gui/DataContext.h"
+#include "newbrush/core/DataContext.h"
 
 namespace nb{
-
-class DependencyObject;
-namespace gui{
 
 class Binding;
 class NB_API BindingMaster
@@ -24,5 +21,4 @@ private:
 };
 
 
-
-}}
+}

@@ -34,5 +34,7 @@ private:
 	std::vector<std::shared_ptr<Timeline>>	m_children;
 };
 
+using StoryboardPtr = std::shared_ptr<Storyboard>;
+
 }
  

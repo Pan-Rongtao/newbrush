@@ -126,7 +126,14 @@ DependencyProperty UIElement::RendererProperty()
 
 DependencyProperty UIElement::StyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", std::make_shared<Style>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
+		auto e = dynamic_cast<UIElement *>(object);
+
+		auto oldStyle = args->oldValue.extract<std::shared_ptr<Style>>();
+		auto newStyle = args->newValue.extract<std::shared_ptr<Style>>();
+
+	//	e->onStyleChanged(oldStyle, newStyle);
+	});
 	return dp;
 }
 
@@ -304,6 +311,10 @@ void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	{
 		updateLayout();
 	}
+}
+
+void UIElement::onStyleChanged(std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle)
+{
 }
 
 void UIElement::onDragEnter(const DragEventArgs & args)

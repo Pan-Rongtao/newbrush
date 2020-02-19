@@ -15,17 +15,13 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 		{
 			fixSetValue = value;
 		}
-		else if (propertyType == typeid(bool))
+		else if (propertyType == typeid(float))
 		{
-			fixSetValue = value.convert<bool>();
+			fixSetValue = value.convert<float>();
 		}
 		else if (propertyType == typeid(double))
 		{
 			fixSetValue = value.convert<double>();
-		}
-		else if (propertyType == typeid(float))
-		{
-			fixSetValue = value.convert<float>();
 		}
 		else if (propertyType == typeid(int))
 		{
@@ -34,6 +30,10 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 		else if (propertyType == typeid(unsigned int))
 		{
 			fixSetValue = value.convert<unsigned int>();
+		}
+		else if (propertyType == typeid(bool))
+		{
+			fixSetValue = value.convert<bool>();
 		}
 		else if (propertyType == typeid(std::string))
 		{

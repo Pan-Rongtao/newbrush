@@ -2,7 +2,7 @@
 #include <string>
 #include "newbrush/core/Property.h"
 #include "newbrush/core/TimeSpan.h"
-#include "newbrush/core/Easing.h"
+#include "newbrush/media/Easing.h"
 #include "newbrush/media/Storyboard.h"
 #include "newbrush/core/DependencyObject.h"
 

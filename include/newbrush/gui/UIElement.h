@@ -51,7 +51,7 @@ enum class OrientationE
 	Vertical,
 };
 
-class NB_API UIElement : public DependencyObject, public std::enable_shared_from_this<UIElement>
+class NB_API UIElement : public DependencyObject
 {
 public:
 	UIElement();
@@ -264,6 +264,7 @@ public:
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
+	virtual void onStyleChanged(std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle);
 
 	virtual void onDragEnter(const DragEventArgs &args);
 	virtual void onDragLeave(const DragEventArgs &args);

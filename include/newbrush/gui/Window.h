@@ -4,12 +4,24 @@
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/ContentControl.h"
 #include "newbrush/gles/Viewport2D.h"
-#include "newbrush/gui/Gui.h"
 
 struct GLFWwindow;
 namespace nb{
-class ImageSource;
 namespace gui {
+	
+enum class WindowStateE
+{
+	Normal,		//还原
+	Maximized,	//最大化
+	Minimized,	//最小化
+};
+
+enum class WindowStyleE
+{
+	None,		//仅工作区可见
+	Fixed,		//
+	SizeBox,
+};
 
 class NB_API Window : public ContentControl
 {

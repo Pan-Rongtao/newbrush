@@ -4,7 +4,6 @@
 #include "Poco/Dynamic/Var.h"
 
 namespace nb {
-namespace gui{
 
 using Poco::Dynamic::Var;
 class NB_API ResourceDictionary
@@ -35,5 +34,4 @@ private:
 	std::unordered_map<std::string, Var>	m_resmap;
 };
 
-}
 }

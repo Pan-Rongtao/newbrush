@@ -2,7 +2,6 @@
 #include "newbrush/core/Def.h"
 
 namespace nb{
-namespace gui{
 
 //数据流方向
 enum class BindingModeE
@@ -40,4 +39,6 @@ private:
 	std::string						m_path;
 };
 
-}}
+using BindingPtr = std::shared_ptr<Binding>;
+
+}

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "newbrush/media/Timeline.h"
-#include "newbrush/core/Easing.h"
+#include "newbrush/media/Easing.h"
 #include "newbrush/core/DependencyProperty.h"
 
 namespace nb{

@@ -24,7 +24,7 @@ enum FullValueSourceE : int16_t
 	IsCoercedWithCurrentValue = 0x200,			//0000 0010 0000 0000
 };
 
-enum BaseValueSourceInternalE : int8_t
+enum class BaseValueSourceInternalE : int8_t
 {
 	Unknown = 0,
 	Default = 1,

@@ -1,7 +1,7 @@
 #include "newbrush/media/SolidColorBrush.h"
-#include "newbrush/gui/Binding.h"
-#include "newbrush/gui/BindingMaster.h"
-#include "newbrush/gui/DataContext.h"
+#include "newbrush/core/Binding.h"
+#include "newbrush/core/BindingMaster.h"
+#include "newbrush/core/DataContext.h"
 #include "newbrush/gui/TextBlock.h"
 #include "catch2/catch.hpp"
 
