@@ -165,7 +165,9 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 
 		if (changed)
 		{
-			onPropertyChanged({ dp, oldValue, setValue });
+			DependencyPropertyChangedEventArgs args{ dp, oldValue, setValue };
+			onPropertyChanged(args);
+			PropertyChanged.invoke(args);
 		}
 	}
 }

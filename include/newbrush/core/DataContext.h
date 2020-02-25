@@ -16,7 +16,7 @@ public:
 	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const;
 	virtual const std::type_info &type() const;
 
-	struct ValueChangedArgs	{ DataContext *root; std::string path; };
+	struct ValueChangedArgs { DataContext *root; std::string path; Var value; };
 	Event<ValueChangedArgs>	ValueChanged;		//值改变事件
 	
 protected:
@@ -86,7 +86,7 @@ public:
 		if (m_v.type() == v.type())
 		{
 			m_v = v;
-			root->ValueChanged.invoke({ root, path });
+			root->ValueChanged.invoke({ root, path, v });
 		}
 		else
 		{
@@ -101,7 +101,7 @@ public:
 			if (!bEqual)
 			{
 				m_v = v;
-				root->ValueChanged.invoke({ root, path });
+				root->ValueChanged.invoke({ root, path, v });
 			}
 		}
 	}

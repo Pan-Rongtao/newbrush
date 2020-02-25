@@ -68,6 +68,10 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	BindingMaster::addBinding(m_element, TextBlock::MarginProperty(), std::make_shared<Binding>(m_dataRoot, "margin"));
 	BindingMaster::addBinding(m_element, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "brush"));
 	BindingMaster::addBinding(m_element, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));
+	
+	auto bd = std::make_shared<Binding>(m_dataRoot, "int");
+	BindingMaster::addBinding(m_element, TextBlock::MinHeightProperty(), bd);
+	BindingMaster::addBinding(m_element, TextBlock::MaxHeightProperty(), bd);
 
 	m_dataRoot->get("bool")->set(true);
 	m_dataRoot->get("char")->set('x');
@@ -98,4 +102,7 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 
 	auto e = m_element->get<VisibilityE>(UIElement::VisibilityProperty());
 	auto e1 = m_element->get<std::string>(TextBlock::TextProperty());
+
+	auto minHeight = m_element->get<float>(TextBlock::MinHeightProperty());
+	auto maxHeight = m_element->get<float>(TextBlock::MaxHeightProperty());
 }

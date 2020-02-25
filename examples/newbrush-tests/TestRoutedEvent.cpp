@@ -7,19 +7,11 @@ using namespace nb;
 class TT : public Object
 {
 public:
-
-	template<class ArgsT>
-	void addHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> &handler)
+	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler)
 	{
-		if (event.argsType() != typeid(ArgsT))
-		{
-			printf("add handler fail, %s != %s", event.argsType().name(), typeid(ArgsT).name());
-			return;
-		}
 		m_eventHandlers[event.hash()].push_back(handler);
 	}
-	template<class ArgsT>
-	void removeHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> handler)
+	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler)
 	{
 		auto iter = m_eventHandlers.find(event.hash());
 		if (iter != m_eventHandlers.end())
@@ -30,26 +22,19 @@ public:
 				handlers.erase(iterHandler);
 		}
 	}
-	template<class ArgsT>
-	void raiseEvent(const ArgsT &args)
+	void raiseEvent(std::shared_ptr<RoutedEventArgs> args)
 	{
-		auto iter = m_eventHandlers.find(args.Event.hash());
+		auto iter = m_eventHandlers.find(args->Event.hash());
 		if (iter != m_eventHandlers.end())
 		{
 			for (auto &h : iter->second)
 			{
-				try {
-					auto hxx = h.extract<RoutedEventHandler<ArgsT>>();
-					hxx.invoke(args);
-				}
-				catch (...) {
-					printf("args must be type of [%s]\n", args.Event.argsType().name());
-				}
+					h.invoke(args);
 			}
 		}
 	}
 
-	std::map<size_t, std::vector<Var>>	m_eventHandlers;
+	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 
 
 	static RoutedEvent ClickEvent();
@@ -65,12 +50,12 @@ RoutedEvent TT::ClickEvent()
 TEST_CASE("Test nb::RoutedEvent", "[RoutedEvent]")
 {
 	TT t;
-	t.addHandler(TT::ClickEvent(), RoutedEventHandler<MouseButtonEventArgs>([](const MouseButtonEventArgs &args) {
+	t.addHandler(TT::ClickEvent(), RoutedEventHandler([](std::shared_ptr<RoutedEventArgs> args) {
 		printf("on click 0\n");
 	}));
 
-	MouseButtonEventArgs args(1000, MouseButtonE::Left);
-	args.OriginalSource = &t;
-	args.Event = TT::ClickEvent();
+	auto args = std::make_shared<MouseButtonEventArgs >(1000, MouseButtonE::Left);
+	args->OriginalSource = &t;
+	args->Event = TT::ClickEvent();
 	t.raiseEvent(args);
 }

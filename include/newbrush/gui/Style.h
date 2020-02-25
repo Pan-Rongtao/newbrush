@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <typeindex>
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/gui/Setter.h"
 #include "newbrush/gui/Trigger.h"
+#include "newbrush/core/DataContext.h"
 
 namespace nb{
 namespace gui{
@@ -27,23 +29,22 @@ public:
 	//´¥·¢Æ÷¼¯ºÏ
 	std::vector<TriggerBasePtr> &triggers();
 
+	void attach(UIElement * uie);
+
+	void handlePropertyChanged(UIElement * uie, const DependencyProperty &dp, const Var &v);
 	
+	struct StyleDataTriggerArgs { std::shared_ptr<DataTrigger> dataTrigger; };
+	Event<StyleDataTriggerArgs> StyleDataTrigger;
+	struct StyleMultiDataTriggerArgs { std::shared_ptr<MultiDataTrigger> multiDataTrigger; };
+	Event<StyleMultiDataTriggerArgs> StyleMultiDataTrigger;
+
 private:
+	void onBingingDataChanged(const DataContext::ValueChangedArgs & args);
+
 	std::type_index				m_targetType;
 	std::vector<SetterBasePtr>	m_setters;
 	std::vector<TriggerBasePtr>	m_triggers;
 
 };
 
-class NB_API StyleHelpler
-{
-public:
-	static void updateStyle(UIElement *uie, std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle);
-
-private:
-	static void processSetters(UIElement * uie, std::shared_ptr<Style> style);
-	static void processTriggers(UIElement * uie, std::shared_ptr<Style> style);
-};
-
-}
-}
+}}

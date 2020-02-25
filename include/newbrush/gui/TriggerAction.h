@@ -9,6 +9,9 @@ class NB_API TriggerAction
 {
 public:
 	virtual void invoke();
+
+protected:
+	TriggerAction() {}
 };
 
 class NB_API BeginStoryboard : public TriggerAction

@@ -39,16 +39,16 @@ private:
 	friend class RoutedEventManager;
 };
 
-template<class ArgsT>
+class RoutedEventArgs;
 class NB_API RoutedEventHandler
 {
 public:
-	using CB = std::function<void(const ArgsT &)>;
+	using CB = std::function<void(std::shared_ptr<RoutedEventArgs>)>;
 	RoutedEventHandler(CB callback) : m_callback(std::make_shared<CB>(std::move(callback))) { }
 
-	void invoke(const ArgsT &args)									{ (*m_callback)(args); }
-	bool operator ==(const RoutedEventHandler<ArgsT> &other) const	{ return !(operator!=(other)); }
-	bool operator !=(const RoutedEventHandler<ArgsT> &other) const	{ return m_callback != other.m_callback; }
+	void invoke(std::shared_ptr<RoutedEventArgs> args) const								{ (*m_callback)(args); }
+	bool operator ==(const RoutedEventHandler &other) const	{ return !(operator!=(other)); }
+	bool operator !=(const RoutedEventHandler &other) const	{ return m_callback != other.m_callback; }
 
 private:
 	std::shared_ptr<CB>	m_callback;

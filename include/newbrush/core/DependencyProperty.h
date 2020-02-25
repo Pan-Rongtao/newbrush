@@ -67,7 +67,7 @@ public:
 
 	bool operator == (const DependencyProperty &other) const;
 	bool operator != (const DependencyProperty &other) const;
-	
+
 	//注册一个依赖属性，如果此属性已存在，则只修改属性值
 	//element：目标元素
 	//property_name：属性名

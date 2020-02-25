@@ -15,9 +15,10 @@ public:
 
 private:
 	static void onBingingDataChanged(const DataContext::ValueChangedArgs & args);
-	static void setToTarget(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, std::shared_ptr<DataContext> dataNode);
+	static void setToTarget(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, const Var &value);
 
-	static std::map<std::shared_ptr<Binding>, std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>>	g_bindingmap;
+	using ObjectPropertysContainer = std::vector<std::pair<std::shared_ptr<DependencyObject>, DependencyProperty>>;
+	static std::map<std::shared_ptr<Binding>, ObjectPropertysContainer>	g_bindingmap;
 };
 
 

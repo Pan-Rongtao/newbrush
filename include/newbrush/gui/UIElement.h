@@ -200,63 +200,10 @@ public:
 	void measure(const Size &availabelSize);
 	void arrage(const Rect &finalRect);
 	virtual void onRender(Viewport2D & drawContext);
-	template<class ArgsT>
-	void addHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> &handler)
-	{
-		if (event.argsType() != typeid(ArgsT))
-			nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", event.name().data(), event.argsType().name());
-		m_eventHandlers[event.hash()].push_back(handler);
-	}
-	template<class ArgsT>
-	void removeHandler(const RoutedEvent &event, const RoutedEventHandler<ArgsT> handler)
-	{
-		auto iter = m_eventHandlers.find(event.hash());
-		if (iter != m_eventHandlers.end())
-		{
-			auto &handlers = iter->second;
-			auto iterHandler = std::find(handlers.begin(), handlers.end(), handler);
-			if (iterHandler != handlers.end())
-				handlers.erase(iterHandler);
-		}
-	}
-	template<class ArgsT>
-	void raiseEvent(const ArgsT &args)
-	{
-		auto fireElementEvents = [&args](UIElement *element) {
-			auto const &eventHandles = element->m_eventHandlers;
-			auto iter = eventHandles.find(args.Event.hash());
-			if (iter != eventHandles.end())
-			{
-				for (auto &h : iter->second)
-				{
-					RoutedEventHandler<ArgsT> hxx(nullptr);
-					try {
-						hxx = h.extract<RoutedEventHandler<ArgsT>>();
-					}
-					catch (...) {
-						nbThrowException(std::logic_error, "[%s]'s args type should be [%s]", args.Event.name().data(), args.Event.argsType().name());
-					}
-					hxx.invoke(args);
-				}
-			}
-		};
-
-		if (args.Event.routingStrategy() == RoutingStrategyE::bubble)
-		{
-			auto pElement = this;
-			do {
-				fireElementEvents(pElement);
-			} while ((pElement->m_parent) && (pElement = pElement->m_parent));
-		}
-		else if (args.Event.routingStrategy() == RoutingStrategyE::bubble)
-		{
-
-		}
-		else
-		{
-
-		}
-	}
+	
+	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
+	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
+	void raiseEvent(std::shared_ptr<RoutedEventArgs> args);
 	
 public:
 	virtual Size measureOverride(const Size &availableSize);
@@ -322,7 +269,7 @@ protected:
 
 private:
 
-	std::map<size_t, std::vector<Var>>	m_eventHandlers;
+	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };
 
 using UIElementPtr = std::shared_ptr<UIElement>;

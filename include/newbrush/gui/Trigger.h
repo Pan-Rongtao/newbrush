@@ -14,15 +14,23 @@ public:
 	Condition(const DependencyProperty &dp, const Var &v, BindingPtr bd);
 
 	DependencyProperty		property;	//条件属性
-	Var						value;		//条件属性值
 	BindingPtr				binding;	//适用于MultiDataTrigger
+	Var						value;		//条件属性值
 };
 
+class UIElement;
 class NB_API TriggerBase
 {
 public:
+	virtual ~TriggerBase() = default;
+
+	void processSetters(UIElement *uie, std::vector<SetterBasePtr> setters);
+
 	std::vector<TriggerActionPtr>	enterActions;
 	std::vector<TriggerActionPtr>	exitActions;
+
+protected:
+	TriggerBase() = default;
 };
 
 //普通触发器
@@ -31,6 +39,8 @@ class NB_API Trigger : public TriggerBase
 public:
 	Trigger();
 	Trigger(const DependencyProperty &dp, const Var &v);
+
+	bool match(const DependencyProperty &dp, const Var &v) const;
 
 	DependencyProperty			property;	//触发条件的属性
 	Var							value;		//触发条件的值
@@ -41,6 +51,8 @@ public:
 class NB_API MultiTrigger : public TriggerBase
 {
 public:
+	bool match(UIElement *uie) const;
+
 	std::vector<Condition>		conditions;	//触发条件组
 	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
 };
@@ -48,6 +60,8 @@ public:
 class DataTrigger : public TriggerBase
 {
 public:
+	bool match(const Var &v) const;
+
 	BindingPtr					binding;	//绑定
 	Var							value;		//触发的绑定值
 	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
@@ -56,6 +70,8 @@ public:
 class MultiDataTrigger : public TriggerBase
 {
 public:
+	bool match(const Var &v) const;
+
 	std::vector<Condition>		conditions;	//触发条件组
 	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
 };
@@ -64,7 +80,7 @@ public:
 class EventTrigger : public TriggerBase
 {
 public:
-	RoutedEvent						event;
+	RoutedEvent						routedEvent;
 	std::vector<TriggerActionPtr>	actions;
 };
 

@@ -131,8 +131,16 @@ DependencyProperty UIElement::StyleProperty()
 
 		auto oldStyle = args->oldValue.extract<std::shared_ptr<Style>>();
 		auto newStyle = args->newValue.extract<std::shared_ptr<Style>>();
-
-	//	e->onStyleChanged(oldStyle, newStyle);
+		if (newStyle)
+		{
+			newStyle->StyleDataTrigger += [e](const Style::StyleDataTriggerArgs &args) {
+				args.dataTrigger->processSetters(e, args.dataTrigger->setters);
+			};
+			newStyle->StyleMultiDataTrigger += [e](const Style::StyleMultiDataTriggerArgs &args) {
+				args.multiDataTrigger->processSetters(e, args.multiDataTrigger->setters);
+			};
+			newStyle->attach(e);
+		}
 	});
 	return dp;
 }
@@ -569,6 +577,54 @@ void UIElement::onPreviewTouchUp(const TouchEventArgs & args)
 
 void UIElement::onRender(Viewport2D & drawContext)
 {
+}
+
+void UIElement::addHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+{
+	m_eventHandlers[event.hash()].push_back(handler);
+}
+
+void UIElement::removeHandler(const RoutedEvent & event, const RoutedEventHandler & handler)
+{
+	auto iter = m_eventHandlers.find(event.hash());
+	if (iter != m_eventHandlers.end())
+	{
+		auto &handlers = iter->second;
+		auto iterHandler = std::find(handlers.begin(), handlers.end(), handler);
+		if (iterHandler != handlers.end())
+			handlers.erase(iterHandler);
+	}
+}
+
+void UIElement::raiseEvent(std::shared_ptr<RoutedEventArgs> args)
+{
+	auto fireElementEvents = [&args](UIElement *element) {
+		auto const &eventHandles = element->m_eventHandlers;
+		auto iter = eventHandles.find(args->Event.hash());
+		if (iter != eventHandles.end())
+		{
+			for (auto const &h : iter->second)
+			{
+				h.invoke(args);
+			}
+		}
+	};
+
+	if (args->Event.routingStrategy() == RoutingStrategyE::bubble)
+	{
+		auto pElement = this;
+		do {
+			fireElementEvents(pElement);
+		} while ((pElement->m_parent) && (pElement = pElement->m_parent));
+	}
+	else if (args->Event.routingStrategy() == RoutingStrategyE::bubble)
+	{
+
+	}
+	else
+	{
+
+	}
 }
 
 RoutedEvent UIElement::LoadedEvent()

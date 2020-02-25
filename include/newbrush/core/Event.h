@@ -54,11 +54,11 @@ public:
 		return m_callbacks ? m_callbacks->size() : 0;
 	}
 
-	void invoke(ArgsT &args)
+	void invoke(ArgsT &args) const
 	{
 		invoke(const_cast<const ArgsT &>(args));
 	}
-	void invoke(const ArgsT &args)
+	void invoke(const ArgsT &args) const
 	{
 		if (!m_callbacks)	return;
 		for (const auto &callback : *m_callbacks)

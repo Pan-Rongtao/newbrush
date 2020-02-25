@@ -28,7 +28,7 @@ class NB_API EventSetter : public SetterBase
 {
 public:
 	RoutedEvent			event;
-//	RoutedEventHandler	handler;
+	RoutedEventHandler	handler;
 };
 
 using SetterBasePtr = std::shared_ptr<SetterBase>;
