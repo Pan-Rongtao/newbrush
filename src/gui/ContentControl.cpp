@@ -29,6 +29,7 @@ void ContentControl::onRender(Viewport2D & drawContext)
 
 void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
+	Control::onPropertyChanged(args);
 	if (args.property == ContentControl::ContentProperty())
 	{
 		auto content = args.newValue.extract<std::shared_ptr<UIElement>>();

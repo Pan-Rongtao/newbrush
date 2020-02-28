@@ -24,6 +24,10 @@ class NB_API TriggerBase
 public:
 	virtual ~TriggerBase() = default;
 
+	virtual void attach(UIElement *uie);
+
+	virtual void onElementPropertyChanged(UIElement * uie);
+
 	void processSetters(UIElement *uie, std::vector<SetterBasePtr> setters);
 
 	std::vector<TriggerActionPtr>	enterActions;
@@ -40,37 +44,72 @@ public:
 	Trigger();
 	Trigger(const DependencyProperty &dp, const Var &v);
 
-	bool match(const DependencyProperty &dp, const Var &v) const;
+	virtual void attach(UIElement *uie) override;
 
-	DependencyProperty			property;	//触发条件的属性
-	Var							value;		//触发条件的值
-	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
+	virtual void onElementPropertyChanged(UIElement * uie) override;
+
+	void setProperty(const DependencyProperty &dp);
+	const DependencyProperty property() const;
+
+	void setValue(const Var &value);
+	const Var &getValue() const;
+
+	std::vector<SetterBasePtr> &setters();
+
+private:
+	DependencyProperty			m_property;	//触发条件的属性
+	Var							m_value;	//触发条件的值
+	std::vector<SetterBasePtr>	m_setters;	//条件成立后执行的setters
 };
 
 //多条件触发器
 class NB_API MultiTrigger : public TriggerBase
 {
 public:
+	MultiTrigger();
+	MultiTrigger(const std::vector<Condition> &conditions, const std::vector<SetterBasePtr> setters);
+
+	virtual void attach(UIElement *uie) override;
+
+	virtual void onElementPropertyChanged(UIElement * uie) override;
+
 	bool match(UIElement *uie) const;
 
-	std::vector<Condition>		conditions;	//触发条件组
-	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
+	std::vector<Condition> &conditions();
+	std::vector<SetterBasePtr> &setters();
+
+private:
+	std::vector<Condition>		m_conditions;	//触发条件组
+	std::vector<SetterBasePtr>	m_setters;		//条件成立后执行的setters
 };
 
 class DataTrigger : public TriggerBase
 {
 public:
-	bool match(const Var &v) const;
+	DataTrigger();
+	DataTrigger(std::shared_ptr<Binding> bd, const Var &value);
 
-	BindingPtr					binding;	//绑定
-	Var							value;		//触发的绑定值
-	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
+	void setBinding(std::shared_ptr<Binding> bd);
+	std::shared_ptr<Binding> binding() const;
+
+	std::vector<SetterBasePtr> &setters();
+
+	virtual void attach(UIElement *uie) override;
+
+	bool match() const;
+
+private:
+	BindingPtr					m_binding;	//绑定
+	Var							m_value;	//触发的绑定值
+	std::vector<SetterBasePtr>	m_setters;	//条件成立后执行的setters
 };
 
 class MultiDataTrigger : public TriggerBase
 {
 public:
-	bool match(const Var &v) const;
+	virtual void attach(UIElement *uie) override;
+
+	bool match() const;
 
 	std::vector<Condition>		conditions;	//触发条件组
 	std::vector<SetterBasePtr>	setters;	//条件成立后执行的setters
@@ -80,6 +119,8 @@ public:
 class EventTrigger : public TriggerBase
 {
 public:
+	virtual void attach(UIElement *uie) override;
+
 	RoutedEvent						routedEvent;
 	std::vector<TriggerActionPtr>	actions;
 };

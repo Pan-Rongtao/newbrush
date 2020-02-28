@@ -51,7 +51,7 @@ void EffectiveValueEntry::setAnimatedValue(const Var & value)
 
 	auto modifiedValue = ensureModifiedValue();
 	modifiedValue.AnimatedValue = value;
-	m_source.addFlags(FullValueSourceE::IsAnimated);
+	m_source.set(FullValueSourceE::IsAnimated);
 }
 
 void EffectiveValueEntry::setCoercedValue(const Var & value, const Var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue)
@@ -61,14 +61,14 @@ void EffectiveValueEntry::setCoercedValue(const Var & value, const Var &baseValu
 
 	auto modifiedValue = ensureModifiedValue();
 	modifiedValue.BaseValue = value;
-	m_source.addFlags(FullValueSourceE::IsCoerced);
+	m_source.set(FullValueSourceE::IsCoerced);
 	if(coerceWithCurrentValue)
 	{
-		m_source.addFlags(FullValueSourceE::IsCoercedWithCurrentValue);
+		m_source.set(FullValueSourceE::IsCoercedWithCurrentValue);
 	}
 	else
 	{
-		m_source.removeFlags(FullValueSourceE::IsCoercedWithCurrentValue);
+		m_source.reset(FullValueSourceE::IsCoercedWithCurrentValue);
 	}
 
 }

@@ -16,14 +16,14 @@ void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const D
 		nbThrowException(std::invalid_argument, "bd is nullptr.");
 	}
 
-	auto dataContext = bd->source();
-	if (!dataContext)
+	auto source = bd->source();
+	if (!source)
 	{
 		nbThrowException(std::invalid_argument, "bd's source is nullptr.");
 	}
 
 	auto path = bd->path();
-	auto dataNode = dataContext->lookup(path);
+	auto dataNode = source->lookup(path);
 	if (!dataNode)
 	{
 		nbThrowException(std::runtime_error, "bd's source has no path [%s]", path.data());
@@ -35,30 +35,19 @@ void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const D
 	//插入成功，表示该binding不存在，否则该binding已经有绑定的属性，需要追加对应关系即可
 	if (ret.second)
 	{
-		if(dataContext->ValueChanged.size() == 0)
-			dataContext->ValueChanged += std::bind(&BindingMaster::onBingingDataChanged, std::placeholders::_1);
-	}
-	else
-	{
-		ret.first->second.push_back({target, dp});
-	}
-}
-
-void BindingMaster::onBingingDataChanged(const DataContext::ValueChangedArgs & args)
-{
-	for (auto iter : g_bindingmap)
-	{
-		auto binding = iter.first;
-		auto &objPropertys = iter.second;
-		if(binding->source().get() == args.root && binding->path() == args.path)
-		{
-			for (auto const &objPropertyPair : objPropertys)
+		bd->BindDataChanged += [bd](const Binding::BindDataChangedEventArgs &args) {
+			auto iterFind = g_bindingmap.find(bd);
+			for (auto const &objPropertyPair : iterFind->second)
 			{
 				auto target = objPropertyPair.first;
 				auto dp = objPropertyPair.second;
 				setToTarget(target, dp, args.value);
 			}
-		}
+		};
+	}
+	else
+	{
+		ret.first->second.push_back({target, dp});
 	}
 }
 

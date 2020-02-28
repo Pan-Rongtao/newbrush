@@ -24,10 +24,9 @@ public:
 		catch (...) { nbThrowException(std::logic_error, "should use get<%s> instead of get<%s> for [%s]", dp.propertyType().name(), typeid(T).name(), dp.name().data()); }
 	}
 
-	Event<DependencyPropertyChangedEventArgs> PropertyChanged;
-
 protected:
 	void _set(const DependencyProperty & dp, const Var &defaultValue, const Var &setValue);
+	void invokePropertyCallback(const DependencyPropertyChangedEventArgs & args);
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args);
 
 private:

@@ -1,8 +1,8 @@
 #pragma once
+#include <bitset>
 #include "newbrush/core/Point.h"
 #include "newbrush/core/Size.h"
 #include "newbrush/core/RoutedEvent.h"
-#include "newbrush/core/EnumFlags.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "Poco/Dynamic/Var.h"
 
@@ -271,9 +271,9 @@ class NB_API KeyEventArgs : public KeyboardEventArgs
 public:
 	KeyEventArgs(int timestamp, KeyE key);
 
-	KeyE					SystemKey;	//由系统按键引起的键（系统键有F10、左Alt、右Alt）：如果仅按下Alt，[systemKey, key]=[Alt, System]；如果按下Alt+A=[A, System]
-	KeyE					Key;		//按键
-	EnumFlags<KeyStateE>	KeyState;	//按键状态
+	KeyE			SystemKey;	//由系统按键引起的键（系统键有F10、左Alt、右Alt）：如果仅按下Alt，[systemKey, key]=[Alt, System]；如果按下Alt+A=[A, System]
+	KeyE			Key;		//按键
+	std::bitset<3>	WKeyState;	//按键状态
 };
 
 struct NB_API TouchEventArgs : public InputEventArgs

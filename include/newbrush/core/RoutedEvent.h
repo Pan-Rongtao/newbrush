@@ -46,7 +46,7 @@ public:
 	using CB = std::function<void(std::shared_ptr<RoutedEventArgs>)>;
 	RoutedEventHandler(CB callback) : m_callback(std::make_shared<CB>(std::move(callback))) { }
 
-	void invoke(std::shared_ptr<RoutedEventArgs> args) const								{ (*m_callback)(args); }
+	void invoke(std::shared_ptr<RoutedEventArgs> args) const { (*m_callback)(args); }
 	bool operator ==(const RoutedEventHandler &other) const	{ return !(operator!=(other)); }
 	bool operator !=(const RoutedEventHandler &other) const	{ return m_callback != other.m_callback; }
 

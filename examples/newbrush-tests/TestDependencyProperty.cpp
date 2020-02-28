@@ -28,7 +28,7 @@ public:
 	int b{ 2 };
 };
 
-TEST_CASE("Test nb::DependencyProperty", "DependencyProperty")
+TEST_CASE("Test nb::DependencyProperty", "[DependencyProperty]")
 {
 	MyObject obj;
 	obj.set(MyObject::BoolPoperty(), (float)0);

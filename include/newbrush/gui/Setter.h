@@ -7,8 +7,12 @@
 namespace nb{
 namespace gui{
 
+class UIElement;
 class NB_API SetterBase
 {
+public:
+	virtual void attach(UIElement* uie);
+
 protected:
 	SetterBase() = default;
 	virtual ~SetterBase() = default;
@@ -20,6 +24,8 @@ public:
 	Setter();
 	Setter(const DependencyProperty &dp, const Var &v);
 
+	virtual void attach(UIElement* uie) override;
+
 	DependencyProperty	property;	// Ù–‘
 	Var					value;		// Ù–‘÷µ
 };
@@ -27,6 +33,8 @@ public:
 class NB_API EventSetter : public SetterBase
 {
 public:
+	virtual void attach(UIElement* uie) override;
+
 	RoutedEvent			event;
 	RoutedEventHandler	handler;
 };

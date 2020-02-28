@@ -4,7 +4,6 @@
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/gui/Setter.h"
 #include "newbrush/gui/Trigger.h"
-#include "newbrush/core/DataContext.h"
 
 namespace nb{
 namespace gui{
@@ -39,12 +38,13 @@ public:
 	Event<StyleMultiDataTriggerArgs> StyleMultiDataTrigger;
 
 private:
-	void onBingingDataChanged(const DataContext::ValueChangedArgs & args);
+	void checkTargetType(UIElement * uie);
+	//void onBingingDataChanged(const Binding::BindDataChangedEventArgs & args);
 
 	std::type_index				m_targetType;
 	std::vector<SetterBasePtr>	m_setters;
 	std::vector<TriggerBasePtr>	m_triggers;
-
+	bool	m_handlingPropertyChanged;
 };
 
 }}

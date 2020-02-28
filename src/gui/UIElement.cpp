@@ -131,14 +131,19 @@ DependencyProperty UIElement::StyleProperty()
 
 		auto oldStyle = args->oldValue.extract<std::shared_ptr<Style>>();
 		auto newStyle = args->newValue.extract<std::shared_ptr<Style>>();
+		//由于style类型每次set都会触发changed，因此设置统一style也会进入此回调函数，应判断newStyle == oldStyle
+		if (newStyle == oldStyle)
+			return;
+		
 		if (newStyle)
 		{
+			/*
 			newStyle->StyleDataTrigger += [e](const Style::StyleDataTriggerArgs &args) {
 				args.dataTrigger->processSetters(e, args.dataTrigger->setters);
 			};
 			newStyle->StyleMultiDataTrigger += [e](const Style::StyleMultiDataTriggerArgs &args) {
 				args.multiDataTrigger->processSetters(e, args.multiDataTrigger->setters);
-			};
+			};*/
 			newStyle->attach(e);
 		}
 	});
@@ -318,6 +323,11 @@ void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty())
 	{
 		updateLayout();
+	}
+	auto style = get<std::shared_ptr<Style>>(StyleProperty());
+	if (style)
+	{
+		style->handlePropertyChanged(this, args.property, args.newValue);
 	}
 }
 

@@ -70,8 +70,8 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	BindingMaster::addBinding(m_element, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));
 	
 	auto bd = std::make_shared<Binding>(m_dataRoot, "int");
-	BindingMaster::addBinding(m_element, TextBlock::MinHeightProperty(), bd);
-	BindingMaster::addBinding(m_element, TextBlock::MaxHeightProperty(), bd);
+	BindingMaster::addBinding(m_element, TextBlock::MinHeightProperty(), std::make_shared<Binding>(m_dataRoot, "int"));
+	BindingMaster::addBinding(m_element, TextBlock::MaxHeightProperty(), std::make_shared<Binding>(m_dataRoot, "int"));
 
 	m_dataRoot->get("bool")->set(true);
 	m_dataRoot->get("char")->set('x');

@@ -1,5 +1,6 @@
 #pragma once
 #include "newbrush/core/Def.h"
+#include "newbrush/core/Event.h"
 
 namespace nb{
 
@@ -32,6 +33,9 @@ public:
 	// Ù–‘¬∑æ∂
 	void setPath(const std::string &path) &;
 	std::string path() const;
+
+	struct BindDataChangedEventArgs { Var value; };
+	Event<BindDataChangedEventArgs> BindDataChanged;
 
 private:
 	BindingModeE					m_mode;

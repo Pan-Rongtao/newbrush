@@ -14,10 +14,10 @@ Binding::Binding(const std::string & path)
 }
 
 Binding::Binding(std::shared_ptr<DataContext> source, const std::string & path, BindingModeE mode)
-	: m_source(source)
-	, m_path(path)
+	: m_path(path)
 	, m_mode(mode)
 {
+	setSource(source);
 }
 
 void Binding::setMode(BindingModeE mode) &
@@ -33,6 +33,13 @@ BindingModeE Binding::mode() const
 void Binding::setSource(std::shared_ptr<DataContext> source) &
 {
 	m_source = source;
+	if (m_source)
+	{
+		m_source->ValueChanged += [&](const DataContext::ValueChangedArgs & args) {
+			if (args.path == path())
+				this->BindDataChanged.invoke({ args.value });
+		};
+	}
 }
 
 std::shared_ptr<DataContext> Binding::source() const

@@ -142,7 +142,9 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 			EffectiveValueEntry newEntry(dp);
 			newEntry.setBaseValue(setValue);
 			m_valueEntrys.insert({ dp.globalIndex(), newEntry });
-			onPropertyChanged({ dp, defaultValue, setValue });
+			DependencyPropertyChangedEventArgs args{ dp, defaultValue, setValue };
+			invokePropertyCallback(args);
+			onPropertyChanged(args);
 		}
 	}
 	else
@@ -166,13 +168,13 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 		if (changed)
 		{
 			DependencyPropertyChangedEventArgs args{ dp, oldValue, setValue };
+			invokePropertyCallback(args);
 			onPropertyChanged(args);
-			PropertyChanged.invoke(args);
 		}
 	}
 }
 
-void DependencyObject::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+void DependencyObject::invokePropertyCallback(const DependencyPropertyChangedEventArgs & args)
 {
 	auto metadata = args.property.defaultMetadata();
 	if (metadata->propertyChangedCallback())
@@ -180,4 +182,8 @@ void DependencyObject::onPropertyChanged(const DependencyPropertyChangedEventArg
 		DependencyPropertyChangedEventArgs *p = const_cast<DependencyPropertyChangedEventArgs *>(&args);
 		metadata->propertyChangedCallback()(this, p);
 	}
+}
+
+void DependencyObject::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
 }

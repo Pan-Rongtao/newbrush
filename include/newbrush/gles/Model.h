@@ -19,7 +19,6 @@
 #pragma once
 #include <vector>
 #include "glm/glm.hpp"
-#include "newbrush/core/EnumFlags.h"
 #include "newbrush/gles/Camera.h"
 #include "newbrush/gles/Projection.h"
 

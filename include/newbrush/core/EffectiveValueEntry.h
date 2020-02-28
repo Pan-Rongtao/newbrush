@@ -1,6 +1,6 @@
 #pragma once
+#include <bitset>
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/core/EnumFlags.h"
 
 namespace nb {
 
@@ -14,14 +14,15 @@ public:
 
 enum FullValueSourceE : int16_t
 {
-	ValueSourceMask = 0x000F,					//0000 0000 0000 1111
-	ModifiersMask = 0x0070,						//0000 0000 0111 0000
-	IsExpression = 0x0010,						//0000 0000 0001 0000
-	IsAnimated = 0x0020,						//0000 0000 0010 0000
-	IsCoerced = 0x0040,							//0000 0000 0100 0000
-	IsPotentiallyADeferredReference = 0x0080,	//0000 0000 1000 0000
-	HasExpressionMarker = 0x0100,				//0000 0001 0000 0000
-	IsCoercedWithCurrentValue = 0x200,			//0000 0010 0000 0000
+	ValueSourceMask,// = 0x000F,					//0000 0000 0000 1111
+	ModifiersMask,// = 0x0070,						//0000 0000 0111 0000
+	IsExpression,// = 0x0010,						//0000 0000 0001 0000
+	IsAnimated,// = 0x0020,						//0000 0000 0010 0000
+	IsCoerced,// = 0x0040,							//0000 0000 0100 0000
+	IsPotentiallyADeferredReference,// = 0x0080,	//0000 0000 1000 0000
+	HasExpressionMarker,// = 0x0100,				//0000 0001 0000 0000
+	IsCoercedWithCurrentValue,// = 0x200,			//0000 0010 0000 0000
+	FS_Max
 };
 
 enum class BaseValueSourceInternalE : int8_t
@@ -60,7 +61,7 @@ private:
 	Var		BaseValue;
 	Var		AnimatedValue;
 	Var		CoercedValue;
-	EnumFlags<FullValueSourceE>	m_source;
+	std::bitset<FS_Max>	m_source;
 };
 
 }
