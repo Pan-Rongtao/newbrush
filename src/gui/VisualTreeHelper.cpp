@@ -3,14 +3,55 @@
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/ContentControl.h"
 
+using namespace nb;
 using namespace nb::gui;
 
-uint32_t VisualTreeHelper::getChildCount(UIElement *element)
+uint32_t VisualTreeHelper::getChildrenCount(UIElement *element)
 {
-	return 1;// element->childCount();
+	return element->childrenCount();
 }
 
 UIElement *VisualTreeHelper::getChild(UIElement *element, uint32_t childIndex)
 {
-	return element;// element->childAt(childIndex).get();
+	return element->getChild(childIndex);
+}
+
+UIElement *VisualTreeHelper::getParent(UIElement * element)
+{
+	return element->getParent();
+}
+
+bool VisualTreeHelper::hitTest(UIElement * element, const Point &point)
+{
+	return false;
+}
+
+UIElement *VisualTreeHelper::findLogicalNode(UIElement * logicalTreeNode, const std::string & name)
+{
+	if (!logicalTreeNode)
+	{
+		nbThrowException(std::invalid_argument, "logicalTreeNode is nullptr");
+	}
+	if (name.empty())
+	{
+		nbThrowException(std::invalid_argument, "name is empty");
+	}
+
+	UIElement* ret = nullptr;
+	auto _myName = logicalTreeNode->getValue<std::string>(UIElement::NameProperty());
+	if (_myName == name)
+	{
+		ret = logicalTreeNode;
+	}
+
+	if (ret == nullptr)
+	{
+		for (auto i = 0; i <= logicalTreeNode->childrenCount(); ++i)
+		{
+			auto childNode = logicalTreeNode->getChild(i);
+			ret = findLogicalNode(childNode, name);
+		}
+	}
+
+	return ret;
 }

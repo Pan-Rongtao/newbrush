@@ -38,7 +38,7 @@ TEST_CASE("test Int8Animation", "[Int8Animation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -70,7 +70,7 @@ TEST_CASE("test Int16Animation", "[Int16Animation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -102,7 +102,7 @@ TEST_CASE("test Int32Animation", "[Int32Animation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -134,7 +134,7 @@ TEST_CASE("test Int64Animation", "[Int64Animation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -168,7 +168,7 @@ TEST_CASE("test FloatAnimation", "[FloatAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -202,7 +202,7 @@ TEST_CASE("test DoubleAnimation", "[DoubleAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -236,7 +236,7 @@ TEST_CASE("test PointAnimation", "[PointAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto offset = ui ? ui->get<Point>(UIElement::OffsetProperty()) : Point();
+		auto offset = ui ? ui->getValue<Point>(UIElement::OffsetProperty()) : Point();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f]\n", time.toString().data(), progress, offset.x(), offset.y());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -270,7 +270,7 @@ TEST_CASE("test SizeAnimation", "[SizeAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto size = ui ? ui->get<Size>(UIElement::RenderSizeProperty()) : Size();
+		auto size = ui ? ui->getValue<Size>(UIElement::RenderSizeProperty()) : Size();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f]\n", time.toString().data(), progress, size.width(), size.height());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -304,7 +304,7 @@ TEST_CASE("test ColorAnimation", "[ColorAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto color = ui ? ui->get<Color>(MyObject::ForegroundProperty()) : Color();
+		auto color = ui ? ui->getValue<Color>(MyObject::ForegroundProperty()) : Color();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%d, %d, %d]\n", time.toString().data(), progress, color.red(), color.green(), color.blue());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -338,7 +338,7 @@ TEST_CASE("test RectAnimation", "[RectAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto rc = ui ? ui->get<Rect>(MyObject::RectProperty()) : Rect();
+		auto rc = ui ? ui->getValue<Rect>(MyObject::RectProperty()) : Rect();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f, %.2f, %.2f]\n", time.toString().data(), progress, rc.x(), rc.y(), rc.width(), rc.height());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -372,7 +372,7 @@ TEST_CASE("test ThicknessAnimation", "[ThicknessAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto tn = ui ? ui->get<Thickness>(UIElement::MarginProperty()) : Thickness();
+		auto tn = ui ? ui->getValue<Thickness>(UIElement::MarginProperty()) : Thickness();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f, %.2f, %.2f]\n", time.toString().data(), progress, tn.left, tn.top, tn.right, tn.bottom);
 	};
 	animation.Completed += [](const EventArgs &args) {

@@ -43,8 +43,8 @@ Size UniformGrid::arrangeOverride(const Size & finalSize)
 	auto rowsColums = calcRowsColums();
 	auto cellWidth = finalSize.width() / rowsColums.second;
 	auto cellHeight = finalSize.height() / rowsColums.first;
-	auto cols = get<int>(ColumnsProperty());
-	auto firstColumn = get<int>(FirstColumnProperty());
+	auto cols = getValue<int>(ColumnsProperty());
+	auto firstColumn = getValue<int>(FirstColumnProperty());
 	auto firstCol = (cols < 0 || firstColumn < 0 || firstColumn >= cols) ? 0 : firstColumn;
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
@@ -61,8 +61,8 @@ Size UniformGrid::arrangeOverride(const Size & finalSize)
 std::pair<int, int> UniformGrid::calcRowsColums() const
 {
 	std::pair<int, int> ret;
-	auto rows = get<int>(RowsProperty());
-	auto cols = get<int>(ColumnsProperty());
+	auto rows = getValue<int>(RowsProperty());
+	auto cols = getValue<int>(ColumnsProperty());
 	if (rows <= 0)
 	{
 		if (cols <= 0)

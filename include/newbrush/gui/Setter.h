@@ -28,6 +28,7 @@ public:
 
 	DependencyProperty	property;	//属性
 	Var					value;		//属性值
+	std::shared_ptr<std::string> targetName; //目标名字
 };
 
 class NB_API EventSetter : public SetterBase

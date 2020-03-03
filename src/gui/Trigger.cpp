@@ -37,7 +37,7 @@ void TriggerBase::processSetters(UIElement *uie, std::vector<SetterBasePtr> sett
 		auto setter = std::dynamic_pointer_cast<Setter>(setterBase);
 		if (setter)
 		{
-			uie->set(setter->property, setter->value);
+			uie->setValue(setter->property, setter->value);
 		}
 		else
 		{
@@ -67,7 +67,7 @@ void Trigger::attach(UIElement *uie)
 
 void Trigger::onElementPropertyChanged(UIElement * uie)
 {
-	if (uie->get(m_property) == m_value)
+	if (uie->getValue(m_property) == m_value)
 	{
 		processSetters(uie, m_setters);
 	}
@@ -125,7 +125,7 @@ bool MultiTrigger::match(UIElement * uie) const
 {
 	for (auto const &c : m_conditions)
 	{
-		if (uie->get(c.property) != c.value)
+		if (uie->getValue(c.property) != c.value)
 			return false;
 	}
 	return true;

@@ -62,8 +62,8 @@ Size Canvas::measureOverride(const Size & availableSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto w = child->get<float>(WidthProperty());
-		auto h = child->get<float>(HeightProperty());
+		auto w = child->getValue<float>(WidthProperty());
+		auto h = child->getValue<float>(HeightProperty());
 		child->measure(Size((std::isnan(w) ? 0.0f : w), (std::isnan(h) ? 0.0f : h)));
 	}
 	return availableSize;
@@ -78,7 +78,7 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 		auto y = getTop(child);
 		if (std::isnan(x))	x = 0.0;
 		if (std::isnan(y))	y = 0.0;
-		auto desiredSize = child->get<Size>(DesiredSizeProperty());
+		auto desiredSize = child->getValue<Size>(DesiredSizeProperty());
 				
 		child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
 	}

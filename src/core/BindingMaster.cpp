@@ -54,7 +54,7 @@ void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const D
 void BindingMaster::setToTarget(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, const Var &value)
 {
 	try {
-		target->set(dp, value);
+		target->setValue(dp, value);
 	}
 	catch (...) {
 		nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", value.type().name(), dp.propertyType().name());

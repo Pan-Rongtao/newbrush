@@ -50,15 +50,15 @@ void ButtonBase::onMouseLeave()
 
 void ButtonBase::onLeftButtonDown()
 {
-	set(IsPressedProperty(), true);
+	setValue(IsPressedProperty(), true);
 }
 
 void ButtonBase::onLeftButtonUp()
 {
-	auto pressed = get<bool>(IsPressedProperty());
+	auto pressed = getValue<bool>(IsPressedProperty());
 	if (pressed)
 	{
 		Click.invoke({});
-		set(IsPressedProperty(), false);
+		setValue(IsPressedProperty(), false);
 	}
 }

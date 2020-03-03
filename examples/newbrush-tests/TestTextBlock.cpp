@@ -10,15 +10,15 @@ TEST_CASE("Test nb::TextBlock", "[TextBlock]")
 {
 	auto m_window = std::make_shared<Window>();
 	auto m_text = std::make_shared<TextBlock>();
-	m_text->set(TextBlock::TextProperty(), std::string("abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+	m_text->setValue(TextBlock::TextProperty(), std::string("abcdefghijklmnopqrstuvwxyz德赛西威123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
 //	m_text->Text = "12345";
-	m_text->set(TextBlock::VerticalAlignmentProperty(), VerticalAlignmentE::Top);
-	m_text->set(TextBlock::HorizontalAlignmentProperty(), HorizontalAlignmentE::Right);
-	m_text->set(TextBlock::PaddingProperty(), 0.0f);
+	m_text->setValue(TextBlock::VerticalAlignmentProperty(), VerticalAlignmentE::Top);
+	m_text->setValue(TextBlock::HorizontalAlignmentProperty(), HorizontalAlignmentE::Right);
+	m_text->setValue(TextBlock::PaddingProperty(), 0.0f);
 //	m_text->Width = 400;
-	m_text->set(TextBlock::CharSpacingProperty(), 1.0f);
-	m_text->set(TextBlock::TextWrappingProperty(), TextWrappingE::Wrap);
-	m_window->set(Window::ContentProperty(), m_text);
+	m_text->setValue(TextBlock::CharSpacingProperty(), 1.0f);
+	m_text->setValue(TextBlock::TextWrappingProperty(), TextWrappingE::Wrap);
+	m_window->setValue(Window::ContentProperty(), m_text);
 
 //	colorAni.From = m_text->Foreground();
 //	colorAni.To = Color(255, 0, 10);

@@ -100,7 +100,7 @@ protected:
 			auto curFrameProgress = (double)(ticks - frameBegTick) / (frameEndTick - frameBegTick);
 			auto ft = (float)curFrameEasing->easeInCore(curFrameProgress);
 			auto value = static_cast<T>( fromValue + (toValue - fromValue) * ft );
-			target().lock()->set(targetProperty(), value);
+			target().lock()->setValue(targetProperty(), value);
 		}
 	}
 
@@ -122,13 +122,13 @@ template<> void PropertyAnimationUsingKeyFrames<bool>::onProcessing()
 		{
 			//前一个关键帧不为空
 			if (--iter != m_keyFrames.end())
-				target().lock()->set(targetProperty(), (iter++)->value());
+				target().lock()->setValue(targetProperty(), (iter++)->value());
 			break;
 		}
 	}
 	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
-		target().lock()->set(targetProperty(), m_keyFrames.crbegin()->value());
+		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}
 
 }
@@ -147,13 +147,13 @@ template<> void PropertyAnimationUsingKeyFrames<std::string>::onProcessing()
 		{
 			//前一个关键帧不为空
 			if (--iter != m_keyFrames.end())
-				target().lock()->set(targetProperty(), (iter++)->value());
+				target().lock()->setValue(targetProperty(), (iter++)->value());
 			break;
 		}
 	}
 	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
-		target().lock()->set(targetProperty(), m_keyFrames.crbegin()->value());
+		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}
 }
 
@@ -182,7 +182,7 @@ template<> void PropertyAnimationUsingKeyFrames<Color>::onProcessing()
 		r = clamp(0, 255, r);
 		g = clamp(0, 255, g);
 		b = clamp(0, 255, b);
-		target().lock()->set(targetProperty(), Color(r, g, b));
+		target().lock()->setValue(targetProperty(), Color(r, g, b));
 	}
 }
 
@@ -209,7 +209,7 @@ template<> void PropertyAnimationUsingKeyFrames<Rect>::onProcessing()
 		auto y = fromValue.y() + (toValue.y() - fromValue.y()) * ft;
 		auto w = fromValue.width() + (toValue.width() - fromValue.width()) * ft;
 		auto h = fromValue.height() + (toValue.height() - fromValue.height()) * ft;
-		target().lock()->set(targetProperty(), Rect(x, y, w, h));
+		target().lock()->setValue(targetProperty(), Rect(x, y, w, h));
 	}
 }
 
@@ -236,7 +236,7 @@ template<> void PropertyAnimationUsingKeyFrames<Thickness>::onProcessing()
 		auto r = fromValue.right + (toValue.right - fromValue.right) * ft;
 		auto t = fromValue.top + (toValue.top - fromValue.top) * ft;
 		auto b = fromValue.bottom + (toValue.bottom - fromValue.bottom) * ft;
-		target().lock()->set(targetProperty(), Thickness(l, t, r, b));
+		target().lock()->setValue(targetProperty(), Thickness(l, t, r, b));
 	}
 }
 

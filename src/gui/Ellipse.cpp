@@ -20,14 +20,14 @@ Ellipse::Ellipse()
 void Ellipse::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = get<Size>(ActualSizeProperty());
+	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
-	auto strokeThickness = get<float>(StrokeThicknessProperty());
+	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
 	if (m_fillObject)
 	{
 		Rect fillRc{ rc };
-		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (stroke)
 		{
 			fillRc.reset(rc.left() - strokeThickness, rc.top() - strokeThickness, rc.width() - strokeThickness * 2, rc.height() - strokeThickness * 2);
@@ -50,7 +50,7 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+		auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -77,7 +77,7 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == StrokeProperty())
 	{
-		auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(FillProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -95,7 +95,7 @@ Size Ellipse::arrangeOverride(const Size & finalSize)
 
 void Ellipse::updateFillObject(float a, float b)
 {
-	auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
 	if (!fill)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
@@ -130,12 +130,12 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 		auto p = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
 		breaks.push_back(p);
 	}
-	auto strokeThickness = get<float>(StrokeThicknessProperty());
-	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffset = get<float>(StrokeDashOffsetProperty());
-	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
+	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
+	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
+	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+	auto stroke = getValue<std::shared_ptr<Brush>>(FillProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

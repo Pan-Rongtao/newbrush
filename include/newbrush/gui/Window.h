@@ -59,7 +59,7 @@ public:
 	Event<EventArgs>						ContentRendered;		//当窗口的内容呈现后发生
 	
 	void swapBuffers() const;
-	static void waitEvent();
+	static void pollEvents();
 
 	static Viewport2D drawContext;
 
@@ -94,7 +94,7 @@ private:
 	void refreshCallback();
 	void closeCallback();
 	void iconifyCallback(int iconified);
-	void maximizeCallback(GLFWwindow* window, int maximized);
+	void maximizeCallback(int maximized);
 
 	static void init();
 	static void deinit();
@@ -102,7 +102,10 @@ private:
 	void destroyWindow();
 
 	GLFWwindow		*m_implWindow;
-	bool			m_onDispatching{ false };
+	bool			m_dispatchingCloseEvent;
+	bool			m_processingCallback;
+	bool			m_processingWindowStateChanged;
+	WindowStateE	m_lastWindowState;
 
 	friend class Application;
 };

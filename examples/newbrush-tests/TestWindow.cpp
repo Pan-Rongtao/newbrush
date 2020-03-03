@@ -5,6 +5,7 @@
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/core/Timer.h"
+#include "newbrush/core/Log.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
@@ -13,74 +14,61 @@ using namespace nb::gui;
 TEST_CASE("Test nb::Window", "[Window]")
 {
 	auto w = std::make_shared<Window>();
-	w->set(Window::TitleProperty(), std::string("Newbrush窗口测试"));
-	std::shared_ptr<UIElement> rc0 = std::make_shared<Rectangle>();
-	rc0->set(UIElement::WidthProperty(), 100);
-	rc0->set(UIElement::HeightProperty(), 100);
-	rc0->set(UIElement::HorizontalAlignmentProperty(), HorizontalAlignmentE::Stretch);
-	w->set(Window::ContentProperty(), rc0);
-//	this->Topmost = true;
+	w->setValue(Window::TitleProperty(), std::string("Newbrush窗口测试"));
+	auto img = std::make_shared<ImageSource>("G:/BK(2015.11.20)/Weibo_UI_121212/Gstencil/Keyboard/Clear_P.png");
+	w->setValue(Window::IconProperty(), img);
 
-	/*
-	doubleAni.From = this->Top();
-	doubleAni.To = this->Top() + 100;
-	doubleAni.Easing = std::make_shared<PowerEase>();
-	doubleAni.BeginTime = TimeSpan::fromSeconds(1);
-	doubleAni.Duration = TimeSpan::fromMilliseconds(200);
-	doubleAni.StateChangedEvent += std::bind(&TestWindow::onStateChanged, this, std::placeholders::_1);
-	doubleAni.ProgressEvent += std::bind(&TestWindow::onProgress, this, std::placeholders::_1);
-	doubleAni.CompleteEvent += std::bind(&TestWindow::onCompleted, this, std::placeholders::_1);
-//	doubleAni.TargetProperty = &this->Top;
-	doubleAni.begin();
-	*/
+	w->Activated += [](const EventArgs &args) {
+		nb::Log::info("on activated");
+	};
+
+	w->Closing += [](CancelEventArgs &args) {
+		args.cancel = false;
+		nb::Log::info("%s close", args.cancel ? "cancel" : "affirm");
+	};
+
+	w->Closed += [](const EventArgs &args) {
+		nb::Log::info("on closed");
+	};
+
+	w->StateChanged += [w](const EventArgs &args) {
+		auto state = w->getValue<WindowStateE>(Window::WindowStateProperty());
+		nb::Log::info("on state changed:%d", static_cast<int>(state));
+	};
+	w->setValue(Window::WindowStateProperty(), WindowStateE::Maximized);
+	w->setValue(Window::WindowStateProperty(), WindowStateE::Minimized);
+	w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);
 	Timer timer;
-	timer.Tick += [&w](const EventArgs &args) {	
+	timer.Tick += [w](const EventArgs &args) {
 		static int i = 0;
-		if (i == 0)
+		std::string sTitle;
+		switch (i)
 		{
-			w->hide();
-		}
-		else if (i == 1)
-		{
-			w->show();
-		}
-		else if (i == 2)
-		{
-			//	w->hide();
-		}
-		else if (i == 3)
-		{
-			w->active();
-		}
-		else
-		{
-			((Timer *)(args.sender))->stop();
+		case 0: w->hide();																sTitle = "hide";					break;
+		case 1: w->show();																sTitle = "show";					break;
+		case 2: w->hide();																sTitle = "hide";					break;
+		case 3: w->setValue(Window::WindowStateProperty(), WindowStateE::Maximized);	sTitle = "WindowStateE::Maximized";	break;
+		case 4: w->setValue(Window::WindowStateProperty(), WindowStateE::Minimized);	sTitle = "WindowStateE::Minimized";	break;
+		case 5: w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);		sTitle = "WindowStateE::Normal";	break;
+		case 6: w->setValue(Window::WindowStyleProperty(), WindowStyleE::None);			sTitle = "WindowStyleE::None";		break;
+		case 7: w->setValue(Window::WindowStyleProperty(), WindowStyleE::Fixed);		sTitle = "WindowStyleE::Fixed";		break;
+		case 8: w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);		sTitle = "WindowStyleE::SizeBox";	break;
+		case 9: w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);		sTitle = "WindowStateE::Normal";	break;
+		case 10: w->setValue(Window::TopmostProperty(), true);							sTitle = "TopmostProperty:true";	break;
+		case 11: w->setValue(Window::TopmostProperty(), false);							sTitle = "TopmostProperty:false";	break;
+		case 12: w->setValue(Window::LeftProperty(), 100);								sTitle = "LeftProperty:100";		break;
+		case 13: w->setValue(Window::TopProperty(), 100);								sTitle = "TopProperty:100";			break;
+		default: ((Timer *)(args.sender))->stop(); w->close();																break;
 		}
 		++i;
+		w->setValue(Window::TitleProperty(), sTitle);
+		printf("done:%s\n", sTitle.data());
 	};
-	timer.start(1500);
+	//timer.start(2000);
 
 	while (true)
 	{
-		Window::waitEvent();
+		Window::pollEvents();
 		Timer::driveInLoop();
 	}
 }
-/*
-void TestWindow::onStateChanged(const Timeline::StateChangedArgs & args)
-{
-	printf("onStateChanged:%d\n", args.state);
-}
-
-void TestWindow::onProgress(const Timeline::ProgressArgs & args)
-{
-	//	printf("onProgress:%f, width=%f\n", args.progress, Width());
-	//printf("onProgress:%f, point=(%f, %f)\n", args.progress, Position().x(), Position().y());
-	//	printf("onProgress:%f, color=(%d, %d, %d)\n", args.progress, Background().red(), Background().green(), Background().blue());
-}
-
-void TestWindow::onCompleted(const Timeline::CompleteArgs & args)
-{
-	printf("onCompleted.\n");
-}
-*/

@@ -12,19 +12,19 @@ using namespace nb::gui;
 
 Image::Image()
 {
-	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
 	renderer->setMaterial(std::make_shared<Material>(Programs::primitive()));
 }
 
 void Image::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = get<Size>(ActualSizeProperty());
+	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
-	auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
+	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
 	drawContext.queue(renderer);
 }
 
@@ -44,30 +44,30 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == SourceProperty())
 	{
-		auto renderer = get<std::shared_ptr<RenderObject>>(RendererProperty());
-		auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
-		auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+		auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
+		auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
+		auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 		renderer->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
 	}
 	else if (args.property == StretchProperty())
 	{
-		set(StretchProperty(), args.newValue.extract<StretchE>());
+		setValue(StretchProperty(), args.newValue.extract<StretchE>());
 	}
 }
 
 Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
-	auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
-	auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 	return Size(std::max<float>(availableSize.width(), (float)bm->width()), std::max<float>(availableSize.height(), (float)bm->height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
 {
-	auto stretch = get<StretchE>(StretchProperty());
-	auto source = get<std::shared_ptr<ImageSource>>(SourceProperty());
-	auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+	auto stretch = getValue<StretchE>(StretchProperty());
+	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 	switch (stretch)
 	{
 	case StretchE::Origion:

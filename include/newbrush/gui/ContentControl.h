@@ -14,6 +14,10 @@ public:
 	
 	virtual void onRender(Viewport2D & drawContext) override;
 
+	virtual uint32_t childrenCount() const;
+
+	virtual UIElement *getChild(uint32_t index);
+
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 

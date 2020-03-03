@@ -8,8 +8,8 @@ using namespace nb;
 using namespace nb::gui;
 
 Rectangle::Rectangle()
-	: RadiusX([&](float v) {set(RadiusXProperty(), v); }, [&]()->float {return get<float>(RadiusXProperty()); })
-	, RadiusY([&](float v) {set(RadiusYProperty(), v); }, [&]()->float {return get<float>(RadiusYProperty()); })
+	: RadiusX([&](float v) {setValue(RadiusXProperty(), v); }, [&]()->float {return getValue<float>(RadiusXProperty()); })
+	, RadiusY([&](float v) {setValue(RadiusYProperty(), v); }, [&]()->float {return getValue<float>(RadiusYProperty()); })
 {
 }
 
@@ -28,16 +28,16 @@ DependencyProperty Rectangle::RadiusYProperty()
 void Rectangle::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = get<Size>(ActualSizeProperty());
+	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
 	if (m_fillObject)
 	{
 		Rect fillRc{rc};
-		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (stroke)
 		{
-			auto strokeThickness = get<float>(StrokeThicknessProperty());
+			auto strokeThickness = getValue<float>(StrokeThicknessProperty());
 			fillRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
 		}
 		updateFillObject(fillRc.width(), fillRc.height(), RadiusX(), RadiusY());
@@ -56,13 +56,13 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+		auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
 		if (!fill)				m_fillObject.reset();
 		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
 	}
 	else if (args.property == StrokeProperty())
 	{
-		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -80,7 +80,7 @@ Size Rectangle::arrangeOverride(const Size & finalSize)
 
 void Rectangle::updateFillObject(float width, float height, float radiusX, float radiusY)
 {
-	auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
 	if (!fill)
 		return;
 
@@ -168,13 +168,13 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 	if (!m_strokeObject)
 		return;
 
-	auto strokeThickness = get<float>(StrokeThicknessProperty());
-	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffset = get<float>(StrokeDashOffsetProperty());
-	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
+	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
+	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
+	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

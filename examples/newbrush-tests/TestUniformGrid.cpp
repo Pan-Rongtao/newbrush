@@ -17,33 +17,33 @@ TEST_CASE("Test nb::UniformGrid", "[UniformGrid]")
 	auto m_window = std::make_shared<Window>();
 
 	auto uniformGrid = std::make_shared<UniformGrid>();
-	uniformGrid->set(UniformGrid::RowsProperty(), 8);
-	uniformGrid->set(UniformGrid::ColumnsProperty(), 4);
-	uniformGrid->set(UniformGrid::FirstColumnProperty(), 1);
+	uniformGrid->setValue(UniformGrid::RowsProperty(), 8);
+	uniformGrid->setValue(UniformGrid::ColumnsProperty(), 4);
+	uniformGrid->setValue(UniformGrid::FirstColumnProperty(), 1);
 	
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
-	rc0->set(Shape::WidthProperty(), 50);
-	rc0->set(Shape::HeightProperty(), 50);
+	rc0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc0->setValue(Shape::WidthProperty(), 50);
+	rc0->setValue(Shape::HeightProperty(), 50);
 	//	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
 
 	auto rc1 = std::make_shared<Rectangle>();
-	rc1->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
+	rc1->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
 	//	rc1->Width = 100;
 	//	rc1->Height = 100;
 
 	auto rc2 = std::make_shared<Rectangle>();
-	rc2->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	rc2->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 	//	rc2->Width = 100;
 	//	rc2->Height = 100;
 
 	auto rc3 = std::make_shared<Rectangle>();
-	rc3->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
-	rc3->set(Shape::WidthProperty(), 100);
-	rc3->set(Shape::HeightProperty(), 100);
+	rc3->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
+	rc3->setValue(Shape::WidthProperty(), 100);
+	rc3->setValue(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
+	es0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
 	//	es0->Width = 100;
 	//	es0->Height = 100;
 
@@ -56,5 +56,5 @@ TEST_CASE("Test nb::UniformGrid", "[UniformGrid]")
 	uniformGrid->Children().add(es0);
 	uniformGrid->Children().add(text);
 	*/
-	m_window->set(Window::ContentProperty(), uniformGrid);
+	m_window->setValue(Window::ContentProperty(), uniformGrid);
 }

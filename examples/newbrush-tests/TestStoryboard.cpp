@@ -24,7 +24,7 @@ TEST_CASE("Test nb::Storyboard", "[Storyboard]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::WidthProperty()) : NAN;
 		printf("wAni procesing: time[%s], progress[%.5f], width[%.5f]\n", time.toString().data(), progress, width);
 	};
 	wAni->Completed += [](const EventArgs &args) {
@@ -46,7 +46,7 @@ TEST_CASE("Test nb::Storyboard", "[Storyboard]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(UIElement::HeightProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(UIElement::HeightProperty()) : NAN;
 		printf("hAni procesing: time[%s], progress[%.5f], height[%.5f]\n", time.toString().data(), progress, width);
 	};
 	hAni->Completed += [](const EventArgs &args) {

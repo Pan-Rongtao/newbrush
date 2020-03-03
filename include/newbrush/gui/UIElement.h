@@ -57,6 +57,7 @@ public:
 	UIElement();
 	virtual ~UIElement() = default;
 
+	static DependencyProperty					NameProperty();
 	static DependencyProperty					VisibilityProperty();	//可视的依赖属性（bool）
 	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性（float）
 	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性（bool）
@@ -192,7 +193,15 @@ public:
 	static RoutedEvent							TouchMoveEvent();
 	static RoutedEvent							TouchUpEvent();
 
+	//获取子节点个数，本实现返回0
+	virtual uint32_t childrenCount() const;
+
+	//获取子节点，本实现抛出std::out_of_range
+	virtual UIElement *getChild(uint32_t index);
+
 	void setParent(UIElement *element);
+	UIElement *getParent();
+
 	UIElement *getRoot();
 	Point worldOffset();
 	void updateLayout();
@@ -265,10 +274,9 @@ protected:
 	virtual void onPreviewTouchMove(const TouchEventArgs &args);
 	virtual void onPreviewTouchUp(const TouchEventArgs &args);
 
-	UIElement	*m_parent;
-
 private:
 
+	UIElement	*m_parent;
 	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 };
 

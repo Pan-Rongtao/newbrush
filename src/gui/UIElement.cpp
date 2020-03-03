@@ -7,7 +7,13 @@ using namespace nb::gui;
 UIElement::UIElement()
 	: m_parent(nullptr)
 {
-	set(RendererProperty(), std::make_shared<RenderObject>());
+	setValue(RendererProperty(), std::make_shared<RenderObject>());
+}
+
+DependencyProperty UIElement::NameProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::string>("Name", "");
+	return dp;
 }
 
 DependencyProperty UIElement::VisibilityProperty()
@@ -156,9 +162,24 @@ DependencyProperty UIElement::StateMachineProperty()
 	return dp;
 }
 
+uint32_t UIElement::childrenCount() const
+{
+	return 0;
+}
+
+UIElement *UIElement::getChild(uint32_t index)
+{
+	nbThrowException(std::out_of_range, "index[%d] is out of range[0, 0)", index);
+}
+
 void UIElement::setParent(UIElement *element)
 {
 	m_parent = element;
+}
+
+UIElement * UIElement::getParent()
+{
+	return m_parent;
 }
 
 UIElement *UIElement::getRoot()
@@ -182,7 +203,7 @@ Point UIElement::worldOffset()
 		auto p = this;
 		Point ret;
 		do {
-			auto offset = p->get<float>(OffsetProperty());
+			auto offset = p->getValue<float>(OffsetProperty());
 			ret += offset;
 		} while ((p->m_parent) && (p = p->m_parent));
 		return ret;
@@ -197,9 +218,9 @@ void UIElement::updateLayout()
 	auto root = getRoot();
 	if (!root)	return;
 
-	auto rootWidth = root->get<float>(WidthProperty());
-	auto rootHeight = root->get<float>(HeightProperty());
-	auto rootDesiredSize = root->get<Size>(DesiredSizeProperty());
+	auto rootWidth = root->getValue<float>(WidthProperty());
+	auto rootHeight = root->getValue<float>(HeightProperty());
+	auto rootDesiredSize = root->getValue<Size>(DesiredSizeProperty());
 	root->measure({ rootWidth, rootHeight });
 	root->arrage(Rect(0, 0, rootDesiredSize));
 	root->onRender(gui::Window::drawContext);
@@ -208,17 +229,17 @@ void UIElement::updateLayout()
 void UIElement::measure(const Size & availabelSize)
 {
 	//如果不可见或两次measure参数一致，忽略
-	auto visibility = get<VisibilityE>(VisibilityProperty());
+	auto visibility = getValue<VisibilityE>(VisibilityProperty());
 	if (visibility != VisibilityE::Visible)
 		return;
 
-	auto margin = get<Thickness>(MarginProperty());
-	auto width = get<float>(WidthProperty());
-	auto height = get<float>(HeightProperty());
-	auto minWidth = get<float>(MinWidthProperty());
-	auto minHeight = get<float>(MinHeightProperty());
-	auto maxWidth = get<float>(MaxWidthProperty());
-	auto maxHeight = get<float>(MaxHeightProperty());
+	auto margin = getValue<Thickness>(MarginProperty());
+	auto width = getValue<float>(WidthProperty());
+	auto height = getValue<float>(HeightProperty());
+	auto minWidth = getValue<float>(MinWidthProperty());
+	auto minHeight = getValue<float>(MinHeightProperty());
+	auto maxWidth = getValue<float>(MaxWidthProperty());
+	auto maxHeight = getValue<float>(MaxHeightProperty());
 	//减去magin计算出本来的constrainedSize
 	auto constrainedSize = Size(availabelSize.width() - margin.left - margin.right, availabelSize.height() - margin.top - margin.bottom);
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
@@ -240,32 +261,32 @@ void UIElement::measure(const Size & availabelSize)
 	//保证在（0, availabelSize)区间
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
-	set(DesiredSizeProperty(), desiredSizeTemp);
+	setValue(DesiredSizeProperty(), desiredSizeTemp);
 }
 
 void UIElement::arrage(const Rect & finalRect)
 {
 	//如果不可见或两次arrage参数一致，忽略
-	auto visibility = get<VisibilityE>(VisibilityProperty());
+	auto visibility = getValue<VisibilityE>(VisibilityProperty());
 	if (visibility != VisibilityE::Visible)
 		return;
 
-	auto margin = get<Thickness>(MarginProperty());
-	auto width = get<float>(WidthProperty());
-	auto height = get<float>(HeightProperty());
-	auto minWidth = get<float>(MinWidthProperty());
-	auto minHeight = get<float>(MinHeightProperty());
-	auto maxWidth = get<float>(MaxWidthProperty());
-	auto maxHeight = get<float>(MaxHeightProperty());
-	auto desiredSize = get<Size>(DesiredSizeProperty());
+	auto margin = getValue<Thickness>(MarginProperty());
+	auto width = getValue<float>(WidthProperty());
+	auto height = getValue<float>(HeightProperty());
+	auto minWidth = getValue<float>(MinWidthProperty());
+	auto minHeight = getValue<float>(MinHeightProperty());
+	auto maxWidth = getValue<float>(MaxWidthProperty());
+	auto maxHeight = getValue<float>(MaxHeightProperty());
+	auto desiredSize = getValue<Size>(DesiredSizeProperty());
 	//减去magin计算出本来的arrangeSize以及clientSize
 	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	auto horizontalAlignment = get<HorizontalAlignmentE>(HorizontalAlignmentProperty());
-	auto verticalAlignment = get<VerticalAlignmentE>(VerticalAlignmentProperty());
+	auto horizontalAlignment = getValue<HorizontalAlignmentE>(HorizontalAlignmentProperty());
+	auto verticalAlignment = getValue<VerticalAlignmentE>(VerticalAlignmentProperty());
 	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(desiredSize.width());
 	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(desiredSize.height());
 
@@ -277,8 +298,8 @@ void UIElement::arrage(const Rect & finalRect)
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
-	set(RenderSizeProperty(), innerInkSize);
-	auto renderSize = get<Size>(RenderSizeProperty());
+	setValue(RenderSizeProperty(), innerInkSize);
+	auto renderSize = getValue<Size>(RenderSizeProperty());
 	//裁剪，保证innerInkSize在Max之内
 	if (std::isnan(width))
 		if (innerInkSize.width() > maxWidth)	innerInkSize.width() = maxWidth;
@@ -301,8 +322,8 @@ void UIElement::arrage(const Rect & finalRect)
 	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - renderSize.height());		break;
 	default:							offsetY = renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top : finalRect.y() + margin.top + (clientSize.height() - renderSize.height()) / 2;	break;
 	}
-	set(OffsetProperty(), Point(offsetX, offsetY));
-	set(ActualSizeProperty(), renderSize);
+	setValue(OffsetProperty(), Point(offsetX, offsetY));
+	setValue(ActualSizeProperty(), renderSize);
 	//裁剪
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
@@ -324,7 +345,7 @@ void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	{
 		updateLayout();
 	}
-	auto style = get<std::shared_ptr<Style>>(StyleProperty());
+	auto style = getValue<std::shared_ptr<Style>>(StyleProperty());
 	if (style)
 	{
 		style->handlePropertyChanged(this, args.property, args.newValue);

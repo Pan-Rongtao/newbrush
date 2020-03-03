@@ -14,7 +14,7 @@ Application::Application()
 	, m_exitFlag(false)
 {
 	if (g_app)
-		nbThrowException(std::logic_error, "create tow application");
+		nbThrowException(std::logic_error, "create two application");
 	g_app = this;
 	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
 	Singleton<WindowCollection>::get()->WindowFocus += std::bind(&Application::onWindowFocused, this, std::placeholders::_1);
@@ -79,7 +79,7 @@ int Application::run(int argc, char *argv[])
 					w->swapBuffers();
 				}
 			}*/
-			Window::waitEvent();
+			Window::pollEvents();
 		}
 	}
 	catch (std::exception &e)	{ UnhandledException.invoke({ e }); }

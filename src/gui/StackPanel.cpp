@@ -57,12 +57,12 @@ Size StackPanel::measureOverride(const Size & availableSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto childWidth = child->get<float>(WidthProperty());
-		auto childHeight = child->get<float>(HeightProperty());
+		auto childWidth = child->getValue<float>(WidthProperty());
+		auto childHeight = child->getValue<float>(HeightProperty());
 		childMeasureSize.width() = std::isnan(childWidth) ? 0.0f : childWidth;
 		childMeasureSize.height() = std::isnan(childHeight) ? 0.0f : childHeight;
 		child->measure(childMeasureSize);
-		auto sz = child->get<Size>(DesiredSizeProperty());
+		auto sz = child->getValue<Size>(DesiredSizeProperty());
 		bool b = false;
 	}
 	return availableSize;
@@ -75,8 +75,8 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto desiredSize = child->get<Size>(DesiredSizeProperty());
-		auto orientation = get<OrientationE>(OrientationProperty());
+		auto desiredSize = child->getValue<Size>(DesiredSizeProperty());
+		auto orientation = getValue<OrientationE>(OrientationProperty());
 		if (orientation == OrientationE::Horizontal)
 		{
 			child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));

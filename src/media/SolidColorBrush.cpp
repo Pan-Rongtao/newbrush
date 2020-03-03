@@ -9,7 +9,7 @@ SolidColorBrush::SolidColorBrush()
 
 SolidColorBrush::SolidColorBrush(const nb::Color &color)
 {
-	set(ColorProperty(), color);
+	setValue(ColorProperty(), color);
 }
 
 DependencyProperty SolidColorBrush::ColorProperty()

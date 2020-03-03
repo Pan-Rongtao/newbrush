@@ -34,10 +34,10 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto childWidth = child->get<float>(WidthProperty());
-		auto childHeight = child->get<float>(HeightProperty());
-		auto itemWidth = get<float>(ItemWidthProperty());
-		auto itemHeight = get<float>(ItemHeightProperty());
+		auto childWidth = child->getValue<float>(WidthProperty());
+		auto childHeight = child->getValue<float>(HeightProperty());
+		auto itemWidth = getValue<float>(ItemWidthProperty());
+		auto itemHeight = getValue<float>(ItemHeightProperty());
 		childMeasureSize.width() = !std::isnan(itemWidth) ? itemWidth : !std::isnan(childWidth) ? childWidth : 0.0f;
 		childMeasureSize.height() = !std::isnan(itemHeight) ? itemHeight : !std::isnan(childHeight) ? childHeight : 0.0f;
 		child->measure(childMeasureSize);
@@ -63,10 +63,10 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			auto child = m_children.childAt(i);
 			auto one = 0.0f;
 			auto maxLen = 0.0f;
-			auto orientation = get<OrientationE>(OrientationProperty());
-			auto itemWidth = get<float>(ItemWidthProperty());
-			auto itemHeight = get<float>(ItemHeightProperty());
-			auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+			auto orientation = getValue<OrientationE>(OrientationProperty());
+			auto itemWidth = getValue<float>(ItemWidthProperty());
+			auto itemHeight = getValue<float>(ItemHeightProperty());
+			auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 			if (orientation == OrientationE::Horizontal)
 			{
 				maxLen = finalSize.width();
@@ -96,9 +96,9 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	auto x = 0.0f;
 	auto y = 0.0f;
 	Rect arrangeRect;
-	auto orientation = get<OrientationE>(OrientationProperty());
-	auto itemWidth = get<float>(ItemWidthProperty());
-	auto itemHeight = get<float>(ItemHeightProperty());
+	auto orientation = getValue<OrientationE>(OrientationProperty());
+	auto itemWidth = getValue<float>(ItemWidthProperty());
+	auto itemHeight = getValue<float>(ItemHeightProperty());
 	if (orientation == OrientationE::Horizontal)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
@@ -108,7 +108,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
@@ -131,7 +131,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				if (i <= linesInfo.front().first)
 				{
@@ -158,7 +158,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
@@ -181,7 +181,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto childDesiredSize = child->get<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				if (i <= linesInfo.front().first)
 				{

@@ -32,3 +32,13 @@ void Panel::onRender(Viewport2D & drawContext)
 		child->onRender(drawContext);
 	}
 }
+
+uint32_t Panel::childrenCount() const
+{
+	return m_children.count();
+}
+
+UIElement *Panel::getChild(uint32_t index)
+{
+	return m_children.childAt(index).get();
+}

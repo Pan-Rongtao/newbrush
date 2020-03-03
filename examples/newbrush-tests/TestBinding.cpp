@@ -100,9 +100,9 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	m_dataRoot->get("brush")->set(brush);
 	m_dataRoot->getObject("obj")->get("x")->set(123.00);
 
-	auto e = m_element->get<VisibilityE>(UIElement::VisibilityProperty());
-	auto e1 = m_element->get<std::string>(TextBlock::TextProperty());
+	auto e = m_element->getValue<VisibilityE>(UIElement::VisibilityProperty());
+	auto e1 = m_element->getValue<std::string>(TextBlock::TextProperty());
 
-	auto minHeight = m_element->get<float>(TextBlock::MinHeightProperty());
-	auto maxHeight = m_element->get<float>(TextBlock::MaxHeightProperty());
+	auto minHeight = m_element->getValue<float>(TextBlock::MinHeightProperty());
+	auto maxHeight = m_element->getValue<float>(TextBlock::MaxHeightProperty());
 }

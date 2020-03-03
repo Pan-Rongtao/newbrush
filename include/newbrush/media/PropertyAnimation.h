@@ -30,7 +30,7 @@ protected:
 		if (currentState() == Timeline::StateE::Active)
 		{
 			try {
-				m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<T>(targetProperty());
+				m_actualFrom = m_hasSetFrom ? m_from : target().lock()->getValue<T>(targetProperty());
 			}
 			catch (...) {
 				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().name().data());
@@ -48,7 +48,7 @@ protected:
 		auto easing = m_easingFunction ? m_easingFunction : std::make_shared<LinearEase>();
 		auto ft = (float)easing->easeInCore(progress);
 		auto value = m_actualFrom + (m_actualTo - m_actualFrom) * ft;
-		target().lock()->set(targetProperty(), value);
+		target().lock()->setValue(targetProperty(), value);
 	}
 
 private:
@@ -67,7 +67,7 @@ void PropertyAnimation<float>::onStateChanged()
 	AnimationTimeline::onStateChanged();
 	if (currentState() == Timeline::StateE::Active)
 	{
-		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<float>(targetProperty());
+		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->getValue<float>(targetProperty());
 		m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated 'from value' for animation.");
 		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated 'to value' for animation.");
@@ -79,7 +79,7 @@ void PropertyAnimation<double>::onStateChanged()
 	AnimationTimeline::onStateChanged();
 	if (currentState() == Timeline::StateE::Active)
 	{
-		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->get<double>(targetProperty());
+		m_actualFrom = m_hasSetFrom ? m_from : target().lock()->getValue<double>(targetProperty());
 		m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		if (std::isnan(m_actualFrom))	nbThrowException(std::runtime_error, "can't calculated 'from value' for animation.");
 		if (std::isnan(m_actualTo))		nbThrowException(std::runtime_error, "can't calculated 'to value' for animation.");
@@ -101,7 +101,7 @@ template<> void PropertyAnimation<Color>::onProcessing()
 	r = clamp(0, 255, r);
 	g = clamp(0, 255, g);
 	b = clamp(0, 255, b);
-	target().lock()->set(targetProperty(), Color(r, g, b));
+	target().lock()->setValue(targetProperty(), Color(r, g, b));
 }
 template<>void PropertyAnimation<Rect>::onProcessing()
 {
@@ -116,7 +116,7 @@ template<>void PropertyAnimation<Rect>::onProcessing()
 	auto y = m_from.y() + (m_to.y() - m_from.y()) * ft;
 	auto w = m_from.width() + (m_to.width() - m_from.width()) * ft;
 	auto h = m_from.height() + (m_to.height() - m_from.height()) * ft;
-	target().lock()->set(targetProperty(), Rect(x, y, w, h));
+	target().lock()->setValue(targetProperty(), Rect(x, y, w, h));
 }
 template<> void PropertyAnimation<Thickness>::onProcessing()
 {
@@ -131,7 +131,7 @@ template<> void PropertyAnimation<Thickness>::onProcessing()
 	auto r = m_from.right + (m_to.right - m_from.right) * ft;
 	auto t = m_from.top + (m_to.top - m_from.top) * ft;
 	auto b = m_from.bottom + (m_to.bottom - m_from.bottom) * ft;
-	target().lock()->set(targetProperty(), Thickness(l, t, r, b));
+	target().lock()->setValue(targetProperty(), Thickness(l, t, r, b));
 }
 
 using Int8Animation = PropertyAnimation<int8_t>;

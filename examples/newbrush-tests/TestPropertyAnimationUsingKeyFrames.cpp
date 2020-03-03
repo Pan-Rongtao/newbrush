@@ -90,7 +90,7 @@ TEST_CASE("test BoolAnimationUsingKeyFrames", "[BoolAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto focus = ui ? ui->get<bool>(UIElement::IsFocusedProperty()) : false;
+		auto focus = ui ? ui->getValue<bool>(UIElement::IsFocusedProperty()) : false;
 		printf("animation procesing: time[%s], progress[%.5f], focus[%d]\n", time.toString().data(), progress, focus);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -125,7 +125,7 @@ TEST_CASE("test StringAnimationUsingKeyFrames", "[StringAnimationUsingKeyFrames]
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto txt = ui ? ui->get<std::string>(MyObject::TextProperty()) : "";
+		auto txt = ui ? ui->getValue<std::string>(MyObject::TextProperty()) : "";
 		printf("animation procesing: time[%s], progress[%.5f], txt[%s]\n", time.toString().data(), progress, txt.data());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -159,7 +159,7 @@ TEST_CASE("test Int8AnimationUsingKeyFrames", "[Int8AnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto count = ui ? ui->get<int8_t>(MyObject::CountProperty()) : -1;
+		auto count = ui ? ui->getValue<int8_t>(MyObject::CountProperty()) : -1;
 		printf("animation procesing: time[%s], progress[%.5f], count[%d]\n", time.toString().data(), progress, count);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -193,7 +193,7 @@ TEST_CASE("test Int16AnimationUsingKeyFrames", "[Int16AnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto size = ui ? ui->get<int16_t>(MyObject::SizeProperty()) : -1;
+		auto size = ui ? ui->getValue<int16_t>(MyObject::SizeProperty()) : -1;
 		printf("animation procesing: time[%s], progress[%.5f], count[%d]\n", time.toString().data(), progress, size);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -227,7 +227,7 @@ TEST_CASE("test Int32AnimationUsingKeyFrames", "[Int32AnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto index = ui ? ui->get<int32_t>(MyObject::IndexProperty()) : -1;
+		auto index = ui ? ui->getValue<int32_t>(MyObject::IndexProperty()) : -1;
 		printf("animation procesing: time[%s], progress[%.5f], count[%d]\n", time.toString().data(), progress, index);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -261,7 +261,7 @@ TEST_CASE("test Int64AnimationUsingKeyFrames", "[Int64AnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto ttt = ui ? ui->get<int64_t>(MyObject::TicksProperty()) : -1;
+		auto ttt = ui ? ui->getValue<int64_t>(MyObject::TicksProperty()) : -1;
 		printf("animation procesing: time[%s], progress[%.5f], count[%lld]\n", time.toString().data(), progress, ttt);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -295,7 +295,7 @@ TEST_CASE("test FloatAnimationUsingKeyFrames", "[FloatAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = ui ? ui->get<float>(MyObject::WidthProperty()) : NAN;
+		auto width = ui ? ui->getValue<float>(MyObject::WidthProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], count[%.5f]\n", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -329,7 +329,7 @@ TEST_CASE("test DoubleAnimationUsingKeyFrames", "[DoubleAnimationUsingKeyFrames]
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto height = ui ? ui->get<double>(MyObject::HeightProperty()) : NAN;
+		auto height = ui ? ui->getValue<double>(MyObject::HeightProperty()) : NAN;
 		printf("animation procesing: time[%s], progress[%.5f], count[%.5f]\n", time.toString().data(), progress, height);
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -363,7 +363,7 @@ TEST_CASE("test PointAnimationUsingKeyFrames", "[PointAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto point = ui ? ui->get<Point>(MyObject::XProperty()) : Point();
+		auto point = ui ? ui->getValue<Point>(MyObject::XProperty()) : Point();
 		printf("animation procesing: time[%s], progress[%.5f], point[%.f, %.f]\n", time.toString().data(), progress, point.x(), point.y());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -397,7 +397,7 @@ TEST_CASE("test SizeAnimationUsingKeyFrames", "[SizeAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto size = ui ? ui->get<Size>(MyObject::ActualSizeProperty()) : Size();
+		auto size = ui ? ui->getValue<Size>(MyObject::ActualSizeProperty()) : Size();
 		printf("animation procesing: time[%s], progress[%.5f], size[%.f, %.f]\n", time.toString().data(), progress, size.width(), size.height());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -431,7 +431,7 @@ TEST_CASE("test ColorAnimationUsingKeyFrames", "[ColorAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto color = ui ? ui->get<Color>(MyObject::FontColorProperty()) : Color();
+		auto color = ui ? ui->getValue<Color>(MyObject::FontColorProperty()) : Color();
 		printf("animation procesing: time[%s], progress[%.5f], color[%d, %d, %d]\n", time.toString().data(), progress, color.red(), color.green(), color.blue());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -465,7 +465,7 @@ TEST_CASE("test RectAnimationUsingKeyFrames", "[RectAnimationUsingKeyFrames]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto rc = ui ? ui->get<Rect>(MyObject::RectProperty()) : Rect();
+		auto rc = ui ? ui->getValue<Rect>(MyObject::RectProperty()) : Rect();
 		printf("animation procesing: time[%s], progress[%.5f], color[%.f, %.f, %.f, %.f]\n", time.toString().data(), progress, rc.x(), rc.y(), rc.width(), rc.height());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -499,7 +499,7 @@ TEST_CASE("test ThicknessAnimationUsingKeyFrames", "[ThicknessAnimationUsingKeyF
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto tn = ui ? ui->get<Thickness>(MyObject::MargProperty()) : Thickness();
+		auto tn = ui ? ui->getValue<Thickness>(MyObject::MargProperty()) : Thickness();
 		printf("animation procesing: time[%s], progress[%.5f], color[%.f, %.f, %.f, %.f]\n", time.toString().data(), progress, tn.left, tn.top, tn.right, tn.bottom);
 	};
 	animation.Completed += [](const EventArgs &args) {

@@ -79,21 +79,21 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
 		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
-		auto color = solidColorBrush->get<Color>(SolidColorBrush::ColorProperty());
+		auto color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
 		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::gradientPrimitive()));
 		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
-		auto stops = linearGradientBrush->get<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
+		auto stops = linearGradientBrush->getValue<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
 		std::vector<glm::vec4> colors;
 		std::vector<float> offsets;
 		for (auto i = 0; i != stops->count(); ++i)
 		{
 			auto stop = (*stops)[i];
-			auto color = stop->get<Color>(GradientStop::ColorProperty());
-			auto offset = stop->get<float>(GradientStop::OffsetPropert());
+			auto color = stop->getValue<Color>(GradientStop::ColorProperty());
+			auto offset = stop->getValue<float>(GradientStop::OffsetPropert());
 			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 			offsets.push_back(offset);
 		}
@@ -104,10 +104,10 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
 		ro->setMaterial(std::make_shared<Material>(Programs::image()));
-		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->get<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
+		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
 		if (source)
 		{
-			auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+			auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
 			ro->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
 		}
 	}

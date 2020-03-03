@@ -10,8 +10,8 @@ VisualState::VisualState()
 
 VisualState::VisualState(const std::string & name, std::shared_ptr<Storyboard> sb)
 {
-	set(NameProperty(), name);
-	set(StoryboardProperty(), sb);
+	setValue(NameProperty(), name);
+	setValue(StoryboardProperty(), sb);
 }
 
 DependencyProperty VisualState::NameProperty()
@@ -67,8 +67,8 @@ VisualStateGroup::VisualStateGroup(const std::string & name)
 
 VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<std::shared_ptr<VisualState>>& states)
 {
-	set(NameProperty(), name);
-	set(StatesProperty(), states);
+	setValue(NameProperty(), name);
+	setValue(StatesProperty(), states);
 }
 
 DependencyProperty VisualStateGroup::NameProperty()
@@ -99,8 +99,8 @@ void VisualStateMachine::addGroup(std::shared_ptr<VisualStateGroup> group)
 {
 	for (auto const &g : m_groups)
 	{
-		auto gName0 = g->get<std::string>(VisualStateGroup::NameProperty());
-		auto gName1 = group->get<std::string>(VisualStateGroup::NameProperty());
+		auto gName0 = g->getValue<std::string>(VisualStateGroup::NameProperty());
+		auto gName1 = group->getValue<std::string>(VisualStateGroup::NameProperty());
 		if (gName0 == gName1)
 		{
 			nbThrowException(std::logic_error, "[%s] is already exists", gName0.data());
@@ -113,20 +113,20 @@ bool VisualStateMachine::gotoState(const std::string &groupName, const std::stri
 {
 	for (auto const &g : m_groups)
 	{
-		auto gName = g->get<std::string>(VisualStateGroup::NameProperty());
+		auto gName = g->getValue<std::string>(VisualStateGroup::NameProperty());
 		if (gName == groupName)
 		{
 			if (useTransitions)
 			{
 
 			}
-			auto states = g->get<std::vector<std::shared_ptr<VisualState>>>(VisualStateGroup::StatesProperty());
+			auto states = g->getValue<std::vector<std::shared_ptr<VisualState>>>(VisualStateGroup::StatesProperty());
 			for (auto const &s : states)
 			{
-				auto sName = s->get<std::string>(VisualState::NameProperty());
+				auto sName = s->getValue<std::string>(VisualState::NameProperty());
 				if (sName == stateName)
 				{
-					auto sb = s->get<std::shared_ptr<Storyboard>>(VisualState::StoryboardProperty());
+					auto sb = s->getValue<std::shared_ptr<Storyboard>>(VisualState::StoryboardProperty());
 					sb->begin();
 					return true;
 				}

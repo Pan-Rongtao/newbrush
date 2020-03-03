@@ -28,17 +28,17 @@ TEST_CASE("test Style", "[Style]")
 	style->setters() = setters;
 	style->triggers() = triggers;
 
-	btn->set(Button::StyleProperty(), style);
+	btn->setValue(Button::StyleProperty(), style);
 
 	Timer timer;
 	timer.setSingleShot(true);
 	timer.Tick += [btn](const EventArgs &args) {
-		btn->set(Button::IsPressedProperty(), true);
+		btn->setValue(Button::IsPressedProperty(), true);
 
-		auto w = btn->get<float>(Button::WidthProperty());
-		auto h = btn->get<float>(Button::HeightProperty());
-		auto tn = btn->get<Thickness>(Button::MarginProperty());
-		auto opacity = btn->get<float>(Button::OpacityProperty());
+		auto w = btn->getValue<float>(Button::WidthProperty());
+		auto h = btn->getValue<float>(Button::HeightProperty());
+		auto tn = btn->getValue<Thickness>(Button::MarginProperty());
+		auto opacity = btn->getValue<float>(Button::OpacityProperty());
 	};
 	timer.start();
 

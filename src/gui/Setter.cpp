@@ -21,7 +21,7 @@ Setter::Setter(const DependencyProperty & dp, const Var & v)
 
 void Setter::attach(UIElement* uie)
 {
-	uie->set(property, value);
+	uie->setValue(property, value);
 }
 
 void EventSetter::attach(UIElement* uie)

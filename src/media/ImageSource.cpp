@@ -10,19 +10,19 @@ ImageSource::ImageSource()
 
 ImageSource::ImageSource(const std::string & uri)
 {
-	auto bm = get<std::shared_ptr<Bitmap>>(BmProperty());
+	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
 	bm->load(uri);
 }
 
 float ImageSource::width() const
 {
-	auto bm = get<std::shared_ptr<Bitmap>>(BmProperty());
+	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
 	return (float)bm->width();
 }
 
 float ImageSource::heigth() const
 {
-	auto bm = get<std::shared_ptr<Bitmap>>(BmProperty());
+	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
 	return (float)bm->height();
 }
 

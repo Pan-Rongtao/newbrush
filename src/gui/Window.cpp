@@ -16,6 +16,10 @@ static bool	g_windowSystemInitialized = false;
 
 Window::Window()
 	: m_implWindow(nullptr)
+	, m_dispatchingCloseEvent(false)
+	, m_processingCallback(false)
+	, m_processingWindowStateChanged(false)
+	, m_lastWindowState(WindowStateE::Normal)
 {
 	init();
 
@@ -23,11 +27,11 @@ Window::Window()
 	int x, y, w, h;
 	glfwGetWindowPos(m_implWindow, &x, &y);
 	glfwGetWindowSize(m_implWindow, &w, &h);
-	//一定不能去掉下面四句（需要在回调生效前设置）以便不触发回调，否则会更新layout，而此时Width或Height是NAN
-	set(LeftProperty(), (float)x);
-	set(TopProperty(), (float)y);
-	set(WidthProperty(), (float)w);
-	set(HeightProperty(), (float)h);
+	//一定不能去掉下面四句（需要在回调生效前设置）以便不触发回调，否则会更新layout，而此时Width或Height是NAN（目前不需要了）
+	setValue(LeftProperty(), (float)x);
+	setValue(TopProperty(), (float)y);
+	setValue(WidthProperty(), (float)w);
+	setValue(HeightProperty(), (float)h);
 	glfwSetWindowUserPointer(m_implWindow, this);
 	glfwSetWindowPosCallback(m_implWindow, [](GLFWwindow*w, int x, int y) { static_cast<Window *>(glfwGetWindowUserPointer(w))->posCallback(x, y); });
 	glfwSetWindowSizeCallback(m_implWindow, [](GLFWwindow*w, int width, int height) { static_cast<Window *>(glfwGetWindowUserPointer(w))->sizeCallback(width, height); });
@@ -41,7 +45,7 @@ Window::Window()
 	glfwSetWindowRefreshCallback(m_implWindow, [](GLFWwindow*w) { static_cast<Window *>(glfwGetWindowUserPointer(w))->refreshCallback(); });
 	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
 	glfwSetWindowIconifyCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
-	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
+	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow * w, int maximized) { static_cast<Window *>(glfwGetWindowUserPointer(w))->maximizeCallback(maximized); });
 
 	glfwMakeContextCurrent(m_implWindow);
 	sizeCallback((int)w, (int)h);
@@ -57,17 +61,20 @@ Window::~Window()
 
 void Window::active()
 {
-	glfwFocusWindow(m_implWindow);
+	if(m_implWindow)
+		glfwFocusWindow(m_implWindow);
 }
 
 void Window::show()
 {
-	glfwShowWindow(m_implWindow);
+	if (m_implWindow)
+		glfwShowWindow(m_implWindow);
 }
 
 void Window::hide()
 {
-	glfwHideWindow(m_implWindow);
+	if (m_implWindow)
+		glfwHideWindow(m_implWindow);
 }
 
 void Window::close()
@@ -77,11 +84,11 @@ void Window::close()
 
 Size Window::measureOverride(const Size & availableSize)
 {
-	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
 	if (content)
 	{
-		auto w = get<float>(WidthProperty());
-		auto h = get<float>(HeightProperty());
+		auto w = getValue<float>(WidthProperty());
+		auto h = getValue<float>(HeightProperty());
 		content->measure({ w, h });
 		//return Content()->DesiredSize;
 		return availableSize;
@@ -94,11 +101,11 @@ Size Window::measureOverride(const Size & availableSize)
 
 Size Window::arrangeOverride(const Size & finalSize)
 {
-	auto content = get<std::shared_ptr<UIElement>>(ContentProperty());
+	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
 	if (content)
 	{
-		auto w = get<float>(WidthProperty());
-		auto h = get<float>(HeightProperty());
+		auto w = getValue<float>(WidthProperty());
+		auto h = getValue<float>(HeightProperty());
 		content->arrage(Rect(0.0, 0.0, w, h));
 	}
 	return finalSize;
@@ -112,19 +119,19 @@ void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector
 		return obj->model()->orthoHitTest((float)x, (float)y);
 	};
 
-	auto count = VisualTreeHelper::getChildCount(e);
+	auto count = VisualTreeHelper::getChildrenCount(e);
 	for (int i = 0; i != count; ++i)
 	{
 		auto child = VisualTreeHelper::getChild(e, i);
 		if (!child)	continue;
 
-		auto childRenderer = child->get<std::shared_ptr<RenderObject>>(UIElement::RendererProperty());
+		auto childRenderer = child->getValue<std::shared_ptr<RenderObject>>(UIElement::RendererProperty());
 		if (hit(childRenderer))
 		{
 			hits.push_back(child);
 		}
 
-		if (VisualTreeHelper::getChildCount(child) > 0)
+		if (VisualTreeHelper::getChildrenCount(child) > 0)
 		{
 			loopTest(x, y, w, child, hits);
 		}
@@ -133,8 +140,10 @@ void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector
 
 void Window::_close(bool eraseFromCollection)
 {
-	if (m_onDispatching)	return;
-	m_onDispatching = true;
+	if (m_dispatchingCloseEvent)
+		return;
+
+	m_dispatchingCloseEvent = true;
 	CancelEventArgs args;
 	onClosing(args);
 	if (!args.cancel)
@@ -144,7 +153,7 @@ void Window::_close(bool eraseFromCollection)
 		if(eraseFromCollection)
 			Singleton<WindowCollection>::get()->erase(this);
 	}
-	m_onDispatching = false;
+	m_dispatchingCloseEvent = false;
 }
 
 std::vector<UIElement *> Window::hitElements(int x, int y) const
@@ -163,8 +172,8 @@ void Window::sizeCallback(int width, int height)
 {
 	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
 	drawContext.viewport(0, 0, width, height);
-	set(WidthProperty(), (float)width);
-	set(HeightProperty(), (float)height);
+	setValue(WidthProperty(), (float)width);
+	setValue(HeightProperty(), (float)height);
 	updateLayout();
 }
 
@@ -241,12 +250,22 @@ void Window::closeCallback()
 
 void Window::iconifyCallback(int iconified)
 {
-	StateChanged.invoke({});
+	m_processingCallback = true;
+	if (!m_processingWindowStateChanged)	//如果从WindowStateChanged来的，则不再setValue
+	{
+		setValue(WindowStateProperty(), iconified ? WindowStateE::Minimized : m_lastWindowState);
+	}
+	m_processingCallback = false;
 }
 
-void Window::maximizeCallback(GLFWwindow * window, int maximized)
+void Window::maximizeCallback(int maximized)
 {
-	StateChanged.invoke({});
+	m_processingCallback = true;
+	if (!m_processingWindowStateChanged)
+	{
+		setValue(WindowStateProperty(), maximized ? WindowStateE::Maximized : WindowStateE::Normal);
+	}
+	m_processingCallback = false;
 }
 
 void Window::init()
@@ -271,12 +290,13 @@ void Window::deinit()
 
 void Window::destroyWindow()
 {
-	if (!m_implWindow)
-		return;
-	glfwDestroyWindow(m_implWindow);
-	m_implWindow = nullptr;
-	if (Singleton<WindowCollection>::get()->windows().empty())
-		deinit();
+	if (m_implWindow)
+	{
+		glfwDestroyWindow(m_implWindow);
+		m_implWindow = nullptr;
+		if (Singleton<WindowCollection>::get()->windows().empty())
+			deinit();
+	}
 }
 
 void Window::swapBuffers() const
@@ -287,92 +307,105 @@ void Window::swapBuffers() const
 	glfwSwapBuffers(m_implWindow);
 }
 
-void Window::waitEvent()
+void Window::pollEvents()
 {
 	if (g_windowSystemInitialized)
-		glfwWaitEvents();
+		glfwPollEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞
 }
 
 DependencyProperty Window::WindowStateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+		if (!w)	return;
+
+		auto oldState = args->oldValue.extract<WindowStateE>();
+		auto newState = args->newValue.extract<WindowStateE>();
+		if (oldState == newState)
+		{
+			return;
+		}
+		dynamic_cast<Window *>(obj)->m_lastWindowState = oldState;
+		if (!dynamic_cast<Window *>(obj)->m_processingCallback)
+		{
+			dynamic_cast<Window *>(obj)->m_processingWindowStateChanged = true;
+			switch (newState)
+			{	
+			//这里多加一个glfwMaximizeWindow的原因，是当出现连续设置glfwMaximizeWindow、glfwIconifyWindow、glfwRestoreWindow时，
+			//glfw恢复到了max状态，这和预期是不符合的，可能是一个bug；在glfwRestoreWindow前加一个glfwMaximizeWindow则可以保证恢复到normal状态
+			case WindowStateE::Normal:		glfwMaximizeWindow(w); glfwRestoreWindow(w);	break;
+			case WindowStateE::Maximized:	glfwMaximizeWindow(w);	break;
+			case WindowStateE::Minimized:	glfwIconifyWindow(w);	break;
+			default:												break;
+			}
+			dynamic_cast<Window *>(obj)->m_processingWindowStateChanged = false;
+		}
+		dynamic_cast<Window *>(obj)->onStateChanged({});
+	});
 	return dp;
 }
 
 DependencyProperty Window::WindowStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		//glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+	});
 	return dp;
 }
 
 DependencyProperty Window::TopmostProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false);
+	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		if(dynamic_cast<Window *>(obj)->m_implWindow)
+			glfwSetWindowAttrib(dynamic_cast<Window *>(obj)->m_implWindow, GLFW_FLOATING, args->newValue.extract<bool>());
+	});
 	return dp;
 }
 
 DependencyProperty Window::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		if (dynamic_cast<Window *>(obj)->m_implWindow)
+			glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+	});
 	return dp;
 }
 
 DependencyProperty Window::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		if (dynamic_cast<Window *>(obj)->m_implWindow)
+			glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+	});
 	return dp;
 }
 
 DependencyProperty Window::TitleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string());
+	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		if (dynamic_cast<Window *>(obj)->m_implWindow)
+			glfwSetWindowTitle(dynamic_cast<Window *>(obj)->m_implWindow, args->newValue.extract<std::string>().data());
+	});
 	return dp;
 }
 
 DependencyProperty Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", std::make_shared<ImageSource>());
+	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+		auto source = args->newValue.extract<std::shared_ptr<ImageSource>>();
+		auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+		GLFWimage img;
+		img.width = bm->width();
+		img.height = bm->height();
+		img.pixels = (unsigned char *)bm->data();
+		if(dynamic_cast<Window *>(obj)->m_implWindow)
+			glfwSetWindowIcon(dynamic_cast<Window *>(obj)->m_implWindow, 1, &img);
+	});
 	return dp;
 }
 
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == WindowStateProperty())
-	{
-		auto state = args.newValue.extract<WindowStateE>();
-		switch (state)
-		{
-		case WindowStateE::Normal:		glfwRestoreWindow(m_implWindow);	break;
-		case WindowStateE::Maximized:	glfwMaximizeWindow(m_implWindow);	break;
-		case WindowStateE::Minimized:	glfwIconifyWindow(m_implWindow);	break;
-		default:															break;
-		}
-	}
-	else if (args.property == WindowStyleProperty())
-	{
-	}
-	else if (args.property == TopmostProperty())
-	{
-		glfwSetWindowAttrib(m_implWindow, GLFW_FLOATING, args.newValue.extract<bool>());
-	}
-	else if (args.property == LeftProperty() || args.property == TopProperty())
-	{
-		glfwSetWindowPos(m_implWindow, (int)get<float>(LeftProperty()), (int)get<float>(TopProperty()));
-	}
-	else if (args.property == TitleProperty())
-	{
-		glfwSetWindowTitle(m_implWindow, args.newValue.extract<std::string>().data());
-	}
-	else if (args.property == IconProperty())
-	{
-		auto source = args.newValue.extract<std::shared_ptr<ImageSource>>();
-		auto bm = source->get<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
-		GLFWimage img;
-		img.width = bm->width();
-		img.height = bm->height();
-		img.pixels = (unsigned char *)bm->data();
-		glfwSetWindowIcon(m_implWindow, 1, &img);
-	}
 }
 
 void Window::onActivated(const EventArgs & args)

@@ -20,7 +20,7 @@ DependencyProperty Polyline::PointsProperty()
 void Polyline::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = get<Size>(ActualSizeProperty());
+	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	if (m_strokeObject)
 	{
@@ -33,7 +33,7 @@ void Polyline::onPropertyChanged(const DependencyPropertyChangedEventArgs & args
 {
 	if (args.property == StrokeProperty())
 	{
-		auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(FillProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -46,7 +46,7 @@ Size Polyline::measureOverride(const Size & availableSize)
 
 Size Polyline::arrangeOverride(const Size & finalSize)
 {
-	auto points = get<std::vector<Point>>(PointsProperty());
+	auto points = getValue<std::vector<Point>>(PointsProperty());
 	if (points.empty())
 	{
 		return Size::zero();
@@ -66,17 +66,17 @@ void Polyline::updateStrokeObject(const Rect &rc)
 		return;
 
 	std::vector<glm::vec2> breaks;
-	auto points = get<std::vector<Point>>(PointsProperty());
+	auto points = getValue<std::vector<Point>>(PointsProperty());
 	for (auto const &p : points)
 	{
 		breaks.push_back({ p.x(), p.y() });
 	}
-	auto strokeThickness = get<float>(StrokeThicknessProperty());
-	auto strokeDashArray = get<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffset = get<float>(StrokeDashOffsetProperty());
-	auto strokeLineJoin = get<PenLineJoinE>(StrokeLineJoinProperty());
+	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
+	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
+	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = get<std::shared_ptr<Brush>>(FillProperty());
+	auto stroke = getValue<std::shared_ptr<Brush>>(FillProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

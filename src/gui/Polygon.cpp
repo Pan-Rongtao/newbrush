@@ -21,16 +21,16 @@ DependencyProperty Polygon::PointsProperty()
 void Polygon::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = get<Size>(ActualSizeProperty());
+	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
 	if (m_fillObject)
 	{
 		Rect fillRc{ rc };
-		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (stroke)
 		{
-			auto strokeThickness = get<float>(StrokeThicknessProperty());
+			auto strokeThickness = getValue<float>(StrokeThicknessProperty());
 			fillRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
 		}
 		updateFillObject();
@@ -49,13 +49,13 @@ void Polygon::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = get<std::shared_ptr<Brush>>(FillProperty());
+		auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
 		if (!fill)				m_fillObject.reset();
 		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
 	}
 	else if (args.property == StrokeProperty())
 	{
-		auto stroke = get<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -68,7 +68,7 @@ Size Polygon::measureOverride(const Size & availableSize)
 
 Size Polygon::arrangeOverride(const Size & finalSize)
 {
-	auto points = get<std::vector<Point>>(PointsProperty());
+	auto points = getValue<std::vector<Point>>(PointsProperty());
 	if (points.empty())
 	{
 		return Size::zero();
@@ -84,8 +84,8 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 
 void Polygon::updateFillObject()
 {
-	auto fill = get<std::shared_ptr<Brush>>(FillProperty());
-	auto points = get<std::vector<Point>>(PointsProperty());
+	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
+	auto points = getValue<std::vector<Point>>(PointsProperty());
 	if (!fill || points.size() < 2)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;

@@ -22,39 +22,39 @@ TEST_CASE("Test nb::Canvas", "[Canvas]")
 	auto cv = std::make_shared<Canvas>();
 
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
-	rc0->set(Shape::WidthProperty(), 100);
-	rc0->set(Shape::HeightProperty(), 100);
+	rc0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc0->setValue(Shape::WidthProperty(), 100);
+	rc0->setValue(Shape::HeightProperty(), 100);
 
 	auto rc1 = std::make_shared<Rectangle>();
-	rc1->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
-	rc1->set(Shape::WidthProperty(), 100);
-	rc1->set(Shape::HeightProperty(), 100);
+	rc1->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
+	rc1->setValue(Shape::WidthProperty(), 100);
+	rc1->setValue(Shape::HeightProperty(), 100);
 
 	auto rc2 = std::make_shared<Rectangle>();
-	rc2->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-	rc2->set(Shape::WidthProperty(), 100);
-	rc2->set(Shape::HeightProperty(), 100);
+	rc2->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	rc2->setValue(Shape::WidthProperty(), 100);
+	rc2->setValue(Shape::HeightProperty(), 100);
 
 	auto rc3 = std::make_shared<Rectangle>();
-	rc3->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
-	rc3->set(Shape::WidthProperty(), 100);
-	rc3->set(Shape::HeightProperty(), 100);
+	rc3->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
+	rc3->setValue(Shape::WidthProperty(), 100);
+	rc3->setValue(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
-	es0->set(Shape::WidthProperty(), 100);
-	es0->set(Shape::HeightProperty(), 100);
+	es0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
+	es0->setValue(Shape::WidthProperty(), 100);
+	es0->setValue(Shape::HeightProperty(), 100);
 
 	auto line0 = std::make_shared<Line>();
-	line0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
-	line0->set(Line::X1Property(), 100); 
-	line0->set(Line::Y1Property(), 100);
-	line0->set(Line::X2Property(), 200);
-	line0->set(Line::Y2Property(), 200);
+	line0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
+	line0->setValue(Line::X1Property(), 100); 
+	line0->setValue(Line::Y1Property(), 100);
+	line0->setValue(Line::X2Property(), 200);
+	line0->setValue(Line::Y2Property(), 200);
 
 	auto pl0 = std::make_shared<Polyline>();
-	pl0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
+	pl0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
 	std::vector<Point> points;// { Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
 	for (float i = 0.0f; i <= 1.000001; i += 0.01f)
 	{
@@ -64,12 +64,12 @@ TEST_CASE("Test nb::Canvas", "[Canvas]")
 	//	points.push_back({p.x, p.y});
 	}
 
-	pl0->set(Polyline::PointsProperty(), std::vector<Point>(points));
+	pl0->setValue(Polyline::PointsProperty(), std::vector<Point>(points));
 
 	auto pg0 = std::make_shared<Polygon>();
-	pg0->set(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
+	pg0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::darkBlue()));
 	//std::vector<Point> points{ Point(0, 0), Point(100, 100), Point(150, 50), Point(200, 50), };
-	pg0->set(Polyline::PointsProperty(), std::vector<Point>(points));
+	pg0->setValue(Polyline::PointsProperty(), std::vector<Point>(points));
 	/*
 	doubleAni.From = 800;
 	doubleAni.To = 1000;
@@ -108,6 +108,6 @@ TEST_CASE("Test nb::Canvas", "[Canvas]")
 	cv->setLeft(pg0, 200);
 	cv->setTop(pg0, 10);
 
-	m_window->set(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(cv));
+	m_window->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(cv));
 	
 }

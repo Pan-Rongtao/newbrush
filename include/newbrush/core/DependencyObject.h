@@ -11,15 +11,15 @@ class NB_API DependencyObject : public Object
 public:
 	//设置属性值（允许设置任意依赖属性对象，即使DependencyObject未注册有该依赖属性）
 	//异常：std::logic_error
-	void set(const DependencyProperty &dp, const Var &value);
+	void setValue(const DependencyProperty &dp, const Var &value);
 
 	//获取属性值
-	Var get(const DependencyProperty &dp) const;
+	Var getValue(const DependencyProperty &dp) const;
 	template<class T>
-	T get(const DependencyProperty &dp) const
+	T getValue(const DependencyProperty &dp) const
 	{
 		try {
-			return get(dp).extract<T>();
+			return getValue(dp).extract<T>();
 		}
 		catch (...) { nbThrowException(std::logic_error, "should use get<%s> instead of get<%s> for [%s]", dp.propertyType().name(), typeid(T).name(), dp.name().data()); }
 	}

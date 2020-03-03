@@ -6,7 +6,7 @@ using namespace nb;
 //反之已经存储该属性的值，当value与defaultValue相等，移除该存储，否则更新该值
 //wchar_t、chart16_t、long double等这些不被视为number，所以无法转成number类型（bool、char、int、short、float、double等）
 //因此wchar_t这些类型都是用extract而不是convert
-void DependencyObject::set(const DependencyProperty & dp, const Var &value)
+void DependencyObject::setValue(const DependencyProperty & dp, const Var &value)
 {
 	auto propertyType = dp.propertyType();
 	Var fixSetValue;
@@ -112,7 +112,7 @@ void DependencyObject::set(const DependencyProperty & dp, const Var &value)
 
 //如果未存储有该属性的值，则返回defaultValue
 //反之，返回该存储值
-Var DependencyObject::get(const DependencyProperty & dp) const
+Var DependencyObject::getValue(const DependencyProperty & dp) const
 {
 	auto iter = m_valueEntrys.find(dp.globalIndex());
 	if (iter == m_valueEntrys.end())
