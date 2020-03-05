@@ -11,7 +11,9 @@ class NB_API Panel : public UIElement
 public:
 	virtual ~Panel() = default;
 
-	static DependencyProperty		BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘
+	static DependencyProperty BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘
+
+	UIElementCollection &children();
 
 	void setZIndex(std::shared_ptr<UIElement> element, int index);
 	int getZIndex(std::shared_ptr<UIElement> element);

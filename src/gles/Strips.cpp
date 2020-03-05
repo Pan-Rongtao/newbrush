@@ -11,6 +11,9 @@ Strips::Strips()
 
 void Strips::update(const std::vector<glm::vec2>& breaks, float thickness, const std::vector<float>& dashArray, float offset, PenLineJoinE lineJionStyle)
 {
+	if (breaks.empty())
+		return;
+
 	std::vector<Vertex> vertexs;
 	//计算外接矩形
 	std::vector<glm::vec2> outBreaks;	//外接点集合

@@ -70,15 +70,7 @@ int Application::run(int argc, char *argv[])
 	{
 		while (!m_exitFlag)
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			Timer::driveInLoop();
-		/*	for (auto const &w : Singleton<WindowCollection>::get()->windows())
-			{
-				if (w->Visibility == VisibilityE::Visible)
-				{
-					w->swapBuffers();
-				}
-			}*/
 			Window::pollEvents();
 		}
 	}

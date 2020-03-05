@@ -8,8 +8,6 @@ using namespace nb;
 using namespace nb::gui;
 
 Rectangle::Rectangle()
-	: RadiusX([&](float v) {setValue(RadiusXProperty(), v); }, [&]()->float {return getValue<float>(RadiusXProperty()); })
-	, RadiusY([&](float v) {setValue(RadiusYProperty(), v); }, [&]()->float {return getValue<float>(RadiusYProperty()); })
 {
 }
 
@@ -40,7 +38,9 @@ void Rectangle::onRender(Viewport2D & drawContext)
 			auto strokeThickness = getValue<float>(StrokeThicknessProperty());
 			fillRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
 		}
-		updateFillObject(fillRc.width(), fillRc.height(), RadiusX(), RadiusY());
+		auto radiusX = getValue<float>(RadiusXProperty());
+		auto radiusY = getValue<float>(RadiusYProperty());
+		updateFillObject(fillRc.width(), fillRc.height(), radiusX, radiusY);
 		drawContext.queue(m_fillObject);
 		m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 	}

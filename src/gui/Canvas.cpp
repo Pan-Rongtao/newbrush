@@ -56,7 +56,7 @@ float Canvas::getBottom(std::shared_ptr<UIElement> element)
 	return v.isEmpty() ? NAN : v.convert<float>();
 }
 
-//位设置宽高则默认为0
+//未设置宽高则默认为0
 Size Canvas::measureOverride(const Size & availableSize)
 {
 	for (auto i = 0u; i < m_children.count(); ++i)

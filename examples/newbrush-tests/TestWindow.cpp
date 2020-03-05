@@ -17,6 +17,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 	w->setValue(Window::TitleProperty(), std::string("Newbrush窗口测试"));
 	auto img = std::make_shared<ImageSource>("G:/BK(2015.11.20)/Weibo_UI_121212/Gstencil/Keyboard/Clear_P.png");
 	w->setValue(Window::IconProperty(), img);
+	w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);
 
 	w->Activated += [](const EventArgs &args) {
 		nb::Log::info("on activated");
@@ -35,9 +36,10 @@ TEST_CASE("Test nb::Window", "[Window]")
 		auto state = w->getValue<WindowStateE>(Window::WindowStateProperty());
 		nb::Log::info("on state changed:%d", static_cast<int>(state));
 	};
-	w->setValue(Window::WindowStateProperty(), WindowStateE::Maximized);
-	w->setValue(Window::WindowStateProperty(), WindowStateE::Minimized);
-	w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);
+
+	//w->setValue(Window::WindowStateProperty(), WindowStateE::Maximized);
+	//w->setValue(Window::WindowStateProperty(), WindowStateE::Minimized);
+	//w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);
 	Timer timer;
 	timer.Tick += [w](const EventArgs &args) {
 		static int i = 0;
@@ -68,7 +70,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 
 	while (true)
 	{
-		Window::pollEvents();
 		Timer::driveInLoop();
+		Window::pollEvents();
 	}
 }

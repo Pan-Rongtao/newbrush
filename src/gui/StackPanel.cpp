@@ -72,24 +72,25 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
 	auto x = 0.0f, y = 0.0f;
+	auto selfDesiredSize = getValue<Size>(DesiredSizeProperty());
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto desiredSize = child->getValue<Size>(DesiredSizeProperty());
+		auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
 		auto orientation = getValue<OrientationE>(OrientationProperty());
 		if (orientation == OrientationE::Horizontal)
 		{
-			child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
-			x += desiredSize.width();
-			ret.width() += desiredSize.width();
-			ret.height() = std::max(ret.height(), desiredSize.height());
+			child->arrage(Rect(x, y, childDesiredSize.width(), selfDesiredSize.height()));
+			x += childDesiredSize.width();
+			ret.width() += childDesiredSize.width();
+			ret.height() = std::max(ret.height(), childDesiredSize.height());
 		}
 		else
 		{
-			child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
-			y += desiredSize.height();
-			ret.width() = std::max(ret.width(), desiredSize.width());
-			ret.height() += desiredSize.height();
+			child->arrage(Rect(x, y, selfDesiredSize.width(), childDesiredSize.height()));
+			y += childDesiredSize.height();
+			ret.width() = std::max(ret.width(), childDesiredSize.width());
+			ret.height() += childDesiredSize.height();
 		}
 	}
 	return finalSize;

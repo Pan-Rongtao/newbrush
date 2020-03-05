@@ -14,6 +14,7 @@ using namespace gui;
 Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
 
+//glfw document：https://www.glfw.org/docs/latest/window_guide.html#window_windowed_full_screen
 Window::Window()
 	: m_implWindow(nullptr)
 	, m_dispatchingCloseEvent(false)
@@ -222,10 +223,8 @@ void Window::focusCallback(int focused)
 void Window::refreshCallback()
 {
 	glfwMakeContextCurrent(m_implWindow);
-	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	{
-
 		static int frames = 0;
 		static uint64_t k = nb::getTickCount();
 		drawContext.draw();
@@ -310,7 +309,7 @@ void Window::swapBuffers() const
 void Window::pollEvents()
 {
 	if (g_windowSystemInitialized)
-		glfwPollEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞
+		glfwWaitEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞（glfwWaitEvents CPU消耗很低，glfwPollEvents则很高30%以上）
 }
 
 DependencyProperty Window::WindowStateProperty()
@@ -348,7 +347,29 @@ DependencyProperty Window::WindowStateProperty()
 DependencyProperty Window::WindowStyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		//glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+		auto oldStyle = args->oldValue.extract<WindowStyleE>();
+		auto newStyle = args->newValue.extract<WindowStyleE>();
+		if (oldStyle == newStyle)
+			return;
+
+		auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+		switch (newStyle)
+		{
+		case nb::gui::WindowStyleE::None:
+			glfwSetWindowAttrib(w, GLFW_DECORATED, false);
+			glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);
+			break;
+		case nb::gui::WindowStyleE::Fixed:
+			glfwSetWindowAttrib(w, GLFW_DECORATED, true);
+			glfwSetWindowAttrib(w, GLFW_RESIZABLE, false);
+			break;
+		case nb::gui::WindowStyleE::SizeBox:
+			glfwSetWindowAttrib(w, GLFW_DECORATED, true);
+			glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);
+			break;
+		default:
+			break;
+		}
 	});
 	return dp;
 }

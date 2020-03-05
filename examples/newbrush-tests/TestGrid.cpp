@@ -8,28 +8,31 @@
 #include "newbrush/media/ImageBrush.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Grid.h"
+#include "newbrush/gui/Application.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
 using namespace nb::gui;
 
-TEST_CASE("Test nb::Grid", "[Grid]")
+TEST_CASE("Test Grid", "[Grid]")
 {
-	auto m_window = std::make_shared<Window>();
+	Application app;
+	std::shared_ptr<Window> w = std::make_shared<Window>();
 	auto grid = std::make_shared<Grid>();
+	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(grid));
 	
 	auto rowdef0 = std::make_shared<RowDefinition>();
 	//rowdef0->Height = 200;
 	//rowdef0->Height = GridLength(1, GridLength::GridUnitType::Star);
-	rowdef0->setValue(UIElement::HeightProperty(), GridLength::automate());
+	rowdef0->setValue(RowDefinition::HeightProperty(), GridLength::automate());
 	auto rowdef1 = std::make_shared<RowDefinition>();
 	//rowdef1->Height = 200;
-	rowdef1->setValue(UIElement::HeightProperty(), GridLength(GridUnitType::Star, 2));
+	rowdef1->setValue(RowDefinition::HeightProperty(), GridLength(GridUnitType::Star, 2));
 	auto rowdef2 = std::make_shared<RowDefinition>();
-	rowdef2->setValue(UIElement::HeightProperty(), GridLength(GridUnitType::Star, 3));
-//	grid->RowDefinitions().push_back(rowdef0);
-//	grid->RowDefinitions().push_back(rowdef1);
-//	grid->RowDefinitions().push_back(rowdef2);
+	rowdef2->setValue(RowDefinition::HeightProperty(), GridLength(GridUnitType::Star, 3));
+
+	std::vector<std::shared_ptr<RowDefinition>> rowDefinitions = { rowdef0, rowdef1, rowdef2 };
+	grid->setValue(Grid::RowDefinitionsProperty(), rowDefinitions);
 
 	auto coldef0 = std::make_shared<ColumnDefinition>();
 	//coldef0->Width = 100;
@@ -37,50 +40,51 @@ TEST_CASE("Test nb::Grid", "[Grid]")
 	//coldef1->Width = 100;
 	auto coldef2 = std::make_shared<ColumnDefinition>();
 	//coldef2->Width = 100;
-//	grid->ColumnDefinitions().push_back(coldef0);
-//	grid->ColumnDefinitions().push_back(coldef1);
-//	grid->ColumnDefinitions().push_back(coldef2);
+
+	std::vector<std::shared_ptr<ColumnDefinition>> colDefinitions = { coldef0, coldef1, coldef2 };
+//	grid->setValue(Grid::ColumnDefinitionsProperty(), colDefinitions);
 
 
 	auto rc0 = std::make_shared<Rectangle>();
-	rc0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc0->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	rc0->setValue(Shape::WidthProperty(), 50);
 	rc0->setValue(Shape::HeightProperty(), 50);
 //	rc0->HorizontalAlignment = HorizontalAlignmentE::Left;
 
 	auto rc1 = std::make_shared<Rectangle>();
-	rc1->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
+	rc1->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
 //	rc1->Width = 100;
 //	rc1->Height = 100;
 
 	auto rc2 = std::make_shared<Rectangle>();
-	rc2->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	rc2->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 //	rc2->Width = 100;
 //	rc2->Height = 100;
 
 	auto rc3 = std::make_shared<Rectangle>();
-	rc3->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
+	rc3->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::firebrick()));
 	rc3->setValue(Shape::WidthProperty(), 100);
 	rc3->setValue(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
+	es0->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
 //	es0->Width = 100;
 //	es0->Height = 100;
 
 	auto text = std::make_shared<TextBlock>("abcdefg");
 
-/*	grid->Children().add(rc0);
-	grid->Children().add(rc1);
-	grid->Children().add(rc2);
-	grid->Children().add(rc3);
-	grid->Children().add(es0);
-	grid->Children().add(text);*/
+	grid->children().add(rc0);
+	grid->children().add(rc1);
+	grid->children().add(rc2);
+	grid->children().add(rc3);
+	grid->children().add(es0);
+	grid->children().add(text);
+
 	grid->setRow(rc0, 0);
 	grid->setColumn(rc0, 0);
 	grid->setRow(rc1, 1);
 	grid->setColumn(rc1, 0);
-	grid->setRowSpan(rc0, 2);
+	grid->setColumnSpan(rc0, 2);
 	grid->setRow(rc2, 2);
 	grid->setColumn(rc2, 0);
 	grid->setRow(rc3, 0);
@@ -90,17 +94,5 @@ TEST_CASE("Test nb::Grid", "[Grid]")
 	grid->setRow(es0, 2);
 	grid->setColumn(es0, 2);
 
-
-	//doubleAni.From = 800;
-	//doubleAni.To = 2000;
-	//doubleAni.Easing = std::make_shared<ElasticEase>();
-	//doubleAni.BeginTime = TimeSpan::fromSeconds(1);
-	//doubleAni.Duration = TimeSpan::fromSeconds(5);
-	//doubleAni.StateChangedEvent += std::bind(&TestCanvas::onStateChanged, this, std::placeholders::_1);
-	//doubleAni.ProgressEvent += std::bind(&TestCanvas::onProgress, this, std::placeholders::_1);
-	//doubleAni.CompleteEvent += std::bind(&TestCanvas::onCompleted, this, std::placeholders::_1);
-	//doubleAni.TargetProperty = &m_window->Width;
-	//doubleAni.begin();
-
-	m_window->setValue(Window::ContentProperty(), grid);
+	app.run(0, nullptr);
 }

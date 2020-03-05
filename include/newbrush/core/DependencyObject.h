@@ -12,6 +12,12 @@ public:
 	//设置属性值（允许设置任意依赖属性对象，即使DependencyObject未注册有该依赖属性）
 	//异常：std::logic_error
 	void setValue(const DependencyProperty &dp, const Var &value);
+	template<class T>
+	void setValue(const DependencyProperty &dp, const T &value)
+	{
+		Var v = value;
+		setValue(dp, v);
+	}
 
 	//获取属性值
 	Var getValue(const DependencyProperty &dp) const;

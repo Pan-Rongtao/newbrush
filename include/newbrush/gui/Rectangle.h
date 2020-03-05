@@ -9,10 +9,8 @@ public:
 	Rectangle();
 	virtual ~Rectangle() = default;
 
-	Property_rw<float>			RadiusX;			//X»¡¶È
-	Property_rw<float>			RadiusY;			//Y»¡¶È
-	static DependencyProperty	RadiusXProperty();	//X»¡¶ÈµÄÒÀÀµÊôÐÔ
-	static DependencyProperty	RadiusYProperty();	//Y»¡¶ÈµÄÒÀÀµÊôÐÔ
+	static DependencyProperty	RadiusXProperty();	//X»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
+	static DependencyProperty	RadiusYProperty();	//Y»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
 
 	virtual void onRender(Viewport2D & drawContext) override;
 

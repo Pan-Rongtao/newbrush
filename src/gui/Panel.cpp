@@ -24,6 +24,11 @@ DependencyProperty Panel::BackgroundProperty()
 	return dp;
 }
 
+UIElementCollection & Panel::children()
+{
+	return m_children;
+}
+
 void Panel::onRender(Viewport2D & drawContext)
 {
 	for (auto i = 0u; i < m_children.count(); ++i)

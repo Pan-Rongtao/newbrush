@@ -19,8 +19,8 @@ enum class WindowStateE
 enum class WindowStyleE
 {
 	None,		//仅工作区可见
-	Fixed,		//
-	SizeBox,
+	Fixed,		//不可改变尺寸
+	SizeBox,	//有边框（默认）
 };
 
 class NB_API Window : public ContentControl

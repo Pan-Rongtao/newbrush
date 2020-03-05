@@ -203,7 +203,7 @@ Point UIElement::worldOffset()
 		auto p = this;
 		Point ret;
 		do {
-			auto offset = p->getValue<float>(OffsetProperty());
+			auto offset = p->getValue<Point>(OffsetProperty());
 			ret += offset;
 		} while ((p->m_parent) && (p = p->m_parent));
 		return ret;

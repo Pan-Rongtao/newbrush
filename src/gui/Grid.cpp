@@ -168,7 +168,7 @@ void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
 uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyRowSpan);
-	return v.isEmpty() ? 0 : v.extract<uint32_t>();
+	return v.isEmpty() ? 1 : v.extract<uint32_t>();
 }
 
 void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
@@ -183,7 +183,7 @@ void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
 uint32_t Grid::getColumnSpan(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumnSpan);
-	return v.isEmpty() ? 0 : v.extract<uint32_t>();
+	return v.isEmpty() ? 1 : v.extract<uint32_t>();
 }
 
 //规则：每次根据RowDefinitions和ColumnDefinitions把每个网格单元的像素尺寸计算出来：
@@ -212,9 +212,9 @@ Size Grid::measureOverride(const Size & availableSize)
 			case GridUnitType::Auto:
 			{
 				auto maxLenghtOfRowOrCol = 0.0f;
-				for (auto i = 0u; i < m_children.count(); ++i)
+				for (auto j = 0u; j < m_children.count(); ++j)
 				{
-					auto child = m_children.childAt(i);
+					auto child = m_children.childAt(j);
 					auto childRowOrCol = isRowdefinition ? getRow(child) : getColumn(child);
 					auto childHeight = child->getValue<float>(HeightProperty());
 					auto x = isRowdefinition ? (std::isnan(childHeight) ? 0.0f : childHeight) : (std::isnan(childHeight) ? 0.0f : childHeight);
@@ -237,12 +237,15 @@ Size Grid::measureOverride(const Size & availableSize)
 			for (auto i = 0; i != rowOrColUnitsPixcelLenghts.size(); ++i)
 			{
 				if (!std::isnan(rowOrColUnitsPixcelLenghts[i]))
+				{
 					verifiedLeghtPixcels += rowOrColUnitsPixcelLenghts[i];
+				}
 				else
 				{
 					auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
 					auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
-					auto lenght = isRowdefinition ? rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty()) : colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty());
+					auto lenght = isRowdefinition ? (i < rowDefinitions.size() ? rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty()) : 0.0) 
+						: (i < colDefinitions.size() ? colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty()) : 0.0);
 					remainStars += lenght.value();
 				}
 			}
@@ -254,12 +257,17 @@ Size Grid::measureOverride(const Size & availableSize)
 				{
 					auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
 					auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
-					auto rowHeight = rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty());
-					auto colWidth = colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty());
+					auto rowHeight = i < rowDefinitions.size() ? rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty()) : 0.0;
+					auto colWidth = i < colDefinitions.size() ? colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty()) : 0.0;
 					rowOrColUnitsPixcelLenghts[i] = isRowdefinition ? (rowHeight.value() / remainStars * remainPixcels) :
 						(colWidth.value() / remainStars * remainPixcels);
 				}
 			}
+		}
+		//如果为空，表示未定义行集合或列集合
+		if (rowOrColUnitsPixcelLenghts.empty())
+		{
+			rowOrColUnitsPixcelLenghts.push_back(isRowdefinition ? availableSize.height() : availableSize.width());
 		}
 		return rowOrColUnitsPixcelLenghts;
 	};
@@ -274,8 +282,10 @@ Size Grid::measureOverride(const Size & availableSize)
 		auto colOfChild = getColumn(child);
 		auto rowSpan = getRowSpan(child);
 		auto colSpan = getColumnSpan(child);
-		auto w = std::accumulate(m_pixcelWidthsForEachCols.begin() + colOfChild, m_pixcelWidthsForEachCols.begin() + colOfChild + rowSpan, 0.0f);
-		auto h = std::accumulate(m_pixcelHeightsForEachRows.begin() + rowOfChild, m_pixcelHeightsForEachRows.begin() + rowOfChild + colSpan, 0.0f);
+		auto actualRowSpan = rowOfChild + rowSpan <= m_pixcelHeightsForEachRows.size() ? rowSpan : m_pixcelHeightsForEachRows.size() - rowOfChild;
+		auto actualColSpan = colOfChild + colSpan <= m_pixcelWidthsForEachCols.size() ? colSpan : m_pixcelHeightsForEachRows.size() - colOfChild;
+		auto w = std::accumulate(m_pixcelWidthsForEachCols.begin() + colOfChild, m_pixcelWidthsForEachCols.begin() + colOfChild + actualColSpan, 0.0f);
+		auto h = std::accumulate(m_pixcelHeightsForEachRows.begin() + rowOfChild, m_pixcelHeightsForEachRows.begin() + rowOfChild + actualRowSpan, 0.0f);
 
 		child->measure(Size(w, h));
 	}
@@ -299,10 +309,12 @@ Size Grid::arrangeOverride(const Size & finalSize)
 		colOfChild = nb::clamp<int>(0u, colDefinitions.size(), colOfChild);
 		auto rowSpan = getRowSpan(child);
 		auto colSpan = getColumnSpan(child);
+		auto actualRowSpan = rowOfChild + rowSpan <= m_pixcelHeightsForEachRows.size() ? rowSpan : m_pixcelHeightsForEachRows.size() - rowOfChild;
+		auto actualColSpan = colOfChild + colSpan <= m_pixcelWidthsForEachCols.size() ? colSpan : m_pixcelHeightsForEachRows.size() - colOfChild;
 		auto x = std::accumulate(m_pixcelWidthsForEachCols.begin(), m_pixcelWidthsForEachCols.begin() + colOfChild, 0.0f);
 		auto y = std::accumulate(m_pixcelHeightsForEachRows.begin(), m_pixcelHeightsForEachRows.begin() + rowOfChild, 0.0f);
-		auto w = std::accumulate(m_pixcelWidthsForEachCols.begin() + colOfChild, m_pixcelWidthsForEachCols.begin() + colOfChild + rowSpan, 0.0f);
-		auto h = std::accumulate(m_pixcelHeightsForEachRows.begin() + rowOfChild, m_pixcelHeightsForEachRows.begin() + rowOfChild + colSpan, 0.0f);
+		auto w = std::accumulate(m_pixcelWidthsForEachCols.begin() + colOfChild, m_pixcelWidthsForEachCols.begin() + colOfChild + actualColSpan, 0.0f);
+		auto h = std::accumulate(m_pixcelHeightsForEachRows.begin() + rowOfChild, m_pixcelHeightsForEachRows.begin() + rowOfChild + actualRowSpan, 0.0f);
 
 		child->arrage(Rect(x, y, w, h));
 	}
