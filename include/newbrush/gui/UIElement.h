@@ -1,5 +1,4 @@
 #pragma once
-#include "newbrush/core/Property.h"
 #include "newbrush/core/DependencyObject.h"
 #include "newbrush/core/Size.h"
 #include "newbrush/core/Rect.h"

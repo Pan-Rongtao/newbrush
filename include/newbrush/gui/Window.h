@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "newbrush/core/Property.h"
 #include "newbrush/core/Event.h"
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/ContentControl.h"

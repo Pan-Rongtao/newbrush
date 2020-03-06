@@ -1,5 +1,4 @@
 #pragma once
-#include "newbrush/core/Property.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/RoutedEvent.h"
 #include "Poco/Dynamic/Var.h"

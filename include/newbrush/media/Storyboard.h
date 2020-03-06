@@ -13,7 +13,6 @@
 ********************************************************/
 #pragma once
 #include "newbrush/media/Timeline.h"
-#include "newbrush/core/Property.h"
 
 namespace nb{
 

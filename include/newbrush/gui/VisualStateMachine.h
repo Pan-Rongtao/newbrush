@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "newbrush/core/Property.h"
 #include "newbrush/core/TimeSpan.h"
 #include "newbrush/media/Easing.h"
 #include "newbrush/media/Storyboard.h"

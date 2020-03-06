@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "newbrush/core/Property.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/Trigger.h"
 

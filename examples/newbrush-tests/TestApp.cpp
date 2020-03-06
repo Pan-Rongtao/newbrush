@@ -2,7 +2,7 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Image.h"
 #include "newbrush/gui/Shape.h"
-#include "newbrush/core/Color.h"
+#include "newbrush/media/Color.h"
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/media/ImageSource.h"
 #include "newbrush/media/SolidColorBrush.h"

@@ -11,7 +11,6 @@
 **	
 ********************************************************/
 #pragma once
-#include "newbrush/core/Property.h"
 #include "newbrush/core/DependencyObject.h"
 
 namespace nb{

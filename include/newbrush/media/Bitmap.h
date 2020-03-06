@@ -16,7 +16,7 @@
 ********************************************************/
 #pragma once
 #include "newbrush/core/Def.h"
-#include "newbrush/core/Color.h"
+#include "newbrush/media/Color.h"
 
 namespace nb{
 

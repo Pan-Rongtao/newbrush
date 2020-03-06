@@ -1,4 +1,4 @@
-#include "newbrush/core/Color.h"
+#include "newbrush/media/Color.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

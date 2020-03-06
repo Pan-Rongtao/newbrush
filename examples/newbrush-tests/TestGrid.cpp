@@ -1,6 +1,6 @@
 #include "newbrush/gui/Shape.h"
 #include "newbrush/gui/Rectangle.h"
-#include "newbrush/core/Color.h"
+#include "newbrush/media/Color.h"
 #include "newbrush/gui/TextBlock.h"
 #include "newbrush/gui/Ellipse.h"
 #include "newbrush/media/SolidColorBrush.h"

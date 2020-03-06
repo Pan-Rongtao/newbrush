@@ -1,7 +1,7 @@
 #include "newbrush/media/AnimationTimeline.h"
 #include "newbrush/core/DependencyObject.h"
 #include "newbrush/core/Rect.h"
-#include "newbrush/core/Color.h"
+#include "newbrush/media/Color.h"
 #include "newbrush/media/Thickness.h"
 
 namespace nb {
