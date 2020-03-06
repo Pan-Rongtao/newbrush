@@ -17,25 +17,26 @@ public:
 	ButtonBase();
 	virtual ~ButtonBase() = default;
 
-	static DependencyProperty	ClickModeProperty();	//点击模式的依赖属性
+	static DependencyProperty	ClickModeProperty();	//点击模式的依赖属性（默认为ClickModeE::release)
 	static DependencyProperty	IsPressedProperty();	//是否压下的依赖属性
 
-	struct ClickArgs {};
-	Event<ClickArgs>				Click;					//点击事件
-
-															
-protected:
-	virtual bool isEnableCore();							//重载以返回子类的可用状态
+	Event<RoutedEventArgs>		Click;					//点击事件
+	static RoutedEvent			ClickEvent();			//点击路由事件(RoutedEventArgs)
 
 	virtual void onClick();
-	virtual void onKeyDown();
-	virtual void onKeyUp();
-	virtual void onMouseEnter();
-	virtual void onMouseMove();
-	virtual void onMouseLeave();
-	virtual void onLeftButtonDown();
-	virtual void onLeftButtonUp();
+	virtual void onIsPressedChanged(const DependencyPropertyChangedEventArgs &args);
 
+protected:
+	virtual bool isEnableCore();						//重载以返回子类的可用状态
+
+	virtual void onMouseEnter(const MouseEventArgs &args) override;
+	virtual void onMouseLeave(const MouseEventArgs &args) override;
+	virtual void onMouseMove(const MouseButtonEventArgs &args) override;
+	virtual void onMouseLeftButtonDown(const MouseButtonEventArgs &args) override;
+	virtual void onMouseLeftButtonUp(const MouseButtonEventArgs &args) override;
+
+private:
+	void updateIsPress();
 };
 
 }

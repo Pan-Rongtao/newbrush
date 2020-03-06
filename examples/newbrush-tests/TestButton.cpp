@@ -65,7 +65,7 @@ void onBtnMouseLeftButtonUp(const MouseButtonEventArgs & args)
 //	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
 }
 
-void onBtnClick(const Button::ClickArgs & args)
+void onBtnClick(const RoutedEventArgs & args)
 {
 	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
 	printf("onBtnClick\n");

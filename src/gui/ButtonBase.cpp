@@ -20,45 +20,73 @@ DependencyProperty ButtonBase::ClickModeProperty()
 
 DependencyProperty ButtonBase::IsPressedProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false);
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false, [](DependencyObject *d, DependencyPropertyChangedEventArgs *args) {
+		auto ctrl = dynamic_cast<ButtonBase *>(d);
+		ctrl->onIsPressedChanged(*args);
+	});
 	return dp;
+}
+
+RoutedEvent ButtonBase::ClickEvent()
+{
+	static auto e = RoutedEventManager::registerRoutedEvent<ButtonBase, RoutedEventArgs>("Click", RoutingStrategyE::bubble);
+	return e;
 }
 
 void ButtonBase::onClick()
 {
+	auto args = std::make_shared<RoutedEventArgs>(ButtonBase::ClickEvent(), this);
+	raiseEvent(args);
 }
 
-void ButtonBase::onKeyDown()
+void ButtonBase::onIsPressedChanged(const DependencyPropertyChangedEventArgs & args)
 {
+	//
 }
 
-void ButtonBase::onKeyUp()
+void ButtonBase::onMouseEnter(const MouseEventArgs & args)
 {
+	ContentControl::onMouseEnter(args);
+	const_cast<MouseEventArgs &>(args).Handled = true;
 }
 
-void ButtonBase::onMouseEnter()
+void ButtonBase::onMouseLeave(const MouseEventArgs & args)
 {
+	ContentControl::onMouseLeave(args);
+	const_cast<MouseEventArgs &>(args).Handled = true;
 }
 
-void ButtonBase::onMouseMove()
+void ButtonBase::onMouseMove(const MouseButtonEventArgs & args)
 {
+	ContentControl::onMouseMove(args);
+	updateIsPress();
+	const_cast<MouseButtonEventArgs &>(args).Handled = true;
 }
 
-void ButtonBase::onMouseLeave()
-{
-}
-
-void ButtonBase::onLeftButtonDown()
+void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
 {
 	setValue(IsPressedProperty(), true);
+	auto clickMode = getValue<ClickModeE>(ClickModeProperty());
+	if (clickMode == ClickModeE::press)
+	{
+		onClick();
+	}
+	ContentControl::onMouseLeftButtonDown(args);
 }
 
-void ButtonBase::onLeftButtonUp()
+void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 {
-	auto pressed = getValue<bool>(IsPressedProperty());
-	if (pressed)
+	auto isPressed = getValue<bool>(IsPressedProperty());
+	auto clickMode = getValue<ClickModeE>(ClickModeProperty());
+	bool shouldClick = isPressed && clickMode == ClickModeE::release;
+	if (shouldClick)
 	{
 		Click.invoke({});
 		setValue(IsPressedProperty(), false);
 	}
+	ContentControl::onMouseLeftButtonDown(args);
+}
+
+void ButtonBase::updateIsPress()
+{
 }
