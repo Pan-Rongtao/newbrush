@@ -3,7 +3,6 @@
 #include <numeric>
 
 using namespace nb;
-using namespace nb::gui;
 
 GridLength::GridLength()
 	: GridLength(GridUnitType::Pixcel, 0.0)

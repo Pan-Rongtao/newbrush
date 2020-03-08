@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/ContentControl.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 ContentControl::ContentControl()
 {

@@ -6,7 +6,6 @@
 #include "catch2/catch.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 TEST_CASE("Test nb::Binding", "[Binding]")
 {

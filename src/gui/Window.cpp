@@ -6,10 +6,10 @@
 #include "newbrush/gui/WindowCollection.h"
 #include "newbrush/core/Singleton.h"
 #include "newbrush/core/Log.h"
+#include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
 
 using namespace nb;
-using namespace gui;
 
 Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
@@ -114,7 +114,7 @@ Size Window::arrangeOverride(const Size & finalSize)
 
 void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector<UIElement *> &hits)
 {
-	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
+/*	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
 	{
 		if (!obj || obj->model() == nullptr)	return false;
 		return obj->model()->orthoHitTest((float)x, (float)y);
@@ -136,7 +136,7 @@ void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector
 		{
 			loopTest(x, y, w, child, hits);
 		}
-	}
+	}*/
 };
 
 void Window::_close(bool eraseFromCollection)
@@ -201,10 +201,27 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 
 void Window::cusorPosCallback(double x, double y)
 {
+	MouseEventArgs e(0);
+	e.LeftButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	e.RightButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	e.MiddleButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	onMouseMove(e);
 }
 
 void Window::cusorPosEnterCallback(int entered)
 {
+	MouseEventArgs args(0);
+	args.LeftButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	args.RightButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	args.MiddleButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	if (entered)
+	{
+		onMouseEnter(args);
+	}
+	else
+	{
+		onMouseLeave(args);
+	}
 }
 
 void Window::scrollCallback(double x, double y)
@@ -355,20 +372,10 @@ DependencyProperty Window::WindowStyleProperty()
 		auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 		switch (newStyle)
 		{
-		case nb::gui::WindowStyleE::None:
-			glfwSetWindowAttrib(w, GLFW_DECORATED, false);
-			glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);
-			break;
-		case nb::gui::WindowStyleE::Fixed:
-			glfwSetWindowAttrib(w, GLFW_DECORATED, true);
-			glfwSetWindowAttrib(w, GLFW_RESIZABLE, false);
-			break;
-		case nb::gui::WindowStyleE::SizeBox:
-			glfwSetWindowAttrib(w, GLFW_DECORATED, true);
-			glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);
-			break;
-		default:
-			break;
+		case WindowStyleE::None:	glfwSetWindowAttrib(w, GLFW_DECORATED, false);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
+		case WindowStyleE::Fixed:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, false);	break;
+		case WindowStyleE::SizeBox:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
+		default:																													break;
 		}
 	});
 	return dp;

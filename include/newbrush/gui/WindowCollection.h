@@ -4,21 +4,17 @@
 #include "newbrush/core/EventArgs.h"
 
 namespace nb {
-namespace gui{
-	class Window;
-}}
 
-namespace nb {
-
+class Window;
 class WindowCollection
 {
 public:
-	void push(gui::Window *w);
-	void erase(gui::Window *w);
-	std::vector<gui::Window *> &windows();
+	void push(Window *w);
+	void erase(Window *w);
+	std::vector<Window *> &windows();
 
-	void setMainWindow(gui::Window *w);
-	gui::Window *mainWindow();
+	void setMainWindow(Window *w);
+	Window *mainWindow();
 
 	struct WindowClosedEventArgs	{ bool isMain; };
 	Event<WindowClosedEventArgs>	WindowClosed;
@@ -26,8 +22,8 @@ public:
 	Event<WindowFocusEventArgs>		WindowFocus;
 
 private:
-	std::vector<gui::Window *>	m_windows;
-	gui::Window					*m_mainWindow;
+	std::vector<Window *>	m_windows;
+	Window					*m_mainWindow;
 };
 
 }

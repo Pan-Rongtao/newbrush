@@ -2,7 +2,6 @@
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Canvas::Canvas()
 {

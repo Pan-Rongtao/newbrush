@@ -2,6 +2,7 @@
 #include "catch2/catch.hpp"
 
 using namespace nb;
+
 TEST_CASE("Test nb::DateTime", "[DateTime]")
 {
 #if 1

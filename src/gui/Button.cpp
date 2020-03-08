@@ -1,10 +1,8 @@
 ﻿#include "newbrush/gui/Button.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Button::Button()
-	: m_pressed(false)
 {
 }
 

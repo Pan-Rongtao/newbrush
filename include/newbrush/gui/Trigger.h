@@ -4,7 +4,6 @@
 #include "TriggerAction.h"
 
 namespace nb{
-namespace gui{
 
 class Condition
 {
@@ -127,4 +126,4 @@ public:
 
 using TriggerBasePtr = std::shared_ptr<TriggerBase>;
 
-}}
+}

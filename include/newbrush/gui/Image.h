@@ -15,8 +15,7 @@
 
 namespace nb{
 class ImageSource;
-namespace gui{
-
+class RenderObject;
 class NB_API Image : public UIElement
 {
 public:
@@ -35,8 +34,8 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
-	Size	m_availableSize;
+	Size							m_availableSize;
+	std::shared_ptr<RenderObject>	m_renderObj;
 };
 
-
-}}
+}

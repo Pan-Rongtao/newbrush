@@ -8,12 +8,11 @@
 #include "newbrush/media/ImageSource.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Image::Image()
+	: m_renderObj(std::make_shared<RenderObject>())
 {
-	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
-	renderer->setMaterial(std::make_shared<Material>(Programs::primitive()));
+	m_renderObj->setMaterial(std::make_shared<Material>(Programs::primitive()));
 }
 
 void Image::onRender(Viewport2D & drawContext)
@@ -24,8 +23,7 @@ void Image::onRender(Viewport2D & drawContext)
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
-	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
-	drawContext.queue(renderer);
+	drawContext.queue(m_renderObj);
 }
 
 DependencyProperty Image::SourceProperty()
@@ -44,10 +42,9 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == SourceProperty())
 	{
-		auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
 		auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
 		auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
-		renderer->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
+		m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
 	}
 	else if (args.property == StretchProperty())
 	{

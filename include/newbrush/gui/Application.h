@@ -4,7 +4,6 @@
 #include "newbrush/gui/WindowCollection.h"
 
 namespace nb{
-namespace gui{
 
 enum class ShutdownModeE : uint8_t
 {
@@ -70,4 +69,4 @@ private:
 	static Application	*g_app;
 };
 
-}}
+}

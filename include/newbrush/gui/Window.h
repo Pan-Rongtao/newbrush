@@ -6,7 +6,6 @@
 
 struct GLFWwindow;
 namespace nb{
-namespace gui {
 	
 enum class WindowStateE
 {
@@ -109,4 +108,4 @@ private:
 	friend class Application;
 };
 
-}}
+}

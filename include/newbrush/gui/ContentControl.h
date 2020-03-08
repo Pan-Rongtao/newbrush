@@ -2,7 +2,6 @@
 #include "newbrush/gui/Control.h"
 
 namespace nb{
-namespace gui{
 
 class NB_API ContentControl : public Control
 {
@@ -26,4 +25,4 @@ protected:
 
 };
 
-}}
+}

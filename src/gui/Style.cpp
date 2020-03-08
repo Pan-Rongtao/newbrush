@@ -2,7 +2,6 @@
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Style::Style()
 	: Style(typeid(void))

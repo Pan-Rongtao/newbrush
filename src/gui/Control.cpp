@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/Control.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Control::Control(){
 }

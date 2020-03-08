@@ -18,7 +18,7 @@
 #pragma once
 #include "newbrush/gui/Panel.h"
 
-namespace nb{ namespace gui{
+namespace nb{
 
 class NB_API WrapPanel : public Panel
 {
@@ -36,4 +36,4 @@ protected:
 
 };
 
-}}
+}

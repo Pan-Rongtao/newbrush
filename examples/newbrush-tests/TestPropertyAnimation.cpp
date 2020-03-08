@@ -4,7 +4,6 @@
 #include "catch2/catch.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 class MyObject : public DependencyObject
 {

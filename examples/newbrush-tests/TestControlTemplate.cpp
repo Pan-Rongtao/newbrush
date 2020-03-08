@@ -1,7 +1,7 @@
 #include "catch2/catch.hpp"
 #include "newbrush/gui/ControlTemplate.h"
 
-using namespace nb::gui;
+using namespace nb;
 
 TEST_CASE("Test ControlTemplate", "ControlTemplate")
 {

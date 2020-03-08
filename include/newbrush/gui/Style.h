@@ -6,7 +6,6 @@
 #include "newbrush/gui/Trigger.h"
 
 namespace nb{
-namespace gui{
 
 class UIElement;
 class NB_API Style
@@ -47,4 +46,4 @@ private:
 	bool	m_handlingPropertyChanged;
 };
 
-}}
+}

@@ -3,7 +3,6 @@
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 class MyObject : public DependencyObject
 {

@@ -10,7 +10,6 @@
 #include "catch2/catch.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 class MyApp : public Application
 {

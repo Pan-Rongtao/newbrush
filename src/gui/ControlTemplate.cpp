@@ -1,7 +1,7 @@
 ﻿#include "newbrush/gui/ControlTemplate.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 
-using namespace nb::gui;
+using namespace nb;
 
 ControlTemplate::ControlTemplate()
 {

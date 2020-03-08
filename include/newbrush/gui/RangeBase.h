@@ -2,7 +2,7 @@
 #include "newbrush/gui/Control.h"
 #include "newbrush/core/Event.h"
 
-namespace nb{ namespace gui {
+namespace nb{
 
 class NB_API RangeBase : public Control
 {
@@ -24,4 +24,4 @@ protected:
 
 };
 
-}}
+}

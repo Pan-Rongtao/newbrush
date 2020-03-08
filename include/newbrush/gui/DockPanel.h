@@ -2,7 +2,6 @@
 #include "newbrush/gui/Panel.h"
 
 namespace nb{
-namespace gui{
 
 enum class DockE
 {
@@ -30,4 +29,4 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 };
 
-}}
+}

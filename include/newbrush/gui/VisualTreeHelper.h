@@ -3,7 +3,6 @@
 #include "newbrush/core/Point.h"
 
 namespace nb{
-namespace gui{
 
 class UIElement;
 class NB_API VisualTreeHelper
@@ -24,4 +23,4 @@ public:
 	UIElement *findLogicalNode(UIElement *logicalTreeNode, const std::string &name);
 };
 
-}}
+}

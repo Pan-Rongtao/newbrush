@@ -5,11 +5,10 @@
 #include "newbrush/media/GlyphMetrics.h"
 
 namespace nb{
+
 class RenderObject;
 class GlyphBunch;
 class Brush;
-namespace gui{
-
 enum class TextAlignmentE
 {
 	Left,
@@ -63,9 +62,9 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 	void onTextChanged(const std::string &_old, const std::string &_new);
-	void onForegroundChanged(const Color &_old, const Color &_new);
 
-	std::shared_ptr<GlyphBunch>	m_glyphBunch;
+private:
+	std::shared_ptr<RenderObject>	m_renderObj;
 };
 
-}}
+}

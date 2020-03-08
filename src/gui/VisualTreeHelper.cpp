@@ -4,7 +4,6 @@
 #include "newbrush/gui/ContentControl.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 uint32_t VisualTreeHelper::getChildrenCount(UIElement *element)
 {

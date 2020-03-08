@@ -4,9 +4,8 @@
 #include "Poco/Dynamic/Var.h"
 
 namespace nb{
-namespace gui{
-
 class UIElement;
+
 class NB_API SetterBase
 {
 public:
@@ -41,4 +40,4 @@ public:
 
 using SetterBasePtr = std::shared_ptr<SetterBase>;
 
-}}
+}

@@ -5,7 +5,7 @@
 
 namespace nb{
 class Brush;
-namespace gui{
+class RenderObject;
 
 using nb::media::PenLineCapE;
 using nb::media::PenLineJoinE;
@@ -31,4 +31,4 @@ protected:
 	std::shared_ptr<RenderObject>	m_strokeObject;
 };
 
-}}
+}

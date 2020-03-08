@@ -3,9 +3,9 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
+#include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Polyline::Polyline()
 {

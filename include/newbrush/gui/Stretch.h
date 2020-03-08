@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 namespace nb{
-namespace gui{
 
 //描述如何调节内容大小以适应目标空间
 enum class StretchE
@@ -12,4 +11,4 @@ enum class StretchE
 	UniformToFill	= 3,	//保持内容纵横比，同时调节大小以填充目标尺寸
 };
 
-}}
+}

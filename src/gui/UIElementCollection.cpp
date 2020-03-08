@@ -1,7 +1,7 @@
 #include "newbrush/gui/UIElementCollection.h"
 #include "newbrush/gui/UIElement.h"
 
-using namespace nb::gui;
+using namespace nb;
 
 UIElementCollection::UIElementCollection(UIElement *logicalParent)
 	: m_logicalParent(logicalParent)

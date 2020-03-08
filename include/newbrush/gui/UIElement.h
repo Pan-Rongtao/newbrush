@@ -3,17 +3,12 @@
 #include "newbrush/core/Size.h"
 #include "newbrush/core/Rect.h"
 #include "newbrush/media/Thickness.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/gui/Style.h"
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
 
 namespace nb{
-	class Viewport2D;
-}
-
-namespace nb{
-namespace gui{
+class Viewport2D;
 
 enum class VisibilityE
 {
@@ -75,7 +70,6 @@ public:
 	static DependencyProperty 					HorizontalAlignmentProperty();	//横向对齐方式的依赖属性（HorizontalAlignmentE）
 	static DependencyProperty 					VerticalAlignmentProperty();	//纵向对齐方式的依赖属性（VerticalAlignmentE）
 	static DependencyProperty 					FlowDirectionProperty();		//流向的依赖属性（FlowDirectionE）
-	static DependencyProperty 					RendererProperty();		//渲染物的依赖属性（std::shared_ptr<RenderObject>）
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性（std::shared_ptr<Style>)
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
 
@@ -243,7 +237,7 @@ protected:
 	virtual void onMouseLeftButtonUp(const MouseButtonEventArgs &args);
 	virtual void onMouseRightButtonDown(const MouseButtonEventArgs &args);
 	virtual void onMouseRightButtonUp(const MouseButtonEventArgs &args);
-	virtual void onMouseMove(const MouseButtonEventArgs &args);
+	virtual void onMouseMove(const MouseEventArgs &args);
 	virtual void onMouseWheel(const MouseWheelEventArgs &args);
 	virtual void onTouchDown(const TouchEventArgs &args);
 	virtual void onTouchEnter(const TouchEventArgs &args);
@@ -281,5 +275,4 @@ private:
 
 using UIElementPtr = std::shared_ptr<UIElement>;
 
-}
 }

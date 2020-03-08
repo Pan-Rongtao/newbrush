@@ -19,7 +19,6 @@
 #include "newbrush/core/Size.h"
 
 namespace nb{
-namespace gui{
 
 class NB_API Canvas : public Panel
 {
@@ -50,4 +49,4 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 };
 
-}}
+}

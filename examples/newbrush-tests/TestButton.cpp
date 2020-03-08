@@ -6,15 +6,24 @@
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/gui/Button.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/gui/Application.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 TEST_CASE("Test nb::Button", "[Button]")
 {
-	std::shared_ptr<Button> m_btn;
-	std::shared_ptr<nb::gui::Window> m_window;
+	Application app;
+	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto btn = std::make_shared<Button>();
+	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(btn));
+
+	auto rc = std::make_shared<Rectangle>();
+	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	btn->setValue<UIElementPtr>(Button::ContentProperty(), rc);
+	btn->setValue(Button::MarginProperty(), Thickness(50));
+
+	app.run(0, nullptr);
 /*	m_btn = std::make_shared<Button>();
 	m_btn->MouseLeftButtonDown += std::bind(&TestButton::onBtnMouseLeftButtonDown, this, std::placeholders::_1);
 	m_btn->MouseLeftButtonUp += std::bind(&TestButton::onBtnMouseLeftButtonUp, this, std::placeholders::_1);
@@ -51,26 +60,4 @@ TEST_CASE("Test nb::Button", "[Button]")
 	m_window = std::make_shared<Window>();
 	m_window->Content = m_btn;*/
 //	m_btn->Width = 100;
-}
-
-void onBtnMouseLeftButtonDown(const MouseButtonEventArgs & args)
-{
-	printf("onBtnMouseLeftButtonDown\n");
-//	m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
-}
-
-void onBtnMouseLeftButtonUp(const MouseButtonEventArgs & args)
-{
-	printf("onBtnMouseLeftButtonUp\n");
-//	m_btn->StateMachine()->gotoState("BtnStateGroup", "NormalState", false);
-}
-
-void onBtnClick(const RoutedEventArgs & args)
-{
-	//m_btn->StateMachine()->gotoState("BtnStateGroup", "PressState", false);
-	printf("onBtnClick\n");
-	//auto rcBtn = Rect( m_btn->worldOffset(), m_btn->ActualSize);
-	//auto rcRect = Rect(m_btn->Content()->worldOffset(), m_btn->Content()->ActualSize);
-	//printf("rcBtn{%d, %d, %d, %d}\n", (int)rcBtn.left(), (int)rcBtn.top(), (int)rcBtn.width(), (int)rcBtn.height());
-	//printf("rcRect{%d, %d, %d, %d\n}", (int)rcRect.left(), (int)rcRect.top(), (int)rcRect.width(), (int)rcRect.height());
 }

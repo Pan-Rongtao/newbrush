@@ -2,7 +2,7 @@
 #include "newbrush/gui/Button.h"
 #include "newbrush/core/Timer.h"
 
-namespace nb{ namespace gui {
+namespace nb{
 
 class NB_API RepeatButton : public Button
 {
@@ -17,5 +17,4 @@ private:
 	Timer	m_timer;
 };
 
-}}
-
+}

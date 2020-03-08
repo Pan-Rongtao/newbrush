@@ -2,7 +2,6 @@
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 void SetterBase::attach(UIElement* uie)
 {

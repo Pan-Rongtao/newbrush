@@ -7,9 +7,9 @@
 #include "newbrush/gles/Material.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/GlyphBunch.h"
+#include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 TextBlock::TextBlock()
 	: TextBlock("")
@@ -17,16 +17,13 @@ TextBlock::TextBlock()
 }
 
 TextBlock::TextBlock(const std::string & text)
-	: m_glyphBunch(std::make_shared<GlyphBunch>())
+	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<GlyphBunch>(), std::make_shared<Material>(Programs::glpy())))
 {
 	setValue(TextProperty(), text);
 	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
 	setValue(LineHeightProperty(), (float)(font->size()));
-	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
-	renderer->setModel(m_glyphBunch);
-	renderer->setMaterial(std::make_shared<Material>(Programs::glpy()));
-	renderer->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
-	renderer->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
+	m_renderObj->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 DependencyProperty TextBlock::TextProperty()
@@ -112,8 +109,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	if (args.property == ForegroundProperty())
 	{
 		auto c = args.newValue.extract<Color>();
-		auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
-		renderer->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
+		m_renderObj->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}
 }
 
@@ -160,7 +156,7 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 	float lineHeight = getValue<float>(LineHeightProperty());
 	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
 	auto actualSize = getValue<Size>(ActualSizeProperty());
-	m_glyphBunch->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
+	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 }
 
 void TextBlock::onRender(Viewport2D & drawContext)
@@ -174,7 +170,6 @@ void TextBlock::onRender(Viewport2D & drawContext)
 	float lineHeight = getValue<float>(LineHeightProperty());
 	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
 	auto actualSize = getValue<Size>(ActualSizeProperty());
-	m_glyphBunch->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
-	auto renderer = getValue<std::shared_ptr<RenderObject>>(RendererProperty());
-	drawContext.queue(renderer);
+	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
+	drawContext.queue(m_renderObj);
 }

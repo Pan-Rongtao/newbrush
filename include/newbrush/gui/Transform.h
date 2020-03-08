@@ -2,7 +2,6 @@
 #include "newbrush/core/DependencyObject.h"
 
 namespace nb {
-namespace gui {
 
 class Transform : public DependencyObject
 {
@@ -16,4 +15,4 @@ public:
 	
 };
 
-}}
+}

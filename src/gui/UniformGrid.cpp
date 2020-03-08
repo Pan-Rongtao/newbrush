@@ -1,7 +1,6 @@
 #include "newbrush/gui/UniformGrid.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 UniformGrid::UniformGrid()
 {

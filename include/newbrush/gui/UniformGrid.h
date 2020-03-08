@@ -2,7 +2,6 @@
 #include "newbrush/gui/Panel.h"
 
 namespace nb {
-namespace gui{
 
 class NB_API UniformGrid : public Panel
 {
@@ -21,5 +20,4 @@ private:
 	std::pair<int, int> calcRowsColums() const;
 };
 
-}
 }

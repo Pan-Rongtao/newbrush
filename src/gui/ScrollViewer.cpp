@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/ScrollViewer.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 ScrollViewer::ScrollViewer()
 {

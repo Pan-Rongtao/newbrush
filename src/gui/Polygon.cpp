@@ -3,10 +3,10 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
+#include "newbrush/gles/RenderObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gui;
 
 Polygon::Polygon()
 {

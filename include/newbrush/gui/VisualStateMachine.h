@@ -6,7 +6,6 @@
 #include "newbrush/core/DependencyObject.h"
 
 namespace nb{
-namespace gui{
 
 class UIElement;
 class NB_API VisualState : public DependencyObject
@@ -60,5 +59,4 @@ private:
 	std::vector<std::shared_ptr<VisualStateGroup>>	m_groups;
 };
 
-}
 }

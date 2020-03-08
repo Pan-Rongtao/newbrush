@@ -5,9 +5,9 @@
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
+#include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Shape::Shape()
 {

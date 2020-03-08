@@ -1,8 +1,7 @@
 #pragma once
 #include "newbrush/gui/ContentControl.h"
 
-namespace nb{ 
-namespace gui{
+namespace nb{
 
 enum class ClickModeE
 {
@@ -31,7 +30,7 @@ protected:
 
 	virtual void onMouseEnter(const MouseEventArgs &args) override;
 	virtual void onMouseLeave(const MouseEventArgs &args) override;
-	virtual void onMouseMove(const MouseButtonEventArgs &args) override;
+	virtual void onMouseMove(const MouseEventArgs &args) override;
 	virtual void onMouseLeftButtonDown(const MouseButtonEventArgs &args) override;
 	virtual void onMouseLeftButtonUp(const MouseButtonEventArgs &args) override;
 
@@ -39,5 +38,4 @@ private:
 	void updateIsPress();
 };
 
-}
 }

@@ -3,7 +3,6 @@
 #include "newbrush/core/DataContext.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Condition::Condition()
 	: Condition(DependencyProperty::invalidProperty(), Var(), nullptr)

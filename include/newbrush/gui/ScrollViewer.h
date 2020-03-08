@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "newbrush/gui/ContentControl.h"
 
-namespace nb {
-namespace gui {
+namespace nb{
 
 class NB_API ScrollViewer : public ContentControl
 {
@@ -48,4 +47,4 @@ protected:
 
 };
 
-}}
+}

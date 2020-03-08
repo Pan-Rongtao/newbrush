@@ -4,8 +4,6 @@
 
 namespace nb{
 class Brush;
-namespace gui{
-
 class NB_API Panel : public UIElement
 {
 public:
@@ -30,4 +28,4 @@ protected:
 	UIElementCollection	m_children;
 };
 
-}}
+}

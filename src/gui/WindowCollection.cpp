@@ -2,14 +2,14 @@
 
 using namespace nb;
 
-void nb::WindowCollection::push(gui::Window * w)
+void nb::WindowCollection::push(Window * w)
 {
 	if (m_windows.empty())
 		m_mainWindow = w;
 	m_windows.push_back(w);
 }
 
-void nb::WindowCollection::erase(gui::Window * w)
+void nb::WindowCollection::erase(Window * w)
 {
 	auto iter = std::find(m_windows.begin(), m_windows.end(), w);
 	if (iter != m_windows.end())
@@ -20,17 +20,17 @@ void nb::WindowCollection::erase(gui::Window * w)
 	}
 }
 
-std::vector<gui::Window*>& nb::WindowCollection::windows()
+std::vector<Window*>& nb::WindowCollection::windows()
 {
 	return m_windows;
 }
 
-void WindowCollection::setMainWindow(gui::Window * w)
+void WindowCollection::setMainWindow(Window * w)
 {
 	m_mainWindow = w;
 }
 
-gui::Window * WindowCollection::mainWindow()
+Window * WindowCollection::mainWindow()
 {
 	return m_mainWindow;
 }

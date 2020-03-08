@@ -6,7 +6,6 @@
 #include "newbrush/media/GradientBrush.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Line::Line()
 {

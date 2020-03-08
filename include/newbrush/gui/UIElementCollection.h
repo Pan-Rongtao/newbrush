@@ -3,7 +3,6 @@
 #include "newbrush/core/Def.h"
 
 namespace nb {
-namespace gui {
 
 class UIElement;
 class NB_API UIElementCollection
@@ -34,4 +33,4 @@ private:
 	UIElement				*m_logicalParent;
 };
 
-}}
+}

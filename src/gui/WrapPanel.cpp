@@ -2,7 +2,6 @@
 #include <queue>
 
 using namespace nb;
-using namespace nb::gui;
 
 WrapPanel::WrapPanel()
 {

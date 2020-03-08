@@ -3,7 +3,6 @@
 #include "newbrush/gui/Trigger.h"
 
 namespace nb{
-namespace gui{
 
 class NB_API ControlTemplate
 {
@@ -29,4 +28,4 @@ private:
 	std::vector<TriggerBase>	m_triggers;
 };
 
-}}
+}

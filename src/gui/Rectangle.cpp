@@ -3,9 +3,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Strips.h"
+#include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Rectangle::Rectangle()
 {

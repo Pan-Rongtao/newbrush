@@ -2,12 +2,10 @@
 #include "newbrush/gui/Window.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 UIElement::UIElement()
 	: m_parent(nullptr)
 {
-	setValue(RendererProperty(), std::make_shared<RenderObject>());
 }
 
 DependencyProperty UIElement::NameProperty()
@@ -124,12 +122,6 @@ DependencyProperty UIElement::FlowDirectionProperty()
 	return dp;
 }
 
-DependencyProperty UIElement::RendererProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<RenderObject>>("Renderer", nullptr);
-	return dp;
-}
-
 DependencyProperty UIElement::StyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
@@ -223,7 +215,7 @@ void UIElement::updateLayout()
 	auto rootDesiredSize = root->getValue<Size>(DesiredSizeProperty());
 	root->measure({ rootWidth, rootHeight });
 	root->arrage(Rect(0, 0, rootDesiredSize));
-	root->onRender(gui::Window::drawContext);
+	root->onRender(Window::drawContext);
 }
 
 void UIElement::measure(const Size & availabelSize)
@@ -466,9 +458,12 @@ void UIElement::onMouseRightButtonUp(const MouseButtonEventArgs & args)
 	MouseRightButtonUp.invoke(args);
 }
 
-void UIElement::onMouseMove(const MouseButtonEventArgs & args)
+void UIElement::onMouseMove(const MouseEventArgs & args)
 {
 	MouseMove.invoke(args);
+	auto e = std::make_shared<MouseEventArgs>(args);
+	e->Event = MouseMoveEvent();
+	raiseEvent(e);
 }
 
 void UIElement::onMouseWheel(const MouseWheelEventArgs & args)
@@ -648,13 +643,13 @@ void UIElement::raiseEvent(std::shared_ptr<RoutedEventArgs> args)
 			fireElementEvents(pElement);
 		} while ((pElement->m_parent) && (pElement = pElement->m_parent));
 	}
-	else if (args->Event.routingStrategy() == RoutingStrategyE::bubble)
+	else if (args->Event.routingStrategy() == RoutingStrategyE::tunnel)
 	{
 
 	}
 	else
 	{
-
+		fireElementEvents(this);
 	}
 }
 
@@ -762,7 +757,7 @@ RoutedEvent UIElement::MouseDownEvent()
 
 RoutedEvent UIElement::MouseEnterEvent()
 {
-	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("MouseEnter", RoutingStrategyE::bubble);
+	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, MouseEventArgs>("MouseEnter", RoutingStrategyE::direct);
 	return e;
 }
 

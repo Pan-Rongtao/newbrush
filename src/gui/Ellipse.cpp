@@ -4,10 +4,10 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
+#include "newbrush/gles/RenderObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
-using namespace nb::gui;
 
 //椭圆的点计算公式为：x = a * cos(α); y = b * sin(α)
 //顶点越多越圆滑

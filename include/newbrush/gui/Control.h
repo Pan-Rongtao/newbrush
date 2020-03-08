@@ -4,8 +4,6 @@
 
 namespace nb{
 class Brush;
-namespace gui{
-
 class NB_API Control : public UIElement
 {
 public:
@@ -27,4 +25,4 @@ protected:
 
 };
 
-}}
+}

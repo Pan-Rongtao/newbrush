@@ -14,8 +14,8 @@
 #include "newbrush/core/DependencyObject.h"
 
 namespace nb{
-class Bitmap;
 
+class Bitmap;
 class NB_API ImageSource : public DependencyObject
 {
 public:

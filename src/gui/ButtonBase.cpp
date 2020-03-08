@@ -1,7 +1,6 @@
 #include "newbrush/gui/ButtonBase.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 ButtonBase::ButtonBase()
 {
@@ -56,11 +55,11 @@ void ButtonBase::onMouseLeave(const MouseEventArgs & args)
 	const_cast<MouseEventArgs &>(args).Handled = true;
 }
 
-void ButtonBase::onMouseMove(const MouseButtonEventArgs & args)
+void ButtonBase::onMouseMove(const MouseEventArgs & args)
 {
 	ContentControl::onMouseMove(args);
 	updateIsPress();
-	const_cast<MouseButtonEventArgs &>(args).Handled = true;
+	const_cast<MouseEventArgs &>(args).Handled = true;
 }
 
 void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)

@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/Slider.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Slider::Slider()
 {

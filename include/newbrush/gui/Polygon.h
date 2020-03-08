@@ -1,7 +1,7 @@
 #pragma once
 #include "newbrush/gui/Shape.h"
 
-namespace nb{ namespace gui{
+namespace nb{
 
 class NB_API Polygon : public Shape
 {
@@ -23,4 +23,4 @@ private:
 	void updateStrokeObject();
 };
 
-}}
+}

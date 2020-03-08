@@ -2,7 +2,6 @@
 #include "newbrush/gui/ButtonBase.h"
 
 namespace nb{
-namespace gui{
 
 class NB_API Button : public ButtonBase
 {
@@ -20,8 +19,8 @@ protected:
 	virtual void onMouseLeftButtonUp();
 
 private:
-	bool	m_pressed;
+
 };
 
-}}
+}
 

@@ -1,6 +1,6 @@
 ﻿#include "newbrush/gui/UserControl.h"
 
-using namespace nb::gui;
+using namespace nb;
 
 UserControl::UserControl()
 {

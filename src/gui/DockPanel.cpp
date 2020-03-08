@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/DockPanel.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 DockPanel::DockPanel()
 {

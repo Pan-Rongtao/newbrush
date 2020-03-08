@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "newbrush/gui/RangeBase.h"
 
-namespace nb{ namespace gui{
+namespace nb{
 
 class NB_API Slider : public RangeBase
 {
@@ -21,4 +21,4 @@ protected:
 
 };
 
-}}
+}

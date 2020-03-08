@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/StackPanel.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 StackPanel::StackPanel()
 {

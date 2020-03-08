@@ -2,7 +2,6 @@
 #include "newbrush/gles/Viewport2D.h"
 
 using namespace nb;
-using namespace nb::gui;
 
 Panel::Panel()
 	: m_children(this)

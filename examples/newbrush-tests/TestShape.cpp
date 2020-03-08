@@ -11,7 +11,6 @@
 #include "catch2/catch.hpp"
 
 using namespace nb;
-using namespace nb::gui;
 
 TEST_CASE("test Rectangle", "[Rectangle]")
 {
@@ -23,8 +22,8 @@ TEST_CASE("test Rectangle", "[Rectangle]")
 	//rc->setValue(Shape::WidthProperty(), 100.0f);
 	//rc->setValue(Shape::HeightProperty(), 100.0f);
 	rc->setValue(Rectangle::MarginProperty(), Thickness(100));
-//	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
+	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+//	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
 	rc->setValue(Rectangle::RadiusXProperty(), 0);
 	rc->setValue(Rectangle::RadiusYProperty(), 0);
 

@@ -23,7 +23,6 @@
 #include "newbrush/gui/Panel.h"
 
 namespace nb{
-namespace gui{
 
 enum class GridUnitType
 {
@@ -118,4 +117,4 @@ private:
 	std::vector<float>	m_pixcelHeightsForEachRows;
 };
 
-}}
+}
