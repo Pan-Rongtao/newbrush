@@ -11,12 +11,11 @@
 **	
 ********************************************************/
 #pragma once
-#include "newbrush/core/DependencyObject.h"
+#include "newbrush/media/Bitmap.h"
 
 namespace nb{
 
-class Bitmap;
-class NB_API ImageSource : public DependencyObject
+class NB_API ImageSource
 {
 public:
 	ImageSource();
@@ -25,8 +24,10 @@ public:
 	float width() const;
 	float heigth() const;
 
-	static DependencyProperty				BmProperty();	//位图的依赖属性
-	
+	const Bitmap &bitmap() const;
+
+private:
+	Bitmap	m_bm;
 };
 
 }

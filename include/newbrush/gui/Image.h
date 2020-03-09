@@ -22,7 +22,7 @@ public:
 	Image();
 	virtual ~Image() = default;
 
-	static DependencyProperty				SourceProperty();	//源的依赖属性
+	static DependencyProperty				SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
 	static DependencyProperty				StretchProperty();	//伸缩方式的依赖属性
 
 	virtual void onRender(Viewport2D & drawContext) override;

@@ -1,5 +1,6 @@
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/gui/VisualTreeHelper.h"
 
 using namespace nb;
 
@@ -154,6 +155,12 @@ DependencyProperty UIElement::StateMachineProperty()
 	return dp;
 }
 
+DependencyProperty UIElement::IsMouseOverProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("IsMouseOver", false);
+	return dp;
+}
+
 uint32_t UIElement::childrenCount() const
 {
 	return 0;
@@ -176,20 +183,15 @@ UIElement * UIElement::getParent()
 
 UIElement *UIElement::getRoot()
 {
-	try {
-		auto ret = this;
-		while (ret->m_parent)
-		{
-			ret = ret->m_parent;
-		}
-		return ret;
+	auto ret = this;
+	while (ret->m_parent)
+	{
+		ret = ret->m_parent;
 	}
-	catch (...) {
-		return nullptr;
-	}
+	return ret;
 }
 
-Point UIElement::worldOffset()
+Point UIElement::worldOffset() const
 {
 	try {
 		auto p = this;
@@ -601,6 +603,81 @@ void UIElement::onPreviewTouchUp(const TouchEventArgs & args)
 	PreviewTouchUp.invoke(args);
 }
 
+void UIElement::onMouseMoveThunk(const MouseEventArgs &e, const Point &pt)
+{
+	auto hit = VisualTreeHelper::hitTest(this, pt);
+	auto isMouseOver = getValue(IsMouseOverProperty());
+	if (hit)
+	{
+		if (!isMouseOver)
+		{
+			onMouseEnter(e);
+			setValue(IsMouseOverProperty(), true);
+		}
+		onMouseMove(e);
+	}
+	else
+	{
+		if (isMouseOver)
+		{
+			onMouseLeave(e);
+			setValue(IsMouseOverProperty(), false);
+		}
+	}
+}
+
+void UIElement::onMouseButtonThunk(const MouseButtonEventArgs & e, const Point & pt)
+{
+	auto hit = VisualTreeHelper::hitTest(this, pt);
+
+	if (e.ButtonState == MouseButtonStateE::Pressed)
+	{
+		if (!hit)	return;
+		if (e.ChangedButton == MouseButtonE::Left)
+		{
+			onMouseLeftButtonDown(e);
+			m_flags.set(IsLeftButtonDownCache);
+		}
+		else
+		{
+			onMouseRightButtonDown(e);
+			m_flags.set(IsRightButtonDownCache);
+		}
+		onMouseDown(e);
+	}
+	else
+	{
+		if (hit)
+		{
+			if (e.ChangedButton == MouseButtonE::Left)
+			{
+				onMouseLeftButtonUp(e);
+				m_flags.reset(IsLeftButtonDownCache);
+			}
+			else
+			{
+				onMouseRightButtonUp(e);
+				m_flags.reset(IsRightButtonDownCache);
+			}
+			onMouseUp(e);
+		}
+		else
+		{
+			if (e.ChangedButton == MouseButtonE::Left && m_flags.test(IsLeftButtonDownCache))
+			{
+				onMouseLeftButtonUp(e);
+				m_flags.reset(IsLeftButtonDownCache);
+			}
+			else if (e.ChangedButton == MouseButtonE::Right && m_flags.test(IsRightButtonDownCache))
+			{
+				onMouseRightButtonUp(e);
+				m_flags.reset(IsRightButtonDownCache);
+			}
+			onMouseUp(e);
+		}
+	}
+}
+
 void UIElement::onRender(Viewport2D & drawContext)
 {
 }
@@ -651,6 +728,14 @@ void UIElement::raiseEvent(std::shared_ptr<RoutedEventArgs> args)
 	{
 		fireElementEvents(this);
 	}
+}
+
+bool UIElement::hitTestCore(const Point &pt) const
+{
+	auto offset = worldOffset();
+	auto actualSize = getValue<Size>(ActualSizeProperty());
+	Rect rc(offset.x(), offset.y(), actualSize);
+	return rc.contains(pt);
 }
 
 RoutedEvent UIElement::LoadedEvent()

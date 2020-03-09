@@ -2,6 +2,7 @@
 #include "newbrush/gui/Panel.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/ContentControl.h"
+#include "newbrush/gui/Window.h"
 
 using namespace nb;
 
@@ -22,7 +23,7 @@ UIElement *VisualTreeHelper::getParent(UIElement * element)
 
 bool VisualTreeHelper::hitTest(UIElement * element, const Point &point)
 {
-	return false;
+	return element->hitTestCore(point);
 }
 
 UIElement *VisualTreeHelper::findLogicalNode(UIElement * logicalTreeNode, const std::string & name)

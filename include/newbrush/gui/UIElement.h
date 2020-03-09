@@ -72,6 +72,7 @@ public:
 	static DependencyProperty 					FlowDirectionProperty();		//流向的依赖属性（FlowDirectionE）
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性（std::shared_ptr<Style>)
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
+	static DependencyProperty 					IsMouseOverProperty();	//鼠标是否在元素上（bool）
 
 	Event<EventArgs>							Initialized;
 	Event<RoutedEventArgs>						Loaded;
@@ -196,7 +197,7 @@ public:
 	UIElement *getParent();
 
 	UIElement *getRoot();
-	Point worldOffset();
+	Point worldOffset() const;
 	void updateLayout();
 
 	void measure(const Size &availabelSize);
@@ -207,6 +208,8 @@ public:
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void raiseEvent(std::shared_ptr<RoutedEventArgs> args);
 	
+	virtual bool hitTestCore(const Point &pt) const;
+
 public:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);
@@ -268,9 +271,21 @@ protected:
 	virtual void onPreviewTouchUp(const TouchEventArgs &args);
 
 private:
+	enum Flags
+	{
+		IsMouseOverCache,
+		IsLeftButtonDownCache,
+		IsRightButtonDownCache,
+		Flags_Max = 32,
+	};
+
+	void onMouseMoveThunk(const MouseEventArgs &e, const Point &pt);
+	void onMouseButtonThunk(const MouseButtonEventArgs &e, const Point &pt);
 
 	UIElement	*m_parent;
 	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
+	std::bitset<Flags_Max>	m_flags;
+	friend class Window;
 };
 
 using UIElementPtr = std::shared_ptr<UIElement>;

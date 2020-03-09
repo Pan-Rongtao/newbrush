@@ -1,4 +1,7 @@
 #include "newbrush/gui/ButtonBase.h"
+#include "newbrush/core/Log.h"
+#include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/gui/Window.h"
 
 using namespace nb;
 
@@ -36,6 +39,7 @@ void ButtonBase::onClick()
 {
 	auto args = std::make_shared<RoutedEventArgs>(ButtonBase::ClickEvent(), this);
 	raiseEvent(args);
+	Click.invoke(*args);
 }
 
 void ButtonBase::onIsPressedChanged(const DependencyPropertyChangedEventArgs & args)
@@ -47,12 +51,14 @@ void ButtonBase::onMouseEnter(const MouseEventArgs & args)
 {
 	ContentControl::onMouseEnter(args);
 	const_cast<MouseEventArgs &>(args).Handled = true;
+	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseLeave(const MouseEventArgs & args)
 {
 	ContentControl::onMouseLeave(args);
 	const_cast<MouseEventArgs &>(args).Handled = true;
+	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseMove(const MouseEventArgs & args)
@@ -60,6 +66,7 @@ void ButtonBase::onMouseMove(const MouseEventArgs & args)
 	ContentControl::onMouseMove(args);
 	updateIsPress();
 	const_cast<MouseEventArgs &>(args).Handled = true;
+//	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
@@ -71,19 +78,23 @@ void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
 		onClick();
 	}
 	ContentControl::onMouseLeftButtonDown(args);
+	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 {
 	auto isPressed = getValue<bool>(IsPressedProperty());
 	auto clickMode = getValue<ClickModeE>(ClickModeProperty());
-	bool shouldClick = isPressed && clickMode == ClickModeE::release;
+	auto w = dynamic_cast<Window*>(getRoot());
+	auto pt = w->getMousePosition();
+	bool shouldClick = isPressed && clickMode == ClickModeE::release && hitTestCore(pt);
 	if (shouldClick)
 	{
-		Click.invoke({});
 		setValue(IsPressedProperty(), false);
+		onClick();
 	}
-	ContentControl::onMouseLeftButtonDown(args);
+	ContentControl::onMouseLeftButtonUp(args);
+	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::updateIsPress()

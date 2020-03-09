@@ -4,30 +4,25 @@
 using namespace nb;
 
 ImageSource::ImageSource()
-	: ImageSource("")
 {
 }
 
 ImageSource::ImageSource(const std::string & uri)
 {
-	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
-	bm->load(uri);
+	m_bm.load(uri);
 }
 
 float ImageSource::width() const
 {
-	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
-	return (float)bm->width();
+	return (float)m_bm.width();
 }
 
 float ImageSource::heigth() const
 {
-	auto bm = getValue<std::shared_ptr<Bitmap>>(BmProperty());
-	return (float)bm->height();
+	return (float)m_bm.height();
 }
 
-DependencyProperty ImageSource::BmProperty()
+const Bitmap &ImageSource::bitmap() const
 {
-	static auto dp = DependencyProperty::registerDependency<ImageSource, std::shared_ptr<Bitmap>>("Bm", std::make_shared<Bitmap>());
-	return dp;
+	return m_bm;
 }

@@ -54,7 +54,8 @@ TEST_CASE("Test Ellipse", "[Ellipse]")
 	auto ep = std::make_shared<Ellipse>();
 	ep->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/boat.jpg")));
 //	ep->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-	ep->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), linearBrush);
+//	ep->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	ep->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), linearBrush);
 	ep->setValue(Shape::StrokeThicknessProperty(), 50);
 	ep->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{1});
 	ep->setValue(Shape::MarginProperty(), Thickness(100));

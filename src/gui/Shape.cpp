@@ -107,8 +107,8 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
 		if (source)
 		{
-			auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
-			ro->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
+			auto const &bm = source->bitmap();
+			ro->material()->textures().push_back(std::make_shared<Texture2D>(bm));
 		}
 	}
 }

@@ -18,9 +18,11 @@ public:
 	static UIElement * getParent(UIElement *element);
 
 	//√¸÷–≤‚ ‘
-	bool hitTest(UIElement *element, const Point &point);
+	static bool hitTest(UIElement *element, const Point &point);
 
-	UIElement *findLogicalNode(UIElement *logicalTreeNode, const std::string &name);
+	static UIElement *findLogicalNode(UIElement *logicalTreeNode, const std::string &name);
+
+	static Point getPosition(UIElement *relativeTo);
 };
 
 }

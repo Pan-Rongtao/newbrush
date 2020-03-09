@@ -83,6 +83,13 @@ void Window::close()
 	_close(true);
 }
 
+Point Window::getMousePosition() const
+{
+	double x = 0, y = 0;
+	glfwGetCursorPos(m_implWindow, &x, &y);
+	return Point((float)x, (float)y);
+}
+
 Size Window::measureOverride(const Size & availableSize)
 {
 	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
@@ -112,31 +119,18 @@ Size Window::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-void loopTest(int x, int y, std::shared_ptr<Window> w, UIElement *e, std::vector<UIElement *> &hits)
+void loopTree(UIElement *e, std::vector<UIElement *> &elements)
 {
-/*	auto hit = [x, y, w](std::shared_ptr<RenderObject> obj)
-	{
-		if (!obj || obj->model() == nullptr)	return false;
-		return obj->model()->orthoHitTest((float)x, (float)y);
-	};
-
-	auto count = VisualTreeHelper::getChildrenCount(e);
-	for (int i = 0; i != count; ++i)
+	elements.push_back(e);
+	auto childrenCount = VisualTreeHelper::getChildrenCount(e);
+	for (int i = 0; i != childrenCount; ++i)
 	{
 		auto child = VisualTreeHelper::getChild(e, i);
-		if (!child)	continue;
-
-		auto childRenderer = child->getValue<std::shared_ptr<RenderObject>>(UIElement::RendererProperty());
-		if (hit(childRenderer))
-		{
-			hits.push_back(child);
-		}
-
 		if (VisualTreeHelper::getChildrenCount(child) > 0)
 		{
-			loopTest(x, y, w, child, hits);
+			loopTree(child, elements);
 		}
-	}*/
+	}
 };
 
 void Window::_close(bool eraseFromCollection)
@@ -155,13 +149,6 @@ void Window::_close(bool eraseFromCollection)
 			Singleton<WindowCollection>::get()->erase(this);
 	}
 	m_dispatchingCloseEvent = false;
-}
-
-std::vector<UIElement *> Window::hitElements(int x, int y) const
-{
-	std::vector<UIElement *> hits;
-	//loopTest(x, y, m_glWindow, const_cast<Window *>(this), hits);
-	return hits;
 }
 
 void Window::posCallback(int x, int y)
@@ -184,18 +171,20 @@ void Window::frameBufferSizeCallback(int width, int height)
 
 void Window::mouseButtonCallback(int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_1)
+	auto changedButton = button == GLFW_MOUSE_BUTTON_1 ? MouseButtonE::Left : button == GLFW_MOUSE_BUTTON_2 ? MouseButtonE::Right : MouseButtonE::Middle;
+	MouseButtonEventArgs e(0, changedButton);
+	e.ButtonState = action == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	e.LeftButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	e.RightButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+	e.MiddleButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
+
+	double x = 0, y = 0;
+	glfwGetCursorPos(m_implWindow, &x, &y);
+	std::vector<UIElement *> elements;
+	loopTree(this, elements);
+	for (auto uie : elements)
 	{
-		double x, y;
-		glfwGetCursorPos(m_implWindow, &x, &y);
-		auto hits = hitElements((int)x, (int)y);
-		for (auto e : hits)
-		{
-		//	e->MouseEnter.invoke({});
-		//	e->onMouseEnter();
-		//	e->MouseMove.invoke({});
-		//	e->onMouseMove();
-		}
+		uie->onMouseButtonThunk(e, Point((float)x, (float)y));
 	}
 }
 
@@ -205,7 +194,13 @@ void Window::cusorPosCallback(double x, double y)
 	e.LeftButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
 	e.RightButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
 	e.MiddleButton = glfwGetMouseButton(m_implWindow, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS ? MouseButtonStateE::Pressed : MouseButtonStateE::Released;
-	onMouseMove(e);
+
+	std::vector<UIElement *> elements;
+	loopTree(this, elements);
+	for (auto uie : elements)
+	{
+		uie->onMouseMoveThunk(e, Point((float)x, (float)y));
+	}
 }
 
 void Window::cusorPosEnterCallback(int entered)
@@ -421,19 +416,27 @@ DependencyProperty Window::IconProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
 		auto source = args->newValue.extract<std::shared_ptr<ImageSource>>();
-		auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+		Bitmap bm = source ? source->bitmap() : Bitmap();
 		GLFWimage img;
-		img.width = bm->width();
-		img.height = bm->height();
-		img.pixels = (unsigned char *)bm->data();
-		if(dynamic_cast<Window *>(obj)->m_implWindow)
+		img.width = bm.width();
+		img.height = bm.height();
+		img.pixels = (unsigned char *)bm.data();
+		if (dynamic_cast<Window *>(obj)->m_implWindow)
+		{
 			glfwSetWindowIcon(dynamic_cast<Window *>(obj)->m_implWindow, 1, &img);
+		}
+
 	});
 	return dp;
 }
 
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
+	ContentControl::onPropertyChanged(args);
+	if (args.property == ContentProperty())
+	{
+		updateLayout();
+	}
 }
 
 void Window::onActivated(const EventArgs & args)

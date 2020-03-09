@@ -39,6 +39,8 @@ public:
 	//关闭/销毁窗口
 	void close();
 
+	Point getMousePosition() const;
+
 	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
 	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
 	static DependencyProperty				TopmostProperty();		//置顶的依赖属性
@@ -78,7 +80,6 @@ protected:
 
 private:
 	void _close(bool eraseFromCollection);
-	std::vector<UIElement *> hitElements(int x, int y) const;
 
 	void posCallback(int x, int y);
 	void sizeCallback(int width, int height);

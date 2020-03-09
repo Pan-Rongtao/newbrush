@@ -77,7 +77,7 @@ MouseEventArgs::MouseEventArgs(int timestamp)
 {
 }
 
-Point MouseEventArgs::getPosition(std::shared_ptr<InputElement> relativeTo)
+Point MouseEventArgs::getPosition(std::shared_ptr<InputElement> relativeTo) const
 {
 	return nb::Point();
 }

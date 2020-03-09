@@ -7,6 +7,7 @@
 #include "newbrush/gui/Button.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
+#include "newbrush/core/Log.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
@@ -16,12 +17,16 @@ TEST_CASE("Test nb::Button", "[Button]")
 	Application app;
 	std::shared_ptr<Window> w = std::make_shared<Window>();
 	auto btn = std::make_shared<Button>();
-	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(btn));
-
 	auto rc = std::make_shared<Rectangle>();
 	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	btn->setValue<UIElementPtr>(Button::ContentProperty(), rc);
 	btn->setValue(Button::MarginProperty(), Thickness(50));
+	//btn->setValue(Button::ClickModeProperty(), ClickModeE::press);
+	btn->Click += [](const RoutedEventArgs &e) {
+		Log::info("on click");
+	};
+
+	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(btn));
 
 	app.run(0, nullptr);
 /*	m_btn = std::make_shared<Button>();

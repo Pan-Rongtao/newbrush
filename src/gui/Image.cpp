@@ -42,9 +42,9 @@ void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == SourceProperty())
 	{
-		auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
-		auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
-		m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(*bm));
+		auto newSource = args.newValue.extract<std::shared_ptr<ImageSource>>();
+		auto &newBm = newSource->bitmap();
+		m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(newBm));
 	}
 	else if (args.property == StretchProperty())
 	{
@@ -56,20 +56,20 @@ Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
 	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
-	auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
-	return Size(std::max<float>(availableSize.width(), (float)bm->width()), std::max<float>(availableSize.height(), (float)bm->height()));
+	Size sourceSize = source ? Size(source->width(), source->heigth()) : Size();
+	return Size(std::max(availableSize.width(), sourceSize.width()), std::max(availableSize.height(), sourceSize.height()));
 }
 
 Size Image::arrangeOverride(const Size & finalSize)
 {
 	auto stretch = getValue<StretchE>(StretchProperty());
 	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
-	auto bm = source->getValue<std::shared_ptr<Bitmap>>(ImageSource::BmProperty());
+	Size sourceSize = source ? Size(source->width(), source->heigth()) : Size();
 	switch (stretch)
 	{
 	case StretchE::Origion:
 	{
-		return Size((float)bm->width(), (float)bm->height());
+		return Size(sourceSize.width(), sourceSize.height());
 	}
 	case StretchE::Fill:
 	{
@@ -78,7 +78,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 	case StretchE::Uniform:
 	{
 		Size sz;
-		auto pixelRatio = source->width() / source->heigth();
+		auto pixelRatio = sourceSize.width() / sourceSize.height();
 		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{

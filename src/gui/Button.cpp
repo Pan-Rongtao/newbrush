@@ -18,19 +18,3 @@ DependencyProperty Button::IsDefaultProperty()
 	return dp;
 }
 
-void Button::onMouseDown()
-{
-}
-
-void Button::onMouseUp()
-{
-}
-
-void Button::onMouseLeftButtonDown()
-{
-
-}
-
-void Button::onMouseLeftButtonUp()
-{
-}
