@@ -17,7 +17,7 @@ float ImageSource::width() const
 	return (float)m_bm.width();
 }
 
-float ImageSource::heigth() const
+float ImageSource::height() const
 {
 	return (float)m_bm.height();
 }

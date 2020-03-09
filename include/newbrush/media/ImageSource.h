@@ -22,7 +22,7 @@ public:
 	ImageSource(const std::string &uri);
 
 	float width() const;
-	float heigth() const;
+	float height() const;
 
 	const Bitmap &bitmap() const;
 

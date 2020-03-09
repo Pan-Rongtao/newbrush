@@ -10,9 +10,16 @@
 using namespace nb;
 
 Image::Image()
-	: m_renderObj(std::make_shared<RenderObject>())
+	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), std::make_shared<Material>(Programs::primitive())))
 {
-	m_renderObj->setMaterial(std::make_shared<Material>(Programs::primitive()));
+	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
+	vertexs.resize(4);
+	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
+	vertexs[1].texCoord = glm::vec2(1.0, 0.0);
+	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
+	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+	auto indices = m_renderObj->model()->meshes[0].indices;
+	indices.insert(indices.begin(), { 0, 1, 2, 0, 2, 3 });
 }
 
 void Image::onRender(Viewport2D & drawContext)
@@ -20,6 +27,11 @@ void Image::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
+	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
+/*	vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };
+	vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };
+	vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };
+	vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };*/
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
@@ -56,7 +68,7 @@ Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
 	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
-	Size sourceSize = source ? Size(source->width(), source->heigth()) : Size();
+	Size sourceSize = source ? Size(source->width(), source->height()) : Size();
 	return Size(std::max(availableSize.width(), sourceSize.width()), std::max(availableSize.height(), sourceSize.height()));
 }
 
@@ -64,7 +76,10 @@ Size Image::arrangeOverride(const Size & finalSize)
 {
 	auto stretch = getValue<StretchE>(StretchProperty());
 	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
-	Size sourceSize = source ? Size(source->width(), source->heigth()) : Size();
+	Size sourceSize = source ? Size(source->width(), source->height()) : Size();
+	if (sourceSize.isZero())
+		return Size();
+
 	switch (stretch)
 	{
 	case StretchE::Origion:
@@ -93,7 +108,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 	case StretchE::UniformToFill:
 	{
 		Size sz;
-		auto pixelRatio = source->width() / source->heigth();
+		auto pixelRatio = sourceSize.width() / sourceSize.height();
 		auto containerRatio = m_availableSize.width() / m_availableSize.height();
 		if (pixelRatio < containerRatio)
 		{
