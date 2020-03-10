@@ -18,14 +18,14 @@ public:
 	UIElementPtr root();
 
 	//触发器集合
-	std::vector<TriggerBase> &triggers();
+	std::vector<TriggerBasePtr> &triggers();
 
 private:
 	std::type_index nodeType(UIElement* node) const;
-	void loopTree(UIElement* node, UIElementPtr instance) const;
+	void loopTree(UIElement* node, UIElementPtr &instance) const;
 
 	UIElementPtr				m_root;
-	std::vector<TriggerBase>	m_triggers;
+	std::vector<TriggerBasePtr>	m_triggers;
 };
 
 }

@@ -17,13 +17,12 @@ void ContentControl::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
-//	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
-//		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
-//	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
-//	drawContext.queue(Renderer());
+
 	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
 	if (content)
+	{
 		content->onRender(drawContext);
+	}
 }
 
 uint32_t ContentControl::childrenCount() const
@@ -44,7 +43,7 @@ void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs 
 	if (args.property == ContentControl::ContentProperty())
 	{
 		auto content = args.newValue.extract<std::shared_ptr<UIElement>>();
-		content->setParent(this);
+		addLogicalChild(content);
 	}
 }
 

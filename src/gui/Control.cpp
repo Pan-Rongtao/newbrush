@@ -49,7 +49,7 @@ DependencyProperty Control::TabIndexProperty()
 
 DependencyProperty Control::TemplateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<ControlTemplate>>("Template", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<ControlTemplate>>("Template", nullptr, Control::onTemplateChanged);
 	return dp;
 }
 
@@ -61,4 +61,21 @@ Size Control::measureOverride(const Size & availableSize)
 Size Control::arrangeOverride(const Size & finalSize)
 {
 	return UIElement::arrangeOverride(finalSize);;
+}
+#include "newbrush/gui/ContentControl.h"
+void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+{
+	auto oldTemplate = e->oldValue.extract<std::shared_ptr<ControlTemplate>>();
+	auto newTemplate = e->newValue.extract<std::shared_ptr<ControlTemplate>>();
+	if (newTemplate == oldTemplate)
+	{
+		return;
+	}
+
+	if (newTemplate)
+	{
+		auto instance = newTemplate->instance();
+		auto ctrl = dynamic_cast<Control *>(d);
+		ctrl->setValue(ContentControl::ContentProperty(), instance);
+	}
 }

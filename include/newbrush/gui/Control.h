@@ -23,6 +23,8 @@ protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
+private:
+	static void onTemplateChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
 };
 
 }

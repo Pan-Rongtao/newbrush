@@ -111,7 +111,8 @@ DependencyProperty ColumnDefinition::ActualWidthProperty()
 	return dp;
 }
 
-Grid::Grid(){
+Grid::Grid()
+{
 }
 
 DependencyProperty Grid::RowDefinitionsProperty()
@@ -318,4 +319,9 @@ Size Grid::arrangeOverride(const Size & finalSize)
 		child->arrage(Rect(x, y, w, h));
 	}
 	return finalSize;
+}
+
+std::shared_ptr<UIElement> Grid::clone() const
+{
+	return std::make_shared<Grid>(*this);
 }

@@ -333,6 +333,16 @@ Size UIElement::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
+void UIElement::addLogicalChild(std::shared_ptr<UIElement> child)
+{
+	child->changedLogicParent(this);
+}
+
+void UIElement::removeLogicalChild(std::shared_ptr<UIElement> child)
+{
+	child->changedLogicParent(nullptr);
+}
+
 void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty())
@@ -601,6 +611,11 @@ void UIElement::onPreviewTouchMove(const TouchEventArgs & args)
 void UIElement::onPreviewTouchUp(const TouchEventArgs & args)
 {
 	PreviewTouchUp.invoke(args);
+}
+
+void UIElement::changedLogicParent(UIElement * parent)
+{
+	m_parent = parent;
 }
 
 void UIElement::onMouseMoveThunk(const MouseEventArgs &e, const Point &pt)
@@ -1036,4 +1051,9 @@ RoutedEvent UIElement::TouchUpEvent()
 {
 	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchUp", RoutingStrategyE::bubble);
 	return e;
+}
+
+std::shared_ptr<UIElement> UIElement::clone() const
+{
+	return std::make_shared<UIElement>(*this);
 }

@@ -187,6 +187,8 @@ public:
 	static RoutedEvent							TouchMoveEvent();
 	static RoutedEvent							TouchUpEvent();
 
+	virtual std::shared_ptr<UIElement> clone() const;
+
 	//获取子节点个数，本实现返回0
 	virtual uint32_t childrenCount() const;
 
@@ -213,6 +215,10 @@ public:
 public:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);
+
+protected:
+	void addLogicalChild(std::shared_ptr<UIElement> child);
+	void removeLogicalChild(std::shared_ptr<UIElement> child);
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
@@ -279,6 +285,7 @@ private:
 		Flags_Max = 32,
 	};
 
+	void changedLogicParent(UIElement* parent);
 	void onMouseMoveThunk(const MouseEventArgs &e, const Point &pt);
 	void onMouseButtonThunk(const MouseButtonEventArgs &e, const Point &pt);
 
@@ -286,6 +293,7 @@ private:
 	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 	std::bitset<Flags_Max>	m_flags;
 	friend class Window;
+	friend class UIElementCollection;
 };
 
 using UIElementPtr = std::shared_ptr<UIElement>;

@@ -25,7 +25,7 @@ void UIElementCollection::insert(uint32_t index, std::shared_ptr<UIElement> elem
 		nbThrowException(std::out_of_range, "index");
 
 	m_children.insert(m_children.begin() + index, element);
-	element->setParent(m_logicalParent);
+	m_logicalParent->addLogicalChild(element);
 }
 
 void UIElementCollection::remove(std::shared_ptr<UIElement> element)

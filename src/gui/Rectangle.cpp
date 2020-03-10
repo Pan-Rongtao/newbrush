@@ -78,6 +78,11 @@ Size Rectangle::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
+std::shared_ptr<UIElement> Rectangle::clone() const
+{
+	return std::make_shared<Rectangle>(*this);
+}
+
 void Rectangle::updateFillObject(float width, float height, float radiusX, float radiusY)
 {
 	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());

@@ -11,6 +11,7 @@ std::shared_ptr<UIElement> ControlTemplate::instance()
 {
 	std::shared_ptr<UIElement> instance;
 	loopTree(m_root.get(), instance);
+	//instance = std::make_shared<UIElement>(*m_root);
 	return instance;
 }
 
@@ -24,7 +25,7 @@ UIElementPtr ControlTemplate::root()
 	return m_root;
 }
 
-std::vector<TriggerBase> &ControlTemplate::triggers()
+std::vector<TriggerBasePtr> &ControlTemplate::triggers()
 {
 	return m_triggers;
 }
@@ -34,19 +35,19 @@ std::type_index ControlTemplate::nodeType(UIElement * node) const
 	return typeid(*node);
 }
 
-void ControlTemplate::loopTree(UIElement* node, UIElementPtr instance) const
+void ControlTemplate::loopTree(UIElement* node, UIElementPtr &instance) const
 {
 	if (!m_root) return;
 
-	instance = std::make_shared<UIElement>();
-	for (auto i = 0; i <= VisualTreeHelper::getChildrenCount(node); ++i)
+	instance = node->clone();
+	for (auto i = 0; i < node->childrenCount(); ++i)
 	{
-		auto newChild = std::make_shared<UIElement>();
+		auto sourceChild = node->getChild(i);
+		auto newChild = sourceChild->clone();
 		newChild->setParent(instance.get());
-		auto childInTemplate = VisualTreeHelper::getChild(node, i);
-		if (VisualTreeHelper::getChildrenCount(childInTemplate) >= 1)
+		if (sourceChild->childrenCount() >= 1)
 		{
-			loopTree(childInTemplate, instance);
+			loopTree(sourceChild, newChild);
 		}
 	}
 }

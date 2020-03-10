@@ -19,6 +19,7 @@ protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
+	virtual std::shared_ptr<UIElement> clone() const;
 private:
 	void updateFillObject(float width, float height, float radiusX, float radiusY);
 	void updateStrokeObject(const Rect &rc);
