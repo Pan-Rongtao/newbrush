@@ -24,7 +24,7 @@ TEST_CASE("Test nb::Event", "Event")
 	printf("----------------test event-----------------\n");
 	EventSender sender;
 	auto h = sender.Timeout.addHandler(std::bind(onTimeout, std::placeholders::_1));
-	h = sender.Timeout.addHandler(std::bind(onTimeout, std::placeholders::_1));
+	//h = sender.Timeout.addHandler(std::bind(onTimeout, std::placeholders::_1));
 	//sender.Timeout.removeHandler(h);
 	//sender.Timeout.clear();
 	sender.Timeout.invoke({ 1, 2.2f, "yes" });
