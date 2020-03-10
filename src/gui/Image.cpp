@@ -6,11 +6,12 @@
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/ImageSource.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
 
 Image::Image()
-	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), std::make_shared<Material>(Programs::primitive())))
+	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), std::make_shared<Material>(Programs::image())))
 {
 	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
 	vertexs.resize(4);
@@ -18,7 +19,7 @@ Image::Image()
 	vertexs[1].texCoord = glm::vec2(1.0, 0.0);
 	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
 	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
-	auto indices = m_renderObj->model()->meshes[0].indices;
+	auto &indices = m_renderObj->model()->meshes[0].indices;
 	indices.insert(indices.begin(), { 0, 1, 2, 0, 2, 3 });
 }
 
@@ -27,15 +28,17 @@ void Image::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
+	auto c = rc.center();
 	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
-/*	vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };
-	vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };
-	vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };
-	vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };*/
+	vertexs[0].position = glm::vec3{ -rc.width()* 0.5, rc.height() * 0.5, 0.0f };
+	vertexs[1].position = glm::vec3{ rc.width() * 0.5, rc.height() * 0.5, 0.0f };
+	vertexs[2].position = glm::vec3{ rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
+	vertexs[3].position = glm::vec3{ -rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
 //		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
 //	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
 	drawContext.queue(m_renderObj);
+	m_renderObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 }
 
 DependencyProperty Image::SourceProperty()
