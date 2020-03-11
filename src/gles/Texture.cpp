@@ -5,34 +5,6 @@
 
 using namespace nb;
 
-//class TexutreWrapping
-TextureWrapping::TextureWrapping()
-	: TextureWrapping(WrappingModeE::Repeat, WrappingModeE::Repeat, { 0.0f, 0.0f, 0.0f, 1.0f })
-{
-}
-
-TextureWrapping::TextureWrapping(TextureWrapping::WrappingModeE s, TextureWrapping::WrappingModeE t)
-	: TextureWrapping(s, t, { 0.0f, 0.0f, 0.0f, 1.0f })
-{
-}
-
-TextureWrapping::TextureWrapping(TextureWrapping::WrappingModeE s, TextureWrapping::WrappingModeE t, const glm::vec4 &borderColor)
-	: m_s(s)
-	, m_t(t)
-	, m_borderColor(borderColor)
-{
-}
-
-TextureWrapping::WrappingModeE TextureWrapping::s() const
-{
-	return m_s;
-}
-
-TextureWrapping::WrappingModeE TextureWrapping::t() const
-{
-	return m_t;
-}
-
 int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
 {
 	GLint nGl = GL_REPEAT;
@@ -46,38 +18,6 @@ int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
 	return nGl;
-}
-
-//class TextureFilter
-TextureFilter::TextureFilter()
-	: TextureFilter(FilterE::Point, FilterE::Point)
-{
-}
-
-TextureFilter::TextureFilter(FilterE uniformFilter)
-	: TextureFilter(uniformFilter, uniformFilter)
-{
-}
-
-TextureFilter::TextureFilter(FilterE magnify, FilterE narrow)
-	: m_MagnifyFilter(magnify)
-	, m_NarrowFilter(narrow)
-{
-}
-
-TextureFilter::FilterE TextureFilter::magnifyFilter() const
-{
-	return m_MagnifyFilter;
-}
-
-TextureFilter::FilterE TextureFilter::narrowFilter() const
-{
-	return m_NarrowFilter;
-}
-
-TextureFilter TextureFilter::defaultx()
-{
-	return FilterE();
 }
 
 int TextureFilter::glValue(TextureFilter::FilterE filter)
@@ -100,7 +40,7 @@ Texture::Texture()
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
 	{
-			nbThrowException(std::logic_error, "gl configure needed, use nb::gl::setConfigure to set configure.");
+		nbThrowException(std::logic_error, "gl configure has not set.");
 	}
 }
 

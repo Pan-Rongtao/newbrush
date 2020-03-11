@@ -118,7 +118,8 @@ void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	auto newSource = args->newValue.extract<std::shared_ptr<ImageSource>>();
 	auto &newBm = newSource->bitmap();
 	auto self = dynamic_cast<Image*>(obj);
-	self->m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(newBm));
+	auto texture = std::make_shared<Texture2D>(newBm);
+	self->m_renderObj->material()->textures().push_back(texture);
 }
 
 void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)

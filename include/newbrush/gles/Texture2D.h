@@ -1,14 +1,14 @@
-/*******************************************************
+ï»¿/*******************************************************
 **	Texture2D
 **
-**	2DÎÆÀí
+**	2Dçº¹ç†
 **	
-**	ÊÇËùÓĞ2DÎÆÀíµÄ»ùÀà£¬2DÎÆÀíÓ¦ÓÃÓÚ2D×ø±êÓ³Éä¡£
+**	æ˜¯æ‰€æœ‰2Dçº¹ç†çš„åŸºç±»ï¼Œ2Dçº¹ç†åº”ç”¨äº2Dåæ ‡æ˜ å°„ã€‚
 **	
-**	×ÓÀàÓĞTextureMipmap¡¢CompressedTextureºÍ BlendTexture
+**	å­ç±»æœ‰TextureMipmapã€CompressedTextureå’Œ BlendTexture
 **	
 **
-**		ÅËÈÙÌÎ
+**		æ½˜è£æ¶›
 **	
 ********************************************************/
 #pragma once
@@ -21,61 +21,45 @@ namespace nb{
 class NB_API Texture2D : public Texture
 {
 public:
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬Ëü²»°üº¬ÈÎºÎÊı¾İ£¬
-	//ËüµÄÎÆÀí»·ÈÆ·½Ê½ÎªWrappingMode::WrappingMode_Repeat£¬ËüµÄÎÆÀí¹ıÂË·½Ê½ÎªTextureFilter::Point
+	//æ„å»ºä¸€ä¸ª2Dçº¹ç†å¯¹è±¡ï¼Œå®ƒä¸åŒ…å«ä»»ä½•æ•°æ®ï¼Œ
+	//å®ƒçš„çº¹ç†ç¯ç»•æ–¹å¼ä¸ºWrappingMode::WrappingMode_Repeatï¼Œå®ƒçš„çº¹ç†è¿‡æ»¤æ–¹å¼ä¸ºTextureFilter::Point
 	Texture2D();
 
-	//´ÓÒ»¸öÒÔ´æÔÚµÄid¹¹½¨Texture2D£¬±ØĞë±£Ö¤idÎ´±»ÊÍ·Å
+	//ä»ä¸€ä¸ªä»¥å­˜åœ¨çš„idæ„å»ºTexture2Dï¼Œå¿…é¡»ä¿è¯idæœªè¢«é‡Šæ”¾
 	Texture2D(uint32_t id);
 
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬ËüµÄ¿í¸ßÎªwidth, height
+	//æ„å»ºä¸€ä¸ª2Dçº¹ç†å¯¹è±¡ï¼Œå®ƒçš„å®½é«˜ä¸ºwidth, height
 	Texture2D(unsigned int width, unsigned int height);
 
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬Ëü½«´ÓÂ·¾¶ÖĞÔØÈëÊı¾İ
-	//ËüµÄÎÆÀí»·ÈÆ·½Ê½ÎªWrappingMode::WrappingMode_Repeat£¬ËüµÄÎÆÀí¹ıÂË·½Ê½ÎªTextureFilter::Point
-	Texture2D(const std::string &path);
-
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬Ëü½«´ÓÂ·¾¶ÖĞÔØÈëÊı¾İ
-	//ËüµÄÎÆÀí»·ÈÆ·½Ê½ÎªWrappingMode::WrappingMode_Repeat£¬ËüµÄÎÆÀí¹ıÂË·½Ê½Îªfilter
-	Texture2D(const std::string &path, const TextureFilter &filter);
-
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬Ëü½«´ÓÂ·¾¶ÖĞÔØÈëÊı¾İ
-	//ËüµÄÎÆÀí»·ÈÆ·½Ê½Îªwrapping£¬ËüµÄÎÆÀí¹ıÂË·½Ê½Îªfilter
-	Texture2D(const std::string &path, const TextureWrapping &wrapping, const TextureFilter &filter);
-
-	//¹¹½¨Ò»¸ö2DÎÆÀí¶ÔÏó£¬Ëü½«´ÓÄÚ´æÔØÈëÊı¾İ
+	//æ„å»ºä¸€ä¸ª2Dçº¹ç†å¯¹è±¡ï¼Œå®ƒå°†ä»å†…å­˜è½½å…¥æ•°æ®
 	Texture2D(const Bitmap &bm);
 
-	virtual ~Texture2D();
+	virtual ~Texture2D() = default;
 
-	//ÎÆÀíÖ§³ÖµÄ×î´ó³ß´ç£¬²»Í¬µÄGPU½«·µ»Ø²»Í¬µÄÖµ£»MaxWidthºÍMaxHeightÒ»°ãÊÇÒ»ÑùµÄÖµ
-	//×¢Òâ£º´Ë½Ó¿ÚÒÀÀµÓÚeglµÄ³õÊ¼»¯£¬ĞèÔÚegl³õÊ¼»¯Íê³Éºó²ÅÄÜ¹»µÃµ½ÕıÈ·µÄÖµ£¬²»È»½«·µ»Ø0
+	//çº¹ç†æ”¯æŒçš„æœ€å¤§å°ºå¯¸ï¼Œä¸åŒçš„GPUå°†è¿”å›ä¸åŒçš„å€¼ï¼›MaxWidthå’ŒMaxHeightä¸€èˆ¬æ˜¯ä¸€æ ·çš„å€¼
+	//æ³¨æ„ï¼šæ­¤æ¥å£ä¾èµ–äºeglçš„åˆå§‹åŒ–ï¼Œéœ€åœ¨eglåˆå§‹åŒ–å®Œæˆåæ‰èƒ½å¤Ÿå¾—åˆ°æ­£ç¡®çš„å€¼ï¼Œä¸ç„¶å°†è¿”å›0
 	static int maxWidthSupported();
 	static int maxHeightSupported();
 
 public:
-	//¼¤»îµ±Ç°ÎÆÀí£¬ÔÚµ÷ÓÃGles ApiµÄÇ°ÖÃ¶¯×÷£¬
-	//±íÊ¾Ö®ºóµÄgl²Ù×÷¶¼ÊÇÕë¶Ôµ±Ç°ÎÆÀí¡£ÔÚÃ¿´ÎµÄGlesÎÆÀí²Ù×÷¶¼Ó¦¸Ãµ÷ÓÃ´Ëº¯Êı
+	//æ¿€æ´»å½“å‰çº¹ç†ï¼Œåœ¨è°ƒç”¨Gles Apiçš„å‰ç½®åŠ¨ä½œï¼Œ
+	//è¡¨ç¤ºä¹‹åçš„glæ“ä½œéƒ½æ˜¯é’ˆå¯¹å½“å‰çº¹ç†ã€‚åœ¨æ¯æ¬¡çš„Glesçº¹ç†æ“ä½œéƒ½åº”è¯¥è°ƒç”¨æ­¤å‡½æ•°
 	virtual void bind() override;
 	virtual void unbind() override;
 
-	//ÉèÖÃÎÆÀí»·ÈÆ·½Ê½
+	//è®¾ç½®çº¹ç†ç¯ç»•æ–¹å¼
 	virtual void setWrapping(const TextureWrapping &wrapping) override;
 
-	//ÉèÖÃÎÆÀí¹ıÂË·½Ê½£¬¼ÙÈô²»ÏÔÊ¾ÉèÖÃ£¬½«²ÉÓÃÄ¬ÈÏµÄ¹ıÂË·½Ê½TextureFilter::Default
+	//è®¾ç½®çº¹ç†è¿‡æ»¤æ–¹å¼ï¼Œå‡è‹¥ä¸æ˜¾ç¤ºè®¾ç½®ï¼Œå°†é‡‡ç”¨é»˜è®¤çš„è¿‡æ»¤æ–¹å¼TextureFilter::Default
 	virtual void setFilter(const TextureFilter &filter) override;
 
-	//¼ÓÔØÂ·¾¶Ô´
-	//Òì³££ºpath²»´æÔÚ
-	void loadFromPath(const std::string &path);
-
-	//´ÓÊı¾İ¼ÓÔØ
+	//ä»æ•°æ®åŠ è½½
 	void loadFromData(const char *data, int width, int height, Texture::PixelFormatE format);
 
-	//»ñÈ¡ÏñËØ¸ß
+	//è·å–åƒç´ é«˜
 	unsigned int width() const;
 
-	//»ñÈ¡ÏñËØ¿í
+	//è·å–åƒç´ å®½
 	unsigned int height() const;
 
 private:
