@@ -303,4 +303,10 @@ struct DependencyPropertyChangedEventArgs
 	Var					newValue;
 };
 
+class ExceptonRoutedEventArgs
+{
+public:
+	std::exception	errorException;
+};
+
 }

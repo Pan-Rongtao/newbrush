@@ -10,8 +10,8 @@ ControlTemplate::ControlTemplate()
 std::shared_ptr<UIElement> ControlTemplate::instance()
 {
 	std::shared_ptr<UIElement> instance;
-	loopTree(m_root.get(), instance);
-	//instance = std::make_shared<UIElement>(*m_root);
+	//loopTree(m_root.get(), instance);
+	instance = m_root->clone();
 	return instance;
 }
 

@@ -12,7 +12,7 @@ TEST_CASE("Test Image", "[Image]")
 	std::shared_ptr<Window> w = std::make_shared<Window>();
 	auto img = std::make_shared<Image>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), img);
-	auto imgSource = std::make_shared<ImageSource>("e:/e.jpg");
+	auto imgSource = std::make_shared<ImageSource>("../images/zelda0.jpg");
 	img->setValue(Image::SourceProperty(), imgSource);
 
 	app.run(0, nullptr);

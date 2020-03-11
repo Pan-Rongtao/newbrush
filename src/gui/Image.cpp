@@ -6,6 +6,7 @@
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/ImageSource.h"
+#include "newbrush/gui/Window.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
@@ -34,37 +35,21 @@ void Image::onRender(Viewport2D & drawContext)
 	vertexs[1].position = glm::vec3{ rc.width() * 0.5, rc.height() * 0.5, 0.0f };
 	vertexs[2].position = glm::vec3{ rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
 	vertexs[3].position = glm::vec3{ -rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
-//	Renderer()->setModel(std::make_shared<gl::Quadrangle>(glm::vec2(rc.left(), rc.bottom()), glm::vec2(rc.right(), rc.bottom()),
-//		glm::vec2(rc.right(), rc.top()), glm::vec2(rc.left(), rc.top())));
-//	Renderer()->setModel(std::make_shared<gl::Quadrangle>(rc.width(), rc.height()));
+
 	drawContext.queue(m_renderObj);
 	m_renderObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 }
 
 DependencyProperty Image::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr);
+	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr, onSourcePropertyChanged);
 	return dp;
 }
 
 DependencyProperty Image::StretchProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform);
+	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged);
 	return dp;
-}
-
-void Image::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
-{
-	if (args.property == SourceProperty())
-	{
-		auto newSource = args.newValue.extract<std::shared_ptr<ImageSource>>();
-		auto &newBm = newSource->bitmap();
-		m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(newBm));
-	}
-	else if (args.property == StretchProperty())
-	{
-		setValue(StretchProperty(), args.newValue.extract<StretchE>());
-	}
 }
 
 Size Image::measureOverride(const Size & availableSize)
@@ -126,4 +111,17 @@ Size Image::arrangeOverride(const Size & finalSize)
 	default:
 		return Size();
 	}
+}
+
+void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto newSource = args->newValue.extract<std::shared_ptr<ImageSource>>();
+	auto &newBm = newSource->bitmap();
+	auto self = dynamic_cast<Image*>(obj);
+	self->m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(newBm));
+}
+
+void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+
 }

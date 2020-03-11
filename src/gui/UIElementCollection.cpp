@@ -9,6 +9,15 @@ UIElementCollection::UIElementCollection(UIElement *logicalParent)
 	
 }
 
+void UIElementCollection::changeLogicalParent(UIElement * logicalParent)
+{
+	m_logicalParent = logicalParent;
+	for (auto const child : m_children)
+	{
+		m_logicalParent->addLogicalChild(child);
+	}
+}
+
 uint32_t UIElementCollection::count() const
 {
 	return m_children.size();

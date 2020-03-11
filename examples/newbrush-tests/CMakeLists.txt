@@ -29,3 +29,4 @@ target_link_libraries(${BIN_NAME} core media gles gui)
 
 # 4. Project Install
 install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(DIRECTORY images DESTINATION ${CMAKE_INSTALL_PREFIX})

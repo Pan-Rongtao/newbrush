@@ -7,6 +7,10 @@ class Brush;
 class NB_API Panel : public UIElement
 {
 public:
+	Panel(const Panel &other);
+	Panel(const Panel &&other);
+	Panel &operator =(const Panel &other);
+	Panel &operator =(const Panel &&other);
 	virtual ~Panel() = default;
 
 	static DependencyProperty BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘

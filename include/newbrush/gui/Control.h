@@ -20,11 +20,14 @@ public:
 	static DependencyProperty				TemplateProperty();						//模板的依赖属性
 
 protected:
+	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs & args) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
 	static void onTemplateChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
+
+	bool m_handlingPropertyChanged{ false };
 };
 
 }

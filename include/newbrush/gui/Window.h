@@ -40,28 +40,25 @@ public:
 	void close();
 
 	Point getMousePosition() const;
-
-	static DependencyProperty				WindowStateProperty();	//窗口状态的依赖属性
-	static DependencyProperty				WindowStyleProperty();	//窗口样式的依赖属性
-	static DependencyProperty				TopmostProperty();		//置顶的依赖属性
-	static DependencyProperty				LeftProperty();			//左位置的依赖属性
-	static DependencyProperty				TopProperty();			//顶位置的依赖属性
-	static DependencyProperty				TitleProperty();		//标题的依赖属性
-	static DependencyProperty				IconProperty();			//图标的依赖属性
-
-	Event<EventArgs>						Activated;				//当窗口成为前台窗口时发生
-	Event<EventArgs>						Deactivated;			//当窗口成为后台窗口时发生
-	Event<EventArgs>						Closed;					//当窗口将关闭时发生
-	Event<CancelEventArgs>					Closing;				//调用close后发生，可取消关闭窗口
-	Event<EventArgs>						LocationChanged;		//位置发生变化时发生
-	Event<EventArgs>						StateChanged;			//WindowState更改时发生
-	Event<EventArgs>						SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
-	Event<EventArgs>						ContentRendered;		//当窗口的内容呈现后发生
-	
-	void swapBuffers() const;
 	static void pollEvents();
-
 	static Viewport2D drawContext;
+
+	static DependencyProperty	WindowStateProperty();	//窗口状态的依赖属性（WindowStateE）
+	static DependencyProperty	WindowStyleProperty();	//窗口样式的依赖属性（WindowStyle）
+	static DependencyProperty	TopmostProperty();		//置顶的依赖属性（bool）
+	static DependencyProperty	LeftProperty();			//左位置的依赖属性（float）
+	static DependencyProperty	TopProperty();			//顶位置的依赖属性（float）
+	static DependencyProperty	TitleProperty();		//标题的依赖属性（std::string）
+	static DependencyProperty	IconProperty();			//图标的依赖属性（std::shared_ptr<ImageSource>）
+
+	Event<EventArgs>			Activated;				//当窗口成为前台窗口时发生
+	Event<EventArgs>			Deactivated;			//当窗口成为后台窗口时发生
+	Event<EventArgs>			Closed;					//当窗口将关闭时发生
+	Event<CancelEventArgs>		Closing;				//调用close后发生，可取消关闭窗口
+	Event<EventArgs>			LocationChanged;		//位置发生变化时发生
+	Event<EventArgs>			StateChanged;			//WindowState更改时发生
+	Event<EventArgs>			SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
+	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
@@ -99,6 +96,16 @@ private:
 	static void deinit();
 
 	void destroyWindow();
+	void render();
+
+	static void onWindowStatePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onWindowStyleChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onTopmostPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onLeftPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onTopPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onTitlePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onIconPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+
 
 	GLFWwindow		*m_implWindow;
 	bool			m_dispatchingCloseEvent;

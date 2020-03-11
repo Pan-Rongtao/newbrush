@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "newbrush/core/Event.h"
-#include "newbrush/core/EventArgs.h"
 
 namespace nb {
 

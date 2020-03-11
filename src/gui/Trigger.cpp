@@ -1,6 +1,7 @@
 #include "newbrush/gui/Trigger.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DataContext.h"
+#include "newbrush/gui/VisualTreeHelper.h"
 
 using namespace nb;
 
@@ -36,7 +37,18 @@ void TriggerBase::processSetters(UIElement *uie, std::vector<SetterBasePtr> sett
 		auto setter = std::dynamic_pointer_cast<Setter>(setterBase);
 		if (setter)
 		{
-			uie->setValue(setter->property, setter->value);
+			if (setter->targetName)
+			{
+				auto node = VisualTreeHelper::findLogicalNode(uie, "rc");
+				if (node)
+				{
+					node->setValue(setter->property, setter->value);
+				}
+			}
+			else
+			{
+				uie->setValue(setter->property, setter->value);
+			}
 		}
 		else
 		{

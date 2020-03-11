@@ -22,15 +22,17 @@ TEST_CASE("Test nb::Button", "[Button]")
 	grid->setValue(UIElement::NameProperty(), "root");
 	auto rc = std::make_shared<Rectangle>();
 	rc->setValue(UIElement::NameProperty(), "rc");
-	rc->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	//rc->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	grid->children().add(rc);
 
 	templ->setRoot(grid);
 
 	auto trigger0 = std::make_shared<Trigger>(UIElement::IsMouseOverProperty(), false);
-	trigger0->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()), "rc"));
+	BrushPtr red = std::make_shared<SolidColorBrush>(Colors::red());
+	BrushPtr green = std::make_shared<SolidColorBrush>(Colors::blue());
+	trigger0->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), red, "rc"));
 	auto trigger1 = std::make_shared<Trigger>(UIElement::IsMouseOverProperty(), true);
-	trigger1->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()), "rc"));
+	trigger1->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), green, "rc"));
 	templ->triggers().push_back(trigger0);
 	templ->triggers().push_back(trigger1);
 

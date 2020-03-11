@@ -17,6 +17,32 @@ int Panel::getZIndex(std::shared_ptr<UIElement> element)
 	return 0;
 }
 
+Panel::Panel(const Panel & other)
+	: m_children(other.m_children)
+{
+	m_children.changeLogicalParent(this);
+}
+
+Panel::Panel(const Panel && other)
+	: m_children(std::move(other.m_children))
+{
+	m_children.changeLogicalParent(this);
+}
+
+Panel & Panel::operator=(const Panel & other)
+{
+	m_children = other.m_children;
+	m_children.changeLogicalParent(this);
+	return *this;
+}
+
+Panel & Panel::operator=(const Panel && other)
+{
+	m_children = std::move(other.m_children);
+	m_children.changeLogicalParent(this);
+	return *this;
+}
+
 DependencyProperty Panel::BackgroundProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Panel, std::shared_ptr<Brush>>("Background", nullptr);

@@ -46,7 +46,7 @@ UIElement *VisualTreeHelper::findLogicalNode(UIElement * logicalTreeNode, const 
 
 	if (ret == nullptr)
 	{
-		for (auto i = 0; i <= logicalTreeNode->childrenCount(); ++i)
+		for (auto i = 0; i < logicalTreeNode->childrenCount(); ++i)
 		{
 			auto childNode = logicalTreeNode->getChild(i);
 			ret = findLogicalNode(childNode, name);

@@ -22,18 +22,20 @@ public:
 	Image();
 	virtual ~Image() = default;
 
-	static DependencyProperty				SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
-	static DependencyProperty				StretchProperty();	//伸缩方式的依赖属性
+	static DependencyProperty	SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
+	static DependencyProperty	StretchProperty();	//伸缩方式的依赖属性（StretchE）
 
-	virtual void onRender(Viewport2D & drawContext) override;
+	Event<RoutedEventArgs>		ImageFailed;
 
 protected:
-	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
+	virtual void onRender(Viewport2D & drawContext) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
+	static void onSourcePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onStretchPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+
 	Size							m_availableSize;
 	std::shared_ptr<RenderObject>	m_renderObj;
 };

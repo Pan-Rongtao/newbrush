@@ -10,6 +10,8 @@ class NB_API UIElementCollection
 public:
 	UIElementCollection(UIElement *logicalParent);
 
+	void changeLogicalParent(UIElement *logicalParent);
+
 	void add(std::shared_ptr<UIElement> element);
 
 	void insert(uint32_t index, std::shared_ptr<UIElement> child);

@@ -62,20 +62,26 @@ Window::~Window()
 
 void Window::active()
 {
-	if(m_implWindow)
+	if (m_implWindow)
+	{
 		glfwFocusWindow(m_implWindow);
+	}
 }
 
 void Window::show()
 {
 	if (m_implWindow)
+	{
 		glfwShowWindow(m_implWindow);
+	}
 }
 
 void Window::hide()
 {
 	if (m_implWindow)
+	{
 		glfwHideWindow(m_implWindow);
+	}
 }
 
 void Window::close()
@@ -136,7 +142,9 @@ void loopTree(UIElement *e, std::vector<UIElement *> &elements)
 void Window::_close(bool eraseFromCollection)
 {
 	if (m_dispatchingCloseEvent)
+	{
 		return;
+	}
 
 	m_dispatchingCloseEvent = true;
 	CancelEventArgs args;
@@ -145,8 +153,10 @@ void Window::_close(bool eraseFromCollection)
 	{
 		destroyWindow();
 		onClosed(args);
-		if(eraseFromCollection)
+		if (eraseFromCollection)
+		{
 			Singleton<WindowCollection>::get()->erase(this);
+		}
 	}
 	m_dispatchingCloseEvent = false;
 }
@@ -234,24 +244,7 @@ void Window::focusCallback(int focused)
 
 void Window::refreshCallback()
 {
-	glfwMakeContextCurrent(m_implWindow);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	{
-		static int frames = 0;
-		static uint64_t k = nb::getTickCount();
-		drawContext.draw();
-
-		++frames;
-		uint64_t kk = nb::getTickCount();
-		if (kk - k >= 2000)
-		{
-			float fps = frames * 1000.0f / (kk - k);
-			frames = 0;
-			k = kk;
-			Log::info("fps:%.2f", fps);
-		}
-	}
-	glfwSwapBuffers(m_implWindow);
+	render();
 }
 
 void Window::closeCallback()
@@ -283,7 +276,7 @@ void Window::init()
 {
 	if (g_windowSystemInitialized)	return;
 
-	glfwSetErrorCallback([](int error, const char*str) {printf("error:%s\n", str); });
+	glfwSetErrorCallback([](int error, const char*str) { Log::error("error:%s\n", str); });
 	glfwInit();
 	//以下两句在有些电脑上导致glfwDestroyWindow挂死，放在库外不会挂死，目前暂未找到原因
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
@@ -306,127 +299,81 @@ void Window::destroyWindow()
 		glfwDestroyWindow(m_implWindow);
 		m_implWindow = nullptr;
 		if (Singleton<WindowCollection>::get()->windows().empty())
+		{
 			deinit();
+		}
 	}
 }
 
-void Window::swapBuffers() const
+void Window::render()
 {
 	glfwMakeContextCurrent(m_implWindow);
-//	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	{
+		static int frames = 0;
+		static uint64_t k = getTickCount();
+		drawContext.draw();
+
+		++frames;
+		uint64_t kk = getTickCount();
+		if (kk - k >= 2000)
+		{
+			float fps = frames * 1000.0f / (kk - k);
+			frames = 0;
+			k = kk;
+			Log::info("fps:%.2f", fps);
+		}
+	}
 	glfwSwapBuffers(m_implWindow);
 }
 
 void Window::pollEvents()
 {
 	if (g_windowSystemInitialized)
-		glfwWaitEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞（glfwWaitEvents CPU消耗很低，glfwPollEvents则很高30%以上）
+	{
+		glfwPollEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞（glfwWaitEvents CPU消耗很低，glfwPollEvents则很高30%以上）
+	}
 }
 
 DependencyProperty Window::WindowStateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		auto w = dynamic_cast<Window *>(obj)->m_implWindow;
-		if (!w)	return;
-
-		auto oldState = args->oldValue.extract<WindowStateE>();
-		auto newState = args->newValue.extract<WindowStateE>();
-		if (oldState == newState)
-		{
-			return;
-		}
-		dynamic_cast<Window *>(obj)->m_lastWindowState = oldState;
-		if (!dynamic_cast<Window *>(obj)->m_processingCallback)
-		{
-			dynamic_cast<Window *>(obj)->m_processingWindowStateChanged = true;
-			switch (newState)
-			{	
-			//这里多加一个glfwMaximizeWindow的原因，是当出现连续设置glfwMaximizeWindow、glfwIconifyWindow、glfwRestoreWindow时，
-			//glfw恢复到了max状态，这和预期是不符合的，可能是一个bug；在glfwRestoreWindow前加一个glfwMaximizeWindow则可以保证恢复到normal状态
-			case WindowStateE::Normal:		glfwMaximizeWindow(w); glfwRestoreWindow(w);	break;
-			case WindowStateE::Maximized:	glfwMaximizeWindow(w);	break;
-			case WindowStateE::Minimized:	glfwIconifyWindow(w);	break;
-			default:												break;
-			}
-			dynamic_cast<Window *>(obj)->m_processingWindowStateChanged = false;
-		}
-		dynamic_cast<Window *>(obj)->onStateChanged({});
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged);
 	return dp;
 }
 
 DependencyProperty Window::WindowStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		auto oldStyle = args->oldValue.extract<WindowStyleE>();
-		auto newStyle = args->newValue.extract<WindowStyleE>();
-		if (oldStyle == newStyle)
-			return;
-
-		auto w = dynamic_cast<Window *>(obj)->m_implWindow;
-		switch (newStyle)
-		{
-		case WindowStyleE::None:	glfwSetWindowAttrib(w, GLFW_DECORATED, false);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
-		case WindowStyleE::Fixed:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, false);	break;
-		case WindowStyleE::SizeBox:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
-		default:																													break;
-		}
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged);
 	return dp;
 }
 
 DependencyProperty Window::TopmostProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		if(dynamic_cast<Window *>(obj)->m_implWindow)
-			glfwSetWindowAttrib(dynamic_cast<Window *>(obj)->m_implWindow, GLFW_FLOATING, args->newValue.extract<bool>());
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged);
 	return dp;
 }
 
 DependencyProperty Window::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		if (dynamic_cast<Window *>(obj)->m_implWindow)
-			glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged);
 	return dp;
 }
 
 DependencyProperty Window::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, [&](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		if (dynamic_cast<Window *>(obj)->m_implWindow)
-			glfwSetWindowPos(dynamic_cast<Window *>(obj)->m_implWindow, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged);
 	return dp;
 }
 
 DependencyProperty Window::TitleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		if (dynamic_cast<Window *>(obj)->m_implWindow)
-			glfwSetWindowTitle(dynamic_cast<Window *>(obj)->m_implWindow, args->newValue.extract<std::string>().data());
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged);
 	return dp;
 }
 
 DependencyProperty Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
-		auto source = args->newValue.extract<std::shared_ptr<ImageSource>>();
-		Bitmap bm = source ? source->bitmap() : Bitmap();
-		GLFWimage img;
-		img.width = bm.width();
-		img.height = bm.height();
-		img.pixels = (unsigned char *)bm.data();
-		if (dynamic_cast<Window *>(obj)->m_implWindow)
-		{
-			glfwSetWindowIcon(dynamic_cast<Window *>(obj)->m_implWindow, 1, &img);
-		}
-
-	});
+	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, onIconPropertyChanged);
 	return dp;
 }
 
@@ -477,4 +424,111 @@ void Window::onSourceInitiallized(const EventArgs & args)
 void Window::onContentRendered(const EventArgs & args)
 {
 	ContentRendered.invoke({ args });
+}
+
+void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto self = dynamic_cast<Window *>(obj);
+	auto w = self->m_implWindow;
+	if (!w)
+	{
+		return;
+	}
+
+	auto oldState = args->oldValue.extract<WindowStateE>();
+	auto newState = args->newValue.extract<WindowStateE>();
+	if (oldState == newState)
+	{
+		return;
+	}
+	self->m_lastWindowState = oldState;
+	if (!self->m_processingCallback)
+	{
+		self->m_processingWindowStateChanged = true;
+		switch (newState)
+		{
+		//处理WindowStateE::Normal，多加一个glfwMaximizeWindow的原因，是当出现连续设置glfwMaximizeWindow、glfwIconifyWindow、glfwRestoreWindow时，
+		//glfw恢复到了max状态，这和预期是不符合的，这是glfw的固有表现；在glfwRestoreWindow前加一个glfwMaximizeWindow则可以保证恢复到normal状态
+		case WindowStateE::Normal:		glfwMaximizeWindow(w); glfwRestoreWindow(w);	break;
+		case WindowStateE::Maximized:	glfwMaximizeWindow(w);							break;
+		case WindowStateE::Minimized:	glfwIconifyWindow(w);							break;
+		default:																		break;
+		}
+		self->m_processingWindowStateChanged = false;
+	}
+	self->onStateChanged({});
+}
+
+void Window::onWindowStyleChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (!w)
+	{
+		return;
+	}
+
+	auto oldStyle = args->oldValue.extract<WindowStyleE>();
+	auto newStyle = args->newValue.extract<WindowStyleE>();
+	if (oldStyle == newStyle)
+	{
+		return;
+	}
+
+	switch (newStyle)
+	{
+	case WindowStyleE::None:	glfwSetWindowAttrib(w, GLFW_DECORATED, false);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
+	case WindowStyleE::Fixed:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, false);	break;
+	case WindowStyleE::SizeBox:	glfwSetWindowAttrib(w, GLFW_DECORATED, true);	glfwSetWindowAttrib(w, GLFW_RESIZABLE, true);	break;
+	default:																													break;
+	}
+}
+
+void Window::onTopmostPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (w)
+	{
+		glfwSetWindowAttrib(w, GLFW_FLOATING, args->newValue.extract<bool>());
+	}
+}
+
+void Window::onLeftPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (w)
+	{
+		glfwSetWindowPos(w, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+	}
+}
+
+void Window::onTopPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (w)
+	{
+		glfwSetWindowPos(w, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+	}
+}
+
+void Window::onTitlePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (w)
+	{
+		glfwSetWindowTitle(w, args->newValue.extract<std::string>().data());
+	}
+}
+
+void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+{
+	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
+	if (!w)
+	{
+		return;
+	}
+
+	auto source = args->newValue.extract<std::shared_ptr<ImageSource>>();
+	Bitmap bm = source ? source->bitmap() : Bitmap();
+	GLFWimage img{ bm.width(), bm.height(), (unsigned char *)bm.data() };
+	glfwSetWindowIcon(w, 1, &img);
 }

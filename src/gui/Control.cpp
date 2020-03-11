@@ -53,6 +53,25 @@ DependencyProperty Control::TemplateProperty()
 	return dp;
 }
 
+void Control::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
+{
+	UIElement::onPropertyChanged(args);
+	auto templ = getValue<std::shared_ptr<ControlTemplate>>(TemplateProperty());
+	if (templ)
+	{
+		//由于处理property改变时会set Property的值，会造成无限循环，判断m_handlingPropertyChanged避免循环
+		if (m_handlingPropertyChanged)
+			return;
+
+		m_handlingPropertyChanged = true;
+		for (auto triggerBase : templ->triggers())
+		{
+			triggerBase->onElementPropertyChanged(this);
+		}
+		m_handlingPropertyChanged = false;
+	}
+}
+
 Size Control::measureOverride(const Size & availableSize)
 {
 	return UIElement::measureOverride(availableSize);
@@ -77,5 +96,11 @@ void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedE
 		auto instance = newTemplate->instance();
 		auto ctrl = dynamic_cast<Control *>(d);
 		ctrl->setValue(ContentControl::ContentProperty(), instance);
+
+
+		for (auto triggerBase : newTemplate->triggers())
+		{
+			triggerBase->attach(ctrl);
+		}
 	}
 }

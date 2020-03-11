@@ -13,7 +13,9 @@ Application::Application()
 	, m_exitFlag(false)
 {
 	if (g_app)
+	{
 		nbThrowException(std::logic_error, "create two application");
+	}
 	g_app = this;
 	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
 	Singleton<WindowCollection>::get()->WindowFocus += std::bind(&Application::onWindowFocused, this, std::placeholders::_1);
@@ -69,6 +71,10 @@ int Application::run(int argc, char *argv[])
 	{
 		while (!m_exitFlag)
 		{
+			for (auto const w : Singleton<WindowCollection>::get()->windows())
+			{
+				w->render();
+			}
 			Timer::driveInLoop();
 			Window::pollEvents();
 		}
@@ -87,7 +93,10 @@ void Application::shutdown(int exitCode)
 {
 	m_exitFlag = true;
 	for (auto const &w : Singleton<WindowCollection>::get()->windows())
+	{
 		w->_close(false);
+	}
+
 	Singleton<WindowCollection>::get()->windows().clear();
 	onExit({ exitCode });
 }

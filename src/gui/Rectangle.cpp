@@ -4,6 +4,7 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/gui/Window.h"
 
 using namespace nb;
 
@@ -56,9 +57,16 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
-		if (!fill)				m_fillObject.reset();
-		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+		auto fill = args.newValue.extract<std::shared_ptr<Brush>>();
+		if (!fill)
+		{
+			m_fillObject.reset();
+		}
+		else if (!m_fillObject)
+		{
+			m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+		}
+		updateMeterial(m_fillObject, fill);
 	}
 	else if (args.property == StrokeProperty())
 	{
