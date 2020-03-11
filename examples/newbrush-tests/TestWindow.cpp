@@ -14,7 +14,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 {
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), std::string("Newbrush窗口测试"));
-	auto img = std::make_shared<ImageSource>("../images/nb.png");
+	auto img = std::make_shared<ImageSource>("../images/nb1.png");
 	w->setValue(Window::IconProperty(), img);
 	w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);
 
