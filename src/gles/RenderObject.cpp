@@ -10,24 +10,19 @@
 using namespace nb;
 
 RenderObject::RenderObject()
-	: RenderObject(nullptr, nullptr, true)
+	: RenderObject(nullptr, nullptr)
 {
 }
 
 RenderObject::RenderObject(std::shared_ptr<Model> model)
-	: RenderObject(model, nullptr, true)
+	: RenderObject(model, nullptr)
 {
 }
 
-RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material)
-	: RenderObject(model, material, true)
-{
-}
-
-RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material, bool bRenderable)
-	: m_renderable(bRenderable)
-	, m_model(model)
-	, m_material(material)
+RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Program> program)
+	: m_model(model)
+	, m_program(program)
+	, m_renderable(true)
 {
 }
 
@@ -67,14 +62,14 @@ std::shared_ptr<Model> RenderObject::model()
 	return m_model;
 }
 
-void RenderObject::setMaterial(std::shared_ptr<Material> material)
+void RenderObject::setProgram(std::shared_ptr<Program> program)
 {
-	m_material = material;
+	m_program = program;
 }
 
-std::shared_ptr<Material> RenderObject::material()
+std::shared_ptr<Program> RenderObject::program()
 {
-	return m_material;
+	return m_program;
 }
 
 void RenderObject::storeUniform(const std::string & name, const Var & v)
@@ -84,11 +79,10 @@ void RenderObject::storeUniform(const std::string & name, const Var & v)
 
 void RenderObject::draw(const Camera &camera, const Projection &projection) const
 {
-	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_material || !m_material->program())
+	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_program)
 		return;
 
-	auto program = m_material->program();
-	auto textures = m_material->textures();
+	auto &program = m_program;
 	program->use();
 	m_model->preprocess();
 	//计算后的mvp，以及分开的m/v/p
@@ -141,15 +135,13 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
 		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
 		program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
-		if (!textures.empty())
+		for (const auto &tex : mesh.material.textures())
 		{
-			textures[0]->bind();
+			tex->bind();
 			program->vertexAttributePointer(Program::nbTexCoordLocaltion, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
 		}
-
 		glDrawElements(m_model->mode, (int)mesh.indices.size(), GL_UNSIGNED_SHORT, mesh.indices.data());
-		if (!textures.empty())
-			textures[0]->unbind();
+
 	}
 
 	program->disuse();

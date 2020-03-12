@@ -7,25 +7,9 @@ Material::Material()
 {
 }
 
-Material::Material(std::shared_ptr<Program> program)
-	: m_program(program)
+Material::Material(const std::vector<std::shared_ptr<Texture>> &textures)
+	: m_textures(textures)
 {
-}
-
-Material::Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures)
-	: m_program(program)
-	, m_textures(textures)
-{
-}
-
-void Material::setProgram(std::shared_ptr<Program> program)
-{
-	m_program = program;
-}
-
-std::shared_ptr<Program> Material::program()
-{
-	return m_program;
 }
 
 std::vector<std::shared_ptr<Texture>>& Material::textures()

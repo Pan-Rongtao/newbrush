@@ -5,6 +5,7 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/ext/matrix_projection.hpp>
+#include "newbrush/gles/Material.h"
 
 using namespace nb;
 
@@ -51,12 +52,14 @@ Mesh::Mesh(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indi
 Mesh::Mesh(const Mesh & other)
 	: vertexs(other.vertexs)
 	, indices(other.indices)
+	, material(other.material)
 {
 }
 
 Mesh::Mesh(const Mesh && other)
 	: vertexs(std::move(other.vertexs))
 	, indices(std::move(other.indices))
+	, material(std::move(other.material))
 {
 
 }
@@ -65,12 +68,14 @@ void Mesh::operator = (const Mesh &other)
 {
 	vertexs = other.vertexs;
 	indices = other.indices;
+	material = other.material;
 }
 
 void Mesh::operator = (const Mesh &&other)
 {
 	vertexs = std::move(other.vertexs);
 	indices = std::move(other.indices);
+	material = std::move(other.material);
 }
 
 float *Mesh::positionData()

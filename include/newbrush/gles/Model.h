@@ -1,19 +1,19 @@
-/*******************************************************
+ï»¿/*******************************************************
 **	Vertex/Mesh/Model
 **
 **	
-**		Ä£ĞÍÓÉMesh¼¯ºÏ¹¹³É£¬MeshÔòÓÉ¶¥µã¼¯ºÏ¹¹³É£¬Ò»¸ö¶¥µã°üº¬position¡¢color¡¢texCoordÒÔ¼°normalÊôĞÔÊı¾İ£¬
-**		Ò»°ã¶øÑÔ£¬¼òµ¥µÄÄ£ĞÍÓÉÒ»¸öMesh¹¹³É£¬¶ø¸´ÔÓµÄÄ£ĞÍ¿ÉÄÜÓÉ¶à¸öMesh¹¹³É¡£
+**		æ¨¡å‹ç”±Meshé›†åˆæ„æˆï¼ŒMeshåˆ™ç”±é¡¶ç‚¹é›†åˆæ„æˆï¼Œä¸€ä¸ªé¡¶ç‚¹åŒ…å«positionã€colorã€texCoordä»¥åŠnormalå±æ€§æ•°æ®ï¼Œ
+**		ä¸€èˆ¬è€Œè¨€ï¼Œç®€å•çš„æ¨¡å‹ç”±ä¸€ä¸ªMeshæ„æˆï¼Œè€Œå¤æ‚çš„æ¨¡å‹å¯èƒ½ç”±å¤šä¸ªMeshæ„æˆã€‚
 **	
-**		¶¥µãµÄ¹¹³ÉÈçÏÂ£º
-**		Vertex£º	Position	Color		TextureCoordinate		Normal
+**		é¡¶ç‚¹çš„æ„æˆå¦‚ä¸‹ï¼š
+**		Vertexï¼š	Position	Color		TextureCoordinate		Normal
 **						3		  4					2				  3			= 12
-**		Mesh¿ÉÑ¡ÔñĞÔµÄ¹¹½¨ÕâĞ©ÊôĞÔ£¬MeshÖĞµÄ¶¥µã¼¯ºÏÊ¹ÓÃÍ¬ÑùµÄÊôĞÔ¹¹³É£¬Ò²¾ÍÊÇËµ£¬MeshÖĞµÄ
-**		Ã¿¸ö¶¥µã¶¼ÓµÓĞÏàÍ¬µÄÊı¾İ¿Õ¼ä£¬±ÈÈçPosition|Color£»¶øÈç¹ûÒ»¸öÄ£ĞÍÓĞ¶à¸öMesh£¬ÀíÂÛÉÏÃ¿¸öMesh
-**		¶¼¿ÉÒÔÓµÓĞ×Ô¼ºµÄ¶¥µãÊôĞÔ¹¹³É£¬ÒòÎªÔÚÊµ¼Ê»æÖÆ¹ı³ÌÖĞ£¬Ã¿¸öMesh¶¼ÊÇµ¥¶À»æÖÆµÄ¡£µ«¼´Ê¹ÕâÑù£¬
-**		Ò²Ã»ÓĞÇø·ÖÊ¹ÓÃ²»Í¬¶¥µãÊôĞÔ¹¹³ÉµÄ±ØÒª¡£
+**		Meshå¯é€‰æ‹©æ€§çš„æ„å»ºè¿™äº›å±æ€§ï¼ŒMeshä¸­çš„é¡¶ç‚¹é›†åˆä½¿ç”¨åŒæ ·çš„å±æ€§æ„æˆï¼Œä¹Ÿå°±æ˜¯è¯´ï¼ŒMeshä¸­çš„
+**		æ¯ä¸ªé¡¶ç‚¹éƒ½æ‹¥æœ‰ç›¸åŒçš„æ•°æ®ç©ºé—´ï¼Œæ¯”å¦‚Position|Colorï¼›è€Œå¦‚æœä¸€ä¸ªæ¨¡å‹æœ‰å¤šä¸ªMeshï¼Œç†è®ºä¸Šæ¯ä¸ªMesh
+**		éƒ½å¯ä»¥æ‹¥æœ‰è‡ªå·±çš„é¡¶ç‚¹å±æ€§æ„æˆï¼Œå› ä¸ºåœ¨å®é™…ç»˜åˆ¶è¿‡ç¨‹ä¸­ï¼Œæ¯ä¸ªMeshéƒ½æ˜¯å•ç‹¬ç»˜åˆ¶çš„ã€‚ä½†å³ä½¿è¿™æ ·ï¼Œ
+**		ä¹Ÿæ²¡æœ‰åŒºåˆ†ä½¿ç”¨ä¸åŒé¡¶ç‚¹å±æ€§æ„æˆçš„å¿…è¦ã€‚
 **		
-**		ÅËÈÙÌÎ
+**		æ½˜è£æ¶›
 **	
 ********************************************************/
 #pragma once
@@ -21,6 +21,7 @@
 #include "glm/glm.hpp"
 #include "newbrush/gles/Camera.h"
 #include "newbrush/gles/Projection.h"
+#include "newbrush/gles/Material.h"
 
 namespace nb{
 
@@ -33,7 +34,7 @@ public:
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord, const glm::vec3 &normal);
 
-	//»ñÈ¡Î»ÖÃÊı¾İ|ÑÕÉ«Êı¾İ|ÑÕÉ«Êı¾İ|·¨ÏßÊı¾İµÄ×é¼şÊıÒÔ¼°×é¼ş¼ä¸ô
+	//è·å–ä½ç½®æ•°æ®|é¢œè‰²æ•°æ®|é¢œè‰²æ•°æ®|æ³•çº¿æ•°æ®çš„ç»„ä»¶æ•°ä»¥åŠç»„ä»¶é—´éš”
 	static constexpr int positionDimension	= 3;
 	static constexpr int colorDimension		= 4;
 	static constexpr int texCoordDimension	= 2;
@@ -51,8 +52,8 @@ class NB_API Mesh
 public:
 	Mesh();
 
-	//vertexs£º¶¥µã¼¯ºÏ
-	//indices£º¶¥µãĞòÁĞ£¨ÄæÊ±Õë£¬ÇÒÒş²Ø±³Ãæ£©
+	//vertexsï¼šé¡¶ç‚¹é›†åˆ
+	//indicesï¼šé¡¶ç‚¹åºåˆ—ï¼ˆé€†æ—¶é’ˆï¼Œä¸”éšè—èƒŒé¢ï¼‰
 	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
 	Mesh(const Mesh &other);
@@ -60,7 +61,7 @@ public:
 	void operator = (const Mesh &other);
 	void operator = (const Mesh &&other);
 
-	//»ñÈ¡Î»ÖÃ|ÑÕÉ«|ÎÆÀí×ø±ê|·¨ÏòÁ¿Êı¾İ
+	//è·å–ä½ç½®|é¢œè‰²|çº¹ç†åæ ‡|æ³•å‘é‡æ•°æ®
 	float *positionData();
 	const float *positionData() const;
 	float *colorData();
@@ -70,18 +71,19 @@ public:
 	float *normalData();
 	const float *normalData() const;
 
-	//½«ËùÓĞ¶¥µãÑÕÉ«Í³Ò»
+	//å°†æ‰€æœ‰é¡¶ç‚¹é¢œè‰²ç»Ÿä¸€
 	void unifyColor(const glm::vec4 &color);
 
-	std::vector<Vertex>		vertexs;	//¶¥µãÊôĞÔ
-	std::vector<uint16_t>	indices;	//¶¥µãĞòÁĞ(ÄæÊ±Õë)
+	std::vector<Vertex>		vertexs;	//é¡¶ç‚¹å±æ€§
+	std::vector<uint16_t>	indices;	//é¡¶ç‚¹åºåˆ—(é€†æ—¶é’ˆ)
+	Material				material;
 
 };
 
 class NB_API Model
 {
 public:
-	//¹¹½¨Ò»¸ö¿ÕµÄÄ£ĞÍ
+	//æ„å»ºä¸€ä¸ªç©ºçš„æ¨¡å‹
 	Model();
 	Model(const std::vector<Mesh> &_meshes);
 	Model(const Model &other);
@@ -90,20 +92,20 @@ public:
 	void operator = (const Model &&other);
 	virtual ~Model() = default;
 
-	//äÖÈ¾Ç°Ö¸Áî
+	//æ¸²æŸ“å‰æŒ‡ä»¤
 	virtual void preprocess();
 
-	//ÊÓÏßÃüÖĞ²âÊÔ
-	//xNormalized,yNormalized£º±ê×¼»¯×ø±ê[-1.0, 1.0]
+	//è§†çº¿å‘½ä¸­æµ‹è¯•
+	//xNormalized,yNormalizedï¼šæ ‡å‡†åŒ–åæ ‡[-1.0, 1.0]
 	virtual bool sightHitTest(const Camera &camera, const Projection &projection, float xNormalized, float yNormalized) const;
 
-	//Õı½»ÃüÖĞ²âÊÔ
-	//x,y£º×ø±ê
+	//æ­£äº¤å‘½ä¸­æµ‹è¯•
+	//x,yï¼šåæ ‡
 	virtual bool orthoHitTest(float x, float y) const;
 
-	glm::mat4x4			matrix;	//Ä£ĞÍ¾ØÕó
-	std::vector<Mesh>	meshes;	//Íø¸ñ
-	uint8_t				mode;	//»æ»­Ä£Ê½£¨Ä¬ÈÏGL_TRIANGLES£¬×¢Òâ£ºÎªÁËÄÚ´æ£¬ÀàĞÍ¶¨ÒåÎª1¸ö×Ö½Ú£©
+	glm::mat4x4			matrix;	//æ¨¡å‹çŸ©é˜µ
+	std::vector<Mesh>	meshes;	//ç½‘æ ¼
+	uint8_t				mode;	//ç»˜ç”»æ¨¡å¼ï¼ˆé»˜è®¤GL_TRIANGLESï¼Œæ³¨æ„ï¼šä¸ºäº†å†…å­˜ï¼Œç±»å‹å®šä¹‰ä¸º1ä¸ªå­—èŠ‚ï¼‰
 
 private:
 	bool intersect(const glm::vec3 &raypos, const glm::vec3 &raydir) const;

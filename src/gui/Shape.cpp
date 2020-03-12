@@ -77,14 +77,14 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 {
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
-		ro->setMaterial(std::make_shared<Material>(Programs::primitive()));
+		ro->setProgram(Programs::primitive());
 		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
 		auto color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
 		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
-		ro->setMaterial(std::make_shared<Material>(Programs::gradientPrimitive()));
+		ro->setProgram(Programs::gradientPrimitive());
 		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
 		auto stops = linearGradientBrush->getValue<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
 		std::vector<glm::vec4> colors;
@@ -103,12 +103,13 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	}
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
-		ro->setMaterial(std::make_shared<Material>(Programs::image()));
+		ro->setProgram(Programs::image());
 		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
 		if (source)
 		{
 			auto const &bm = source->bitmap();
-			ro->material()->textures().push_back(std::make_shared<Texture2D>(bm));
+			//ro->material()->textures().push_back(std::make_shared<Texture2D>(bm));
+			ro->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(bm));
 		}
 	}
 }

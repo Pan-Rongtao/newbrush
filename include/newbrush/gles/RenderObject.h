@@ -34,11 +34,8 @@ public:
 	//构建一个空的RenderObject，它的可渲染状态为bRenderable
 	RenderObject(std::shared_ptr<Model> model);
 
-	//构建一个RenderObject，它的模型为model，材质为materia，可渲染状态为true
-	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material);
-
-	//构建一个RenderObject，它的模型为model，材质为materia，可渲染状态为bRenderable
-	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Material> material, bool bRenderable);
+	//构建一个RenderObject，它的模型为model，程序为program，可渲染状态为true
+	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Program> program);
 
 public:	
 	//从文件中加载
@@ -56,11 +53,11 @@ public:
 	//获取模型
 	std::shared_ptr<Model> model();
 
-	//设置材质
-	void setMaterial(std::shared_ptr<Material> material);
+	//设置program
+	void setProgram(std::shared_ptr<Program> program);
 
-	//获取材质
-	std::shared_ptr<Material> material();
+	//获取program
+	std::shared_ptr<Program> program();
 
 	//存储uniform变量，以便下次刷新使用
 	void storeUniform(const std::string &name, const Var &v);
@@ -72,10 +69,10 @@ private:
 	void loopNode(aiNode * node, const aiScene * scene);
 	Mesh processMesh(aiMesh * mesh, const aiScene * scene);
 
-	bool						m_renderable;
 	std::shared_ptr<Model>		m_model;
-	std::shared_ptr<Material>	m_material;
+	std::shared_ptr<Program>	m_program;
 	std::map<std::string, Var>	m_uniforms;
+	bool						m_renderable;
 };
 
 }

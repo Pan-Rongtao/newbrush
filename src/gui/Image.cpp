@@ -12,15 +12,16 @@
 using namespace nb;
 
 Image::Image()
-	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), std::make_shared<Material>(Programs::image())))
+	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), Programs::image()))
 {
-	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
+	auto &mesh = m_renderObj->model()->meshes[0];
+	auto &vertexs = mesh.vertexs;
+	auto &indices = mesh.indices;
 	vertexs.resize(4);
 	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
 	vertexs[1].texCoord = glm::vec2(1.0, 0.0);
 	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
 	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
-	auto &indices = m_renderObj->model()->meshes[0].indices;
 	indices.insert(indices.begin(), { 0, 1, 2, 0, 2, 3 });
 }
 
@@ -119,7 +120,8 @@ void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	auto &newBm = newSource->bitmap();
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>(newBm);
-	self->m_renderObj->material()->textures().push_back(texture);
+	auto &material = self->m_renderObj->model()->meshes[0].material;
+	material.textures().push_back(texture);
 	self->updateLayout();
 }
 

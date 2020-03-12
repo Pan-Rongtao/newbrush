@@ -1,13 +1,13 @@
-/*******************************************************
+ï»¿/*******************************************************
 **	Material
 **
-**	²ÄÖÊ
+**	æè´¨
 **	
-**	²ÄÖÊÊÇÎïÌå¶Ô¹âµÄ½»»¥£¨·´Éä¡¢ÕÛÉäµÈ£©ĞÔÖÊµÄÃèÊö£¬
-**	Ëü×îÖÕ±»±í´ïÎªÑÕÉ«£¬ÆäÖĞÒ²°üº¬ÎÆÀíÕâ²¿·ÖÊı¾İ£¬ÒÔ¼°¶Ô
-**		¹âÕÕÓ°ÏìµÄ·´Ó³²úÉúµÄ×îÖÕĞ§¹û
+**	æè´¨æ˜¯ç‰©ä½“å¯¹å…‰çš„äº¤äº’ï¼ˆåå°„ã€æŠ˜å°„ç­‰ï¼‰æ€§è´¨çš„æè¿°ï¼Œ
+**	å®ƒæœ€ç»ˆè¢«è¡¨è¾¾ä¸ºé¢œè‰²ï¼Œå…¶ä¸­ä¹ŸåŒ…å«çº¹ç†è¿™éƒ¨åˆ†æ•°æ®ï¼Œä»¥åŠå¯¹
+**		å…‰ç…§å½±å“çš„åæ˜ äº§ç”Ÿçš„æœ€ç»ˆæ•ˆæœ
 **		
-**		ÅËÈÙÌÎ
+**		æ½˜è£æ¶›
 **	
 ********************************************************/
 #pragma once
@@ -21,27 +21,18 @@ namespace nb{
 class NB_API Material
 {
 public:
-	//¹¹½¨Ò»¸ö²ÄÖÊ£¬ËüµÄProgramÎª¿Õ£¬ÎÆÀíÎª¿Õ
+	//æ„å»ºä¸€ä¸ªæè´¨ï¼Œçº¹ç†ä¸ºç©º
 	Material();
+	~Material() = default;
 
-	//¹¹½¨Ò»¸ö²ÄÖÊ£¬ËüµÄProgramÎªprogram£¬ËüµÄÎÆÀíÎª¿Õ
-	Material(std::shared_ptr<Program> program);
+	//æ„å»ºä¸€ä¸ªæè´¨ï¼Œå®ƒçš„Programä¸ºprogramï¼Œå®ƒçš„çº¹ç†texture
+	Material(const std::vector<std::shared_ptr<Texture>> &textures);
 
-	//¹¹½¨Ò»¸ö²ÄÖÊ£¬ËüµÄProgramÎªprogram£¬ËüµÄÎÆÀítexture
-	Material(std::shared_ptr<Program> program, const std::vector<std::shared_ptr<Texture>> &textures);
-
-	//ÉèÖÃprogram
-	void setProgram(std::shared_ptr<Program> program);
-
-	//»ñÈ¡program
-	std::shared_ptr<Program> program();
-
-	//ÎÆÀí
+	//çº¹ç†
 	std::vector<std::shared_ptr<Texture>> &textures();
 	const std::vector<std::shared_ptr<Texture>> &textures() const;
 
 private:
-	std::shared_ptr<Program>				m_program;
 	std::vector<std::shared_ptr<Texture>>	m_textures;
 };
 

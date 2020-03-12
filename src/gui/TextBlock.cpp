@@ -17,12 +17,12 @@ TextBlock::TextBlock()
 }
 
 TextBlock::TextBlock(const std::string & text)
-	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<GlyphBunch>(), std::make_shared<Material>(Programs::glpy())))
+	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<GlyphBunch>(), Programs::glpy()))
 {
 	setValue(TextProperty(), text);
 	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
 	setValue(LineHeightProperty(), (float)(font->size()));
-	m_renderObj->material()->textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
+	m_renderObj->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
 	m_renderObj->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
