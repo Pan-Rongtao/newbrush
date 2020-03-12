@@ -28,13 +28,17 @@ TEST_CASE("Test nb::Button", "[Button]")
 	templ->setRoot(grid);
 
 	auto trigger0 = std::make_shared<Trigger>(UIElement::IsMouseOverProperty(), false);
-	BrushPtr red = std::make_shared<SolidColorBrush>(Colors::red());
-	BrushPtr green = std::make_shared<SolidColorBrush>(Colors::blue());
-	trigger0->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), red, "rc"));
+	BrushPtr normal = std::make_shared<SolidColorBrush>(Colors::red());
+	BrushPtr mouseOver = std::make_shared<SolidColorBrush>(Colors::blue());
+	BrushPtr press = std::make_shared<SolidColorBrush>(Colors::green());
+	trigger0->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), normal, "rc"));
 	auto trigger1 = std::make_shared<Trigger>(UIElement::IsMouseOverProperty(), true);
-	trigger1->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), green, "rc"));
+	trigger1->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), mouseOver, "rc"));
+	auto trigger2 = std::make_shared<Trigger>(Button::IsPressedProperty(), true);
+	trigger2->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), press, "rc"));
 	templ->triggers().push_back(trigger0);
 	templ->triggers().push_back(trigger1);
+	templ->triggers().push_back(trigger2);
 
 	//end template
 

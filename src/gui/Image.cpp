@@ -120,9 +120,11 @@ void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>(newBm);
 	self->m_renderObj->material()->textures().push_back(texture);
+	self->updateLayout();
 }
 
 void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
 {
-
+	auto self = dynamic_cast<Image*>(obj);
+	self->updateLayout();
 }

@@ -40,10 +40,11 @@ UIElement * ContentControl::getChild(uint32_t index)
 void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	Control::onPropertyChanged(args);
-	if (args.property == ContentControl::ContentProperty())
+	if (args.property == ContentProperty())
 	{
 		auto content = args.newValue.extract<std::shared_ptr<UIElement>>();
 		addLogicalChild(content);
+		updateLayout();
 	}
 }
 

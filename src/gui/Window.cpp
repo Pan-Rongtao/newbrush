@@ -98,16 +98,16 @@ Point Window::getMousePosition() const
 
 Size Window::measureOverride(const Size & availableSize)
 {
-	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
+/*	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
 	if (content)
 	{
-		auto w = getValue<float>(WidthProperty());
-		auto h = getValue<float>(HeightProperty());
-		content->measure({ w, h });
+	//	auto w = getValue<float>(WidthProperty());
+	//	auto h = getValue<float>(HeightProperty());
+		content->measure(availableSize);
 		//return Content()->DesiredSize;
 		return availableSize;
 	}
-	else
+	else*/
 	{
 		return ContentControl::measureOverride(availableSize);
 	}
@@ -380,10 +380,6 @@ DependencyProperty Window::IconProperty()
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	ContentControl::onPropertyChanged(args);
-	if (args.property == ContentProperty())
-	{
-		updateLayout();
-	}
 }
 
 void Window::onActivated(const EventArgs & args)

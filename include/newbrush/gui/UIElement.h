@@ -292,6 +292,9 @@ private:
 	UIElement	*m_parent;
 	std::map<size_t, std::vector<RoutedEventHandler>>	m_eventHandlers;
 	std::bitset<Flags_Max>	m_flags;
+	Size m_lastMesaaeAvailabelSize;
+	bool m_measureInProgress;
+
 	friend class Window;
 	friend class UIElementCollection;
 };

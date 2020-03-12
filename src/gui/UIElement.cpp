@@ -1,4 +1,4 @@
-#include "newbrush/gui/UIElement.h"
+ï»¿#include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 
@@ -6,6 +6,8 @@ using namespace nb;
 
 UIElement::UIElement()
 	: m_parent(nullptr)
+	, m_lastMesaaeAvailabelSize(-1, -1)
+	, m_measureInProgress(false)
 {
 }
 
@@ -130,7 +132,7 @@ DependencyProperty UIElement::StyleProperty()
 
 		auto oldStyle = args->oldValue.extract<std::shared_ptr<Style>>();
 		auto newStyle = args->newValue.extract<std::shared_ptr<Style>>();
-		//ÓÉÓÚstyleÀàĞÍÃ¿´Îset¶¼»á´¥·¢changed£¬Òò´ËÉèÖÃÍ³Ò»styleÒ²»á½øÈë´Ë»Øµ÷º¯Êı£¬Ó¦ÅĞ¶ÏnewStyle == oldStyle
+		//ç”±äºstyleç±»å‹æ¯æ¬¡setéƒ½ä¼šè§¦å‘changedï¼Œå› æ­¤è®¾ç½®ç»Ÿä¸€styleä¹Ÿä¼šè¿›å…¥æ­¤å›è°ƒå‡½æ•°ï¼Œåº”åˆ¤æ–­newStyle == oldStyle
 		if (newStyle == oldStyle)
 			return;
 		
@@ -193,18 +195,13 @@ UIElement *UIElement::getRoot()
 
 Point UIElement::worldOffset() const
 {
-	try {
-		auto p = this;
-		Point ret;
-		do {
-			auto offset = p->getValue<Point>(OffsetProperty());
-			ret += offset;
-		} while ((p->m_parent) && (p = p->m_parent));
-		return ret;
-	}
-	catch (...) {
-		return Point::zero();
-	}
+	Point ret;
+	auto p = this;
+	do {
+		auto offset = p->getValue<Point>(OffsetProperty());
+		ret += offset;
+	} while ((p->m_parent) && (p = p->m_parent));
+	return ret;
 }
 
 void UIElement::updateLayout()
@@ -220,12 +217,21 @@ void UIElement::updateLayout()
 	root->onRender(Window::drawContext);
 }
 
+//ç›´æ¥å¿½ç•¥è¿”å›çš„æƒ…å†µ
+//1ã€å¦‚æœä¸å¯è§
+//2ã€ä¸ä¸Šæ¬¡measureå‚æ•°ä¸€è‡´
+//3ã€å·²ç»åœ¨å¤„ç†measureä¸­ï¼Œé˜²æ­¢measureå‡½æ•°å†…æœ‰æŸç§æ“ä½œå¯¼è‡´é‡æ–°è¿›å…¥measureå‡½æ•°ï¼ˆæ¯”å¦‚è®¾ç½®æŸäº›å±æ€§ï¼‰
+//4ã€childä¸è„ï¼ˆè¿˜æœªäº†è§£ï¼‰
+//è¯¥å‡½æ•°æ˜¯ä¸ºäº†ç¡®è®¤DesiredSize
 void UIElement::measure(const Size & availabelSize)
 {
-	//Èç¹û²»¿É¼û»òÁ½´Îmeasure²ÎÊıÒ»ÖÂ£¬ºöÂÔ
 	auto visibility = getValue<VisibilityE>(VisibilityProperty());
-	if (visibility != VisibilityE::Visible)
+	if (m_measureInProgress || visibility != VisibilityE::Visible)
+	{
 		return;
+	}
+
+	m_lastMesaaeAvailabelSize = availabelSize;
 
 	auto margin = getValue<Thickness>(MarginProperty());
 	auto width = getValue<float>(WidthProperty());
@@ -234,33 +240,35 @@ void UIElement::measure(const Size & availabelSize)
 	auto minHeight = getValue<float>(MinHeightProperty());
 	auto maxWidth = getValue<float>(MaxWidthProperty());
 	auto maxHeight = getValue<float>(MaxHeightProperty());
-	//¼õÈ¥magin¼ÆËã³ö±¾À´µÄconstrainedSize
+	//å‡å»maginè®¡ç®—å‡ºæœ¬æ¥çš„constrainedSize
 	auto constrainedSize = Size(availabelSize.width() - margin.left - margin.right, availabelSize.height() - margin.top - margin.bottom);
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½bound(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, constrainedSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°bound(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, constrainedSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	constrainedSize.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? constrainedSize.width() : width);
 	constrainedSize.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? constrainedSize.height() : height);
 
-	//measureOverride·µ»Ø¿Ø¼şÆÚÍû´óĞ¡desiredSizeTemp£¬ĞèÒªµ÷Õûµ½±£Ö¤ÔÚ(Min, Max)Çø¼ä
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, constrainedSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//measureOverrideè¿”å›æ§ä»¶æœŸæœ›å¤§å°desiredSizeTempï¼Œéœ€è¦è°ƒæ•´åˆ°ä¿è¯åœ¨(Min, Max)åŒºé—´
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, constrainedSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	auto desiredSizeTemp = measureOverride(constrainedSize);
 	desiredSizeTemp.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? desiredSizeTemp.width(): width);
 	desiredSizeTemp.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? desiredSizeTemp.height() : height);
 
-	//ÓÉÓÚchild²»¹Ø×¢ºÍ¼ÆËãmagin£¬Òò´ËĞèÖØĞÂ+margin
+	//ç”±äºchildä¸å…³æ³¨å’Œè®¡ç®—maginï¼Œå› æ­¤éœ€é‡æ–°+margin
 	desiredSizeTemp += Size(margin.left + margin.right, margin.top + margin.bottom);
-	//±£Ö¤ÔÚ£¨0, availabelSize)Çø¼ä
+	//ä¿è¯åœ¨ï¼ˆ0, availabelSize)åŒºé—´
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
 	setValue(DesiredSizeProperty(), desiredSizeTemp);
+
+	m_measureInProgress = false;
 }
 
 void UIElement::arrage(const Rect & finalRect)
 {
-	//Èç¹û²»¿É¼û»òÁ½´Îarrage²ÎÊıÒ»ÖÂ£¬ºöÂÔ
+	//å¦‚æœä¸å¯è§æˆ–ä¸¤æ¬¡arrageå‚æ•°ä¸€è‡´ï¼Œå¿½ç•¥
 	auto visibility = getValue<VisibilityE>(VisibilityProperty());
 	if (visibility != VisibilityE::Visible)
 		return;
@@ -273,28 +281,28 @@ void UIElement::arrage(const Rect & finalRect)
 	auto maxWidth = getValue<float>(MaxWidthProperty());
 	auto maxHeight = getValue<float>(MaxHeightProperty());
 	auto desiredSize = getValue<Size>(DesiredSizeProperty());
-	//¼õÈ¥magin¼ÆËã³ö±¾À´µÄarrangeSizeÒÔ¼°clientSize
+	//å‡å»maginè®¡ç®—å‡ºæœ¬æ¥çš„arrangeSizeä»¥åŠclientSize
 	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
-	//µ÷Õûarrange´óÓÚDesiredSize
+	//è°ƒæ•´arrangeå¤§äºDesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
-	//Èç¹ûAligment²»ÊÇStretch£¬Ö±½Ó½«arrangeSizeÉèÖÃÎªDesiredSize£¬ÒÔ±£Ö¤´«ÈëarrangeOverrideµÄarrangeSizeÃ»ÓĞStretch
+	//å¦‚æœAligmentä¸æ˜¯Stretchï¼Œç›´æ¥å°†arrangeSizeè®¾ç½®ä¸ºDesiredSizeï¼Œä»¥ä¿è¯ä¼ å…¥arrangeOverrideçš„arrangeSizeæ²¡æœ‰Stretch
 	auto horizontalAlignment = getValue<HorizontalAlignmentE>(HorizontalAlignmentProperty());
 	auto verticalAlignment = getValue<VerticalAlignmentE>(VerticalAlignmentProperty());
 	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(desiredSize.width());
 	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(desiredSize.height());
 
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½bound(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, arrangeSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°bound(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, arrangeSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	arrangeSize.width() = nb::clamp<float>(minWidth, maxWidth, std::isnan(width) ? arrangeSize.width() : width);
 	arrangeSize.height() = nb::clamp<float>(minHeight, maxHeight, std::isnan(height) ? arrangeSize.height() : height);
 
-	//arrangeOverrideºóµÄRenderSizeÊÇ²»ĞèÒªµ÷ÕûµÄ·Ç²Ã¼ôÇøÓò£¬¶ø²»ÊÇ×îÖÕµÄ¿É¼ûÇøÓò
+	//arrangeOverrideåçš„RenderSizeæ˜¯ä¸éœ€è¦è°ƒæ•´çš„éè£å‰ªåŒºåŸŸï¼Œè€Œä¸æ˜¯æœ€ç»ˆçš„å¯è§åŒºåŸŸ
 	auto innerInkSize = arrangeOverride(arrangeSize);
 	setValue(RenderSizeProperty(), innerInkSize);
 	auto renderSize = getValue<Size>(RenderSizeProperty());
-	//²Ã¼ô£¬±£Ö¤innerInkSizeÔÚMaxÖ®ÄÚ
+	//è£å‰ªï¼Œä¿è¯innerInkSizeåœ¨Maxä¹‹å†…
 	if (std::isnan(width))
 		if (innerInkSize.width() > maxWidth)	innerInkSize.width() = maxWidth;
 	if (std::isnan(height))
@@ -318,7 +326,7 @@ void UIElement::arrage(const Rect & finalRect)
 	}
 	setValue(OffsetProperty(), Point(offsetX, offsetY));
 	setValue(ActualSizeProperty(), renderSize);
-	//²Ã¼ô
+	//è£å‰ª
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
 }
