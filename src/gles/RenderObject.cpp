@@ -176,7 +176,7 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 	for (int i = 0; i != mesh->mNumVertices; ++i)
 	{
 		Vertex ver;
-		if (mesh->HasPositions())		ver.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+		if (mesh->HasPositions())		ver.position = { mesh->mVertices[i].x*0.04f, mesh->mVertices[i].y*0.04f, mesh->mVertices[i].z*0.04f };
 		if (mesh->mColors[0])			ver.color = { mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a };
 		if (mesh->mTextureCoords[0])	ver.texCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 		if (mesh->HasNormals())			ver.normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };

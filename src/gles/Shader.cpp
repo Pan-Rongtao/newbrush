@@ -38,7 +38,7 @@ const std::string &Shader::source() const
 void Shader::compile()
 {
 	const char *pSource = m_source.data();
-	glShaderSource(m_shaderHandle, 1, &pSource, nullptr);
+	glShaderSource(m_shaderHandle, 1, &pSource, NULL);
 	glCompileShader(m_shaderHandle);
 	GLint nShaderStatus;
 	glGetShaderiv(m_shaderHandle, GL_COMPILE_STATUS, &nShaderStatus);

@@ -395,6 +395,26 @@ std::shared_ptr<Program> Programs::cube()
 	return p;
 }
 
+std::shared_ptr<Program> Programs::model()
+{
+	static std::shared_ptr<Program> p;
+	if (p)	return p;
+
+	constexpr char vs[] =
+		"attribute vec4 nbPos;"
+		"void main()"
+		"{"
+		"	gl_Position = nbPos;"
+		"}";
+	constexpr char fs[] =
+		"void main()"
+		"{"
+		"	gl_FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+		"}";
+	p = compileBindLink(vs, fs);
+	return p;
+}
+
 std::shared_ptr<Program> Programs::glpy()
 {
 	static std::shared_ptr<Program> p;

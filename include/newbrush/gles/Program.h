@@ -142,6 +142,8 @@ public:
 	//cube program
 	static std::shared_ptr<Program> cube();
 
+	static std::shared_ptr<Program> model();
+
 	//glyp program
 	static std::shared_ptr<Program> glpy();
 
