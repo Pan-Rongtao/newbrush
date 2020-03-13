@@ -45,7 +45,7 @@ void ButtonBase::onClick()
 
 void ButtonBase::onIsPressedChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	Log::info("ispressed=%d", args.newValue.extract<bool>());
+//	Log::info("ispressed=%d", args.newValue.extract<bool>());
 }
 
 void ButtonBase::onMouseEnter(const MouseEventArgs & args)
@@ -56,7 +56,7 @@ void ButtonBase::onMouseEnter(const MouseEventArgs & args)
 	{
 		setValue(IsPressedProperty(), true);
 	}
-	Log::info("%s", __FUNCTION__);
+//	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseLeave(const MouseEventArgs & args)
@@ -66,7 +66,7 @@ void ButtonBase::onMouseLeave(const MouseEventArgs & args)
 	auto isPressed = getValue<bool>(IsPressedProperty());
 	m_leaveWithPressed = isPressed;
 	setValue(IsPressedProperty(), false);
-	Log::info("%s", __FUNCTION__);
+//	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseMove(const MouseEventArgs & args)
@@ -85,7 +85,7 @@ void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
 		onClick();
 	}
 	ContentControl::onMouseLeftButtonDown(args);
-	Log::info("%s", __FUNCTION__);
+//	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
@@ -102,7 +102,7 @@ void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 		onClick();
 	}
 	ContentControl::onMouseLeftButtonUp(args);
-	Log::info("%s", __FUNCTION__);
+//	Log::info("%s", __FUNCTION__);
 }
 
 void ButtonBase::updateIsPress()
