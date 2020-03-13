@@ -14,6 +14,8 @@ TEST_CASE("Test Image", "[Image]")
 	w->setValue<UIElementPtr>(Window::ContentProperty(), img);
 	auto imgSource = std::make_shared<ImageSource>("../images/zelda0.jpg");
 	img->setValue(Image::SourceProperty(), imgSource);
+	img->setValue(Image::StretchProperty(), StretchE::Uniform);
+	img->setValue(Image::MarginProperty(), Thickness(20));
 
 	app.run(0, nullptr);
 }

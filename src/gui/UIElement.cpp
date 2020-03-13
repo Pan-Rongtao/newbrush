@@ -353,7 +353,7 @@ void UIElement::removeLogicalChild(std::shared_ptr<UIElement> child)
 
 void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty())
+	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty() || args.property == MarginProperty())
 	{
 		updateLayout();
 	}

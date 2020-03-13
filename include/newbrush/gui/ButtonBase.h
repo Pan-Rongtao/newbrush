@@ -37,6 +37,7 @@ protected:
 
 private:
 	void updateIsPress();
+	bool	m_leaveWithPressed;
 };
 
 }

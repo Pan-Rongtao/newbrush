@@ -2,6 +2,7 @@
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DataContext.h"
 #include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/core/Log.h"
 
 using namespace nb;
 
@@ -81,6 +82,7 @@ void Trigger::onElementPropertyChanged(UIElement * uie)
 	if (uie->getValue(m_property) == m_value)
 	{
 		processSetters(uie, m_setters);
+	//	Log::info("property=%s", m_property.name().data());
 	}
 }
 

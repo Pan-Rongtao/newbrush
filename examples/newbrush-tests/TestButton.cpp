@@ -36,9 +36,12 @@ TEST_CASE("Test nb::Button", "[Button]")
 	trigger1->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), mouseOver, "rc"));
 	auto trigger2 = std::make_shared<Trigger>(Button::IsPressedProperty(), true);
 	trigger2->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), press, "rc"));
+	auto trigger3 = std::make_shared<Trigger>(Button::IsPressedProperty(), false);
+	trigger3->setters().push_back(std::make_shared<Setter>(Rectangle::FillProperty(), normal, "rc"));
 	templ->triggers().push_back(trigger0);
 	templ->triggers().push_back(trigger1);
 	templ->triggers().push_back(trigger2);
+//	templ->triggers().push_back(trigger3);
 
 	//end template
 
