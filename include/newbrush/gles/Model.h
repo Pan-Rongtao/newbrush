@@ -56,6 +56,8 @@ public:
 	//indices：顶点序列（逆时针，且隐藏背面）
 	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
+	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, const Material &materia);
+
 	Mesh(const Mesh &other);
 	Mesh(const Mesh &&other);
 	void operator = (const Mesh &other);

@@ -31,7 +31,8 @@ void RenderObject::loadFromFile(const std::string & path)
 #ifdef WIN32
 	m_model = std::make_shared<Model>();
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+	//const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		Log::error("load [%s] fail:%s", path.data(), importer.GetErrorString());
@@ -135,10 +136,12 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
 		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
 		program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
-		for (const auto &tex : mesh.material.textures())
+		for (int i = 0; i < mesh.material.textures().size(); i++)
 		{
-			tex->bind();
+			mesh.material.textures()[i]->bind();
+			//texure->bind();
 			program->vertexAttributePointer(Program::nbTexCoordLocaltion, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
+			glActiveTexture(GL_TEXTURE0 + i);
 		}
 		glDrawElements(m_model->mode, (int)mesh.indices.size(), GL_UNSIGNED_SHORT, mesh.indices.data());
 
@@ -164,11 +167,12 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 {
 	std::vector<Vertex> vertexs;
 	std::vector<uint16_t> indices;
+	Material ma;
 #ifdef WIN32
 	for (int i = 0; i != mesh->mNumVertices; ++i)
 	{
 		Vertex ver;
-		if (mesh->HasPositions())		ver.position = { mesh->mVertices[i].x*0.04f, mesh->mVertices[i].y*0.04f, mesh->mVertices[i].z*0.04f };
+		if (mesh->HasPositions())		ver.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
 		if (mesh->mColors[0])			ver.color = { mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b, mesh->mColors[0][i].a };
 		if (mesh->mTextureCoords[0])	ver.texCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 		if (mesh->HasNormals())			ver.normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
@@ -183,6 +187,43 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene)
 			indices.push_back(face.mIndices[j]);
 		}
 	}
+
+	auto loadMaterialTextures = [](aiMaterial *mat, aiTextureType type, uint8_t samplerUnit)->std::vector<std::shared_ptr<Texture2D>> {
+		std::vector<std::shared_ptr<Texture2D>> textures;
+		int ii = mat->GetTextureCount(type);
+		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+			aiString str;
+			mat->GetTexture(type, i, &str);
+
+			std::string filename = std::string(str.C_Str());
+			filename = "D:/share/myProject/modelLoading/resources/objects/models/car_texture/" + filename.substr(filename.find_last_of('\\') + 1);
+
+			auto texture2DPtr = std::make_shared<Texture2D>(Bitmap(filename));
+			texture2DPtr->setWrapping(TextureWrapping{ TextureWrapping::WrappingModeE::Repeat });
+			texture2DPtr->setFilter(TextureFilter{ TextureFilter::FilterE::Bilinear , TextureFilter::FilterE::Trilinear });
+			texture2DPtr->setSamplerUnit(samplerUnit);
+
+			textures.push_back(texture2DPtr);
+		}
+		return textures;
+	};
+
+	if (mesh->mMaterialIndex >= 0) {
+		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		// 1. diffuse maps
+		std::vector<std::shared_ptr<Texture2D>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, 0);
+		ma.textures().insert(ma.textures().end(), diffuseMaps.begin(), diffuseMaps.end());
+		// 2. specular maps
+		std::vector<std::shared_ptr<Texture2D>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, 1);
+		ma.textures().insert(ma.textures().end(), specularMaps.begin(), specularMaps.end());
+		// 3. normal maps
+		std::vector<std::shared_ptr<Texture2D>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, 2);
+		ma.textures().insert(ma.textures().end(), normalMaps.begin(), normalMaps.end());
+		// 4. height maps
+		std::vector<std::shared_ptr<Texture2D>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, 3);
+		ma.textures().insert(ma.textures().end(), heightMaps.begin(), heightMaps.end());
+	}
+	
 #endif
-	return Mesh(vertexs, indices);
+	return Mesh(vertexs, indices, ma);
 }

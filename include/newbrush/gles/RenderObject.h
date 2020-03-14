@@ -17,6 +17,7 @@
 #include "newbrush/gles/Material.h"
 #include "newbrush/gles/Camera.h"
 #include "newbrush/gles/Projection.h"
+#include "newbrush/gles/Texture2D.h"
 #include "Poco/Dynamic/Var.h"
 
 struct aiNode;

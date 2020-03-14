@@ -1,6 +1,8 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/gles/Program.h"
+#include "glm/gtc/matrix_transform.hpp"
 #include "catch2/catch.hpp"
 #include <fstream>
 #include <sstream>
@@ -32,8 +34,7 @@ TEST_CASE("test RenderObject", "[RenderObject]") {
 
 	auto renderObj = std::make_shared<RenderObject>();
 	renderObj->loadFromFile("D:/share/myProject/modelLoading/resources/objects/models/car.fbx");
-	renderObj->setMaterial(std::make_shared<Material>(Programs::model()));
-
+	renderObj->setProgram(Programs::model());
 	while (!glfwWindowShouldClose(window)) {
 		//GLfloat currentFrame = glfwGetTime();
 
@@ -44,8 +45,12 @@ TEST_CASE("test RenderObject", "[RenderObject]") {
 		Camera camera;
 		Projection projection;
 		renderObj->draw(camera, projection);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+		renderObj->storeUniform("nbM", model);
+
 		glfwSwapBuffers(window);
-		//renderObj->storeUniform("color", glm::vec4(0.5f, 0.2f, 0.1f, 1.0f));
 	}
 	glfwTerminate();
 }

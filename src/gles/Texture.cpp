@@ -36,6 +36,7 @@ int TextureFilter::glValue(TextureFilter::FilterE filter)
 
 //class Texture
 Texture::Texture()
+	: m_samplerUnit(0)
 {
 	glGenTextures(1, &m_handle);
 	if (glGetError() == GL_INVALID_OPERATION)
@@ -67,6 +68,16 @@ TextureFilter &Texture::filter()
 const TextureFilter &Texture::filter() const
 {
 	return m_filter;
+}
+
+void Texture::setSamplerUnit(const uint8_t & unit)
+{
+	m_samplerUnit = unit;
+}
+
+uint8_t Texture::samplerUnit()
+{
+	return m_samplerUnit;
 }
 
 void Texture::bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const

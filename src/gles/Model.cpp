@@ -49,6 +49,13 @@ Mesh::Mesh(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indi
 {
 }
 
+Mesh::Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, const Material &materia)
+	: vertexs(vertexs)
+	, indices(indices)
+	, material(materia)
+{
+}
+
 Mesh::Mesh(const Mesh & other)
 	: vertexs(other.vertexs)
 	, indices(other.indices)

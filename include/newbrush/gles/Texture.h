@@ -42,7 +42,7 @@ public:
 		ClampToBorder,	//用户颜色边缘延伸
 	};
 
-	WrappingModeE	s;				//T轴
+	WrappingModeE	s;				//S轴
 	WrappingModeE	t;				//T轴
 	glm::vec4		borderColor;	//边框颜色
 
@@ -110,6 +110,10 @@ public:
 	//获取纹理过滤方式
 	TextureFilter &filter();
 	const TextureFilter &filter() const;
+
+	//设置、获取纹理采样单元
+	void setSamplerUnit(const uint8_t & unit);
+	uint8_t samplerUnit();
 	
 protected:
 	Texture();
@@ -119,6 +123,7 @@ protected:
 	TextureWrapping		m_wrapping;
 	TextureFilter		m_filter;
 	unsigned int		m_handle;
+	uint8_t						m_samplerUnit;
 };
 
 }
