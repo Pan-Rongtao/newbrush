@@ -16,18 +16,19 @@ class StudioCommunicationHelper
 public:
 	StudioCommunicationHelper();
 
-	bool connect(const std::string &ip, int port);
+	void startWorking();
 
 	void send(const std::string &data);
 
 	struct MessageArrivedArgs { std::string message; };
 	nb::Event<MessageArrivedArgs>	MessageArrived;
 
-	Poco::Net::StreamSocket m_socket;
 private:
+	void onApplicationMessage(uint32_t id);
+	void recv();
+	void parseRecvMessage(const std::string &s);
 
-	void onAppMessage(uint32_t id);
-	void revc();
-
+	bool					m_ready;
+	Poco::Net::StreamSocket m_socket;
 };
 

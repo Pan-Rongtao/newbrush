@@ -9,23 +9,38 @@
 using namespace nb;
 
 constexpr int BUFFER_SIZE = 3 * 1024 * 1024;
+
 StudioCommunicationHelper::StudioCommunicationHelper()
+	: m_ready(false)
 {
-	auto app = nb::Application::current();
-	assert(app != nullptr);
-	app->UserMessage += std::bind(&StudioCommunicationHelper::onAppMessage, this, std::placeholders::_1);
 }
 
-bool StudioCommunicationHelper::connect(const std::string &ip, int port)
+void StudioCommunicationHelper::startWorking()
 {
-	try {
-		m_socket.connect(Poco::Net::SocketAddress(ip, port));
+	if (m_ready)
+	{
+		return;
 	}
-	catch (...) { return false; }
 
-	std::thread t(&StudioCommunicationHelper::revc, this);
+	auto app = nb::Application::current();
+	if (!app)
+	{
+		nbThrowException(std::logic_error, "app has not been instanced");
+	}
+	app->UserMessage += std::bind(&StudioCommunicationHelper::onApplicationMessage, this, std::placeholders::_1);
+
+	try 
+	{
+		m_socket.connect(Poco::Net::SocketAddress("127.0.0.1", 8888));
+	}
+	catch (...) 
+	{
+		Log::error("connect to studio fail."); 
+	}
+
+	std::thread t(&StudioCommunicationHelper::recv, this);
 	t.detach();
-	return true;
+	m_ready = true;
 }
 
 void StudioCommunicationHelper::send(const std::string & data)
@@ -33,7 +48,8 @@ void StudioCommunicationHelper::send(const std::string & data)
 	m_socket.sendBytes(data.data(), data.size());
 }
 
-void StudioCommunicationHelper::onAppMessage(uint32_t id)
+//application thread
+void StudioCommunicationHelper::onApplicationMessage(uint32_t id)
 {
 	Log::info("onAppMessage:%d", id);
 	auto rc = std::dynamic_pointer_cast<nb::Rectangle>(Application::current()->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
@@ -54,59 +70,53 @@ void StudioCommunicationHelper::onAppMessage(uint32_t id)
 	}
 }
 
-void StudioCommunicationHelper::revc()
+void StudioCommunicationHelper::recv()
 {
 	while (true)
 	{
 		char *buffer = new char[BUFFER_SIZE];
 		memset(buffer, 0, BUFFER_SIZE);
-		try {
+		try 
+		{
 			m_socket.receiveBytes(buffer, BUFFER_SIZE);
-			bool b = false;
 		}
-		catch (...) { printf("socket recv data error.\n"); break; };
+		catch (...) 
+		{ 
+			Log::error("m_socket.receiveBytes error.");
+			delete[]buffer;
+			break; 
+		};
 
 		std::string recvStr(buffer);
+		delete[]buffer;
+		parseRecvMessage(recvStr);
+	}
+}
 
-		Poco::JSON::Parser parser;
-		auto result = parser.parse(buffer);
+void StudioCommunicationHelper::parseRecvMessage(const std::string & s)
+{
+	Poco::JSON::Parser parser;
+	Poco::Dynamic::Var result;
+	try
+	{
+		result = parser.parse(s);
+	}
+	catch (...) {}
+	
+	if(result.isEmpty())
+	{
+		Log::error("parseRecvMessage error, not a json string.");
+		return;
+	}
+
+	try 
+	{
 		Poco::JSON::Object::Ptr root = result.extract<Poco::JSON::Object::Ptr>();
 		int msgId = root->get("msg_id");
 		Application::current()->sendMessage(msgId);
 	}
-}
-/*
-std::string StudioCommunicationHelper::getLocalIp() const
-{
-#ifdef WIN32
-	WSADATA Data;
-	auto x = WSAStartup(MAKEWORD(1, 1), &Data);
-	char hostName[256] = { 0 };
-	gethostname(hostName, sizeof(hostName));
-	PHOSTENT hostinfo;
-	hostinfo = gethostbyname(hostName);
-	std::string ip = inet_ntoa(*(struct in_addr*)*hostinfo->h_addr_list);
-	WSACleanup();
-	return ip;
-#else
-	auto getDeviceIp = [](const std::string &sDev)->std::string {
-		char ip[80] = { 0 };
-		struct ifreq ifr;
-		int sk = socket(AF_INET, SOCK_DGRAM, 0);
-		strcpy(ifr.ifr_name, sDev.data());
-		if (ioctl(sk, SIOCGIFADDR, &ifr) == 0)
-			strcpy(ip, inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
-		close(sk);
-		return ip;
-	};
-
-	auto eth = getDeviceIp("ens160");
-	if (eth.empty())
+	catch (...)
 	{
-		eth = getDeviceIp("eth1");
-		if (eth.empty())
-			eth = getDeviceIp("mlan0");
+		Log::error("parseRecvMessage error, can't recgnize msg id.");
 	}
-	return eth;
-#endif
-}*/
+}

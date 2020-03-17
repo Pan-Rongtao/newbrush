@@ -21,7 +21,7 @@ project(newbrush-player)
 
 set(BIN_NAME "nbplayer")
 
-file(GLOB SRC_FILES "*.h" "*.cpp" "../*.h" "../*.cpp")
+file(GLOB SRC_FILES "*.h" "*.cpp")
 
 add_executable(${BIN_NAME} ${SRC_FILES})
 set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${BIN_NAME})

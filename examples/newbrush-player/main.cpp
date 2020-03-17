@@ -10,14 +10,12 @@
 
 using namespace nb;
 
-
 int main(int argc, char **argv)
 {
 	Application app;
 
 	StudioCommunicationHelper helper;
-	bool b = helper.connect("127.0.0.1", 8888);
-	Log::info("connect to studio [%s]", b ? "success" : "fail");
+	helper.startWorking();
 
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), "nbplayer");
