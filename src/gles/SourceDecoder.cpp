@@ -9,23 +9,15 @@ constexpr char		KeywordStruct[]		= "struct";
 constexpr size_t	KeywordUniformSize	= sizeof(KeywordUniform) - 1;
 constexpr size_t	KeywordStructSize	= sizeof(KeywordStruct) - 1;
 
-SourceDecoder::SourceDecoder()
+std::unordered_map<std::string, SourceDecoder::VarTypeE> SourceDecoder::decode(const std::string & verSource, const std::string & fragSource)
 {
+	std::unordered_map<std::string, SourceDecoder::VarTypeE> uniforms;
+	decodeOne(verSource, uniforms);
+	decodeOne(fragSource, uniforms);
+	return uniforms;
 }
 
-void SourceDecoder::decode(const std::string & verSource, const std::string & fragSource)
-{
-	m_uniforms.clear();
-	decodeOne(verSource);
-	decodeOne(fragSource);
-}
-
-void SourceDecoder::getUniforms(std::map<std::string, VarTypeE> &uniforms)
-{
-	uniforms = m_uniforms;
-}
-
-void SourceDecoder::decodeOne(const std::string &source)
+void SourceDecoder::decodeOne(const std::string &source, std::unordered_map<std::string, VarTypeE> &uniforms)
 {
 	std::string sCutMain = cutMain(source);
 	if (source.empty())
@@ -71,12 +63,12 @@ void SourceDecoder::decodeOne(const std::string &source)
 						auto structMembers = m_structDefines.find(varTypeName)->second;
 						for (auto const &member : structMembers)
 						{
-							m_uniforms.insert({varName + "." + member.first, member.second});
+							uniforms.insert({varName + "." + member.first, member.second});
 						}
 					}
 					else
 					{
-						m_uniforms.insert({ varName, varType });
+						uniforms.insert({ varName, varType });
 					}
 				}
 				i = end + 1;

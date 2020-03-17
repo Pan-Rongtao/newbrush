@@ -71,6 +71,11 @@ int Application::run(int argc, char *argv[])
 	{
 		while (!m_exitFlag)
 		{
+			auto msg = pickMessage();
+			if (msg != -1)
+			{
+				UserMessage.invoke((uint32_t)msg);
+			}
 			for (auto const w : Singleton<WindowCollection>::get()->windows())
 			{
 				w->render();
@@ -99,6 +104,13 @@ void Application::shutdown(int exitCode)
 
 	Singleton<WindowCollection>::get()->windows().clear();
 	onExit({ exitCode });
+}
+
+void nb::Application::sendMessage(uint32_t msg)
+{
+	m_mutex.lock();
+	m_msgQueue.push(msg);
+	m_mutex.unlock();
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -152,4 +164,17 @@ void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs &
 	{
 
 	}
+}
+
+int Application::pickMessage()
+{
+	m_mutex.lock();
+	int ret = -1;
+	if (!m_msgQueue.empty())
+	{
+		ret = m_msgQueue.front();
+		m_msgQueue.pop();
+	}
+	m_mutex.unlock();
+	return ret;
 }

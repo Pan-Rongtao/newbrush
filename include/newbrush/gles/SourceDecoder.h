@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <unordered_map>
 #include <string>
 #include "newbrush/core/Def.h"
 
@@ -36,21 +37,16 @@ public:
 	};
 
 public:
-	SourceDecoder();
-
-	void decode(const std::string &verSource, const std::string &fragSource);
+	std::unordered_map<std::string, VarTypeE> decode(const std::string &verSource, const std::string &fragSource);
 	
-	void getUniforms(std::map<std::string, VarTypeE> &uniforms);
-
 private:
-	void decodeOne(const std::string &s);
+	void decodeOne(const std::string &s, std::unordered_map<std::string, VarTypeE> &uniforms);
 	std::string cutMain(const std::string &s);
 	void extractStruct(const std::string &sStructDefineStr, std::string &structName, std::map<std::string, VarTypeE> &structMembers);
 	void extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarTypeE &varType);
 	bool isBlank(char c) const;
 	std::string toLower(const std::string &s) const;
 
-	std::map<std::string, VarTypeE>							m_uniforms;
 	std::map<std::string, std::map<std::string, VarTypeE>>	m_structDefines;
 };
 

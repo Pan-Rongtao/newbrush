@@ -67,6 +67,7 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 			m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
 		}
 		updateMeterial(m_fillObject, fill);
+		updateLayout();
 	}
 	else if (args.property == StrokeProperty())
 	{

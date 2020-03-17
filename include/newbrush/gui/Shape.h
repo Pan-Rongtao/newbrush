@@ -22,6 +22,8 @@ public:
 	static DependencyProperty StrokeDashCapProperty();		//笔画帽的依赖属性(PenLineCapE)
 	static DependencyProperty StrokeLineJoinProperty();		//顶点联接样式的依赖属性(PenLineJoinE)
 	static DependencyProperty StretchProperty();			//伸缩方式的依赖属性(StretchE)
+	
+	std::shared_ptr<RenderObject> renderObject();
 
 protected:
 	Shape();

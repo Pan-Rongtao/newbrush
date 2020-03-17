@@ -73,6 +73,11 @@ DependencyProperty Shape::StrokeDashOffsetProperty()
 	return dp;
 }
 
+std::shared_ptr<RenderObject> Shape::renderObject()
+{
+	return m_fillObject;
+}
+
 void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Brush> brush)
 {
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))

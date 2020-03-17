@@ -2,6 +2,8 @@
 #include "newbrush/core/Event.h"
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/WindowCollection.h"
+#include <queue>
+#include <mutex>
 
 namespace nb{
 
@@ -43,6 +45,8 @@ public:
 	void shutdown();
 	void shutdown(int exitCode);
 
+	void sendMessage(uint32_t msg);
+
 	Event<EventArgs>						Activated;				//当应用程序成为前台应用程序，发生
 	Event<EventArgs>						Deactivated;			//当应用程序不再是前台应用程序，发生
 	Event<UnhandledExceptionEventArgs>		UnhandledException;		//如果异常是由应用程序引发，且继承于std::exception，异常未处理时发生
@@ -51,6 +55,7 @@ public:
 	Event<EventArgs>						LoadCompleted;			//加载完成并呈现时发生
 	Event<SessionEndingCancelEventArgs>		SessionEnding;			//用户在注销或关闭操作系统时发生
 	Event<StartupEventArgs>					Startup;				//当启动时发生
+	Event<uint32_t>							UserMessage;
 
 protected:
 	virtual void onActivated(const EventArgs &args);
@@ -64,9 +69,13 @@ private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
 
+	int pickMessage();
+
 	ShutdownModeE		m_shutdownMode;
 	bool				m_exitFlag;
 	static Application	*g_app;
+	std::queue<uint32_t>m_msgQueue;
+	std::mutex	m_mutex;
 };
 
 }
