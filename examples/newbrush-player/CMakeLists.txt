@@ -16,6 +16,10 @@
 project(newbrush-player)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
+include_directories(${CMAKE_SOURCE_DIR}/3rdparty/include/grpc)
+add_definitions(-D_WIN32_WINNT=0x600)
+add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 # 3. Project Build
 

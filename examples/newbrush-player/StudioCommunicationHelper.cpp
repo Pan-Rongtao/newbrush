@@ -1,10 +1,7 @@
 #include "StudioCommunicationHelper.h"
 #include <thread>
-#include "newbrush/gui/Application.h"
-#include "newbrush/gui/Rectangle.h"
-#include "newbrush/media/SolidColorBrush.h"
-#include "newbrush/gui/Window.h"
 #include "newbrush/core/Log.h"
+#include "Command.h"
 
 using namespace nb;
 
@@ -49,25 +46,11 @@ void StudioCommunicationHelper::send(const std::string & data)
 }
 
 //application thread
-void StudioCommunicationHelper::onApplicationMessage(uint32_t id)
+void StudioCommunicationHelper::onApplicationMessage(const Application::UserMessageArgs &e)
 {
-	Log::info("onAppMessage:%d", id);
-	auto rc = std::dynamic_pointer_cast<nb::Rectangle>(Application::current()->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
-
-	switch (id)
-	{
-	case Update_Shader_Source:
-	{
-		rc->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::green()));
-		Poco::JSON::Object::Ptr root = new Poco::JSON::Object();
-		root->set("msg_id", id);
-		auto str = Poco::Dynamic::Var(root).toString();
-		m_socket.sendBytes(str.data(), str.size());
-	}
-	break;
-	default:
-		break;
-	}
+	Log::info("onApplicationMessage:%d", e.id);
+	auto cmd = CommandFactory::createCommand((CommandID)e.id);
+	auto ret = cmd->excute(e.data);
 }
 
 void StudioCommunicationHelper::recv()
@@ -113,7 +96,7 @@ void StudioCommunicationHelper::parseRecvMessage(const std::string & s)
 	{
 		Poco::JSON::Object::Ptr root = result.extract<Poco::JSON::Object::Ptr>();
 		int msgId = root->get("msg_id");
-		Application::current()->sendMessage(msgId);
+		Application::current()->sendMessage(msgId, Poco::Dynamic::Var(root).toString());
 	}
 	catch (...)
 	{
