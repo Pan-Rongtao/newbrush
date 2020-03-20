@@ -12,14 +12,9 @@ public:
 
 	void startWorking();
 
-	void send(const std::string &data);
-
 private:
-	void onApplicationMessage(const nb::Application::UserMessageArgs &e);
-	void recv();
-	void parseRecvMessage(const std::string &s);
+	void runGrpcServer();
 
-	bool					m_ready;
-	Poco::Net::StreamSocket m_socket;
+	std::unique_ptr<grpc::Server>	m_server;
 };
 

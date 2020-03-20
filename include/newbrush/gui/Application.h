@@ -45,6 +45,7 @@ public:
 	void shutdown();
 	void shutdown(int exitCode);
 
+	using Callback = std::function<void(void *, void *)>;
 	void sendMessage(uint32_t msg, const std::string &data);
 
 	Event<EventArgs>						Activated;				//当应用程序成为前台应用程序，发生
