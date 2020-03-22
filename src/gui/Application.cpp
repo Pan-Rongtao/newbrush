@@ -71,10 +71,10 @@ int Application::run(int argc, char *argv[])
 	{
 		while (!m_exitFlag)
 		{
-			auto msg = pickMessage();
-			if (msg.first != -1)
+			auto cb = pick();
+			if (cb)
 			{
-				UserMessage.invoke({ (uint32_t)msg.first, msg.second });
+				cb();
 			}
 			for (auto const w : Singleton<WindowCollection>::get()->windows())
 			{
@@ -106,11 +106,10 @@ void Application::shutdown(int exitCode)
 	onExit({ exitCode });
 }
 
-void nb::Application::sendMessage(uint32_t msg, const std::string &data)
+void Application::connect(CallBack callback)
 {
-	m_mutex.lock();
-	m_msgQueue.push({ msg,data });
-	m_mutex.unlock();
+	std::lock_guard<std::mutex> lock(m_mutex);
+	m_msgQueue.push({ callback });
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -166,15 +165,14 @@ void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs &
 	}
 }
 
-std::pair<uint32_t, std::string> Application::pickMessage()
+Application::CallBack Application::pick()
 {
-	m_mutex.lock();
-	std::pair<uint32_t, std::string> ret = { -1,"" };
+	std::lock_guard<std::mutex> lock(m_mutex);
+	CallBack ret = nullptr;
 	if (!m_msgQueue.empty())
 	{
 		ret = m_msgQueue.front();
 		m_msgQueue.pop();
 	}
-	m_mutex.unlock();
 	return ret;
 }

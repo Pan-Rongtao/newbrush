@@ -45,8 +45,8 @@ public:
 	void shutdown();
 	void shutdown(int exitCode);
 
-	using Callback = std::function<void(void *, void *)>;
-	void sendMessage(uint32_t msg, const std::string &data);
+	using CallBack = std::function<void(void)>;
+	void connect(CallBack callback);
 
 	Event<EventArgs>						Activated;				//当应用程序成为前台应用程序，发生
 	Event<EventArgs>						Deactivated;			//当应用程序不再是前台应用程序，发生
@@ -70,14 +70,14 @@ protected:
 private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
-
-	std::pair<uint32_t, std::string> pickMessage();
-
+	
 	ShutdownModeE		m_shutdownMode;
 	bool				m_exitFlag;
 	static Application	*g_app;
-	std::queue<std::pair<uint32_t, std::string>>m_msgQueue;
-	std::mutex	m_mutex;
+
+	CallBack				pick();
+	std::queue<CallBack>	m_msgQueue;
+	std::mutex				m_mutex;
 };
 
 }
