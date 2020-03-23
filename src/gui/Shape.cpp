@@ -5,6 +5,7 @@
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
+#include "newbrush/media/EffectBrush.h"
 #include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
@@ -116,5 +117,12 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 			//ro->material()->textures().push_back(std::make_shared<Texture2D>(bm));
 			ro->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(bm));
 		}
+	}
+	else if (std::dynamic_pointer_cast<EffectBrush>(brush))
+	{
+		bool b = false;
+	//	ro->storeUniform("size", 4);
+	//	ro->storeUniform("colors", colors);
+	//	ro->storeUniform("offsets", offsets);
 	}
 }
