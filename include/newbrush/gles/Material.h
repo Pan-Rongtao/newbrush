@@ -28,12 +28,27 @@ public:
 	//构建一个材质，它的Program为program，它的纹理texture
 	Material(const std::vector<std::shared_ptr<Texture>> &textures);
 
+	Material(const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm::vec3 &specular);
+
 	//纹理
 	std::vector<std::shared_ptr<Texture>> &textures();
 	const std::vector<std::shared_ptr<Texture>> &textures() const;
 
+	//颜色
+	glm::vec3 &getAmbient();
+	const glm::vec3 &getAmbient() const;
+
+	glm::vec3 &getDiffuse();
+	const glm::vec3 &getDiffuse() const;
+
+	glm::vec3 &getSpecular();
+	const glm::vec3 &getSpecular() const;
+
 private:
 	std::vector<std::shared_ptr<Texture>>	m_textures;
+	glm::vec3 m_ambient;
+	glm::vec3 m_diffuse;
+	glm::vec3 m_specular;
 };
 
 }

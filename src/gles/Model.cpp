@@ -46,6 +46,7 @@ Mesh::Mesh()
 Mesh::Mesh(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
 	: vertexs(vertexs)
 	, indices(indices)
+	, transformation(1.0f)
 {
 }
 
@@ -53,6 +54,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indi
 	: vertexs(vertexs)
 	, indices(indices)
 	, material(materia)
+	, transformation(1.0f)
 {
 }
 
@@ -60,6 +62,7 @@ Mesh::Mesh(const Mesh & other)
 	: vertexs(other.vertexs)
 	, indices(other.indices)
 	, material(other.material)
+	, transformation(other.transformation)
 {
 }
 
@@ -67,6 +70,7 @@ Mesh::Mesh(const Mesh && other)
 	: vertexs(std::move(other.vertexs))
 	, indices(std::move(other.indices))
 	, material(std::move(other.material))
+	, transformation(std::move(other.transformation))
 {
 
 }
@@ -76,6 +80,7 @@ void Mesh::operator = (const Mesh &other)
 	vertexs = other.vertexs;
 	indices = other.indices;
 	material = other.material;
+	transformation = other.transformation;
 }
 
 void Mesh::operator = (const Mesh &&other)
@@ -83,6 +88,7 @@ void Mesh::operator = (const Mesh &&other)
 	vertexs = std::move(other.vertexs);
 	indices = std::move(other.indices);
 	material = std::move(other.material);
+	transformation = std::move(other.transformation);
 }
 
 float *Mesh::positionData()

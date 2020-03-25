@@ -18,6 +18,7 @@
 #include "newbrush/gles/Camera.h"
 #include "newbrush/gles/Projection.h"
 #include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/TextureMipmap.h"
 #include "Poco/Dynamic/Var.h"
 
 struct aiNode;
@@ -40,7 +41,7 @@ public:
 
 public:	
 	//从文件中加载
-	void loadFromFile(const std::string &path);
+	void loadFromFile(const std::string &modelPath, const std::string &picPath = "");
 
 	//设置是否可渲染，这将决定物体是否绘制
 	void setRenderable(bool bRenderable);
@@ -67,8 +68,8 @@ public:
 	virtual void draw(const Camera &camera, const Projection &projection) const;
 
 private:
-	void loopNode(aiNode * node, const aiScene * scene);
-	Mesh processMesh(aiMesh * mesh, const aiScene * scene);
+	void loopNode(aiNode * node, const aiScene * scene, const std::string &picPath);
+	Mesh processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath);
 
 	std::shared_ptr<Model>		m_model;
 	std::shared_ptr<Program>	m_program;

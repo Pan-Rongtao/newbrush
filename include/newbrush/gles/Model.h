@@ -79,6 +79,7 @@ public:
 	std::vector<Vertex>		vertexs;	//顶点属性
 	std::vector<uint16_t>	indices;	//顶点序列(逆时针)
 	Material				material;
+	glm::mat4x4			transformation;
 
 };
 

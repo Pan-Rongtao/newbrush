@@ -25,7 +25,7 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/newbrush/${PROJECT_NAME}/*.h" "
 
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME NbMedia)
-target_link_libraries(${LIB_NAME} core freetype)
+target_link_libraries(${LIB_NAME} core freetype openGL32 SOIL)
 
 # 4. Project Install
 install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
