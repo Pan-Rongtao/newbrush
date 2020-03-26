@@ -4,6 +4,7 @@
 #include "newbrush/core/Log.h"
 #include <GLES2/gl2.h>
 #include "newbrush/core/Singleton.h"
+#include "newbrush/media/Color.h"
 
 using namespace nb;
 
@@ -66,7 +67,8 @@ int Application::run(int argc, char *argv[])
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClearColor(250 / 255.0f, 235 / 255.0f, 215 / 255.0f, 1.0f);
+	Color clearColor(255, 0, 0, 0);
+	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
 	try
 	{
 		while (!m_exitFlag)

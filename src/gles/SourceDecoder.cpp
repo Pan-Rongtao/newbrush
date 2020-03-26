@@ -9,15 +9,15 @@ constexpr char		KeywordStruct[]		= "struct";
 constexpr size_t	KeywordUniformSize	= sizeof(KeywordUniform) - 1;
 constexpr size_t	KeywordStructSize	= sizeof(KeywordStruct) - 1;
 
-std::unordered_map<std::string, SourceDecoder::VarTypeE> SourceDecoder::decode(const std::string & verSource, const std::string & fragSource)
+std::unordered_map<std::string, SourceDecoder::UniformTypeE> SourceDecoder::decode(const std::string & verSource, const std::string & fragSource)
 {
-	std::unordered_map<std::string, SourceDecoder::VarTypeE> uniforms;
+	std::unordered_map<std::string, SourceDecoder::UniformTypeE> uniforms;
 	decodeOne(verSource, uniforms);
 	decodeOne(fragSource, uniforms);
 	return uniforms;
 }
 
-void SourceDecoder::decodeOne(const std::string &source, std::unordered_map<std::string, VarTypeE> &uniforms)
+void SourceDecoder::decodeOne(const std::string &source, std::unordered_map<std::string, UniformTypeE> &uniforms)
 {
 	std::string sCutMain = cutMain(source);
 	if (source.empty())
@@ -35,7 +35,7 @@ void SourceDecoder::decodeOne(const std::string &source, std::unordered_map<std:
 			{
 				std::string sStructDefineStr = sCutMain.substr(i + KeywordStructSize, end - (i + KeywordStructSize) + 1);
 				std::string structName;
-				std::map<std::string, VarTypeE> structMembers;
+				std::map<std::string, UniformTypeE> structMembers;
 				extractStruct(sStructDefineStr, structName, structMembers);
 				i = end + 1;
 			}
@@ -53,12 +53,12 @@ void SourceDecoder::decodeOne(const std::string &source, std::unordered_map<std:
 			{
 				std::string varTypeName;
 				std::string varName;
-				VarTypeE varType;
+				UniformTypeE varType;
 				std::string sVarDefineStr = sCutMain.substr(i, end - i);
 				extractVar(sVarDefineStr, varTypeName, varName, varType);
-				if (varType != VarTypeE::unknown)
+				if (varType != UniformTypeE::unknown)
 				{
-					if (varType == VarTypeE::structure)
+					if (varType == UniformTypeE::structure)
 					{
 						auto structMembers = m_structDefines.find(varTypeName)->second;
 						for (auto const &member : structMembers)
@@ -92,29 +92,29 @@ std::string SourceDecoder::cutMain(const std::string & s)
 	return mainP != std::string::npos ? s.substr(0, mainP - 5) : "";	//prev 'void'
 }
 
-void SourceDecoder::extractStruct(const std::string & sStructDefineStr, std::string & structName, std::map<std::string, VarTypeE>& structMembers)
+void SourceDecoder::extractStruct(const std::string & sStructDefineStr, std::string & structName, std::map<std::string, UniformTypeE>& structMembers)
 {
 	std::string::const_iterator a = std::find_if(sStructDefineStr.begin(), sStructDefineStr.end(), [](char c) {return !isblank(c); });
 	auto b = std::find_if(a, sStructDefineStr.end(), [](char c) {return isblank(c) || c == '{'; });
 	structName.assign(a, b);
 	std::string memberDefineStr(b, sStructDefineStr.end());
 	size_t n = memberDefineStr.find(';');
-	std::map<std::string, VarTypeE> members;
+	std::map<std::string, UniformTypeE> members;
 	while (n != std::string::npos) 
 	{
 		std::string sVarDefStr = memberDefineStr.substr(0, n);
 		std::string memberTypeName;
 		std::string memberName;
-		VarTypeE memberType;
+		UniformTypeE memberType;
 		extractVar(sVarDefStr, memberTypeName, memberName, memberType);
-		if (memberType != VarTypeE::unknown && memberType != VarTypeE::structure)
+		if (memberType != UniformTypeE::unknown && memberType != UniformTypeE::structure)
 			members.insert({ memberName, memberType });
 		n = memberDefineStr.find(';', n + 1);
 	}
 	m_structDefines.insert({ structName, members });
 }
 
-void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarTypeE &varType)
+void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, UniformTypeE &varType)
 {
 	//如果';'前面有空白字符，需要先把空白字符去掉
 	std::string sDef = sVarDefineStr;
@@ -163,30 +163,30 @@ void SourceDecoder::extractVar(const std::string &sVarDefineStr, std::string &va
 	}
 	varTypeName = sDef.substr(nTypeBeg, nTypeEnd - nTypeBeg);
 	std::string sLower = toLower(varTypeName);
-	if (sLower == "bool")							varType = VarTypeE::boolean;
-	else if (sLower == "int")						varType = VarTypeE::integer;
-	else if (sLower == "float")						varType = VarTypeE::real;
-	else if (sLower == "vec2")						varType = VarTypeE::vec2;
-	else if (sLower == "vec3")						varType = VarTypeE::vec3;
-	else if (sLower == "vec4")						varType = VarTypeE::vec4;
-	else if (sLower == "mat2" || sLower == "mat2x2")varType = VarTypeE::mat2x2;
-	else if (sLower == "mat3" || sLower == "mat3x3")varType = VarTypeE::mat3x3;
-	else if (sLower == "mat4" || sLower == "mat4x4")varType = VarTypeE::mat4x4;
-	else if (sLower == "mat2x3")					varType = VarTypeE::mat2x2;
-	else if (sLower == "mat2x4")					varType = VarTypeE::mat2x2;
-	else if (sLower == "mat3x2")					varType = VarTypeE::mat2x2;
-	else if (sLower == "mat3x4")					varType = VarTypeE::mat2x2;
-	else if (sLower == "mat4x2")					varType = VarTypeE::mat2x2;
-	else if (sLower == "mat4x3")					varType = VarTypeE::mat2x2;
+	if (sLower == "bool")							varType = UniformTypeE::boolean;
+	else if (sLower == "int")						varType = UniformTypeE::integer;
+	else if (sLower == "float")						varType = UniformTypeE::real;
+	else if (sLower == "vec2")						varType = UniformTypeE::vec2;
+	else if (sLower == "vec3")						varType = UniformTypeE::vec3;
+	else if (sLower == "vec4")						varType = UniformTypeE::vec4;
+	else if (sLower == "mat2" || sLower == "mat2x2")varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat3" || sLower == "mat3x3")varType = UniformTypeE::mat3x3;
+	else if (sLower == "mat4" || sLower == "mat4x4")varType = UniformTypeE::mat4x4;
+	else if (sLower == "mat2x3")					varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat2x4")					varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat3x2")					varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat3x4")					varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat4x2")					varType = UniformTypeE::mat2x2;
+	else if (sLower == "mat4x3")					varType = UniformTypeE::mat2x2;
 	else
 	{
 		if (m_structDefines.find(varTypeName) != m_structDefines.end())
 		{
-			varType = VarTypeE::structure;
+			varType = UniformTypeE::structure;
 		}
 		else
 		{
-			varType = VarTypeE::unknown;
+			varType = UniformTypeE::unknown;
 		}
 	}
 

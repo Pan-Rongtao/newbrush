@@ -9,7 +9,7 @@ namespace nb{
 class NB_API SourceDecoder
 {
 public:
-	enum class VarTypeE
+	enum class UniformTypeE
 	{
 		unknown,
 		boolean,
@@ -37,17 +37,17 @@ public:
 	};
 
 public:
-	std::unordered_map<std::string, VarTypeE> decode(const std::string &verSource, const std::string &fragSource);
+	std::unordered_map<std::string, UniformTypeE> decode(const std::string &verSource, const std::string &fragSource);
 	
 private:
-	void decodeOne(const std::string &s, std::unordered_map<std::string, VarTypeE> &uniforms);
+	void decodeOne(const std::string &s, std::unordered_map<std::string, UniformTypeE> &uniforms);
 	std::string cutMain(const std::string &s);
-	void extractStruct(const std::string &sStructDefineStr, std::string &structName, std::map<std::string, VarTypeE> &structMembers);
-	void extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, VarTypeE &varType);
+	void extractStruct(const std::string &sStructDefineStr, std::string &structName, std::map<std::string, UniformTypeE> &structMembers);
+	void extractVar(const std::string &sVarDefineStr, std::string &varTypeName, std::string &varName, UniformTypeE &varType);
 	bool isBlank(char c) const;
 	std::string toLower(const std::string &s) const;
 
-	std::map<std::string, std::map<std::string, VarTypeE>>	m_structDefines;
+	std::map<std::string, std::map<std::string, UniformTypeE>>	m_structDefines;
 };
 
 }

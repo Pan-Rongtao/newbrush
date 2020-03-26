@@ -51,3 +51,4 @@ optimized absl_throw_delegate debug absl_throw_delegated
 
 # 4. Project Install
 install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

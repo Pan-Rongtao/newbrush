@@ -1,6 +1,8 @@
 #include "ShaderServerStub.h"
+#include <thread>
+#include "newbrush/core/Log.h"
 
-grpc::Status ShaderServerStub::BuildShader(::grpc::ServerContext* context, const ::NBPlayer::BuildShaderRequest* request, ::NBPlayer::BuildShaderReply* response)
+Status ShaderServerStub::BuildShader(::ServerContext* context, const BuildShaderRequest* request, BuildShaderReply* response)
 {
 	auto app = nb::Application::current();
 	bool done = false;
@@ -17,36 +19,126 @@ grpc::Status ShaderServerStub::BuildShader(::grpc::ServerContext* context, const
 			rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
 
 
-			auto varInfos = response->mutable_varinfos();
+			auto varInfos = response->mutable_uniforminfos();
 			getUniforms(varInfos, request->vshadercode(), request->fshadercode());
 		}
 		done = true;
 	});
 
-	while (!done)
-	{
-	}
-	return grpc::Status::OK;
+	while (!done) {}
+	return Status::OK;
 }
 
-::grpc::Status ShaderServerStub::SetUniform(::grpc::ServerContext * context, const::NBPlayer::SetUniformRequest * request, ::NBPlayer::SetUniformReply * response)
+Status ShaderServerStub::UniformBool(ServerContext * context, const UniformBoolRequest * request, NoneReply * response)
 {
 	auto app = nb::Application::current();
 	bool done = false;
 	app->connect([this, request, response, &done, app]()
 	{
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
-		auto name = request->name();
-		auto value = request->value();
-		rc->renderObject()->storeUniform(name, value);
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, uniformValue);
 		done = true;
 	});
 
-	while (!done)
-	{
+	while (!done) {}
+	return Status::OK;
+}
 
-	}
-	return grpc::Status::OK;
+Status ShaderServerStub::UniformFloat(ServerContext * context, const UniformFloatRequest * request, NoneReply * response)
+{
+	auto app = nb::Application::current();
+	bool done = false;
+	app->connect([this, request, response, &done, app]()
+	{
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, uniformValue);
+		done = true;
+	});
+
+	while (!done) {}
+	return Status::OK;
+}
+
+Status ShaderServerStub::UniformInteger(ServerContext * context, const UniformIntegerRequest * request, NoneReply * response)
+{
+	auto app = nb::Application::current();
+	bool done = false;
+	app->connect([this, request, response, &done, app]()
+	{
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, uniformValue);
+		done = true;
+	});
+
+	while (!done) {}
+	return Status::OK;
+}
+
+Status ShaderServerStub::UniformVec2(ServerContext * context, const UniformVec2Request * request, NoneReply * response)
+{
+	auto app = nb::Application::current();
+	bool done = false;
+	app->connect([this, request, response, &done, app]()
+	{
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, glm::vec2{uniformValue.x(), uniformValue.y()});
+		done = true;
+	});
+
+	while (!done) {}
+	return Status::OK;
+}
+
+Status ShaderServerStub::UniformVec3(ServerContext * context, const UniformVec3Request * request, NoneReply * response)
+{
+	auto app = nb::Application::current();
+	bool done = false;
+	app->connect([this, request, response, &done, app]()
+	{
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, glm::vec3{ uniformValue.x(), uniformValue.y(), uniformValue.z() });
+		done = true;
+	});
+
+	while (!done) {}
+	return Status::OK;
+}
+
+Status ShaderServerStub::UniformVec4(ServerContext * context, const UniformVec4Request * request, NoneReply * response)
+{
+	auto app = nb::Application::current();
+	bool done = false;
+	app->connect([this, request, response, &done, app]()
+	{
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		auto uniformName = request->name();
+		auto uniformValue = request->value();
+		rc->renderObject()->storeUniform(uniformName, glm::vec4{ uniformValue.x(), uniformValue.y(), uniformValue.z(), uniformValue.w() });
+		done = true;
+	});
+
+	while (!done) {}
+	return Status::OK;
+}
+
+Status ShaderServerStub::UniformMat3x3(ServerContext * context, const UniformMat3x3Request * request, NoneReply * response)
+{
+	return Status();
+}
+
+Status ShaderServerStub::UniformMat4x4(ServerContext * context, const UniformMat4x4Request * request, NoneReply * response)
+{
+	return Status();
 }
 
 std::shared_ptr<Program> ShaderServerStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
@@ -65,20 +157,21 @@ std::shared_ptr<Program> ShaderServerStub::makeProgram(const std::string &vShade
 		program->link();
 		return program;
 	}
-	catch (...)
+	catch (std::runtime_error e)
 	{
-		return nullptr;
+		Log::error("%s", e.what());
 	}
 }
 
-void ShaderServerStub::getUniforms(google::protobuf::Map<std::string, ::NBPlayer::BuildShaderReply_ShaderVarType>* &ref, const std::string &vShaderCode, const std::string &fShaderCode)
+void ShaderServerStub::getUniforms(google::protobuf::Map<std::string, UniformType>* &ref, const std::string &vShaderCode, const std::string &fShaderCode)
 {
 	SourceDecoder sd;
 	auto uniforms = sd.decode(vShaderCode, fShaderCode);
 
 	for (auto const &u : uniforms)
 	{
-		NBPlayer::BuildShaderReply_ShaderVarType t = static_cast<NBPlayer::BuildShaderReply_ShaderVarType>(u.second);
-		ref->insert( MapPair<std::string, ::NBPlayer::BuildShaderReply_ShaderVarType>(u.first, t));
+		auto t = static_cast<UniformType>(u.second);
+		if(!(u.first.size() >= 2 && u.first.substr(0, 2) == "nb"))
+			ref->insert( MapPair<std::string, UniformType>(u.first, t));
 	}
 }

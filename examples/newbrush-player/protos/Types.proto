@@ -1,0 +1,29 @@
+syntax = "proto3";
+package nbrpc;
+
+enum UniformType
+{
+	unknown = 0;
+	boolean = 1;
+	integer = 2;
+	real = 3;
+	vec2 = 4;
+	vec3 = 5;
+	vec4 = 6;
+	ivec2 = 7;
+	ivec3 = 8;
+	ivec4 = 9;
+	bvec2 = 10;
+	bvec3 = 11;
+	bvec4 = 12;
+	mat2x2 = 13;
+	mat2x3 = 14;
+	mat2x4 = 15;
+	mat3x2 = 16;
+	mat3x3 = 17;
+	mat3x4 = 18;
+	mat4x2 = 19;
+	mat4x3 = 20;
+	mat4x4 = 21;
+	structure = 22;
+}

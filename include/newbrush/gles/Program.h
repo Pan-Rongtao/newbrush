@@ -36,7 +36,6 @@ public:
 	static constexpr char *nbMStr					= "nbM";
 	static constexpr char *nbVStr					= "nbV";
 	static constexpr char *nbPStr					= "nbP";
-	static constexpr char *nbColorModeLocationStr	= "nbColorMode";
 
 public:
 	//构建一个Program，未指定顶点着色器和片元着色器
