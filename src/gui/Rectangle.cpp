@@ -5,6 +5,7 @@
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/media/Transform.h"
 
 using namespace nb;
 
@@ -74,6 +75,12 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
+	}
+	else if (args.property == RenderTransformProperty())
+	{
+		auto transformationPtr = args.newValue.extract<std::shared_ptr<Transform>>();
+		glm::mat4 mat = transformationPtr->Value();
+		m_fillObject->model()->matrix = mat * m_fillObject->model()->matrix;
 	}
 }
 

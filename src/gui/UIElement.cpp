@@ -163,6 +163,12 @@ DependencyProperty UIElement::IsMouseOverProperty()
 	return dp;
 }
 
+DependencyProperty UIElement::RenderTransformProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Transform>>("RenderTransform", std::make_shared<Transform>());
+	return dp;
+}
+
 uint32_t UIElement::childrenCount() const
 {
 	return 0;

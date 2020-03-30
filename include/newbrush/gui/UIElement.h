@@ -6,6 +6,7 @@
 #include "newbrush/gui/Style.h"
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
+#include "newbrush/media/Transform.h"
 
 namespace nb{
 class Viewport2D;
@@ -73,6 +74,7 @@ public:
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性（std::shared_ptr<Style>)
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
 	static DependencyProperty 					IsMouseOverProperty();	//鼠标是否在元素上（bool）
+	static DependencyProperty 					RenderTransformProperty();
 
 	Event<EventArgs>							Initialized;
 	Event<RoutedEventArgs>						Loaded;
