@@ -12,8 +12,8 @@ Status ShaderServerStub::BuildShader(::ServerContext* context, const BuildShader
 		if (program)
 		{
 			auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
-			rc->renderObject()->setProgram(program);
 			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
+			rc->renderObject()->setProgram(program);
 			rc->renderObject()->storeUniform("mouse", glm::vec2(0.5, 0.5));
 			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
 			rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
@@ -160,6 +160,7 @@ std::shared_ptr<Program> ShaderServerStub::makeProgram(const std::string &vShade
 	catch (std::runtime_error e)
 	{
 		Log::error("%s", e.what());
+		return nullptr;
 	}
 }
 

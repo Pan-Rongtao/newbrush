@@ -18,10 +18,10 @@ Image::Image()
 	auto &vertexs = mesh.vertexs;
 	auto &indices = mesh.indices;
 	vertexs.resize(4);
-	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
-	vertexs[1].texCoord = glm::vec2(1.0, 0.0);
-	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
-	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+	vertexs[0].texCoord = glm::vec2(0.0, 1.0);
+	vertexs[1].texCoord = glm::vec2(1.0, 1.0);
+	vertexs[2].texCoord = glm::vec2(1.0, 0.0);
+	vertexs[3].texCoord = glm::vec2(0.0, 0.0);
 	indices.insert(indices.begin(), { 0, 1, 2, 0, 2, 3 });
 }
 

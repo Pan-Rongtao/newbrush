@@ -331,6 +331,7 @@ void Window::pollEvents()
 {
 	if (g_windowSystemInitialized)
 	{
+		//glfwWaitEvents();
 		glfwPollEvents();	//与glfwWaitEvents不同，glfwWaitEvents会阻塞（glfwWaitEvents CPU消耗很低，glfwPollEvents则很高30%以上）
 	}
 }
@@ -380,6 +381,12 @@ DependencyProperty Window::IconProperty()
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	ContentControl::onPropertyChanged(args);
+	if (args.property == WidthProperty() || args.property == HeightProperty())
+	{
+		auto w = getValue<float>(WidthProperty());
+		auto h = getValue<float>(HeightProperty());
+		glfwSetWindowSize(m_implWindow, (int)w, (int)h);
+	}
 }
 
 void Window::onActivated(const EventArgs & args)

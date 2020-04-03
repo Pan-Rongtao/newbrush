@@ -20,8 +20,9 @@ int main(int argc, char **argv)
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), "nbplayer");
 	auto rc = std::make_shared<nb::Rectangle>();
-	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+//	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
+	w->setValue(Window::WindowStyleProperty(), WindowStyleE::None);
 
 	return app.run(argc, argv);
 

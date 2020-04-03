@@ -67,7 +67,7 @@ int Application::run(int argc, char *argv[])
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	Color clearColor(255, 0, 0, 0);
+	Color clearColor(255, 245, 245, 245);
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
 	try
 	{
