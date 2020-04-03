@@ -10,13 +10,11 @@ TransformCollection::TransformCollection()
 
 TransformCollection::TransformCollection(std::vector<std::shared_ptr<Transform>> collection)
 {
-	m_collection.clear();
 	m_collection = collection;
 }
 
 TransformCollection::TransformCollection(size_t capacity)
 {
-	m_collection.clear();
 	m_collection.resize(capacity);
 }
 
