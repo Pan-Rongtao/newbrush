@@ -2,34 +2,29 @@
 
 using namespace nb;
 
+Transform Transform::m_identity;
+
 Transform::Transform()
-	:matrix(1.0f)
 {}
-
-Transform::Transform(glm::mat4x4 mat)
-{
-	matrix = mat;
-}
-
 
 Transform Transform::Identity()
 {
-	Transform trans(glm::mat4x4(1.0f));
-	return trans;
+	return m_identity;
 }
 
 Transform Transform::Inverse()
 {
-	glm::inverse(matrix);
 	return *this;
 }
 
 glm::mat4x4 Transform::Value()
 {
+	glm::mat4x4 matrix = glm::mat4x4(1.0f);
 	return matrix;
 }
 
 bool Transform::TryTransform(const Point &inPoint, Point &outPoint)
 {
+	outPoint = inPoint;
 	return true;
 }

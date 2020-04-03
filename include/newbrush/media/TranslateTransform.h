@@ -1,6 +1,7 @@
 /*******************************************************
 **	TranslateTransform
 **
+*在 二维 x-y 坐标系中平移（移动）对象。
 **
 ********************************************************/
 
@@ -21,11 +22,5 @@ namespace nb {
 
 		virtual glm::mat4x4 Value() override;
 
-	protected:
-		virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
-	private:
-		float m_X;
-		float m_Y;
 	};
 }

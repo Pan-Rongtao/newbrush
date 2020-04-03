@@ -1,6 +1,7 @@
 /*******************************************************
 **	ScaleTransform
 **
+*在二维 x-y 坐标系内缩放对象。
 **
 ********************************************************/
 
@@ -23,14 +24,5 @@ namespace nb {
 		static DependencyProperty ScaleYProperty();
 
 		virtual glm::mat4x4 Value() override;
-
-	protected:
-		virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
-	private:
-		float m_scaleX;
-		float m_scaleY;
-		float m_centerX;
-		float m_centerY;
 	};
 }

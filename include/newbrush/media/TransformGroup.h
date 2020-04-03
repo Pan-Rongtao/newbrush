@@ -1,3 +1,10 @@
+/*******************************************************
+**	TransformGroup
+**
+*表示由其它Transform对象组成的复合Transform
+**
+********************************************************/
+
 #pragma once
 #include "newbrush/media/TransformCollection.h"
 
@@ -12,10 +19,5 @@ namespace nb {
 
 		virtual glm::mat4x4 Value() override;
 
-	protected:
-		virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
-	private:
-		std::shared_ptr<TransformCollection> m_transformCollection;
 	};
 }

@@ -4,27 +4,20 @@
 using namespace nb;
 
 ScaleTransform::ScaleTransform()
-	:m_scaleX(1.0f),
-	m_scaleY(1.0f),
-	m_centerX(0.0f),
-	m_centerY(0.0f)
 {
 }
 
 ScaleTransform::ScaleTransform(float scaleX, float scaleY)
-	:m_scaleX(scaleX),
-	m_scaleY(scaleY),
-	m_centerX(0.0f),
-	m_centerY(0.0f)
 {
+	setValue<float>(ScaleTransform::ScaleXProperty(), scaleX);
+	setValue<float>(ScaleTransform::ScaleYProperty(), scaleY);
 }
 
 ScaleTransform::ScaleTransform(float scaleX, float scaleY, float centerX, float centerY)
-	:m_scaleX(scaleX),
-	m_scaleY(scaleY),
-	m_centerX(centerX),
-	m_centerY(centerY)
+	: ScaleTransform(scaleX, scaleY)
 {
+	setValue<float>(ScaleTransform::CenterXProperty(), centerX);
+	setValue<float>(ScaleTransform::CenterYProperty(), centerY);
 }
 
 DependencyProperty ScaleTransform::CenterXProperty()
@@ -53,27 +46,14 @@ DependencyProperty ScaleTransform::ScaleYProperty()
 
 glm::mat4x4 ScaleTransform::Value()
 {
+	float m_centerX = getValue<float>(CenterXProperty());
+	float m_centerY = getValue<float>(CenterYProperty());
+	float m_scaleX = getValue<float>(ScaleXProperty());
+	float m_scaleY = getValue<float>(ScaleYProperty());
+
+	glm::mat4x4 matrix = glm::mat4x4(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(m_centerX * (1 - m_scaleX), m_centerY * (1 - m_scaleY), 0.0f));
 	matrix = glm::scale(matrix, glm::vec3(m_scaleX, m_scaleY, 1.0f));
-	return matrix;
-}
 
-void ScaleTransform::onPropertyChanged(const DependencyPropertyChangedEventArgs &args)
-{
-	if (args.property == CenterXProperty())
-	{
-		m_centerX = args.newValue.convert<float>();
-	}
-	else if (args.property == CenterYProperty())
-	{
-		m_centerY = args.newValue.convert<float>();
-	}
-	else if (args.property == ScaleXProperty())
-	{
-		m_scaleX = args.newValue.convert<float>();
-	}
-	else if (args.property == ScaleYProperty())
-	{
-		m_scaleY = args.newValue.convert<float>();
-	}
+	return matrix;
 }

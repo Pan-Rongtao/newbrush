@@ -21,8 +21,11 @@ TEST_CASE("test Transform", "[Transform]")
 	Application app;
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), "Rectangle");
+
+
 	auto rc = std::make_shared<Rectangle>();
-	rc->setValue(Rectangle::MarginProperty(), Thickness(100));
+	//设置元素的外边距
+	rc->setValue(Rectangle::MarginProperty(), Thickness(200));
 	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 	rc->setValue(Rectangle::RadiusXProperty(), 0);
 	rc->setValue(Rectangle::RadiusYProperty(), 0);
@@ -32,26 +35,24 @@ TEST_CASE("test Transform", "[Transform]")
 	rc->setValue(Rectangle::StrokeDashOffsetProperty(), 0);
 	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
 
-
 	auto offset = rc->worldOffset();
-
-	//rotate
-	auto rotateTransformPtr = std::make_shared<RotateTransform>();
-	rotateTransformPtr->setValue<float>(RotateTransform::CenterXProperty(), offset.x() + 0.0f);
-	rotateTransformPtr->setValue<float>(RotateTransform::CenterYProperty(), offset.y() + 0.0f);
-	rotateTransformPtr->setValue<float>(RotateTransform::AngleProperty(), 30.0f);
-
 	//scale
 	auto scaleTransformPtr = std::make_shared<ScaleTransform>();
 	scaleTransformPtr->setValue<float>(ScaleTransform::CenterXProperty(), offset.x());
 	scaleTransformPtr->setValue<float>(ScaleTransform::CenterYProperty(), offset.y());
-	scaleTransformPtr->setValue<float>(ScaleTransform::ScaleXProperty(), 0.5f);
-	scaleTransformPtr->setValue<float>(ScaleTransform::ScaleYProperty(), 0.5f);
+	scaleTransformPtr->setValue<float>(ScaleTransform::ScaleXProperty(), 0.7f);
+	scaleTransformPtr->setValue<float>(ScaleTransform::ScaleYProperty(), 0.7f);
 
 	//translate
 	auto translateTransformPtr = std::make_shared<TranslateTransform>();
 	translateTransformPtr->setValue<float>(TranslateTransform::XProperty(), 100.0f);
 	translateTransformPtr->setValue<float>(TranslateTransform::YProperty(), 100.0f);
+
+	//rotate
+	auto rotateTransformPtr = std::make_shared<RotateTransform>();
+	rotateTransformPtr->setValue<float>(RotateTransform::CenterXProperty(), offset.x() + 0.0f);
+	rotateTransformPtr->setValue<float>(RotateTransform::CenterYProperty(), offset.y() + 0.0f);
+	rotateTransformPtr->setValue<float>(RotateTransform::AngleProperty(), 45.0f);
 
 	//Collection
 	auto transformCollectionPtr = std::make_shared<TransformCollection>();
@@ -64,5 +65,6 @@ TEST_CASE("test Transform", "[Transform]")
 	transformGroupPtr->setValue<std::shared_ptr<TransformCollection>>(TransformGroup::ChildrenProperty(), transformCollectionPtr);
 
 	rc->setValue<std::shared_ptr<Transform>>(Rectangle::RenderTransformProperty(), transformGroupPtr);
+
 	app.run(0, nullptr);
 }

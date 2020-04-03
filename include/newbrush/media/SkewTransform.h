@@ -25,13 +25,5 @@ namespace nb {
 
 		virtual glm::mat4x4 Value() override;
 
-	protected:
-		virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
-	private:
-		float m_angleX;
-		float m_angleY;
-		float m_centerX;
-		float m_centerY;
 	};
 }

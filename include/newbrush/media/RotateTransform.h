@@ -1,7 +1,7 @@
 /*******************************************************
 **	RotateTransform
 **
-**以任意点为中心的图像旋转，只需要将平移和旋转操作结合即可
+**在二维 x-y 坐标系内以任意点为中心的图像旋转，只需要将平移和旋转操作结合即可
 **		步骤：
 **		1.	先将坐标系平移到指定点
 **		2.	再以新的坐标原点为中心旋转
@@ -22,18 +22,11 @@ namespace nb {
 		RotateTransform(float angle, float centerX, float centerY);
 		virtual ~RotateTransform() = default;
 
-		static DependencyProperty AngleProperty();	
+		static DependencyProperty AngleProperty();
 		static DependencyProperty CenterXProperty();
 		static DependencyProperty CenterYProperty();
 
 		virtual glm::mat4x4 Value() override;
 
-	protected:
-		virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-
-	private:
-		float m_angle;
-		float m_centerX;
-		float m_centerY;
 	};
 }

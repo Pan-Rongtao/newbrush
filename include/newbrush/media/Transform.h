@@ -16,7 +16,6 @@ namespace nb {
 	{
 	public:
 		Transform();
-		Transform(glm::mat4x4 mat);
 		virtual ~Transform() = default;
 
 		static Transform Identity();
@@ -25,7 +24,7 @@ namespace nb {
 		virtual glm::mat4x4 Value();
 		virtual bool TryTransform(const Point &inPoint, Point &outPoint);
 
-	protected:
-		glm::mat4x4 matrix;
+	private:
+		static Transform m_identity;
 	};
 }

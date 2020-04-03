@@ -4,24 +4,19 @@
 using namespace nb;
 
 RotateTransform::RotateTransform()
-	:m_angle(0.0f),
-	m_centerX(0.0f),
-	m_centerY(0.0f)
 {
 }
 
 RotateTransform::RotateTransform(float angle)
-	:m_angle(angle),
-	m_centerX(0.0f),
-	m_centerY(0.0f)
 {
+	setValue<float>(RotateTransform::AngleProperty(), angle);
 }
 
 RotateTransform::RotateTransform(float angle, float centerX, float centerY)
-	:m_angle(angle),
-	m_centerX(centerX),
-	m_centerY(centerY)
+	: RotateTransform(angle)
 {
+	setValue<float>(RotateTransform::CenterXProperty(), centerX);
+	setValue<float>(RotateTransform::CenterYProperty(), centerY);
 }
 
 DependencyProperty RotateTransform::AngleProperty()
@@ -44,25 +39,14 @@ DependencyProperty RotateTransform::CenterYProperty()
 
 glm::mat4x4 RotateTransform::Value()
 {
+	float m_angle = getValue<float>(AngleProperty());
+	float m_centerX = getValue<float>(CenterXProperty());
+	float m_centerY = getValue<float>(CenterYProperty());
+
+	glm::mat4x4 matrix = glm::mat4x4(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(m_centerX, m_centerY, 0.0f));
 	matrix = glm::rotate(matrix, glm::radians(m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	matrix = glm::translate(matrix, glm::vec3(-m_centerX, -m_centerY, 0.0f));
-	return matrix;
-}
 
-void RotateTransform::onPropertyChanged(const DependencyPropertyChangedEventArgs &args)
-{
-	if (args.property == AngleProperty())
-	{
-		m_angle = args.newValue.convert<float>();
-		//m_angle = getValue<float>(AngleProperty());
-	}
-	else if (args.property == CenterXProperty())
-	{
-		m_centerX = args.newValue.convert<float>();
-	}
-	else if (args.property == CenterYProperty())
-	{
-		m_centerY = args.newValue.convert<float>();
-	}
+	return matrix;
 }

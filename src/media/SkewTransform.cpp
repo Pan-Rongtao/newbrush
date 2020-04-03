@@ -1,28 +1,24 @@
 #include "newbrush/media/SkewTransform.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <math.h>
 
 using namespace nb;
 
 SkewTransform::SkewTransform()
-	:m_angleX(0.0f),
-	m_angleY(0.0f),
-	m_centerX(0.0f),
-	m_centerY(0.0f)
 {
 }
 
 SkewTransform::SkewTransform(float angleX, float angleY)
-	:m_angleX(0.0f),
-	m_angleY(0.0f)
 {
+	setValue<float>(SkewTransform::AngleXProperty(), angleX);
+	setValue<float>(SkewTransform::AngleYProperty(), angleY);
 }
 
 SkewTransform::SkewTransform(float angleX, float angleY, float centerX, float centerY)
-	:m_angleX(0.0f),
-	m_angleY(0.0f),
-	m_centerX(centerX),
-	m_centerY(centerY)
+	: SkewTransform(angleX, angleY)
 {
+	setValue<float>(SkewTransform::CenterXProperty(), centerX);
+	setValue<float>(SkewTransform::CenterYProperty(), centerY);
 }
 
 DependencyProperty SkewTransform::AngleXProperty()
@@ -51,26 +47,8 @@ DependencyProperty SkewTransform::CenterYProperty()
 
 glm::mat4x4 SkewTransform::Value()
 {
-//待实现
-	return matrix;
-}
+	//待实现
+	glm::mat4 matrix = glm::mat4(1.0f);
 
-void SkewTransform::onPropertyChanged(const DependencyPropertyChangedEventArgs &args)
-{
-	if (args.property == AngleXProperty())
-	{
-		m_angleX = args.newValue.convert<float>();
-	}
-	else if (args.property == AngleYProperty())
-	{
-		m_angleY = args.newValue.convert<float>();
-	}
-	else if (args.property == CenterXProperty())
-	{
-		m_centerX = args.newValue.convert<float>();
-	}
-	else if (args.property == CenterYProperty())
-	{
-		m_centerY = args.newValue.convert<float>();
-	}
+	return matrix;
 }
