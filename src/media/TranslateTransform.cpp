@@ -25,7 +25,7 @@ DependencyProperty TranslateTransform::YProperty()
 	return dp;
 }
 
-glm::mat4x4 TranslateTransform::Value()
+glm::mat4x4 TranslateTransform::value()
 {
 	float m_X = getValue<float>(XProperty());
 	float m_Y = getValue<float>(YProperty());

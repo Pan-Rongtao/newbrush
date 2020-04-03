@@ -23,6 +23,6 @@ namespace nb {
 		static DependencyProperty ScaleXProperty();
 		static DependencyProperty ScaleYProperty();
 
-		virtual glm::mat4x4 Value() override;
+		virtual glm::mat4x4 value() override;
 	};
 }

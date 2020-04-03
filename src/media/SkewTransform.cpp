@@ -1,5 +1,6 @@
 #include "newbrush/media/SkewTransform.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "newbrush/core/Def.h"
 #include <math.h>
 
 using namespace nb;
@@ -45,10 +46,11 @@ DependencyProperty SkewTransform::CenterYProperty()
 	return dp;
 }
 
-glm::mat4x4 SkewTransform::Value()
+glm::mat4x4 SkewTransform::value()
 {
 	//´ýÊµÏÖ
+	nbThrowException(std::out_of_range, "SkewTransform::value() is not implementation");
+	
 	glm::mat4 matrix = glm::mat4(1.0f);
-
 	return matrix;
 }

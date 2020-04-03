@@ -52,19 +52,18 @@ TEST_CASE("test Transform", "[Transform]")
 	auto rotateTransformPtr = std::make_shared<RotateTransform>();
 	rotateTransformPtr->setValue<float>(RotateTransform::CenterXProperty(), offset.x() + 0.0f);
 	rotateTransformPtr->setValue<float>(RotateTransform::CenterYProperty(), offset.y() + 0.0f);
-	rotateTransformPtr->setValue<float>(RotateTransform::AngleProperty(), 45.0f);
+	rotateTransformPtr->setValue<float>(RotateTransform::AngleProperty(), 15.0f);
 
 	//Collection
 	auto transformCollectionPtr = std::make_shared<TransformCollection>();
-	transformCollectionPtr->Add(scaleTransformPtr);
-	transformCollectionPtr->Add(translateTransformPtr);
-	transformCollectionPtr->Add(rotateTransformPtr);
+	transformCollectionPtr->add(scaleTransformPtr);
+	transformCollectionPtr->add(translateTransformPtr);
+	transformCollectionPtr->add(rotateTransformPtr);
 
 	//transformGroup
 	auto transformGroupPtr = std::make_shared<TransformGroup>();
 	transformGroupPtr->setValue<std::shared_ptr<TransformCollection>>(TransformGroup::ChildrenProperty(), transformCollectionPtr);
 
 	rc->setValue<std::shared_ptr<Transform>>(Rectangle::RenderTransformProperty(), transformGroupPtr);
-
 	app.run(0, nullptr);
 }

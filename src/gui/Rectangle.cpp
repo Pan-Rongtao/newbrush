@@ -79,8 +79,9 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	else if (args.property == RenderTransformProperty())
 	{
 		auto transformationPtr = args.newValue.extract<std::shared_ptr<Transform>>();
-		glm::mat4 mat = transformationPtr->Value();
+		glm::mat4 mat = transformationPtr->value();
 		m_fillObject->model()->matrix = mat * m_fillObject->model()->matrix;
+		m_strokeObject->model()->matrix = mat * m_strokeObject->model()->matrix;
 	}
 }
 

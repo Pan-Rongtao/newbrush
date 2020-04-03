@@ -20,7 +20,7 @@ namespace nb {
 		static DependencyProperty XProperty();
 		static DependencyProperty YProperty();
 
-		virtual glm::mat4x4 Value() override;
+		virtual glm::mat4x4 value() override;
 
 	};
 }

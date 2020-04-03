@@ -23,7 +23,7 @@ namespace nb {
 		static DependencyProperty CenterXProperty();
 		static DependencyProperty CenterYProperty();
 
-		virtual glm::mat4x4 Value() override;
+		virtual glm::mat4x4 value() override;
 
 	};
 }

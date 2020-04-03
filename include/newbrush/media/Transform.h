@@ -18,11 +18,11 @@ namespace nb {
 		Transform();
 		virtual ~Transform() = default;
 
-		static Transform Identity();
+		static Transform identity();
 
-		virtual Transform Inverse();
-		virtual glm::mat4x4 Value();
-		virtual bool TryTransform(const Point &inPoint, Point &outPoint);
+		virtual Transform inverse();
+		virtual glm::mat4x4 value();
+		virtual bool tryTransform(const Point &inPoint, Point &outPoint);
 
 	private:
 		static Transform m_identity;

@@ -17,7 +17,7 @@ namespace nb {
 
 		static DependencyProperty ChildrenProperty();
 
-		virtual glm::mat4x4 Value() override;
+		virtual glm::mat4x4 value() override;
 
 	};
 }

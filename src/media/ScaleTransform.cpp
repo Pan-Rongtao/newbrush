@@ -44,7 +44,7 @@ DependencyProperty ScaleTransform::ScaleYProperty()
 	return dp;
 }
 
-glm::mat4x4 ScaleTransform::Value()
+glm::mat4x4 ScaleTransform::value()
 {
 	float m_centerX = getValue<float>(CenterXProperty());
 	float m_centerY = getValue<float>(CenterYProperty());

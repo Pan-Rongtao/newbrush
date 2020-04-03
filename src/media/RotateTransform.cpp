@@ -37,7 +37,7 @@ DependencyProperty RotateTransform::CenterYProperty()
 	return dp;
 }
 
-glm::mat4x4 RotateTransform::Value()
+glm::mat4x4 RotateTransform::value()
 {
 	float m_angle = getValue<float>(AngleProperty());
 	float m_centerX = getValue<float>(CenterXProperty());
