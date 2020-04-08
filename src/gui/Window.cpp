@@ -168,7 +168,7 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, 1000.0f, -1000.0f);
+	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
 	drawContext.viewport(0, 0, width, height);
 	setValue(WidthProperty(), (float)width);
 	setValue(HeightProperty(), (float)height);

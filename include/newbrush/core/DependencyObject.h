@@ -31,12 +31,12 @@ public:
 	}
 
 protected:
-	void _set(const DependencyProperty & dp, const Var &defaultValue, const Var &setValue);
-	void invokePropertyCallback(const DependencyPropertyChangedEventArgs & args);
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args);
 
 private:
-	
+	void _set(const DependencyProperty & dp, const Var &defaultValue, const Var &setValue);
+	void invokePropertyCallback(const DependencyPropertyChangedEventArgs & args);
+
 	std::map<size_t, EffectiveValueEntry>	m_valueEntrys;
 };
 
