@@ -14,9 +14,9 @@ Status ShaderServerStub::BuildShader(::ServerContext* context, const BuildShader
 			auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
 			rc->renderObject()->setProgram(program);
-			rc->renderObject()->storeUniform("mouse", glm::vec2(0.5, 0.5));
+			rc->renderObject()->storeUniform("mouse", glm::vec2(0.2, 0.2));
 			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
-			rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
+			rc->renderObject()->storeUniform("resolution", glm::vec2(670, 1440));
 
 
 			auto varInfos = response->mutable_uniforminfos();

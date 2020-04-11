@@ -7,6 +7,7 @@
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
 #include "newbrush/media/Transform.h"
+#include "newbrush/gui/EditorInfo.h"
 
 namespace nb{
 class Viewport2D;
@@ -213,7 +214,7 @@ public:
 	void raiseEvent(std::shared_ptr<RoutedEventArgs> args);
 	
 	virtual bool hitTestCore(const Point &pt) const;
-
+	
 public:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);

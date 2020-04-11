@@ -43,6 +43,7 @@ public:
 	void setBottom(std::shared_ptr<UIElement> element, float bottom);
 	float getBottom(std::shared_ptr<UIElement> element);
 
+	static EditorInfo getEditorInfo();
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

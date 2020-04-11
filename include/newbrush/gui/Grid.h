@@ -108,6 +108,8 @@ public:
 	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
 	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
 
+	static EditorInfo getEditorInfo();
+
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;

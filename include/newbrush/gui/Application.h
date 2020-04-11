@@ -56,8 +56,6 @@ public:
 	Event<EventArgs>						LoadCompleted;			//加载完成并呈现时发生
 	Event<SessionEndingCancelEventArgs>		SessionEnding;			//用户在注销或关闭操作系统时发生
 	Event<StartupEventArgs>					Startup;				//当启动时发生
-	struct UserMessageArgs { uint32_t id; std::string data; };
-	Event<UserMessageArgs>					UserMessage;
 
 protected:
 	virtual void onActivated(const EventArgs &args);

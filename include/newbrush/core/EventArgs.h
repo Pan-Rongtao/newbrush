@@ -303,6 +303,13 @@ struct DependencyPropertyChangedEventArgs
 	Var					newValue;
 };
 
+class RoutedProperyChangedEventArgs : public RoutedEventArgs
+{
+public:
+	Var		oldValue;
+	Var		newValue;
+};
+
 class ExceptonRoutedEventArgs
 {
 public:

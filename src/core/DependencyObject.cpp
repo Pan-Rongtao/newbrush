@@ -128,9 +128,16 @@ Var DependencyObject::getValue(const DependencyProperty & dp) const
 
 void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultValue, const Var & setValue)
 {
+	auto coerceValue = setValue;
+	auto coerce = dp.defaultMetadata()->coerceValueCallback();
+	if (coerce)
+	{
+		coerceValue = coerce(this, setValue);
+	}
+
 	bool equalDefault = false;
 	try {
-		equalDefault = setValue == defaultValue;
+		equalDefault = coerceValue == defaultValue;
 	}
 	catch (...) {}	//异常表示无法比较，则视为非普通类型
 	
@@ -140,9 +147,9 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 		if (!equalDefault)
 		{
 			EffectiveValueEntry newEntry(dp);
-			newEntry.setBaseValue(setValue);
+			newEntry.setBaseValue(coerceValue);
 			m_valueEntrys.insert({ dp.globalIndex(), newEntry });
-			DependencyPropertyChangedEventArgs args{ dp, defaultValue, setValue };
+			DependencyPropertyChangedEventArgs args{ dp, defaultValue, coerceValue };
 			invokePropertyCallback(args);
 			onPropertyChanged(args);
 		}
@@ -152,7 +159,7 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 		auto changed = true;
 		auto oldValue = iterFind->second.baseValue();
 		try {
-			changed = oldValue != setValue;
+			changed = oldValue != coerceValue;
 		}
 		catch (...) {}	//异常表示无法比较，则视为非普通类型
 
@@ -162,12 +169,12 @@ void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultVa
 		}
 		else
 		{
-			iterFind->second.setBaseValue(setValue);
+			iterFind->second.setBaseValue(coerceValue);
 		}
 
 		if (changed)
 		{
-			DependencyPropertyChangedEventArgs args{ dp, oldValue, setValue };
+			DependencyPropertyChangedEventArgs args{ dp, oldValue, coerceValue };
 			invokePropertyCallback(args);
 			onPropertyChanged(args);
 		}

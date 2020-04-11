@@ -60,6 +60,8 @@ public:
 	Event<EventArgs>			SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
 	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
 
+	static EditorInfo getEditorInfo();
+
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 

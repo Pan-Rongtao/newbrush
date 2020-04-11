@@ -378,6 +378,21 @@ DependencyProperty Window::IconProperty()
 	return dp;
 }
 
+EditorInfo Window::getEditorInfo()
+{
+	EditorInfo info;
+	info.id = typeid(Window).hash_code();
+	std::string s = typeid(Window).name();
+	auto n = s.rfind(':');
+	if (n == std::string::npos)
+	{
+		n = s.rfind(' ');
+	}
+	info.name = s.substr(n + 1);
+	info.description = "窗口控件，作为可视化元素树的顶级元素";
+	return info;
+}
+
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	ContentControl::onPropertyChanged(args);
