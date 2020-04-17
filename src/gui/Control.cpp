@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/Control.h"
+#include "newbrush/media/Brush.h"
 
 using namespace nb;
 

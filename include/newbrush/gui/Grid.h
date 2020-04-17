@@ -84,6 +84,7 @@ public:
 ///////class Grid
 class NB_API Grid : public Panel
 {
+	NB_STATIC_MOUDULE(Grid);
 public:
 	Grid();
 	virtual ~Grid() = default;
@@ -107,8 +108,6 @@ public:
 
 	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
 	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
-
-	static EditorInfo getEditorInfo();
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

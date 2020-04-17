@@ -76,6 +76,8 @@ private:
 	CallBack				pick();
 	std::queue<CallBack>	m_msgQueue;
 	std::mutex				m_mutex;
+
+	void registerMetaTypes();
 };
 
 }

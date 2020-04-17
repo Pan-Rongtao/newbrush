@@ -1,10 +1,12 @@
 #pragma once
 #include "newbrush/gui/Shape.h"
+#include "newbrush/core/MetaType.h"
 
 namespace nb{
 
 class NB_API Line : public Shape
 {
+	NB_STATIC_MOUDULE(Line)
 public:
 	Line();
 	virtual ~Line() = default;

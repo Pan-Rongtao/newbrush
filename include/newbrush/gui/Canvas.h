@@ -22,6 +22,7 @@ namespace nb{
 
 class NB_API Canvas : public Panel
 {
+	NB_STATIC_MOUDULE(Canvas)
 public:
 	Canvas();
 	virtual ~Canvas() = default;
@@ -42,8 +43,6 @@ public:
 
 	void setBottom(std::shared_ptr<UIElement> element, float bottom);
 	float getBottom(std::shared_ptr<UIElement> element);
-
-	static EditorInfo getEditorInfo();
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

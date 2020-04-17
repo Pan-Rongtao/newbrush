@@ -322,21 +322,6 @@ Size Grid::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-EditorInfo Grid::getEditorInfo()
-{
-	EditorInfo info;
-	info.id = typeid(Grid).hash_code();
-	std::string s = typeid(Grid).name();
-	auto n = s.rfind(':');
-	if (n == std::string::npos)
-	{
-		n = s.rfind(' ');
-	}
-	info.name = s.substr(n + 1);
-	info.description = "网格，一种对子元素进行网格化管理的布局容器";
-	return info;
-}
-
 std::shared_ptr<UIElement> Grid::clone() const
 {
 	return std::make_shared<Grid>(*this);

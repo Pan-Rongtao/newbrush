@@ -27,3 +27,12 @@ enum UniformType
 	mat4x4 = 21;
 	structure = 22;
 }
+
+message CommonRequest
+{
+}
+message CommonReply
+{
+	bool success = 1;
+	string msg = 2;
+}

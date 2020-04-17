@@ -55,21 +55,6 @@ float Canvas::getBottom(std::shared_ptr<UIElement> element)
 	return v.isEmpty() ? NAN : v.convert<float>();
 }
 
-EditorInfo Canvas::getEditorInfo()
-{
-	EditorInfo info;
-	info.id = typeid(Canvas).hash_code();
-	std::string s = typeid(Canvas).name();
-	auto n = s.rfind(':');
-	if (n == std::string::npos)
-	{
-		n = s.rfind(' ');
-	}
-	info.name = s.substr(n + 1);
-	info.description = "画布，一种使用绝对坐标进行子元素布局的容器";
-	return info;
-}
-
 //未设置宽高则默认为0
 Size Canvas::measureOverride(const Size & availableSize)
 {

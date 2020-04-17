@@ -1,147 +1,141 @@
-#include "ShaderServerStub.h"
+#include "ShaderStub.h"
 #include <thread>
 #include "newbrush/core/Log.h"
 
-Status ShaderServerStub::BuildShader(::ServerContext* context, const BuildShaderRequest* request, BuildShaderReply* response)
+using namespace nb;
+
+Status ShaderStub::BuildShader(::ServerContext* context, const BuildShaderRequest* request, BuildShaderReply* response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
 		auto program = makeProgram(request->vshadercode(), request->fshadercode());
 		if (program)
 		{
+			auto app = Application::current();
 			auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
-			rc->renderObject()->setProgram(program);
-			rc->renderObject()->storeUniform("mouse", glm::vec2(0.2, 0.2));
+			//rc->renderObject()->setProgram(program);
+			rc->renderObject()->setProgram(Programs::model());
 			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
-			rc->renderObject()->storeUniform("resolution", glm::vec2(670, 1440));
+			//rc->renderObject()->storeUniform("resolution", glm::vec2(670, 1440));
+			rc->renderObject()->loadFromFile("../model/car.fbx", "../model");
 
+			glm::mat4 model = glm::mat4(1.0f);
+			float strength = 20.0f;
+			model = glm::scale(model, glm::vec3(strength, strength, strength));
+			//model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+			//rc->renderObject()->model()->matrix = model;
 
 			auto varInfos = response->mutable_uniforminfos();
 			getUniforms(varInfos, request->vshadercode(), request->fshadercode());
 		}
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformBool(ServerContext * context, const UniformBoolRequest * request, NoneReply * response)
+Status ShaderStub::UniformBool(ServerContext * context, const UniformBoolRequest * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, uniformValue);
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformFloat(ServerContext * context, const UniformFloatRequest * request, NoneReply * response)
+Status ShaderStub::UniformFloat(ServerContext * context, const UniformFloatRequest * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, uniformValue);
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformInteger(ServerContext * context, const UniformIntegerRequest * request, NoneReply * response)
+Status ShaderStub::UniformInteger(ServerContext * context, const UniformIntegerRequest * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, uniformValue);
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformVec2(ServerContext * context, const UniformVec2Request * request, NoneReply * response)
+Status ShaderStub::UniformVec2(ServerContext * context, const UniformVec2Request * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, glm::vec2{uniformValue.x(), uniformValue.y()});
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformVec3(ServerContext * context, const UniformVec3Request * request, NoneReply * response)
+Status ShaderStub::UniformVec3(ServerContext * context, const UniformVec3Request * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, glm::vec3{ uniformValue.x(), uniformValue.y(), uniformValue.z() });
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformVec4(ServerContext * context, const UniformVec4Request * request, NoneReply * response)
+Status ShaderStub::UniformVec4(ServerContext * context, const UniformVec4Request * request, CommonReply * response)
 {
-	auto app = nb::Application::current();
-	bool done = false;
-	app->connect([this, request, response, &done, app]()
+	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
 		rc->renderObject()->storeUniform(uniformName, glm::vec4{ uniformValue.x(), uniformValue.y(), uniformValue.z(), uniformValue.w() });
-		done = true;
-	});
+		this->taskReady();
+	};
 
-	while (!done) {}
-	return Status::OK;
+	return waitForTaskReady(task);
 }
 
-Status ShaderServerStub::UniformMat3x3(ServerContext * context, const UniformMat3x3Request * request, NoneReply * response)
+Status ShaderStub::UniformMat3x3(ServerContext * context, const UniformMat3x3Request * request, CommonReply * response)
 {
 	return Status();
 }
 
-Status ShaderServerStub::UniformMat4x4(ServerContext * context, const UniformMat4x4Request * request, NoneReply * response)
+Status ShaderStub::UniformMat4x4(ServerContext * context, const UniformMat4x4Request * request, CommonReply * response)
 {
 	return Status();
 }
 
-std::shared_ptr<Program> ShaderServerStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
+std::shared_ptr<Program> ShaderStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
 {
 	auto vShader = std::make_shared<VertexShader>(vShaderCode);
 	auto fShader = std::make_shared<FragmentShader>(fShaderCode);
@@ -164,7 +158,7 @@ std::shared_ptr<Program> ShaderServerStub::makeProgram(const std::string &vShade
 	}
 }
 
-void ShaderServerStub::getUniforms(google::protobuf::Map<std::string, UniformType>* &ref, const std::string &vShaderCode, const std::string &fShaderCode)
+void ShaderStub::getUniforms(google::protobuf::Map<std::string, UniformType>* &ref, const std::string &vShaderCode, const std::string &fShaderCode)
 {
 	SourceDecoder sd;
 	auto uniforms = sd.decode(vShaderCode, fShaderCode);

@@ -2,23 +2,25 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Grid.h"
 #include "newbrush/gui/Canvas.h"
+#include "newbrush/gui/Rectangle.h"
 
 using namespace nb;
 
 struct Info
 {
-	long long	id;
-	char		name[64];
-	char		description[256];
+	char	type[64];
+	char	defaultName[64];
+	char	description[256];
 };
 
-static std::vector<EditorInfo> getMetaClasses()
+static std::vector<MetaData> getMetaClasses()
 {
-	std::vector<EditorInfo> infos;
+	std::vector<MetaData> infos;
 
-	infos.push_back(Window::getEditorInfo());
-	infos.push_back(Grid::getEditorInfo());
-	infos.push_back(Canvas::getEditorInfo());
+	infos.push_back(Window::getMetaData());
+	infos.push_back(Grid::getMetaData());
+	infos.push_back(Canvas::getMetaData());
+	infos.push_back(Rectangle::getMetaData());
 
 	return infos;
 }
@@ -35,8 +37,8 @@ extern "C" _declspec(dllexport) void getEditorInfos(Info *infos, int count)
 	for (int i = 0; i < count && i < metas.size(); ++i)
 	{
 		auto m = metas[i];
-		infos[i].id = m.id;
-		strcpy(infos[i].name, m.name.data());
-		strcpy(infos[i].description, m.description.data());
+		strcpy(infos[i].type, nb::getFullName(m.type).data());
+		strcpy(infos[i].defaultName, nb::getClassName(m.type).data());
+		strcpy(infos[i].description, "this is xxx");
 	}
 }

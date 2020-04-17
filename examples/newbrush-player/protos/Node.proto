@@ -1,0 +1,30 @@
+syntax = "proto3";
+package nbrpc;
+
+import "Types.proto";
+import "Math.proto";
+  
+service NodeRpc
+{
+	rpc AddNode (AddNodeRequest) returns (CommonReply) {}
+	rpc RemoveNode (RemoveNodeRequest) returns (CommonReply) {}
+	rpc RenameNode (RenameNodeRequest) returns (CommonReply) {}
+}
+
+message AddNodeRequest
+{
+	string path = 1;
+	string childType = 2;
+	string childName = 3;
+}
+message RemoveNodeRequest
+{
+	string path = 1;
+	string childName = 2;
+}
+message RenameNodeRequest
+{
+	string path = 1;
+	string childOldName = 2;
+	string childNewName = 3;
+}

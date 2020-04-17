@@ -3,6 +3,7 @@
 #include <string>
 
 namespace nb {
+
 	
 struct EditorInfo
 {

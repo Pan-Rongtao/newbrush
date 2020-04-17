@@ -23,6 +23,7 @@ enum class WindowStyleE
 
 class NB_API Window : public ContentControl
 {
+	NB_STATIC_MOUDULE(Window);
 public:
 	Window();
 	virtual ~Window();
@@ -59,8 +60,6 @@ public:
 	Event<EventArgs>			StateChanged;			//WindowState更改时发生
 	Event<EventArgs>			SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
 	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
-
-	static EditorInfo getEditorInfo();
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;

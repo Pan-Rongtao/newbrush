@@ -7,7 +7,7 @@
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
 #include "newbrush/media/Transform.h"
-#include "newbrush/gui/EditorInfo.h"
+#include "newbrush/core/MetaType.h"
 
 namespace nb{
 class Viewport2D;

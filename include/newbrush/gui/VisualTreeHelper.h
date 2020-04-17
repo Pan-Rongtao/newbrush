@@ -14,6 +14,8 @@ public:
 	//获取下标子节点
 	static UIElement * getChild(UIElement *element, uint32_t childIndex);
 
+	static UIElement *findChild(UIElement *element, const std::string &name);
+
 	//获取父节点
 	static UIElement * getParent(UIElement *element);
 
@@ -21,6 +23,8 @@ public:
 	static bool hitTest(UIElement *element, const Point &point);
 
 	static UIElement *findLogicalNode(UIElement *logicalTreeNode, const std::string &name);
+
+	static UIElement *lookupNode(UIElement *node, const std::string &path);
 
 	static Point getPosition(UIElement *relativeTo);
 };

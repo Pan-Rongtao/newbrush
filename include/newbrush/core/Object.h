@@ -8,6 +8,7 @@ class NB_API Object
 public:
 	Object() = default;
 	virtual ~Object() = default;
+
 };
 
 }

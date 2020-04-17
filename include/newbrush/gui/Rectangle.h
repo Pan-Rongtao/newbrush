@@ -5,6 +5,7 @@ namespace nb{
 
 class NB_API Rectangle : public Shape
 {
+	NB_STATIC_MOUDULE(Rectangle)
 public:
 	Rectangle();
 	virtual ~Rectangle() = default;

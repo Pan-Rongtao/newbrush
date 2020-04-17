@@ -4,17 +4,17 @@ package nbrpc;
 import "Types.proto";
 import "Math.proto";
   
-service ShaderStub
+service ShaderRpc
 {
 	rpc BuildShader (BuildShaderRequest) returns (BuildShaderReply) {}
-	rpc UniformBool (UniformBoolRequest) returns (NoneReply) {}
-	rpc UniformFloat (UniformFloatRequest) returns (NoneReply) {}
-	rpc UniformInteger (UniformIntegerRequest) returns (NoneReply) {}
-	rpc UniformVec2 (UniformVec2Request) returns (NoneReply) {}
-	rpc UniformVec3 (UniformVec3Request) returns (NoneReply) {}
-	rpc UniformVec4 (UniformVec4Request) returns (NoneReply) {}
-	rpc UniformMat3x3 (UniformMat3x3Request) returns (NoneReply) {}
-	rpc UniformMat4x4 (UniformMat4x4Request) returns (NoneReply) {}
+	rpc UniformBool (UniformBoolRequest) returns (CommonReply) {}
+	rpc UniformFloat (UniformFloatRequest) returns (CommonReply) {}
+	rpc UniformInteger (UniformIntegerRequest) returns (CommonReply) {}
+	rpc UniformVec2 (UniformVec2Request) returns (CommonReply) {}
+	rpc UniformVec3 (UniformVec3Request) returns (CommonReply) {}
+	rpc UniformVec4 (UniformVec4Request) returns (CommonReply) {}
+	rpc UniformMat3x3 (UniformMat3x3Request) returns (CommonReply) {}
+	rpc UniformMat4x4 (UniformMat4x4Request) returns (CommonReply) {}
 }
 
 message BuildShaderRequest 
@@ -66,7 +66,4 @@ message UniformMat4x4Request
 {
 	string name = 1;
 	Mat4x4 value = 2;
-}
-message NoneReply
-{
 }

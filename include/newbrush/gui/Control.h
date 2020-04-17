@@ -3,7 +3,6 @@
 #include "newbrush/gui/ControlTemplate.h"
 
 namespace nb{
-class Brush;
 class NB_API Control : public UIElement
 {
 public:

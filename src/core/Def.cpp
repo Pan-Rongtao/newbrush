@@ -39,6 +39,56 @@ uint32_t nb::getTid()
 	return std::stoi(os.str());
 }
 
+std::string nb::getFullName(const std::type_index & t)
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	std::string s = t.name();
+	auto n = s.find(' ');
+	return n == std::string::npos ? s : s.substr(n + 1);
+#else
+	nbThrowException(std::runtime_error, "not implement.");
+#endif
+
+}
+
+std::string nb::getNamespace(const std::type_index & t)
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	std::string s = t.name();
+	auto n = s.find(' ');
+	if (n == std::string::npos)	//нч"class "
+	{
+		return "";
+	}
+	else
+	{
+		auto n1 = s.rfind("::");//
+		return n1 == std::string::npos ? "" : s.substr(n + 1, n1 - n - 1);
+	}
+#else
+	nbThrowException(std::runtime_error, "not implement.");
+#endif
+}
+
+std::string nb::getClassName(const std::type_index & t)
+{
+#ifdef NB_OS_FAMILY_WINDOWS
+	std::string s = t.name();
+	auto n = s.find(' ');
+	if (n == std::string::npos)
+	{
+		return s;
+	}
+	else
+	{
+		auto n1 = s.rfind(":");
+		return n1 == std::string::npos ? s : s.substr(n1 + 1);
+	}
+#else
+	nbThrowException(std::runtime_error, "not implement.");
+#endif
+}
+
 std::vector<std::string> nb::stringSplit(const std::string & s, const std::string & sSymbol, bool bSkipEmptyString)
 {
 	std::vector<std::string> ret;

@@ -16,6 +16,26 @@ UIElement *VisualTreeHelper::getChild(UIElement *element, uint32_t childIndex)
 	return element->getChild(childIndex);
 }
 
+UIElement * VisualTreeHelper::findChild(UIElement * element, const std::string & name)
+{
+	if (element == nullptr)
+	{
+		nbThrowException(std::invalid_argument, "element is nullptr.");
+	}
+
+	for (int i = 0; i < getChildrenCount(element); ++i)
+	{
+		auto child = getChild(element, i);
+		auto childName = child->getValue<std::string>(UIElement::NameProperty());
+		if (childName == name)
+		{
+			return child;
+		}
+	}
+
+	return nullptr;
+}
+
 UIElement *VisualTreeHelper::getParent(UIElement * element)
 {
 	return element->getParent();
@@ -54,4 +74,33 @@ UIElement *VisualTreeHelper::findLogicalNode(UIElement * logicalTreeNode, const 
 	}
 
 	return ret;
+}
+
+UIElement * VisualTreeHelper::lookupNode(UIElement * node, const std::string & path)
+{
+	auto nodeNames = nb::stringSplit(path, ".", false);
+	auto p = node;
+	for (int i = 0; i <= nodeNames.size(); ++i)
+	{
+		if (!p)	break;
+
+		auto curNodeName = p->getValue<std::string>(UIElement::NameProperty());
+		if (curNodeName == nodeNames[i])
+		{
+			if (i == nodeNames.size() - 1)
+			{
+				return p;
+			}
+			else
+			{
+				p = findChild(node, nodeNames[i + 1]);
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return nullptr;
 }

@@ -20,6 +20,7 @@ Application::Application()
 	g_app = this;
 	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
 	Singleton<WindowCollection>::get()->WindowFocus += std::bind(&Application::onWindowFocused, this, std::placeholders::_1);
+	registerMetaTypes();
 }
 
 Application::~Application()
@@ -177,4 +178,14 @@ Application::CallBack Application::pick()
 		m_msgQueue.pop();
 	}
 	return ret;
+}
+
+#include "newbrush/gui/Grid.h"
+#include "newbrush/gui/Rectangle.h"
+#include "newbrush/core/MetaType.h"
+void Application::registerMetaTypes()
+{
+	MetaType::registerClass<Window>();
+	MetaType::registerClass<Grid>();
+	MetaType::registerClass<Rectangle>();
 }
