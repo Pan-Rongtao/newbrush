@@ -37,9 +37,9 @@ int main(int argc, char **argv)
 
 	glm::mat4 model = glm::mat4(1.0f);
 	auto strength = 20.0f;
-	model = glm::translate(model, {400, 200, 0});
+	model = glm::translate(model, {400, 300, 0});
 	model = glm::scale(model, glm::vec3(strength, strength, strength));
-	//model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	rc->renderObject()->model()->matrix = model;
 
 //	w->setValue(Window::WindowStyleProperty(), WindowStyleE::None);

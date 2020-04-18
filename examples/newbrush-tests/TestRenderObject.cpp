@@ -17,8 +17,8 @@ using namespace nb;
 TEST_CASE("test RenderObject", "[RenderObject]") {
 
 	const GLuint WIDTH = 800, HEIGHT = 600;
-	glfwInit();
 
+	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -29,6 +29,7 @@ TEST_CASE("test RenderObject", "[RenderObject]") {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
+
 	glfwMakeContextCurrent(window);
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -37,34 +38,46 @@ TEST_CASE("test RenderObject", "[RenderObject]") {
 	renderObj->setProgram(Programs::model());
 	renderObj->loadFromFile("../model/car.fbx", "../model");
 	
+
+	enum WindowType
+	{
+		WINDOW2D = 0,
+		WINDOW3D
+	};
+
+	WindowType windowType = WINDOW2D;
 	Camera camera;
 	Projection projection;
-	float strength;	//用来调整渲染对象的缩放比例
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//2D窗口展示：
-	projection.matrix = glm::ortho(-(float)WIDTH / 2, (float)WIDTH / 2, -(float)HEIGHT / 2, (float)HEIGHT / 2, -1000.0f, 1000.0f);
-	strength = 20.0f;
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//3D窗口展示：
-	//camera.lookat(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//projection.perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-	//strength = 0.0015f;
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if (windowType == WINDOW2D) {
+		projection.matrix = glm::ortho(0.0f, (float)WIDTH, (float)HEIGHT, 0.0f, -1000.0f, 1000.0f);
+	}
+	else if (windowType == WINDOW3D) {
+		camera.lookat(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		projection.perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	}
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		renderObj->draw(camera, projection);
-		
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(strength, strength, strength));
-		//model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		if (windowType == WINDOW2D) {
+			float strength{ 20.0f };
+			model = glm::translate(model, { 400, 300, 0 });
+			model = glm::scale(model, glm::vec3(strength, strength, strength));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		else if (windowType == WINDOW3D) {
+			float strength{ 0.0015f };
+			model = glm::scale(model, glm::vec3(strength, strength, strength));
+			model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		
 		renderObj->model()->matrix = model;
+		renderObj->draw(camera, projection);
 
 		glfwSwapBuffers(window);
 	}
