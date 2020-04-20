@@ -1,10 +1,7 @@
-﻿#include "grpcpp/grpcpp.h"
-#include "Node.grpc.pb.h"
+﻿#include "Node.grpc.pb.h"
 #include "StubBase.h"
 
 using namespace nbrpc;
-using namespace grpc;
-using namespace google::protobuf;
 
 class NodeStub : public NodeRpc::Service, public StubBase
 {

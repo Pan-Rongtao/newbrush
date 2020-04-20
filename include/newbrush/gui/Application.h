@@ -1,9 +1,10 @@
 ﻿#pragma once
+#include <queue>
+#include <mutex>
 #include "newbrush/core/Event.h"
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/WindowCollection.h"
-#include <queue>
-#include <mutex>
+#include "newbrush/core/ResourceDictionary.h"
 
 namespace nb{
 
@@ -35,6 +36,9 @@ public:
 	//主窗口（默认为第一个窗口）
 	void setMainWindow(Window *w);
 	Window *mainWindow();
+
+	//资源
+	std::shared_ptr<ResourceDictionary> resources();
 
 	//运行
 	//返回值：退出码，默认情况下为0
@@ -69,8 +73,9 @@ private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
 	
-	ShutdownModeE		m_shutdownMode;
-	bool				m_exitFlag;
+	ShutdownModeE m_shutdownMode;
+	bool m_exitFlag;
+	std::shared_ptr<ResourceDictionary> m_resources;
 	static Application	*g_app;
 
 	CallBack				pick();

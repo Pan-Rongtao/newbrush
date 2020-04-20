@@ -15,6 +15,7 @@ service ShaderRpc
 	rpc UniformVec4 (UniformVec4Request) returns (CommonReply) {}
 	rpc UniformMat3x3 (UniformMat3x3Request) returns (CommonReply) {}
 	rpc UniformMat4x4 (UniformMat4x4Request) returns (CommonReply) {}
+	rpc LoadModel (LoadModelRequest) returns (CommonReply) {}
 }
 
 message BuildShaderRequest 
@@ -67,3 +68,9 @@ message UniformMat4x4Request
 	string name = 1;
 	Mat4x4 value = 2;
 }
+message LoadModelRequest
+{
+	string modelPath = 1;
+	string texturePath = 2;
+}
+

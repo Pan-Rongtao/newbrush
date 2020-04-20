@@ -1,0 +1,45 @@
+syntax = "proto3";
+package nbrpc;
+
+import "Types.proto";
+
+service ResourceDictionaryRpc
+{
+	rpc AddBool (AddBoolRequest) returns (CommonReply) {}
+	rpc AddInt (AddIntRequest) returns (CommonReply) {}
+	rpc AddFloat (AddFloatRequest) returns (CommonReply) {}
+	rpc AddString (AddStringRequest) returns (CommonReply) {}
+	rpc AddSolidSolorBrush (AddSolidSolorBrushRequest) returns (CommonReply) {}
+	rpc AddImageBrush (AddImageBrushRequest) returns (CommonReply) {}
+}
+
+message AddBoolRequest
+{
+	string key = 1;
+	bool value = 2;
+}
+message AddIntRequest
+{
+	string key = 1;
+	int32 value = 2;
+}
+message AddFloatRequest
+{
+	string key = 1;
+	float value = 2;
+}
+message AddStringRequest
+{
+	string key = 1;
+	string value = 2;
+}
+message AddSolidSolorBrushRequest
+{
+	string key = 1;
+	Color value = 2;
+}
+message AddImageBrushRequest
+{
+	string key = 1;
+	string value = 2;
+}

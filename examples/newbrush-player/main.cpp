@@ -24,15 +24,16 @@ int main(int argc, char **argv)
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), "nbplayer");
 	w->setValue(Window::NameProperty(), "Window");
-	auto rc = std::make_shared<nb::Rectangle>();
-//	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
-//	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
-
+	//auto rc = std::make_shared<nb::Rectangle>();
+	//rc->setValue<Thickness>(Rectangle::MarginProperty(), Thickness(20));
+	//rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	//w->setValue(Window::WindowStyleProperty(), WindowStyleE::None);
+	//w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
+	/*
 	rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
 	//rc->renderObject()->setProgram(program);
 	rc->renderObject()->setProgram(Programs::model());
 	auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
-	//rc->renderObject()->storeUniform("resolution", glm::vec2(670, 1440));
 	rc->renderObject()->loadFromFile("../model/car.fbx", "../model");
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -41,8 +42,7 @@ int main(int argc, char **argv)
 	model = glm::scale(model, glm::vec3(strength, strength, strength));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	rc->renderObject()->model()->matrix = model;
-
-//	w->setValue(Window::WindowStyleProperty(), WindowStyleE::None);
+	*/
 
 	return app.run(argc, argv);
 

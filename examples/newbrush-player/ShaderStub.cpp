@@ -1,33 +1,23 @@
 #include "ShaderStub.h"
-#include <thread>
-#include "newbrush/core/Log.h"
-
-using namespace nb;
 
 Status ShaderStub::BuildShader(::ServerContext* context, const BuildShaderRequest* request, BuildShaderReply* response)
 {
 	auto task = [this, request, response]()
 	{
+		auto app = Application::current();
 		auto program = makeProgram(request->vshadercode(), request->fshadercode());
 		if (program)
 		{
-			auto app = Application::current();
 			auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
-			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
-			//rc->renderObject()->setProgram(program);
-			rc->renderObject()->setProgram(Programs::model());
-			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
-			//rc->renderObject()->storeUniform("resolution", glm::vec2(670, 1440));
-			rc->renderObject()->loadFromFile("../model/car.fbx", "../model");
-
-			glm::mat4 model = glm::mat4(1.0f);
-			float strength = 20.0f;
-			model = glm::scale(model, glm::vec3(strength, strength, strength));
-			//model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
-			//rc->renderObject()->model()->matrix = model;
-
-			auto varInfos = response->mutable_uniforminfos();
-			getUniforms(varInfos, request->vshadercode(), request->fshadercode());
+			if (rc)
+			{
+				rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
+				auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
+				rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
+				rc->renderObject()->setProgram(program);
+				auto varInfos = response->mutable_uniforminfos();
+				getUniforms(varInfos, request->vshadercode(), request->fshadercode());
+			}
 		}
 		this->taskReady();
 	};
@@ -135,6 +125,36 @@ Status ShaderStub::UniformMat4x4(ServerContext * context, const UniformMat4x4Req
 	return Status();
 }
 
+Status ShaderStub::LoadModel(ServerContext * context, const LoadModelRequest * request, CommonReply * response)
+{
+	auto task = [this, request, response]()
+	{
+		auto app = Application::current();
+		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		if (rc)
+		{
+			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
+			rc->renderObject()->setProgram(Programs::model());
+			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
+			auto modelPath = request->modelpath();
+			auto texturePath = request->texturepath();
+			rc->renderObject()->loadFromFile(modelPath, texturePath);
+
+			glm::mat4 model = glm::mat4(1.0f);
+			float strength = 20.0f;
+			model = glm::translate(model, glm::vec3(sz.width() / 2, sz.height() / 2, 0));
+			model = glm::scale(model, glm::vec3(strength, strength, strength));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			rc->renderObject()->model()->matrix = model;
+
+		}
+		this->taskReady();
+	};
+
+	return waitForTaskReady(task);
+}
+
 std::shared_ptr<Program> ShaderStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
 {
 	auto vShader = std::make_shared<VertexShader>(vShaderCode);
@@ -153,7 +173,6 @@ std::shared_ptr<Program> ShaderStub::makeProgram(const std::string &vShaderCode,
 	}
 	catch (std::runtime_error e)
 	{
-		Log::error("%s", e.what());
 		return nullptr;
 	}
 }

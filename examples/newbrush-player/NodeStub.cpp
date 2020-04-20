@@ -1,10 +1,5 @@
 #include "NodeStub.h"
-#include "newbrush/gui/Window.h"
-#include "newbrush/gui/VisualTreeHelper.h"
-#include "newbrush/gui/Application.h"
-#include "newbrush/gui/Panel.h"
 
-using namespace nb;
 Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request, CommonReply * response)
 {
 	auto task = [this, request, response]() 

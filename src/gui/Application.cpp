@@ -12,6 +12,7 @@ Application *Application::g_app = nullptr;
 Application::Application()
 	: m_shutdownMode(ShutdownModeE::OnLastWindowClose)
 	, m_exitFlag(false)
+	, m_resources(std::make_shared<ResourceDictionary>())
 {
 	if (g_app)
 	{
@@ -55,6 +56,11 @@ void Application::setMainWindow(Window * w)
 Window * Application::mainWindow()
 {
 	return Singleton<WindowCollection>::get()->mainWindow();
+}
+
+std::shared_ptr<ResourceDictionary> Application::resources()
+{
+	return m_resources;
 }
 
 int Application::run(int argc, char *argv[])

@@ -28,6 +28,14 @@ enum UniformType
 	structure = 22;
 }
 
+message Color
+{
+	int32 r = 1;
+	int32 g = 2;
+	int32 b = 3;
+	int32 a = 4;
+}
+
 message CommonRequest
 {
 }
