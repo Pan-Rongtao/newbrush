@@ -84,7 +84,7 @@ public:
 ///////class Grid
 class NB_API Grid : public Panel
 {
-	NB_STATIC_MOUDULE(Grid);
+	NB_STATIC_MOUDULE(Grid)
 public:
 	Grid();
 	virtual ~Grid() = default;

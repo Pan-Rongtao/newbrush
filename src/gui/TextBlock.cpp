@@ -8,6 +8,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/GlyphBunch.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/media/Brush.h"
 
 using namespace nb;
 

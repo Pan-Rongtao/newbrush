@@ -14,10 +14,11 @@
 #include "newbrush/gui/Stretch.h"
 
 namespace nb{
-class ImageSource;
+
 class RenderObject;
 class NB_API Image : public UIElement
 {
+	NB_STATIC_MOUDULE(Image)
 public:
 	Image();
 	virtual ~Image() = default;

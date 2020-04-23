@@ -23,15 +23,14 @@ public:\
 	}\
 	static MetaData getMetaData()\
 	{\
-		MetaData md { typeid(classType), classType::create };\
-		return md;\
+		return MetaType::registerClass<classType>();\
 	}
 
 class NB_API MetaType
 {
 public:
 	template<class T>
-	static void registerClass()
+	static MetaData registerClass()
 	{
 		static_assert(std::is_base_of<Object, T>::value, "[T] must be [Object] type or it's derived type.");
 		if (registeredClasses().size() >= std::numeric_limits<size_t>::max())
@@ -41,10 +40,11 @@ public:
 
 		MetaData md{ typeid(T), T::create };
 		auto p = registeredClasses().insert({ nb::getFullName(typeid(T)), md });
-		if (!p.second)
-		{
-			nbThrowException(std::logic_error, "[%s] has already been registered.", typeid(T).name());
-		}
+		return p.first->second;
+	//	if (!p.second)
+	//	{
+	//		nbThrowException(std::logic_error, "[%s] has already been registered.", typeid(T).name());
+	//	}
 	}
 
 	static std::shared_ptr<Object> makeObject(const std::string &className);

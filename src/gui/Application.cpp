@@ -5,6 +5,7 @@
 #include <GLES2/gl2.h>
 #include "newbrush/core/Singleton.h"
 #include "newbrush/media/Color.h"
+#include "newbrush/gui/BuildinStudioPlugin.h"
 
 using namespace nb;
 
@@ -21,7 +22,8 @@ Application::Application()
 	g_app = this;
 	Singleton<WindowCollection>::get()->WindowClosed += std::bind(&Application::onWindowClosed, this, std::placeholders::_1);
 	Singleton<WindowCollection>::get()->WindowFocus += std::bind(&Application::onWindowFocused, this, std::placeholders::_1);
-	registerMetaTypes();
+
+	registerStudioPlugin<BuildinStudioPlugin>();
 }
 
 Application::~Application()
@@ -174,6 +176,11 @@ void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs &
 	}
 }
 
+void Application::_registerPlugin(std::shared_ptr<StudioPlugin> plugin)
+{
+	plugin->getMetaClassesOverride();
+}
+
 Application::CallBack Application::pick()
 {
 	std::lock_guard<std::mutex> lock(m_mutex);
@@ -184,14 +191,4 @@ Application::CallBack Application::pick()
 		m_msgQueue.pop();
 	}
 	return ret;
-}
-
-#include "newbrush/gui/Grid.h"
-#include "newbrush/gui/Rectangle.h"
-#include "newbrush/core/MetaType.h"
-void Application::registerMetaTypes()
-{
-	MetaType::registerClass<Window>();
-	MetaType::registerClass<Grid>();
-	MetaType::registerClass<Rectangle>();
 }

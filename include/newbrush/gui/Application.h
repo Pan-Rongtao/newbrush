@@ -16,6 +16,7 @@ enum class ShutdownModeE : uint8_t
 };
 
 class Window;
+class StudioPlugin;
 class NB_API Application
 {
 public:
@@ -49,6 +50,14 @@ public:
 	void shutdown();
 	void shutdown(int exitCode);
 
+	//注册插件
+	template<class PluginT>
+	void registerStudioPlugin()
+	{
+		auto plugin = std::make_shared<PluginT>();
+		_registerPlugin(plugin);
+	}
+
 	using CallBack = std::function<void(void)>;
 	void connect(CallBack callback);
 
@@ -72,6 +81,7 @@ protected:
 private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
+	void _registerPlugin(std::shared_ptr<StudioPlugin> plugin);
 	
 	ShutdownModeE m_shutdownMode;
 	bool m_exitFlag;
@@ -82,7 +92,6 @@ private:
 	std::queue<CallBack>	m_msgQueue;
 	std::mutex				m_mutex;
 
-	void registerMetaTypes();
 };
 
 }

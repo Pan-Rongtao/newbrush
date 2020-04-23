@@ -5,6 +5,7 @@ namespace nb{
 
 class NB_API Ellipse : public Shape
 {
+	NB_STATIC_MOUDULE(Ellipse)
 public:
 	Ellipse();
 

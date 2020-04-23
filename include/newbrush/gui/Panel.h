@@ -3,7 +3,7 @@
 #include "newbrush/gui/UIElementCollection.h"
 
 namespace nb{
-class Brush;
+
 class NB_API Panel : public UIElement
 {
 public:

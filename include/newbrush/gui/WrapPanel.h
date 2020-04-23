@@ -22,6 +22,7 @@ namespace nb{
 
 class NB_API WrapPanel : public Panel
 {
+	NB_STATIC_MOUDULE(WrapPanel)
 public:
 	WrapPanel();
 	virtual ~WrapPanel() = default;

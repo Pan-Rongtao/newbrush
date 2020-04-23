@@ -5,6 +5,7 @@ namespace nb {
 
 class NB_API UniformGrid : public Panel
 {
+	NB_STATIC_MOUDULE(UniformGrid)
 public:
 	UniformGrid();
 

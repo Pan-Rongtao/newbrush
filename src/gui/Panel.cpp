@@ -1,4 +1,5 @@
 #include "newbrush/gui/Panel.h"
+#include "newbrush/media/Brush.h"
 #include "newbrush/gles/Viewport2D.h"
 
 using namespace nb;

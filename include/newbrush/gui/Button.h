@@ -5,6 +5,7 @@ namespace nb{
 
 class NB_API Button : public ButtonBase
 {
+	NB_STATIC_MOUDULE(Button)
 public:
 	Button();
 	virtual ~Button() = default;

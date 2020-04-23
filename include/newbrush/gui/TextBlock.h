@@ -6,9 +6,6 @@
 
 namespace nb{
 
-class RenderObject;
-class GlyphBunch;
-class Brush;
 enum class TextAlignmentE
 {
 	Left,
@@ -32,8 +29,10 @@ enum class TextDecorationE
 	Underline
 };
 
+class RenderObject;
 class NB_API TextBlock : public UIElement
 {
+	NB_STATIC_MOUDULE(TextBlock)
 public:
 	TextBlock();
 	explicit TextBlock(const std::string &content);
