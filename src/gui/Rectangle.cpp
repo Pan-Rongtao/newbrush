@@ -200,3 +200,14 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
 }
+
+MetaObject *Rectangle::getMetaObject()
+{
+	Descriptor dsp;
+	dsp.id = typeid(Rectangle).hash_code();
+	dsp.category = "";
+	dsp.displayName = "Object";
+	dsp.description = "All NB classes's supper Class";
+	static MetaObject metaObj(dsp, nullptr);
+	return &metaObj;
+}

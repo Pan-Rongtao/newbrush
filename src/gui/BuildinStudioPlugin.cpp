@@ -38,4 +38,4 @@ std::vector<MetaData> BuildinStudioPlugin::getMetaClassesOverride()
 	return classes;
 }
 
-NB_PLUGIN_FOR_STUDIO(BuildinStudioPlugin)
+NB_PLUGIN_ENTRY_FOR_STUDIO(BuildinStudioPlugin)

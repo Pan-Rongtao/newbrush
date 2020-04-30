@@ -18,7 +18,7 @@ struct CInfo
 };
 
 
-#define NB_PLUGIN_FOR_STUDIO(pluginClass) \
+#define NB_PLUGIN_ENTRY_FOR_STUDIO(pluginClass) \
 \
 extern "C" NB_API int getMetaClassesCount()\
 {\
