@@ -26,6 +26,7 @@ protected:
 private:
 	void updateFillObject(float width, float height, float radiusX, float radiusY);
 	void updateStrokeObject(const Rect &rc);
+
 };
 
 }

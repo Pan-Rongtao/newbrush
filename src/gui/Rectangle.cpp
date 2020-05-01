@@ -1,4 +1,4 @@
-#include "newbrush/gui/Rectangle.h"
+ï»¿#include "newbrush/gui/Rectangle.h"
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/gles/Viewport2D.h"
@@ -106,19 +106,19 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 	if (!fill)
 		return;
 
-	//¸üĞÂmodelÊı¾İ
-	//ËÄ¸ö½ÇµãÎ»ÖÃ
+	//æ›´æ–°modelæ•°æ®
+	//å››ä¸ªè§’ç‚¹ä½ç½®
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
 	auto &indices = m_fillObject->model()->meshes[0].indices;
-	bool radius = (width != 0.0f && height != 0.0f) && (radiusX != 0.0f && radiusY != 0.0f);			//ÊÇ·ñĞèÒª»¡ĞÎ
-	constexpr auto connerVertexSize = 20u;							//Ã¿¸ö»¡ĞÎµÄ¶¥µãÊı
-	constexpr auto connerIndicesSize = 3 * (connerVertexSize - 2);	//Ã¿¸ö»¡ĞÎµÄ¶¥µãĞòÁĞ´óĞ¡
-	constexpr auto radianStep = M_PI_2 / (connerVertexSize - 2);	//»¡ĞÎµ¥Î»»¡¶È
-	vertexs.resize(radius ? connerVertexSize * 4 : 4);				//ËùÓĞ¶¥µãÊı
-	indices.resize(radius ? connerIndicesSize * 4 + 12 : 6);		//ËùÓĞ¶¥µãĞòÁĞ´óĞ¡=ËÄ¸ö»¡¶È¶¥µãĞòÁĞ + Ê®×ÖÁ½¸ö¾ØĞÎ¶¥µãĞòÁĞ
+	bool radius = (width != 0.0f && height != 0.0f) && (radiusX != 0.0f && radiusY != 0.0f);			//æ˜¯å¦éœ€è¦å¼§å½¢
+	constexpr auto connerVertexSize = 20u;							//æ¯ä¸ªå¼§å½¢çš„é¡¶ç‚¹æ•°
+	constexpr auto connerIndicesSize = 3 * (connerVertexSize - 2);	//æ¯ä¸ªå¼§å½¢çš„é¡¶ç‚¹åºåˆ—å¤§å°
+	constexpr auto radianStep = M_PI_2 / (connerVertexSize - 2);	//å¼§å½¢å•ä½å¼§åº¦
+	vertexs.resize(radius ? connerVertexSize * 4 : 4);				//æ‰€æœ‰é¡¶ç‚¹æ•°
+	indices.resize(radius ? connerIndicesSize * 4 + 12 : 6);		//æ‰€æœ‰é¡¶ç‚¹åºåˆ—å¤§å°=å››ä¸ªå¼§åº¦é¡¶ç‚¹åºåˆ— + åå­—ä¸¤ä¸ªçŸ©å½¢é¡¶ç‚¹åºåˆ—
 	if (radius)
 	{
-		//ÏŞ¶¨Ô²½ÇÔÚ¾ØĞÎ°ë³¤/¿íÄÚ
+		//é™å®šåœ†è§’åœ¨çŸ©å½¢åŠé•¿/å®½å†…
 		auto _radiusX = std::fabs(radiusX) <= width * 0.5f ? std::fabs(radiusX) : width * 0.5f;
 		auto _radiusY = std::fabs(radiusY) <= height * 0.5f ? std::fabs(radiusY) : height * 0.5f;
 
@@ -136,7 +136,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 			}
 			for (auto i = 0u; i < connerVertexSize; ++i)
 			{
-				//Ìî³ä¶¥µãÊôĞÔ
+				//å¡«å……é¡¶ç‚¹å±æ€§
 				if (i == 0)
 				{
 					vertexs[beg].position = center;
@@ -148,7 +148,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 					vertexs[beg + i].position = glm::vec3(_radiusX * cos(radian), _radiusY * sin(radian), 0.0) + center;
 					vertexs[beg + i].texCoord = glm::vec2(centerTexCoord.x + _radiusX / width * cos(radian), centerTexCoord.y - _radiusY / height * sin(radian));
 				}
-				//Ìî³ä¶¥µãĞòÁĞ
+				//å¡«å……é¡¶ç‚¹åºåˆ—
 				if (i >= 0 && i < connerVertexSize - 2)
 				{
 					int base = connerIndicesSize * cornnerIndex + (3 * i);
@@ -158,13 +158,13 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 				}
 			}
 		};
-		//×óÉÏ½Ç»¡ĞÎ¡¢ÓÒÉÏ½Ç»¡ĞÎ¡¢ÓÒÏÂ½Ç»¡ĞÎ¡¢×óÏÂ½Ç»¡ĞÎ
+		//å·¦ä¸Šè§’å¼§å½¢ã€å³ä¸Šè§’å¼§å½¢ã€å³ä¸‹è§’å¼§å½¢ã€å·¦ä¸‹è§’å¼§å½¢
 		auto connerIndex = 0u;
 		fillConner(glm::vec3{ _radiusX - width * 0.5, _radiusY - height * 0.5, 0.0f }, (float)M_PI, connerIndex++);
 		fillConner(glm::vec3{ width * 0.5 - _radiusX, _radiusY - height * 0.5, 0.0f }, (float)M_PI * 1.5f, connerIndex++);
 		fillConner(glm::vec3{ width * 0.5 - _radiusX, height * 0.5 - _radiusY, 0.0f }, M_PI * 0.0, connerIndex++);
 		fillConner(glm::vec3{ _radiusX - width * 0.5, height * 0.5 - _radiusY, 0.0f }, (float)M_PI * 0.5, connerIndex++);
-		//ÖĞ¼äÊ®×ÖÁ½¸ö¾ØĞÎµÄ¶¥µãĞòÁĞ
+		//ä¸­é—´åå­—ä¸¤ä¸ªçŸ©å½¢çš„é¡¶ç‚¹åºåˆ—
 		auto beg = indices.size() - 12;
 		indices[beg++] = 1;						indices[beg++] = connerVertexSize * 2 - 1;	indices[beg++] = connerVertexSize * 2 + 1;
 		indices[beg++] = 1;						indices[beg++] = connerVertexSize * 2 + 1;	indices[beg++] = connerVertexSize * 4 - 1;
@@ -181,7 +181,7 @@ void Rectangle::updateFillObject(float width, float height, float radiusX, float
 		indices = { 0, 1, 2, 0, 2, 3 };
 	}
 
-	//¸üĞÂ²ÄÖÊ
+	//æ›´æ–°æè´¨
 	updateMeterial(m_fillObject, fill);
 }
 
@@ -203,11 +203,7 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 
 MetaObject *Rectangle::getMetaObject()
 {
-	Descriptor dsp;
-	dsp.id = typeid(Rectangle).hash_code();
-	dsp.category = "";
-	dsp.displayName = "Object";
-	dsp.description = "All NB classes's supper Class";
-	static MetaObject metaObj(dsp, nullptr);
+	ClassDescriptor dsp(typeid(Rectangle).hash_code(), "Shape", "Rectangle", "çŸ©å½¢ï¼Œå½¢çŠ¶çš„ä¸€ç§ï¼Œå¯å¡«å……ç”»åˆ·ï¼Œä¹Ÿå¯è®¾ç½®è¾¹æ¡†", Shape::getMetaObject(), [] {return std::make_shared<Rectangle>(); });
+	static MetaObject metaObj(dsp);
 	return &metaObj;
 }

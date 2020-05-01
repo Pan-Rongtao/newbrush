@@ -4,7 +4,7 @@
 
 using namespace nb;
 
-class DevideMetaObject : public NBObject
+class DevideMetaObject : public Object
 {
 public:
 	NB_OBJECT
@@ -12,17 +12,19 @@ public:
 
 MetaObject *DevideMetaObject::getMetaObject()
 {
-	static MetaObject m(Descriptor(typeid(MetaObject).hash_code(), "ContentControl", "MetaObject", "这是一个自定义控件"), NBObject::getMetaObject());
-	m.addProperty(Descriptor(UIElement::WidthProperty().globalIndex(), UIElement::WidthProperty().ownerType().name(), UIElement::WidthProperty().name(), "描述元素宽度的属性"));
-	return &m;
+	auto meta = MetaObject::get<DevideMetaObject, Object>("Shape", "Object", "矩形，形状的一种，可填充画刷，也可设置边框", [] {return std::make_shared<DevideMetaObject>(); });
+//	ClassDescriptor dsp(typeid(DevideMetaObject).hash_code(), "Shape", "Object", "矩形，形状的一种，可填充画刷，也可设置边框", Object::getMetaObject(), [] {return std::make_shared<DevideMetaObject>(); });
+//	static MetaObject metaObj(dsp);
+	meta->addProperty(Descriptor(UIElement::WidthProperty().globalIndex(), UIElement::WidthProperty().ownerType().name(), UIElement::WidthProperty().name(), "描述元素宽度的属性"));
+	return meta.get();
 }
 
 TEST_CASE("Test MetaObject", "[MetaObject]")
 {
-	auto dmo = std::make_shared<DevideMetaObject>();
-	auto p = dmo->metaObject();
-	printf("%s's properties\n", p->descriptor().displayName.data());
-	for (auto dp : p->propertys())
+	auto metaObj = DevideMetaObject::getMetaObject();
+	auto classDsp = metaObj->classDescriptor();
+	printf("[%s(%d),%s,%s]\n", classDsp.category.data(), classDsp.id, classDsp.displayName.data(), classDsp.description.data());
+	for (auto dp : metaObj->propertys())
 	{
 		printf("%s::%s->%s\n", dp.category.data(), dp.displayName.data(), dp.description.data());
 	}
