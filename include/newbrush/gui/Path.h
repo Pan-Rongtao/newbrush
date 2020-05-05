@@ -5,7 +5,7 @@ namespace nb{
 
 class Path : public Shape
 {
-	NB_STATIC_MOUDULE(Path)
+	NB_OBJECT
 public:
 
 };

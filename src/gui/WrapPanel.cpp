@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/WrapPanel.h"
+#include "newbrush/core/MetaObject.h"
 #include <queue>
 
 using namespace nb;
@@ -199,4 +200,10 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 		}
 	}
 	return finalSize;
+}
+
+std::shared_ptr<MetaObject> WrapPanel::getMetaObject()
+{
+	auto meta = MetaObject::get<WrapPanel, Panel>("Panel", "WrapPanel", "自动折行面板，当一行元素排满后会自动换行。", [] {return std::make_shared<WrapPanel>(); });
+	return meta;
 }

@@ -178,7 +178,8 @@ void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs &
 
 void Application::_registerPlugin(std::shared_ptr<StudioPlugin> plugin)
 {
-	plugin->getMetaClassesOverride();
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	plugin->getMetametaObjectsOverride(metaObjects);
 }
 
 Application::CallBack Application::pick()

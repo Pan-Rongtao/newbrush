@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/Canvas.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -82,4 +83,10 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 		child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
 	}
 	return finalSize;
+}
+
+std::shared_ptr<MetaObject> Canvas::getMetaObject()
+{
+	auto meta = MetaObject::get<Canvas, Panel>("Panel", "Canvas", "画布，内部元素使用绝对坐标进行布局", [] {return std::make_shared<Canvas>(); });
+	return meta;
 }

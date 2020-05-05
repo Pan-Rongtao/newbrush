@@ -4,6 +4,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
@@ -108,4 +109,10 @@ void Polygon::updateFillObject()
 
 void Polygon::updateStrokeObject()
 {
+}
+
+std::shared_ptr<MetaObject> Polygon::getMetaObject()
+{
+	auto meta = MetaObject::get<Polygon, Shape>("Shape", "Polygon", "多边形，形状的一种。", [] {return std::make_shared<Polygon>(); });
+	return meta;
 }

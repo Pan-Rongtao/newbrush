@@ -13,7 +13,7 @@ enum class DockE
 
 class NB_API DockPanel : public Panel
 {
-	NB_STATIC_MOUDULE(DockPanel)
+	NB_OBJECT
 public:
 	static constexpr const char *AttachedPropertyDock = "DockPanel.Dock";
 

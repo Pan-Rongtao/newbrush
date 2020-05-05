@@ -3,10 +3,10 @@
 
 namespace nb {
 
-class BuildinStudioPlugin : public StudioPlugin
+class NB_API BuildinStudioPlugin : public StudioPlugin
 {
 public:
-	virtual std::vector<MetaData> getMetaClassesOverride() override;
+	virtual void getMetametaObjectsOverride(std::vector<std::shared_ptr<MetaObject>> &metaObjects) override;
 };
 
 }

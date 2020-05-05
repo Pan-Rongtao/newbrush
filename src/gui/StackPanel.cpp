@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/StackPanel.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -93,4 +94,10 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 		}
 	}
 	return finalSize;
+}
+
+std::shared_ptr<MetaObject> StackPanel::getMetaObject()
+{
+	auto meta = MetaObject::get<StackPanel, Panel>("Panel", "StackPanel", "栈式面板。可以将包含元素排成一条直线，当添加或移除包含元素时，后面的元素会自动向下或向上移动。", [] {return std::make_shared<StackPanel>(); });
+	return meta;
 }

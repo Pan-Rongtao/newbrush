@@ -3,18 +3,14 @@
 
 using namespace nb;
 
-MetaObject *Object::getMetaObject()
+std::shared_ptr<MetaObject> Object::getMetaObject()
 {
-	ClassDescriptor dsp;
-	dsp.id = typeid(Object).hash_code();
-	dsp.category = "";
-	dsp.displayName = "Object";
-	dsp.description = "All NB classes's supper Class";
-	static MetaObject metaObj(dsp);
-	return &metaObj;
+	auto meta = MetaObject::get<Object, void>("", "Object", "≥¨¿‡", [] {return std::make_shared<Object>(); });
+	return meta;
+//	return nullptr;
 }
 
-MetaObject *Object::metaObject()
+std::shared_ptr<MetaObject> Object::metaObject()
 {
 	return getMetaObject();
 }

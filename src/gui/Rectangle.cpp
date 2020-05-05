@@ -4,6 +4,7 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/MetaObject.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/media/Transform.h"
 
@@ -201,9 +202,9 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 	updateMeterial(m_strokeObject, stroke);
 }
 
-MetaObject *Rectangle::getMetaObject()
+std::shared_ptr<MetaObject> Rectangle::getMetaObject()
 {
-	ClassDescriptor dsp(typeid(Rectangle).hash_code(), "Shape", "Rectangle", "矩形，形状的一种，可填充画刷，也可设置边框", Shape::getMetaObject(), [] {return std::make_shared<Rectangle>(); });
-	static MetaObject metaObj(dsp);
-	return &metaObj;
+	auto meta = MetaObject::get<Rectangle, Shape>("Shape", "Rectangle", "矩形，形状的一种，可填充画刷，也可设置边框", [] {return std::make_shared<Rectangle>(); });
+	meta->addProperty(RadiusXProperty(), "", "矩形的角变圆的椭圆的 x 轴半径", PropertyDescriptor::Single);
+	return meta;
 }

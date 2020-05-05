@@ -32,7 +32,7 @@ enum class TextDecorationE
 class RenderObject;
 class NB_API TextBlock : public UIElement
 {
-	NB_STATIC_MOUDULE(TextBlock)
+	NB_OBJECT
 public:
 	TextBlock();
 	explicit TextBlock(const std::string &content);

@@ -18,7 +18,7 @@ namespace nb{
 class RenderObject;
 class NB_API Image : public UIElement
 {
-	NB_STATIC_MOUDULE(Image)
+	NB_OBJECT
 public:
 	Image();
 	virtual ~Image() = default;

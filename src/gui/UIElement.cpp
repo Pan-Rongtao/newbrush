@@ -1,6 +1,7 @@
 ﻿#include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -1070,4 +1071,27 @@ RoutedEvent UIElement::TouchUpEvent()
 std::shared_ptr<UIElement> UIElement::clone() const
 {
 	return std::make_shared<UIElement>(*this);
+}
+
+std::shared_ptr<MetaObject> UIElement::getMetaObject()
+{
+	auto meta = MetaObject::get<UIElement, Object>("Object", "UIElement", "可视化元素基类", [] {return std::make_shared<UIElement>(); });
+
+	meta->addProperty(NameProperty(), "布局", "元素的名字，同级元素不可同名", PropertyDescriptor::String);
+	meta->addProperty(VisibilityProperty(), "外观", "元素的可见性", PropertyDescriptor::Enum, "Hidden|Visible|Collapsed");
+	meta->addProperty(OpacityProperty(), "外观", "元素的不透明度系数（0.0到1.0），可使得元素透明或半透", PropertyDescriptor::Single);
+	meta->addProperty(FocusableProperty(), "外观", "是否允许元素可获得焦点", PropertyDescriptor::Boolean);
+	meta->addProperty(WidthProperty(), "布局", "元素的宽度", PropertyDescriptor::Single);
+	meta->addProperty(HeightProperty(), "布局", "元素的高度", PropertyDescriptor::Single);
+	meta->addProperty(MinWidthProperty(), "布局", "元素的最小宽度约束", PropertyDescriptor::Single);
+	meta->addProperty(MaxWidthProperty(), "布局", "元素的最大宽度约束", PropertyDescriptor::Single);
+	meta->addProperty(MinHeightProperty(), "布局", "元素的最小高度约束", PropertyDescriptor::Single);
+	meta->addProperty(MaxHeightProperty(), "布局", "元素的最大高度约束", PropertyDescriptor::Single);
+	meta->addProperty(MarginProperty(), "布局", "元素的外边距，指与其他相邻元素之间的间距", PropertyDescriptor::Thickness);
+	meta->addProperty(HorizontalAlignmentProperty(), "布局", "在父元素（如Panel或项控件）中组合此元素时所应用的水平对齐特征", PropertyDescriptor::Enum, "Left|Center|Right|Stretch");
+	meta->addProperty(VerticalAlignmentProperty(), "布局", "在父元素（如Panel或项控件）中组合此元素时所应用的垂直特征", PropertyDescriptor::Enum, "Top|Center|Bottom|Stretch");
+	meta->addProperty(FlowDirectionProperty(), "布局", "方向，文本和其他元素在任何控制其布局的父元素中都按此方向流动", PropertyDescriptor::Enum, "LeftToRight|RightToLeft");
+	meta->addProperty(RenderTransformProperty(), "转换", "渲染变换，可设置元素的转换、旋转、缩放、倾斜等", PropertyDescriptor::Boolean);
+
+	return meta;
 }

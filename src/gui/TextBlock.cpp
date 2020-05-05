@@ -9,6 +9,7 @@
 #include "newbrush/gles/GlyphBunch.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/media/Brush.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -173,4 +174,10 @@ void TextBlock::onRender(Viewport2D & drawContext)
 	auto actualSize = getValue<Size>(ActualSizeProperty());
 	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 	drawContext.queue(m_renderObj);
+}
+
+std::shared_ptr<MetaObject> TextBlock::getMetaObject()
+{
+	auto meta = MetaObject::get<TextBlock, UIElement>("UIElement", "TextBlock", "文本块，一种现实文本信息的块状元素。", [] {return std::make_shared<TextBlock>(); });
+	return meta;
 }

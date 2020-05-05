@@ -1,4 +1,5 @@
-#include "newbrush/gui/UniformGrid.h"
+﻿#include "newbrush/gui/UniformGrid.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -88,4 +89,10 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 		}
 	}
 	return ret;
+}
+
+std::shared_ptr<MetaObject> UniformGrid::getMetaObject()
+{
+	auto meta = MetaObject::get<UniformGrid, Panel>("Panel", "UniformGrid", "均匀网格。简化版的网格面板，等分的行和列，每个网格都具有相同的尺寸。", [] {return std::make_shared<UniformGrid>(); });
+	return meta;
 }

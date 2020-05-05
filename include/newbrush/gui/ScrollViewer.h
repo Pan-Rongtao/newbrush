@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API ScrollViewer : public ContentControl
 {
-	NB_STATIC_MOUDULE(ScrollViewer)
+	NB_OBJECT
 public:
 	ScrollViewer();
 	virtual ~ScrollViewer();

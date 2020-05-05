@@ -21,7 +21,7 @@ namespace nb{
 
 class NB_API StackPanel : public Panel
 {
-	NB_STATIC_MOUDULE(StackPanel)
+	NB_OBJECT
 public:
 	StackPanel();
 	virtual ~StackPanel() = default;

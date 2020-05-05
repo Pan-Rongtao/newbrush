@@ -4,6 +4,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/media/GradientBrush.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -93,4 +94,10 @@ void Line::updateStrokeObject(const Rect &rc)
 
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
+}
+
+std::shared_ptr<MetaObject> Line::getMetaObject()
+{
+	auto meta = MetaObject::get<Line, Shape>("Shape", "Line", "线段，形状的一种。", [] {return std::make_shared<Line>(); });
+	return meta;
 }

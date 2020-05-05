@@ -23,7 +23,7 @@ enum class WindowStyleE
 
 class NB_API Window : public ContentControl
 {
-	NB_STATIC_MOUDULE(Window)
+	NB_OBJECT
 public:
 	Window();
 	virtual ~Window();

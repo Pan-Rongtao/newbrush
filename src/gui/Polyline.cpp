@@ -4,6 +4,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -79,4 +80,10 @@ void Polyline::updateStrokeObject(const Rect &rc)
 
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
+}
+
+std::shared_ptr<MetaObject> Polyline::getMetaObject()
+{
+	auto meta = MetaObject::get<Polyline, Shape>("Shape", "Polyline", "多线段，形状的一种。", [] {return std::make_shared<Polyline>(); });
+	return meta;
 }

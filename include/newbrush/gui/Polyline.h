@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API Polyline : public Shape
 {
-	NB_STATIC_MOUDULE(Polyline)
+	NB_OBJECT
 public:
 	Polyline();
 	virtual ~Polyline() = default;

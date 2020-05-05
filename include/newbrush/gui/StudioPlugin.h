@@ -1,20 +1,30 @@
 #pragma once
-#include "newbrush/core/MetaType.h"
+#include "newbrush/core/MetaObject.h"
 
 namespace nb {
 
 class StudioPlugin
 {
 public:
-	virtual std::vector<MetaData> getMetaClassesOverride() = 0;
+	virtual void getMetametaObjectsOverride(std::vector<std::shared_ptr<MetaObject>> &metaObjects) = 0;
 
 };
 
-struct CInfo
+struct CPropertyInfo
 {
-	char	type[64];
-	char	defaultName[64];
+	size_t	type;
+	char	category[64];
+	char	displayName[64];
 	char	description[256];
+};
+
+struct CClassInfo
+{
+	char	typeName[64];
+	char	category[64];
+	char	displayName[64];
+	char	description[256];
+	CPropertyInfo propertys[100];
 };
 
 
@@ -22,20 +32,24 @@ struct CInfo
 \
 extern "C" NB_API int getMetaClassesCount()\
 {\
-	pluginClass p;\
-	return p.getMetaClassesOverride().size();\
+	pluginClass plugin;\
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;\
+	plugin.getMetametaObjectsOverride(metaObjects);\
+	return metaObjects.size();\
 }\
 \
-extern "C" NB_API void getMetaClasses(CInfo *infos, int count)\
+extern "C" NB_API void getMetaClasses(CClassInfo *infos, int count)\
 {\
-	pluginClass p;\
-	std::vector<MetaData> metas = p.getMetaClassesOverride();\
-	for (size_t i = 0; i < (size_t)count && i < metas.size(); ++i)\
+	pluginClass plugin;\
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;\
+	plugin.getMetametaObjectsOverride(metaObjects);\
+	for (size_t i = 0; i < (size_t)count && i < metaObjects.size(); ++i)\
 	{\
-		auto m = metas[i];\
-		strcpy(infos[i].type, nb::getFullName(m.type).data());\
-		strcpy(infos[i].defaultName, nb::getClassName(m.type).data());\
-		strcpy(infos[i].description, "this is xxx");\
+		auto obj = metaObjects[i];\
+		auto classDsp = obj->classDescriptor();\
+		strcpy(infos[i].typeName, nb::getFullName(classDsp.type).data());\
+		strcpy(infos[i].displayName, classDsp.displayName.data());\
+		strcpy(infos[i].description, classDsp.description.data());\
 	}\
 }\
 

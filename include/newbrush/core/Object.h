@@ -1,6 +1,5 @@
 #pragma once
 #include "newbrush/core/Def.h"
-#include "newbrush/core/MetaObject.h"
 
 namespace nb {
 
@@ -12,15 +11,16 @@ public:
 	virtual ~Object() = default;
 
 	//子类应该重写此函数返回自己的MetaObject信息
-	static MetaObject *getMetaObject();
+	static std::shared_ptr<MetaObject> getMetaObject();
 
 	//子类重写返回getMetaObject()即可
-	virtual MetaObject *metaObject();
+	virtual std::shared_ptr<MetaObject> metaObject();
 };
 
-#define NB_OBJECT\
-	static MetaObject *getMetaObject();\
-	virtual MetaObject *metaObject() override\
+#define NB_OBJECT \
+public:\
+	static std::shared_ptr<MetaObject> getMetaObject();\
+	virtual std::shared_ptr<MetaObject> metaObject() override\
 	{\
 		return getMetaObject();\
 	}

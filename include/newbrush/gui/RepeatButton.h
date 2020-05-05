@@ -6,7 +6,7 @@ namespace nb{
 
 class NB_API RepeatButton : public Button
 {
-	NB_STATIC_MOUDULE(RepeatButton)
+	NB_OBJECT
 public:
 	RepeatButton();
 	virtual ~RepeatButton();

@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API Slider : public RangeBase
 {
-	NB_STATIC_MOUDULE(Slider)
+	NB_OBJECT
 public:
 	Slider();
 	virtual ~Slider() = default;

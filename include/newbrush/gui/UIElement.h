@@ -7,7 +7,6 @@
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
 #include "newbrush/media/Transform.h"
-#include "newbrush/core/MetaType.h"
 
 namespace nb{
 class Viewport2D;
@@ -49,33 +48,34 @@ enum class OrientationE
 
 class NB_API UIElement : public DependencyObject
 {
+	NB_OBJECT
 public:
 	UIElement();
 	virtual ~UIElement() = default;
 
-	static DependencyProperty					NameProperty();
+	static DependencyProperty					NameProperty();			//可视的依赖属性（string）
 	static DependencyProperty					VisibilityProperty();	//可视的依赖属性（bool）
 	static DependencyProperty					OpacityProperty();		//不透明度的依赖属性（float）
 	static DependencyProperty					FocusableProperty();	//是否可用焦点的依赖属性（bool）
-	static DependencyProperty					IsFocusedProperty();	//是否可用焦点的依赖属性（bool）
+	static DependencyProperty					IsFocusedProperty();	//元素当前是否具有焦点的依赖属性（bool）只读
 	static DependencyProperty 					WidthProperty();		//设定宽的依赖属性（float）
 	static DependencyProperty 					HeightProperty();		//设定高的依赖属性（float）
 	static DependencyProperty 					MinWidthProperty();		//最小宽的依赖属性（float）
 	static DependencyProperty 					MinHeightProperty();	//最小高的依赖属性（float）
 	static DependencyProperty 					MaxWidthProperty();		//最大宽的依赖属性（float）
 	static DependencyProperty 					MaxHeightProperty();	//最大高的依赖属性（float）
-	static DependencyProperty 					DesiredSizeProperty();	//期望尺寸的依赖属性（Size）
-	static DependencyProperty 					ActualSizeProperty();	//实际尺寸的依赖属性（Size）
-	static DependencyProperty 					RenderSizeProperty();	//渲染尺寸的依赖属性（Size）
-	static DependencyProperty 					OffsetProperty();		//相对父偏移量的依赖属性（float）
+	static DependencyProperty 					DesiredSizeProperty();	//期望尺寸的依赖属性（Size）只读
+	static DependencyProperty 					ActualSizeProperty();	//实际尺寸的依赖属性（Size）只读
+	static DependencyProperty 					RenderSizeProperty();	//渲染尺寸的依赖属性（Size）只读
+	static DependencyProperty 					OffsetProperty();		//相对父偏移量的依赖属性（float）未知
 	static DependencyProperty 					MarginProperty();		//边缘的依赖属性（Thickness）
 	static DependencyProperty 					HorizontalAlignmentProperty();	//横向对齐方式的依赖属性（HorizontalAlignmentE）
 	static DependencyProperty 					VerticalAlignmentProperty();	//纵向对齐方式的依赖属性（VerticalAlignmentE）
 	static DependencyProperty 					FlowDirectionProperty();		//流向的依赖属性（FlowDirectionE）
 	static DependencyProperty 					StyleProperty();		//风格的依赖属性（std::shared_ptr<Style>)
 	static DependencyProperty 					StateMachineProperty();	//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
-	static DependencyProperty 					IsMouseOverProperty();	//鼠标是否在元素上（bool）
-	static DependencyProperty 					RenderTransformProperty();
+	static DependencyProperty 					IsMouseOverProperty();	//鼠标是否在元素上（bool）只读
+	static DependencyProperty 					RenderTransformProperty(); //变换的依赖属性(std::make_shared<Transform>())
 
 	Event<EventArgs>							Initialized;
 	Event<RoutedEventArgs>						Loaded;

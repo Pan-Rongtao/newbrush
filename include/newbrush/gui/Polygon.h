@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API Polygon : public Shape
 {
-	NB_STATIC_MOUDULE(Polygon)
+	NB_OBJECT
 public:
 	Polygon();
 	virtual ~Polygon() = default;

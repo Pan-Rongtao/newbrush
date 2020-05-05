@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/Grid.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/MetaObject.h"
 #include <numeric>
 
 using namespace nb;
@@ -325,4 +326,10 @@ Size Grid::arrangeOverride(const Size & finalSize)
 std::shared_ptr<UIElement> Grid::clone() const
 {
 	return std::make_shared<Grid>(*this);
+}
+
+std::shared_ptr<MetaObject> Grid::getMetaObject()
+{
+	auto meta = MetaObject::get<Grid, Panel>("Panel", "Grid", "网格。可以自定义行和列，并通过行列的数量、行高和列宽来调整控件的布局。", [] {return std::make_shared<Grid>(); });
+	return meta;
 }

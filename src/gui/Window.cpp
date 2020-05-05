@@ -8,6 +8,7 @@
 #include "newbrush/core/Log.h"
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -535,4 +536,10 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 	Bitmap bm = source ? source->bitmap() : Bitmap();
 	GLFWimage img{ bm.width(), bm.height(), (unsigned char *)bm.data() };
 	glfwSetWindowIcon(w, 1, &img);
+}
+
+std::shared_ptr<MetaObject> Window::getMetaObject()
+{
+	auto meta = MetaObject::get<Window, ContentControl>("控件", "Window", "窗口，用于呈现子元素的顶级部件。", [] {return std::make_shared<Window>(); });
+	return meta;
 }

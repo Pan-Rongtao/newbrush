@@ -22,7 +22,7 @@ namespace nb{
 
 class NB_API WrapPanel : public Panel
 {
-	NB_STATIC_MOUDULE(WrapPanel)
+	NB_OBJECT
 public:
 	WrapPanel();
 	virtual ~WrapPanel() = default;

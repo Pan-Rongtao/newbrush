@@ -7,6 +7,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/ImageSource.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace nb;
@@ -129,4 +130,10 @@ void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyC
 {
 	auto self = dynamic_cast<Image*>(obj);
 	self->updateLayout();
+}
+
+std::shared_ptr<MetaObject> Image::getMetaObject()
+{
+	auto meta = MetaObject::get<Image, UIElement>("UIElement", "Image", "图片，可设置多种适应模式。", [] {return std::make_shared<Image>(); });
+	return meta;
 }

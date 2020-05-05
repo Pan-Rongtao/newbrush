@@ -1,4 +1,5 @@
 #include "NodeStub.h"
+#include "newbrush/core/MetaObject.h"
 
 Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request, CommonReply * response)
 {
@@ -6,7 +7,7 @@ Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request
 	{
 		auto const &path = request->path();
 		auto parent = VisualTreeHelper::lookupNode(Application::current()->mainWindow(), path);
-		auto childNode = MetaType::makeObject(request->childtype());
+		auto childNode = MetaObject::makeObject(request->childtype());
 		if (!parent || !childNode)
 		{
 			response->set_success(false);

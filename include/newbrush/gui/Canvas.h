@@ -22,7 +22,7 @@ namespace nb{
 
 class NB_API Canvas : public Panel
 {
-	NB_STATIC_MOUDULE(Canvas)
+	NB_OBJECT
 public:
 	Canvas();
 	virtual ~Canvas() = default;
