@@ -135,5 +135,7 @@ void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyC
 std::shared_ptr<MetaObject> Image::getMetaObject()
 {
 	auto meta = MetaObject::get<Image, UIElement>("UIElement", "Image", "图片，可设置多种适应模式。", [] {return std::make_shared<Image>(); });
+	meta->addProperty(SourceProperty(), "公共", "图像源", PropertyDescriptor::Brush);
+	meta->addProperty(StretchProperty(), "公共", "拉伸或填充的方式", PropertyDescriptor::Enum, "Origion|Fill|Uniform|UniformToFill");
 	return meta;
 }

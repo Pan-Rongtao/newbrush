@@ -90,7 +90,6 @@ public:
 	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue,
 		PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
 	{
-		static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
 
 		if (name.empty())
@@ -102,7 +101,7 @@ public:
 		auto _hash = typeid(OwnerType).hash_code() ^ _shash(name);
 		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
 		DependencyProperty dp(name, typeid(OwnerType), typeid(PropertyType), metadata, validateValueCallback, _hash);
-		auto p = g_dependencyProperties.insert({ _hash, dp });
+		auto p = dependencyProperties().insert({ _hash, dp });
 		if (!p.second)
 		{
 			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
@@ -112,10 +111,15 @@ public:
 	}
 	
 	static Var unsetValue();
-	static DependencyProperty invalidProperty();
+	static const DependencyProperty &invalidProperty();
+	static const DependencyProperty &find(size_t globalIndex);
 
 private:
 	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
+
+	//如果不适用std::shared_ptr<DependencyProperty>而是DependencyProperty，会发现studio插件在FreeLibrary时挂死
+	//后续要处理这个事情，把DependencyProperty改为std::shared_ptr<DependencyProperty>
+	static std::map<std::size_t, DependencyProperty> &dependencyProperties();
 
 	std::string							m_name;
 	std::type_index						m_propertyType;

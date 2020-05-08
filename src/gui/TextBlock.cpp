@@ -1,4 +1,4 @@
-#include "newbrush/gui/TextBlock.h"
+﻿#include "newbrush/gui/TextBlock.h"
 #include <codecvt>
 #include "newbrush/media/Font.h"
 #include "newbrush/gles/GlyphFactory.h"
@@ -43,6 +43,12 @@ DependencyProperty TextBlock::BackgroundProperty()
 DependencyProperty TextBlock::FontProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"));
+	return dp;
+}
+
+DependencyProperty TextBlock::FontStyleProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<TextBlock, FontStyleE>("FontStyle", FontStyleE::Normal);
 	return dp;
 }
 
@@ -178,6 +184,18 @@ void TextBlock::onRender(Viewport2D & drawContext)
 
 std::shared_ptr<MetaObject> TextBlock::getMetaObject()
 {
-	auto meta = MetaObject::get<TextBlock, UIElement>("UIElement", "TextBlock", "�ı��飬һ����ʵ�ı���Ϣ�Ŀ�״Ԫ�ء�", [] {return std::make_shared<TextBlock>(); });
+	auto meta = MetaObject::get<TextBlock, UIElement>("UIElement", "TextBlock", "文本块，一种现实文本信息的块状元素。", [] {return std::make_shared<TextBlock>(); });
+	meta->addProperty(BackgroundProperty(), "画笔", "元素背景的画笔", PropertyDescriptor::Brush);
+	meta->addProperty(ForegroundProperty(), "画笔", "前景色画笔", PropertyDescriptor::Brush);
+	meta->addProperty(TextProperty(), "公共", "文本内容", PropertyDescriptor::String);
+	meta->addProperty(FontStyleProperty(), "文本", "字形", PropertyDescriptor::Enum, "Normal|Italic|Oblique");
+	meta->addProperty(FontSizeProperty(), "文本", "字号", PropertyDescriptor::Float);
+	meta->addProperty(FontWeightProperty(), "文本", "字体粗细度", PropertyDescriptor::Int32);
+	meta->addProperty(LineHeightProperty(), "文本", "行高", PropertyDescriptor::Float);
+	meta->addProperty(CharSpacingProperty(), "文本", "字间距", PropertyDescriptor::Float);
+	meta->addProperty(PaddingProperty(), "布局", "控件内部的填充边距，指在对象和其他边距或边框之间插入的边距", PropertyDescriptor::Float);
+	meta->addProperty(TextAlignmentProperty(), "文本", "文本内容的水平对齐方式", PropertyDescriptor::Enum, "Left|Right|Center|Justify");
+	meta->addProperty(TextTrimmingProperty(), "文本", "文本超出内容区域时采用的文本裁剪行为", PropertyDescriptor::Enum, "None|CharacterEllipsis|WordEllipsis");
+	meta->addProperty(TextWrappingProperty(), "文本", "是否自动换行", PropertyDescriptor::Enum, "None|CharacterEllipsis|WordEllipsis");
 	return meta;
 }

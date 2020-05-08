@@ -87,6 +87,6 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 
 std::shared_ptr<MetaObject> Canvas::getMetaObject()
 {
-	auto meta = MetaObject::get<Canvas, Panel>("Panel", "Canvas", "画布，内部元素使用绝对坐标进行布局", [] {return std::make_shared<Canvas>(); });
+	auto meta = MetaObject::get<Canvas, Panel>("面板", "Canvas", "画布，内部元素使用绝对坐标进行布局", [] {return std::make_shared<Canvas>(); });
 	return meta;
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/Stretch.h"
 #include "newbrush/media/Media.h"
@@ -11,17 +11,18 @@ using nb::media::PenLineCapE;
 using nb::media::PenLineJoinE;
 class NB_API Shape : public UIElement
 {
+	NB_OBJECT
 public:
-	static DependencyProperty FillProperty();				//Ìî³ä»­Ë¢µÄÒÀÀµÊôĞÔ(std::shared_ptr<Brush>)
-	static DependencyProperty StrokeProperty();				//ÂÖÀª»­Ë¢µÄÒÀÀµÊôĞÔ(std::shared_ptr<Brush>)
-	static DependencyProperty StrokeThicknessProperty();	//ÂÖÀª¿í¶ÈµÄÒÀÀµÊôĞÔ(float)
-	static DependencyProperty StrokeStartLineCapProperty();	//ÂÖÀªÏßÌõµÄÆğµã±ÊÃ±ÑùÊ½µÄÒÀÀµÊôĞÔ(PenLineCapE)
-	static DependencyProperty StrokeEndLineCapProperty();	//ÂÖÀªÏßÌõµÄÖÕµã±ÊÃ±ÑùÊ½µÄÒÀÀµÊôĞÔ(PenLineCapE)
-	static DependencyProperty StrokeDashArrayProperty();	//ĞéÏßµÄ¼äÏ¶µÄÒÀÀµÊôĞÔ(std::vector<float>)
-	static DependencyProperty StrokeDashOffsetProperty();	//ĞéÏß¿ªÊ¼µÄÆ«ÒÆµÄÒÀÀµÊôĞÔ(float)
-	static DependencyProperty StrokeDashCapProperty();		//±Ê»­Ã±µÄÒÀÀµÊôĞÔ(PenLineCapE)
-	static DependencyProperty StrokeLineJoinProperty();		//¶¥µãÁª½ÓÑùÊ½µÄÒÀÀµÊôĞÔ(PenLineJoinE)
-	static DependencyProperty StretchProperty();			//ÉìËõ·½Ê½µÄÒÀÀµÊôĞÔ(StretchE)
+	static DependencyProperty FillProperty();				//å¡«å……ç”»åˆ·çš„ä¾èµ–å±æ€§(std::shared_ptr<Brush>)
+	static DependencyProperty StrokeProperty();				//è½®å»“ç”»åˆ·çš„ä¾èµ–å±æ€§(std::shared_ptr<Brush>)
+	static DependencyProperty StrokeThicknessProperty();	//è½®å»“å®½åº¦çš„ä¾èµ–å±æ€§(float)
+	static DependencyProperty StrokeStartLineCapProperty();	//è½®å»“çº¿æ¡çš„èµ·ç‚¹ç¬”å¸½æ ·å¼çš„ä¾èµ–å±æ€§(PenLineCapE)
+	static DependencyProperty StrokeEndLineCapProperty();	//è½®å»“çº¿æ¡çš„ç»ˆç‚¹ç¬”å¸½æ ·å¼çš„ä¾èµ–å±æ€§(PenLineCapE)
+	static DependencyProperty StrokeDashArrayProperty();	//è™šçº¿çš„é—´éš™çš„ä¾èµ–å±æ€§(std::vector<float>)
+	static DependencyProperty StrokeDashOffsetProperty();	//è™šçº¿å¼€å§‹çš„åç§»çš„ä¾èµ–å±æ€§(float)
+	static DependencyProperty StrokeDashCapProperty();		//ç¬”ç”»å¸½çš„ä¾èµ–å±æ€§(PenLineCapE)
+	static DependencyProperty StrokeLineJoinProperty();		//é¡¶ç‚¹è”æ¥æ ·å¼çš„ä¾èµ–å±æ€§(PenLineJoinE)
+	static DependencyProperty StretchProperty();			//ä¼¸ç¼©æ–¹å¼çš„ä¾èµ–å±æ€§(StretchE)
 	
 	std::shared_ptr<RenderObject> renderObject();
 

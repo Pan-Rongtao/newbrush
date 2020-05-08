@@ -1,7 +1,8 @@
-#include "newbrush/gui/ButtonBase.h"
+﻿#include "newbrush/gui/ButtonBase.h"
 #include "newbrush/core/Log.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -17,7 +18,7 @@ bool ButtonBase::isEnableCore()
 
 DependencyProperty ButtonBase::ClickModeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::release);
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::Release);
 	return dp;
 }
 
@@ -80,7 +81,7 @@ void ButtonBase::onMouseLeftButtonDown(const MouseButtonEventArgs & args)
 {
 	setValue(IsPressedProperty(), true);
 	auto clickMode = getValue<ClickModeE>(ClickModeProperty());
-	if (clickMode == ClickModeE::press)
+	if (clickMode == ClickModeE::Press)
 	{
 		onClick();
 	}
@@ -95,7 +96,7 @@ void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 	auto clickMode = getValue<ClickModeE>(ClickModeProperty());
 	auto w = dynamic_cast<Window*>(getRoot());
 	auto pt = w->getMousePosition();
-	bool shouldClick = isPressed && clickMode == ClickModeE::release && hitTestCore(pt);
+	bool shouldClick = isPressed && clickMode == ClickModeE::Release && hitTestCore(pt);
 	if (shouldClick)
 	{
 		setValue(IsPressedProperty(), false);
@@ -119,4 +120,11 @@ void ButtonBase::updateIsPress()
 	{
 		setValue(IsPressedProperty(), true);
 	}
+}
+
+std::shared_ptr<MetaObject> ButtonBase::getMetaObject()
+{
+	auto meta = MetaObject::get<ButtonBase, ContentControl>("形状", "Line", "线段，形状的一种。", [] {return nullptr; });
+	meta->addProperty(ClickModeProperty(), "其他", "线段起点的X分量", PropertyDescriptor::Enum, "Hover|Press|Release");
+	return meta;
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "newbrush/core/Event.h"
-#include "Poco/Net/StreamSocket.h"
 #include "newbrush/gui/Application.h"
 #include "grpcpp/grpcpp.h"
 

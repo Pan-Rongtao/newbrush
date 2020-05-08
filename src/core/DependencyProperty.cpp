@@ -2,6 +2,9 @@
 
 using namespace nb;
 
+static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
+std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	DependencyProperty::m_attProperties;
+
 PropertyMetadata::PropertyMetadata(const Var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
 	: m_defaultValue(defaulValue)
 	, m_propertyChangedCallback(propertyChangedCallback)
@@ -33,8 +36,6 @@ CoerceValueCallback PropertyMetadata::coerceValueCallback()
 {
 	return m_coerceValueCallback;
 }
-
-std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	DependencyProperty::m_attProperties;
 
 void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Var & property_v)
 {
@@ -80,10 +81,16 @@ Var DependencyProperty::unsetValue()
 	return staticUnsetValue;
 }
 
-DependencyProperty DependencyProperty::invalidProperty()
+const DependencyProperty &DependencyProperty::invalidProperty()
 {
 	static DependencyProperty dp("", typeid(void), typeid(void), nullptr, nullptr, 0);
 	return dp;
+}
+
+const DependencyProperty &DependencyProperty::find(size_t globalIndex)
+{
+	auto iter = g_dependencyProperties.find(globalIndex);
+	return iter == g_dependencyProperties.end() ? invalidProperty() : iter->second;
 }
 
 DependencyProperty::DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash)
@@ -144,4 +151,9 @@ bool DependencyProperty::operator != (const DependencyProperty &other) const
 bool DependencyProperty::isInvalid() const
 {
 	return *this == invalidProperty();
+}
+
+std::map<std::size_t, DependencyProperty> &DependencyProperty::dependencyProperties()
+{
+	return g_dependencyProperties;
 }

@@ -1,4 +1,4 @@
-#include "newbrush/gui/BuildinStudioPlugin.h"
+﻿#include "newbrush/gui/BuildinStudioPlugin.h"
 #include "newbrush/gui/Canvas.h"
 #include "newbrush/gui/DockPanel.h"
 #include "newbrush/gui/WrapPanel.h"
@@ -37,16 +37,15 @@ void BuildinStudioPlugin::getMetametaObjectsOverride(std::vector<std::shared_ptr
 }
 
 //NB_PLUGIN_ENTRY_FOR_STUDIO(BuildinStudioPlugin)
-extern "C" NB_API int getMetaClassesCount()
+extern "C" NB_API int GetMetaObjectCount()
 {
-//	return 1;
 	BuildinStudioPlugin plugin;
-	std::vector<std::shared_ptr<MetaObject>> metaObjects; 
-	plugin.getMetametaObjectsOverride(metaObjects); 
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	plugin.getMetametaObjectsOverride(metaObjects);
 	return metaObjects.size(); 
 }
 
-extern "C" NB_API void getMetaClasses(CClassInfo *infos, int count)
+extern "C" NB_API void getMetaObjects(CClassInfo *infos, int count)
 {
 	BuildinStudioPlugin plugin;
 	std::vector<std::shared_ptr<MetaObject>> metaObjects;
@@ -73,6 +72,8 @@ extern "C" NB_API void getMetaClasses(CClassInfo *infos, int count)
 				strcpy(cProperty.category, sdkProperty.category.data());
 				strcpy(cProperty.displayName, sdkProperty.displayName.data());
 				strcpy(cProperty.description, sdkProperty.description.data());
+				cProperty.valueType = sdkProperty.valueType;
+				strcpy(cProperty.extra, sdkProperty.extra.data());
 			}
 			else
 			{
@@ -80,6 +81,8 @@ extern "C" NB_API void getMetaClasses(CClassInfo *infos, int count)
 				strcpy(cProperty.category, "");
 				strcpy(cProperty.displayName, "");
 				strcpy(cProperty.description, "");
+				cProperty.valueType = -1;
+				strcpy(cProperty.extra, "");
 			}
 		}
 	}

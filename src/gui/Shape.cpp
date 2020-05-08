@@ -1,4 +1,4 @@
-#include "newbrush/gui/Shape.h"
+﻿#include "newbrush/gui/Shape.h"
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
@@ -7,6 +7,7 @@
 #include "newbrush/media/ImageBrush.h"
 #include "newbrush/media/EffectBrush.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -125,4 +126,20 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	//	ro->storeUniform("colors", colors);
 	//	ro->storeUniform("offsets", offsets);
 	}
+}
+
+std::shared_ptr<MetaObject> Shape::getMetaObject()
+{
+	auto meta = MetaObject::get<Shape, UIElement>("形状", "Shape", "文本块，一种现实文本信息的块状元素。", [] {return nullptr; });
+	meta->addProperty(FillProperty(), "画笔", "该画笔指定如何绘制形状内部", PropertyDescriptor::Brush);
+	meta->addProperty(StrokeProperty(), "画笔", "该画笔指定如何绘制形状轮廓", PropertyDescriptor::Brush);
+	meta->addProperty(StrokeThicknessProperty(), "外观", "形状轮廓的宽度（粗细）", PropertyDescriptor::Float);
+	meta->addProperty(StrokeStartLineCapProperty(), "外观", "描述笔划起点处的形状，对没有笔划或者没有起点或终点（如椭圆）的形状不起作用", PropertyDescriptor::Enum, "Flat|Round|Square|Triangle");
+	meta->addProperty(StrokeEndLineCapProperty(), "外观", "描述笔划起点处的形状，对没有笔划或者没有起点或终点（如椭圆）的形状不起作用", PropertyDescriptor::Enum, "Flat|Round|Square|Triangle");
+	meta->addProperty(StrokeDashArrayProperty(), "外观", "用于绘制形状轮廓时的短划线和间隙的间隔长度，轮廓将呈现虚线", PropertyDescriptor::FloatArray);
+	meta->addProperty(StrokeDashOffsetProperty(), "外观", "指定短划线在短划线图案中开始的距离（偏移值）", PropertyDescriptor::Float);
+	meta->addProperty(StrokeDashCapProperty(), "外观", "指定如何绘制每一小段短划线的两端", PropertyDescriptor::Enum, "Flat|Round|Square|Triangle");
+	meta->addProperty(StrokeLineJoinProperty(), "外观", "指定形状顶点处使用的连接类型，对没有顶点的元素不起作用（如线段）", PropertyDescriptor::Enum, "Beval|Miter|Round");
+	meta->addProperty(StretchProperty(), "外观", "描述如何调整内容大小以使其填充占据所分配的空间", PropertyDescriptor::Enum, "Origion|Fill|Uniform|UniformToFill");
+	return meta;
 }

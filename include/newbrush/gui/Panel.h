@@ -6,6 +6,7 @@ namespace nb{
 
 class NB_API Panel : public UIElement
 {
+	NB_OBJECT
 public:
 	Panel(const Panel &other);
 	Panel(const Panel &&other);

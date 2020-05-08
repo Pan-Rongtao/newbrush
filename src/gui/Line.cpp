@@ -1,4 +1,4 @@
-#include "newbrush/gui/Line.h"
+﻿#include "newbrush/gui/Line.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/Texture2D.h"
@@ -98,6 +98,10 @@ void Line::updateStrokeObject(const Rect &rc)
 
 std::shared_ptr<MetaObject> Line::getMetaObject()
 {
-	auto meta = MetaObject::get<Line, Shape>("Shape", "Line", "�߶Σ���״��һ�֡�", [] {return std::make_shared<Line>(); });
+	auto meta = MetaObject::get<Line, Shape>("形状", "Line", "线段，形状的一种。", [] {return std::make_shared<Line>(); });
+	meta->addProperty(X1Property(), "外观", "线段起点的X分量", PropertyDescriptor::Float);
+	meta->addProperty(X2Property(), "外观", "线段终点的X分量", PropertyDescriptor::Float);
+	meta->addProperty(Y1Property(), "外观", "线段起点的Y分量", PropertyDescriptor::Float);
+	meta->addProperty(Y2Property(), "外观", "线段终点的Y分量", PropertyDescriptor::Float);
 	return meta;
 }

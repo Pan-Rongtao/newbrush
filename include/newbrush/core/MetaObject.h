@@ -31,7 +31,8 @@ struct NB_API ClassDescriptor : public Descriptor
 
 struct NB_API PropertyDescriptor : public Descriptor
 {
-	enum ValueType : short
+	//请勿随意替换顺序，studio会使用到
+	enum ValueType
 	{
 		Boolean,
 		Int8,
@@ -42,7 +43,7 @@ struct NB_API PropertyDescriptor : public Descriptor
 		UInt16,
 		UInt32,
 		UInt64,
-		Single,
+		Float,
 		Double,
 		String,
 		Vec2,
@@ -58,12 +59,13 @@ struct NB_API PropertyDescriptor : public Descriptor
 		Mat4x3,
 		Mat4x4,
 		Color,
-		Date,
-		Time,
 		DateTime,
 		TimeSpan,
 		Thickness,
 		Enum,
+		Brush,
+		FloatArray,
+		PiontArray,
 	};
 
 	PropertyDescriptor(size_t _type, const std::string &_category, const std::string &_displayName, const std::string &_description, ValueType _valueType, const std::string &_extra = "");

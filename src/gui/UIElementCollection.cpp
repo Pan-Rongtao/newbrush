@@ -1,4 +1,4 @@
-#include "newbrush/gui/UIElementCollection.h"
+﻿#include "newbrush/gui/UIElementCollection.h"
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;

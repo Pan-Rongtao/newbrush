@@ -1,4 +1,4 @@
-#include "newbrush/gui/Trigger.h"
+﻿#include "newbrush/gui/Trigger.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DataContext.h"
 #include "newbrush/gui/VisualTreeHelper.h"

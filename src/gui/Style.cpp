@@ -1,4 +1,4 @@
-#include "newbrush/gui/Style.h"
+ï»¿#include "newbrush/gui/Style.h"
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;
@@ -51,7 +51,7 @@ void Style::attach(UIElement * uie)
 
 void Style::handlePropertyChanged(UIElement * uie, const DependencyProperty & dp, const Var & v)
 {
-	//ÓÉÓÚ´¦Àíproperty¸Ä±äÊ±»áset PropertyµÄÖµ£¬»áÔì³ÉÎŞÏŞÑ­»·£¬ÅĞ¶Ïm_handlingPropertyChanged±ÜÃâÑ­»·
+	//ç”±äºå¤„ç†propertyæ”¹å˜æ—¶ä¼šset Propertyçš„å€¼ï¼Œä¼šé€ æˆæ— é™å¾ªç¯ï¼Œåˆ¤æ–­m_handlingPropertyChangedé¿å…å¾ªç¯
 	if (m_handlingPropertyChanged)
 		return;
 

@@ -1,32 +1,33 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/gui/ContentControl.h"
 
 namespace nb{
 
 enum class ClickModeE
 {
-	hover,	//Êó±êĞüÍ£ÔÚ¿Ø¼şÉÏÊ±Òı·¢clickÊÂ¼ş
-	press,	//Ñ¹ÏÂÊ±Òı·¢clickÊÂ¼ş
-	release,//Ñ¹ÏÂºÍÊÍ·Å°´Å¥Ê±Òı·¢clickÊÂ¼ş
+	Hover,	//é¼ æ ‡æ‚¬åœåœ¨æ§ä»¶ä¸Šæ—¶å¼•å‘clickäº‹ä»¶
+	Press,	//å‹ä¸‹æ—¶å¼•å‘clickäº‹ä»¶
+	Release,//å‹ä¸‹å’Œé‡Šæ”¾æŒ‰é’®æ—¶å¼•å‘clickäº‹ä»¶
 };
 
 class NB_API ButtonBase : public ContentControl
 {
+	NB_OBJECT
 public:
 	virtual ~ButtonBase() = default;
 
-	static DependencyProperty	ClickModeProperty();	//µã»÷Ä£Ê½µÄÒÀÀµÊôĞÔ£¨Ä¬ÈÏÎªClickModeE::release)
-	static DependencyProperty	IsPressedProperty();	//ÊÇ·ñÑ¹ÏÂµÄÒÀÀµÊôĞÔ
+	static DependencyProperty	ClickModeProperty();	//ç‚¹å‡»æ¨¡å¼çš„ä¾èµ–å±æ€§ï¼ˆé»˜è®¤ä¸ºClickModeE::release)
+	static DependencyProperty	IsPressedProperty();	//æ˜¯å¦å‹ä¸‹çš„ä¾èµ–å±æ€§
 
-	Event<RoutedEventArgs>		Click;					//µã»÷ÊÂ¼ş
-	static RoutedEvent			ClickEvent();			//µã»÷Â·ÓÉÊÂ¼ş(RoutedEventArgs)
+	Event<RoutedEventArgs>		Click;					//ç‚¹å‡»äº‹ä»¶
+	static RoutedEvent			ClickEvent();			//ç‚¹å‡»è·¯ç”±äº‹ä»¶(RoutedEventArgs)
 
 	virtual void onIsPressedChanged(const DependencyPropertyChangedEventArgs &args);
 
 protected:
 	ButtonBase();
 
-	virtual bool isEnableCore();						//ÖØÔØÒÔ·µ»Ø×ÓÀàµÄ¿ÉÓÃ×´Ì¬
+	virtual bool isEnableCore();						//é‡è½½ä»¥è¿”å›å­ç±»çš„å¯ç”¨çŠ¶æ€
 
 	virtual void onClick();
 	virtual void onMouseEnter(const MouseEventArgs &args) override;

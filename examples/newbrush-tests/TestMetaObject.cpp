@@ -26,7 +26,7 @@ public:
 std::shared_ptr<MetaObject> DevideMetaObject::getMetaObject()
 {
 	auto meta = MetaObject::get<DevideMetaObject, Object>("Shape", "Object", "矩形，形状的一种，可填充画刷，也可设置边框", [] {return std::make_shared<DevideMetaObject>(); });
-	meta->addProperty(UIElement::WidthProperty(), "杂项", "描述元素宽度的属性", PropertyDescriptor::Single);
+	meta->addProperty(UIElement::WidthProperty(), "杂项", "描述元素宽度的属性", PropertyDescriptor::Float);
 	return meta;
 }
 

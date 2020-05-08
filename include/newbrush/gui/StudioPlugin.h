@@ -16,6 +16,8 @@ struct CPropertyInfo
 	char	category[64];
 	char	displayName[64];
 	char	description[256];
+	int		valueType;
+	char	extra[256];
 };
 
 struct CClassInfo

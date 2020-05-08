@@ -1,4 +1,4 @@
-#include "newbrush/gui/Polyline.h"
+﻿#include "newbrush/gui/Polyline.h"
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
@@ -84,6 +84,7 @@ void Polyline::updateStrokeObject(const Rect &rc)
 
 std::shared_ptr<MetaObject> Polyline::getMetaObject()
 {
-	auto meta = MetaObject::get<Polyline, Shape>("Shape", "Polyline", "���߶Σ���״��һ�֡�", [] {return std::make_shared<Polyline>(); });
+	auto meta = MetaObject::get<Polyline, Shape>("形状", "Polyline", "多线段，形状的一种。", [] {return std::make_shared<Polyline>(); });
+	meta->addProperty(PointsProperty(), "外观", "描述多线段的所有顶点", PropertyDescriptor::PiontArray);
 	return meta;
 }

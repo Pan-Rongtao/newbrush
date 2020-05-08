@@ -1,4 +1,4 @@
-#include "newbrush/gui/Ellipse.h"
+ï»¿#include "newbrush/gui/Ellipse.h"
 #include <math.h>
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Viewport2D.h"
@@ -10,8 +10,8 @@
 
 using namespace nb;
 
-//ÍÖÔ²µÄµã¼ÆËã¹«Ê½Îª£ºx = a * cos(¦Á); y = b * sin(¦Á)
-//¶¥µãÔ½¶àÔ½Ô²»¬
+//æ¤­åœ†çš„ç‚¹è®¡ç®—å…¬å¼ä¸ºï¼šx = a * cos(Î±); y = b * sin(Î±)
+//é¡¶ç‚¹è¶Šå¤šè¶Šåœ†æ»‘
 constexpr int vertexCount = 200;
 
 Ellipse::Ellipse()
@@ -100,10 +100,10 @@ void Ellipse::updateFillObject(float a, float b)
 	if (!fill)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
-	//ÖĞĞÄµã
+	//ä¸­å¿ƒç‚¹
 	vertexs[0].position = glm::vec3();
 	vertexs[0].texCoord = glm::vec2(0.5, 0.5);
-	//ÊÇ·ñÊÇµÑ¿¨¶û×ø±êÏµ£¬¶¥µãºÍÎÆÀí×ø±ê½«²»Í¬
+	//æ˜¯å¦æ˜¯ç¬›å¡å°”åæ ‡ç³»ï¼Œé¡¶ç‚¹å’Œçº¹ç†åæ ‡å°†ä¸åŒ
 	constexpr auto radianStep = 2 * M_PI / (vertexCount - 2);
 	for (int i = 1; i != vertexCount; ++i)
 	{
@@ -112,7 +112,7 @@ void Ellipse::updateFillObject(float a, float b)
 		vertexs[i].texCoord = glm::vec2(0.5 * cos(radian) + 0.5, 1.0 - (0.5 * sin(radian) + 0.5));
 	}
 
-	//¸üĞÂ²ÄÖÊ
+	//æ›´æ–°æè´¨
 	updateMeterial(m_fillObject, fill);
 }
 
@@ -143,6 +143,6 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 
 std::shared_ptr<MetaObject> Ellipse::getMetaObject()
 {
-	auto meta = MetaObject::get<Ellipse, Shape>("Shape", "Ellipse", "ÍÖÔ²£¬ĞÎ×´µÄÒ»ÖÖ¡£", [] {return std::make_shared<Ellipse>(); });
+	auto meta = MetaObject::get<Ellipse, Shape>("å½¢çŠ¶", "Ellipse", "æ¤­åœ†ï¼Œå½¢çŠ¶çš„ä¸€ç§ã€‚", [] {return std::make_shared<Ellipse>(); });
 	return meta;
 }

@@ -33,12 +33,16 @@ TEST_CASE("Test StudioPlugin", "[StudioPlugin]")
 				strcpy(cProperty.category, sdkProperty.category.data());
 				strcpy(cProperty.displayName, sdkProperty.displayName.data());
 				strcpy(cProperty.description, sdkProperty.description.data());
+				cProperty.valueType = cProperty.valueType;
+				strcpy(cProperty.extra, sdkProperty.extra.data());
 			}
 			else
 			{
 				strcpy(cProperty.category, "");
 				strcpy(cProperty.displayName, "");
 				strcpy(cProperty.description, "");
+				cProperty.valueType = -1;
+				strcpy(cProperty.extra, "");
 			}
 		}
 	}

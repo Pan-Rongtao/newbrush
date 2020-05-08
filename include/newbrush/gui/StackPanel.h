@@ -27,17 +27,18 @@ public:
 	virtual ~StackPanel() = default;
 	
 	static DependencyProperty	OrientationProperty();		//方向的依赖属性
-	static DependencyProperty	ExtentWidthProperty();		//外部宽的依赖属性
-	static DependencyProperty	ExtentHeightProperty();		//外部高的依赖属性
-	static DependencyProperty	HorizontalOffsetProperty();	//横向偏移量的依赖属性
-	static DependencyProperty	VerticalOffsetProperty();	//纵向偏移量的依赖属性
-	static DependencyProperty	ViewportWidthProperty();	//视口宽的依赖属性
-	static DependencyProperty	ViewportHeightProperty();	//视口高的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
+private:
+	float	m_extentWidth;		//外部宽的依赖属性
+	float	ExtentHeight;		//外部高的依赖属性
+	float	HorizontalOffset;	//横向偏移量的依赖属性
+	float	VerticalOffset;		//纵向偏移量的依赖属性
+	float	ViewportWidth;		//视口宽的依赖属性
+	float	ViewportHeight;		//视口高的依赖属性
 };
 
 }

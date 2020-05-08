@@ -1,4 +1,4 @@
-#include "newbrush/gui/Setter.h"
+﻿#include "newbrush/gui/Setter.h"
 #include "newbrush/gui/UIElement.h"
 
 using namespace nb;

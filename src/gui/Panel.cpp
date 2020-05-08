@@ -1,6 +1,7 @@
-#include "newbrush/gui/Panel.h"
+﻿#include "newbrush/gui/Panel.h"
 #include "newbrush/media/Brush.h"
 #include "newbrush/gles/Viewport2D.h"
+#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -72,4 +73,11 @@ uint32_t Panel::childrenCount() const
 UIElement *Panel::getChild(uint32_t index)
 {
 	return m_children.childAt(index).get();
+}
+
+std::shared_ptr<MetaObject> Panel::getMetaObject()
+{
+	auto meta = MetaObject::get<Panel, UIElement>("面板", "Panel", "面板基类。表示按需要根据规则对子元素进行测量和排列的元素类型。", [] {return nullptr; });
+	meta->addProperty(BackgroundProperty(), "画笔", "元素背景的画笔", PropertyDescriptor::Brush);
+	return meta;
 }

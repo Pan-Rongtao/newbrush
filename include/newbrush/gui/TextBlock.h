@@ -1,10 +1,17 @@
-#pragma once
+Ôªø#pragma once
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gles/Model.h"
 #include "newbrush/media/Font.h"
 #include "newbrush/media/GlyphMetrics.h"
 
 namespace nb{
+
+enum class FontStyleE
+{
+	Normal,
+	Italic,
+	Oblique,
+};
 
 enum class TextAlignmentE
 {
@@ -37,10 +44,10 @@ public:
 	TextBlock();
 	explicit TextBlock(const std::string &content);
 
-	//fontstyle”–…∂”√
 	static DependencyProperty		TextProperty();
 	static DependencyProperty		BackgroundProperty();
 	static DependencyProperty		FontProperty();
+	static DependencyProperty		FontStyleProperty();	//Â≠óÂΩ¢
 	static DependencyProperty		FontSizeProperty();
 	static DependencyProperty		FontWeightProperty();
 	static DependencyProperty		ForegroundProperty();

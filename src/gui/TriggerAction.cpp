@@ -1,4 +1,4 @@
-#include "newbrush/gui/TriggerAction.h"
+﻿#include "newbrush/gui/TriggerAction.h"
 
 using namespace nb;
 

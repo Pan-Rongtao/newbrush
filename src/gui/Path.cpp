@@ -1,10 +1,10 @@
-#include "newbrush/gui/Path.h"
+ï»¿#include "newbrush/gui/Path.h"
 #include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
 std::shared_ptr<MetaObject> Path::getMetaObject()
 {
-	auto meta = MetaObject::get<Path, Shape>("Shape", "Path", "¹ì¼££¬ĞÎ×´µÄÒ»ÖÖ£¬¿ÉÃèÊöÈÎÒâ¿ª¿ÚÂ·¾¶¡£", [] {return std::make_shared<Path>(); });
+	auto meta = MetaObject::get<Path, Shape>("Shape", "Path", "è½¨è¿¹ï¼Œå½¢çŠ¶çš„ä¸€ç§ï¼Œå¯æè¿°ä»»æ„å¼€å£è·¯å¾„ã€‚", [] {return std::make_shared<Path>(); });
 	return meta;
 }

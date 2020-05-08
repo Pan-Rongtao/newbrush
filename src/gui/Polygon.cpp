@@ -1,4 +1,4 @@
-#include "newbrush/gui/Polygon.h"
+﻿#include "newbrush/gui/Polygon.h"
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
@@ -113,6 +113,7 @@ void Polygon::updateStrokeObject()
 
 std::shared_ptr<MetaObject> Polygon::getMetaObject()
 {
-	auto meta = MetaObject::get<Polygon, Shape>("Shape", "Polygon", "����Σ���״��һ�֡�", [] {return std::make_shared<Polygon>(); });
+	auto meta = MetaObject::get<Polygon, Shape>("形状", "Polygon", "多边形，形状的一种。", [] {return std::make_shared<Polygon>(); });
+	meta->addProperty(PointsProperty(), "外观", "描述多边形的所有顶点", PropertyDescriptor::PiontArray);
 	return meta;
 }

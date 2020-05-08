@@ -28,12 +28,58 @@ enum UniformType
 	structure = 22;
 }
 
+message Vec2
+{
+	float x = 1;
+	float y = 2;
+}
+
+message Vec3
+{
+	float x = 1;
+	float y = 2;
+	float z = 3;
+}
+
+message Vec4
+{
+	float x = 1;
+	float y = 2;
+	float z = 3;
+	float w = 4;
+}
+
 message Color
 {
 	int32 r = 1;
 	int32 g = 2;
 	int32 b = 3;
 	int32 a = 4;
+}
+
+message DateTime
+{
+	int32 year = 1;
+	int32 month = 2;
+	int32 day = 3;
+	int32 hour = 4;
+	int32 minute = 5;
+	int32 second = 6;
+	int32 millisecond = 7;
+	int32 microsecond = 8;
+}
+
+message TimeSpan
+{
+	int64 micros = 1;
+}
+
+message Thickness
+{
+	float left = 1;
+	float top = 2;
+	float right = 3;
+	float bottom = 4;
 }
 
 message CommonRequest

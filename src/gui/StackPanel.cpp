@@ -13,42 +13,6 @@ DependencyProperty StackPanel::OrientationProperty()
 	return dp;
 }
 
-DependencyProperty StackPanel::ExtentWidthProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentWidth", 0.0);
-	return dp;
-}
-
-DependencyProperty StackPanel::ExtentHeightProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ExtentHeight", 0.0);
-	return dp;
-}
-
-DependencyProperty StackPanel::HorizontalOffsetProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("HorizontalOffset", 0.0);
-	return dp;
-}
-
-DependencyProperty StackPanel::VerticalOffsetProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("VerticalOffset", 0.0);
-	return dp;
-}
-
-DependencyProperty StackPanel::ViewportWidthProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportWidth", 0.0);
-	return dp;
-}
-
-DependencyProperty StackPanel::ViewportHeightProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<StackPanel, float>("ViewportHeight", 0.0);
-	return dp;
-}
-
 //如果是Horizontal，水平方向是无限的，垂直方向availableSize.height
 //否则如果是Vertical，垂直方向是无限的，水平方向取availableSize.width
 Size StackPanel::measureOverride(const Size & availableSize)
@@ -99,5 +63,6 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 std::shared_ptr<MetaObject> StackPanel::getMetaObject()
 {
 	auto meta = MetaObject::get<StackPanel, Panel>("Panel", "StackPanel", "栈式面板。可以将包含元素排成一条直线，当添加或移除包含元素时，后面的元素会自动向下或向上移动。", [] {return std::make_shared<StackPanel>(); });
+	meta->addProperty(OrientationProperty(), "布局", "子内容是水平排列还是垂直排列", PropertyDescriptor::Enum, "Horizontal|Vertical");
 	return meta;
 }

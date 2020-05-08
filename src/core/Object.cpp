@@ -1,13 +1,12 @@
-#include "newbrush/core/Object.h"
+ï»¿#include "newbrush/core/Object.h"
 #include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
 std::shared_ptr<MetaObject> Object::getMetaObject()
 {
-	auto meta = MetaObject::get<Object, void>("", "Object", "³¬Àà", [] {return std::make_shared<Object>(); });
+	auto meta = MetaObject::get<Object, void>("", "Object", "è¶…ç±»", [] {return std::make_shared<Object>(); });
 	return meta;
-//	return nullptr;
 }
 
 std::shared_ptr<MetaObject> Object::metaObject()

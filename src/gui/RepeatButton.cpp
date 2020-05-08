@@ -81,6 +81,6 @@ void RepeatButton::onIntervalPropertyChanged(DependencyObject * d, DependencyPro
 
 std::shared_ptr<MetaObject> RepeatButton::getMetaObject()
 {
-	auto meta = MetaObject::get<RepeatButton, Button>("Shape", "RepeatButton", "重复触发按钮，按钮的一种，可重复发出点击事件。", [] {return std::make_shared<RepeatButton>(); });
+	auto meta = MetaObject::get<RepeatButton, Button>("内容控件", "RepeatButton", "重复触发按钮，按钮的一种，可重复发出点击事件。", [] {return std::make_shared<RepeatButton>(); });
 	return meta;
 }

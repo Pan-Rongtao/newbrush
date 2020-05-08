@@ -1,4 +1,4 @@
-#include "newbrush/gui/WindowCollection.h"
+﻿#include "newbrush/gui/WindowCollection.h"
 
 using namespace nb;
 

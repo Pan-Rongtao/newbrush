@@ -204,6 +204,9 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 
 std::shared_ptr<MetaObject> WrapPanel::getMetaObject()
 {
-	auto meta = MetaObject::get<WrapPanel, Panel>("Panel", "WrapPanel", "自动折行面板，当一行元素排满后会自动换行。", [] {return std::make_shared<WrapPanel>(); });
+	auto meta = MetaObject::get<WrapPanel, Panel>("面板", "WrapPanel", "自动折行面板，当一行元素排满后会自动换行。", [] {return std::make_shared<WrapPanel>(); });
+	meta->addProperty(OrientationProperty(), "布局", "子内容是水平排列还是垂直排列", PropertyDescriptor::Enum, "Horizontal|Vertical");
+	meta->addProperty(ItemWidthProperty(), "布局", "子内容是水平排列还是垂直排列", PropertyDescriptor::Float);
+	meta->addProperty(ItemHeightProperty(), "布局", "子内容是水平排列还是垂直排列", PropertyDescriptor::Float);
 	return meta;
 }
