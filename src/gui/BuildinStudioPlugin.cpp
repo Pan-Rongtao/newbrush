@@ -35,7 +35,7 @@ void BuildinStudioPlugin::getMetametaObjectsOverride(std::vector<std::shared_ptr
 	metaObjects.push_back(Rectangle::getMetaObject());
 	metaObjects.push_back(Ellipse::getMetaObject());
 }
-
+/*
 //NB_PLUGIN_ENTRY_FOR_STUDIO(BuildinStudioPlugin)
 extern "C" NB_API int GetMetaObjectCount()
 {
@@ -60,6 +60,57 @@ extern "C" NB_API void getMetaObjects(CClassInfo *infos, int count)
 		strcpy(cClass.displayName, classDsp.displayName.data());
 		strcpy(cClass.description, classDsp.description.data());
 		
+		auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
+		auto &allProperties = obj->getAllProperties();
+		for (auto j = 0; j < propertyLimit; ++j)
+		{
+			auto &cProperty = cClass.propertys[j];
+			if (j < allProperties.size())
+			{
+				auto sdkProperty = allProperties[j];
+				cProperty.type = sdkProperty.type;
+				strcpy(cProperty.category, sdkProperty.category.data());
+				strcpy(cProperty.displayName, sdkProperty.displayName.data());
+				strcpy(cProperty.description, sdkProperty.description.data());
+				cProperty.valueType = sdkProperty.valueType;
+				strcpy(cProperty.extra, sdkProperty.extra.data());
+			}
+			else
+			{
+				cProperty.type = 0;
+				strcpy(cProperty.category, "");
+				strcpy(cProperty.displayName, "");
+				strcpy(cProperty.description, "");
+				cProperty.valueType = -1;
+				strcpy(cProperty.extra, "");
+			}
+		}
+	}
+}
+*/
+NB_API int nb::getMetaObjectCount()
+{
+	BuildinStudioPlugin plugin;
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	plugin.getMetametaObjectsOverride(metaObjects);
+	return metaObjects.size();
+}
+
+NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
+{
+	BuildinStudioPlugin plugin;
+	std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	plugin.getMetametaObjectsOverride(metaObjects);
+	for (size_t i = 0; i < (size_t)count && i < metaObjects.size(); ++i)
+	{
+		auto obj = metaObjects[i];
+		auto classDsp = obj->classDescriptor();
+		auto &cClass = infos[i];
+		strcpy(cClass.typeName, nb::getFullName(classDsp.type).data());
+		strcpy(cClass.category, classDsp.category.data());
+		strcpy(cClass.displayName, classDsp.displayName.data());
+		strcpy(cClass.description, classDsp.description.data());
+
 		auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
 		auto &allProperties = obj->getAllProperties();
 		for (auto j = 0; j < propertyLimit; ++j)

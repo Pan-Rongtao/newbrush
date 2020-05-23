@@ -1080,7 +1080,7 @@ std::shared_ptr<MetaObject> UIElement::getMetaObject()
 	meta->addProperty(NameProperty(), "布局", "元素的名字，同级元素不可同名", PropertyDescriptor::String);
 	meta->addProperty(VisibilityProperty(), "外观", "元素的可见性", PropertyDescriptor::Enum, "Hidden|Visible|Collapsed");
 	meta->addProperty(OpacityProperty(), "外观", "元素的不透明度系数（0.0到1.0），可使得元素透明或半透", PropertyDescriptor::Float);
-	meta->addProperty(FocusableProperty(), "外观", "是否允许元素可获得焦点", PropertyDescriptor::Boolean);
+	meta->addProperty(FocusableProperty(), "公共", "是否允许元素可获得焦点", PropertyDescriptor::Boolean);
 	meta->addProperty(WidthProperty(), "布局", "元素的宽度", PropertyDescriptor::Float);
 	meta->addProperty(HeightProperty(), "布局", "元素的高度", PropertyDescriptor::Float);
 	meta->addProperty(MinWidthProperty(), "布局", "元素的最小宽度约束", PropertyDescriptor::Float);

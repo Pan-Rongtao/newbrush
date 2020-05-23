@@ -259,7 +259,7 @@ void Window::iconifyCallback(int iconified)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)	//如果从WindowStateChanged来的，则不再setValue
 	{
-		setValue(WindowStateProperty(), iconified ? WindowStateE::Minimized : m_lastWindowState);
+		setValue(WindowStateProperty(), iconified ? (int)WindowStateE::Minimized : (int)m_lastWindowState);
 	}
 	m_processingCallback = false;
 }
@@ -269,7 +269,7 @@ void Window::maximizeCallback(int maximized)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)
 	{
-		setValue(WindowStateProperty(), maximized ? WindowStateE::Maximized : WindowStateE::Normal);
+		setValue(WindowStateProperty(), maximized ? (int)WindowStateE::Maximized : (int)WindowStateE::Normal);
 	}
 	m_processingCallback = false;
 }
@@ -340,7 +340,7 @@ void Window::pollEvents()
 
 DependencyProperty Window::WindowStateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, int>("WindowState", static_cast<int>(WindowStateE::Normal), onWindowStatePropertyChanged);
 	return dp;
 }
 
@@ -440,13 +440,13 @@ void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyProp
 		return;
 	}
 
-	auto oldState = args->oldValue.extract<WindowStateE>();
-	auto newState = args->newValue.extract<WindowStateE>();
+	auto oldState = args->oldValue.extract<int>();
+	auto newState = args->newValue.extract<int>();
 	if (oldState == newState)
 	{
 		return;
 	}
-	self->m_lastWindowState = oldState;
+	self->m_lastWindowState = (WindowStateE)oldState;
 	if (!self->m_processingCallback)
 	{
 		self->m_processingWindowStateChanged = true;

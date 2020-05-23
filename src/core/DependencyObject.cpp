@@ -103,7 +103,8 @@ void DependencyObject::setValue(const DependencyProperty & dp, const Var &value)
 
 	if(fixSetValue.isEmpty())
 	{
-		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
+		fixSetValue = value;
+	//	nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
 	}
 
 	auto defaultValue = dp.defaultMetadata()->defaultValue();

@@ -80,7 +80,7 @@ UIElement * VisualTreeHelper::lookupNode(UIElement * node, const std::string & p
 {
 	auto nodeNames = nb::stringSplit(path, ".", false);
 	auto p = node;
-	for (int i = 0; i <= nodeNames.size(); ++i)
+	for (int i = 0; i < nodeNames.size(); ++i)
 	{
 		if (!p)	break;
 

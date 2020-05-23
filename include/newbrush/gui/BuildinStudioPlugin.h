@@ -9,4 +9,6 @@ public:
 	virtual void getMetametaObjectsOverride(std::vector<std::shared_ptr<MetaObject>> &metaObjects) override;
 };
 
+extern "C" NB_API int getMetaObjectCount();
+extern "C" NB_API void getMetaObjects(CClassInfo *infos, int count);
 }

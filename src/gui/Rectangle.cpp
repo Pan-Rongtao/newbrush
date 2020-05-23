@@ -204,7 +204,7 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 
 std::shared_ptr<MetaObject> Rectangle::getMetaObject()
 {
-	auto meta = MetaObject::get<Rectangle, Shape>("Shape", "Rectangle", "矩形，形状的一种，可填充画刷，也可设置边框", [] {return std::make_shared<Rectangle>(); });
+	auto meta = MetaObject::get<Rectangle, Shape>("形状", "Rectangle", "矩形，形状的一种，可填充画刷，也可设置边框", [] {return std::make_shared<Rectangle>(); });
 	meta->addProperty(RadiusXProperty(), "杂项", "矩形的角变圆的椭圆的 x 轴半径", PropertyDescriptor::Float);
 	meta->addProperty(RadiusYProperty(), "杂项", "矩形的角变圆的椭圆的 y 轴半径", PropertyDescriptor::Float);
 	return meta;
