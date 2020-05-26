@@ -2,13 +2,38 @@
 
 using namespace nb;
 
+Range::Range(Var lowerBound, Var upperBound, Var step)
+	: m_lowerBound(lowerBound)
+	, m_upperBound(upperBound)
+	, m_step(step)
+{
+}
+
+Var Range::lowerBound() const
+{
+	return m_lowerBound;
+}
+
+Var Range::upperBound() const
+{
+	return m_upperBound;
+}
+
+Var Range::step() const
+{
+	return m_step;
+}
+
 static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
 std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	DependencyProperty::m_attProperties;
 
-PropertyMetadata::PropertyMetadata(const Var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
+PropertyMetadata::PropertyMetadata(const Var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback, const std::string &category, const std::string &description, std::shared_ptr<Range> range)
 	: m_defaultValue(defaulValue)
 	, m_propertyChangedCallback(propertyChangedCallback)
 	, m_coerceValueCallback(coerceValueCallback)
+	, m_category(category)
+	, m_description(description)
+	, m_range(range)
 {
 }
 
@@ -35,6 +60,21 @@ PropertyChangedCallback PropertyMetadata::propertyChangedCallback()
 CoerceValueCallback PropertyMetadata::coerceValueCallback()
 {
 	return m_coerceValueCallback;
+}
+
+const std::string &PropertyMetadata::category() const
+{
+	return m_category;
+}
+
+const std::string &PropertyMetadata::description() const
+{
+	return m_description;
+}
+
+std::shared_ptr<Range>PropertyMetadata::range() const
+{
+	return m_range;
 }
 
 void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const Var & property_v)
@@ -76,6 +116,10 @@ struct UnsetValueInternal
 	std::string	_name;
 };
 static UnsetValueInternal staticUnsetValue{ "DependencyProperty.UnsetValue" };
+std::vector<DependencyProperty>DependencyProperty::getTypePropertys(std::type_index ownerType)
+{
+	return std::vector<DependencyProperty>();
+}
 Var DependencyProperty::unsetValue()
 {
 	return staticUnsetValue;
@@ -101,6 +145,20 @@ DependencyProperty::DependencyProperty(const std::string & name, std::type_index
 	, m_validateValueCallback(validateValueCallback)
 	, m_hash(hash)
 {
+}
+
+const DependencyProperty &DependencyProperty::registerCommon(const std::string &name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+{
+	std::hash<std::string> _shash;
+	auto _hash = ownerType.hash_code() ^ _shash(name);
+	DependencyProperty dp(name, ownerType, propertyType, metadata, validateValueCallback, _hash);
+	auto p = dependencyProperties().insert({ _hash, dp });
+	if (!p.second)
+	{
+		nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), ownerType.name());
+	}
+
+	return p.first->second;
 }
 
 const std::string &DependencyProperty::name() const

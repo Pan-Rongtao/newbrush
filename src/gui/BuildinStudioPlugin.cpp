@@ -17,6 +17,14 @@
 
 using namespace nb;
 
+void registerCommonType()
+{
+//	auto meta = MetaObject::get<int, Object>("通用", "Int", "整型", nullptr);
+
+	auto x = std::make_shared<int>();
+	auto p = *x;
+}
+
 void BuildinStudioPlugin::getMetametaObjectsOverride(std::vector<std::shared_ptr<MetaObject>> &metaObjects)
 {
 	metaObjects.push_back(Canvas::getMetaObject());

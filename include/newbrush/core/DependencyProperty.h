@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <functional>
 #include <string>
 #include <map>
@@ -17,50 +17,84 @@ using PropertyChangedCallback = std::function<void(DependencyObject *, Dependenc
 using CoerceValueCallback = std::function<Var(DependencyObject *, Var)>;
 using ValidateValueCallback = std::function<bool(const Var &value)>;
 
+class NB_API Range
+{
+public:
+	Range(Var lowerBound, Var upperBound, Var step);
+
+	Var lowerBound() const;
+	Var upperBound() const;
+	Var step() const;
+
+private:
+	Var m_lowerBound;
+	Var m_upperBound;
+	Var m_step;
+};
+
+enum class PropertyCategoryE
+{
+	Brush = 0,	//ç”»ç¬”
+	Appearance,	//å¤–è§‚
+	Public,		//å…¬å…±
+	Automation,	//è‡ªåŠ¨åŒ–
+	Layout,		//å¸ƒå±€
+	Text,		//æ–‡æœ¬
+	Transform,	//è½¬æ¢
+	Misc,		//æ‚é¡¹
+	Custom,		//è‡ªå®šä¹‰
+};
+
 class NB_API PropertyMetadata
 {
 public:
-	//¹¹½¨Ò»¸öPropertyMetadata
-	//defaulValue£ºÄ¬ÈÏÖµ
-	//propertyChangedCallback£ºÊôĞÔÒÑ¸Ä±ä»Øµ÷
-	//coerceValueCallback£ºÊôĞÔÖµ½ÃÕı»Øµ÷
-	PropertyMetadata(const Var &defaulValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
+	//æ„å»ºä¸€ä¸ªPropertyMetadata
+	//defaulValueï¼šé»˜è®¤å€¼
+	//propertyChangedCallbackï¼šå±æ€§å·²æ”¹å˜å›è°ƒ
+	//coerceValueCallbackï¼šå±æ€§å€¼çŸ«æ­£å›è°ƒ
+	PropertyMetadata(const Var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, const std::string &category = "", const std::string &description = "", std::shared_ptr<Range> range = nullptr);
 
 	void setDefaultValue(const Var &value) &;
 	Var defaultValue() const;
 	bool isSealed() const;
 	PropertyChangedCallback propertyChangedCallback();
 	CoerceValueCallback coerceValueCallback();
-
+	const std::string &category() const;
+	const std::string &description() const;
+	std::shared_ptr<Range> range() const;
+	
 private:
 	Var						m_defaultValue;
 	PropertyChangedCallback	m_propertyChangedCallback;
 	CoerceValueCallback		m_coerceValueCallback;
+	std::string				m_category;
+	std::string				m_description;
+	std::shared_ptr<Range>	m_range;
 };
 
 
 class NB_API DependencyProperty final
 {
 public:
-	//ÊôĞÔÃû×Ö
+	//å±æ€§åå­—
 	const std::string &name() const;
 
-	//ËŞÖ÷ÀàĞÍ
+	//å®¿ä¸»ç±»å‹
 	std::type_index ownerType() const;
 
-	//ËŞÖ÷ÀàĞÍ
+	//å®¿ä¸»ç±»å‹
 	std::type_index propertyType() const;
 
-	//ÔªÊı¾İ
+	//å…ƒæ•°æ®
 	std::shared_ptr<PropertyMetadata> defaultMetadata() const;
 
-	//ÊÇ·ñ¿É¸ÄĞ´
+	//æ˜¯å¦å¯æ”¹å†™
 	bool readOnly() const;
 
-	//Î¨Ò»±êÊ¶Öµ
+	//å”¯ä¸€æ ‡è¯†å€¼
 	size_t globalIndex() const;
 
-	//¼ìÑé»Øµ÷
+	//æ£€éªŒå›è°ƒ
 	ValidateValueCallback validateValueCallback() const;
 
 	bool isInvalid() const;
@@ -68,47 +102,35 @@ public:
 	bool operator == (const DependencyProperty &other) const;
 	bool operator != (const DependencyProperty &other) const;
 
-	//×¢²áÒ»¸öÒÀÀµÊôĞÔ£¬Èç¹û´ËÊôĞÔÒÑ´æÔÚ£¬ÔòÖ»ĞŞ¸ÄÊôĞÔÖµ
-	//element£ºÄ¿±êÔªËØ
-	//property_name£ºÊôĞÔÃû
-	//property_v£ºÊôĞÔÖµ
+	//æ³¨å†Œä¸€ä¸ªä¾èµ–å±æ€§ï¼Œå¦‚æœæ­¤å±æ€§å·²å­˜åœ¨ï¼Œåˆ™åªä¿®æ”¹å±æ€§å€¼
+	//elementï¼šç›®æ ‡å…ƒç´ 
+	//property_nameï¼šå±æ€§å
+	//property_vï¼šå±æ€§å€¼
 	static void registerAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name, const Var &property_v);
 
 	
-	//²éÑ¯ÒÀÀµÊôĞÔÖµ£¬Èç¹û²éÑ¯²»µ½£¬½«·µ»ØÒ»¸ö¿ÕµÄVar
-	//element£ºÄ¿±êÔªËØ
-	//property_name£ºÊôĞÔÃû
+	//æŸ¥è¯¢ä¾èµ–å±æ€§å€¼ï¼Œå¦‚æœæŸ¥è¯¢ä¸åˆ°ï¼Œå°†è¿”å›ä¸€ä¸ªç©ºçš„Var
+	//elementï¼šç›®æ ‡å…ƒç´ 
+	//property_nameï¼šå±æ€§å
 	static Var findAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name);
 
-	//×¢²áÒÀÀµÊôĞÔ
-	//name£ºÊôĞÔÃû
-	//propertyType£ºÊôĞÔÖµÀàĞÍ
-	//ownerType£ºÊôĞÔËŞÖ÷ÀàĞÍ
-	//Òì³££ºstd::invalid_argument [name]²ÎÊıÎª¿Õ
-	//Òì³££ºstd::logic_errorÒÑ¾­×¢²á¹ıÍ¬ÀàĞÍÊôĞÔ
+	//æ³¨å†Œä¾èµ–å±æ€§
+	//nameï¼šå±æ€§å
+	//propertyTypeï¼šå±æ€§å€¼ç±»å‹
+	//ownerTypeï¼šå±æ€§å®¿ä¸»ç±»å‹
+	//å¼‚å¸¸ï¼šstd::invalid_argument [name]å‚æ•°ä¸ºç©º
+	//å¼‚å¸¸ï¼šstd::logic_errorå·²ç»æ³¨å†Œè¿‡åŒç±»å‹å±æ€§
 	template<class OwnerType, class PropertyType>
-	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue,
-		PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
+	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, 
+		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, const std::string &category = "", const std::string &description = "",
+		std::shared_ptr<Range> range = nullptr)
 	{
 		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
-
-		if (name.empty())
-		{
-			nbThrowException(std::invalid_argument, "'name' is empty.");
-		}
-
-		std::hash<std::string> _shash;
-		auto _hash = typeid(OwnerType).hash_code() ^ _shash(name);
-		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
-		DependencyProperty dp(name, typeid(OwnerType), typeid(PropertyType), metadata, validateValueCallback, _hash);
-		auto p = dependencyProperties().insert({ _hash, dp });
-		if (!p.second)
-		{
-			nbThrowException(std::logic_error, "[%s] has already been registered for [%s]", name.data(), typeid(OwnerType).name());
-		}
-
-		return p.first->second;
+		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback, category, description, range);
+		return registerCommon(name, typeid(OwnerType), typeid(PropertyType), metadata, validateValueCallback);
 	}
+
+	static std::vector<DependencyProperty> getTypePropertys(std::type_index ownerType);
 	
 	static Var unsetValue();
 	static const DependencyProperty &invalidProperty();
@@ -117,8 +139,10 @@ public:
 private:
 	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
 
-	//Èç¹û²»ÊÊÓÃstd::shared_ptr<DependencyProperty>¶øÊÇDependencyProperty£¬»á·¢ÏÖstudio²å¼şÔÚFreeLibraryÊ±¹ÒËÀ
-	//ºóĞøÒª´¦ÀíÕâ¸öÊÂÇé£¬°ÑDependencyProperty¸ÄÎªstd::shared_ptr<DependencyProperty>
+	static const DependencyProperty &registerCommon(const std::string &name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
+
+	//å¦‚æœä¸é€‚ç”¨std::shared_ptr<DependencyProperty>è€Œæ˜¯DependencyPropertyï¼Œä¼šå‘ç°studioæ’ä»¶åœ¨FreeLibraryæ—¶æŒ‚æ­»
+	//åç»­è¦å¤„ç†è¿™ä¸ªäº‹æƒ…ï¼ŒæŠŠDependencyPropertyæ”¹ä¸ºstd::shared_ptr<DependencyProperty>
 	static std::map<std::size_t, DependencyProperty> &dependencyProperties();
 
 	std::string							m_name;

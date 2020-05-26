@@ -33,10 +33,10 @@ TEST_CASE("Test nb::Window", "[Window]")
 
 	w->StateChanged += [w](const EventArgs &args) {
 		auto state = w->getValue(Window::WindowStateProperty());
-		nb::Log::info("on state changed:%d", static_cast<int>(state));
+		nb::Log::info("on state changed:%d", state.extract<WindowStateE>());
 	};
 
-	w->setValue(Window::WindowStateProperty(), 1);
+	//w->setValue(Window::WindowStateProperty(), 1);
 	//w->setValue(Window::WindowStateProperty(), WindowStateE::Minimized);
 	//w->setValue(Window::WindowStateProperty(), WindowStateE::Normal);
 	Timer timer;

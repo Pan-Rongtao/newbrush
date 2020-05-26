@@ -24,10 +24,7 @@ DependencyProperty ButtonBase::ClickModeProperty()
 
 DependencyProperty ButtonBase::IsPressedProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false, [](DependencyObject *d, DependencyPropertyChangedEventArgs *args) {
-		auto ctrl = dynamic_cast<ButtonBase *>(d);
-		ctrl->onIsPressedChanged(*args);
-	});
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false, onIsPressedPropertyChanged);
 	return dp;
 }
 
@@ -104,6 +101,12 @@ void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 	}
 	ContentControl::onMouseLeftButtonUp(args);
 //	Log::info("%s", __FUNCTION__);
+}
+
+void ButtonBase::onIsPressedPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * args)
+{
+	auto ctrl = dynamic_cast<ButtonBase *>(d);
+	ctrl->onIsPressedChanged(*args);
 }
 
 void ButtonBase::updateIsPress()

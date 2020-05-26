@@ -9,6 +9,7 @@
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
 #include "newbrush/core/MetaObject.h"
+#include "rttr/registration.h"
 
 using namespace nb;
 
@@ -259,7 +260,7 @@ void Window::iconifyCallback(int iconified)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)	//如果从WindowStateChanged来的，则不再setValue
 	{
-		setValue(WindowStateProperty(), iconified ? (int)WindowStateE::Minimized : (int)m_lastWindowState);
+		setValue(WindowStateProperty(), iconified ? WindowStateE::Minimized : m_lastWindowState);
 	}
 	m_processingCallback = false;
 }
@@ -269,7 +270,7 @@ void Window::maximizeCallback(int maximized)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)
 	{
-		setValue(WindowStateProperty(), maximized ? (int)WindowStateE::Maximized : (int)WindowStateE::Normal);
+		setValue(WindowStateProperty(), maximized ? WindowStateE::Maximized : WindowStateE::Normal);
 	}
 	m_processingCallback = false;
 }
@@ -340,13 +341,15 @@ void Window::pollEvents()
 
 DependencyProperty Window::WindowStateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, int>("WindowState", static_cast<int>(WindowStateE::Normal), onWindowStatePropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged, nullptr, nullptr,
+		rttr::type::get<PropertyCategoryE>().get_enumeration().value_to_name(PropertyCategoryE::Public).to_string(), "指示窗口是普通、最小化还是最大化状态");
 	return dp;
 }
 
 DependencyProperty Window::WindowStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged, nullptr, nullptr,
+		rttr::type::get<PropertyCategoryE>().get_enumeration().value_to_name(PropertyCategoryE::Appearance).to_string(), "窗口的边框样式");
 	return dp;
 }
 
@@ -440,13 +443,13 @@ void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyProp
 		return;
 	}
 
-	auto oldState = args->oldValue.extract<int>();
-	auto newState = args->newValue.extract<int>();
+	auto oldState = args->oldValue.extract<WindowStateE>();
+	auto newState = args->newValue.extract<WindowStateE>();
 	if (oldState == newState)
 	{
 		return;
 	}
-	self->m_lastWindowState = (WindowStateE)oldState;
+	self->m_lastWindowState = oldState;
 	if (!self->m_processingCallback)
 	{
 		self->m_processingWindowStateChanged = true;
