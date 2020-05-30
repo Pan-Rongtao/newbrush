@@ -9,7 +9,7 @@ public:
 	SolidColorBrush();
 	explicit SolidColorBrush(const nb::Color &color);
 
-	static DependencyProperty	ColorProperty();	//颜色依赖属性
+	static DependencyPropertyPtr ColorProperty();	//颜色依赖属性
 
 };
 

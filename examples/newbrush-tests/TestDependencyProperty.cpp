@@ -1,4 +1,5 @@
 #include "newbrush/core/DependencyObject.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
@@ -6,14 +7,14 @@ using namespace nb;
 class MyObject : public DependencyObject
 {
 public:
-	static DependencyProperty BoolPoperty();
-	static DependencyProperty IntProperty();
-	static DependencyProperty FloatProperty();
-	static DependencyProperty DoubleProperty();
-	static DependencyProperty StringProperty();
-	static DependencyProperty WStringProperty();
-	static DependencyProperty PointProperty();
-	static DependencyProperty SharedPtrProperty();
+	static DependencyPropertyPtr BoolPoperty();
+	static DependencyPropertyPtr IntProperty();
+	static DependencyPropertyPtr FloatProperty();
+	static DependencyPropertyPtr DoubleProperty();
+	static DependencyPropertyPtr StringProperty();
+	static DependencyPropertyPtr WStringProperty();
+	static DependencyPropertyPtr PointProperty();
+	static DependencyPropertyPtr SharedPtrProperty();
 
 };
 class A
@@ -52,56 +53,56 @@ TEST_CASE("Test nb::DependencyProperty", "[DependencyProperty]")
 	auto bx = std::dynamic_pointer_cast<B>(ret);
 }
 
-DependencyProperty MyObject::BoolPoperty()
+DependencyPropertyPtr MyObject::BoolPoperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, bool>("Bool", true, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
 		auto tdp = dynamic_cast<MyObject *>(obj);
-		printf("%s changed from %d to %d\n", args->property.name().data(), args->oldValue.get_value<bool>(), args->newValue.get_value<bool>());
+		printf("%s changed from %d to %d\n", args->property->name().data(), args->oldValue.get_value<bool>(), args->newValue.get_value<bool>());
 	});
 	return dp;
 }
 
-DependencyProperty MyObject::IntProperty()
+DependencyPropertyPtr MyObject::IntProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, int>("Int", 1);
 	return dp;
 }
 
-DependencyProperty MyObject::FloatProperty()
+DependencyPropertyPtr MyObject::FloatProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, float>("Float", 2.0);
 	return dp;
 }
 
-DependencyProperty MyObject::DoubleProperty()
+DependencyPropertyPtr MyObject::DoubleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, double>("Double", 3.0);
 	return dp;
 }
 
-DependencyProperty MyObject::StringProperty()
+DependencyPropertyPtr MyObject::StringProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, std::string>("String", "");
 	return dp;
 }
 
-DependencyProperty MyObject::WStringProperty()
+DependencyPropertyPtr MyObject::WStringProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, std::wstring>("WString", L"");
 	return dp;
 }
 
-DependencyProperty MyObject::PointProperty()
+DependencyPropertyPtr MyObject::PointProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, Point>("Point", Point(5, 5));
 	return dp;
 }
 
-DependencyProperty MyObject::SharedPtrProperty()
+DependencyPropertyPtr MyObject::SharedPtrProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, std::shared_ptr<A>>("SharedPtr", nullptr, [](DependencyObject *dp, DependencyPropertyChangedEventArgs *args) {
 		auto tdp = dynamic_cast<MyObject *>(dp);
-		printf("%s changed\n", args->property.name().data());
+		printf("%s changed\n", args->property->name().data());
 	});
 	return dp;
 }

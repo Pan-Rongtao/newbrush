@@ -90,7 +90,7 @@ std::shared_ptr<PropertyCategory> PropertyCategory::Custom()
 	return PropertyCategory::get("×Ô¶¨Òå", 8);
 }
 
-static std::map<std::size_t, DependencyProperty> g_dependencyProperties;
+static std::map<std::size_t, std::shared_ptr<DependencyProperty>> g_dependencyProperties;
 std::map<std::shared_ptr<DependencyObject>, std::map<std::string, var>>	DependencyProperty::m_attProperties;
 
 PropertyMetadata::PropertyMetadata(const var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback, 
@@ -189,7 +189,7 @@ struct UnsetValueInternal
 	std::string	_name;
 };
 static UnsetValueInternal staticUnsetValue{ "DependencyProperty.UnsetValue" };
-void DependencyProperty::getTypePropertys(rttr::type ownerType, std::vector<DependencyProperty> &ret)
+void DependencyProperty::getTypePropertys(rttr::type ownerType, std::vector<std::shared_ptr<DependencyProperty>> &ret)
 {
 	using namespace rttr;
 	auto baseClassesRange = ownerType.get_base_classes();
@@ -207,13 +207,13 @@ void DependencyProperty::getTypePropertys(rttr::type ownerType, std::vector<Depe
 	}
 }
 
-std::vector<DependencyProperty> DependencyProperty::getTypePropertys(rttr::type t)
+std::vector<std::shared_ptr<DependencyProperty>> DependencyProperty::getTypePropertys(rttr::type t)
 {
-	std::vector<DependencyProperty> ret;
+	std::vector<std::shared_ptr<DependencyProperty>> ret;
 	for (auto pair : g_dependencyProperties)
 	{
 		auto const &p = pair.second;
-		if (p.ownerType() == t)
+		if (p->ownerType() == t)
 		{
 			ret.push_back(p);
 		}
@@ -226,16 +226,10 @@ var DependencyProperty::unsetValue()
 	return staticUnsetValue;
 }
 
-const DependencyProperty &DependencyProperty::invalidProperty()
-{
-	static DependencyProperty dp("", rttr::type::get<void>(), rttr::type::get<void>(), nullptr, nullptr, 0);
-	return dp;
-}
-
-const DependencyProperty &DependencyProperty::find(size_t globalIndex)
+std::shared_ptr<DependencyProperty> DependencyProperty::find(size_t globalIndex)
 {
 	auto iter = g_dependencyProperties.find(globalIndex);
-	return iter == g_dependencyProperties.end() ? invalidProperty() : iter->second;
+	return iter == g_dependencyProperties.end() ? nullptr : iter->second;
 }
 
 DependencyProperty::DependencyProperty(const std::string & name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash)
@@ -248,11 +242,11 @@ DependencyProperty::DependencyProperty(const std::string & name, rttr::type owne
 {
 }
 
-const DependencyProperty &DependencyProperty::registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+std::shared_ptr<DependencyProperty> DependencyProperty::registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
 {
 	std::hash<std::string> _shash;
 	auto _hash = ownerType.get_id() ^ _shash(name);
-	DependencyProperty dp(name, ownerType, propertyType, metadata, validateValueCallback, _hash);
+	std::shared_ptr<DependencyProperty> dp(new DependencyProperty(name, ownerType, propertyType, metadata, validateValueCallback, _hash));
 	auto p = dependencyProperties().insert({ _hash, dp });
 	if (!p.second)
 	{
@@ -307,12 +301,7 @@ bool DependencyProperty::operator != (const DependencyProperty &other) const
 	return m_hash != other.m_hash;
 }
 
-bool DependencyProperty::isInvalid() const
-{
-	return *this == invalidProperty();
-}
-
-std::map<std::size_t, DependencyProperty> &DependencyProperty::dependencyProperties()
+std::map<std::size_t, std::shared_ptr<DependencyProperty>> &DependencyProperty::dependencyProperties()
 {
 	return g_dependencyProperties;
 }

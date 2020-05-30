@@ -11,7 +11,7 @@ public:
 	Polygon();
 	virtual ~Polygon() = default;
 
-	static DependencyProperty		PointsProperty();	//点集合的依赖属性
+	static DependencyPropertyPtr PointsProperty();	//点集合的依赖属性
 
 	virtual void onRender(Viewport2D & drawContext) override;
 

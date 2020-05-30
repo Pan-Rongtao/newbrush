@@ -1,13 +1,15 @@
 #pragma once
 #include <vector>
 #include <typeindex>
-#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/gui/Setter.h"
 #include "newbrush/gui/Trigger.h"
 
 namespace nb{
 
 class UIElement;
+class DependencyProperty;
+using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+
 class NB_API Style
 {
 public:
@@ -29,7 +31,7 @@ public:
 
 	void attach(UIElement * uie);
 
-	void handlePropertyChanged(UIElement * uie, const DependencyProperty &dp, const var &v);
+	void handlePropertyChanged(UIElement * uie, DependencyPropertyPtr dp, const var &v);
 	
 	struct StyleDataTriggerArgs { std::shared_ptr<DataTrigger> dataTrigger; };
 	Event<StyleDataTriggerArgs> StyleDataTrigger;

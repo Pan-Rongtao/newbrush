@@ -44,13 +44,13 @@ public:
 	static void pollEvents();
 	static Viewport2D drawContext;
 
-	static DependencyProperty	WindowStateProperty();	//窗口状态的依赖属性（WindowStateE）
-	static DependencyProperty	WindowStyleProperty();	//窗口样式的依赖属性（WindowStyle）
-	static DependencyProperty	TopmostProperty();		//置顶的依赖属性（bool）
-	static DependencyProperty	LeftProperty();			//左位置的依赖属性（float）
-	static DependencyProperty	TopProperty();			//顶位置的依赖属性（float）
-	static DependencyProperty	TitleProperty();		//标题的依赖属性（std::string）
-	static DependencyProperty	IconProperty();			//图标的依赖属性（std::shared_ptr<ImageSource>）
+	static DependencyPropertyPtr WindowStateProperty();	//窗口状态的依赖属性（WindowStateE）
+	static DependencyPropertyPtr WindowStyleProperty();	//窗口样式的依赖属性（WindowStyle）
+	static DependencyPropertyPtr TopmostProperty();		//置顶的依赖属性（bool）
+	static DependencyPropertyPtr LeftProperty();		//左位置的依赖属性（float）
+	static DependencyPropertyPtr TopProperty();			//顶位置的依赖属性（float）
+	static DependencyPropertyPtr TitleProperty();		//标题的依赖属性（std::string）
+	static DependencyPropertyPtr IconProperty();		//图标的依赖属性（std::shared_ptr<ImageSource>）
 
 	Event<EventArgs>			Activated;				//当窗口成为前台窗口时发生
 	Event<EventArgs>			Deactivated;			//当窗口成为后台窗口时发生

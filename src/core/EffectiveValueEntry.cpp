@@ -1,21 +1,22 @@
 #include "newbrush/core/EffectiveValueEntry.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
-EffectiveValueEntry::EffectiveValueEntry(const DependencyProperty & dp)
-	: m_propertyIndex(dp.globalIndex())
+EffectiveValueEntry::EffectiveValueEntry(DependencyPropertyPtr dp)
+	: m_propertyIndex(dp->globalIndex())
 	, m_source((FullValueSourceE)BaseValueSourceInternalE::Unknown)
 {
 }
 
-EffectiveValueEntry::EffectiveValueEntry(const DependencyProperty & dp, BaseValueSourceInternalE valueSource)
-	: m_propertyIndex(dp.globalIndex())
+EffectiveValueEntry::EffectiveValueEntry(DependencyPropertyPtr dp, BaseValueSourceInternalE valueSource)
+	: m_propertyIndex(dp->globalIndex())
 	, m_source((FullValueSourceE)BaseValueSourceInternalE::Unknown)
 {
 }
 
-EffectiveValueEntry::EffectiveValueEntry(const DependencyProperty & dp, FullValueSourceE fullValueSource)
-	: m_propertyIndex(dp.globalIndex())
+EffectiveValueEntry::EffectiveValueEntry(DependencyPropertyPtr dp, FullValueSourceE fullValueSource)
+	: m_propertyIndex(dp->globalIndex())
 	, m_source(fullValueSource)
 {
 }

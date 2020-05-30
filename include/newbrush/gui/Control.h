@@ -10,14 +10,14 @@ public:
 	Control();
 	virtual ~Control() = default;
 
-	static DependencyProperty				BackgroundProperty();					//背景的依赖属性
-	static DependencyProperty				BorderBrushProperty();					//边框的依赖属性
-	static DependencyProperty				BorderThicknessProperty();				//边框厚度的依赖属性
-	static DependencyProperty				PaddingProperty();						//内边距的依赖属性
-	static DependencyProperty				HorizontalContentAlignmentProperty();	//内容横向对齐方式的依赖属性
-	static DependencyProperty				VerticalContentAlignmentProperty();		//内容纵向对齐方式的依赖属性
-	static DependencyProperty				TabIndexProperty();						//Tab下标的依赖属性
-	static DependencyProperty				TemplateProperty();						//模板的依赖属性
+	static DependencyPropertyPtr BackgroundProperty();					//背景的依赖属性
+	static DependencyPropertyPtr BorderBrushProperty();					//边框的依赖属性
+	static DependencyPropertyPtr BorderThicknessProperty();				//边框厚度的依赖属性
+	static DependencyPropertyPtr PaddingProperty();						//内边距的依赖属性
+	static DependencyPropertyPtr HorizontalContentAlignmentProperty();	//内容横向对齐方式的依赖属性
+	static DependencyPropertyPtr VerticalContentAlignmentProperty();	//内容纵向对齐方式的依赖属性
+	static DependencyPropertyPtr TabIndexProperty();					//Tab下标的依赖属性
+	static DependencyPropertyPtr TemplateProperty();					//模板的依赖属性
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs & args) override;

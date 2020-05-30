@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/StackPanel.h"
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -7,7 +8,7 @@ StackPanel::StackPanel()
 {
 }
 
-DependencyProperty StackPanel::OrientationProperty()
+DependencyPropertyPtr StackPanel::OrientationProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr,
 		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 3);

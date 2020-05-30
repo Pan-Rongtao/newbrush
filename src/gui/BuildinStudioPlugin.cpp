@@ -14,6 +14,7 @@
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/gui/Ellipse.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -177,7 +178,7 @@ NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 		strcpy(cClass.description, description.data());
 
 		auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
-		std::vector<DependencyProperty> dps;
+		std::vector<DependencyPropertyPtr> dps;
 		DependencyProperty::getTypePropertys(t, dps);
 		for (decltype(propertyLimit) j = 0; j < propertyLimit; ++j)
 		{
@@ -185,12 +186,12 @@ NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 			if (j < dps.size())
 			{
 				auto sdkProperty = dps[j];
-				cProperty.type = sdkProperty.propertyType().get_id();
-				strcpy(cProperty.category, sdkProperty.defaultMetadata()->category()->name().data());
-				strcpy(cProperty.displayName, sdkProperty.name().data());
-				strcpy(cProperty.description, sdkProperty.defaultMetadata()->description().data());
-				cProperty.valueType = sdkProperty.propertyType().get_id();
-				if(sdkProperty.propertyType().is_enumeration())
+				cProperty.type = sdkProperty->propertyType().get_id();
+				strcpy(cProperty.category, sdkProperty->defaultMetadata()->category()->name().data());
+				strcpy(cProperty.displayName, sdkProperty->name().data());
+				strcpy(cProperty.description, sdkProperty->defaultMetadata()->description().data());
+				cProperty.valueType = sdkProperty->propertyType().get_id();
+				if(sdkProperty->propertyType().is_enumeration())
 					strcpy(cProperty.extra, "a|b");
 			}
 			else

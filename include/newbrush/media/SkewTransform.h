@@ -18,10 +18,10 @@ namespace nb {
 		SkewTransform(float angleX, float angleY, float centerX, float centerY);
 		virtual ~SkewTransform() = default;
 
-		static DependencyProperty AngleXProperty();
-		static DependencyProperty AngleYProperty();
-		static DependencyProperty CenterXProperty();
-		static DependencyProperty CenterYProperty();
+		static DependencyPropertyPtr AngleXProperty();
+		static DependencyPropertyPtr AngleYProperty();
+		static DependencyPropertyPtr CenterXProperty();
+		static DependencyPropertyPtr CenterYProperty();
 
 		virtual glm::mat4x4 value() override;
 

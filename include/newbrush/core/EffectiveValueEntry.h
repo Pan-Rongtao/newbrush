@@ -1,15 +1,15 @@
 #pragma once
 #include <bitset>
-#include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/Def.h"
 
 namespace nb {
 
 class ModifiedValue
 {
 public:
-	var		BaseValue;
-	var		AnimatedValue;
-	var		CoercedValue;
+	var BaseValue;
+	var AnimatedValue;
+	var CoercedValue;
 };
 
 enum FullValueSourceE : int16_t
@@ -41,12 +41,15 @@ enum class BaseValueSourceInternalE : int8_t
 	Local = 11,
 };
 
+class DependencyProperty;
+using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+
 class NB_API EffectiveValueEntry
 {
 public:
-	EffectiveValueEntry(const DependencyProperty &dp);
-	EffectiveValueEntry(const DependencyProperty &dp, BaseValueSourceInternalE valueSource);
-	EffectiveValueEntry(const DependencyProperty &dp, FullValueSourceE fullValueSource);
+	EffectiveValueEntry(DependencyPropertyPtr dp);
+	EffectiveValueEntry(DependencyPropertyPtr dp, BaseValueSourceInternalE valueSource);
+	EffectiveValueEntry(DependencyPropertyPtr dp, FullValueSourceE fullValueSource);
 
 	void setBaseValue(const var &value) &;
 	var baseValue() const;

@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/ContentControl.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/MetaObject.h"
 
 using namespace nb;
@@ -7,7 +8,7 @@ ContentControl::ContentControl()
 {
 }
 
-DependencyProperty ContentControl::ContentProperty()
+DependencyPropertyPtr ContentControl::ContentProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ContentControl, std::shared_ptr<UIElement>>("Content", nullptr);
 	return dp;

@@ -8,17 +8,16 @@ void SetterBase::attach(UIElement* uie)
 }
 
 Setter::Setter()
-	: property(DependencyProperty::invalidProperty())
 {
 }
 
-Setter::Setter(const DependencyProperty & dp, const var & v)
+Setter::Setter(DependencyPropertyPtr dp, const var & v)
 	: property(dp)
 	, value(v)
 {
 }
 
-Setter::Setter(const DependencyProperty &dp, const var &v, const std::string &_targetName)
+Setter::Setter(DependencyPropertyPtr dp, const var &v, const std::string &_targetName)
 	: property(dp)
 	, value(v)
 	, targetName(std::make_shared<std::string>(_targetName))

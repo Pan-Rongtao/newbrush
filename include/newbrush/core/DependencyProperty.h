@@ -7,8 +7,6 @@
 
 namespace nb{
 
-using rttr::variant;
-
 class DependencyObject;
 class PropertyMetadata;
 struct DependencyPropertyChangedEventArgs;
@@ -86,7 +84,6 @@ private:
 	std::shared_ptr<Range>	m_range;
 };
 
-
 class NB_API DependencyProperty final
 {
 public:
@@ -111,8 +108,6 @@ public:
 	//检验回调
 	ValidateValueCallback validateValueCallback() const;
 
-	bool isInvalid() const;
-
 	bool operator == (const DependencyProperty &other) const;
 	bool operator != (const DependencyProperty &other) const;
 
@@ -135,7 +130,7 @@ public:
 	//异常：std::invalid_argument [name]参数为空
 	//异常：std::logic_error已经注册过同类型属性
 	template<class OwnerType, class PropertyType>
-	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, 
+	static std::shared_ptr<DependencyProperty> registerDependency(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr,
 		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, PropertyCategoryPtr category = nullptr, const std::string &description = "",
 		int order = std::numeric_limits<int>::max(), std::shared_ptr<Range> range = nullptr)
 	{
@@ -144,22 +139,22 @@ public:
 		return registerCommon(name, rttr::type::get<OwnerType>(), rttr::type::get<PropertyType>(), metadata, validateValueCallback);
 	}
 
-	static void getTypePropertys(rttr::type ownerType, std::vector<DependencyProperty> &ret);
+	static void getTypePropertys(rttr::type ownerType, std::vector<std::shared_ptr<DependencyProperty>> &ret);
 	
 	static var unsetValue();
-	static const DependencyProperty &invalidProperty();
-	static const DependencyProperty &find(size_t globalIndex);
+
+	static std::shared_ptr<DependencyProperty> find(size_t globalIndex);
 
 private:
 	DependencyProperty(const std::string & name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
 
-	static const DependencyProperty &registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
+	static std::shared_ptr<DependencyProperty> registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
 
 	//如果不适用std::shared_ptr<DependencyProperty>而是DependencyProperty，会发现studio插件在FreeLibrary时挂死
 	//后续要处理这个事情，把DependencyProperty改为std::shared_ptr<DependencyProperty>
-	static std::map<std::size_t, DependencyProperty> &dependencyProperties();
+	static std::map<std::size_t, std::shared_ptr<DependencyProperty>> &dependencyProperties();
 
-	static std::vector<DependencyProperty> getTypePropertys(rttr::type t);
+	static std::vector<std::shared_ptr<DependencyProperty>> getTypePropertys(rttr::type t);
 
 	std::string							m_name;
 	rttr::type							m_propertyType;

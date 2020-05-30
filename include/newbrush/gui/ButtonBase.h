@@ -17,8 +17,8 @@ class NB_API ButtonBase : public ContentControl
 public:
 	virtual ~ButtonBase() = default;
 
-	static DependencyProperty	ClickModeProperty();	//点击模式的依赖属性（默认为ClickModeE::release)
-	static DependencyProperty	IsPressedProperty();	//是否压下的依赖属性
+	static DependencyPropertyPtr ClickModeProperty();	//点击模式的依赖属性（默认为ClickModeE::release)
+	static DependencyPropertyPtr IsPressedProperty();	//是否压下的依赖属性
 
 	Event<RoutedEventArgs>		Click;					//点击事件
 	static RoutedEvent			ClickEvent();			//点击路由事件(RoutedEventArgs)

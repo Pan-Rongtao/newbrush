@@ -8,6 +8,7 @@
 #include "newbrush/gles/Program.h"
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 

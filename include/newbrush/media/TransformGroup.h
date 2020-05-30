@@ -15,7 +15,7 @@ namespace nb {
 	public:
 		TransformGroup();
 
-		static DependencyProperty ChildrenProperty();
+		static DependencyPropertyPtr ChildrenProperty();
 
 		virtual glm::mat4x4 value() override;
 

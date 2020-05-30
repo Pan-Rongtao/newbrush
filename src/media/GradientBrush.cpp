@@ -1,4 +1,5 @@
 #include "newbrush/media/GradientBrush.h"
+#include "newbrush/core/DependencyProperty.h"
 #include <algorithm>
 #include "glm/glm.hpp"
 
@@ -15,13 +16,13 @@ GradientStop::GradientStop(const nb::Color & color, float offset)
 	setValue(OffsetPropert(), offset);
 }
 
-DependencyProperty GradientStop::ColorProperty()
+DependencyPropertyPtr GradientStop::ColorProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<GradientStop, nb::Color>("Color", nb::Color());
 	return dp;
 }
 
-DependencyProperty GradientStop::OffsetPropert()
+DependencyPropertyPtr GradientStop::OffsetPropert()
 {
 	static auto dp = DependencyProperty::registerDependency<GradientStop, float>("Offset", 0.0f);
 	return dp;
@@ -81,7 +82,7 @@ GradientBrush::GradientBrush(GradientStopCollectionPtr gradientStops)
 {
 }
 
-DependencyProperty GradientBrush::GradientStopsProperty()
+DependencyPropertyPtr GradientBrush::GradientStopsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<GradientBrush, GradientStopCollectionPtr>("GradientStops", nullptr);
 	return dp;
@@ -131,13 +132,13 @@ LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops
 	setValue(EndPointProperty(), endPoint);
 }
 
-DependencyProperty LinearGradientBrush::StartPointProperty()
+DependencyPropertyPtr LinearGradientBrush::StartPointProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<LinearGradientBrush, Point>("StartPoint", Point());
 	return dp;
 }
 
-DependencyProperty LinearGradientBrush::EndPointProperty()
+DependencyPropertyPtr LinearGradientBrush::EndPointProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<LinearGradientBrush, Point>("EndPoint", Point(1.0f, 0.0f));
 	return dp;

@@ -28,9 +28,9 @@ public:
 	WrapPanel();
 	virtual ~WrapPanel() = default;
 
-	static DependencyProperty	OrientationProperty();	//方向的依赖属性
-	static DependencyProperty	ItemWidthProperty();	//项宽的依赖属性
-	static DependencyProperty	ItemHeightProperty();	//项高的依赖属性
+	static DependencyPropertyPtr OrientationProperty();	//方向的依赖属性
+	static DependencyPropertyPtr ItemWidthProperty();	//项宽的依赖属性
+	static DependencyPropertyPtr ItemHeightProperty();	//项高的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

@@ -18,10 +18,10 @@ namespace nb {
 		ScaleTransform(float scaleX, float scaleY, float centerX, float centerY);
 		virtual ~ScaleTransform() = default;
 
-		static DependencyProperty CenterXProperty();
-		static DependencyProperty CenterYProperty();
-		static DependencyProperty ScaleXProperty();
-		static DependencyProperty ScaleYProperty();
+		static DependencyPropertyPtr CenterXProperty();
+		static DependencyPropertyPtr CenterYProperty();
+		static DependencyPropertyPtr ScaleXProperty();
+		static DependencyPropertyPtr ScaleYProperty();
 
 		virtual glm::mat4x4 value() override;
 	};

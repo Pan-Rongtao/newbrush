@@ -9,8 +9,8 @@ public:
 	GradientStop();
 	GradientStop(const nb::Color &color, float offset);
 
-	static DependencyProperty	ColorProperty();
-	static DependencyProperty	OffsetPropert();
+	static DependencyPropertyPtr ColorProperty();
+	static DependencyPropertyPtr OffsetPropert();
 };
 using GradientStopPtr = std::shared_ptr<GradientStop>;
 
@@ -35,7 +35,7 @@ using GradientStopCollectionPtr = std::shared_ptr<GradientStopCollection>;
 class NB_API GradientBrush : public Brush
 {
 public:
-	static DependencyProperty				GradientStopsProperty();
+	static DependencyPropertyPtr GradientStopsProperty();
 
 protected:
 	GradientBrush();
@@ -56,8 +56,8 @@ public:
 	LinearGradientBrush(GradientStopCollectionPtr gradientStops, float angle);
 	LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point &startPoint, const nb::Point &endPoint);
 
-	static DependencyProperty	StartPointProperty();
-	static DependencyProperty	EndPointProperty();
+	static DependencyPropertyPtr StartPointProperty();
+	static DependencyPropertyPtr EndPointProperty();
 };
 using LinearGradientBrushPtr = std::shared_ptr<LinearGradientBrush>;
 

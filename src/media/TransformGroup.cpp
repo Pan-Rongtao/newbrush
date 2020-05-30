@@ -1,4 +1,5 @@
 #include "newbrush/media/TransformGroup.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -6,7 +7,7 @@ TransformGroup::TransformGroup()
 {
 }
 
-DependencyProperty TransformGroup::ChildrenProperty()
+DependencyPropertyPtr TransformGroup::ChildrenProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<TransformGroup, std::shared_ptr<TransformCollection>>("Children", std::make_shared<TransformCollection>());
 	return dp;

@@ -1,4 +1,5 @@
 #include "newbrush/media/ScaleTransform.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb;
@@ -20,25 +21,25 @@ ScaleTransform::ScaleTransform(float scaleX, float scaleY, float centerX, float 
 	setValue<float>(ScaleTransform::CenterYProperty(), centerY);
 }
 
-DependencyProperty ScaleTransform::CenterXProperty()
+DependencyPropertyPtr ScaleTransform::CenterXProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ScaleTransform, float>("CenterX", 0.0f);
 	return dp;
 }
 
-DependencyProperty ScaleTransform::CenterYProperty()
+DependencyPropertyPtr ScaleTransform::CenterYProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ScaleTransform, float>("CenterY", 0.0f);
 	return dp;
 }
 
-DependencyProperty ScaleTransform::ScaleXProperty()
+DependencyPropertyPtr ScaleTransform::ScaleXProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ScaleTransform, float>("ScaleX", 0.0f);
 	return dp;
 }
 
-DependencyProperty ScaleTransform::ScaleYProperty()
+DependencyPropertyPtr ScaleTransform::ScaleYProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ScaleTransform, float>("ScaleY", 0.0f);
 	return dp;

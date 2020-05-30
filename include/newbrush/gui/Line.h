@@ -11,10 +11,10 @@ public:
 	Line();
 	virtual ~Line() = default;
 
-	static DependencyProperty	X1Property();	//X1的依赖属性
-	static DependencyProperty	X2Property();	//X2的依赖属性
-	static DependencyProperty	Y1Property();	//Y1的依赖属性
-	static DependencyProperty	Y2Property();	//Y2的依赖属性
+	static DependencyPropertyPtr X1Property();	//X1的依赖属性
+	static DependencyPropertyPtr X2Property();	//X2的依赖属性
+	static DependencyPropertyPtr Y1Property();	//Y1的依赖属性
+	static DependencyPropertyPtr Y2Property();	//Y2的依赖属性
 
 	virtual void onRender(Viewport2D & drawContext) override;
 

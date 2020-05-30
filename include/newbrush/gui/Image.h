@@ -24,8 +24,8 @@ public:
 	Image();
 	virtual ~Image() = default;
 
-	static DependencyProperty	SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
-	static DependencyProperty	StretchProperty();	//伸缩方式的依赖属性（StretchE）
+	static DependencyPropertyPtr SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
+	static DependencyPropertyPtr StretchProperty();	//伸缩方式的依赖属性（StretchE）
 
 	Event<RoutedEventArgs>		ImageFailed;
 

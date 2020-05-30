@@ -2,6 +2,7 @@
 #include "newbrush/media/Brush.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -45,7 +46,7 @@ Panel & Panel::operator=(const Panel && other)
 	return *this;
 }
 
-DependencyProperty Panel::BackgroundProperty()
+DependencyPropertyPtr Panel::BackgroundProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Panel, std::shared_ptr<Brush>>("Background", nullptr, nullptr, nullptr, nullptr,
 		PropertyCategory::Brush(), "元素背景的画笔", 1);

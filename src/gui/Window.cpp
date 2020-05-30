@@ -9,7 +9,7 @@
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
 #include "newbrush/core/MetaObject.h"
-#include "rttr/registration.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -339,49 +339,49 @@ void Window::pollEvents()
 	}
 }
 
-DependencyProperty Window::WindowStateProperty()
+DependencyPropertyPtr Window::WindowStateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "指示窗口是普通、最小化还是最大化状态", 10);
 	return dp;
 }
 
-DependencyProperty Window::WindowStyleProperty()
+DependencyPropertyPtr Window::WindowStyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged, nullptr, nullptr,
 		PropertyCategory::Appearance(), "窗口的边框样式", 10);
 	return dp;
 }
 
-DependencyProperty Window::TopmostProperty()
+DependencyPropertyPtr Window::TopmostProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged, nullptr, nullptr, 
 		PropertyCategory::Public(), "窗口置顶", 7);
 	return dp;
 }
 
-DependencyProperty Window::LeftProperty()
+DependencyPropertyPtr Window::LeftProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged, nullptr, nullptr,
 		PropertyCategory::Layout(), "窗口距设备左端位置", 5);
 	return dp;
 }
 
-DependencyProperty Window::TopProperty()
+DependencyPropertyPtr Window::TopProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged, nullptr, nullptr,
 		PropertyCategory::Layout(), "窗口距设备顶部位置", 7);
 	return dp;
 }
 
-DependencyProperty Window::TitleProperty()
+DependencyPropertyPtr Window::TitleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "窗口标题", 6);
 	return dp;
 }
 
-DependencyProperty Window::IconProperty()
+DependencyPropertyPtr Window::IconProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "窗口图标", 2);

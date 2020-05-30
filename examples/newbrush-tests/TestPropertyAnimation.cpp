@@ -1,6 +1,7 @@
 #include "newbrush/media/PropertyAnimation.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/gui/TextBlock.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;
@@ -8,12 +9,12 @@ using namespace nb;
 class MyObject : public DependencyObject
 {
 public:
-	static DependencyProperty ForegroundProperty()
+	static DependencyPropertyPtr ForegroundProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Color>("Foreground", Color());
 		return dp;
 	}
-	static DependencyProperty RectProperty()
+	static DependencyPropertyPtr RectProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Rect>("Rect", Rect());
 		return dp;

@@ -5,6 +5,7 @@
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -12,28 +13,28 @@ Line::Line()
 {
 }
 
-DependencyProperty Line::X1Property()
+DependencyPropertyPtr Line::X1Property()
 {
 	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "线段起点的X分量", 1);
 	return dp;
 }
 
-DependencyProperty Line::X2Property()
+DependencyPropertyPtr Line::X2Property()
 {
 	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "线段终点的X分量", 1);
 	return dp;
 }
 
-DependencyProperty Line::Y1Property()
+DependencyPropertyPtr Line::Y1Property()
 {
 	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "线段起点的Y分量", 1);
 	return dp;
 }
 
-DependencyProperty Line::Y2Property()
+DependencyPropertyPtr Line::Y2Property()
 {
 	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "线段终点的Y分量", 1);

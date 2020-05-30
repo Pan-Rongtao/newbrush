@@ -11,8 +11,8 @@ public:
 	Rectangle();
 	virtual ~Rectangle() = default;
 
-	static DependencyProperty	RadiusXProperty();	//X»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
-	static DependencyProperty	RadiusYProperty();	//Y»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
+	static DependencyPropertyPtr RadiusXProperty();	//X»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
+	static DependencyPropertyPtr RadiusYProperty();	//Y»¡¶ÈµÄÒÀÀµÊôÐÔ(float)
 
 	virtual void onRender(Viewport2D & drawContext) override;
 

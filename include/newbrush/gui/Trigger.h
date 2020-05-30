@@ -9,10 +9,10 @@ class Condition
 {
 public:
 	Condition();
-	Condition(const DependencyProperty &dp, const var &v);
-	Condition(const DependencyProperty &dp, const var &v, BindingPtr bd);
+	Condition(DependencyPropertyPtr dp, const var &v);
+	Condition(DependencyPropertyPtr dp, const var &v, BindingPtr bd);
 
-	DependencyProperty		property;	//条件属性
+	DependencyPropertyPtr	property;	//条件属性
 	BindingPtr				binding;	//适用于MultiDataTrigger
 	var						value;		//条件属性值
 };
@@ -41,14 +41,14 @@ class NB_API Trigger : public TriggerBase
 {
 public:
 	Trigger();
-	Trigger(const DependencyProperty &dp, const var &v);
+	Trigger(DependencyPropertyPtr dp, const var &v);
 
 	virtual void attach(UIElement *uie) override;
 
 	virtual void onElementPropertyChanged(UIElement * uie) override;
 
-	void setProperty(const DependencyProperty &dp);
-	const DependencyProperty property() const;
+	void setProperty(DependencyPropertyPtr dp);
+	DependencyPropertyPtr property() const;
 
 	void setValue(const var &value);
 	const var &getValue() const;
@@ -56,7 +56,7 @@ public:
 	std::vector<SetterBasePtr> &setters();
 
 private:
-	DependencyProperty			m_property;	//触发条件的属性
+	DependencyPropertyPtr		m_property;	//触发条件的属性
 	var							m_value;	//触发条件的值
 	std::vector<SetterBasePtr>	m_setters;	//条件成立后执行的setters
 };

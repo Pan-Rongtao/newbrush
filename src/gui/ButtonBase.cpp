@@ -2,6 +2,7 @@
 #include "newbrush/core/Log.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/MetaObject.h"
 
 using namespace nb;
@@ -16,13 +17,13 @@ bool ButtonBase::isEnableCore()
 	return true;
 }
 
-DependencyProperty ButtonBase::ClickModeProperty()
+DependencyPropertyPtr ButtonBase::ClickModeProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::Release, nullptr, nullptr, nullptr, PropertyCategory::Misc(), "合适应该发生Click事件", 3);
 	return dp;
 }
 
-DependencyProperty ButtonBase::IsPressedProperty()
+DependencyPropertyPtr ButtonBase::IsPressedProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<ButtonBase, bool>("IsPressed", false, onIsPressedPropertyChanged);
 	return dp;

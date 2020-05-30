@@ -4,6 +4,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/media/Brush.h"
@@ -14,7 +15,7 @@ Polygon::Polygon()
 {
 }
 
-DependencyProperty Polygon::PointsProperty()
+DependencyPropertyPtr Polygon::PointsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "描述多边形的所有顶点", 5);

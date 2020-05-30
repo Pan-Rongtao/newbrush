@@ -6,6 +6,7 @@
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/MetaObject.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/media/Transform.h"
 #include "newbrush/media/Brush.h"
 
@@ -15,14 +16,14 @@ Rectangle::Rectangle()
 {
 }
 
-DependencyProperty Rectangle::RadiusXProperty()
+DependencyPropertyPtr Rectangle::RadiusXProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 x 轴半径", 4);
 	return dp;
 }
 
-DependencyProperty Rectangle::RadiusYProperty()
+DependencyPropertyPtr Rectangle::RadiusYProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 y 轴半径", 5);

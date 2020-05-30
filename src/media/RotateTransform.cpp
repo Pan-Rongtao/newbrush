@@ -1,4 +1,5 @@
 #include "newbrush/media/RotateTransform.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb;
@@ -19,19 +20,19 @@ RotateTransform::RotateTransform(float angle, float centerX, float centerY)
 	setValue<float>(RotateTransform::CenterYProperty(), centerY);
 }
 
-DependencyProperty RotateTransform::AngleProperty()
+DependencyPropertyPtr RotateTransform::AngleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RotateTransform, float>("Angle", 0.0f);
 	return dp;
 }
 
-DependencyProperty RotateTransform::CenterXProperty()
+DependencyPropertyPtr RotateTransform::CenterXProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RotateTransform, float>("CenterX", 0.0f);
 	return dp;
 }
 
-DependencyProperty RotateTransform::CenterYProperty()
+DependencyPropertyPtr RotateTransform::CenterYProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RotateTransform, float>("CenterY", 0.0f);
 	return dp;

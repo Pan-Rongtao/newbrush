@@ -24,7 +24,7 @@ public:
 	void setDock(std::shared_ptr<UIElement> element, DockE dock);
 	DockE getDock(std::shared_ptr<UIElement> element);
 
-	static DependencyProperty	LastChildFillProperty();	//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
+	static DependencyPropertyPtr LastChildFillProperty();	//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

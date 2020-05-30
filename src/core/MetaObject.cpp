@@ -1,4 +1,5 @@
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -35,13 +36,13 @@ const ClassDescriptor &MetaObject::classDescriptor() const
 	return m_classDescriptor;
 }
 
-void MetaObject::addProperty(const DependencyProperty &dp, const std::string &category, const std::string &description, PropertyDescriptor::ValueType valueType, const std::string &extra)
+void MetaObject::addProperty(DependencyPropertyPtr dp, const std::string &category, const std::string &description, PropertyDescriptor::ValueType valueType, const std::string &extra)
 {
 	if (seal)
 	{
 		return;
 	}
-	PropertyDescriptor propertyDescriptor(dp.globalIndex(), category, dp.name(), description, valueType, extra);
+	PropertyDescriptor propertyDescriptor(dp->globalIndex(), category, dp->name(), description, valueType, extra);
 	m_properties.push_back(propertyDescriptor);
 }
 

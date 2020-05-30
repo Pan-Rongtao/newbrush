@@ -11,8 +11,8 @@ public:
 	RepeatButton();
 	virtual ~RepeatButton();
 
-	static DependencyProperty	DelayProperty();	//是否是“取消”按钮依赖属性，用户可以通过按ESC键激活“取消”按钮
-	static DependencyProperty	IntervalProperty();	//是否是“默认”按钮依赖属性，用户可以通过按Enter键激活“默认”按钮
+	static DependencyPropertyPtr DelayProperty();	//是否是“取消”按钮依赖属性，用户可以通过按ESC键激活“取消”按钮
+	static DependencyPropertyPtr IntervalProperty();	//是否是“默认”按钮依赖属性，用户可以通过按Enter键激活“默认”按钮
 
 	/*
 	Property_rw<int>		Delay;

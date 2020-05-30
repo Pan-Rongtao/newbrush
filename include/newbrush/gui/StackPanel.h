@@ -27,7 +27,7 @@ public:
 	StackPanel();
 	virtual ~StackPanel() = default;
 	
-	static DependencyProperty	OrientationProperty();		//方向的依赖属性
+	static DependencyPropertyPtr OrientationProperty();		//方向的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

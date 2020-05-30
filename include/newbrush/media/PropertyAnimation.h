@@ -33,15 +33,16 @@ protected:
 				m_actualFrom = m_hasSetFrom ? m_from : target().lock()->getValue<T>(targetProperty());
 			}
 			catch (...) {
-				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().name().data());
+				_unmatchThrow(typeid(T));
 			}
 			m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		}
 	}
+
 	virtual void onProcessing() override
 	{
 		AnimationTimeline::onProcessing();
-		if (!target().lock() || targetProperty().isInvalid())
+		if (!target().lock() || !targetProperty())
 			return;
 
 		auto progress = getCurrentProgress();
@@ -89,7 +90,7 @@ void PropertyAnimation<double>::onStateChanged()
 template<> void PropertyAnimation<Color>::onProcessing()
 {
 	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
+	if (!target().lock() || !targetProperty())
 		return;
 
 	auto progress = getCurrentProgress();
@@ -106,7 +107,7 @@ template<> void PropertyAnimation<Color>::onProcessing()
 template<>void PropertyAnimation<Rect>::onProcessing()
 {
 	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
+	if (!target().lock() || !targetProperty())
 		return;
 
 	auto progress = getCurrentProgress();
@@ -121,7 +122,7 @@ template<>void PropertyAnimation<Rect>::onProcessing()
 template<> void PropertyAnimation<Thickness>::onProcessing()
 {
 	AnimationTimeline::onProcessing();
-	if (!target().lock() || targetProperty().isInvalid())
+	if (!target().lock() || !targetProperty())
 		return;
 
 	auto progress = getCurrentProgress();

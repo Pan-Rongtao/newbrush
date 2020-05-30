@@ -1,68 +1,69 @@
 #include "newbrush/media/PropertyAnimationUsingKeyFrames.h"
 #include "catch2/catch.hpp"
 #include "newbrush/gui/UIElement.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
 class MyObject : public DependencyObject
 {
 public:
-	static DependencyProperty TextProperty()
+	static DependencyPropertyPtr TextProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, std::string>("Text", "");
 		return dp;
 	}
-	static DependencyProperty CountProperty()
+	static DependencyPropertyPtr CountProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, int8_t>("Count", 0);
 		return dp;
 	}
-	static DependencyProperty SizeProperty()
+	static DependencyPropertyPtr SizeProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, int16_t>("Size", 0);
 		return dp;
 	}
-	static DependencyProperty IndexProperty()
+	static DependencyPropertyPtr IndexProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, int32_t>("Index", 0);
 		return dp;
 	}
-	static DependencyProperty TicksProperty()
+	static DependencyPropertyPtr TicksProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, int64_t>("Ticks", 0);
 		return dp;
 	}
-	static DependencyProperty WidthProperty()
+	static DependencyPropertyPtr WidthProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, float>("Width", 0.0f);
 		return dp;
 	}
-	static DependencyProperty HeightProperty()
+	static DependencyPropertyPtr HeightProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, double>("Height", 0.0);
 		return dp;
 	}
-	static DependencyProperty XProperty()
+	static DependencyPropertyPtr XProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Point>("X", Point());
 		return dp;
 	}
-	static DependencyProperty ActualSizeProperty()
+	static DependencyPropertyPtr ActualSizeProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Size>("ActualSize", Size());
 		return dp;
 	}
-	static DependencyProperty FontColorProperty()
+	static DependencyPropertyPtr FontColorProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Color>("FontColor", Color());
 		return dp;
 	}
-	static DependencyProperty RectProperty()
+	static DependencyPropertyPtr RectProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Rect>("Rect", Rect());
 		return dp;
 	}
-	static DependencyProperty MargProperty()
+	static DependencyPropertyPtr MargProperty()
 	{
 		static auto dp = DependencyProperty::registerDependency<MyObject, Thickness>("Marg", Thickness());
 		return dp;

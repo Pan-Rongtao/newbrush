@@ -15,7 +15,7 @@ public:
 	Panel &operator =(const Panel &&other);
 	virtual ~Panel() = default;
 
-	static DependencyProperty BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘
+	static DependencyPropertyPtr BackgroundProperty();	//±≥æ∞µƒ“¿¿µ Ù–‘
 
 	UIElementCollection &children();
 

@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/WrapPanel.h"
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 #include <queue>
 
 using namespace nb;
@@ -8,19 +9,19 @@ WrapPanel::WrapPanel()
 {
 }
 
-DependencyProperty WrapPanel::OrientationProperty()
+DependencyPropertyPtr WrapPanel::OrientationProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Visibility", OrientationE::Horizontal);
 	return dp;
 }
 
-DependencyProperty WrapPanel::ItemWidthProperty()
+DependencyPropertyPtr WrapPanel::ItemWidthProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN);
 	return dp;
 }
 
-DependencyProperty WrapPanel::ItemHeightProperty()
+DependencyPropertyPtr WrapPanel::ItemHeightProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN);
 	return dp;

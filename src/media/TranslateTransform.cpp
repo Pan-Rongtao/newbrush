@@ -1,4 +1,5 @@
 #include "newbrush/media/TranslateTransform.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb;
@@ -13,13 +14,13 @@ TranslateTransform::TranslateTransform(float offsetX, float offsetY)
 	setValue<float>(TranslateTransform::YProperty(), offsetY);
 }
 
-DependencyProperty TranslateTransform::XProperty()
+DependencyPropertyPtr TranslateTransform::XProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<TranslateTransform, float>("X", 0.0f);
 	return dp;
 }
 
-DependencyProperty TranslateTransform::YProperty()
+DependencyPropertyPtr TranslateTransform::YProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<TranslateTransform, float>("Y", 0.0f);
 	return dp;

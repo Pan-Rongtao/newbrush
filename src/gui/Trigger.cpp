@@ -7,16 +7,16 @@
 using namespace nb;
 
 Condition::Condition()
-	: Condition(DependencyProperty::invalidProperty(), var(), nullptr)
+	: Condition(nullptr, var(), nullptr)
 {
 }
 
-Condition::Condition(const DependencyProperty & dp, const var & v)
+Condition::Condition(DependencyPropertyPtr dp, const var & v)
 	: Condition(dp, v, nullptr)
 {
 }
 
-Condition::Condition(const DependencyProperty & dp, const var & v, BindingPtr bd)
+Condition::Condition(DependencyPropertyPtr dp, const var & v, BindingPtr bd)
 	: property(dp)
 	, value(v)
 	, binding(bd)
@@ -62,11 +62,11 @@ void TriggerBase::processSetters(UIElement *uie, std::vector<SetterBasePtr> sett
 }
 
 Trigger::Trigger()
-	: Trigger(DependencyProperty::invalidProperty(), var())
+	: Trigger(nullptr, var())
 {
 }
 
-Trigger::Trigger(const DependencyProperty & dp, const var & v)
+Trigger::Trigger(DependencyPropertyPtr dp, const var & v)
 	: m_property(dp)
 	, m_value(v)
 {
@@ -86,12 +86,12 @@ void Trigger::onElementPropertyChanged(UIElement * uie)
 	}
 }
 
-void Trigger::setProperty(const DependencyProperty & dp)
+void Trigger::setProperty(DependencyPropertyPtr dp)
 {
 	m_property = dp;
 }
 
-const DependencyProperty Trigger::property() const
+DependencyPropertyPtr Trigger::property() const
 {
 	return m_property;
 }

@@ -9,7 +9,7 @@ public:
 	ImageBrush();
 	explicit ImageBrush(std::shared_ptr<ImageSource> imgSource);
 
-	static DependencyProperty					SourceProperty();	//源依赖属性
+	static DependencyPropertyPtr SourceProperty();	//源依赖属性
 };
 
 

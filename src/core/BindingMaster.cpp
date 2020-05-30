@@ -1,5 +1,6 @@
 #include "newbrush/core/BindingMaster.h"
 #include "newbrush/core/DependencyObject.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/Binding.h"
 
 using namespace nb;
@@ -7,9 +8,9 @@ using namespace nb;
 //每个binding实例可以对应多个obj-property
 //source和path相同的不同binding实例，分别对应不同obj-property
 //因此map做成这个结果，此结果性能并非最佳，后续可能考虑优化
-std::map<std::shared_ptr<Binding>, BindingMaster::ObjectPropertysContainer >	BindingMaster::g_bindingmap;
+std::map<BindingPtr, BindingMaster::ObjectPropertysContainer >	BindingMaster::g_bindingmap;
 
-void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, std::shared_ptr<Binding> bd)
+void BindingMaster::addBinding(DependencyObjectPtr target, DependencyPropertyPtr dp, BindingPtr bd)
 {
 	if (!bd)
 	{
@@ -51,12 +52,12 @@ void BindingMaster::addBinding(std::shared_ptr<DependencyObject> target, const D
 	}
 }
 
-void BindingMaster::setToTarget(std::shared_ptr<DependencyObject> target, const DependencyProperty & dp, const var &value)
+void BindingMaster::setToTarget(DependencyObjectPtr target, DependencyPropertyPtr dp, const var &value)
 {
 	try {
 		target->setValue(dp, value);
 	}
 	catch (...) {
-		nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", value.get_type().get_name().data(), dp.propertyType().get_name().data());
+		nbThrowException(std::logic_error, "binding data type[%s] is unmatched with target property type[%s]", value.get_type().get_name().data(), dp->propertyType().get_name().data());
 	}
 }

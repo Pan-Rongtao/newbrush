@@ -17,8 +17,8 @@ namespace nb {
 		TranslateTransform(float offsetX, float offsetY);
 		virtual ~TranslateTransform() = default;
 
-		static DependencyProperty XProperty();
-		static DependencyProperty YProperty();
+		static DependencyPropertyPtr XProperty();
+		static DependencyPropertyPtr YProperty();
 
 		virtual glm::mat4x4 value() override;
 

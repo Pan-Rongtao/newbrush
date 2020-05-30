@@ -5,6 +5,10 @@
 namespace nb {
 
 class MetaObject;
+class DependencyProperty;
+using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+using rttr::variant;
+
 class NB_API Object
 {
 	RTTR_ENABLE()

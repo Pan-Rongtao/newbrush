@@ -45,20 +45,20 @@ public:
 	TextBlock();
 	explicit TextBlock(const std::string &content);
 
-	static DependencyProperty		TextProperty();
-	static DependencyProperty		BackgroundProperty();
-	static DependencyProperty		FontProperty();
-	static DependencyProperty		FontStyleProperty();	//字形
-	static DependencyProperty		FontSizeProperty();
-	static DependencyProperty		FontWeightProperty();
-	static DependencyProperty		ForegroundProperty();
-	static DependencyProperty		LineHeightProperty();
-	static DependencyProperty		CharSpacingProperty();
-	static DependencyProperty		PaddingProperty();
-	static DependencyProperty		TextAlignmentProperty();
-	static DependencyProperty		TextTrimmingProperty();
-	static DependencyProperty		TextWrappingProperty();
-	static DependencyProperty		TextDecorationProperty();
+	static DependencyPropertyPtr TextProperty();
+	static DependencyPropertyPtr BackgroundProperty();
+	static DependencyPropertyPtr FontProperty();
+	static DependencyPropertyPtr FontStyleProperty();	//字形
+	static DependencyPropertyPtr FontSizeProperty();
+	static DependencyPropertyPtr FontWeightProperty();
+	static DependencyPropertyPtr ForegroundProperty();
+	static DependencyPropertyPtr LineHeightProperty();
+	static DependencyPropertyPtr CharSpacingProperty();
+	static DependencyPropertyPtr PaddingProperty();
+	static DependencyPropertyPtr TextAlignmentProperty();
+	static DependencyPropertyPtr TextTrimmingProperty();
+	static DependencyPropertyPtr TextWrappingProperty();
+	static DependencyPropertyPtr TextDecorationProperty();
 
 
 	virtual void onRender(Viewport2D & drawContext) override;

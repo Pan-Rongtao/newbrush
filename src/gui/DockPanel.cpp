@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/DockPanel.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/MetaObject.h"
 
 using namespace nb;
@@ -19,7 +20,7 @@ DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 	return !v.is_valid() ? DockE::Left : v.get_value<DockE>();
 }
 
-DependencyProperty DockPanel::LastChildFillProperty()
+DependencyPropertyPtr DockPanel::LastChildFillProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false, nullptr, nullptr, nullptr,
 		PropertyCategory::Layout(), "最后一个子元素是否拉伸以填充剩余的可用空间", 5);

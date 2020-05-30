@@ -24,7 +24,7 @@ class NB_API Brush : public DependencyObject
 public:
 	virtual ~Brush() = default;
 
-	static DependencyProperty	OpacityProperty();	//不透明度依赖属性
+	static DependencyPropertyPtr OpacityProperty();	//不透明度依赖属性
 
 protected:
 	Brush();

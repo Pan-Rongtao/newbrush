@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/RepeatButton.h"
 #include "newbrush/core/MetaObject.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -12,13 +13,13 @@ RepeatButton::~RepeatButton()
 {
 }
 
-DependencyProperty RepeatButton::DelayProperty()
+DependencyPropertyPtr RepeatButton::DelayProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RepeatButton, uint32_t>("Delay", 500, onDelayPropertyChanged);
 	return dp;
 }
 
-DependencyProperty RepeatButton::IntervalProperty()
+DependencyPropertyPtr RepeatButton::IntervalProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RepeatButton, uint32_t>("Interval", 33, onIntervalPropertyChanged);
 	return dp;

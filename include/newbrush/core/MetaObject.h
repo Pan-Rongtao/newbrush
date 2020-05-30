@@ -4,7 +4,6 @@
 #include <functional>
 #include <type_traits>
 #include "newbrush/core/Def.h"
-#include "newbrush/core/DependencyProperty.h"
 
 namespace nb {
 
@@ -75,12 +74,14 @@ struct NB_API PropertyDescriptor : public Descriptor
 	std::string	extra;
 };
 
+class DependencyProperty;
+using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
 class NB_API MetaObject
 {
 public:
 	const ClassDescriptor &classDescriptor() const;
 
-	void addProperty(const DependencyProperty &dp, const std::string &category, const std::string &description, PropertyDescriptor::ValueType valueType, const std::string &extra = "");
+	void addProperty(DependencyPropertyPtr dp, const std::string &category, const std::string &description, PropertyDescriptor::ValueType valueType, const std::string &extra = "");
 
 	const std::vector<PropertyDescriptor> &properties() const;
 

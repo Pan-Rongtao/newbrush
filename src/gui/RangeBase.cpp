@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/RangeBase.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -10,31 +11,31 @@ RangeBase::~RangeBase()
 {
 }
 
-DependencyProperty RangeBase::ValueProperty()
+DependencyPropertyPtr RangeBase::ValueProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RangeBase, float>("Value", 0.0f, onValuePropertyChanged, coerceValue);
 	return dp;
 }
 
-DependencyProperty RangeBase::MaximumProperty()
+DependencyPropertyPtr RangeBase::MaximumProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RangeBase, float>("Maximum", 0.0f, onMaxinumPropertyChanged, coerceMaximum);
 	return dp;
 }
 
-DependencyProperty RangeBase::MinimumProperty()
+DependencyPropertyPtr RangeBase::MinimumProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RangeBase, float>("Minimum", 0.0f, onMinimumPropertyChanged, coerceMinimum);
 	return dp;
 }
 
-DependencyProperty RangeBase::SmallChangeProperty()
+DependencyPropertyPtr RangeBase::SmallChangeProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RangeBase, float>("SmallChange", 0.0f);
 	return dp;
 }
 
-DependencyProperty RangeBase::LargeChangeProperty()
+DependencyPropertyPtr RangeBase::LargeChangeProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<RangeBase, float>("LargeChange", 0.0f);
 	return dp;

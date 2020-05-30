@@ -60,10 +60,10 @@ public:
 	RowDefinition();
 	~RowDefinition() = default;
 
-	static DependencyProperty	HeightProperty();		//高的依赖属性
-	static DependencyProperty	MinHeightProperty();	//最小高的依赖属性
-	static DependencyProperty	MaxHeightProperty();	//最大高的依赖属性
-	static DependencyProperty	ActualHeightProperty();	//实际高的依赖属性
+	static DependencyPropertyPtr HeightProperty();		//高的依赖属性
+	static DependencyPropertyPtr MinHeightProperty();	//最小高的依赖属性
+	static DependencyPropertyPtr MaxHeightProperty();	//最大高的依赖属性
+	static DependencyPropertyPtr ActualHeightProperty();//实际高的依赖属性
 
 };
 
@@ -74,10 +74,10 @@ public:
 	ColumnDefinition();
 	~ColumnDefinition() = default;
 
-	static DependencyProperty	WidthProperty();		//设定宽的依赖属性
-	static DependencyProperty	MinWidthProperty();		//最小宽的依赖属性
-	static DependencyProperty	MaxWidthProperty();		//最大宽的依赖属性
-	static DependencyProperty	ActualWidthProperty();	//实际宽的依赖属性
+	static DependencyPropertyPtr WidthProperty();		//设定宽的依赖属性
+	static DependencyPropertyPtr MinWidthProperty();	//最小宽的依赖属性
+	static DependencyPropertyPtr MaxWidthProperty();	//最大宽的依赖属性
+	static DependencyPropertyPtr ActualWidthProperty();	//实际宽的依赖属性
 
 };
 
@@ -107,8 +107,8 @@ public:
 	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
 	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
 
-	static DependencyProperty								RowDefinitionsProperty();	//行定义的依赖属性
-	static DependencyProperty								ColumnDefinitionsProperty();//列定义的依赖属性
+	static DependencyPropertyPtr RowDefinitionsProperty();	//行定义的依赖属性
+	static DependencyPropertyPtr ColumnDefinitionsProperty();//列定义的依赖属性
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

@@ -1,54 +1,55 @@
 ﻿#include "newbrush/gui/Control.h"
 #include "newbrush/media/Brush.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
 Control::Control(){
 }
 
-DependencyProperty Control::BackgroundProperty()
+DependencyPropertyPtr Control::BackgroundProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("Background", nullptr);
 	return dp;
 }
 
-DependencyProperty Control::BorderBrushProperty()
+DependencyPropertyPtr Control::BorderBrushProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("BorderBrush", nullptr);
 	return dp;
 }
 
-DependencyProperty Control::BorderThicknessProperty()
+DependencyPropertyPtr Control::BorderThicknessProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("BorderThickness", Thickness());
 	return dp;
 }
 
-DependencyProperty Control::PaddingProperty()
+DependencyPropertyPtr Control::PaddingProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("Padding", Thickness());
 	return dp;
 }
 
-DependencyProperty Control::HorizontalContentAlignmentProperty()
+DependencyPropertyPtr Control::HorizontalContentAlignmentProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, HorizontalAlignmentE>("HorizontalContentAlignment", HorizontalAlignmentE::Stretch);
 	return dp;
 }
 
-DependencyProperty Control::VerticalContentAlignmentProperty()
+DependencyPropertyPtr Control::VerticalContentAlignmentProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, VerticalAlignmentE>("VerticalContentAlignment", VerticalAlignmentE::Stretch);
 	return dp;
 }
 
-DependencyProperty Control::TabIndexProperty()
+DependencyPropertyPtr Control::TabIndexProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, int>("TabIndex", -1);
 	return dp;
 }
 
-DependencyProperty Control::TemplateProperty()
+DependencyPropertyPtr Control::TemplateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<ControlTemplate>>("Template", nullptr, Control::onTemplateChanged);
 	return dp;

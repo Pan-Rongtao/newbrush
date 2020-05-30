@@ -6,6 +6,7 @@
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/MetaObject.h"
 #include "newbrush/media/Brush.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -13,7 +14,7 @@ Polyline::Polyline()
 {
 }
 
-DependencyProperty Polyline::PointsProperty()
+DependencyPropertyPtr Polyline::PointsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr,
 		PropertyCategory::Appearance(), "描述多线段的所有顶点", 5);

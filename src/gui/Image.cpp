@@ -7,6 +7,7 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/ImageSource.h"
 #include "newbrush/gui/Window.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -42,14 +43,14 @@ void Image::onRender(Viewport2D & drawContext)
 	m_renderObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 }
 
-DependencyProperty Image::SourceProperty()
+DependencyPropertyPtr Image::SourceProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "图像源", 1);
 	return dp;
 }
 
-DependencyProperty Image::StretchProperty()
+DependencyPropertyPtr Image::StretchProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "拉伸或填充的方式", 2);

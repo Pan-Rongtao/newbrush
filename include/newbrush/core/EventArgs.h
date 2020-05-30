@@ -3,10 +3,12 @@
 #include "newbrush/core/Point.h"
 #include "newbrush/core/Size.h"
 #include "newbrush/core/RoutedEvent.h"
-#include "newbrush/core/DependencyProperty.h"
 
 namespace nb {
-	
+
+class DependencyProperty;
+using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+
 //°´¼üÃ¶¾Ù
 enum class KeyE
 {
@@ -297,9 +299,9 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 
 struct DependencyPropertyChangedEventArgs
 {
-	DependencyProperty	property;
-	var					oldValue;
-	var					newValue;
+	DependencyPropertyPtr	property;
+	var						oldValue;
+	var						newValue;
 };
 
 class RoutedProperyChangedEventArgs : public RoutedEventArgs

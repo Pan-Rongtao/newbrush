@@ -5,6 +5,7 @@
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/ImageBrush.h"
 #include "newbrush/media/GradientBrush.h"
+#include "newbrush/core/DependencyProperty.h"
 
 Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request, CommonReply * response)
 {

@@ -22,9 +22,9 @@ namespace nb {
 		RotateTransform(float angle, float centerX, float centerY);
 		virtual ~RotateTransform() = default;
 
-		static DependencyProperty AngleProperty();
-		static DependencyProperty CenterXProperty();
-		static DependencyProperty CenterYProperty();
+		static DependencyPropertyPtr AngleProperty();
+		static DependencyPropertyPtr CenterXProperty();
+		static DependencyPropertyPtr CenterYProperty();
 
 		virtual glm::mat4x4 value() override;
 

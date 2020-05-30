@@ -1,4 +1,5 @@
 ﻿#include "newbrush/gui/VisualStateMachine.h"
+#include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
@@ -13,13 +14,13 @@ VisualState::VisualState(const std::string & name, std::shared_ptr<Storyboard> s
 	setValue(StoryboardProperty(), sb);
 }
 
-DependencyProperty VisualState::NameProperty()
+DependencyPropertyPtr VisualState::NameProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualState, std::string>("Name", std::string());
 	return dp;
 }
 
-DependencyProperty VisualState::StoryboardProperty()
+DependencyPropertyPtr VisualState::StoryboardProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualState, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
 	return dp;
@@ -29,31 +30,31 @@ VisualTransition::VisualTransition()
 {
 }
 
-DependencyProperty VisualTransition::FromProperty()
+DependencyPropertyPtr VisualTransition::FromProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::string>("From", std::string());
 	return dp;
 }
 
-DependencyProperty VisualTransition::ToProperty()
+DependencyPropertyPtr VisualTransition::ToProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::string>("To", std::string());
 	return dp;
 }
 
-DependencyProperty VisualTransition::DurationProperty()
+DependencyPropertyPtr VisualTransition::DurationProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualTransition, TimeSpan>("Duration", TimeSpan());
 	return dp;
 }
 
-DependencyProperty VisualTransition::StoryboardProperty()
+DependencyPropertyPtr VisualTransition::StoryboardProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
 	return dp;
 }
 
-DependencyProperty VisualTransition::EasingProperty()
+DependencyPropertyPtr VisualTransition::EasingProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<EasingBase>>("Easing", nullptr);
 	return dp;
@@ -70,25 +71,25 @@ VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<s
 	setValue(StatesProperty(), states);
 }
 
-DependencyProperty VisualStateGroup::NameProperty()
+DependencyPropertyPtr VisualStateGroup::NameProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::string>("Name", std::string());
 	return dp;
 }
 
-DependencyProperty VisualStateGroup::StatesProperty()
+DependencyPropertyPtr VisualStateGroup::StatesProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<std::shared_ptr<VisualState>>>("States", {});
 	return dp;
 }
 
-DependencyProperty VisualStateGroup::CurrentStateProperty()
+DependencyPropertyPtr VisualStateGroup::CurrentStateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::shared_ptr<VisualState>>("CurrentState", std::make_shared<VisualState>());
 	return dp;
 }
 
-DependencyProperty VisualStateGroup::TransitionsProperty()
+DependencyPropertyPtr VisualStateGroup::TransitionsProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<VisualTransition>>("Transitions", {});
 	return dp;

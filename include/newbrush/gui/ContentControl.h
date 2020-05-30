@@ -11,7 +11,7 @@ public:
 	explicit ContentControl();
 	virtual ~ContentControl() = default;
 
-	static DependencyProperty			ContentProperty();	//内容依赖属性
+	static DependencyPropertyPtr ContentProperty();	//内容依赖属性
 	
 	virtual void onRender(Viewport2D & drawContext) override;
 

@@ -40,7 +40,7 @@ void ControlTemplate::loopTree(UIElement* node, UIElementPtr &instance) const
 	if (!m_root) return;
 
 	instance = node->clone();
-	for (auto i = 0; i < node->childrenCount(); ++i)
+	for (auto i = 0u; i < node->childrenCount(); ++i)
 	{
 		auto sourceChild = node->getChild(i);
 		auto newChild = sourceChild->clone();

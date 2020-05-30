@@ -14,8 +14,8 @@ public:
 	VisualState();
 	VisualState(const std::string &name, std::shared_ptr<Storyboard> sb = nullptr);
 
-	static DependencyProperty			NameProperty();			//名字的依赖属性
-	static DependencyProperty			StoryboardProperty();	//故事板的依赖属性
+	static DependencyPropertyPtr NameProperty();			//名字的依赖属性
+	static DependencyPropertyPtr StoryboardProperty();	//故事板的依赖属性
 };
 
 class NB_API VisualTransition : public DependencyObject
@@ -23,11 +23,11 @@ class NB_API VisualTransition : public DependencyObject
 public:
 	VisualTransition();
 
-	static DependencyProperty			FromProperty();		//起始状态的依赖属性
-	static DependencyProperty			ToProperty();		//目标状态的依赖属性
-	static DependencyProperty			DurationProperty();	//持续时间的依赖属性
-	static DependencyProperty			StoryboardProperty();//故事板的依赖属性
-	static DependencyProperty			EasingProperty();	//缓动函数的依赖属性
+	static DependencyPropertyPtr FromProperty();		//起始状态的依赖属性
+	static DependencyPropertyPtr ToProperty();			//目标状态的依赖属性
+	static DependencyPropertyPtr DurationProperty();	//持续时间的依赖属性
+	static DependencyPropertyPtr StoryboardProperty();	//故事板的依赖属性
+	static DependencyPropertyPtr EasingProperty();		//缓动函数的依赖属性
 };
 
 class NB_API VisualStateGroup : public DependencyObject
@@ -36,14 +36,14 @@ public:
 	VisualStateGroup(const std::string &name);
 	VisualStateGroup(const std::string &name, const std::vector<std::shared_ptr<VisualState>> &states);
 
-	static DependencyProperty							NameProperty();			//名字的依赖属性
-	static DependencyProperty							StatesProperty();		//状态集合的依赖属性
-	static DependencyProperty							CurrentStateProperty();	//当前状态的依赖属性
-	static DependencyProperty							TransitionsProperty();	//过度的依赖属性
+	static DependencyPropertyPtr NameProperty();		//名字的依赖属性
+	static DependencyPropertyPtr StatesProperty();		//状态集合的依赖属性
+	static DependencyPropertyPtr CurrentStateProperty();//当前状态的依赖属性
+	static DependencyPropertyPtr TransitionsProperty();	//过度的依赖属性
 
 	struct StateChangedEventArgs {};
-	Event<StateChangedEventArgs>						CurrentStateChanged;	//当前状态改变完成事件
-	Event<StateChangedEventArgs>						CurrentStateChanging;	//当前状态正在改变事件
+	Event<StateChangedEventArgs> CurrentStateChanged;	//当前状态改变完成事件
+	Event<StateChangedEventArgs> CurrentStateChanging;	//当前状态正在改变事件
 
 };
 
