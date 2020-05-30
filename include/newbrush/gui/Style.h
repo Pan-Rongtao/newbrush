@@ -29,7 +29,7 @@ public:
 
 	void attach(UIElement * uie);
 
-	void handlePropertyChanged(UIElement * uie, const DependencyProperty &dp, const Var &v);
+	void handlePropertyChanged(UIElement * uie, const DependencyProperty &dp, const var &v);
 	
 	struct StyleDataTriggerArgs { std::shared_ptr<DataTrigger> dataTrigger; };
 	Event<StyleDataTriggerArgs> StyleDataTrigger;

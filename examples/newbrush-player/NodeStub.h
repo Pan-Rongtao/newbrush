@@ -32,5 +32,5 @@ class NodeStub : public NodeRpc::Service, public StubBase
 	Status SetPropertyImageBrush(ServerContext* context, const SetPropertyImageBrushRequest* request, CommonReply* response);
 	Status SetPropertyLinearGradientBrush(ServerContext* context, const SetPropertyLinearGradientBrushRequest* request, CommonReply* response);
 
-	std::pair<bool, std::string> _setProperty(const std::string &path, uint64 propertyID, const Poco::Dynamic::Var &v);
+	std::pair<bool, std::string> _setProperty(const std::string &path, uint64 propertyID, const var &v);
 };

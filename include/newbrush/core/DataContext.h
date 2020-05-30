@@ -2,7 +2,6 @@
 #include <map>
 #include "newbrush/core/Def.h"
 #include "newbrush/core/Event.h"
-#include "Poco/Dynamic/Var.h"
 
 namespace nb{
 
@@ -11,12 +10,12 @@ class NB_API DataContext
 public:
 	virtual ~DataContext() = default;
 
-	virtual void set(const Var &value) &;
-	virtual Var get() const;
+	virtual void set(const var &value) &;
+	virtual var get() const;
 	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const;
 	virtual const std::type_info &type() const;
 
-	struct ValueChangedArgs { DataContext *root; std::string path; Var value; };
+	struct ValueChangedArgs { DataContext *root; std::string path; var value; };
 	Event<ValueChangedArgs>	ValueChanged;		//值改变事件
 	
 protected:
@@ -76,14 +75,14 @@ public:
 
 	void set(const T &v)
 	{
-		set(Var(T));
+		set(var(T));
 	}
 
-	virtual void set(const Var &v) &
+	virtual void set(const var &v) &
 	{
 		auto root = getRoot();
 		auto path = getPath();
-		if (m_v.type() == v.type())
+		if (m_v.get_type() == v.get_type())
 		{
 			m_v = v;
 			root->ValueChanged.invoke({ root, path, v });
@@ -95,7 +94,7 @@ public:
 				bEqual = m_v == v;
 			}
 			catch (...) {
-				nbThrowException(std::logic_error, "should set for [%s] with [%s] but not [%s].", getAbsPath().data(), m_v.type().name(), v.type().name());
+				nbThrowException(std::logic_error, "should set for [%s] with [%s] but not [%s].", getAbsPath().data(), m_v.get_type().get_name().data(), v.get_type().get_name().data());
 			}
 
 			if (!bEqual)
@@ -105,7 +104,7 @@ public:
 			}
 		}
 	}
-	virtual Var get() const override { return m_v; }
+	virtual var get() const override { return m_v; }
 
 	virtual const std::type_info &type() const override { return typeid(T); }
 
@@ -115,7 +114,7 @@ public:
 	}
 
 private:
-	Var	m_v;
+	var	m_v;
 };
 
 class NB_API DataArray : public DataContext

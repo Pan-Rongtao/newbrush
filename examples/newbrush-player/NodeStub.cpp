@@ -370,7 +370,7 @@ Status NodeStub::SetPropertyLinearGradientBrush(ServerContext * context, const S
 	return waitForTaskReady(task);
 }
 
-std::pair<bool, std::string> NodeStub::_setProperty(const std::string & path, uint64 propertyID, const Poco::Dynamic::Var & v)
+std::pair<bool, std::string> NodeStub::_setProperty(const std::string & path, uint64 propertyID, const var & v)
 {
 	std::pair<bool, std::string> ret{ true, "" };
 	auto d = VisualTreeHelper::lookupNode(Application::current()->mainWindow(), path);

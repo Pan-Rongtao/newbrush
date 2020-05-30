@@ -39,6 +39,7 @@ enum class TextDecorationE
 class RenderObject;
 class NB_API TextBlock : public UIElement
 {
+	RTTR_ENABLE(UIElement)
 	NB_OBJECT
 public:
 	TextBlock();

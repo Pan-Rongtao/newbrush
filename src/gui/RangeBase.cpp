@@ -56,22 +56,22 @@ void RangeBase::onMininumChanged(float oldValue, float newValue)
 {
 }
 
-Var RangeBase::coerceValue(DependencyObject * d, Var baseValue)
+var RangeBase::coerceValue(DependencyObject * d, var baseValue)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
 	auto min = self->getValue<float>(MinimumProperty());
 	auto max = self->getValue<float>(MaximumProperty());
-	return nb::clamp<float>(min, max, (float)baseValue);
+	return nb::clamp<float>(min, max, baseValue.to_float());
 }
 
-Var RangeBase::coerceMaximum(DependencyObject * d, Var baseValue)
+var RangeBase::coerceMaximum(DependencyObject * d, var baseValue)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
 	auto min = self->getValue<float>(MinimumProperty());
 	return baseValue < min ? min : baseValue;
 }
 
-Var RangeBase::coerceMinimum(DependencyObject * d, Var baseValue)
+var RangeBase::coerceMinimum(DependencyObject * d, var baseValue)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
 	auto max = self->getValue<float>(MaximumProperty());
@@ -81,29 +81,29 @@ Var RangeBase::coerceMinimum(DependencyObject * d, Var baseValue)
 void RangeBase::onValuePropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	self->onMaxinumChanged(e->oldValue.extract<float>(), e->newValue.extract<float>());
+	self->onMaxinumChanged(e->oldValue.to_float(), e->newValue.to_float());
 }
 
 void RangeBase::onMaxinumPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	auto max = e->newValue.extract<float>();
+	auto max = e->newValue.get_value<float>();
 	auto value = self->getValue<float>(ValueProperty());
 	if (value > max)
 	{
 		self->setValue(ValueProperty(), max);
 	}
-	self->onMaxinumChanged(e->oldValue.extract<float>(), max);
+	self->onMaxinumChanged(e->oldValue.get_value<float>(), max);
 }
 
 void RangeBase::onMinimumPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	auto min = e->newValue.extract<float>();
+	auto min = e->newValue.get_value<float>();
 	auto value = self->getValue<float>(ValueProperty());
 	if (value < min)
 	{
 		self->setValue(ValueProperty(), min);
 	}
-	self->onMaxinumChanged(e->oldValue.extract<float>(), min);
+	self->onMaxinumChanged(e->oldValue.get_value<float>(), min);
 }

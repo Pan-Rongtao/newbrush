@@ -5,6 +5,7 @@
 namespace nb{
 class NB_API Control : public UIElement
 {
+	RTTR_ENABLE(UIElement)
 public:
 	Control();
 	virtual ~Control() = default;

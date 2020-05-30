@@ -1,11 +1,13 @@
 #pragma once
 #include "newbrush/core/Def.h"
+#include "rttr/registration.h"
 
 namespace nb {
 
 class MetaObject;
 class NB_API Object
 {
+	RTTR_ENABLE()
 public:
 	Object() = default;
 	virtual ~Object() = default;
@@ -15,6 +17,7 @@ public:
 
 	//子类重写返回getMetaObject()即可
 	virtual std::shared_ptr<MetaObject> metaObject();
+
 };
 
 #define NB_OBJECT \

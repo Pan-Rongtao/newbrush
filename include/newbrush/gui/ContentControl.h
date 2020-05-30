@@ -5,6 +5,7 @@ namespace nb{
 
 class NB_API ContentControl : public Control
 {
+	RTTR_ENABLE(Control)
 	NB_OBJECT
 public:
 	explicit ContentControl();

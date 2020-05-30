@@ -342,44 +342,49 @@ void Window::pollEvents()
 DependencyProperty Window::WindowStateProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged, nullptr, nullptr,
-		rttr::type::get<PropertyCategoryE>().get_enumeration().value_to_name(PropertyCategoryE::Public).to_string(), "指示窗口是普通、最小化还是最大化状态");
+		PropertyCategory::Public(), "指示窗口是普通、最小化还是最大化状态", 10);
 	return dp;
 }
 
 DependencyProperty Window::WindowStyleProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged, nullptr, nullptr,
-		rttr::type::get<PropertyCategoryE>().get_enumeration().value_to_name(PropertyCategoryE::Appearance).to_string(), "窗口的边框样式");
+		PropertyCategory::Appearance(), "窗口的边框样式", 10);
 	return dp;
 }
 
 DependencyProperty Window::TopmostProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged, nullptr, nullptr, 
+		PropertyCategory::Public(), "窗口置顶", 7);
 	return dp;
 }
 
 DependencyProperty Window::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged, nullptr, nullptr,
+		PropertyCategory::Layout(), "窗口距设备左端位置", 5);
 	return dp;
 }
 
 DependencyProperty Window::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged, nullptr, nullptr,
+		PropertyCategory::Layout(), "窗口距设备顶部位置", 7);
 	return dp;
 }
 
 DependencyProperty Window::TitleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged, nullptr, nullptr,
+		PropertyCategory::Public(), "窗口标题", 6);
 	return dp;
 }
 
 DependencyProperty Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, onIconPropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr,
+		PropertyCategory::Public(), "窗口图标", 2);
 	return dp;
 }
 
@@ -443,8 +448,8 @@ void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyProp
 		return;
 	}
 
-	auto oldState = args->oldValue.extract<WindowStateE>();
-	auto newState = args->newValue.extract<WindowStateE>();
+	auto oldState = args->oldValue.get_value<WindowStateE>();
+	auto newState = args->newValue.get_value<WindowStateE>();
 	if (oldState == newState)
 	{
 		return;
@@ -475,8 +480,8 @@ void Window::onWindowStyleChanged(DependencyObject * obj, DependencyPropertyChan
 		return;
 	}
 
-	auto oldStyle = args->oldValue.extract<WindowStyleE>();
-	auto newStyle = args->newValue.extract<WindowStyleE>();
+	auto oldStyle = args->oldValue.get_value<WindowStyleE>();
+	auto newStyle = args->newValue.get_value<WindowStyleE>();
 	if (oldStyle == newStyle)
 	{
 		return;
@@ -496,7 +501,7 @@ void Window::onTopmostPropertyChanged(DependencyObject * obj, DependencyProperty
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowAttrib(w, GLFW_FLOATING, args->newValue.extract<bool>());
+		glfwSetWindowAttrib(w, GLFW_FLOATING, args->newValue.get_value<bool>());
 	}
 }
 
@@ -523,7 +528,7 @@ void Window::onTitlePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowTitle(w, args->newValue.extract<std::string>().data());
+		glfwSetWindowTitle(w, args->newValue.get_value<std::string>().data());
 	}
 }
 
@@ -535,7 +540,7 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 		return;
 	}
 
-	auto source = args->newValue.extract<std::shared_ptr<ImageSource>>();
+	auto source = args->newValue.get_value<std::shared_ptr<ImageSource>>();
 	Bitmap bm = source ? source->bitmap() : Bitmap();
 	GLFWimage img{ bm.width(), bm.height(), (unsigned char *)bm.data() };
 	glfwSetWindowIcon(w, 1, &img);

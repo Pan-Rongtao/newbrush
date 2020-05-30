@@ -66,7 +66,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			auto orientation = getValue<OrientationE>(OrientationProperty());
 			auto itemWidth = getValue<float>(ItemWidthProperty());
 			auto itemHeight = getValue<float>(ItemHeightProperty());
-			auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+			auto childDesiredSize = child->desiredSize();
 			if (orientation == OrientationE::Horizontal)
 			{
 				maxLen = finalSize.width();
@@ -108,7 +108,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->desiredSize();
 				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
 				if ((x + w <= finalSize.width()) || (x == 0.0 && w > finalSize.width()))
@@ -131,7 +131,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->desiredSize();
 				auto w = !std::isnan(itemWidth) ? itemWidth : childDesiredSize.width();
 				if (i <= linesInfo.front().first)
 				{
@@ -158,7 +158,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (auto i = 0u; i < m_children.count(); ++i)
 			{
 				auto child = m_children.childAt(i);
-				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->desiredSize();
 				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
 				if ((y + h <= finalSize.height()) || (y == 0.0 && h > finalSize.height()))
@@ -181,7 +181,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			for (int i = 0; i != m_children.count(); ++i)
 			{
 				auto const &child = m_children.childAt(i);
-				auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+				auto childDesiredSize = child->desiredSize();
 				auto h = !std::isnan(itemHeight) ? itemHeight : childDesiredSize.height();
 				if (i <= linesInfo.front().first)
 				{

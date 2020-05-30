@@ -33,7 +33,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 
 	w->StateChanged += [w](const EventArgs &args) {
 		auto state = w->getValue(Window::WindowStateProperty());
-		nb::Log::info("on state changed:%d", state.extract<WindowStateE>());
+		nb::Log::info("on state changed:%d", state.get_value<WindowStateE>());
 	};
 
 	//w->setValue(Window::WindowStateProperty(), 1);

@@ -21,6 +21,7 @@ namespace nb{
 
 class NB_API StackPanel : public Panel
 {
+	RTTR_ENABLE(Panel)
 	NB_OBJECT
 public:
 	StackPanel();

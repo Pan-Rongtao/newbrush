@@ -4,7 +4,6 @@
 #include "newbrush/core/Size.h"
 #include "newbrush/core/RoutedEvent.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "Poco/Dynamic/Var.h"
 
 namespace nb {
 	
@@ -299,15 +298,15 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 struct DependencyPropertyChangedEventArgs
 {
 	DependencyProperty	property;
-	Var					oldValue;
-	Var					newValue;
+	var					oldValue;
+	var					newValue;
 };
 
 class RoutedProperyChangedEventArgs : public RoutedEventArgs
 {
 public:
-	Var		oldValue;
-	Var		newValue;
+	var		oldValue;
+	var		newValue;
 };
 
 class ExceptonRoutedEventArgs

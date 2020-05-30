@@ -1,111 +1,25 @@
 #include "newbrush/core/DependencyObject.h"
 
 using namespace nb;
+using namespace rttr;
 
-//如果未存储有该属性的值，则当value与defaultValue不相等时，插入新存储
+//如果使用Poco::Var，如果未存储有该属性的值，则当value与defaultValue不相等时，插入新存储
 //反之已经存储该属性的值，当value与defaultValue相等，移除该存储，否则更新该值
 //wchar_t、chart16_t、long double等这些不被视为number，所以无法转成number类型（bool、char、int、short、float、double等）
 //因此wchar_t这些类型都是用extract而不是convert
-void DependencyObject::setValue(const DependencyProperty & dp, const Var &value)
+void DependencyObject::setValue(const DependencyProperty & dp, const var &value)
 {
 	auto propertyType = dp.propertyType();
-	Var fixSetValue;
-	try {
-		if (propertyType == value.type())
-		{
-			fixSetValue = value;
-		}
-		else if (propertyType == typeid(float))
-		{
-			fixSetValue = value.convert<float>();
-		}
-		else if (propertyType == typeid(double))
-		{
-			fixSetValue = value.convert<double>();
-		}
-		else if (propertyType == typeid(int))
-		{
-			fixSetValue = value.convert<int>();
-		}
-		else if (propertyType == typeid(unsigned int))
-		{
-			fixSetValue = value.convert<unsigned int>();
-		}
-		else if (propertyType == typeid(bool))
-		{
-			fixSetValue = value.convert<bool>();
-		}
-		else if (propertyType == typeid(std::string))
-		{
-			fixSetValue = value.convert<std::string>();
-		}
-		else if (propertyType == typeid(std::wstring))
-		{
-			fixSetValue = value.convert<std::wstring>();
-		}
-		else if (propertyType == typeid(short))
-		{
-			fixSetValue = value.convert<short>();
-		}
-		else if (propertyType == typeid(unsigned short))
-		{
-			fixSetValue = value.convert<unsigned short>();
-		}
-		else if (propertyType == typeid(char))
-		{
-			fixSetValue = value.convert<char>();
-		}
-		else if (propertyType == typeid(signed char))
-		{
-			fixSetValue = value.convert<signed char>();
-		}
-		else if (propertyType == typeid(unsigned char))
-		{
-			fixSetValue = value.convert<unsigned char>();
-		}
-		else if (propertyType == typeid(wchar_t))
-		{
-			fixSetValue = value.extract<wchar_t>();
-		}
-		else if (propertyType == typeid(char16_t))
-		{
-			fixSetValue = value.extract<char16_t>();
-		}
-		else if (propertyType == typeid(char32_t))
-		{
-			fixSetValue = value.extract<char32_t>();
-		}
-		else if (propertyType == typeid(long))
-		{
-			fixSetValue = value.convert<long>();
-		}
-		else if (propertyType == typeid(unsigned long))
-		{
-			fixSetValue = value.convert<unsigned long>();
-		}
-		else if (propertyType == typeid(long long))
-		{
-			fixSetValue = value.convert<long long>();
-		}
-		else if (propertyType == typeid(unsigned long long))
-		{
-			fixSetValue = value.convert<unsigned long long>();
-		}
-		else if (propertyType == typeid(long double))
-		{
-			fixSetValue = value.extract<long double>();
-		}
-	}
-	catch (...)
+	var fixSetValue;
+	if (dp.propertyType() != value.get_type())
 	{
-		nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
+		bool ok = value.convert(propertyType);
+		if (!ok)
+		{
+			nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().get_name().data(), value.get_type().get_name().data());
+		}
 	}
-
-	if(fixSetValue.isEmpty())
-	{
-		fixSetValue = value;
-	//	nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp.name().data(), dp.propertyType().name(), value.type().name());
-	}
+	fixSetValue = value;
 
 	auto defaultValue = dp.defaultMetadata()->defaultValue();
 	_set(dp, defaultValue, fixSetValue);
@@ -113,7 +27,7 @@ void DependencyObject::setValue(const DependencyProperty & dp, const Var &value)
 
 //如果未存储有该属性的值，则返回defaultValue
 //反之，返回该存储值
-Var DependencyObject::getValue(const DependencyProperty & dp) const
+var DependencyObject::getValue(const DependencyProperty & dp) const
 {
 	auto iter = m_valueEntrys.find(dp.globalIndex());
 	if (iter == m_valueEntrys.end())
@@ -127,7 +41,7 @@ Var DependencyObject::getValue(const DependencyProperty & dp) const
 	}
 }
 
-void DependencyObject::_set(const DependencyProperty & dp, const Var & defaultValue, const Var & setValue)
+void DependencyObject::_set(const DependencyProperty & dp, const var & defaultValue, const var & setValue)
 {
 	auto coerceValue = setValue;
 	auto coerce = dp.defaultMetadata()->coerceValueCallback();

@@ -7,16 +7,16 @@
 using namespace nb;
 
 Condition::Condition()
-	: Condition(DependencyProperty::invalidProperty(), Var(), nullptr)
+	: Condition(DependencyProperty::invalidProperty(), var(), nullptr)
 {
 }
 
-Condition::Condition(const DependencyProperty & dp, const Var & v)
+Condition::Condition(const DependencyProperty & dp, const var & v)
 	: Condition(dp, v, nullptr)
 {
 }
 
-Condition::Condition(const DependencyProperty & dp, const Var & v, BindingPtr bd)
+Condition::Condition(const DependencyProperty & dp, const var & v, BindingPtr bd)
 	: property(dp)
 	, value(v)
 	, binding(bd)
@@ -62,11 +62,11 @@ void TriggerBase::processSetters(UIElement *uie, std::vector<SetterBasePtr> sett
 }
 
 Trigger::Trigger()
-	: Trigger(DependencyProperty::invalidProperty(), Var())
+	: Trigger(DependencyProperty::invalidProperty(), var())
 {
 }
 
-Trigger::Trigger(const DependencyProperty & dp, const Var & v)
+Trigger::Trigger(const DependencyProperty & dp, const var & v)
 	: m_property(dp)
 	, m_value(v)
 {
@@ -96,12 +96,12 @@ const DependencyProperty Trigger::property() const
 	return m_property;
 }
 
-void Trigger::setValue(const Var & value)
+void Trigger::setValue(const var & value)
 {
 	m_value = value;
 }
 
-const Var & Trigger::getValue() const
+const var & Trigger::getValue() const
 {
 	return m_value;
 }
@@ -158,7 +158,7 @@ DataTrigger::DataTrigger()
 {
 }
 
-DataTrigger::DataTrigger(std::shared_ptr<Binding> bd, const Var & value)
+DataTrigger::DataTrigger(std::shared_ptr<Binding> bd, const var & value)
 	: m_value(value)
 {
 	setBinding(bd);

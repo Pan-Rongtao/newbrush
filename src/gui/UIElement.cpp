@@ -14,25 +14,29 @@ UIElement::UIElement()
 
 DependencyProperty UIElement::NameProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::string>("Name", "");
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::string>("Name", "", nullptr, nullptr, nullptr,
+		PropertyCategory::Public(), "元素的名字，同级元素不可同名", 0);
 	return dp;
 }
 
 DependencyProperty UIElement::VisibilityProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的可见性", 2);
 	return dp;
 }
 
 DependencyProperty UIElement::OpacityProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的不透明度系数", 1);
 	return dp;
 }
 
 DependencyProperty UIElement::FocusableProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true);
+	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "是否允许元素可获得焦点", 7);
 	return dp;
 }
 
@@ -44,43 +48,43 @@ DependencyProperty UIElement::IsFocusedProperty()
 
 DependencyProperty UIElement::WidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的宽度", 0);
 	return dp;
 }
 
 DependencyProperty UIElement::HeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的高度", 1);
 	return dp;
 }
 
 DependencyProperty UIElement::MinWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的最小宽度约束", 6);
 	return dp;
 }
 
 DependencyProperty UIElement::MinHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的最小高度约束", 7);
 	return dp;
 }
 
 DependencyProperty UIElement::MaxWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max());
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的最大宽度约束", 8);
 	return dp;
 }
 
 DependencyProperty UIElement::MaxHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max());
-	return dp;
-}
-
-DependencyProperty UIElement::DesiredSizeProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("DesiredSize", Size());
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的最大高度约束", 9);
 	return dp;
 }
 
@@ -90,39 +94,31 @@ DependencyProperty UIElement::ActualSizeProperty()
 	return dp;
 }
 
-DependencyProperty UIElement::RenderSizeProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<UIElement, Size>("RenderSize", Size());
-	return dp;
-}
-
-DependencyProperty UIElement::OffsetProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<UIElement, Point>("Offset", Point());
-	return dp;
-}
-
 DependencyProperty UIElement::MarginProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness());
+	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness(), nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "元素的外边距，指与其他相邻元素之间的间距", 5);
 	return dp;
 }
 
 DependencyProperty UIElement::HorizontalAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch);
+	static auto dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "在父元素（如Panel或项控件）中组合此元素时所应用的水平对齐特征", 3);
 	return dp;
 }
 
 DependencyProperty UIElement::VerticalAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "在父元素（如Panel或项控件）中组合此元素时所应用的垂直特征", 4);
 	return dp;
 }
 
 DependencyProperty UIElement::FlowDirectionProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight);
+	static auto dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "方向，文本和其他元素在任何控制其布局的父元素中都按此方向流动", 12);
 	return dp;
 }
 
@@ -131,8 +127,8 @@ DependencyProperty UIElement::StyleProperty()
 	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
 		auto e = dynamic_cast<UIElement *>(object);
 
-		auto oldStyle = args->oldValue.extract<std::shared_ptr<Style>>();
-		auto newStyle = args->newValue.extract<std::shared_ptr<Style>>();
+		auto oldStyle = args->oldValue.get_value<std::shared_ptr<Style>>();
+		auto newStyle = args->newValue.get_value<std::shared_ptr<Style>>();
 		//由于style类型每次set都会触发changed，因此设置统一style也会进入此回调函数，应判断newStyle == oldStyle
 		if (newStyle == oldStyle)
 			return;
@@ -148,7 +144,7 @@ DependencyProperty UIElement::StyleProperty()
 			};*/
 			newStyle->attach(e);
 		}
-	});
+	}, nullptr, nullptr, PropertyCategory::Misc(), "样式");
 	return dp;
 }
 
@@ -166,7 +162,8 @@ DependencyProperty UIElement::IsMouseOverProperty()
 
 DependencyProperty UIElement::RenderTransformProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Transform>>("RenderTransform", std::make_shared<Transform>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Transform>>("RenderTransform", std::make_shared<Transform>(), nullptr, nullptr, nullptr,
+		PropertyCategory::Transform(), "", 1);
 	return dp;
 }
 
@@ -205,7 +202,7 @@ Point UIElement::worldOffset() const
 	Point ret;
 	auto p = this;
 	do {
-		auto offset = p->getValue<Point>(OffsetProperty());
+		auto offset = p->m_offsetToParent;
 		ret += offset;
 	} while ((p->m_parent) && (p = p->m_parent));
 	return ret;
@@ -218,7 +215,7 @@ void UIElement::updateLayout()
 
 	auto rootWidth = root->getValue<float>(WidthProperty());
 	auto rootHeight = root->getValue<float>(HeightProperty());
-	auto rootDesiredSize = root->getValue<Size>(DesiredSizeProperty());
+	auto const &rootDesiredSize = root->desiredSize();
 	root->measure({ rootWidth, rootHeight });
 	root->arrage(Rect(0, 0, rootDesiredSize));
 	root->onRender(Window::drawContext);
@@ -268,7 +265,7 @@ void UIElement::measure(const Size & availabelSize)
 	//保证在（0, availabelSize)区间
 	desiredSizeTemp.width() = nb::clamp<float>(0.0, availabelSize.width(), desiredSizeTemp.width());
 	desiredSizeTemp.height() = nb::clamp<float>(0.0, availabelSize.height(), desiredSizeTemp.height());
-	setValue(DesiredSizeProperty(), desiredSizeTemp);
+	m_desiredSize = desiredSizeTemp;
 
 	m_measureInProgress = false;
 }
@@ -287,7 +284,6 @@ void UIElement::arrage(const Rect & finalRect)
 	auto minHeight = getValue<float>(MinHeightProperty());
 	auto maxWidth = getValue<float>(MaxWidthProperty());
 	auto maxHeight = getValue<float>(MaxHeightProperty());
-	auto desiredSize = getValue<Size>(DesiredSizeProperty());
 	//减去magin计算出本来的arrangeSize以及clientSize
 	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
@@ -296,8 +292,8 @@ void UIElement::arrage(const Rect & finalRect)
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
 	auto horizontalAlignment = getValue<HorizontalAlignmentE>(HorizontalAlignmentProperty());
 	auto verticalAlignment = getValue<VerticalAlignmentE>(VerticalAlignmentProperty());
-	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(desiredSize.width());
-	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(desiredSize.height());
+	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(m_desiredSize.width());
+	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(m_desiredSize.height());
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
@@ -307,8 +303,7 @@ void UIElement::arrage(const Rect & finalRect)
 
 	//arrangeOverride后的RenderSize是不需要调整的非裁剪区域，而不是最终的可见区域
 	auto innerInkSize = arrangeOverride(arrangeSize);
-	setValue(RenderSizeProperty(), innerInkSize);
-	auto renderSize = getValue<Size>(RenderSizeProperty());
+	m_renderSize = innerInkSize;
 	//裁剪，保证innerInkSize在Max之内
 	if (std::isnan(width))
 		if (innerInkSize.width() > maxWidth)	innerInkSize.width() = maxWidth;
@@ -320,19 +315,19 @@ void UIElement::arrage(const Rect & finalRect)
 	switch (horizontalAlignment)
 	{
 	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + margin.left;													break;
-	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left + (clientSize.width() - renderSize.width()) / 2;	break;
-	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right - renderSize.width();							break;
-	default:							offsetX = renderSize.width() >= clientSize.width() ? finalRect.left() + margin.left : finalRect.x() + margin.left + (clientSize.width() - renderSize.width()) / 2;	break;
+	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left + (clientSize.width() - m_renderSize.width()) / 2;	break;
+	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right - m_renderSize.width();							break;
+	default:							offsetX = m_renderSize.width() >= clientSize.width() ? finalRect.left() + margin.left : finalRect.x() + margin.left + (clientSize.width() - m_renderSize.width()) / 2;	break;
 	}
 	switch (verticalAlignment)
 	{
 	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + margin.top;														break;
-	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top + (clientSize.height() - renderSize.height()) / 2;	break;
-	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - renderSize.height());		break;
-	default:							offsetY = renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top : finalRect.y() + margin.top + (clientSize.height() - renderSize.height()) / 2;	break;
+	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top + (clientSize.height() - m_renderSize.height()) / 2;	break;
+	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - m_renderSize.height());		break;
+	default:							offsetY = m_renderSize.height() >= clientSize.height() ? finalRect.top() + margin.top : finalRect.y() + margin.top + (clientSize.height() - m_renderSize.height()) / 2;	break;
 	}
-	setValue(OffsetProperty(), Point(offsetX, offsetY));
-	setValue(ActualSizeProperty(), renderSize);
+	m_offsetToParent.reset(offsetX, offsetY);
+	setValue(ActualSizeProperty(), m_renderSize);
 	//裁剪
 //	if (m_actualSize.width() > finalRect.width())	m_actualSize.width() = finalRect.width();
 //	if (m_actualSize.height() > finalRect.height())	m_actualSize.height() = finalRect.height();
@@ -1066,6 +1061,11 @@ RoutedEvent UIElement::TouchUpEvent()
 {
 	static auto e = RoutedEventManager::registerRoutedEvent<UIElement, TouchEventArgs>("TouchUp", RoutingStrategyE::bubble);
 	return e;
+}
+
+const Size &UIElement::desiredSize() const
+{
+	return m_desiredSize;
 }
 
 std::shared_ptr<UIElement> UIElement::clone() const

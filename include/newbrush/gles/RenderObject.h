@@ -19,14 +19,12 @@
 #include "newbrush/gles/Projection.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/TextureMipmap.h"
-#include "Poco/Dynamic/Var.h"
 
 struct aiNode;
 struct aiMesh;
 struct aiScene;
 namespace nb{
 	
-using Poco::Dynamic::Var;
 class NB_API RenderObject
 {
 public:
@@ -62,7 +60,7 @@ public:
 	std::shared_ptr<Program> program();
 
 	//存储uniform变量，以便下次刷新使用
-	void storeUniform(const std::string &name, const Var &v);
+	void storeUniform(const std::string &name, const var &v);
 	
 	//绘制，重写此方法以构建自己的渲染方式
 	virtual void draw(const Camera &camera, const Projection &projection) const;
@@ -73,7 +71,7 @@ private:
 
 	std::shared_ptr<Model>		m_model;
 	std::shared_ptr<Program>	m_program;
-	std::map<std::string, Var>	m_uniforms;
+	std::map<std::string, var>	m_uniforms;
 	bool						m_renderable;
 };
 

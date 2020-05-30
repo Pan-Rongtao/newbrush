@@ -14,25 +14,29 @@ Line::Line()
 
 DependencyProperty Line::X1Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "线段起点的X分量", 1);
 	return dp;
 }
 
 DependencyProperty Line::X2Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "线段终点的X分量", 1);
 	return dp;
 }
 
 DependencyProperty Line::Y1Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "线段起点的Y分量", 1);
 	return dp;
 }
 
 DependencyProperty Line::Y2Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "线段终点的Y分量", 1);
 	return dp;
 }
 

@@ -12,13 +12,13 @@ Setter::Setter()
 {
 }
 
-Setter::Setter(const DependencyProperty & dp, const Var & v)
+Setter::Setter(const DependencyProperty & dp, const var & v)
 	: property(dp)
 	, value(v)
 {
 }
 
-Setter::Setter(const DependencyProperty &dp, const Var &v, const std::string &_targetName)
+Setter::Setter(const DependencyProperty &dp, const var &v, const std::string &_targetName)
 	: property(dp)
 	, value(v)
 	, targetName(std::make_shared<std::string>(_targetName))

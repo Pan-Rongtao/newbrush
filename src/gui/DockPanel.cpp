@@ -16,12 +16,13 @@ void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
 DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyDock);
-	return v.isEmpty() ? DockE::Left : v.extract<DockE>();
+	return !v.is_valid() ? DockE::Left : v.get_value<DockE>();
 }
 
 DependencyProperty DockPanel::LastChildFillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false);
+	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "最后一个子元素是否拉伸以填充剩余的可用空间", 5);
 	return dp;
 }
 
@@ -72,7 +73,7 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 	for (int i = 0; i != m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+		auto childDesiredSize = child->desiredSize();
 		Rect childArrageRect;
 		auto lastChildFill = getValue<bool>(LastChildFillProperty());
 		if (lastChildFill && (i == m_children.count() - 1))

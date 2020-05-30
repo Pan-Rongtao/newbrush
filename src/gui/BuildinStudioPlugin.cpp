@@ -98,41 +98,100 @@ extern "C" NB_API void getMetaObjects(CClassInfo *infos, int count)
 */
 NB_API int nb::getMetaObjectCount()
 {
-	BuildinStudioPlugin plugin;
-	std::vector<std::shared_ptr<MetaObject>> metaObjects;
-	plugin.getMetametaObjectsOverride(metaObjects);
-	return metaObjects.size();
+	//BuildinStudioPlugin plugin;
+	//std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	//plugin.getMetametaObjectsOverride(metaObjects);
+	//return metaObjects.size();
+	//
+	
+	using namespace rttr;
+	array_range<type> range = type::get_types();
+	return range.size();
 }
 
 NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 {
-	BuildinStudioPlugin plugin;
-	std::vector<std::shared_ptr<MetaObject>> metaObjects;
-	plugin.getMetametaObjectsOverride(metaObjects);
-	for (size_t i = 0; i < (size_t)count && i < metaObjects.size(); ++i)
+	//BuildinStudioPlugin plugin;
+	//std::vector<std::shared_ptr<MetaObject>> metaObjects;
+	//plugin.getMetametaObjectsOverride(metaObjects);
+	//for (size_t i = 0; i < (size_t)count && i < metaObjects.size(); ++i)
+	//{
+	//	auto obj = metaObjects[i];
+	//	auto classDsp = obj->classDescriptor();
+	//	auto &cClass = infos[i];
+	//	strcpy(cClass.typeName, nb::getFullName(classDsp.type).data());
+	//	strcpy(cClass.category, classDsp.category.data());
+	//	strcpy(cClass.displayName, classDsp.displayName.data());
+	//	strcpy(cClass.description, classDsp.description.data());
+
+	//	auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
+	//	auto &allProperties = obj->getAllProperties();
+	//	for (auto j = 0; j < propertyLimit; ++j)
+	//	{
+	//		auto &cProperty = cClass.propertys[j];
+	//		if (j < allProperties.size())
+	//		{
+	//			auto sdkProperty = allProperties[j];
+	//			cProperty.type = sdkProperty.type;
+	//			strcpy(cProperty.category, sdkProperty.category.data());
+	//			strcpy(cProperty.displayName, sdkProperty.displayName.data());
+	//			strcpy(cProperty.description, sdkProperty.description.data());
+	//			cProperty.valueType = sdkProperty.valueType;
+	//			strcpy(cProperty.extra, sdkProperty.extra.data());
+	//		}
+	//		else
+	//		{
+	//			cProperty.type = 0;
+	//			strcpy(cProperty.category, "");
+	//			strcpy(cProperty.displayName, "");
+	//			strcpy(cProperty.description, "");
+	//			cProperty.valueType = -1;
+	//			strcpy(cProperty.extra, "");
+	//		}
+	//	}
+	//}
+	using namespace rttr;
+	array_range<type> range = type::get_types();
+	int i = 0;
+	for (type t : range)
 	{
-		auto obj = metaObjects[i];
-		auto classDsp = obj->classDescriptor();
+		if (i > count)	break;
+		if (t == type::get<Window>())
+		{
+			int x = 0;
+			++x;
+		}
+		auto typeName = t.get_name();
+		auto category = t.get_metadata("Category").to_string();
+		auto displayName = t.get_metadata("DisplayName").to_string();
+		auto description = t.get_metadata("Description").to_string();
+		auto p0 = t.get_metadata(1);
+		if (p0.is_valid())
+		{
+			//auto p = p0.get_value<DependencyProperty>();
+		}
 		auto &cClass = infos[i];
-		strcpy(cClass.typeName, nb::getFullName(classDsp.type).data());
-		strcpy(cClass.category, classDsp.category.data());
-		strcpy(cClass.displayName, classDsp.displayName.data());
-		strcpy(cClass.description, classDsp.description.data());
+		strcpy(cClass.typeName, typeName.data());
+		strcpy(cClass.category, category.data());
+		strcpy(cClass.displayName, displayName.data());
+		strcpy(cClass.description, description.data());
 
 		auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
-		auto &allProperties = obj->getAllProperties();
-		for (auto j = 0; j < propertyLimit; ++j)
+		std::vector<DependencyProperty> dps;
+		DependencyProperty::getTypePropertys(t, dps);
+		for (decltype(propertyLimit) j = 0; j < propertyLimit; ++j)
 		{
 			auto &cProperty = cClass.propertys[j];
-			if (j < allProperties.size())
+			if (j < dps.size())
 			{
-				auto sdkProperty = allProperties[j];
-				cProperty.type = sdkProperty.type;
-				strcpy(cProperty.category, sdkProperty.category.data());
-				strcpy(cProperty.displayName, sdkProperty.displayName.data());
-				strcpy(cProperty.description, sdkProperty.description.data());
-				cProperty.valueType = sdkProperty.valueType;
-				strcpy(cProperty.extra, sdkProperty.extra.data());
+				auto sdkProperty = dps[j];
+				cProperty.type = sdkProperty.propertyType().get_id();
+				strcpy(cProperty.category, sdkProperty.defaultMetadata()->category()->name().data());
+				strcpy(cProperty.displayName, sdkProperty.name().data());
+				strcpy(cProperty.description, sdkProperty.defaultMetadata()->description().data());
+				cProperty.valueType = sdkProperty.propertyType().get_id();
+				if(sdkProperty.propertyType().is_enumeration())
+					strcpy(cProperty.extra, "a|b");
 			}
 			else
 			{
@@ -144,5 +203,6 @@ NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 				strcpy(cProperty.extra, "");
 			}
 		}
+		++i;
 	}
 }

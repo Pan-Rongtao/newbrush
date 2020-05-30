@@ -43,7 +43,7 @@ void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs 
 	Control::onPropertyChanged(args);
 	if (args.property == ContentProperty())
 	{
-		auto content = args.newValue.extract<std::shared_ptr<UIElement>>();
+		auto content = args.newValue.get_value<std::shared_ptr<UIElement>>();
 		addLogicalChild(content);
 		updateLayout();
 	}

@@ -7,9 +7,9 @@ namespace nb {
 class ModifiedValue
 {
 public:
-	Var		BaseValue;
-	Var		AnimatedValue;
-	Var		CoercedValue;
+	var		BaseValue;
+	var		AnimatedValue;
+	var		CoercedValue;
 };
 
 enum FullValueSourceE : int16_t
@@ -48,19 +48,19 @@ public:
 	EffectiveValueEntry(const DependencyProperty &dp, BaseValueSourceInternalE valueSource);
 	EffectiveValueEntry(const DependencyProperty &dp, FullValueSourceE fullValueSource);
 
-	void setBaseValue(const Var &value) &;
-	Var baseValue() const;
-	void setExpressionValue(const Var &value);
-	void setAnimatedValue(const Var &value);
-	void setCoercedValue(const Var &value, const Var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue);
+	void setBaseValue(const var &value) &;
+	var baseValue() const;
+	void setExpressionValue(const var &value);
+	void setAnimatedValue(const var &value);
+	void setCoercedValue(const var &value, const var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue);
 
 private:
 	ModifiedValue ensureModifiedValue();
 
 	size_t				m_propertyIndex;
-	Var		BaseValue;
-	Var		AnimatedValue;
-	Var		CoercedValue;
+	var		BaseValue;
+	var		AnimatedValue;
+	var		CoercedValue;
 	std::bitset<FS_Max>	m_source;
 };
 

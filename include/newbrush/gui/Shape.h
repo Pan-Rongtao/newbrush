@@ -11,6 +11,7 @@ using nb::media::PenLineCapE;
 using nb::media::PenLineJoinE;
 class NB_API Shape : public UIElement
 {
+	RTTR_ENABLE(UIElement)
 	NB_OBJECT
 public:
 	static DependencyProperty FillProperty();				//填充画刷的依赖属性(std::shared_ptr<Brush>)

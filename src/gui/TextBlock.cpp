@@ -30,85 +30,99 @@ TextBlock::TextBlock(const std::string & text)
 
 DependencyProperty TextBlock::TextProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::string>("Text", std::string());
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::string>("Text", "", nullptr, nullptr, nullptr,
+		PropertyCategory::Public(), "文本内容", 1);
 	return dp;
 }
 
 DependencyProperty TextBlock::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Brush>>("Background", nullptr);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Brush>>("Background", nullptr, nullptr, nullptr, nullptr,
+		PropertyCategory::Brush(), "元素背景的画笔", 1);
 	return dp;
 }
 
 DependencyProperty TextBlock::FontProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"));
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "字体", 1);
 	return dp;
 }
 
 DependencyProperty TextBlock::FontStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, FontStyleE>("FontStyle", FontStyleE::Normal);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, FontStyleE>("FontStyle", FontStyleE::Normal, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "字形", 3);
 	return dp;
 }
 
 DependencyProperty TextBlock::FontSizeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("FontSize", 0.0);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("FontSize", 0.0, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "字号", 1);
 	return dp;
 }
 
 DependencyProperty TextBlock::FontWeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, int>("FontWeight", 0);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, int>("FontWeight", 0, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "字体粗细", 5);
 	return dp;
 }
 
 DependencyProperty TextBlock::ForegroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, Color>("Foreground", Color());
+	static auto dp = DependencyProperty::registerDependency<TextBlock, Color>("Foreground", Color(), nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "前景色画笔", 2);
 	return dp;
 }
 
 DependencyProperty TextBlock::LineHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("LineHeight", 0.0);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("LineHeight", 0.0, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "前景色画笔", 2);
 	return dp;
 }
 
 DependencyProperty TextBlock::CharSpacingProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("CharSpacing", 0.0);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, float>("CharSpacing", 0.0, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "字间距", 2);
 	return dp;
 }
 
 DependencyProperty TextBlock::PaddingProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, Thickness>("Padding", Thickness());
+	static auto dp = DependencyProperty::registerDependency<TextBlock, Thickness>("Padding", Thickness(), nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "控件内部的填充边距，指在对象和其他边距或边框之间插入的边距", 14);
 	return dp;
 }
 
 DependencyProperty TextBlock::TextAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, TextAlignmentE>("TextAlignment", TextAlignmentE::Center);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextAlignmentE>("TextAlignment", TextAlignmentE::Center, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "文本内容的水平对齐方式", 2);
 	return dp;
 }
 
 DependencyProperty TextBlock::TextTrimmingProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, TextTrimmingE>("TextTrimming", TextTrimmingE::None);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextTrimmingE>("TextTrimming", TextTrimmingE::None, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "文本超出内容区域时采用的文本裁剪行为", 11);
 	return dp;
 }
 
 DependencyProperty TextBlock::TextWrappingProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, TextWrappingE>("TextWrapping", TextWrappingE::NoWrap);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextWrappingE>("TextWrapping", TextWrappingE::NoWrap, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "是否自动换行", 12);
 	return dp;
 }
 
 DependencyProperty TextBlock::TextDecorationProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, TextDecorationE>("TextDecoration", TextDecorationE::Baseline);
+	static auto dp = DependencyProperty::registerDependency<TextBlock, TextDecorationE>("TextDecoration", TextDecorationE::Baseline, nullptr, nullptr, nullptr,
+		PropertyCategory::Text(), "下划线", 1);
 	return dp;
 }
 
@@ -116,7 +130,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == ForegroundProperty())
 	{
-		auto c = args.newValue.extract<Color>();
+		auto c = args.newValue.get_value<Color>();
 		m_renderObj->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}
 }

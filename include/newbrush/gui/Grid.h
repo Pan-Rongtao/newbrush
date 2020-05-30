@@ -84,6 +84,7 @@ public:
 ///////class Grid
 class NB_API Grid : public Panel
 {
+	RTTR_ENABLE(Panel)
 	NB_OBJECT
 public:
 	Grid();

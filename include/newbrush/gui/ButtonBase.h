@@ -12,6 +12,7 @@ enum class ClickModeE
 
 class NB_API ButtonBase : public ContentControl
 {
+	RTTR_ENABLE(ContentControl)
 	NB_OBJECT
 public:
 	virtual ~ButtonBase() = default;

@@ -49,7 +49,7 @@ void Style::attach(UIElement * uie)
 	}
 }
 
-void Style::handlePropertyChanged(UIElement * uie, const DependencyProperty & dp, const Var & v)
+void Style::handlePropertyChanged(UIElement * uie, const DependencyProperty & dp, const var & v)
 {
 	//由于处理property改变时会set Property的值，会造成无限循环，判断m_handlingPropertyChanged避免循环
 	if (m_handlingPropertyChanged)

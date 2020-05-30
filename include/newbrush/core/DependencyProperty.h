@@ -4,46 +4,57 @@
 #include <map>
 #include <typeindex>
 #include "newbrush/core/Def.h"
-#include "Poco/Dynamic/Var.h"
 
 namespace nb{
 
-using Poco::Dynamic::Var;
+using rttr::variant;
 
 class DependencyObject;
 class PropertyMetadata;
 struct DependencyPropertyChangedEventArgs;
 using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs *)>;
-using CoerceValueCallback = std::function<Var(DependencyObject *, Var)>;
-using ValidateValueCallback = std::function<bool(const Var &value)>;
+using CoerceValueCallback = std::function<var(DependencyObject *, var)>;
+using ValidateValueCallback = std::function<bool(const var &value)>;
 
 class NB_API Range
 {
 public:
-	Range(Var lowerBound, Var upperBound, Var step);
+	Range(var lowerBound, var upperBound, var step);
 
-	Var lowerBound() const;
-	Var upperBound() const;
-	Var step() const;
+	var lowerBound() const;
+	var upperBound() const;
+	var step() const;
 
 private:
-	Var m_lowerBound;
-	Var m_upperBound;
-	Var m_step;
+	var m_lowerBound;
+	var m_upperBound;
+	var m_step;
 };
 
-enum class PropertyCategoryE
+class NB_API PropertyCategory
 {
-	Brush = 0,	//画笔
-	Appearance,	//外观
-	Public,		//公共
-	Automation,	//自动化
-	Layout,		//布局
-	Text,		//文本
-	Transform,	//转换
-	Misc,		//杂项
-	Custom,		//自定义
+public:
+	const std::string &name() const;
+	int order() const;
+
+	static std::shared_ptr<PropertyCategory> get(const std::string &name, int order);
+
+	static std::shared_ptr<PropertyCategory> Brush();
+	static std::shared_ptr<PropertyCategory> Appearance();
+	static std::shared_ptr<PropertyCategory> Public();
+	static std::shared_ptr<PropertyCategory> Automation();
+	static std::shared_ptr<PropertyCategory> Layout();
+	static std::shared_ptr<PropertyCategory> Text();
+	static std::shared_ptr<PropertyCategory> Transform();
+	static std::shared_ptr<PropertyCategory> Misc();
+	static std::shared_ptr<PropertyCategory> Custom();
+
+private:
+	std::string m_name;
+	int			m_order;
+	static std::map<std::string, std::shared_ptr<PropertyCategory>> s_propertyCategorys;
 };
+using PropertyCategoryPtr = std::shared_ptr<PropertyCategory>;
 
 class NB_API PropertyMetadata
 {
@@ -52,23 +63,26 @@ public:
 	//defaulValue：默认值
 	//propertyChangedCallback：属性已改变回调
 	//coerceValueCallback：属性值矫正回调
-	PropertyMetadata(const Var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, const std::string &category = "", const std::string &description = "", std::shared_ptr<Range> range = nullptr);
+	PropertyMetadata(const var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, 
+		PropertyCategoryPtr category = nullptr, const std::string &description = "", int order = std::numeric_limits<int>::max(), std::shared_ptr<Range> range = nullptr);
 
-	void setDefaultValue(const Var &value) &;
-	Var defaultValue() const;
+	void setDefaultValue(const var &value) &;
+	var defaultValue() const;
 	bool isSealed() const;
 	PropertyChangedCallback propertyChangedCallback();
 	CoerceValueCallback coerceValueCallback();
-	const std::string &category() const;
+	PropertyCategoryPtr category() const;
 	const std::string &description() const;
+	int order() const;
 	std::shared_ptr<Range> range() const;
 	
 private:
-	Var						m_defaultValue;
+	var						m_defaultValue;
 	PropertyChangedCallback	m_propertyChangedCallback;
 	CoerceValueCallback		m_coerceValueCallback;
-	std::string				m_category;
+	PropertyCategoryPtr		m_category;
 	std::string				m_description;
+	int						m_order;
 	std::shared_ptr<Range>	m_range;
 };
 
@@ -80,10 +94,10 @@ public:
 	const std::string &name() const;
 
 	//宿主类型
-	std::type_index ownerType() const;
+	rttr::type ownerType() const;
 
 	//宿主类型
-	std::type_index propertyType() const;
+	rttr::type propertyType() const;
 
 	//元数据
 	std::shared_ptr<PropertyMetadata> defaultMetadata() const;
@@ -106,13 +120,13 @@ public:
 	//element：目标元素
 	//property_name：属性名
 	//property_v：属性值
-	static void registerAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name, const Var &property_v);
+	static void registerAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name, const var &property_v);
 
 	
-	//查询依赖属性值，如果查询不到，将返回一个空的Var
+	//查询依赖属性值，如果查询不到，将返回一个空的var
 	//element：目标元素
 	//property_name：属性名
-	static Var findAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name);
+	static var findAttached(std::shared_ptr<DependencyObject> element, const std::string &property_name);
 
 	//注册依赖属性
 	//name：属性名
@@ -122,37 +136,39 @@ public:
 	//异常：std::logic_error已经注册过同类型属性
 	template<class OwnerType, class PropertyType>
 	static const DependencyProperty &registerDependency(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, 
-		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, const std::string &category = "", const std::string &description = "",
-		std::shared_ptr<Range> range = nullptr)
+		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, PropertyCategoryPtr category = nullptr, const std::string &description = "",
+		int order = std::numeric_limits<int>::max(), std::shared_ptr<Range> range = nullptr)
 	{
 		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
-		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback, category, description, range);
-		return registerCommon(name, typeid(OwnerType), typeid(PropertyType), metadata, validateValueCallback);
+		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback, category, description, order, range);
+		return registerCommon(name, rttr::type::get<OwnerType>(), rttr::type::get<PropertyType>(), metadata, validateValueCallback);
 	}
 
-	static std::vector<DependencyProperty> getTypePropertys(std::type_index ownerType);
+	static void getTypePropertys(rttr::type ownerType, std::vector<DependencyProperty> &ret);
 	
-	static Var unsetValue();
+	static var unsetValue();
 	static const DependencyProperty &invalidProperty();
 	static const DependencyProperty &find(size_t globalIndex);
 
 private:
-	DependencyProperty(const std::string & name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
+	DependencyProperty(const std::string & name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash);
 
-	static const DependencyProperty &registerCommon(const std::string &name, std::type_index ownerType, std::type_index propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
+	static const DependencyProperty &registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback);
 
 	//如果不适用std::shared_ptr<DependencyProperty>而是DependencyProperty，会发现studio插件在FreeLibrary时挂死
 	//后续要处理这个事情，把DependencyProperty改为std::shared_ptr<DependencyProperty>
 	static std::map<std::size_t, DependencyProperty> &dependencyProperties();
 
+	static std::vector<DependencyProperty> getTypePropertys(rttr::type t);
+
 	std::string							m_name;
-	std::type_index						m_propertyType;
-	std::type_index						m_ownerType;
+	rttr::type							m_propertyType;
+	rttr::type							m_ownerType;
 	std::shared_ptr<PropertyMetadata>	m_metadata;
 	ValidateValueCallback				m_validateValueCallback;
 	size_t								m_hash;
 
-	static std::map<std::shared_ptr<DependencyObject>, std::map<std::string, Var>>	m_attProperties;
+	static std::map<std::shared_ptr<DependencyObject>, std::map<std::string, var>>	m_attProperties;
 };
 
 }

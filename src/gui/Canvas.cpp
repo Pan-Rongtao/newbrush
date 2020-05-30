@@ -17,7 +17,7 @@ void Canvas::setLeft(std::shared_ptr<UIElement> element, float left)
 float Canvas::getLeft(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyLeft);
-	return v.isEmpty() ? NAN : v.convert<float>();
+	return !v.is_valid() ? NAN : v.convert<float>();
 }
 
 void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
@@ -29,7 +29,7 @@ void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
 float Canvas::getRight(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyRight);
-	return v.isEmpty() ? NAN : v.convert<float>();
+	return !v.is_valid() ? NAN : v.convert<float>();
 }
 
 void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
@@ -41,7 +41,7 @@ void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
 float Canvas::getTop(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyTop);
-	return v.isEmpty() ? NAN : v.convert<float>();
+	return !v.is_valid() ? NAN : v.convert<float>();
 }
 
 void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
@@ -53,7 +53,7 @@ void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
 float Canvas::getBottom(std::shared_ptr<UIElement> element)
 {
 	auto v = DependencyProperty::findAttached(element, AttachedPropertyBottom);
-	return v.isEmpty() ? NAN : v.convert<float>();
+	return !v.is_valid() ? NAN : v.convert<float>();
 }
 
 //未设置宽高则默认为0
@@ -78,7 +78,7 @@ Size Canvas::arrangeOverride(const Size & finalSize)
 		auto y = getTop(child);
 		if (std::isnan(x))	x = 0.0;
 		if (std::isnan(y))	y = 0.0;
-		auto desiredSize = child->getValue<Size>(DesiredSizeProperty());
+		auto desiredSize = child->desiredSize();
 				
 		child->arrage(Rect(x, y, desiredSize.width(), desiredSize.height()));
 	}

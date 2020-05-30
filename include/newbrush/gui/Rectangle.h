@@ -5,6 +5,7 @@ namespace nb{
 
 class NB_API Rectangle : public Shape
 {
+	RTTR_ENABLE(Shape)
 	NB_OBJECT
 public:
 	Rectangle();

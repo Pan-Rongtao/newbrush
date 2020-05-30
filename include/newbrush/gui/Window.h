@@ -115,6 +115,8 @@ private:
 	WindowStateE	m_lastWindowState;
 
 	friend class Application;
+
+	RTTR_ENABLE()
 };
 
 }

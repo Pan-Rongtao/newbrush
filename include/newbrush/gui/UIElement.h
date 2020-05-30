@@ -48,6 +48,7 @@ enum class OrientationE
 
 class NB_API UIElement : public DependencyObject
 {
+	RTTR_ENABLE(DependencyObject)
 	NB_OBJECT
 public:
 	UIElement();
@@ -64,10 +65,7 @@ public:
 	static DependencyProperty 					MinHeightProperty();	//最小高的依赖属性（float）
 	static DependencyProperty 					MaxWidthProperty();		//最大宽的依赖属性（float）
 	static DependencyProperty 					MaxHeightProperty();	//最大高的依赖属性（float）
-	static DependencyProperty 					DesiredSizeProperty();	//期望尺寸的依赖属性（Size）只读
 	static DependencyProperty 					ActualSizeProperty();	//实际尺寸的依赖属性（Size）只读
-	static DependencyProperty 					RenderSizeProperty();	//渲染尺寸的依赖属性（Size）只读
-	static DependencyProperty 					OffsetProperty();		//相对父偏移量的依赖属性（float）未知
 	static DependencyProperty 					MarginProperty();		//边缘的依赖属性（Thickness）
 	static DependencyProperty 					HorizontalAlignmentProperty();	//横向对齐方式的依赖属性（HorizontalAlignmentE）
 	static DependencyProperty 					VerticalAlignmentProperty();	//纵向对齐方式的依赖属性（VerticalAlignmentE）
@@ -190,6 +188,8 @@ public:
 	static RoutedEvent							TouchMoveEvent();
 	static RoutedEvent							TouchUpEvent();
 
+	const Size &desiredSize() const;
+
 	virtual std::shared_ptr<UIElement> clone() const;
 
 	//获取子节点个数，本实现返回0
@@ -297,6 +297,9 @@ private:
 	std::bitset<Flags_Max>	m_flags;
 	Size m_lastMesaaeAvailabelSize;
 	bool m_measureInProgress;
+	Size m_desiredSize;
+	Point m_offsetToParent;
+	Size m_renderSize;
 
 	friend class Window;
 	friend class UIElementCollection;

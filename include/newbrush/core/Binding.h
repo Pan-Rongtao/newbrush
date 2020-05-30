@@ -34,7 +34,7 @@ public:
 	void setPath(const std::string &path) &;
 	std::string path() const;
 
-	struct BindDataChangedEventArgs { Var value; };
+	struct BindDataChangedEventArgs { var value; };
 	Event<BindDataChangedEventArgs> BindDataChanged;
 
 private:

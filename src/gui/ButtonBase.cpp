@@ -18,7 +18,7 @@ bool ButtonBase::isEnableCore()
 
 DependencyProperty ButtonBase::ClickModeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::Release);
+	static auto dp = DependencyProperty::registerDependency<ButtonBase, ClickModeE>("ClickMode", ClickModeE::Release, nullptr, nullptr, nullptr, PropertyCategory::Misc(), "合适应该发生Click事件", 3);
 	return dp;
 }
 

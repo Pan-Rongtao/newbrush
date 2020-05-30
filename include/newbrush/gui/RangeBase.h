@@ -24,9 +24,9 @@ protected:
 	virtual void onMininumChanged(float oldValue, float newValue);
 			
 private:
-	static Var coerceValue(DependencyObject *d, Var baseValue);
-	static Var coerceMaximum(DependencyObject *d, Var baseValue);
-	static Var coerceMinimum(DependencyObject *d, Var baseValue);
+	static var coerceValue(DependencyObject *d, var baseValue);
+	static var coerceMaximum(DependencyObject *d, var baseValue);
+	static var coerceMinimum(DependencyObject *d, var baseValue);
 
 	static void onValuePropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
 	static void onMaxinumPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);

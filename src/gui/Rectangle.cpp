@@ -7,6 +7,7 @@
 #include "newbrush/core/MetaObject.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/media/Transform.h"
+#include "newbrush/media/Brush.h"
 
 using namespace nb;
 
@@ -16,13 +17,15 @@ Rectangle::Rectangle()
 
 DependencyProperty Rectangle::RadiusXProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 x 轴半径", 4);
 	return dp;
 }
 
 DependencyProperty Rectangle::RadiusYProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0, nullptr, nullptr, nullptr,
+		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 y 轴半径", 5);
 	return dp;
 }
 
@@ -59,7 +62,7 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = args.newValue.extract<std::shared_ptr<Brush>>();
+		auto fill = args.newValue.get_value<std::shared_ptr<Brush>>();
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -79,7 +82,7 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	}
 	else if (args.property == RenderTransformProperty())
 	{
-		auto transformationPtr = args.newValue.extract<std::shared_ptr<Transform>>();
+		auto transformationPtr = args.newValue.get_value<std::shared_ptr<Transform>>();
 		glm::mat4 mat = transformationPtr->value();
 		m_fillObject->model()->matrix = mat * m_fillObject->model()->matrix;
 		m_strokeObject->model()->matrix = mat * m_strokeObject->model()->matrix;

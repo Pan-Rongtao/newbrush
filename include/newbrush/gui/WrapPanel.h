@@ -22,6 +22,7 @@ namespace nb{
 
 class NB_API WrapPanel : public Panel
 {
+	RTTR_ENABLE(Panel)
 	NB_OBJECT
 public:
 	WrapPanel();

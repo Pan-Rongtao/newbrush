@@ -76,7 +76,7 @@ void RepeatButton::onDelayPropertyChanged(DependencyObject * d, DependencyProper
 void RepeatButton::onIntervalPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
 	auto self = dynamic_cast<RepeatButton*>(d);
-	self->m_timer.setInterval(e->newValue.extract<uint32_t>());
+	self->m_timer.setInterval(e->newValue.get_value<uint32_t>());
 }
 
 std::shared_ptr<MetaObject> RepeatButton::getMetaObject()

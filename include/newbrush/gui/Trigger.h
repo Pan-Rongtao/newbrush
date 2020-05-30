@@ -9,12 +9,12 @@ class Condition
 {
 public:
 	Condition();
-	Condition(const DependencyProperty &dp, const Var &v);
-	Condition(const DependencyProperty &dp, const Var &v, BindingPtr bd);
+	Condition(const DependencyProperty &dp, const var &v);
+	Condition(const DependencyProperty &dp, const var &v, BindingPtr bd);
 
 	DependencyProperty		property;	//条件属性
 	BindingPtr				binding;	//适用于MultiDataTrigger
-	Var						value;		//条件属性值
+	var						value;		//条件属性值
 };
 
 class UIElement;
@@ -41,7 +41,7 @@ class NB_API Trigger : public TriggerBase
 {
 public:
 	Trigger();
-	Trigger(const DependencyProperty &dp, const Var &v);
+	Trigger(const DependencyProperty &dp, const var &v);
 
 	virtual void attach(UIElement *uie) override;
 
@@ -50,14 +50,14 @@ public:
 	void setProperty(const DependencyProperty &dp);
 	const DependencyProperty property() const;
 
-	void setValue(const Var &value);
-	const Var &getValue() const;
+	void setValue(const var &value);
+	const var &getValue() const;
 
 	std::vector<SetterBasePtr> &setters();
 
 private:
 	DependencyProperty			m_property;	//触发条件的属性
-	Var							m_value;	//触发条件的值
+	var							m_value;	//触发条件的值
 	std::vector<SetterBasePtr>	m_setters;	//条件成立后执行的setters
 };
 
@@ -86,7 +86,7 @@ class DataTrigger : public TriggerBase
 {
 public:
 	DataTrigger();
-	DataTrigger(std::shared_ptr<Binding> bd, const Var &value);
+	DataTrigger(std::shared_ptr<Binding> bd, const var &value);
 
 	void setBinding(std::shared_ptr<Binding> bd);
 	std::shared_ptr<Binding> binding() const;
@@ -99,7 +99,7 @@ public:
 
 private:
 	BindingPtr					m_binding;	//绑定
-	Var							m_value;	//触发的绑定值
+	var							m_value;	//触发的绑定值
 	std::vector<SetterBasePtr>	m_setters;	//条件成立后执行的setters
 };
 

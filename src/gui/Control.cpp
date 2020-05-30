@@ -85,8 +85,8 @@ Size Control::arrangeOverride(const Size & finalSize)
 #include "newbrush/gui/ContentControl.h"
 void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
-	auto oldTemplate = e->oldValue.extract<std::shared_ptr<ControlTemplate>>();
-	auto newTemplate = e->newValue.extract<std::shared_ptr<ControlTemplate>>();
+	auto oldTemplate = e->oldValue.get_value<std::shared_ptr<ControlTemplate>>();
+	auto newTemplate = e->newValue.get_value<std::shared_ptr<ControlTemplate>>();
 	if (newTemplate == oldTemplate)
 	{
 		return;

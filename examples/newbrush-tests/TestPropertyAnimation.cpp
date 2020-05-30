@@ -223,7 +223,7 @@ TEST_CASE("test PointAnimation", "[PointAnimation]")
 	//animation.setFrom(Point());
 	animation.setTo(Point(200.0f, 100.0f));
 	animation.setTarget(ui);
-	animation.setTargetProperty(UIElement::OffsetProperty());
+//	animation.setTargetProperty(UIElement::OffsetProperty());
 	animation.setAutoReversel(true);
 	animation.setEasingFunction(std::make_shared<BackEase>());
 	animation.StateChanged += [](const EventArgs &args) {
@@ -235,7 +235,7 @@ TEST_CASE("test PointAnimation", "[PointAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto offset = ui ? ui->getValue<Point>(UIElement::OffsetProperty()) : Point();
+		auto offset = Point();// ui ? ui->getValue<Point>(UIElement::OffsetProperty()) : Point();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f]\n", time.toString().data(), progress, offset.x(), offset.y());
 	};
 	animation.Completed += [](const EventArgs &args) {
@@ -257,7 +257,7 @@ TEST_CASE("test SizeAnimation", "[SizeAnimation]")
 	animation.setFrom(Size(1000.0f, -100.0f));
 	animation.setTo(Size(200.0f, 100.0f));
 	animation.setTarget(ui);
-	animation.setTargetProperty(UIElement::RenderSizeProperty());
+//	animation.setTargetProperty(UIElement::RenderSizeProperty());
 	animation.setAutoReversel(true);
 	animation.setEasingFunction(std::make_shared<BackEase>());
 	animation.StateChanged += [](const EventArgs &args) {
@@ -269,7 +269,7 @@ TEST_CASE("test SizeAnimation", "[SizeAnimation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto size = ui ? ui->getValue<Size>(UIElement::RenderSizeProperty()) : Size();
+		auto size = Size();// ui ? ui->getValue<Size>(UIElement::RenderSizeProperty()) : Size();
 		printf("animation procesing: time[%s], progress[%.5f], offset[%.2f, %.2f]\n", time.toString().data(), progress, size.width(), size.height());
 	};
 	animation.Completed += [](const EventArgs &args) {

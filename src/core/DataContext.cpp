@@ -35,13 +35,13 @@ std::string DataContext::getPath() const
 	return path;
 }
 
-void DataContext::set(const Var &value) &
+void DataContext::set(const var &value) &
 {
 }
 
-Var DataContext::get() const
+var DataContext::get() const
 {
-	return Var();
+	return var();
 }
 
 std::shared_ptr<DataContext> DataContext::lookup(const std::string & path) const

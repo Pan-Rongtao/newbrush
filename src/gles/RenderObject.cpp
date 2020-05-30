@@ -85,7 +85,7 @@ std::shared_ptr<Program> RenderObject::program()
 	return m_program;
 }
 
-void RenderObject::storeUniform(const std::string & name, const Var & v)
+void RenderObject::storeUniform(const std::string & name, const var & v)
 {
 	m_uniforms[name] = v;
 }
@@ -114,31 +114,31 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 	{
 		auto location = program->getUniformLocation(iter.first.data());
 		auto const &v = iter.second;
-		if (v.type() == typeid(bool))							program->uniform(location, v.extract<bool>());
-		else if (v.type() == typeid(int))						program->uniform(location, v.extract<int>());
-		else if (v.type() == typeid(float))						program->uniform(location, v.extract<float>());
-		else if (v.type() == typeid(double))					program->uniform(location, (float)v.extract<double>());
-		else if (v.type() == typeid(glm::vec2))					program->uniform(location, v.extract<glm::vec2>());
-		else if (v.type() == typeid(glm::vec3))					program->uniform(location, v.extract<glm::vec3>());
-		else if (v.type() == typeid(glm::vec4))					program->uniform(location, v.extract<glm::vec4>());
-		else if (v.type() == typeid(glm::mat2x2))				program->uniform(location, v.extract<glm::mat2x2>());
-		else if (v.type() == typeid(glm::mat3x3))				program->uniform(location, v.extract<glm::mat3x3>());
-		else if (v.type() == typeid(glm::mat4x4))				program->uniform(location, v.extract<glm::mat4x4>());
-		else if (v.type() == typeid(glm::ivec2))				program->uniform(location, v.extract<glm::ivec2>());
-		else if (v.type() == typeid(glm::ivec3))				program->uniform(location, v.extract<glm::ivec3>());
-		else if (v.type() == typeid(glm::ivec4))				program->uniform(location, v.extract<glm::ivec4>());
-		else if (v.type() == typeid(std::vector<int>))			program->uniform(location, v.extract<std::vector<int>>());
-		else if (v.type() == typeid(std::vector<float>))		program->uniform(location, v.extract<std::vector<float>>());
-		else if (v.type() == typeid(std::vector<glm::vec2>))	program->uniform(location, v.extract<std::vector<glm::vec2>>());
-		else if (v.type() == typeid(std::vector<glm::vec3>))	program->uniform(location, v.extract<std::vector<glm::vec3>>());
-		else if (v.type() == typeid(std::vector<glm::vec4>))	program->uniform(location, v.extract<std::vector<glm::vec4>>());
-		else if (v.type() == typeid(std::vector<glm::mat2x2>))	program->uniform(location, v.extract<std::vector<glm::mat2x2>>());
-		else if (v.type() == typeid(std::vector<glm::mat3x3>))	program->uniform(location, v.extract<std::vector<glm::mat3x3>>());
-		else if (v.type() == typeid(std::vector<glm::mat4x4>))	program->uniform(location, v.extract<std::vector<glm::mat4x4>>());
-		else if (v.type() == typeid(std::vector<glm::ivec2>))	program->uniform(location, v.extract<std::vector<glm::ivec2>>());
-		else if (v.type() == typeid(std::vector<glm::ivec3>))	program->uniform(location, v.extract<std::vector<glm::ivec3>>());
-		else if (v.type() == typeid(std::vector<glm::ivec4>))	program->uniform(location, v.extract<std::vector<glm::ivec4>>());
-		else													Log::warn("%s is not a supported type for glsl.", v.type().name());
+		if (v.is_type<bool>())							program->uniform(location, v.get_value<bool>());
+		else if (v.is_type<int>())						program->uniform(location, v.get_value<int>());
+		else if (v.is_type<float>())					program->uniform(location, v.get_value<float>());
+		else if (v.is_type<double>())					program->uniform(location, (float)v.get_value<double>());
+		else if (v.is_type<glm::vec2>())				program->uniform(location, v.get_value<glm::vec2>());
+		else if (v.is_type<glm::vec3>())				program->uniform(location, v.get_value<glm::vec3>());
+		else if (v.is_type<glm::vec4>())				program->uniform(location, v.get_value<glm::vec4>());
+		else if (v.is_type<glm::mat2x2>())				program->uniform(location, v.get_value<glm::mat2x2>());
+		else if (v.is_type<glm::mat3x3>())				program->uniform(location, v.get_value<glm::mat3x3>());
+		else if (v.is_type<glm::mat4x4>())				program->uniform(location, v.get_value<glm::mat4x4>());
+		else if (v.is_type<glm::ivec2>())				program->uniform(location, v.get_value<glm::ivec2>());
+		else if (v.is_type<glm::ivec3>())				program->uniform(location, v.get_value<glm::ivec3>());
+		else if (v.is_type<glm::ivec4>())				program->uniform(location, v.get_value<glm::ivec4>());
+		else if (v.is_type<std::vector<int>>())			program->uniform(location, v.get_value<std::vector<int>>());
+		else if (v.is_type<std::vector<float>>())		program->uniform(location, v.get_value<std::vector<float>>());
+		else if (v.is_type<std::vector<glm::vec2>>())	program->uniform(location, v.get_value<std::vector<glm::vec2>>());
+		else if (v.is_type<std::vector<glm::vec3>>())	program->uniform(location, v.get_value<std::vector<glm::vec3>>());
+		else if (v.is_type<std::vector<glm::vec4>>())	program->uniform(location, v.get_value<std::vector<glm::vec4>>());
+		else if (v.is_type<std::vector<glm::mat2x2>>())	program->uniform(location, v.get_value<std::vector<glm::mat2x2>>());
+		else if (v.is_type<std::vector<glm::mat3x3>>())	program->uniform(location, v.get_value<std::vector<glm::mat3x3>>());
+		else if (v.is_type<std::vector<glm::mat4x4>>())	program->uniform(location, v.get_value<std::vector<glm::mat4x4>>());
+		else if (v.is_type<std::vector<glm::ivec2>>())	program->uniform(location, v.get_value<std::vector<glm::ivec2>>());
+		else if (v.is_type<std::vector<glm::ivec3>>())	program->uniform(location, v.get_value<std::vector<glm::ivec3>>());
+		else if (v.is_type<std::vector<glm::ivec4>>())	program->uniform(location, v.get_value<std::vector<glm::ivec4>>());
+		else											Log::warn("%s is not a supported type for glsl.", v.get_type().get_name().data());
 	}
 	//ÒÀ´Î»æÖÆmeshs
 	for (auto const &mesh : m_model->meshes)

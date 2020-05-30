@@ -56,7 +56,7 @@ DependencyProperty MyObject::BoolPoperty()
 {
 	static auto dp = DependencyProperty::registerDependency<MyObject, bool>("Bool", true, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
 		auto tdp = dynamic_cast<MyObject *>(obj);
-		printf("%s changed from %d to %d\n", args->property.name().data(), args->oldValue.extract<bool>(), args->newValue.extract<bool>());
+		printf("%s changed from %d to %d\n", args->property.name().data(), args->oldValue.get_value<bool>(), args->newValue.get_value<bool>());
 	});
 	return dp;
 }

@@ -13,6 +13,7 @@ enum class DockE
 
 class NB_API DockPanel : public Panel
 {
+	RTTR_ENABLE(Panel)
 	NB_OBJECT
 public:
 	static constexpr const char *AttachedPropertyDock = "DockPanel.Dock";

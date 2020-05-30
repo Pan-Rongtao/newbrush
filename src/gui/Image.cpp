@@ -44,13 +44,15 @@ void Image::onRender(Viewport2D & drawContext)
 
 DependencyProperty Image::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr, onSourcePropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr,
+		PropertyCategory::Public(), "图像源", 1);
 	return dp;
 }
 
 DependencyProperty Image::StretchProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged);
+	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged, nullptr, nullptr,
+		PropertyCategory::Public(), "拉伸或填充的方式", 2);
 	return dp;
 }
 
@@ -117,7 +119,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 
 void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
 {
-	auto newSource = args->newValue.extract<std::shared_ptr<ImageSource>>();
+	auto newSource = args->newValue.get_value<std::shared_ptr<ImageSource>>();
 	auto &newBm = newSource->bitmap();
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>(newBm);

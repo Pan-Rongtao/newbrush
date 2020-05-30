@@ -27,7 +27,7 @@ file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/include/newbrush/${PROJECT_NAME}/*.h" "
 add_library(${LIB_NAME} SHARED ${SRC_FILES})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME NbCore)
 if(WIN32 AND NOT MINGW)
-	target_link_libraries(${LIB_NAME})
+	target_link_libraries(${LIB_NAME} rttr_core_d)
 elseif(UNIX AND NOT ANDROID)
 	set(CMAKE_PREFIX_PATH   "$ENV{SDKTARGETSYSROOT}/usr/lib/cmake")
 	include(FindPkgConfig)

@@ -63,7 +63,7 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	BindingMaster::addBinding(m_element, TextBlock::MinWidthProperty(), std::make_shared<Binding>(m_dataRoot, "unsigned long"));
 	BindingMaster::addBinding(m_element, TextBlock::OpacityProperty(), std::make_shared<Binding>(m_dataRoot, "float"));
 	BindingMaster::addBinding(m_element, TextBlock::VisibilityProperty(), std::make_shared<Binding>(m_dataRoot, "visible"));
-	BindingMaster::addBinding(m_element, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "point"));
+//	BindingMaster::addBinding(m_element, TextBlock::OffsetProperty(), std::make_shared<Binding>(m_dataRoot, "point"));
 	BindingMaster::addBinding(m_element, TextBlock::MarginProperty(), std::make_shared<Binding>(m_dataRoot, "margin"));
 	BindingMaster::addBinding(m_element, TextBlock::BackgroundProperty(), std::make_shared<Binding>(m_dataRoot, "brush"));
 	BindingMaster::addBinding(m_element, TextBlock::TextProperty(), std::make_shared<Binding>(m_dataRoot, "obj.x"));

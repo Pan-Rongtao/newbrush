@@ -9,7 +9,8 @@ StackPanel::StackPanel()
 
 DependencyProperty StackPanel::OrientationProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 3);
 	return dp;
 }
 
@@ -26,7 +27,7 @@ Size StackPanel::measureOverride(const Size & availableSize)
 		childMeasureSize.width() = std::isnan(childWidth) ? 0.0f : childWidth;
 		childMeasureSize.height() = std::isnan(childHeight) ? 0.0f : childHeight;
 		child->measure(childMeasureSize);
-		auto sz = child->getValue<Size>(DesiredSizeProperty());
+		auto sz = child->desiredSize();
 		bool b = false;
 	}
 	return availableSize;
@@ -36,11 +37,11 @@ Size StackPanel::arrangeOverride(const Size & finalSize)
 {
 	Size ret;
 	auto x = 0.0f, y = 0.0f;
-	auto selfDesiredSize = getValue<Size>(DesiredSizeProperty());
+	auto selfDesiredSize = desiredSize();
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		auto childDesiredSize = child->getValue<Size>(DesiredSizeProperty());
+		auto childDesiredSize = child->desiredSize();
 		auto orientation = getValue<OrientationE>(OrientationProperty());
 		if (orientation == OrientationE::Horizontal)
 		{

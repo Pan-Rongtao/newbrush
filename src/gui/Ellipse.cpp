@@ -7,6 +7,7 @@
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "newbrush/media/Brush.h"
 
 using namespace nb;
 
