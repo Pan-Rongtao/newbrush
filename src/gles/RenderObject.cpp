@@ -160,7 +160,7 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 		}
 		else {
 			program->uniform(program->getUniformLocation("flag"), false);
-			for (int i = 0; i < mesh.material.textures().size(); i++)
+			for (size_t i = 0; i < mesh.material.textures().size(); i++)
 			{
 				mesh.material.textures()[i]->bind();
 				glActiveTexture(GL_TEXTURE0 + i);
