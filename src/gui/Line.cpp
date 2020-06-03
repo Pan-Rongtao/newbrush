@@ -4,7 +4,6 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Viewport2D.h"
 #include "newbrush/media/GradientBrush.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -99,14 +98,4 @@ void Line::updateStrokeObject(const Rect &rc)
 
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
-}
-
-std::shared_ptr<MetaObject> Line::getMetaObject()
-{
-	auto meta = MetaObject::get<Line, Shape>("形状", "Line", "线段，形状的一种。", [] {return std::make_shared<Line>(); });
-	meta->addProperty(X1Property(), "外观", "线段起点的X分量", PropertyDescriptor::Float);
-	meta->addProperty(X2Property(), "外观", "线段终点的X分量", PropertyDescriptor::Float);
-	meta->addProperty(Y1Property(), "外观", "线段起点的Y分量", PropertyDescriptor::Float);
-	meta->addProperty(Y2Property(), "外观", "线段终点的Y分量", PropertyDescriptor::Float);
-	return meta;
 }

@@ -19,7 +19,6 @@ class RenderObject;
 class NB_API Image : public UIElement
 {
 	RTTR_ENABLE(UIElement)
-	NB_OBJECT
 public:
 	Image();
 	virtual ~Image() = default;

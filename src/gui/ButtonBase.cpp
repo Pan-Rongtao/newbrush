@@ -3,7 +3,6 @@
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -124,11 +123,4 @@ void ButtonBase::updateIsPress()
 	{
 		setValue(IsPressedProperty(), true);
 	}
-}
-
-std::shared_ptr<MetaObject> ButtonBase::getMetaObject()
-{
-	auto meta = MetaObject::get<ButtonBase, ContentControl>("形状", "Line", "线段，形状的一种。", [] {return nullptr; });
-	meta->addProperty(ClickModeProperty(), "其他", "线段起点的X分量", PropertyDescriptor::Enum, "Hover|Press|Release");
-	return meta;
 }

@@ -6,7 +6,7 @@ namespace nb{
 
 class NB_API RepeatButton : public Button
 {
-	NB_OBJECT
+	RTTR_ENABLE(Button)
 public:
 	RepeatButton();
 	virtual ~RepeatButton();

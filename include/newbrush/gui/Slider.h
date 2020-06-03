@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API Slider : public RangeBase
 {
-	NB_OBJECT
+	RTTR_ENABLE(RangeBase)
 public:
 	Slider();
 	virtual ~Slider() = default;

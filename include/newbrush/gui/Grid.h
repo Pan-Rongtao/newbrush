@@ -85,7 +85,6 @@ public:
 class NB_API Grid : public Panel
 {
 	RTTR_ENABLE(Panel)
-	NB_OBJECT
 public:
 	Grid();
 	virtual ~Grid() = default;

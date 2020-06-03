@@ -8,7 +8,6 @@
 #include "newbrush/core/Log.h"
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -544,17 +543,4 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 	Bitmap bm = source ? source->bitmap() : Bitmap();
 	GLFWimage img{ bm.width(), bm.height(), (unsigned char *)bm.data() };
 	glfwSetWindowIcon(w, 1, &img);
-}
-
-std::shared_ptr<MetaObject> Window::getMetaObject()
-{
-	auto meta = MetaObject::get<Window, ContentControl>("内容控件", "Window", "窗口，用于呈现子元素的顶级部件。", [] {return std::make_shared<Window>(); });
-	meta->addProperty(WindowStateProperty(), "公共", "指示窗口是普通、最小化还是最大化状态", PropertyDescriptor::Enum, "Normal|Maximized|Minimized");
-	meta->addProperty(WindowStyleProperty(), "外观", "窗口的边框样式", PropertyDescriptor::Enum, "None|Fixed|SizeBox");
-	meta->addProperty(TopmostProperty(), "公共", "窗口置顶", PropertyDescriptor::Boolean);
-	meta->addProperty(LeftProperty(), "布局", "窗口距设备左端位置", PropertyDescriptor::Float);
-	meta->addProperty(TopProperty(), "布局", "窗口距设备顶部位置", PropertyDescriptor::Float);
-	meta->addProperty(TitleProperty(), "公共", "窗口标题", PropertyDescriptor::String);
-	meta->addProperty(IconProperty(), "公共", "窗口图标", PropertyDescriptor::Brush);
-	return meta;
 }

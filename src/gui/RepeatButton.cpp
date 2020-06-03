@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/RepeatButton.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -78,10 +77,4 @@ void RepeatButton::onIntervalPropertyChanged(DependencyObject * d, DependencyPro
 {
 	auto self = dynamic_cast<RepeatButton*>(d);
 	self->m_timer.setInterval(e->newValue.get_value<uint32_t>());
-}
-
-std::shared_ptr<MetaObject> RepeatButton::getMetaObject()
-{
-	auto meta = MetaObject::get<RepeatButton, Button>("内容控件", "RepeatButton", "重复触发按钮，按钮的一种，可重复发出点击事件。", [] {return std::make_shared<RepeatButton>(); });
-	return meta;
 }

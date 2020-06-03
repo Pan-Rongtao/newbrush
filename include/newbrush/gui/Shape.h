@@ -10,7 +10,6 @@ class RenderObject;
 class NB_API Shape : public UIElement
 {
 	RTTR_ENABLE(UIElement)
-	NB_OBJECT
 public:
 	static DependencyPropertyPtr FillProperty();				//填充画刷的依赖属性(std::shared_ptr<Brush>)
 	static DependencyPropertyPtr StrokeProperty();				//轮廓画刷的依赖属性(std::shared_ptr<Brush>)

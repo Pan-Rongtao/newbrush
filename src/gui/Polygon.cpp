@@ -5,7 +5,6 @@
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/media/Brush.h"
 
@@ -112,11 +111,4 @@ void Polygon::updateFillObject()
 
 void Polygon::updateStrokeObject()
 {
-}
-
-std::shared_ptr<MetaObject> Polygon::getMetaObject()
-{
-	auto meta = MetaObject::get<Polygon, Shape>("形状", "Polygon", "多边形，形状的一种。", [] {return std::make_shared<Polygon>(); });
-	meta->addProperty(PointsProperty(), "外观", "描述多边形的所有顶点", PropertyDescriptor::PiontArray);
-	return meta;
 }

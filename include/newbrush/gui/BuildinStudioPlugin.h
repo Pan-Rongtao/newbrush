@@ -6,7 +6,7 @@ namespace nb {
 class NB_API BuildinStudioPlugin : public StudioPlugin
 {
 public:
-	virtual void getMetametaObjectsOverride(std::vector<std::shared_ptr<MetaObject>> &metaObjects) override;
+	virtual void getMetametaObjectsOverride() override;
 };
 
 extern "C" NB_API int getMetaObjectCount();

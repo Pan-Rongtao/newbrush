@@ -1,6 +1,5 @@
 ﻿#include "newbrush/gui/ContentControl.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -74,10 +73,4 @@ Size ContentControl::arrangeOverride(const Size & finalSize)
 		content->arrage(Rect(0.0, 0.0, finalSize));
 	}
 	return finalSize;
-}
-
-std::shared_ptr<MetaObject> ContentControl::getMetaObject()
-{
-	auto meta = MetaObject::get<ContentControl, Control>("内容控件", "ContentControl", "内容控件的基类。", [] {return std::make_shared<ContentControl>(); });
-	return meta;
 }

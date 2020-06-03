@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API ScrollViewer : public ContentControl
 {
-	NB_OBJECT
+	RTTR_ENABLE(ContentControl)
 public:
 	ScrollViewer();
 	virtual ~ScrollViewer();

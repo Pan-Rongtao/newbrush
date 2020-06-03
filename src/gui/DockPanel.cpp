@@ -1,6 +1,5 @@
 ﻿#include "newbrush/gui/DockPanel.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -130,11 +129,4 @@ Size DockPanel::arrangeOverride(const Size & finalSize)
 		child->arrage(childArrageRect);
 	}
 	return finalSize;
-}
-
-std::shared_ptr<MetaObject> DockPanel::getMetaObject()
-{
-	auto meta = MetaObject::get<DockPanel, Panel>("面板", "DockPanel", "泊靠式面板，内部元素可以选择泊靠方式。", [] {return std::make_shared<DockPanel>(); });
-	meta->addProperty(LastChildFillProperty(), "布局", "最后一个子元素是否拉伸以填充剩余的可用空间", PropertyDescriptor::Boolean);
-	return meta;
 }

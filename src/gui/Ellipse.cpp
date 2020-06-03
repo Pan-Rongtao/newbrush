@@ -5,7 +5,6 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
-#include "newbrush/core/MetaObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/media/Brush.h"
 
@@ -140,10 +139,4 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
-}
-
-std::shared_ptr<MetaObject> Ellipse::getMetaObject()
-{
-	auto meta = MetaObject::get<Ellipse, Shape>("形状", "Ellipse", "椭圆，形状的一种。", [] {return std::make_shared<Ellipse>(); });
-	return meta;
 }

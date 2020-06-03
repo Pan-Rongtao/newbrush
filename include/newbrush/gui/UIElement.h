@@ -49,7 +49,6 @@ enum class OrientationE
 class NB_API UIElement : public DependencyObject
 {
 	RTTR_ENABLE(DependencyObject)
-	NB_OBJECT
 public:
 	UIElement();
 	virtual ~UIElement() = default;

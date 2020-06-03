@@ -5,7 +5,7 @@ namespace nb{
 
 class NB_API Ellipse : public Shape
 {
-	NB_OBJECT
+	RTTR_ENABLE(Shape);
 public:
 	Ellipse();
 

@@ -6,7 +6,6 @@ namespace nb{
 class NB_API Polygon : public Shape
 {
 	RTTR_ENABLE(Shape)
-	NB_OBJECT
 public:
 	Polygon();
 	virtual ~Polygon() = default;

@@ -1,5 +1,4 @@
 #include "NodeStub.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/core/DateTime.h"
 #include "newbrush/media/Thickness.h"
 #include "newbrush/media/SolidColorBrush.h"
@@ -13,8 +12,10 @@ Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request
 	{
 		auto const &path = request->path();
 		auto parent = VisualTreeHelper::lookupNode(Application::current()->mainWindow(), path);
-		auto childNode = MetaObject::makeObject(request->childtype());
-		if (!parent || !childNode)
+		auto const &childTypeName = request->childtype();
+		auto childType = rttr::type::get_by_name(childTypeName);
+		var child = childType.create({});
+		if (!parent || !child.is_valid())
 		{
 			response->set_success(false);
 			response->set_msg(parent ? "childType is not registered" : "parent is not exist.");
@@ -22,7 +23,7 @@ Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request
 			return;
 		}
 
-		auto child = nb::as<UIElement>(childNode);
+		auto childNode = child.get_value<UIElementPtr>();
 		if (nb::is<ContentControl>(parent))
 		{
 			auto content = parent->getValue<UIElementPtr>(ContentControl::ContentProperty());
@@ -40,7 +41,7 @@ Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request
 		else if (nb::is<Panel>(parent))
 		{
 			auto panel = nb::as<Panel>(parent);
-			panel->children().add(child);
+			panel->children().add(childNode);
 		}
 		else
 		{

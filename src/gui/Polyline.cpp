@@ -4,7 +4,6 @@
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/media/Brush.h"
 #include "newbrush/core/DependencyProperty.h"
 
@@ -83,11 +82,4 @@ void Polyline::updateStrokeObject(const Rect &rc)
 
 	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
-}
-
-std::shared_ptr<MetaObject> Polyline::getMetaObject()
-{
-	auto meta = MetaObject::get<Polyline, Shape>("形状", "Polyline", "多线段，形状的一种。", [] {return std::make_shared<Polyline>(); });
-	meta->addProperty(PointsProperty(), "外观", "描述多线段的所有顶点", PropertyDescriptor::PiontArray);
-	return meta;
 }

@@ -19,6 +19,7 @@
 using namespace grpc;
 using namespace google::protobuf;
 using namespace nb;
+using namespace rttr;
 class StubBase
 {
 protected:

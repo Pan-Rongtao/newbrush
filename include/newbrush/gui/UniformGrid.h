@@ -6,7 +6,6 @@ namespace nb {
 class NB_API UniformGrid : public Panel
 {
 	RTTR_ENABLE(Panel)
-	NB_OBJECT
 public:
 	UniformGrid();
 

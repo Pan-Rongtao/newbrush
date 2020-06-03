@@ -6,7 +6,6 @@ namespace nb{
 class NB_API Line : public Shape
 {
 	RTTR_ENABLE(Shape)
-	NB_OBJECT
 public:
 	Line();
 	virtual ~Line() = default;

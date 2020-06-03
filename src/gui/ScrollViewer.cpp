@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/ScrollViewer.h"
-#include "newbrush/core/MetaObject.h"
 
 using namespace nb;
 
@@ -84,10 +83,4 @@ Size ScrollViewer::measureOverride(const Size & availableSize)
 Size ScrollViewer::arrangeOverride(const Size & finalSize)
 {
 	return Size();
-}
-
-std::shared_ptr<MetaObject> ScrollViewer::getMetaObject()
-{
-	auto meta = MetaObject::get<ScrollViewer, ContentControl>("内容控件", "ScrollViewer", "滚动视图，可展示超过范围的视图容器。", [] {return std::make_shared<ScrollViewer>(); });
-	return meta;
 }

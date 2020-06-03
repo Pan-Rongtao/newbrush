@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/UniformGrid.h"
-#include "newbrush/core/MetaObject.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -93,13 +92,4 @@ std::pair<int, int> UniformGrid::calcRowsColums() const
 		}
 	}
 	return ret;
-}
-
-std::shared_ptr<MetaObject> UniformGrid::getMetaObject()
-{
-	auto meta = MetaObject::get<UniformGrid, Panel>("面板", "UniformGrid", "均匀网格。简化版的网格面板，等分的行和列，每个网格都具有相同的尺寸。", [] {return std::make_shared<UniformGrid>(); });
-	meta->addProperty(RowsProperty(), "公共", "网格行数", PropertyDescriptor::UInt32);
-	meta->addProperty(ColumnsProperty(), "公共", "网格列数", PropertyDescriptor::UInt32);
-	meta->addProperty(FirstColumnProperty(), "公共", "第一行空白数（需显式指定了Colums才有效，如果大于等于Colums也无效）", PropertyDescriptor::UInt32);
-	return meta;
 }

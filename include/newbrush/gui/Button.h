@@ -6,7 +6,6 @@ namespace nb{
 class NB_API Button : public ButtonBase
 {
 	RTTR_ENABLE(ButtonBase)
-	NB_OBJECT
 public:
 	Button();
 	virtual ~Button() = default;
