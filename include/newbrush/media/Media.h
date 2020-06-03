@@ -1,7 +1,6 @@
 #pragma once
 
 namespace nb {
-namespace media{
 
 //±ÊÃ±ÑùÊ½
 enum class PenLineCapE
@@ -21,4 +20,4 @@ enum class PenLineJoinE
 };
 
 
-}}
+}

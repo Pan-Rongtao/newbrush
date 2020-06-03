@@ -11,16 +11,15 @@ using namespace rttr;
 void DependencyObject::setValue(DependencyPropertyPtr dp, const var &value)
 {
 	auto propertyType = dp->propertyType();
-	var fixSetValue;
-	if (dp->propertyType() != value.get_type())
+	var fixSetValue = value;
+	if (propertyType != value.get_type())
 	{
-		bool ok = value.convert(propertyType);
+		bool ok = fixSetValue.convert(rttr::type(propertyType));
 		if (!ok)
 		{
 			nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp->name().data(), dp->propertyType().get_name().data(), value.get_type().get_name().data());
 		}
 	}
-	fixSetValue = value;
 
 	auto defaultValue = dp->defaultMetadata()->defaultValue();
 	_set(dp, defaultValue, fixSetValue);

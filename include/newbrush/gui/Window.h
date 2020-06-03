@@ -23,6 +23,7 @@ enum class WindowStyleE
 
 class NB_API Window : public ContentControl
 {
+	RTTR_ENABLE(ContentControl)
 	NB_OBJECT
 public:
 	Window();
@@ -116,7 +117,6 @@ private:
 
 	friend class Application;
 
-	RTTR_ENABLE()
 };
 
 }

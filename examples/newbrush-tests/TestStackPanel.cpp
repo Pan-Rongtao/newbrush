@@ -16,12 +16,13 @@ TEST_CASE("Test StackPanel", "[StackPanel]")
 	std::shared_ptr<Window> w = std::make_shared<Window>();
 	auto sp = std::make_shared<StackPanel>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), sp);
-	sp->setValue(StackPanel::OrientationProperty(), OrientationE::Vertical);
+	sp->setValue(StackPanel::OrientationProperty(), OrientationE::Horizontal);
 
 	auto rc0 = std::make_shared<Rectangle>();
 	rc0->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
-	rc0->setValue(Shape::WidthProperty(), 100);
-	rc0->setValue(Shape::HeightProperty(), 100);
+	rc0->setValue(Shape::WidthProperty(), 100.0f);
+	rc0->setValue(Shape::HeightProperty(), 100.0);
+	auto ww = rc0->getValue<float>(Shape::WidthProperty());
 //	rc0->setValue(UIElement::VerticalAlignmentProperty(), VerticalAlignmentE::Top);
 //	rc0->setValue(UIElement::HorizontalAlignmentProperty(), HorizontalAlignmentE::Right);
 

@@ -7,8 +7,6 @@ namespace nb{
 class Brush;
 class RenderObject;
 
-using nb::media::PenLineCapE;
-using nb::media::PenLineJoinE;
 class NB_API Shape : public UIElement
 {
 	RTTR_ENABLE(UIElement)

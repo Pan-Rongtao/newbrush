@@ -5,8 +5,6 @@
 
 namespace nb{
 
-using nb::media::PenLineJoinE;
-
 class NB_API Strips : public Model
 {
 public:

@@ -236,7 +236,7 @@ Size Grid::measureOverride(const Size & availableSize)
 			float verifiedLeghtPixcels = 0.0f;									//已经计算的像素长度和
 			float remainStars = 0.0f;											//剩余Start和
 			float remainPixcels = 0.0f;											//剩余像素和
-			for (auto i = 0; i != rowOrColUnitsPixcelLenghts.size(); ++i)
+			for (size_t i = 0; i != rowOrColUnitsPixcelLenghts.size(); ++i)
 			{
 				if (!std::isnan(rowOrColUnitsPixcelLenghts[i]))
 				{
@@ -253,7 +253,7 @@ Size Grid::measureOverride(const Size & availableSize)
 			}
 			remainPixcels = isRowdefinition ? (availableSize.height() - verifiedLeghtPixcels) : (availableSize.width() - verifiedLeghtPixcels);
 			//计算每个Star类型Lenght对应的像素值
-			for (auto i = 0; i != rowOrColUnitsPixcelLenghts.size(); ++i)
+			for (size_t i = 0; i != rowOrColUnitsPixcelLenghts.size(); ++i)
 			{
 				if (std::isnan(rowOrColUnitsPixcelLenghts[i]))
 				{

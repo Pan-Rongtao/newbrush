@@ -14,8 +14,7 @@ public:
 	template<class T>
 	void setValue(DependencyPropertyPtr dp, const T &value)
 	{
-		var v = value;
-		setValue(dp, v);
+		setValue(dp, var(value));
 	}
 
 	//获取属性值

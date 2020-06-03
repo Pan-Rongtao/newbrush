@@ -1,5 +1,4 @@
-﻿#include "rttr/registration.h"
-#include "newbrush/gui/RttrRegistration.h.h"
+﻿#include "newbrush/gui/RttrRegistration.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/core/Log.h"
 #include "newbrush/core/Binding.h"
@@ -25,9 +24,97 @@
 using namespace nb;
 using namespace rttr;
 
-//enums
 RTTR_REGISTRATION
 {
+	//enums
+	registration::enumeration<StretchE>("StretchE")
+	(
+		value("Origion", StretchE::Origion),
+		value("Fill", StretchE::Fill),
+		value("Uniform", StretchE::Uniform),
+		value("UniformToFill", StretchE::UniformToFill)
+	);
+	registration::enumeration<VisibilityE>("VisibilityE")
+	(
+		value("Hidden", VisibilityE::Hidden),
+		value("Visible", VisibilityE::Visible),
+		value("Collapsed", VisibilityE::Collapsed)
+	);
+	registration::enumeration<HorizontalAlignmentE>("HorizontalAlignmentE")
+	(
+		value("Left", HorizontalAlignmentE::Left),
+		value("Center", HorizontalAlignmentE::Center),
+		value("Right", HorizontalAlignmentE::Right),
+		value("Stretch", HorizontalAlignmentE::Stretch)
+	);
+	registration::enumeration<VerticalAlignmentE>("VerticalAlignmentE")
+	(
+		value("Top", VerticalAlignmentE::Top),
+		value("Center", VerticalAlignmentE::Center),
+		value("Bottom", VerticalAlignmentE::Bottom),
+		value("Stretch", VerticalAlignmentE::Stretch)
+	);
+	registration::enumeration<FlowDirectionE>("FlowDirectionE")
+	(
+		value("LeftToRight", FlowDirectionE::LeftToRight),
+		value("RightToLeft", FlowDirectionE::RightToLeft)
+	);
+	registration::enumeration<FontStyleE>("FontStyleE")
+	(
+		value("Normal", FontStyleE::Normal),
+		value("Italic", FontStyleE::Italic),
+		value("Oblique", FontStyleE::Oblique)
+	);
+	registration::enumeration<TextAlignmentE>("TextAlignmentE")
+	(
+		value("Left", TextAlignmentE::Left),
+		value("Right", TextAlignmentE::Right),
+		value("Center", TextAlignmentE::Center),
+		value("Justify", TextAlignmentE::Justify)
+	);
+	registration::enumeration<TextWrappingE>("TextWrappingE")
+	(
+		value("NoWrap", TextWrappingE::NoWrap),
+		value("Wrap", TextWrappingE::Wrap),
+		value("WrapWithOverflow", TextWrappingE::WrapWithOverflow)
+	);
+	registration::enumeration<TextTrimmingE>("TextTrimmingE")
+	(
+		value("None", TextTrimmingE::None),
+		value("CharacterEllipsis", TextTrimmingE::CharacterEllipsis),
+		value("WordEllipsis", TextTrimmingE::WordEllipsis)
+	);
+	registration::enumeration<OrientationE>("OrientationE")
+	(
+		value("Horizontal", OrientationE::Horizontal),
+		value("Vertical", OrientationE::Vertical)
+	);
+	registration::enumeration<WindowStyleE>("WindowStyleE")
+	(
+		value("None", WindowStyleE::None),
+		value("Fixed", WindowStyleE::Fixed),
+		value("SizeBox", WindowStyleE::SizeBox)
+	);
+	registration::enumeration<WindowStateE>("WindowStateE")
+	(
+		value("Normal", WindowStateE::Normal),
+		value("Maximized", WindowStateE::Maximized),
+		value("Minimized", WindowStateE::Minimized)
+	);
+	registration::enumeration<PenLineCapE>("PenLineCapE")
+	(
+		value("Flat", PenLineCapE::Flat),
+		value("Round", PenLineCapE::Round),
+		value("Square", PenLineCapE::Square),
+		value("Triangle", PenLineCapE::Triangle)
+	);
+	registration::enumeration<PenLineJoinE>("PenLineCapE")
+	(
+		value("Beval", PenLineJoinE::Beval),
+		value("Miter", PenLineJoinE::Miter),
+		value("Round", PenLineJoinE::Round)
+	);
+
 	auto k = nb::getTickCount();
 
 	/////////////////////////Point//////////////////////
@@ -65,7 +152,6 @@ RTTR_REGISTRATION
 			metadata(RttrClassMetadataIndex::Property7, UIElement::MinWidthProperty()),
 			metadata(RttrClassMetadataIndex::Property8, UIElement::MaxHeightProperty()),
 			metadata(RttrClassMetadataIndex::Property9, UIElement::MaxWidthProperty()),
-			metadata(RttrClassMetadataIndex::Property10, UIElement::MaxHeightProperty()),
 			metadata(RttrClassMetadataIndex::Property11, UIElement::MarginProperty()),
 			metadata(RttrClassMetadataIndex::Property12, UIElement::HorizontalAlignmentProperty()),
 			metadata(RttrClassMetadataIndex::Property13, UIElement::VerticalAlignmentProperty()),
@@ -86,7 +172,6 @@ RTTR_REGISTRATION
 		)
 		.constructor<>()(policy::ctor::as_std_shared_ptr)
 		;
-
 
 	registration::class_<TextBlock>("nb::TextBlock")
 		(
@@ -332,4 +417,39 @@ RTTR_REGISTRATION
 
 	auto kk = nb::getTickCount();
 	Log::info("RTTR registration cost [%d] ms.", kk - k);
+}
+
+std::vector<DependencyPropertyPtr> RttrRegistration::getTypeSelfPropertys(rttr::type t)
+{
+	std::vector<std::shared_ptr<DependencyProperty>> ret;
+	for (auto i = (int)RttrClassMetadataIndex::Property0; i <= (int)RttrClassMetadataIndex::PropertyMax; ++i)
+	{
+		var vProperty = t.get_metadata((RttrClassMetadataIndex)i);
+		type ttt = vProperty.get_type();
+		if (vProperty.is_type<DependencyPropertyPtr>())
+		{
+			const DependencyPropertyPtr &p = vProperty.get_value<DependencyPropertyPtr>();
+			ret.push_back(p);
+		}
+		else if(vProperty.is_valid())
+		{
+			Log::error("[%s]'s metadata[%d] must be set as [DependencyPropertyPtr] type", t.get_name().data(), i);
+		}
+	}
+	return ret;
+}
+
+std::vector<DependencyPropertyPtr> RttrRegistration::getTypeAllPropertys(rttr::type t)
+{
+	std::vector<std::shared_ptr<DependencyProperty>> ret;
+	auto selfPros = getTypeSelfPropertys(t);
+	ret.insert(ret.end(), selfPros.begin(), selfPros.end());
+
+	auto baseClassesRange = t.get_base_classes();
+	for (auto base : baseClassesRange)
+	{
+		auto pros = getTypeSelfPropertys(base);
+		ret.insert(ret.end(), pros.begin(), pros.end());
+	}
+	return ret;
 }

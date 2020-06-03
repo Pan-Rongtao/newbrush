@@ -40,9 +40,9 @@ TEST_CASE("Test nb::DependencyProperty", "[DependencyProperty]")
 	obj.setValue(MyObject::DoubleProperty(), 333.333);
 	std::string s = std::string("abc");
 	char axx[] = "abc";
-	obj.setValue(MyObject::StringProperty(), std::wstring(L"DD"));
+	//obj.setValue(MyObject::StringProperty(), std::wstring(L"DD"));
 	obj.setValue(MyObject::StringProperty(), "def");
-	obj.setValue(MyObject::WStringProperty(), std::string("def"));
+	obj.setValue(MyObject::WStringProperty(), std::wstring(L"def"));
 	obj.setValue(MyObject::PointProperty(), Point(2, 2));
 	obj.setValue(MyObject::PointProperty(), Point(2, 2));
 
