@@ -35,6 +35,8 @@ public:
 	const std::string &name() const;
 	int order() const;
 
+	static const std::map<std::string, std::shared_ptr<PropertyCategory>> &getAll();
+
 	static std::shared_ptr<PropertyCategory> get(const std::string &name, int order);
 
 	static std::shared_ptr<PropertyCategory> Brush();

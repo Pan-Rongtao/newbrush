@@ -5,15 +5,15 @@ using namespace nb;
 
 TEST_CASE("Test StudioPlugin", "[StudioPlugin]")
 {
-	auto count = getMetaObjectCount();
-	CClassInfo *infos = new CClassInfo[count];
-	getMetaObjects(infos, count);
+	auto categoryOrderCount = getCategoryOrderCount();
+	CCategoryOrder *categoryOrders = new CCategoryOrder[categoryOrderCount];
+	getCategoryOrders(categoryOrders, categoryOrderCount);
+	std::vector<CCategoryOrder> vtCategoryOrders{ categoryOrders, categoryOrders + categoryOrderCount };
+	delete[]categoryOrders;
 
-	std::vector<CClassInfo> vtInfos;
-	for (int i = 0; i < count; ++i)
-	{
-		vtInfos.push_back(infos[i]);
-	}
-
-	delete[]infos;
+	auto classCount = getMetaObjectCount();
+	CClass *classes = new CClass[classCount];
+	getMetaObjects(classes, classCount);
+	std::vector<CClass> vtClasses(classes, classes + classCount);
+	delete[]classes;
 }

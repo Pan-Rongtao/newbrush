@@ -36,6 +36,11 @@ int PropertyCategory::order() const
 	return m_order;
 }
 
+const std::map<std::string, std::shared_ptr<PropertyCategory>>& nb::PropertyCategory::getAll()
+{
+	return s_propertyCategorys;
+}
+
 std::shared_ptr<PropertyCategory> PropertyCategory::get(const std::string & name, int order)
 {
 	auto newPC = std::make_shared<PropertyCategory>();
@@ -245,7 +250,7 @@ DependencyProperty::DependencyProperty(const std::string & name, rttr::type owne
 std::shared_ptr<DependencyProperty> DependencyProperty::registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
 {
 	std::hash<std::string> _shash;
-	auto _hash = ownerType.get_id() ^ _shash(name);
+	auto _hash = _shash(ownerType.get_name().data()) ^ _shash(name);
 	std::shared_ptr<DependencyProperty> dp(new DependencyProperty(name, ownerType, propertyType, metadata, validateValueCallback, _hash));
 	auto p = dependencyProperties().insert({ _hash, dp });
 	if (!p.second)

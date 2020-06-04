@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/core/Def.h"
 
 namespace nb {
@@ -10,23 +10,31 @@ public:
 
 };
 
-struct CPropertyInfo
+struct CCategoryOrder
 {
-	uint64_t	typeID = 0;			//ÊôĞÔID£¨Î¨Ò»£©
-	char	valueTypeName[128] = {};//ÖµÀàĞÍ
-	char	category[64] = {};		//·ÖÀà
-	char	displayName[64] = {};	//ÏÔÊ¾Ãû
-	char	description[256] = {};	//ÃèÊö
-	char	enumSource[512] = {};	//Ã¶¾ÙÖµ×Ö·û´®×éºÏ£¨Èç¹ûÊÇÃ¶¾ÙÀàĞÍ£©£¬ĞÎÈç "Enum0|Enum1|Enum2"£¬ÒÔ'|'×÷Îª·Ö¸ô·û
+	char	name[64] = {};			//åˆ†ç±»
+	int		order{ 0 };				//é¡ºåº
 };
 
-struct CClassInfo
+struct CProperty
+{
+	uint64_t	typeID = 0;			//å±æ€§IDï¼ˆå”¯ä¸€ï¼‰
+	char	valueTypeName[128] = {};//å€¼ç±»å‹
+	char	category[64] = {};		//åˆ†ç±»
+	int		categoryOrder = { 0 };	//åˆ†ç±»é¡ºåº
+	char	displayName[64] = {};	//æ˜¾ç¤ºå
+	int		order = { 0 };			//å±æ€§é¡ºåº
+	char	description[256] = {};	//æè¿°
+	char	enumSource[512] = {};	//æšä¸¾å€¼å­—ç¬¦ä¸²ç»„åˆï¼ˆå¦‚æœæ˜¯æšä¸¾ç±»å‹ï¼‰ï¼Œå½¢å¦‚ "Enum0|Enum1|Enum2"ï¼Œä»¥'|'ä½œä¸ºåˆ†éš”ç¬¦
+};
+
+struct CClass
 {
 	char	typeName[64] = {};
 	char	category[64] = {};
 	char	displayName[64] = {};
 	char	description[256] = {};
-	CPropertyInfo propertys[100] = {};
+	CProperty propertys[100] = {};
 };
 
 }

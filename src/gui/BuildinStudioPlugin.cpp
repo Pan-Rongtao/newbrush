@@ -25,6 +25,27 @@ void BuildinStudioPlugin::getMetametaObjectsOverride()
 {
 }
 
+NB_API int nb::getCategoryOrderCount()
+{
+	auto const &allPropertyCategorys = PropertyCategory::getAll();
+	return allPropertyCategorys.size();
+}
+
+NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
+{
+	auto const &allPropertyCategorys = PropertyCategory::getAll();
+	int i = 0;
+	for (const auto &pair : allPropertyCategorys)
+	{
+		if (i >= count)	break;
+
+		auto &c = categorys[i++];
+		auto const &pc = pair.second;
+		strcpy(c.name, pc->name().data());
+		c.order = pc->order();
+	}
+}
+
 NB_API int nb::getMetaObjectCount()
 {
 	array_range<type> range = type::get_types();
@@ -36,7 +57,7 @@ NB_API int nb::getMetaObjectCount()
 	return count;
 }
 
-NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
+NB_API void nb::getMetaObjects(CClass * classes, int count)
 {
 	array_range<type> range = type::get_types();
 	int i = 0;
@@ -64,14 +85,14 @@ NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 		std::string description = vDescription.is_type<std::string>() ? vDescription.get_value<std::string>() : "";
 
 
-		auto &cClass = infos[i];
-		strcpy(cClass.typeName, typeName.data());
-		strcpy(cClass.category, category.data());
-		strcpy(cClass.displayName, displayName.data());
-		strcpy(cClass.description, description.data());
+		auto &cc = classes[i];
+		strcpy(cc.typeName, typeName.data());
+		strcpy(cc.category, category.data());
+		strcpy(cc.displayName, displayName.data());
+		strcpy(cc.description, description.data());
 
 		//properties info
-		auto propertyLimit = sizeof(CClassInfo::propertys) / sizeof(CPropertyInfo);
+		auto propertyLimit = sizeof(CClass::propertys) / sizeof(CProperty);
 		std::vector<std::shared_ptr<DependencyProperty>> allProperties = RttrRegistration::getTypeAllPropertys(t);
 		if (allProperties.size() > propertyLimit)
 		{
@@ -80,13 +101,15 @@ NB_API void nb::getMetaObjects(CClassInfo * infos, int count)
 
 		for (size_t j = 0; j < allProperties.size() && j < propertyLimit; ++j)
 		{
-			auto &cProperty = cClass.propertys[j];
+			auto &cProperty = cc.propertys[j];
 			auto p = allProperties[j];
 			auto propertyMeta = p->defaultMetadata();
 			cProperty.typeID = p->globalIndex();
 			strcpy(cProperty.valueTypeName, p->propertyType().get_name().data());
 			strcpy(cProperty.category, propertyMeta->category() ? propertyMeta->category()->name().data() : "");
+			cProperty.categoryOrder = propertyMeta->category() ? propertyMeta->category()->order() : INT_MAX;
 			strcpy(cProperty.displayName, p->name().data());
+			cProperty.order = propertyMeta->order();
 			strcpy(cProperty.description, propertyMeta->category() ? propertyMeta->description().data() : "");
 			if (p->propertyType().is_enumeration())
 			{
