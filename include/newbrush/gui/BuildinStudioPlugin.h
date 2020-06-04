@@ -11,6 +11,6 @@ public:
 
 extern "C" NB_API int getCategoryOrderCount();
 extern "C" NB_API void getCategoryOrders(CCategoryOrder *categorys, int count);
-extern "C" NB_API int getMetaObjectCount();
-extern "C" NB_API void getMetaObjects(CClass *classes, int count);
+extern "C" NB_API int getMetaClassCount();
+extern "C" NB_API void getMetaClasses(CClass *classes, int count);
 }

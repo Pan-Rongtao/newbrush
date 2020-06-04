@@ -11,9 +11,9 @@ TEST_CASE("Test StudioPlugin", "[StudioPlugin]")
 	std::vector<CCategoryOrder> vtCategoryOrders{ categoryOrders, categoryOrders + categoryOrderCount };
 	delete[]categoryOrders;
 
-	auto classCount = getMetaObjectCount();
+	auto classCount = getMetaClassCount();
 	CClass *classes = new CClass[classCount];
-	getMetaObjects(classes, classCount);
+	getMetaClasses(classes, classCount);
 	std::vector<CClass> vtClasses(classes, classes + classCount);
 	delete[]classes;
 }

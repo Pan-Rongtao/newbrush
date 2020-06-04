@@ -21,7 +21,6 @@ struct CProperty
 	uint64_t	typeID = 0;			//属性ID（唯一）
 	char	valueTypeName[128] = {};//值类型
 	char	category[64] = {};		//分类
-	int		categoryOrder = { 0 };	//分类顺序
 	char	displayName[64] = {};	//显示名
 	int		order = { 0 };			//属性顺序
 	char	description[256] = {};	//描述

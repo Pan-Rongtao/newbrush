@@ -46,7 +46,7 @@ NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
 	}
 }
 
-NB_API int nb::getMetaObjectCount()
+NB_API int nb::getMetaClassCount()
 {
 	array_range<type> range = type::get_types();
 	auto count = std::count_if(range.begin(), range.end(), [](type t)->bool {
@@ -57,7 +57,7 @@ NB_API int nb::getMetaObjectCount()
 	return count;
 }
 
-NB_API void nb::getMetaObjects(CClass * classes, int count)
+NB_API void nb::getMetaClasses(CClass * classes, int count)
 {
 	array_range<type> range = type::get_types();
 	int i = 0;
@@ -107,7 +107,6 @@ NB_API void nb::getMetaObjects(CClass * classes, int count)
 			cProperty.typeID = p->globalIndex();
 			strcpy(cProperty.valueTypeName, p->propertyType().get_name().data());
 			strcpy(cProperty.category, propertyMeta->category() ? propertyMeta->category()->name().data() : "");
-			cProperty.categoryOrder = propertyMeta->category() ? propertyMeta->category()->order() : INT_MAX;
 			strcpy(cProperty.displayName, p->name().data());
 			cProperty.order = propertyMeta->order();
 			strcpy(cProperty.description, propertyMeta->category() ? propertyMeta->description().data() : "");
