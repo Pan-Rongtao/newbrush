@@ -9,6 +9,28 @@ struct FT_BitmapGlyphRec_;
 
 namespace nb{
 
+enum class FontStretchE
+{
+	Condensed,
+	Expanded,
+	ExtraCondensed,
+	ExtraExpanded,
+	Medium,
+	Normal,
+	SemiCondensed,
+	SemiExpanded,
+	UltraCondensed,
+	UltraExpanded,
+};
+
+enum class FontStyleE
+{
+	Normal,
+	Italic,
+	Oblique,
+};
+
+
 class NB_API Font
 {
 public:

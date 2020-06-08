@@ -6,13 +6,6 @@
 
 namespace nb{
 
-enum class FontStyleE
-{
-	Normal,
-	Italic,
-	Oblique,
-};
-
 enum class TextAlignmentE
 {
 	Left,

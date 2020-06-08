@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "newbrush/gui/UIElement.h"
-#include "newbrush/gui/Stretch.h"
 #include "newbrush/media/Media.h"
 
 namespace nb{

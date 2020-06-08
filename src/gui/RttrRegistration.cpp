@@ -65,6 +65,19 @@ RTTR_REGISTRATION
 		value("Italic", FontStyleE::Italic),
 		value("Oblique", FontStyleE::Oblique)
 	);
+	registration::enumeration<FontStretchE>("FontStretchE")
+	(
+		value("Condensed", FontStretchE::Condensed),
+		value("Expanded", FontStretchE::Expanded),
+		value("ExtraCondensed", FontStretchE::ExtraCondensed),
+		value("ExtraExpanded", FontStretchE::ExtraExpanded),
+		value("Medium", FontStretchE::Medium),
+		value("Normal", FontStretchE::Normal),
+		value("SemiCondensed", FontStretchE::SemiCondensed),
+		value("SemiExpanded", FontStretchE::SemiExpanded),
+		value("UltraCondensed", FontStretchE::UltraCondensed),
+		value("UltraExpanded", FontStretchE::UltraExpanded)
+	);
 	registration::enumeration<TextAlignmentE>("TextAlignmentE")
 	(
 		value("Left", TextAlignmentE::Left),
@@ -158,6 +171,34 @@ RTTR_REGISTRATION
 			metadata(RttrClassMetadataIndex::Property13, UIElement::VerticalAlignmentProperty()),
 			metadata(RttrClassMetadataIndex::Property14, UIElement::FlowDirectionProperty()),
 			metadata(RttrClassMetadataIndex::Property15, UIElement::RenderTransformProperty())
+		)
+		.constructor<>()(policy::ctor::as_std_shared_ptr)
+		;
+	
+	registration::class_<Control>("nb::Control")
+		(
+			metadata(RttrClassMetadataIndex::Property0, Control::BackgroundProperty()),
+			metadata(RttrClassMetadataIndex::Property1, Control::BorderBrushProperty()),
+			metadata(RttrClassMetadataIndex::Property2, Control::BorderThicknessProperty()),
+			metadata(RttrClassMetadataIndex::Property3, Control::FontFamilyProperty()),
+			metadata(RttrClassMetadataIndex::Property4, Control::FontSizeProperty()),
+			metadata(RttrClassMetadataIndex::Property5, Control::FontStretchProperty()),
+			metadata(RttrClassMetadataIndex::Property7, Control::FontStyleProperty()),
+			metadata(RttrClassMetadataIndex::Property8, Control::FontWeightProperty()),
+			metadata(RttrClassMetadataIndex::Property9, Control::ForegroundProperty()),
+			metadata(RttrClassMetadataIndex::Property10, Control::PaddingProperty()),
+			metadata(RttrClassMetadataIndex::Property11, Control::HorizontalContentAlignmentProperty()),
+			metadata(RttrClassMetadataIndex::Property12, Control::VerticalContentAlignmentProperty()),
+			metadata(RttrClassMetadataIndex::Property13, Control::TabIndexProperty()),
+			metadata(RttrClassMetadataIndex::Property14, Control::IsTabStopProperty()),
+			metadata(RttrClassMetadataIndex::Property15, Control::TemplateProperty())
+		)
+		.constructor<>()(policy::ctor::as_std_shared_ptr)
+		;
+	
+	registration::class_<ContentControl>("nb::ContentControl")
+		(
+			metadata(RttrClassMetadataIndex::Property0, ContentControl::ContentProperty())
 		)
 		.constructor<>()(policy::ctor::as_std_shared_ptr)
 		;
