@@ -24,12 +24,10 @@ namespace nb{
 class NB_API TextureMipmap : public Texture2D
 {
 public:
-	//构建多级纹理
-	void generate();
+	TextureMipmap() = default;
+	~TextureMipmap() = default;
 
-public:
-	TextureMipmap(const Bitmap &bm);
-	~TextureMipmap();
+	void update(const unsigned char * data, int width, int height, int glFormat, int glType);
 };
 
 }

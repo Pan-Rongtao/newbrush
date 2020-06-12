@@ -45,11 +45,6 @@ Texture::Texture()
 	}
 }
 
-Texture::~Texture()
-{
-	glDeleteTextures(1, &m_handle);
-}
-
 TextureWrapping &Texture::wrapping()
 {
 	return m_wrapping;
@@ -70,26 +65,34 @@ const TextureFilter &Texture::filter() const
 	return m_filter;
 }
 
-void Texture::setSamplerUnit(const uint8_t & unit)
+void Texture::setSamplerUnit(int unit)
 {
 	m_samplerUnit = unit;
 }
 
-uint8_t Texture::samplerUnit()
+int Texture::samplerUnit()
 {
 	return m_samplerUnit;
 }
 
-void Texture::bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const
+void Texture::active()
 {
-	switch(bmChannels)
+	glActiveTexture(m_samplerUnit);
+}
+
+std::pair<int, int> Texture::getGlFormatAndType(int bmChannels)
+{
+	switch (bmChannels)
 	{
-	case 1:	glInteralFormat = GL_RGB;		glPixcelDepth = GL_UNSIGNED_BYTE;			break;
-	case 2:	glInteralFormat = GL_ALPHA;		glPixcelDepth = GL_UNSIGNED_BYTE;	break;
-	case 3:	glInteralFormat = GL_RGB;		glPixcelDepth = GL_UNSIGNED_BYTE;			break;
-//	case Bitmap::Format_Bpp16_Argb4444:	glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_SHORT_4_4_4_4;	break;
-//	case Bitmap::Format_Bpp1_Mono:		glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_SHORT_5_5_5_1;	break;
-	case 4:	glInteralFormat = GL_RGBA;		glPixcelDepth = GL_UNSIGNED_BYTE;			break;
+	case 1:	return{ GL_RGB, GL_UNSIGNED_BYTE };
+	case 2:	return{ GL_ALPHA, GL_UNSIGNED_BYTE };
+	case 3:	return{ GL_RGB, GL_UNSIGNED_BYTE };
+	case 4:	return{ GL_RGBA, GL_UNSIGNED_BYTE };
 	default: nbThrowException(std::invalid_argument, "bmChannels[%d] is invalid", bmChannels);	break;
 	}
+}
+
+Texture::~Texture()
+{
+	glDeleteTextures(1, &m_handle);
 }

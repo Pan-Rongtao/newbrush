@@ -33,10 +33,10 @@ public:
 	//设置纹理过滤方式，假若不显示设置，将采用默认的过滤方式TextureFilter::Default
 	virtual void setFilter(const TextureFilter &filter) override;
 
-	//加载资源
+	//更新六面数据
 	//右、左、底、顶、后、前
-	void load(const std::vector<std::string> &paths);
-
+	//异常：index >= 6
+	void update(unsigned int index, const unsigned char *data, int width, int height, int glFormat, int glType);
 
 };
 

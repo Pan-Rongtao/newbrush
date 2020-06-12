@@ -78,16 +78,6 @@ public:
 class NB_API Texture
 {
 public:
-	enum class PixelFormatE
-	{
-		Bpp8_Alpha = 0,
-		Bpp16_Rgb565,
-		Bpp24_Rgb888,
-		Bpp32_Rgb4444,
-		Bpp32_Rgb5551,
-		Bpp32_Rgba8888,
-	};
-
 	virtual ~Texture();
 
 	//绑定当前纹理，表示之后的gl操作都是针对当前纹理。在每次的Gles纹理操作都应该调用此函数
@@ -111,18 +101,22 @@ public:
 	const TextureFilter &filter() const;
 
 	//设置、获取纹理采样单元
-	void setSamplerUnit(const uint8_t & unit);
-	uint8_t samplerUnit();
-	
+	void setSamplerUnit(int unit);
+	int samplerUnit();
+
+	//激活当前采用单元
+	void active();
+
+	//获取glFormat和glType
+	static std::pair<int, int> getGlFormatAndType(int bmChannels);
+
 protected:
 	Texture();
-
-	void bitmapFormatToGlFormat(int bmChannels, int &glInteralFormat, int &glPixcelDepth) const;
 
 	TextureWrapping		m_wrapping;
 	TextureFilter		m_filter;
 	unsigned int		m_handle;
-	uint8_t						m_samplerUnit;
+	int					m_samplerUnit;
 };
 
 }

@@ -3,6 +3,7 @@
 #include "newbrush/core/Log.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/glm.hpp"
+#include "newbrush/media/Bitmap.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -162,7 +163,7 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 			for (size_t i = 0; i < mesh.material.textures().size(); i++)
 			{
 				mesh.material.textures()[i]->bind();
-				glActiveTexture(GL_TEXTURE0 + i);
+				mesh.material.textures()[i]->active();
 			}
 		}
 		glDrawElements(m_model->mode, mesh.indices.size(), GL_UNSIGNED_SHORT, mesh.indices.data());
@@ -226,7 +227,10 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 			std::string filename = std::string(str.C_Str());
 			filename = picPath + "/" +filename.substr(filename.find_last_of('\\') + 1);
 
-			auto textureMipPtr = std::make_shared<TextureMipmap>(Bitmap(filename));
+			Bitmap bm(filename);
+			auto textureMipPtr = std::make_shared<TextureMipmap>();
+			auto glFormatAndType = Texture::getGlFormatAndType(bm.channels());
+			textureMipPtr->update(bm.data(), bm.width(), bm.height(), glFormatAndType.first, glFormatAndType.second);
 			textureMipPtr->setWrapping(TextureWrapping{ TextureWrapping::WrappingModeE::Repeat, TextureWrapping::WrappingModeE::Repeat });
 			textureMipPtr->setFilter(TextureFilter{ TextureFilter::FilterE::Bilinear , TextureFilter::FilterE::Trilinear });
 			textureMipPtr->setSamplerUnit(samplerUnit);
@@ -245,16 +249,16 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 		ma = Material(glm::vec3(ambient.r, ambient.g, ambient.b), glm::vec3(diffuse.r, diffuse.g, diffuse.b), glm::vec3(specular.r, specular.g, specular.b));
 
 		// 1. diffuse maps
-		std::vector<std::shared_ptr<TextureMipmap>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, 0);
+		std::vector<std::shared_ptr<TextureMipmap>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, GL_TEXTURE0);
 		ma.textures().insert(ma.textures().end(), diffuseMaps.begin(), diffuseMaps.end());
 		// 2. specular maps
-		std::vector<std::shared_ptr<TextureMipmap>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, 1);
+		std::vector<std::shared_ptr<TextureMipmap>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, GL_TEXTURE1);
 		ma.textures().insert(ma.textures().end(), specularMaps.begin(), specularMaps.end());
 		// 3. normal maps
-		std::vector<std::shared_ptr<TextureMipmap>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, 2);
+		std::vector<std::shared_ptr<TextureMipmap>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, GL_TEXTURE2);
 		ma.textures().insert(ma.textures().end(), normalMaps.begin(), normalMaps.end());
 		// 4. height maps
-		std::vector<std::shared_ptr<TextureMipmap>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, 3);
+		std::vector<std::shared_ptr<TextureMipmap>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, GL_TEXTURE3);
 		ma.textures().insert(ma.textures().end(), heightMaps.begin(), heightMaps.end());
 	}
 	

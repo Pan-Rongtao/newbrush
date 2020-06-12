@@ -125,8 +125,10 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 		if (source)
 		{
 			auto const &bm = source->bitmap();
-			//ro->material()->textures().push_back(std::make_shared<Texture2D>(bm));
-			ro->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(bm));
+			auto texture = std::make_shared<Texture2D>();
+			auto glFormatAndType = Texture::getGlFormatAndType(bm.channels());
+			texture->update(bm.data(), bm.width(), bm.height(), glFormatAndType.first, glFormatAndType.second);
+			ro->model()->meshes[0].material.textures().push_back(texture);
 		}
 	}
 	else if (std::dynamic_pointer_cast<EffectBrush>(brush))

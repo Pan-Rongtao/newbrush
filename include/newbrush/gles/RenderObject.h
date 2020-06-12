@@ -95,6 +95,10 @@ public:
 			std::is_same<T, std::vector<glm::mat4x4>>::value
 			, "only support type[short, int, long, float, double, vec2, vec3, vec4, mat2x2, mat3x3, mat4x4 or their vector types].");
 
+		if (name.empty())
+		{
+			nbThrowException(std::invalid_argument, "name is empty.");
+		}
 		m_uniforms[name] = v;
 	}
 	
