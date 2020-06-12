@@ -3,6 +3,7 @@
 #include "newbrush/core/Rect.h"
 #include "newbrush/media/Color.h"
 #include "newbrush/media/Thickness.h"
+#include "newbrush/media/Easing.h"
 
 namespace nb {
 	

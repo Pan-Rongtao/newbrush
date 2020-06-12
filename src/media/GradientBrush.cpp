@@ -6,11 +6,11 @@
 using namespace nb;
 
 GradientStop::GradientStop()
-	: GradientStop(nb::Color(), 0.0f)
+	: GradientStop(Color(), 0.0f)
 {
 }
 
-GradientStop::GradientStop(const nb::Color & color, float offset)
+GradientStop::GradientStop(const Color & color, float offset)
 {
 	setValue(ColorProperty(), color);
 	setValue(OffsetPropert(), offset);
@@ -18,7 +18,7 @@ GradientStop::GradientStop(const nb::Color & color, float offset)
 
 DependencyPropertyPtr GradientStop::ColorProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<GradientStop, nb::Color>("Color", nb::Color());
+	static auto dp = DependencyProperty::registerDependency<GradientStop, Color>("Color", Color());
 	return dp;
 }
 
@@ -93,7 +93,7 @@ LinearGradientBrush::LinearGradientBrush()
 {
 }
 
-LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb::Color & endColor, float angle)
+LinearGradientBrush::LinearGradientBrush(const Color & startColor, const Color & endColor, float angle)
 {
 	auto xDiff = 1 / std::tanf(glm::radians(angle));
 	setValue(StartPointProperty(), Point(0, 0));
@@ -103,7 +103,7 @@ LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb:
 	}) );
 }
 
-LinearGradientBrush::LinearGradientBrush(const nb::Color & startColor, const nb::Color & endColor, const nb::Point & startPoint, const nb::Point & endPoint)
+LinearGradientBrush::LinearGradientBrush(const Color & startColor, const Color & endColor, const Point & startPoint, const Point & endPoint)
 {
 	setValue(StartPointProperty(), startPoint);
 	setValue(EndPointProperty(), endPoint);
@@ -125,7 +125,7 @@ LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops
 	setValue(EndPointProperty(), Point(xDiff, 1));
 }
 
-LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point & startPoint, const nb::Point & endPoint)
+LinearGradientBrush::LinearGradientBrush(GradientStopCollectionPtr gradientStops, const Point & startPoint, const Point & endPoint)
 	: GradientBrush(gradientStops)
 {
 	setValue(StartPointProperty(), startPoint);

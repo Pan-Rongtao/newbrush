@@ -36,7 +36,7 @@ int PropertyCategory::order() const
 	return m_order;
 }
 
-const std::map<std::string, std::shared_ptr<PropertyCategory>>& nb::PropertyCategory::getAll()
+const std::map<std::string, std::shared_ptr<PropertyCategory>>& PropertyCategory::getAll()
 {
 	return s_propertyCategorys;
 }

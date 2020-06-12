@@ -8,6 +8,7 @@
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
+#include "newbrush/media/ImageSource.h"
 #include "catch2/catch.hpp"
 #include "bezier.h"
 

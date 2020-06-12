@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "newbrush/media/Timeline.h"
-#include "newbrush/media/Easing.h"
 
 namespace nb{
 

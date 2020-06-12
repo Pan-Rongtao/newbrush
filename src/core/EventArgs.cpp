@@ -79,7 +79,7 @@ MouseEventArgs::MouseEventArgs(int timestamp)
 
 Point MouseEventArgs::getPosition(std::shared_ptr<InputElement> relativeTo) const
 {
-	return nb::Point();
+	return Point();
 }
 
 MouseButtonEventArgs::MouseButtonEventArgs(int timestamp, MouseButtonE button)

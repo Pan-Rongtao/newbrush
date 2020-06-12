@@ -12,10 +12,7 @@
 **	
 ********************************************************/
 #pragma once
-#include "newbrush/core/Point.h"
-#include "newbrush/media/Color.h"
 #include "newbrush/core/DependencyObject.h"
-#include "newbrush/media/ImageSource.h"
 
 namespace nb{
 

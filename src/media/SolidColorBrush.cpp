@@ -4,17 +4,17 @@
 using namespace nb;
 
 SolidColorBrush::SolidColorBrush()
-	: SolidColorBrush(nb::Color())
+	: SolidColorBrush(Color())
 {
 }
 
-SolidColorBrush::SolidColorBrush(const nb::Color &color)
+SolidColorBrush::SolidColorBrush(const Color &color)
 {
 	setValue(ColorProperty(), color);
 }
 
 DependencyPropertyPtr SolidColorBrush::ColorProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Brush, nb::Color>("Color", nb::Color());
+	static auto dp = DependencyProperty::registerDependency<SolidColorBrush, Color>("Color", Color());
 	return dp;
 }

@@ -3,6 +3,7 @@
 
 namespace nb {
 
+class ImageSource;
 class NB_API ImageBrush : public Brush
 {
 public:

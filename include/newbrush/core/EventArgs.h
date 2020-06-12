@@ -214,7 +214,7 @@ class NB_API MouseEventArgs : public InputEventArgs
 public:
 	MouseEventArgs(int timestamp);
 
-	nb::Point getPosition(std::shared_ptr<InputElement> relativeTo) const;			//获取光标相对于指定元素的位置
+	Point getPosition(std::shared_ptr<InputElement> relativeTo) const;			//获取光标相对于指定元素的位置
 
 	MouseButtonStateE	LeftButton;		//左按钮状态
 	MouseButtonStateE	MiddleButton;	//中间按钮状态

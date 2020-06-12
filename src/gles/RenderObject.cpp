@@ -217,7 +217,7 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 		}
 	}
 	
-	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, uint8_t samplerUnit)->std::vector<std::shared_ptr<TextureMipmap>> {
+	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, int samplerUnit)->std::vector<std::shared_ptr<TextureMipmap>> {
 		std::vector<std::shared_ptr<TextureMipmap>> textures;
 		int ii = mat->GetTextureCount(type);
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {

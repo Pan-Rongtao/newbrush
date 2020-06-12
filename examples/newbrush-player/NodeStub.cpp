@@ -3,6 +3,7 @@
 #include "newbrush/media/Thickness.h"
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/ImageBrush.h"
+#include "newbrush/media/ImageSource.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/core/DependencyProperty.h"
 

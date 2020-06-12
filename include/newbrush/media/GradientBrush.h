@@ -1,5 +1,6 @@
 #pragma once
 #include "newbrush/media/Brush.h"
+#include "newbrush/media/Color.h"
 
 namespace nb{
 
@@ -7,7 +8,7 @@ class NB_API GradientStop : public DependencyObject
 {
 public:
 	GradientStop();
-	GradientStop(const nb::Color &color, float offset);
+	GradientStop(const Color &color, float offset);
 
 	static DependencyPropertyPtr ColorProperty();
 	static DependencyPropertyPtr OffsetPropert();
@@ -50,11 +51,11 @@ class NB_API LinearGradientBrush : public GradientBrush
 {
 public:
 	LinearGradientBrush();
-	LinearGradientBrush(const nb::Color &startColor, const nb::Color &endColor, float angle);
-	LinearGradientBrush(const nb::Color &startColor, const nb::Color &endColor, const nb::Point &startPoint, const nb::Point &endPoint);
+	LinearGradientBrush(const Color &startColor, const Color &endColor, float angle);
+	LinearGradientBrush(const Color &startColor, const Color &endColor, const Point &startPoint, const Point &endPoint);
 	LinearGradientBrush(GradientStopCollectionPtr gradientStops);
 	LinearGradientBrush(GradientStopCollectionPtr gradientStops, float angle);
-	LinearGradientBrush(GradientStopCollectionPtr gradientStops, const nb::Point &startPoint, const nb::Point &endPoint);
+	LinearGradientBrush(GradientStopCollectionPtr gradientStops, const Point &startPoint, const Point &endPoint);
 
 	static DependencyPropertyPtr StartPointProperty();
 	static DependencyPropertyPtr EndPointProperty();

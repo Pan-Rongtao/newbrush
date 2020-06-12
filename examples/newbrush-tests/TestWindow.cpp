@@ -19,21 +19,21 @@ TEST_CASE("Test nb::Window", "[Window]")
 	w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);
 
 	w->Activated += [](const EventArgs &args) {
-		nb::Log::info("on activated");
+		Log::info("on activated");
 	};
 
 	w->Closing += [](CancelEventArgs &args) {
 		args.cancel = false;
-		nb::Log::info("%s close", args.cancel ? "cancel" : "affirm");
+		Log::info("%s close", args.cancel ? "cancel" : "affirm");
 	};
 
 	w->Closed += [](const EventArgs &args) {
-		nb::Log::info("on closed");
+		Log::info("on closed");
 	};
 
 	w->StateChanged += [w](const EventArgs &args) {
 		auto state = w->getValue(Window::WindowStateProperty());
-		nb::Log::info("on state changed:%d", state.get_value<WindowStateE>());
+		Log::info("on state changed:%d", state.get_value<WindowStateE>());
 	};
 
 	//w->setValue(Window::WindowStateProperty(), 1);

@@ -89,7 +89,7 @@ DependencyPropertyPtr Control::TabIndexProperty()
 	return dp;
 }
 
-DependencyPropertyPtr nb::Control::IsTabStopProperty()
+DependencyPropertyPtr Control::IsTabStopProperty()
 {
 	static auto dp = DependencyProperty::registerDependency<Control, bool>("IsTabStop", true, nullptr, nullptr, nullptr, PropertyCategory::Public(), "模板", 17);
 	return dp;

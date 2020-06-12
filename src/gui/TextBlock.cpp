@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/TextBlock.h"
-#include <codecvt>
 #include "newbrush/media/Font.h"
 #include "newbrush/gles/GlyphFactory.h"
 #include "newbrush/gles/Viewport2D.h"
@@ -9,6 +8,7 @@
 #include "newbrush/gles/GlyphBunch.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/media/Brush.h"
+#include "newbrush/media/Color.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -44,7 +44,7 @@ DependencyPropertyPtr TextBlock::BackgroundProperty()
 
 DependencyPropertyPtr TextBlock::FontProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<nb::Font>>("Font", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Font>>("Font", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr,
 		PropertyCategory::Text(), "字体", 1);
 	return dp;
 }
