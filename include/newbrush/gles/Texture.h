@@ -24,7 +24,6 @@
 ********************************************************/
 #pragma once
 #include "newbrush/core/Def.h"
-#include "newbrush/media/Bitmap.h"
 #include "glm/glm.hpp"
 
 namespace nb{

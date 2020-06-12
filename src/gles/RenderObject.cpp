@@ -1,4 +1,4 @@
-#include "newbrush/gles/RenderObject.h"
+ï»¿#include "newbrush/gles/RenderObject.h"
 #include <GLES2/gl2.h>
 #include "newbrush/core/Log.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -43,7 +43,7 @@ void RenderObject::loadFromFile(const std::string &modelPath, const std::string 
 
 	loopNode(scene->mRootNode, scene, picPath);
 
-	//ÉèÖÃ¹âÕÕ
+	//è®¾ç½®å…‰ç…§
 	{
 		storeUniform("light.position", glm::vec3(0.0f, 0.0f, 5.0f));
 		storeUniform("viewPos", glm::vec3(0.0f, 0.0f, 3.0f));
@@ -85,11 +85,6 @@ std::shared_ptr<Program> RenderObject::program()
 	return m_program;
 }
 
-void RenderObject::storeUniform(const std::string & name, const var & v)
-{
-	m_uniforms[name] = v;
-}
-
 void RenderObject::draw(const Camera &camera, const Projection &projection) const
 {
 	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_program)
@@ -98,24 +93,28 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 	auto &program = m_program;
 	program->use();
 	m_model->preprocess();
-	//¼ÆËãºóµÄmvp£¬ÒÔ¼°·Ö¿ªµÄm/v/p
-	{
-		auto const &m = m_model->matrix;
-		auto const &v = camera.matrix;
-		auto const &p = projection.matrix;
-		auto mvp = p * v * m;
-		program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
-		program->uniform(program->getUniformLocation(Program::nbMStr), m);
-		program->uniform(program->getUniformLocation(Program::nbVStr), v);
-		program->uniform(program->getUniformLocation(Program::nbPStr), p);
-	}
-	//storageÖÐµÄuniform
+
+	//è®¡ç®—åŽçš„mvpï¼Œä»¥åŠåˆ†å¼€çš„m/v/p
+	auto const &m = m_model->matrix;
+	auto const &v = camera.matrix;
+	auto const &p = projection.matrix;
+	auto mvp = p * v * m;
+	program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
+	program->uniform(program->getUniformLocation(Program::nbMStr), m);
+	program->uniform(program->getUniformLocation(Program::nbVStr), v);
+	program->uniform(program->getUniformLocation(Program::nbPStr), p);
+
+	//storageä¸­çš„uniform
 	for (auto const &iter : m_uniforms)
 	{
 		auto location = program->getUniformLocation(iter.first.data());
 		auto const &v = iter.second;
-		if (v.is_type<bool>())							program->uniform(location, v.get_value<bool>());
-		else if (v.is_type<int>())						program->uniform(location, v.get_value<int>());
+		if (v.is_type<int>())							program->uniform(location, v.get_value<int>());
+		else if (v.is_type<unsigned int>())				program->uniform(location, (int)v.get_value<unsigned int>());
+		else if (v.is_type<short>())					program->uniform(location, (int)v.get_value<short>());
+		else if (v.is_type<unsigned short>())			program->uniform(location, (int)v.get_value<unsigned short>());
+		else if (v.is_type<long>())						program->uniform(location, (int)v.get_value<long>());
+		else if (v.is_type<unsigned long>())			program->uniform(location, (int)v.get_value<unsigned long>());
 		else if (v.is_type<float>())					program->uniform(location, v.get_value<float>());
 		else if (v.is_type<double>())					program->uniform(location, (float)v.get_value<double>());
 		else if (v.is_type<glm::vec2>())				program->uniform(location, v.get_value<glm::vec2>());
@@ -138,9 +137,9 @@ void RenderObject::draw(const Camera &camera, const Projection &projection) cons
 		else if (v.is_type<std::vector<glm::ivec2>>())	program->uniform(location, v.get_value<std::vector<glm::ivec2>>());
 		else if (v.is_type<std::vector<glm::ivec3>>())	program->uniform(location, v.get_value<std::vector<glm::ivec3>>());
 		else if (v.is_type<std::vector<glm::ivec4>>())	program->uniform(location, v.get_value<std::vector<glm::ivec4>>());
-		else											Log::warn("%s is not a supported type for glsl.", v.get_type().get_name().data());
+		else											nbThrowException(std::runtime_error, "%s[%s] is not a supported type for gles uniform, ignore.", iter.first.data(), v.get_type().get_name().data());
 	}
-	//ÒÀ´Î»æÖÆmeshs
+	//ä¾æ¬¡ç»˜åˆ¶meshs
 	for (auto const &mesh : m_model->meshes)
 	{
 		program->uniform(program->getUniformLocation(Program::nbMStr), m_model->matrix * mesh.transformation);

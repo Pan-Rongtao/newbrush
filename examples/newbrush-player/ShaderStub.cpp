@@ -33,7 +33,7 @@ Status ShaderStub::UniformBool(ServerContext * context, const UniformBoolRequest
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, uniformValue);
+		//rc->renderObject()->storeUniform(uniformName, uniformValue);
 		this->taskReady();
 	};
 

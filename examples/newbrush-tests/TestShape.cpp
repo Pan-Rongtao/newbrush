@@ -9,6 +9,7 @@
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
 #include "catch2/catch.hpp"
+#include "bezier.h"
 
 using namespace nb;
 
@@ -23,9 +24,9 @@ TEST_CASE("test Rectangle", "[Rectangle]")
 	//rc->setValue(Shape::HeightProperty(), 100.0f);
 	rc->setValue(Rectangle::MarginProperty(), Thickness(100));
 	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-//	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
-	rc->setValue(Rectangle::RadiusXProperty(), 0);
-	rc->setValue(Rectangle::RadiusYProperty(), 0);
+	//rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
+	rc->setValue(Rectangle::RadiusXProperty(), 50);
+	rc->setValue(Rectangle::RadiusYProperty(), 50);
 
 	rc->setValue<std::shared_ptr<Brush>>(Rectangle::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	rc->setValue(Rectangle::StrokeThicknessProperty(), 5.0f);
@@ -111,7 +112,16 @@ TEST_CASE("Test Polyline", "[Polyline]")
 	auto gradientStops = std::make_shared<GradientStopCollection>(std::vector<GradientStopPtr>{ gs0, gs1, gs2, gs3 });
 	linearBrush->setValue(LinearGradientBrush::GradientStopsProperty(), gradientStops);
 	auto pl = std::make_shared<Polyline>();
-	pl->setValue(Polyline::PointsProperty(), std::vector<Point>{ {0, 0}, { 100,100 }, { 100,200 }, { 300, 250 } });
+	std::vector<Point> points;// = { { 0, 0 },{ 100,100 },{ 100,200 },{ 300, 250 } };
+
+	Bezier::Bezier<3> cubicBezier({ { 0, 0 },{ 100,100 },{ 100,200 },{ 300, 250 } }/*{ { 120, 160 },{ 35, 200 },{ 220, 260 },{ 220, 40 } }*/);
+	for (float i = 0.0f; i <= 1.000001; i += 0.1f)
+	{
+			Bezier::Point p = cubicBezier.valueAt(i);
+			points.push_back({p.x, p.y});
+	}
+
+	pl->setValue(Polyline::PointsProperty(), points/*std::vector<Point>{ {0, 0}, { 100,100 }, { 100,200 }, { 300, 250 } }*/);
 	pl->setValue(Shape::StrokeThicknessProperty(), 20);
 	pl->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 //	pl->setValue(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/doudou.jpg")));

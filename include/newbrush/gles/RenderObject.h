@@ -1,14 +1,14 @@
-/*******************************************************
+ï»¿/*******************************************************
 **	RenderObject
 **
-**	äÖÈ¾Îï
+**	æ¸²æŸ“ç‰©
 **	
-**	äÖÈ¾ÎïÊÇÃèÊö¿ÉäÖÈ¾¶ÔÏóµÄÊı¾İ½á¹¹
+**	æ¸²æŸ“ç‰©æ˜¯æè¿°å¯æ¸²æŸ“å¯¹è±¡çš„æ•°æ®ç»“æ„
 **
-**	Ò»°ã¶øÑÔ£¬äÖÈ¾Îï¶¼ÓĞ×Ô¼ºµÄÄ£ĞÍ½á¹¹¡¢²ÄÖÊµÈ
+**	ä¸€èˆ¬è€Œè¨€ï¼Œæ¸²æŸ“ç‰©éƒ½æœ‰è‡ªå·±çš„æ¨¡å‹ç»“æ„ã€æè´¨ç­‰
 **		
 **		
-**		ÅËÈÙÌÎ
+**		æ½˜è£æ¶›
 **	
 ********************************************************/
 #pragma once
@@ -28,41 +28,77 @@ namespace nb{
 class NB_API RenderObject
 {
 public:
-	//¹¹½¨Ò»¸ö¿ÕµÄRenderObject£¬ËüµÄ¿ÉäÖÈ¾×´Ì¬Îªtrue
+	//æ„å»ºä¸€ä¸ªç©ºçš„RenderObjectï¼Œå®ƒçš„å¯æ¸²æŸ“çŠ¶æ€ä¸ºtrue
 	RenderObject();
 
-	//¹¹½¨Ò»¸ö¿ÕµÄRenderObject£¬ËüµÄ¿ÉäÖÈ¾×´Ì¬ÎªbRenderable
+	//æ„å»ºä¸€ä¸ªç©ºçš„RenderObjectï¼Œå®ƒçš„å¯æ¸²æŸ“çŠ¶æ€ä¸ºbRenderable
 	RenderObject(std::shared_ptr<Model> model);
 
-	//¹¹½¨Ò»¸öRenderObject£¬ËüµÄÄ£ĞÍÎªmodel£¬³ÌĞòÎªprogram£¬¿ÉäÖÈ¾×´Ì¬Îªtrue
+	//æ„å»ºä¸€ä¸ªRenderObjectï¼Œå®ƒçš„æ¨¡å‹ä¸ºmodelï¼Œç¨‹åºä¸ºprogramï¼Œå¯æ¸²æŸ“çŠ¶æ€ä¸ºtrue
 	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Program> program);
 
 public:	
-	//´ÓÎÄ¼şÖĞ¼ÓÔØ
+	//ä»æ–‡ä»¶ä¸­åŠ è½½
 	void loadFromFile(const std::string &modelPath, const std::string &picPath = "");
 
-	//ÉèÖÃÊÇ·ñ¿ÉäÖÈ¾£¬Õâ½«¾ö¶¨ÎïÌåÊÇ·ñ»æÖÆ
+	//è®¾ç½®æ˜¯å¦å¯æ¸²æŸ“ï¼Œè¿™å°†å†³å®šç‰©ä½“æ˜¯å¦ç»˜åˆ¶
 	void setRenderable(bool bRenderable);
 
-	//ÊÇ·ñ¿ÉäÖÈ¾
+	//æ˜¯å¦å¯æ¸²æŸ“
 	bool renderable() const;
 
-	//ÉèÖÃÄ£ĞÍ
+	//è®¾ç½®æ¨¡å‹
 	void setModel(std::shared_ptr<Model> model);
 
-	//»ñÈ¡Ä£ĞÍ
+	//è·å–æ¨¡å‹
 	std::shared_ptr<Model> model();
 
-	//ÉèÖÃprogram
+	//è®¾ç½®program
 	void setProgram(std::shared_ptr<Program> program);
 
-	//»ñÈ¡program
+	//è·å–program
 	std::shared_ptr<Program> program();
 
-	//´æ´¢uniform±äÁ¿£¬ÒÔ±ãÏÂ´ÎË¢ĞÂÊ¹ÓÃ
-	void storeUniform(const std::string &name, const var &v);
+	//å­˜å‚¨uniformå˜é‡ï¼Œä»¥ä¾¿ä¸‹æ¬¡åˆ·æ–°ä½¿ç”¨
+	template<class T>
+	void storeUniform(const std::string &name, const T &v)
+	{
+		static_assert(
+			std::is_same<T, short>::value ||
+			std::is_same<T, unsigned short>::value ||
+			std::is_same<T, int>::value ||
+			std::is_same<T, unsigned int>::value ||
+			std::is_same<T, long>::value ||
+			std::is_same<T, unsigned long>::value ||
+			std::is_same<T, float>::value ||
+			std::is_same<T, double>::value ||
+			std::is_same<T, glm::vec2>::value ||
+			std::is_same<T, glm::vec3>::value ||
+			std::is_same<T, glm::vec4>::value ||
+			std::is_same<T, glm::ivec2>::value ||
+			std::is_same<T, glm::ivec3>::value ||
+			std::is_same<T, glm::ivec4>::value ||
+			std::is_same<T, glm::mat2x2>::value ||
+			std::is_same<T, glm::mat3x3>::value ||
+			std::is_same<T, glm::mat4x4>::value ||
+
+			std::is_same<T, std::vector<float>>::value ||
+			std::is_same<T, std::vector<glm::vec2>>::value ||
+			std::is_same<T, std::vector<glm::vec3>>::value ||
+			std::is_same<T, std::vector<glm::vec4>>::value ||
+			std::is_same<T, std::vector<int>>::value ||
+			std::is_same<T, std::vector<glm::ivec2>>::value ||
+			std::is_same<T, std::vector<glm::ivec3>>::value ||
+			std::is_same<T, std::vector<glm::ivec4>>::value ||
+			std::is_same<T, std::vector<glm::mat2x2>>::value ||
+			std::is_same<T, std::vector<glm::mat3x3>>::value ||
+			std::is_same<T, std::vector<glm::mat4x4>>::value
+			, "only support type[short, int, long, float, double, vec2, vec3, vec4, mat2x2, mat3x3, mat4x4 or their vector types].");
+
+		m_uniforms[name] = v;
+	}
 	
-	//»æÖÆ£¬ÖØĞ´´Ë·½·¨ÒÔ¹¹½¨×Ô¼ºµÄäÖÈ¾·½Ê½
+	//ç»˜åˆ¶ï¼Œé‡å†™æ­¤æ–¹æ³•ä»¥æ„å»ºè‡ªå·±çš„æ¸²æŸ“æ–¹å¼
 	virtual void draw(const Camera &camera, const Projection &projection) const;
 
 private:
