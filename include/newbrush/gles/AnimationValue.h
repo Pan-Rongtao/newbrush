@@ -2,7 +2,6 @@
 #include <vector>
 #include "newbrush/core/Def.h"
 
-
 template<class T>
 class KeyFrame
 {

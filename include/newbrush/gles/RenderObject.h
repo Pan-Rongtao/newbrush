@@ -14,17 +14,15 @@
 #pragma once
 #include <string>
 #include "newbrush/gles/Model.h"
-#include "newbrush/gles/Material.h"
 #include "newbrush/gles/Camera.h"
 #include "newbrush/gles/Projection.h"
-#include "newbrush/gles/Texture2D.h"
-#include "newbrush/gles/TextureMipmap.h"
 
 struct aiNode;
 struct aiMesh;
 struct aiScene;
 namespace nb{
 	
+class Program;
 class NB_API RenderObject
 {
 public:

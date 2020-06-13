@@ -13,11 +13,12 @@
 #pragma once
 #include <vector>
 #include "newbrush/core/Def.h"
-#include "newbrush/gles/Program.h"
-#include "newbrush/gles/Texture.h"
+#include "glm/glm.hpp"
 
 namespace nb{
 
+class Program;
+class Texture;
 class NB_API Material
 {
 public:

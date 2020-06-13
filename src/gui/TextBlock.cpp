@@ -10,6 +10,7 @@
 #include "newbrush/media/Brush.h"
 #include "newbrush/media/Color.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/gles/Program.h"
 
 using namespace nb;
 

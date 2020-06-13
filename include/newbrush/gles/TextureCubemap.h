@@ -10,7 +10,6 @@
 **	
 ********************************************************/
 #pragma once
-#include <vector>
 #include <string>
 #include "newbrush/gles/Texture.h"
 

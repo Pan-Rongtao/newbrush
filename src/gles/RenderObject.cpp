@@ -4,6 +4,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/glm.hpp"
 #include "newbrush/media/Bitmap.h"
+#include "newbrush/gles/Program.h"
+#include "newbrush/gles/Texture2D.h"
+#include "newbrush/gles/TextureMipmap.h"
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
