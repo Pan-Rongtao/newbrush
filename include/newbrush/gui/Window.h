@@ -62,6 +62,7 @@ public:
 	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
 
 protected:
+	virtual void onRender(Viewport2D & drawContext) override;
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 
 	virtual void onActivated(const EventArgs &args);
@@ -106,8 +107,7 @@ private:
 	static void onTopPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
 	static void onTitlePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
 	static void onIconPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-
-
+	
 	GLFWwindow		*m_implWindow;
 	bool			m_dispatchingCloseEvent;
 	bool			m_processingCallback;

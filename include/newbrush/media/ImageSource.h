@@ -21,13 +21,20 @@ public:
 	ImageSource();
 	ImageSource(const std::string &uri);
 
-	float width() const;
-	float height() const;
+	void load(const unsigned char *buffer, uint32_t bytes);
 
-	const Bitmap &bitmap() const;
+	int width() const;
+	int height() const;
+	int channels() const;
+
+	const std::string &stream() const;
+
 
 private:
-	Bitmap	m_bm;
+	std::string	m_stream;
+	int			m_width;
+	int			m_height;
+	int			m_channels;
 };
 
 }

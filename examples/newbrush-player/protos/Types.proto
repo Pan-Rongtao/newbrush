@@ -1,6 +1,25 @@
 syntax = "proto3";
 package nbrpc;
 
+//	bool		布尔类型 							bool
+//	double		64位浮点数							double
+//	float		32为浮点数							float
+//	int32		32位整数							int
+//	uin32		32位无符号整数						unsigned int
+//	int64		64位整数							__int64
+//	uint64		64位无符号整						unsigned __int64
+//	sint32		32位整数，处理负数效率更高			int32
+//	sing64		64位整数，处理负数效率更高			__int64
+//	fixed32		32位无符号整数						unsigned int32
+//	fixed64 	64位无符号整数						unsigned __int64
+//	sfixed32 	32位整数、能以更高的效率处理负数	unsigned int32
+//	sfixed64	64位整数							unsigned __int64
+//	string 		只能处理 ASCII字符					std::string
+//	bytes 		用于处理多字节的语言字符、如中文	std::string
+//	enum 		可以包含一个用户自定义的枚举类型	enum(uint32)
+//	message 	可以包含一个用户自定义的消息类型	object of class
+
+
 enum UniformType
 {
 	unknown = 0;
@@ -48,6 +67,16 @@ message Vec4
 	float z = 3;
 	float w = 4;
 }
+
+message Mat3x3
+{
+	repeated float data = 1;
+};
+
+message Mat4x4
+{
+	repeated float data = 1;
+};
 
 message Color
 {

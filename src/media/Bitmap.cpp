@@ -109,7 +109,7 @@ bool Bitmap::scale(uint32_t width, uint32_t height)
 
 bool Bitmap::save(const std::string &path, uint32_t quality) const
 {
-	nbThrowException(std::logic_error, "Unimplemented method");
+	//nbThrowException(std::logic_error, "Unimplemented method");
 	/*bmp, png, jpeg, tga*/
 	int n = 0;
 	//if (std::regex_match(path, std::regex("(.*)(.dds)")))

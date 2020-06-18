@@ -24,23 +24,23 @@ TEST_CASE("nb::Bitmap", "[Bitmap]")
 	int h2 = bm2.height();
 	int bpp2 = bm2.channels();
 	int bytes2 = bm2.bytes();
-	/*
+	
 	Bitmap bm4;
 	FILE *pFile = nullptr;
-	fopen_s(&pFile, "f:/pics/copy_pic.jpg", "rb");
+	fopen_s(&pFile, "../images/zelda0.jpg", "rb");
 	fseek(pFile, 0, SEEK_END);
 	int nLength = ftell(pFile);
 	unsigned char *pData = new unsigned char[nLength];
 	fseek(pFile, 0, SEEK_SET);
 	fread(pData, nLength, 1, pFile);
 	bm4.load(pData, nLength);
-	bm4.save("f:/1.png");
+	bm4.save("../images/zelda_sv.jpg");
 	delete[]pData;
 	fclose(pFile);
 
-	bm4.scale(200, bm4.height());
-	bm4.save("f:/scalew200.bmp");
-	*/
+//	bm4.scale(200, bm4.height());
+//	bm4.save("f:/scalew200.bmp");
+	
 	Bitmap bm33("f:/flower.png");
 	int w33 = bm33.width();
 	int w34 = bm33.height();

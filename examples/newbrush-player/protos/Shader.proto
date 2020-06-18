@@ -2,7 +2,6 @@ syntax = "proto3";
 package nbrpc;
 
 import "Types.proto";
-import "Math.proto";
   
 service ShaderRpc
 {

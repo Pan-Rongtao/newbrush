@@ -9,6 +9,7 @@
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/gles/RenderObject.h"
 
 using namespace nb;
 
@@ -387,6 +388,31 @@ DependencyPropertyPtr Window::IconProperty()
 	return dp;
 }
 
+void Window::onRender(Viewport2D & drawContext)
+{
+	ContentControl::onRender(drawContext);
+	auto offset = worldOffset();
+	auto actualSize = getValue<Size>(ActualSizeProperty());
+	Rect rc(offset.x(), offset.y(), actualSize);
+	auto width = rc.width();
+	auto height = rc.height();
+	auto c = rc.center();
+	if (m_bkgObj)
+	{
+		auto &vertexs = m_bkgObj->model()->meshes[0].vertexs;
+		auto &indices = m_bkgObj->model()->meshes[0].indices;
+		vertexs.resize(4);				//所有顶点数
+		indices.resize(6);		//所有顶点序列大小=四个弧度顶点序列 + 十字两个矩形顶点序列
+		vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
+		vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
+		vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
+		vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+		indices = { 0, 1, 2, 0, 2, 3 };
+		drawContext.queue(m_bkgObj);
+		m_bkgObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	}
+}
+
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	ContentControl::onPropertyChanged(args);
@@ -540,7 +566,7 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 	}
 
 	auto source = args->newValue.get_value<std::shared_ptr<ImageSource>>();
-	Bitmap bm = source ? source->bitmap() : Bitmap();
-	GLFWimage img{ bm.width(), bm.height(), (unsigned char *)bm.data() };
+	auto &stream = source ? source->stream() : "";
+	GLFWimage img{ source->width(), source->height(), (unsigned char *)stream.data() };
 	glfwSetWindowIcon(w, 1, &img);
 }

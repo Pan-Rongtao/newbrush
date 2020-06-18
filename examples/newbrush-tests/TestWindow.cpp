@@ -7,6 +7,7 @@
 #include "newbrush/core/Timer.h"
 #include "newbrush/core/Log.h"
 #include "catch2/catch.hpp"
+#include "newbrush/media/SolidColorBrush.h"
 
 using namespace nb;
 
@@ -17,6 +18,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 	auto img = std::make_shared<ImageSource>("../images/nb1.png");
 	w->setValue(Window::IconProperty(), img);
 	w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);
+	w->setValue<BrushPtr>(Window::BackgroundProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 
 	w->Activated += [](const EventArgs &args) {
 		Log::info("on activated");

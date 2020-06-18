@@ -4,25 +4,51 @@
 using namespace nb;
 
 ImageSource::ImageSource()
+	: m_width(0)
+	, m_height(0)
+	, m_channels(0)
 {
 }
 
 ImageSource::ImageSource(const std::string & uri)
+	: m_width(0)
+	, m_height(0)
+	, m_channels(0)
 {
-	m_bm.load(uri);
+	Bitmap bm;
+	bm.load(uri);
+	m_stream.assign((const char *)bm.data(), bm.bytes());
+	m_width = bm.width();
+	m_height = bm.height();
+	m_channels = bm.channels();
 }
 
-float ImageSource::width() const
+void ImageSource::load(const unsigned char *buffer, uint32_t bytes)
 {
-	return (float)m_bm.width();
+	Bitmap bm;
+	bm.load(buffer, bytes);
+	m_stream.assign((const char *)bm.data(), bm.bytes());
+	m_width = bm.width();
+	m_height = bm.height();
+	m_channels = bm.channels();
 }
 
-float ImageSource::height() const
+const std::string &ImageSource::stream() const
 {
-	return (float)m_bm.height();
+	return m_stream;
 }
 
-const Bitmap &ImageSource::bitmap() const
+int ImageSource::width() const
 {
-	return m_bm;
+	return m_width;
+}
+
+int ImageSource::height() const
+{
+	return m_height;
+}
+
+int ImageSource::channels() const
+{
+	return m_channels;
 }

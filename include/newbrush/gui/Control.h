@@ -3,6 +3,9 @@
 #include "newbrush/gui/ControlTemplate.h"
 
 namespace nb{
+
+class RenderObject;
+class Brush;
 class NB_API Control : public UIElement
 {
 	RTTR_ENABLE(UIElement)
@@ -31,7 +34,12 @@ protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
+	void updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Brush> brush);
+
+	std::shared_ptr<RenderObject>	m_bkgObj;
+
 private:
+	static void onBackgroundPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
 	static void onTemplateChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
 
 	bool m_handlingPropertyChanged{ false };

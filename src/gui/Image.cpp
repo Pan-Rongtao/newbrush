@@ -120,11 +120,11 @@ Size Image::arrangeOverride(const Size & finalSize)
 void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
 {
 	auto newSource = args->newValue.get_value<std::shared_ptr<ImageSource>>();
-	auto &newBm = newSource->bitmap();
+	auto &stream = newSource->stream();
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>();
-	auto glFormatAndType = Texture::getGlFormatAndType(newBm.channels());
-	texture->update(newBm.data(), newBm.width(), newBm.height(), glFormatAndType.first, glFormatAndType.second);
+	auto glFormatAndType = Texture::getGlFormatAndType(newSource->channels());
+	texture->update((const unsigned char *)stream.data(), newSource->width(), newSource->height(), glFormatAndType.first, glFormatAndType.second);
 	auto &material = self->m_renderObj->model()->meshes[0].material;
 	material.textures().push_back(texture);
 	self->updateLayout();

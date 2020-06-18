@@ -55,7 +55,7 @@ public:
 	int channels() const;
 
 	//伸缩
-	bool Bitmap::scale(uint32_t width, uint32_t height);
+	bool scale(uint32_t width, uint32_t height);
 
 	//保存为图像
 	//path：将根据后缀判断保存的图片类型，如果不能从后缀判断出来，则保存为BMP图片
