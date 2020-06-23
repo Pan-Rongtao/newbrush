@@ -568,5 +568,5 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 	auto source = args->newValue.get_value<std::shared_ptr<ImageSource>>();
 	auto &stream = source ? source->stream() : "";
 	GLFWimage img{ source->width(), source->height(), (unsigned char *)stream.data() };
-	glfwSetWindowIcon(w, 1, &img);
+	glfwSetWindowIcon(w, 1, &img);			//图片大会挂死
 }

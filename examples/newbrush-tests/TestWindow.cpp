@@ -15,7 +15,7 @@ TEST_CASE("Test nb::Window", "[Window]")
 {
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), std::string("Newbrush窗口测试"));
-	auto img = std::make_shared<ImageSource>("../images/nb1.png");
+	auto img = std::make_shared<ImageSource>("../images/nb0.png");
 	w->setValue(Window::IconProperty(), img);
 	w->setValue(Window::WindowStyleProperty(), WindowStyleE::SizeBox);
 	w->setValue<BrushPtr>(Window::BackgroundProperty(), std::make_shared<SolidColorBrush>(Colors::red()));

@@ -24,6 +24,10 @@
 using namespace nb;
 using namespace rttr;
 
+//enum类型需要主动注册，因为需要把枚举值注册
+//控件类型需主动注册，因为需要注册构造函数和metadata
+//作为Property属性类型的类型不要主动注册，让RTTR自动生成（用到什么就会自动生成什么）
+
 RTTR_REGISTRATION
 {
 	//enums
@@ -130,13 +134,6 @@ RTTR_REGISTRATION
 
 	auto k = nb::getTickCount();
 
-	/////////////////////////Point//////////////////////
-	registration::class_<Point>("nb::Point")
-		.constructor<>()()
-		.constructor<float, float>()(policy::ctor::as_object)
-		;
-	//////////////////////End Point/////////////////////
-
 	/////////////////////////Binding//////////////////////
 	registration::enumeration<BindingModeE>("BindingModeE")
 	(
@@ -147,11 +144,6 @@ RTTR_REGISTRATION
 	);
 	//////////////////////End Binding/////////////////////
 
-
-	/////////////////////////Object//////////////////////
-
-	registration::class_<Object>("nb::Object").constructor<>();
-	registration::class_<DependencyObject>("nb::DependencyObject").constructor<>();
 
 	/////////////////////////UIElement//////////////////////
 	registration::class_<UIElement>("nb::UIElement")

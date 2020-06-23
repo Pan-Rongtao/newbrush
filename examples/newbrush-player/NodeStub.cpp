@@ -108,17 +108,80 @@ void registerConvertor()
 	static bool b = false;
 	if (b)	return;
 
-	type::register_converter_func([](const std::string &str, bool &ok)->std::shared_ptr<Brush>
-	{
+	type::register_converter_func([](const std::string &s, bool &ok)->nb::Point {
+		nb::Point p;
+		std::vector<std::string> segms = nb::stringSplit(s, ",", true);
+		if (segms.size() != 2)
+		{
+			ok = false;
+		}
+		else
+		{
+			ok = true;
+			auto x = std::stoi(segms[0]);
+			auto y = std::stoi(segms[1]);
+			p = nb::Point(x, y);
+			return p;
+		}
+	});
+
+	type::register_converter_func([](const std::string &s, bool &ok)->nb::Color {
+		nb::Color c;
+		std::vector<std::string> segms = nb::stringSplit(s, ",", true);
+		if (segms.size() != 4)
+		{
+			ok = false;
+		}
+		else
+		{
+			ok = true;
+			auto r = std::stoi(segms[0]);
+			auto g = std::stoi(segms[1]);
+			auto b = std::stoi(segms[2]);
+			auto a = std::stoi(segms[3]);
+			c = nb::Color(a, r, g, b);
+			return c;
+		}
+	});
+
+	type::register_converter_func([](const std::string &s, bool &ok)->nb::Thickness {
+
+		nb::Thickness tn;
+		std::vector<std::string> segms = nb::stringSplit(s, ",", true);
+		if (segms.size() != 4)
+		{
+			ok = false;
+		}
+		else
+		{
+			ok = true;
+			tn.left = std::stof(segms[0]);
+			tn.left = std::stof(segms[1]);
+			tn.left = std::stof(segms[2]);
+			tn.left = std::stof(segms[3]);
+			return tn;
+		}
+	});
+
+	type::register_converter_func([](const std::string &s, bool &ok)->std::shared_ptr<ImageSource> {
+		
+		auto ret = std::make_shared<ImageSource>();
+		ret->load((const unsigned char *)s.data(), s.size());
 		ok = true;
+		return ret;
+	});
+
+	type::register_converter_func([](const std::string &s, bool &ok)->std::shared_ptr<Brush>
+	{
 		BrushPtr brush;
 
-		std::vector<std::string> segms = nb::stringSplit(str, ",", true);
+		std::vector<std::string> segms = nb::stringSplit(s, ",", true);
 		if (segms.size() == 1)
 		{
 			auto imgSource = std::make_shared<ImageSource>();
-			imgSource->load((const unsigned char *)str.data(), str.size());
+			imgSource->load((const unsigned char *)s.data(), s.size());
 			brush = std::make_shared<ImageBrush>(imgSource);
+			ok = true;
 		}
 		else if (segms.size() == 4)
 		{
@@ -128,6 +191,11 @@ void registerConvertor()
 			auto a = std::stoi(segms[3]);
 			nb::Color c = nb::Color(a, r, g, b);
 			brush = std::make_shared<SolidColorBrush>(c);
+			ok = true;
+		}
+		else
+		{
+			ok = false;
 		}
 		return brush;
 	});

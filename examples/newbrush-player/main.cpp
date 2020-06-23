@@ -9,11 +9,15 @@
 #include "newbrush/gui/Rectangle.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/DependencyProperty.h"
+#include <wchar.h>
 
 using namespace nb;
 
 int main(int argc, char **argv)
 {
+	char c = -1111;
+	auto xx = sizeof(long double);
+
 	Application app;
 
 	StudioCommunicationHelper helper;
