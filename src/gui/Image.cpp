@@ -124,7 +124,7 @@ void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>();
 	auto glFormatAndType = Texture::getGlFormatAndType(newSource->channels());
-	texture->update((const unsigned char *)stream.data(), newSource->width(), newSource->height(), glFormatAndType.first, glFormatAndType.second);
+	texture->update((const unsigned char *)stream.data(), (int)newSource->width(), (int)newSource->height(), glFormatAndType.first, glFormatAndType.second);
 	auto &material = self->m_renderObj->model()->meshes[0].material;
 	material.textures().push_back(texture);
 	self->updateLayout();

@@ -23,8 +23,8 @@ public:
 
 	void load(const unsigned char *buffer, uint32_t bytes);
 
-	int width() const;
-	int height() const;
+	float width() const;
+	float height() const;
 	int channels() const;
 
 	const std::string &stream() const;

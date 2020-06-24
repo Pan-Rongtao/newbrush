@@ -38,14 +38,14 @@ const std::string &ImageSource::stream() const
 	return m_stream;
 }
 
-int ImageSource::width() const
+float ImageSource::width() const
 {
-	return m_width;
+	return (float)m_width;
 }
 
-int ImageSource::height() const
+float ImageSource::height() const
 {
-	return m_height;
+	return (float)m_height;
 }
 
 int ImageSource::channels() const

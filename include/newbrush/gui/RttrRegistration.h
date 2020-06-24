@@ -70,11 +70,19 @@ using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
 class NB_API RttrRegistration
 {
 public:
+	//执行注册
+	static void doRegister();
+
 	//获取类型的自身属性（不包括继承的属性）
 	static std::vector<DependencyPropertyPtr> getTypeSelfPropertys(rttr::type t);
 
 	//获取类型的所有属性（包括继承的属性）
 	static std::vector<DependencyPropertyPtr> getTypeAllPropertys(rttr::type ownerType);
+
+private:
+	static void registerEnums();
+	static void registerUIElementTypes();
+	static void registerConverters();
 };
 
 

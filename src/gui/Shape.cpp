@@ -128,7 +128,7 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 			auto const &stream = source->stream();
 			auto texture = std::make_shared<Texture2D>();
 			auto glFormatAndType = Texture::getGlFormatAndType(source->channels());
-			texture->update((const unsigned char *)stream.data(), source->width(), source->height(), glFormatAndType.first, glFormatAndType.second);
+			texture->update((const unsigned char *)stream.data(), (int)source->width(), (int)source->height(), glFormatAndType.first, glFormatAndType.second);
 			ro->model()->meshes[0].material.textures().push_back(texture);
 		}
 	}

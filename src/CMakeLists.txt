@@ -10,6 +10,7 @@ add_subdirectory(core)
 add_subdirectory(media)
 add_subdirectory(gles)
 add_subdirectory(gui)
+add_subdirectory(rpc-helper)
 
 
 # 5. Project Install
