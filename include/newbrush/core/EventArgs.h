@@ -8,6 +8,8 @@ namespace nb {
 
 class DependencyProperty;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+class InputElement;
+using InputElementPtr = std::shared_ptr<InputElement>;
 
 //按键枚举
 enum class KeyE
@@ -214,7 +216,7 @@ class NB_API MouseEventArgs : public InputEventArgs
 public:
 	MouseEventArgs(int timestamp);
 
-	Point getPosition(std::shared_ptr<InputElement> relativeTo) const;			//获取光标相对于指定元素的位置
+	Point getPosition(InputElementPtr relativeTo) const;			//获取光标相对于指定元素的位置
 
 	MouseButtonStateE	LeftButton;		//左按钮状态
 	MouseButtonStateE	MiddleButton;	//中间按钮状态
@@ -247,7 +249,7 @@ public:
 	static bool isKeyDown(KeyE key);
 	static bool isKeyUp(KeyE key);
 	static bool isKeyToggled(KeyE key);
-	std::shared_ptr<InputElement> focus(std::shared_ptr<InputElement> element);
+	InputElementPtr focus(InputElementPtr element);
 };
 
 class NB_API KeyboardEventArgs : public InputEventArgs
@@ -260,10 +262,10 @@ public:
 class NB_API KeyboardFocusChangedEventArgs : public KeyboardEventArgs
 {
 public:
-	KeyboardFocusChangedEventArgs(int timestamp, std::shared_ptr<InputElement> oldFocus, std::shared_ptr<InputElement> newFocus);
+	KeyboardFocusChangedEventArgs(int timestamp, InputElementPtr oldFocus, InputElementPtr newFocus);
 
-	std::shared_ptr<InputElement>	OldFocus;	//以前具有焦点的元素
-	std::shared_ptr<InputElement>	NewFocus;	//已移动到的元素
+	InputElementPtr	OldFocus;	//以前具有焦点的元素
+	InputElementPtr	NewFocus;	//已移动到的元素
 };
 
 //按键事件（该设计与WPF有差距，需要重点注意）

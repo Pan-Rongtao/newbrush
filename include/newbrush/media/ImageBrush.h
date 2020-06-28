@@ -4,11 +4,12 @@
 namespace nb {
 
 class ImageSource;
+using ImageSourcePtr = std::shared_ptr<ImageSource>;
 class NB_API ImageBrush : public Brush
 {
 public:
 	ImageBrush();
-	explicit ImageBrush(std::shared_ptr<ImageSource> imgSource);
+	explicit ImageBrush(ImageSourcePtr imgSource);
 
 	static DependencyPropertyPtr SourceProperty();	//‘¥“¿¿µ Ù–‘
 };

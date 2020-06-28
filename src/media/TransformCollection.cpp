@@ -8,7 +8,7 @@ TransformCollection::TransformCollection()
 	m_collection.clear();
 }
 
-TransformCollection::TransformCollection(std::vector<std::shared_ptr<Transform>> collection)
+TransformCollection::TransformCollection(std::vector<TransformPtr> collection)
 {
 	m_collection = collection;
 }
@@ -23,7 +23,7 @@ size_t TransformCollection::count()
 	return m_collection.size();
 }
 
-void TransformCollection::add(std::shared_ptr<Transform> value)
+void TransformCollection::add(TransformPtr value)
 {
 	m_collection.push_back(value);
 }
@@ -33,26 +33,26 @@ void TransformCollection::clear()
 	m_collection.clear();
 }
 
-bool TransformCollection::contains(std::shared_ptr<Transform> value)
+bool TransformCollection::contains(TransformPtr value)
 {
 	auto iter = std::find(m_collection.begin(), m_collection.end(), value);
 	
 	return iter != m_collection.end() ? true : false;
 }
 
-int TransformCollection::indexOf(std::shared_ptr<Transform> value)
+int TransformCollection::indexOf(TransformPtr value)
 {
 	auto  iter = std::find(m_collection.begin(), m_collection.end(), value);
 
 	return iter != m_collection.end() ? iter - m_collection.begin() : -1;
 }
 
-void TransformCollection::insert(size_t index, std::shared_ptr<Transform> value)
+void TransformCollection::insert(size_t index, TransformPtr value)
 {
 	m_collection.insert(m_collection.begin() + index, value);
 }
 
-bool TransformCollection::remove(std::shared_ptr<Transform> value)
+bool TransformCollection::remove(TransformPtr value)
 {
 	auto  iter = std::find(m_collection.begin(), m_collection.end(), value);
 
@@ -73,7 +73,7 @@ void TransformCollection::removeAt(size_t index)
 	m_collection.erase(m_collection.begin() + index);
 }
 
-std::shared_ptr<Transform> TransformCollection::getItem(size_t i)
+TransformPtr TransformCollection::getItem(size_t i)
 {
 	if (i >= count())
 	{

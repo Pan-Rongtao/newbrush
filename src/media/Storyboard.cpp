@@ -12,7 +12,7 @@ Storyboard::Storyboard()
 	};
 }
 
-std::vector<std::shared_ptr<Timeline>>& Storyboard::children()
+std::vector<TimelinePtr>& Storyboard::children()
 {
 	return m_children;
 }
@@ -32,7 +32,7 @@ TimeSpan Storyboard::getActualDurationTimespan() const
 	}
 	else
 	{
-		auto iter = std::max_element(m_children.begin(), m_children.end(), [](std::shared_ptr<Timeline> tl0, std::shared_ptr<Timeline> tl1) {
+		auto iter = std::max_element(m_children.begin(), m_children.end(), [](TimelinePtr tl0, TimelinePtr tl1) {
 			return tl1->getActualDurationTimespan() > tl0->getActualDurationTimespan();
 		});
 		return (*iter)->getActualDurationTimespan();

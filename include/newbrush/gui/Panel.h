@@ -4,6 +4,8 @@
 
 namespace nb{
 
+class Brush;
+using BrushPtr = std::shared_ptr<Brush>;
 class NB_API Panel : public UIElement
 {
 	RTTR_ENABLE(UIElement)
@@ -18,8 +20,8 @@ public:
 
 	UIElementCollection &children();
 
-	void setZIndex(std::shared_ptr<UIElement> element, int index);
-	int getZIndex(std::shared_ptr<UIElement> element);
+	void setZIndex(UIElementPtr element, int index);
+	int getZIndex(UIElementPtr element);
 
 	virtual void onRender(Viewport2D & drawContext) override;
 

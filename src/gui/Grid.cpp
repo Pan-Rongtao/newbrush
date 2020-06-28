@@ -117,74 +117,90 @@ Grid::Grid()
 
 DependencyPropertyPtr Grid::RowDefinitionsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Grid, std::vector<std::shared_ptr<RowDefinition>>>("RowDefinitions", {});
+	static auto dp = DependencyProperty::registerDependency<Grid, std::vector<RowDefinitionPtr>>("RowDefinitions", {});
 	return dp;
 }
 
 DependencyPropertyPtr Grid::ColumnDefinitionsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency <Grid, std::vector<std::shared_ptr<ColumnDefinition>>>("ColumnDefinitions", {});
+	static auto dp = DependencyProperty::registerDependency <Grid, std::vector<ColumnDefinitionPtr>>("ColumnDefinitions", {});
 	return dp;
 }
 
-void Grid::setRow(std::shared_ptr<UIElement> element, uint32_t row)
+DependencyPropertyPtr Grid::RowProperty()
 {
-	auto rows = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()).size();
-	if ((row > 0 && row < rows) && m_children.contains(element))
-	{
-		DependencyProperty::registerAttached(element, AttachedPropertyRow, row);
-	}
+	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("Row", 0, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "Grid中的子内容的行", 3);
+	return dp;
 }
 
-uint32_t Grid::getRow(std::shared_ptr<UIElement> element)
+DependencyPropertyPtr Grid::ColumnProperty()
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyRow);
-	return !v.is_valid() ? 0 : v.get_value<uint32_t>();
+	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("Column", 0, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "Grid中的子内容的列", 3);
+	return dp;
 }
 
-void Grid::setColumn(std::shared_ptr<UIElement> element, uint32_t col)
+DependencyPropertyPtr Grid::RowSpanProperty()
 {
-	auto cols = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()).size();
-	if ((col > 0 && col < cols) && m_children.contains(element))
-	{
-		DependencyProperty::registerAttached(element, AttachedPropertyColumn, col);
-	}
+	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("RowSpan", 1, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "Grid中的子内容所跨域的总行数", 3);
+	return dp;
 }
 
-uint32_t Grid::getColumn(std::shared_ptr<UIElement> element)
+DependencyPropertyPtr Grid::ColumnSpanProperty()
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumn);
-	return !v.is_valid() ? 0 : v.get_value<uint32_t>();
+	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("ColumnSpan", 1, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "Grid中的子内容所跨域的总列数", 3);
+	return dp;
 }
 
-void Grid::setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan)
+void Grid::setRow(UIElementPtr element, uint32_t row)
 {
-	auto rows = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty()).size();
-	if ((rowSpan >= 1 && rowSpan <= rows) && m_children.contains(element))
-	{
-		DependencyProperty::registerAttached(element, AttachedPropertyRowSpan, rowSpan);
-	}
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(RowProperty(), row);
 }
 
-uint32_t Grid::getRowSpan(std::shared_ptr<UIElement> element)
+uint32_t Grid::getRow(UIElementPtr element)
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyRowSpan);
-	return !v.is_valid() ? 1 : v.get_value<uint32_t>();
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(RowProperty()).get_value<uint32_t>();
 }
 
-void Grid::setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan)
+void Grid::setColumn(UIElementPtr element, uint32_t col)
 {
-	auto cols = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty()).size();
-	if ((colSpan <= cols) && colSpan >= 1 && m_children.contains(element))
-	{
-		DependencyProperty::registerAttached(element, AttachedPropertyColumnSpan, colSpan);
-	}
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(ColumnProperty(), col);
 }
 
-uint32_t Grid::getColumnSpan(std::shared_ptr<UIElement> element)
+uint32_t Grid::getColumn(UIElementPtr element)
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyColumnSpan);
-	return !v.is_valid() ? 1 : v.get_value<uint32_t>();
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(ColumnProperty()).get_value<uint32_t>();
+}
+
+void Grid::setRowSpan(UIElementPtr element, uint32_t rowSpan)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(RowSpanProperty(), rowSpan);
+}
+
+uint32_t Grid::getRowSpan(UIElementPtr element)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(RowSpanProperty()).get_value<uint32_t>();
+}
+
+void Grid::setColumnSpan(UIElementPtr element, uint32_t colSpan)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(ColumnSpanProperty(), colSpan);
+}
+
+uint32_t Grid::getColumnSpan(UIElementPtr element)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(ColumnSpanProperty()).get_value<uint32_t>();
 }
 
 //规则：每次根据RowDefinitions和ColumnDefinitions把每个网格单元的像素尺寸计算出来：
@@ -194,8 +210,8 @@ Size Grid::measureOverride(const Size & availableSize)
 {
 	auto calcPixcelLenghts = [&](bool isRowdefinition)->std::vector<float>
 	{
-		auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
-		auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+		auto rowDefinitions = getValue<std::vector<RowDefinitionPtr>>(RowDefinitionsProperty());
+		auto colDefinitions = getValue<std::vector<ColumnDefinitionPtr>>(ColumnDefinitionsProperty());
 		std::vector<float> rowOrColUnitsPixcelLenghts(isRowdefinition ? rowDefinitions.size() : colDefinitions.size(), NAN);
 		auto verifiedCount = 0u;
 		//第一次循环把非Start的像素长度确定下来
@@ -243,8 +259,8 @@ Size Grid::measureOverride(const Size & availableSize)
 				}
 				else
 				{
-					auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
-					auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+					auto rowDefinitions = getValue<std::vector<RowDefinitionPtr>>(RowDefinitionsProperty());
+					auto colDefinitions = getValue<std::vector<ColumnDefinitionPtr>>(ColumnDefinitionsProperty());
 					auto lenght = isRowdefinition ? (i < rowDefinitions.size() ? rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty()) : 0.0) 
 						: (i < colDefinitions.size() ? colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty()) : 0.0);
 					remainStars += lenght.value();
@@ -256,8 +272,8 @@ Size Grid::measureOverride(const Size & availableSize)
 			{
 				if (std::isnan(rowOrColUnitsPixcelLenghts[i]))
 				{
-					auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
-					auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
+					auto rowDefinitions = getValue<std::vector<RowDefinitionPtr>>(RowDefinitionsProperty());
+					auto colDefinitions = getValue<std::vector<ColumnDefinitionPtr>>(ColumnDefinitionsProperty());
 					auto rowHeight = i < rowDefinitions.size() ? rowDefinitions[i]->getValue<GridLength>(RowDefinition::HeightProperty()) : 0.0;
 					auto colWidth = i < colDefinitions.size() ? colDefinitions[i]->getValue<GridLength>(ColumnDefinition::WidthProperty()) : 0.0;
 					rowOrColUnitsPixcelLenghts[i] = isRowdefinition ? (rowHeight.value() / remainStars * remainPixcels) :
@@ -304,10 +320,10 @@ Size Grid::arrangeOverride(const Size & finalSize)
 		auto child = m_children.childAt(i);
 		auto rowOfChild = getRow(child);
 		auto colOfChild = getColumn(child);
-		auto rowDefinitions = getValue<std::vector<std::shared_ptr<RowDefinition>>>(RowDefinitionsProperty());
-		auto colDefinitions = getValue<std::vector<std::shared_ptr<ColumnDefinition>>>(ColumnDefinitionsProperty());
-		rowOfChild = nb::clamp<int>(0, rowDefinitions.size(), rowOfChild);
-		colOfChild = nb::clamp<int>(0u, colDefinitions.size(), colOfChild);
+		auto rowDefinitions = getValue<std::vector<RowDefinitionPtr>>(RowDefinitionsProperty());
+		auto colDefinitions = getValue<std::vector<ColumnDefinitionPtr>>(ColumnDefinitionsProperty());
+		rowOfChild = clamp<int>(0, rowDefinitions.size(), rowOfChild);
+		colOfChild = clamp<int>(0u, colDefinitions.size(), colOfChild);
 		auto rowSpan = getRowSpan(child);
 		auto colSpan = getColumnSpan(child);
 		auto actualRowSpan = rowOfChild + rowSpan <= m_pixcelHeightsForEachRows.size() ? rowSpan : m_pixcelHeightsForEachRows.size() - rowOfChild;
@@ -322,7 +338,7 @@ Size Grid::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-std::shared_ptr<UIElement> Grid::clone() const
+UIElementPtr Grid::clone() const
 {
 	return std::make_shared<Grid>(*this);
 }

@@ -21,7 +21,7 @@ class NB_API TextureGlyphAtlas : public Texture2D
 {
 public:
 	//构建一个字形图集纹理，宽高为width, height，字形的尺寸为glypSize
-	TextureGlyphAtlas(std::shared_ptr<Font> font, const std::wstring &unicodeStr)
+	TextureGlyphAtlas(FontPtr font, const std::wstring &unicodeStr)
 		: Texture2D(GlyphAltasWidth, GlyphAltasHeight) , m_x(0) , m_y(0) , m_font(font)
 	{
 		if ((width() != 0 && height() != 0) && (width() % m_font->size() != 0 || height() % m_font->size() != 0))
@@ -42,21 +42,21 @@ public:
 	}
 
 	//font
-	std::shared_ptr<Font> font()
+	FontPtr font()
 	{
 		return m_font;
 	}
 
 	//获取一个字符的信息
 	//如果存在返回存在的字形，否则新建一个新字形，并存储下来；倘若TextureGlyphAtlas已满则不允许新建，最终返回的Glyph.texureId为-1
-	std::shared_ptr<Glyph> getGlyph(wchar_t ch)
+	GlyphPtr getGlyph(wchar_t ch)
 	{
 		auto iter = m_glyphs.find(ch);
 		return (iter != m_glyphs.end()) ? iter->second : appendChar(ch);
 	}
 
 	//返回的Plyph的texureId=-1表示添加失败，已满
-	std::shared_ptr<Glyph> appendChar(wchar_t ch)
+	GlyphPtr appendChar(wchar_t ch)
 	{
 		if (m_glyphs.find(ch) != m_glyphs.end())
 			return{ nullptr };
@@ -94,7 +94,7 @@ public:
 		}
 		unbind();
 
-		std::shared_ptr<Glyph> ret = std::make_shared<Glyph>();
+		GlyphPtr ret = std::make_shared<Glyph>();
 		ret->texureId = m_handle;
 		ret->info = glyph;
 		ret->uv[0] = uv[0];
@@ -114,14 +114,14 @@ public:
 private:
 	float										m_x;
 	float										m_y;
-	std::map<wchar_t, std::shared_ptr<Glyph>>	m_glyphs;
-	std::shared_ptr<Font>						m_font;
+	std::map<wchar_t, GlyphPtr>	m_glyphs;
+	FontPtr						m_font;
 	friend class GlyphFactory;
 };
 
-std::shared_ptr<Glyph> GlyphFactory::getGlyph(std::shared_ptr<Font> font, wchar_t ch)
+GlyphPtr GlyphFactory::getGlyph(FontPtr font, wchar_t ch)
 {
-	std::shared_ptr<Glyph> ret;
+	GlyphPtr ret;
 	for (auto &atlas : g_glyphAtlas)
 	{
 		ret = atlas->getGlyph(ch);

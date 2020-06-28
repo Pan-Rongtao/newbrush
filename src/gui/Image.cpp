@@ -44,7 +44,7 @@ void Image::onRender(Viewport2D & drawContext)
 
 DependencyPropertyPtr Image::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, std::shared_ptr<ImageSource>>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<Image, ImageSourcePtr>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "图像源", 1);
 	return dp;
 }
@@ -59,7 +59,7 @@ DependencyPropertyPtr Image::StretchProperty()
 Size Image::measureOverride(const Size & availableSize)
 {
 	m_availableSize = availableSize;
-	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto source = getValue<ImageSourcePtr>(SourceProperty());
 	Size sourceSize = source ? Size(source->width(), source->height()) : Size();
 	return Size(std::max(availableSize.width(), sourceSize.width()), std::max(availableSize.height(), sourceSize.height()));
 }
@@ -67,7 +67,7 @@ Size Image::measureOverride(const Size & availableSize)
 Size Image::arrangeOverride(const Size & finalSize)
 {
 	auto stretch = getValue<StretchE>(StretchProperty());
-	auto source = getValue<std::shared_ptr<ImageSource>>(SourceProperty());
+	auto source = getValue<ImageSourcePtr>(SourceProperty());
 	Size sourceSize = source ? Size(source->width(), source->height()) : Size();
 	if (sourceSize.isZero())
 		return Size();
@@ -119,7 +119,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 
 void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
 {
-	auto newSource = args->newValue.get_value<std::shared_ptr<ImageSource>>();
+	auto newSource = args->newValue.get_value<ImageSourcePtr>();
 	auto &stream = newSource->stream();
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>();

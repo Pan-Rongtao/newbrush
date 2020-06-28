@@ -1,137 +1,173 @@
 ﻿#include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/TimeSpan.h"
+#include "newbrush/media/Easing.h"
+#include "newbrush/media/Storyboard.h"
 
 using namespace nb;
 
 VisualState::VisualState()
-	: VisualState("", nullptr)
+	: VisualState("")
 {
 }
 
-VisualState::VisualState(const std::string & name, std::shared_ptr<Storyboard> sb)
+VisualState::VisualState(const std::string & name)
 {
-	setValue(NameProperty(), name);
-	setValue(StoryboardProperty(), sb);
 }
 
-DependencyPropertyPtr VisualState::NameProperty()
+void VisualState::setName(const std::string & name)
 {
-	static auto dp = DependencyProperty::registerDependency<VisualState, std::string>("Name", std::string());
-	return dp;
+	m_name = name;
 }
 
-DependencyPropertyPtr VisualState::StoryboardProperty()
+const std::string & VisualState::name() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualState, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
-	return dp;
+	return m_name;
+}
+
+void VisualState::setStoryboard(StoryboardPtr sb)
+{
+	m_storyboard = sb;
+}
+
+StoryboardPtr VisualState::storyboard()
+{
+	return m_storyboard;
 }
 
 VisualTransition::VisualTransition()
 {
 }
 
-DependencyPropertyPtr VisualTransition::FromProperty()
+void VisualTransition::setFrom(const std::string & from)
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::string>("From", std::string());
-	return dp;
+	m_from = from;
 }
 
-DependencyPropertyPtr VisualTransition::ToProperty()
+const std::string & VisualTransition::from() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::string>("To", std::string());
-	return dp;
+	return m_from;
 }
 
-DependencyPropertyPtr VisualTransition::DurationProperty()
+void VisualTransition::setTo(const std::string & to)
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, TimeSpan>("Duration", TimeSpan());
-	return dp;
+	m_to = to;
 }
 
-DependencyPropertyPtr VisualTransition::StoryboardProperty()
+const std::string & VisualTransition::to() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<Storyboard>>("Storyboard", nullptr);
-	return dp;
+	return m_to;
 }
 
-DependencyPropertyPtr VisualTransition::EasingProperty()
+void VisualTransition::setDuration(const TimeSpan & duration)
 {
-	static auto dp = DependencyProperty::registerDependency<VisualTransition, std::shared_ptr<EasingBase>>("Easing", nullptr);
-	return dp;
+	m_duration = duration;
+}
+
+const TimeSpan & VisualTransition::duration() const
+{
+	return m_duration;
+}
+
+void VisualTransition::setEasing(EasingBasePtr easing)
+{
+	m_easing = easing;
+}
+
+EasingBasePtr VisualTransition::easing() const
+{
+	return m_easing;
+}
+
+void VisualTransition::setStoryboard(StoryboardPtr sb)
+{
+	m_storyboard = sb;
+}
+
+StoryboardPtr VisualTransition::storyboard()
+{
+	return m_storyboard;
+}
+
+VisualStateGroup::VisualStateGroup()
+	: VisualStateGroup("")
+{
 }
 
 VisualStateGroup::VisualStateGroup(const std::string & name)
-	: VisualStateGroup(name, {})
+	: m_name(name)
 {
 }
 
-VisualStateGroup::VisualStateGroup(const std::string & name, const std::vector<std::shared_ptr<VisualState>>& states)
+void VisualStateGroup::setName(const std::string & name)
 {
-	setValue(NameProperty(), name);
-	setValue(StatesProperty(), states);
+	m_name = name;
 }
 
-DependencyPropertyPtr VisualStateGroup::NameProperty()
+const std::string & VisualStateGroup::name() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::string>("Name", std::string());
-	return dp;
+	return m_name;
 }
 
-DependencyPropertyPtr VisualStateGroup::StatesProperty()
+VisualStatePtr VisualStateGroup::currentState()
 {
-	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<std::shared_ptr<VisualState>>>("States", {});
-	return dp;
+	return m_currentState;
 }
 
-DependencyPropertyPtr VisualStateGroup::CurrentStateProperty()
+const std::vector<VisualStatePtr>& VisualStateGroup::states() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::shared_ptr<VisualState>>("CurrentState", std::make_shared<VisualState>());
-	return dp;
+	return m_states;
 }
 
-DependencyPropertyPtr VisualStateGroup::TransitionsProperty()
+const std::vector<VisualTransitionPtr>& VisualStateGroup::transitions() const
 {
-	static auto dp = DependencyProperty::registerDependency<VisualStateGroup, std::vector<VisualTransition>>("Transitions", {});
-	return dp;
+	return m_transitions;
 }
 
-void VisualStateMachine::addGroup(std::shared_ptr<VisualStateGroup> group)
+void VisualStateMachine::addGroup(VisualStateGroupPtr stateGroup)
 {
-	for (auto const &g : m_groups)
+	for (auto const &group : m_groups)
 	{
-		auto gName0 = g->getValue<std::string>(VisualStateGroup::NameProperty());
-		auto gName1 = group->getValue<std::string>(VisualStateGroup::NameProperty());
-		if (gName0 == gName1)
+		if (group->name() == stateGroup->name())
 		{
-			nbThrowException(std::logic_error, "[%s] is already exists", gName0.data());
+			nbThrowException(std::logic_error, "[%s] is already exists", group->name().data());
 		}
 	}
-	m_groups.push_back(group);
+	m_groups.push_back(stateGroup);
 }
 
-bool VisualStateMachine::gotoState(const std::string &groupName, const std::string & stateName, bool useTransitions)
+bool VisualStateMachine::gotoState(const std::string &stateGroupName, const std::string &stateName, bool useTransitions)
 {
-	for (auto const &g : m_groups)
+	auto state = findState(stateGroupName, stateName);
+	if (!state)
 	{
-		auto gName = g->getValue<std::string>(VisualStateGroup::NameProperty());
-		if (gName == groupName)
-		{
-			if (useTransitions)
-			{
-
-			}
-			auto states = g->getValue<std::vector<std::shared_ptr<VisualState>>>(VisualStateGroup::StatesProperty());
-			for (auto const &s : states)
-			{
-				auto sName = s->getValue<std::string>(VisualState::NameProperty());
-				if (sName == stateName)
-				{
-					auto sb = s->getValue<std::shared_ptr<Storyboard>>(VisualState::StoryboardProperty());
-					sb->begin();
-					return true;
-				}
-			}
-		}
+		return false;
 	}
-	return false;
+
+	auto sb = state->storyboard();
+	sb->begin();
+	return true;
+}
+
+VisualStateGroupPtr VisualStateMachine::findGroup(const std::string & groupName) const
+{
+	auto iter = std::find_if(m_groups.begin(), m_groups.end(), [&groupName](VisualStateGroupPtr group) {
+		return group->name() == groupName;
+	});
+	return iter != m_groups.end() ? *iter : nullptr;
+}
+
+VisualStatePtr VisualStateMachine::findState(const std::string & groupName, const std::string & stateName) const
+{
+	auto group = findGroup(groupName);
+	if (!group)
+	{
+		return nullptr;
+	}
+
+	auto const &states = group->states();
+	auto iter = std::find_if(states.begin(), states.end(), [&stateName](VisualStatePtr s) {
+		return s->name() == stateName;
+	});
+	return iter != states.end() ? *iter : nullptr;
 }

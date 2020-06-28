@@ -27,22 +27,22 @@ public:
 	Canvas();
 	virtual ~Canvas() = default;
 
-	static constexpr char *AttachedPropertyLeft		= "Canvas.Left";
-	static constexpr char *AttachedPropertyRight	= "Canvas.Right";
-	static constexpr char *AttachedPropertyTop		= "Canvas.Top";
-	static constexpr char *AttachedPropertyBottom	= "Canvas.Bottom";
+	static DependencyPropertyPtr LeftProperty();
+	static DependencyPropertyPtr RightProperty();
+	static DependencyPropertyPtr TopProperty();
+	static DependencyPropertyPtr BottomProperty();
 	
-	void setLeft(std::shared_ptr<UIElement> element, float left);
-	float getLeft(std::shared_ptr<UIElement> element);
+	static void setLeft(UIElementPtr element, float left);
+	static float getLeft(UIElementPtr element);
 
-	void setRight(std::shared_ptr<UIElement> element, float right);
-	float getRight(std::shared_ptr<UIElement> element);
+	static void setRight(UIElementPtr element, float right);
+	static float getRight(UIElementPtr element);
 
-	void setTop(std::shared_ptr<UIElement> element, float top);
-	float getTop(std::shared_ptr<UIElement> element);
+	static void setTop(UIElementPtr element, float top);
+	static float getTop(UIElementPtr element);
 
-	void setBottom(std::shared_ptr<UIElement> element, float bottom);
-	float getBottom(std::shared_ptr<UIElement> element);
+	static void setBottom(UIElementPtr element, float bottom);
+	static float getBottom(UIElementPtr element);
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

@@ -47,8 +47,10 @@ void EffectiveValueEntry::setExpressionValue(const var & value)
 
 void EffectiveValueEntry::setAnimatedValue(const var & value)
 {
-	if (value.get_type() == DependencyProperty::unsetValue().get_type())
-		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");
+	if (!value.is_valid())
+	{
+		nbThrowException(std::invalid_argument, "value is invalid");
+	}
 
 	auto modifiedValue = ensureModifiedValue();
 	modifiedValue.AnimatedValue = value;
@@ -57,8 +59,10 @@ void EffectiveValueEntry::setAnimatedValue(const var & value)
 
 void EffectiveValueEntry::setCoercedValue(const var & value, const var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue)
 {
-	if (value.get_type() == DependencyProperty::unsetValue().get_type())
-		nbThrowException(std::runtime_error, "value can't be DependencyProperty::unsetValue()");
+	if (!value.is_valid())
+	{
+		nbThrowException(std::invalid_argument, "value is invalid");
+	}
 
 	auto modifiedValue = ensureModifiedValue();
 	modifiedValue.BaseValue = value;

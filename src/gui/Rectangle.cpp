@@ -38,7 +38,7 @@ void Rectangle::onRender(Viewport2D & drawContext)
 	if (m_fillObject)
 	{
 		Rect fillRc{rc};
-		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (stroke)
 		{
 			auto strokeThickness = getValue<float>(StrokeThicknessProperty());
@@ -62,7 +62,7 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = args.newValue.get_value<std::shared_ptr<Brush>>();
+		auto fill = args.newValue.get_value<BrushPtr>();
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -76,13 +76,13 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	}
 	else if (args.property == StrokeProperty())
 	{
-		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
 	else if (args.property == RenderTransformProperty())
 	{
-		auto transformationPtr = args.newValue.get_value<std::shared_ptr<Transform>>();
+		auto transformationPtr = args.newValue.get_value<TransformPtr>();
 		glm::mat4 mat = transformationPtr->value();
 		m_fillObject->model()->matrix = mat * m_fillObject->model()->matrix;
 		m_strokeObject->model()->matrix = mat * m_strokeObject->model()->matrix;
@@ -99,14 +99,14 @@ Size Rectangle::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-std::shared_ptr<UIElement> Rectangle::clone() const
+UIElementPtr Rectangle::clone() const
 {
 	return std::make_shared<Rectangle>(*this);
 }
 
 void Rectangle::updateFillObject(float width, float height, float radiusX, float radiusY)
 {
-	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
+	auto fill = getValue<BrushPtr>(FillProperty());
 	if (!fill)
 		return;
 
@@ -201,6 +201,6 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+	auto stroke = getValue<BrushPtr>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

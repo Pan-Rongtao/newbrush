@@ -1,4 +1,5 @@
 #include "ShaderStub.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 Status ShaderStub::BuildShader(::ServerContext* context, const BuildShaderRequest* request, BuildShaderReply* response)
 {

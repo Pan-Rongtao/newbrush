@@ -60,7 +60,7 @@ void Line::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == StrokeProperty())
 	{
-		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -96,6 +96,6 @@ void Line::updateStrokeObject(const Rect &rc)
 	std::vector<glm::vec2> breaks{ glm::vec2(x1, y1), glm::vec2(x2, y2) };
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+	auto stroke = getValue<BrushPtr>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

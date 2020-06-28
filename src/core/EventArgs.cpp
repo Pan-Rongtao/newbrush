@@ -37,7 +37,7 @@ KeyEventArgs::KeyEventArgs(int timestamp, KeyE key)
 	Timestamp = timestamp;
 }
 
-KeyboardFocusChangedEventArgs::KeyboardFocusChangedEventArgs(int timestamp, std::shared_ptr<InputElement> oldFocus, std::shared_ptr<InputElement> newFocus)
+KeyboardFocusChangedEventArgs::KeyboardFocusChangedEventArgs(int timestamp, InputElementPtr oldFocus, InputElementPtr newFocus)
 	: KeyboardEventArgs(timestamp)
 	, OldFocus(oldFocus)
 	, NewFocus(newFocus)
@@ -64,9 +64,9 @@ bool Keyboard::isKeyToggled(KeyE key)
 	return false;
 }
 
-std::shared_ptr<InputElement> Keyboard::focus(std::shared_ptr<InputElement> element)
+InputElementPtr Keyboard::focus(InputElementPtr element)
 {
-	return std::shared_ptr<InputElement>();
+	return InputElementPtr();
 }
 
 MouseEventArgs::MouseEventArgs(int timestamp)
@@ -77,7 +77,7 @@ MouseEventArgs::MouseEventArgs(int timestamp)
 {
 }
 
-Point MouseEventArgs::getPosition(std::shared_ptr<InputElement> relativeTo) const
+Point MouseEventArgs::getPosition(InputElementPtr relativeTo) const
 {
 	return Point();
 }

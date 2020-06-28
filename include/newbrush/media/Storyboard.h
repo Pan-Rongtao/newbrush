@@ -16,13 +16,14 @@
 
 namespace nb{
 
+using TimelinePtr = std::shared_ptr<Timeline>;
 class NB_API Storyboard : public Timeline
 {
 public:
 	Storyboard();
 	virtual ~Storyboard() = default;
 
-	std::vector<std::shared_ptr<Timeline>> &children();
+	std::vector<TimelinePtr> &children();
 
 	void begin();
 
@@ -30,10 +31,8 @@ protected:
 	virtual TimeSpan getActualDurationTimespan() const override;
 
 private:
-	std::vector<std::shared_ptr<Timeline>>	m_children;
+	std::vector<TimelinePtr>	m_children;
 };
-
-using StoryboardPtr = std::shared_ptr<Storyboard>;
 
 }
  

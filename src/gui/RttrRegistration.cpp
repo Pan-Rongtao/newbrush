@@ -40,7 +40,7 @@ RTTR_REGISTRATION
 
 std::vector<DependencyPropertyPtr> RttrRegistration::getTypeSelfPropertys(rttr::type t)
 {
-	std::vector<std::shared_ptr<DependencyProperty>> ret;
+	std::vector<DependencyPropertyPtr> ret;
 	for (auto i = (int)RttrClassMetadataIndex::Property0; i <= (int)RttrClassMetadataIndex::PropertyMax; ++i)
 	{
 		var vProperty = t.get_metadata((RttrClassMetadataIndex)i);
@@ -60,7 +60,7 @@ std::vector<DependencyPropertyPtr> RttrRegistration::getTypeSelfPropertys(rttr::
 
 std::vector<DependencyPropertyPtr> RttrRegistration::getTypeAllPropertys(rttr::type t)
 {
-	std::vector<std::shared_ptr<DependencyProperty>> ret;
+	std::vector<DependencyPropertyPtr> ret;
 	auto selfPros = getTypeSelfPropertys(t);
 	ret.insert(ret.end(), selfPros.begin(), selfPros.end());
 
@@ -595,7 +595,7 @@ void RttrRegistration::registerConverters()
 		}
 	});
 
-	type::register_converter_func([](const std::string &s, bool &ok)->std::shared_ptr<ImageSource> {
+	type::register_converter_func([](const std::string &s, bool &ok)->ImageSourcePtr {
 
 		auto ret = std::make_shared<ImageSource>();
 		ret->load((const unsigned char *)s.data(), s.size());
@@ -603,7 +603,7 @@ void RttrRegistration::registerConverters()
 		return ret;
 	});
 
-	type::register_converter_func([](const std::string &s, bool &ok)->std::shared_ptr<Brush>
+	type::register_converter_func([](const std::string &s, bool &ok)->BrushPtr
 	{
 		BrushPtr brush;
 

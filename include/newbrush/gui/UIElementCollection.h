@@ -5,6 +5,7 @@
 namespace nb {
 
 class UIElement;
+using UIElementPtr = std::shared_ptr<UIElement>;
 class NB_API UIElementCollection
 {
 public:
@@ -12,13 +13,13 @@ public:
 
 	void changeLogicalParent(UIElement *logicalParent);
 
-	void add(std::shared_ptr<UIElement> element);
+	void add(UIElementPtr element);
 
-	void insert(uint32_t index, std::shared_ptr<UIElement> child);
+	void insert(uint32_t index, UIElementPtr child);
 
 	uint32_t count() const;
 
-	void remove(std::shared_ptr<UIElement> child);
+	void remove(UIElementPtr child);
 
 	void removeAt(uint32_t index);
 
@@ -26,13 +27,13 @@ public:
 
 	void clear();
 
-	std::shared_ptr<UIElement> childAt(uint32_t index);
+	UIElementPtr childAt(uint32_t index);
 
-	bool contains(std::shared_ptr<UIElement> element) const;
+	bool contains(UIElementPtr element) const;
 
 private:
-	std::vector<std::shared_ptr<UIElement>>	m_children;
-	UIElement				*m_logicalParent;
+	std::vector<UIElementPtr>	m_children;
+	UIElement					*m_logicalParent;
 };
 
 }

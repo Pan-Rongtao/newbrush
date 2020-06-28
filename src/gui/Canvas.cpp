@@ -7,52 +7,80 @@ Canvas::Canvas()
 {
 }
 
-void Canvas::setLeft(std::shared_ptr<UIElement> element, float left)
+DependencyPropertyPtr Canvas::LeftProperty()
 {
-	if (m_children.contains(element))
-		DependencyProperty::registerAttached(element, AttachedPropertyLeft, left);
+	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Left", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "元素左侧与其父Canvas左侧之间的距离", 3);
+	return dp;
 }
 
-float Canvas::getLeft(std::shared_ptr<UIElement> element)
+DependencyPropertyPtr Canvas::RightProperty()
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyLeft);
-	return !v.is_valid() ? NAN : v.convert<float>();
+	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "元素右侧与其父Canvas右侧之间的距离", 5);
+	return dp;
 }
 
-void Canvas::setRight(std::shared_ptr<UIElement> element, float right)
+DependencyPropertyPtr Canvas::TopProperty()
 {
-	if (m_children.contains(element))
-		DependencyProperty::registerAttached(element, AttachedPropertyRight, right);
+	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "元素顶部与其父Canvas顶部之间的距离", 4);
+	return dp;
 }
 
-float Canvas::getRight(std::shared_ptr<UIElement> element)
+DependencyPropertyPtr Canvas::BottomProperty()
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyRight);
-	return !v.is_valid() ? NAN : v.convert<float>();
+	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "元素底部与其父Canvas底部之间的距离", 6);
+	return dp;
 }
 
-void Canvas::setTop(std::shared_ptr<UIElement> element, float top)
+void Canvas::setLeft(UIElementPtr element, float left)
 {
-	if (m_children.contains(element))
-		DependencyProperty::registerAttached(element, AttachedPropertyTop, top);
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(LeftProperty(), left);
 }
 
-float Canvas::getTop(std::shared_ptr<UIElement> element)
+float Canvas::getLeft(UIElementPtr element)
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyTop);
-	return !v.is_valid() ? NAN : v.convert<float>();
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(LeftProperty()).get_value<float>();
 }
 
-void Canvas::setBottom(std::shared_ptr<UIElement> element, float bottom)
+void Canvas::setRight(UIElementPtr element, float right)
 {
-	if (m_children.contains(element))
-		DependencyProperty::registerAttached(element, AttachedPropertyBottom, bottom);
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(RightProperty(), right);
 }
 
-float Canvas::getBottom(std::shared_ptr<UIElement> element)
+float Canvas::getRight(UIElementPtr element)
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyBottom);
-	return !v.is_valid() ? NAN : v.convert<float>();
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(RightProperty()).get_value<float>();
+}
+
+void Canvas::setTop(UIElementPtr element, float top)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(TopProperty(), top);
+}
+
+float Canvas::getTop(UIElementPtr element)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(TopProperty()).get_value<float>();
+}
+
+void Canvas::setBottom(UIElementPtr element, float bottom)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(BottomProperty(), bottom);
+}
+
+float Canvas::getBottom(UIElementPtr element)
+{
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(BottomProperty()).get_value<float>();
 }
 
 //未设置宽高则默认为0

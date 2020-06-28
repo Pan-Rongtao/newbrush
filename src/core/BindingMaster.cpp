@@ -1,6 +1,7 @@
 #include "newbrush/core/BindingMaster.h"
 #include "newbrush/core/DependencyObject.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/DataContext.h"
 #include "newbrush/core/Binding.h"
 
 using namespace nb;
@@ -8,7 +9,7 @@ using namespace nb;
 //每个binding实例可以对应多个obj-property
 //source和path相同的不同binding实例，分别对应不同obj-property
 //因此map做成这个结果，此结果性能并非最佳，后续可能考虑优化
-std::map<BindingPtr, BindingMaster::ObjectPropertysContainer >	BindingMaster::g_bindingmap;
+std::map<BindingPtr, BindingMaster::ObjectPropertysContainer>	BindingMaster::g_bindingmap;
 
 void BindingMaster::addBinding(DependencyObjectPtr target, DependencyPropertyPtr dp, BindingPtr bd)
 {

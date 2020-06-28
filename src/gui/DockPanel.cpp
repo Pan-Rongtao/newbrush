@@ -7,16 +7,23 @@ DockPanel::DockPanel()
 {
 }
 
-void DockPanel::setDock(std::shared_ptr<UIElement> element, DockE dock)
+void DockPanel::setDock(UIElementPtr element, DockE dock)
 {
-	if (m_children.contains(element))
-		DependencyProperty::registerAttached(element, AttachedPropertyDock, dock);
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	element->setValue(DockProperty(), dock);
 }
 
-DockE DockPanel::getDock(std::shared_ptr<UIElement> element)
+DockE DockPanel::getDock(UIElementPtr element)
 {
-	auto v = DependencyProperty::findAttached(element, AttachedPropertyDock);
-	return !v.is_valid() ? DockE::Left : v.get_value<DockE>();
+	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
+	return element->getValue(DockProperty()).get_value<DockE>();
+}
+
+DependencyPropertyPtr DockPanel::DockProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<DockPanel, DockE>("Dock", DockE::Left, nullptr, nullptr, nullptr,
+		PropertyCategory::Layout(), "子元素在父DockPanel中的位置", 3);
+	return dp;
 }
 
 DependencyPropertyPtr DockPanel::LastChildFillProperty()

@@ -82,6 +82,8 @@ public:
 };
 
 ///////class Grid
+using RowDefinitionPtr = std::shared_ptr<RowDefinition>;
+using ColumnDefinitionPtr = std::shared_ptr<ColumnDefinition>;
 class NB_API Grid : public Panel
 {
 	RTTR_ENABLE(Panel)
@@ -89,32 +91,32 @@ public:
 	Grid();
 	virtual ~Grid() = default;
 
-	static constexpr char *AttachedPropertyRow			= "Grid.Row";
-	static constexpr char *AttachedPropertyColumn		= "Grid.Column";
-	static constexpr char *AttachedPropertyRowSpan		= "Grid.RowSpan";
-	static constexpr char *AttachedPropertyColumnSpan	= "Grid.ColumnSpan";
-
-	void setRow(std::shared_ptr<UIElement> element, uint32_t row);
-	uint32_t getRow(std::shared_ptr<UIElement> element);
-
-	void setColumn(std::shared_ptr<UIElement> element, uint32_t col);
-	uint32_t getColumn(std::shared_ptr<UIElement> element);
-
-	void setRowSpan(std::shared_ptr<UIElement> element, uint32_t rowSpan);
-	uint32_t getRowSpan(std::shared_ptr<UIElement> element);
-
-	void setColumnSpan(std::shared_ptr<UIElement> element, uint32_t colSpan);
-	uint32_t getColumnSpan(std::shared_ptr<UIElement> element);
-
 	static DependencyPropertyPtr RowDefinitionsProperty();	//行定义的依赖属性
 	static DependencyPropertyPtr ColumnDefinitionsProperty();//列定义的依赖属性
+
+	static DependencyPropertyPtr RowProperty();		//行下标的附加属性
+	static DependencyPropertyPtr ColumnProperty();	//列下标的附加属性
+	static DependencyPropertyPtr RowSpanProperty();	//行跨度的附加属性
+	static DependencyPropertyPtr ColumnSpanProperty();	//列跨度的附加属性
+
+	static void setRow(UIElementPtr element, uint32_t row);
+	static uint32_t getRow(UIElementPtr element);
+
+	static void setColumn(UIElementPtr element, uint32_t col);
+	static uint32_t getColumn(UIElementPtr element);
+
+	static void setRowSpan(UIElementPtr element, uint32_t rowSpan);
+	static uint32_t getRowSpan(UIElementPtr element);
+
+	static void setColumnSpan(UIElementPtr element, uint32_t colSpan);
+	static uint32_t getColumnSpan(UIElementPtr element);
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 
-	virtual std::shared_ptr<UIElement> clone() const;
+	virtual UIElementPtr clone() const;
 private:
 	std::vector<float>	m_pixcelWidthsForEachCols;
 	std::vector<float>	m_pixcelHeightsForEachRows;

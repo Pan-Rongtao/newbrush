@@ -21,13 +21,13 @@ Control::Control()
 
 DependencyPropertyPtr Control::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("Background", nullptr, onBackgroundPropertyChanged, nullptr, nullptr, PropertyCategory::Brush(), "描述元素背景的画笔", 1);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Background", nullptr, onBackgroundPropertyChanged, nullptr, nullptr, PropertyCategory::Brush(), "描述元素背景的画笔", 1);
 	return dp;
 }
 
 DependencyPropertyPtr Control::BorderBrushProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("BorderBrush", nullptr, nullptr, nullptr, nullptr, PropertyCategory::Brush(), "描述元素边框背景的画笔", 2);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("BorderBrush", nullptr, nullptr, nullptr, nullptr, PropertyCategory::Brush(), "描述元素边框背景的画笔", 2);
 	return dp;
 }
 
@@ -39,7 +39,7 @@ DependencyPropertyPtr Control::BorderThicknessProperty()
 
 DependencyPropertyPtr Control::FontFamilyProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Font>>("FontFamily", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr, PropertyCategory::Text(), "字体名称", 1);
+	static auto dp = DependencyProperty::registerDependency<Control, FontPtr>("FontFamily", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr, PropertyCategory::Text(), "字体名称", 1);
 	return dp;
 }
 
@@ -69,7 +69,7 @@ DependencyPropertyPtr Control::FontWeightProperty()
 
 DependencyPropertyPtr Control::ForegroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<Brush>>("Foreground", std::make_shared<SolidColorBrush>(Colors::black()), nullptr, nullptr, nullptr, PropertyCategory::Brush(), "前景色画笔", 3);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Foreground", std::make_shared<SolidColorBrush>(Colors::black()), nullptr, nullptr, nullptr, PropertyCategory::Brush(), "前景色画笔", 3);
 	return dp;
 }
 
@@ -107,14 +107,14 @@ DependencyPropertyPtr Control::IsTabStopProperty()
 
 DependencyPropertyPtr Control::TemplateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, std::shared_ptr<ControlTemplate>>("Template", nullptr, onTemplateChanged, nullptr, nullptr, PropertyCategory::Public(), "模板");
+	static auto dp = DependencyProperty::registerDependency<Control, ControlTemplatePtr>("Template", nullptr, onTemplateChanged, nullptr, nullptr, PropertyCategory::Public(), "模板");
 	return dp;
 }
 
 void Control::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	UIElement::onPropertyChanged(args);
-	auto templ = getValue<std::shared_ptr<ControlTemplate>>(TemplateProperty());
+	auto templ = getValue<ControlTemplatePtr>(TemplateProperty());
 	if (templ)
 	{
 		//由于处理property改变时会set Property的值，会造成无限循环，判断m_handlingPropertyChanged避免循环
@@ -157,8 +157,8 @@ void Control::onBackgroundPropertyChanged(DependencyObject * d, DependencyProper
 }
 void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
 {
-	auto oldTemplate = e->oldValue.get_value<std::shared_ptr<ControlTemplate>>();
-	auto newTemplate = e->newValue.get_value<std::shared_ptr<ControlTemplate>>();
+	auto oldTemplate = e->oldValue.get_value<ControlTemplatePtr>();
+	auto newTemplate = e->newValue.get_value<ControlTemplatePtr>();
 	if (newTemplate == oldTemplate)
 	{
 		return;
@@ -178,7 +178,7 @@ void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedE
 	}
 }
 
-void Control::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Brush> brush)
+void Control::updateMeterial(RenderObjectPtr ro, BrushPtr brush)
 {
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
@@ -209,7 +209,7 @@ void Control::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<B
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
 		ro->setProgram(Programs::image());
-		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
+		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<ImageSourcePtr>(ImageBrush::SourceProperty());
 		if (source)
 		{
 			auto const &stream = source->stream();

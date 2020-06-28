@@ -10,11 +10,11 @@ Panel::Panel()
 {
 }
 
-void Panel::setZIndex(std::shared_ptr<UIElement> element, int index)
+void Panel::setZIndex(UIElementPtr element, int index)
 {
 }
 
-int Panel::getZIndex(std::shared_ptr<UIElement> element)
+int Panel::getZIndex(UIElementPtr element)
 {
 	return 0;
 }
@@ -47,7 +47,7 @@ Panel & Panel::operator=(const Panel && other)
 
 DependencyPropertyPtr Panel::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Panel, std::shared_ptr<Brush>>("Background", nullptr, nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<Panel, BrushPtr>("Background", nullptr, nullptr, nullptr, nullptr,
 		PropertyCategory::Brush(), "元素背景的画笔", 1);
 	return dp;
 }

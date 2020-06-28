@@ -11,7 +11,7 @@ Program::Program()
 {
 }
 
-Program::Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader)
+Program::Program(VertexShaderPtr verShader, FragmentShaderPtr fragShader)
 	: m_vertexShader(verShader)
 	, m_fragmentShader(fragShader)
 	, m_programHandle(0)
@@ -30,22 +30,22 @@ Program::~Program()
 	}
 }
 
-void Program::setVertexShader(std::shared_ptr<VertexShader> verShader)
+void Program::setVertexShader(VertexShaderPtr verShader)
 {
 	m_vertexShader = verShader;
 }
 
-std::shared_ptr<VertexShader> Program::vertexShader()
+VertexShaderPtr Program::vertexShader()
 {
 	return m_vertexShader;
 }
 
-void Program::setFragmentShader(std::shared_ptr<FragmentShader> fragShader)
+void Program::setFragmentShader(FragmentShaderPtr fragShader)
 {
 	m_fragmentShader = fragShader;
 }
 
-std::shared_ptr<FragmentShader> Program::fragmentShader()
+FragmentShaderPtr Program::fragmentShader()
 {
 	return m_fragmentShader;
 }
@@ -233,9 +233,9 @@ void Program::uniform(int location, const std::vector<glm::mat4x4> &v)
 
 ////////////////programs
 
-std::shared_ptr<Program> Programs::primitive()
+ProgramPtr Programs::primitive()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -255,9 +255,9 @@ std::shared_ptr<Program> Programs::primitive()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::gradientPrimitive()
+ProgramPtr Programs::gradientPrimitive()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -284,9 +284,9 @@ std::shared_ptr<Program> Programs::gradientPrimitive()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::image()
+ProgramPtr Programs::image()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -310,9 +310,9 @@ std::shared_ptr<Program> Programs::image()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::phong()
+ProgramPtr Programs::phong()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -370,9 +370,9 @@ std::shared_ptr<Program> Programs::phong()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::cube()
+ProgramPtr Programs::cube()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -395,9 +395,9 @@ std::shared_ptr<Program> Programs::cube()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::model()
+ProgramPtr Programs::model()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p)	return p;
 
 	constexpr char vs[] =
@@ -469,9 +469,9 @@ std::shared_ptr<Program> Programs::model()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::glpy()
+ProgramPtr Programs::glpy()
 {
-	static std::shared_ptr<Program> p;
+	static ProgramPtr p;
 	if (p) return p;
 
 	constexpr char vs[] =
@@ -497,7 +497,7 @@ std::shared_ptr<Program> Programs::glpy()
 	return p;
 }
 
-std::shared_ptr<Program> Programs::compileBindLink(const std::string &vs, const std::string &fs)
+ProgramPtr Programs::compileBindLink(const std::string &vs, const std::string &fs)
 {
 	auto p = std::make_shared<Program>(std::make_shared<VertexShader>(vs), std::make_shared<FragmentShader>(fs));
 	p->vertexShader()->compile();

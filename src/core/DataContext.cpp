@@ -44,7 +44,7 @@ var DataContext::get() const
 	return var();
 }
 
-std::shared_ptr<DataContext> DataContext::lookup(const std::string & path) const
+DataContextPtr DataContext::lookup(const std::string & path) const
 {
 	return nullptr;
 }
@@ -65,7 +65,7 @@ DataObject::DataObject(const std::string &name)
 {
 }
 
-void DataObject::add(std::shared_ptr<DataContext> child) &
+void DataObject::add(DataContextPtr child) &
 {
 	if (!child)
 	{
@@ -94,20 +94,20 @@ bool DataObject::has(const std::string & childName) const
 	return m_children.find(childName) != m_children.end();
 }
 
-std::shared_ptr<DataContext> DataObject::get(const std::string & childName) const
+DataContextPtr DataObject::get(const std::string & childName) const
 {
 	auto iter = m_children.find(childName);
 	return iter == m_children.end() ? nullptr : iter->second;
 }
 
-std::shared_ptr<DataObject> DataObject::getObject(const std::string & childName) const
+DataObjectPtr DataObject::getObject(const std::string & childName) const
 {
 	auto x = get(childName);
 	auto p = std::dynamic_pointer_cast<DataObject>(x);
 	return p;
 }
 
-std::shared_ptr<DataContext> DataObject::lookup(const std::string & path) const
+DataContextPtr DataObject::lookup(const std::string & path) const
 {
 	auto pathSegments = nb::stringSplit(path, ".", false);
 	auto obj = this;
@@ -133,7 +133,7 @@ const std::type_info & DataObject::type() const
 	return typeid(DataObject);
 }
 
-std::shared_ptr<DataObject> DataObject::gen(const std::string & name)
+DataObjectPtr DataObject::gen(const std::string & name)
 {
 	return std::make_shared<DataObject>(name);
 }
@@ -143,7 +143,7 @@ DataArray::DataArray(const std::string & name)
 {
 }
 
-void DataArray::setTemplate(std::shared_ptr<DataObject> temp)
+void DataArray::setTemplate(DataObjectPtr temp)
 {
 	if (!temp)
 	{
@@ -153,12 +153,12 @@ void DataArray::setTemplate(std::shared_ptr<DataObject> temp)
 	m_template = temp;
 }
 
-const std::shared_ptr<DataObject> &DataArray::getTemplate() const
+const DataObjectPtr &DataArray::getTemplate() const
 {
 	return m_template;
 }
 
-void DataArray::addItem(std::shared_ptr<DataObject> item)
+void DataArray::addItem(DataObjectPtr item)
 {
 	m_items.push_back(item);
 }
@@ -172,7 +172,7 @@ void DataArray::removeItem(std::size_t index)
 	m_items.erase(m_items.begin() + index);
 }
 
-std::shared_ptr<DataObject> DataArray::item(std::size_t index)
+DataObjectPtr DataArray::item(std::size_t index)
 {
 	if (index >= itemCount())
 		return nullptr;

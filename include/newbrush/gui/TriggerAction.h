@@ -2,8 +2,10 @@
 #include "newbrush/core/Def.h"
 #include "newbrush/media/Storyboard.h"
 
-namespace nb 
-{
+namespace nb {
+
+class Storyboard;
+using StoryboardPtr = std::shared_ptr<Storyboard>;
 
 class NB_API TriggerAction
 {

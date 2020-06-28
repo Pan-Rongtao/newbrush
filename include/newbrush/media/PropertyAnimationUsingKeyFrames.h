@@ -7,6 +7,8 @@
 
 namespace nb {
 	
+using EasingBasePtr = std::shared_ptr<EasingBase>;
+
 template<class T>
 class NB_API KeyFrame
 {
@@ -33,15 +35,15 @@ public:
 		return m_value;
 	}
 
-	void setEasing(std::shared_ptr<EasingBase> easing) & { m_easing = easing; }
-	std::shared_ptr<EasingBase> easing() const { return m_easing; }
+	void setEasing(EasingBasePtr easing) & { m_easing = easing; }
+	EasingBasePtr easing() const { return m_easing; }
 
 	bool operator < (const KeyFrame &other) const { return m_keyTime < other.m_keyTime; }
 	
 private:
-	TimeSpan					m_keyTime;
-	T							m_value;
-	std::shared_ptr<EasingBase>	m_easing;
+	TimeSpan		m_keyTime;
+	T				m_value;
+	EasingBasePtr	m_easing;
 };
 using BoolKeyFrame = KeyFrame<bool>;
 using Int8KeyFrame = KeyFrame<int8_t>;

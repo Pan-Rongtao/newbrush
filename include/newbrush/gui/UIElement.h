@@ -3,10 +3,7 @@
 #include "newbrush/core/Size.h"
 #include "newbrush/core/Rect.h"
 #include "newbrush/media/Thickness.h"
-#include "newbrush/gui/Style.h"
-#include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/core/RoutedEvent.h"
-#include "newbrush/media/Transform.h"
 
 namespace nb{
 class Viewport2D;
@@ -46,6 +43,17 @@ enum class OrientationE
 	Vertical,
 };
 
+class Style;
+class Transform;
+class VisualStateMachine;
+class UIElement;
+class RoutedEventArgs;
+using StylePtr = std::shared_ptr<Style>;
+using TransformPtr = std::shared_ptr<Transform>;
+using UIElementPtr = std::shared_ptr<UIElement>;
+using RoutedEventArgsPtr = std::shared_ptr<RoutedEventArgs>;
+using VisualStateMachinePtr = std::shared_ptr<VisualStateMachine>;
+
 class NB_API UIElement : public DependencyObject
 {
 	RTTR_ENABLE(DependencyObject)
@@ -69,8 +77,8 @@ public:
 	static DependencyPropertyPtr HorizontalAlignmentProperty();	//横向对齐方式的依赖属性（HorizontalAlignmentE）
 	static DependencyPropertyPtr VerticalAlignmentProperty();	//纵向对齐方式的依赖属性（VerticalAlignmentE）
 	static DependencyPropertyPtr FlowDirectionProperty();		//流向的依赖属性（FlowDirectionE）
-	static DependencyPropertyPtr StyleProperty();				//风格的依赖属性（std::shared_ptr<Style>)
-	static DependencyPropertyPtr StateMachineProperty();		//状态机的依赖属性（std::shared_ptr<VisualStateMachine>）
+	static DependencyPropertyPtr StyleProperty();				//风格的依赖属性（StylePtr)
+	static DependencyPropertyPtr StateMachineProperty();		//状态机的依赖属性（VisualStateMachinePtr）
 	static DependencyPropertyPtr IsMouseOverProperty();			//鼠标是否在元素上（bool）只读
 	static DependencyPropertyPtr RenderTransformProperty();		//变换的依赖属性(std::make_shared<Transform>())
 
@@ -189,7 +197,7 @@ public:
 
 	const Size &desiredSize() const;
 
-	virtual std::shared_ptr<UIElement> clone() const;
+	virtual UIElementPtr clone() const;
 
 	//获取子节点个数，本实现返回0
 	virtual uint32_t childrenCount() const;
@@ -210,7 +218,7 @@ public:
 	
 	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
-	void raiseEvent(std::shared_ptr<RoutedEventArgs> args);
+	void raiseEvent(RoutedEventArgsPtr args);
 	
 	virtual bool hitTestCore(const Point &pt) const;
 	
@@ -219,12 +227,12 @@ public:
 	virtual Size arrangeOverride(const Size &finalSize);
 
 protected:
-	void addLogicalChild(std::shared_ptr<UIElement> child);
-	void removeLogicalChild(std::shared_ptr<UIElement> child);
+	void addLogicalChild(UIElementPtr child);
+	void removeLogicalChild(UIElementPtr child);
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
-	virtual void onStyleChanged(std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle);
+	virtual void onStyleChanged(StylePtr oldStyle, StylePtr newStyle);
 
 	virtual void onDragEnter(const DragEventArgs &args);
 	virtual void onDragLeave(const DragEventArgs &args);
@@ -303,7 +311,5 @@ private:
 	friend class Window;
 	friend class UIElementCollection;
 };
-
-using UIElementPtr = std::shared_ptr<UIElement>;
 
 }

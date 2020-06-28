@@ -11,10 +11,11 @@ struct Glyph
 	GlyphInfo	info;		//×ÖÐÎÐÅÏ¢
 };
 
+using GlyphPtr = std::shared_ptr<Glyph>;
 class NB_API GlyphFactory
 {
 public:
-	static std::shared_ptr<Glyph> getGlyph(std::shared_ptr<Font> font, wchar_t ch);
+	static GlyphPtr getGlyph(FontPtr font, wchar_t ch);
 
 };
 

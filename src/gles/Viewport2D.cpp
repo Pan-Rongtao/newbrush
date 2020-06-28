@@ -9,7 +9,7 @@ void Viewport2D::viewport(int x, int y, unsigned int width, unsigned height)
 	glViewport(x, y, width, height);
 }
 
-void Viewport2D::queue(std::shared_ptr<RenderObject> renderObject)
+void Viewport2D::queue(RenderObjectPtr renderObject)
 {
 	if (std::find(m_renderObjects.begin(), m_renderObjects.end(), renderObject) == m_renderObjects.end())
 		m_renderObjects.push_back(renderObject);

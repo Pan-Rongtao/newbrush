@@ -10,17 +10,17 @@
 
 namespace nb {
 
-	class NB_API TranslateTransform : public Transform
-	{
-	public:
-		TranslateTransform();
-		TranslateTransform(float offsetX, float offsetY);
-		virtual ~TranslateTransform() = default;
+class NB_API TranslateTransform : public Transform
+{
+public:
+	TranslateTransform();
+	TranslateTransform(float offsetX, float offsetY);
+	virtual ~TranslateTransform() = default;
 
-		static DependencyPropertyPtr XProperty();
-		static DependencyPropertyPtr YProperty();
+	static DependencyPropertyPtr XProperty();
+	static DependencyPropertyPtr YProperty();
 
-		virtual glm::mat4x4 value() override;
+	virtual glm::mat4x4 value() override;
 
-	};
+};
 }

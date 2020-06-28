@@ -9,13 +9,13 @@ TransformGroup::TransformGroup()
 
 DependencyPropertyPtr TransformGroup::ChildrenProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TransformGroup, std::shared_ptr<TransformCollection>>("Children", std::make_shared<TransformCollection>());
+	static auto dp = DependencyProperty::registerDependency<TransformGroup, TransformCollectionPtr>("Children", std::make_shared<TransformCollection>());
 	return dp;
 }
 
 glm::mat4x4 TransformGroup::value()
 {
-	auto m_transformCollection = getValue<std::shared_ptr<TransformCollection>>(ChildrenProperty());
+	auto m_transformCollection = getValue<TransformCollectionPtr>(ChildrenProperty());
 
 	glm::mat4x4 matrix = glm::mat4x4(1.0f);
 	for (size_t i = 0; i < m_transformCollection->count(); i++)

@@ -23,9 +23,9 @@ TextBlock::TextBlock(const std::string & text)
 	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<GlyphBunch>(), Programs::glpy()))
 {
 	setValue(TextProperty(), text);
-	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
+	auto font = getValue<FontPtr>(FontProperty());
 	setValue(LineHeightProperty(), (float)(font->size()));
-	m_renderObj->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
+	//m_renderObj->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
 	m_renderObj->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
@@ -38,14 +38,14 @@ DependencyPropertyPtr TextBlock::TextProperty()
 
 DependencyPropertyPtr TextBlock::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Brush>>("Background", nullptr, nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<TextBlock, BrushPtr>("Background", nullptr, nullptr, nullptr, nullptr,
 		PropertyCategory::Brush(), "元素背景的画笔", 1);
 	return dp;
 }
 
 DependencyPropertyPtr TextBlock::FontProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<TextBlock, std::shared_ptr<Font>>("Font", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<TextBlock, FontPtr>("Font", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr,
 		PropertyCategory::Text(), "字体", 1);
 	return dp;
 }
@@ -145,7 +145,7 @@ Size TextBlock::measureOverride(const Size & availableSize)
 Size TextBlock::arrangeOverride(const Size & finalSize)
 {
 	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
-	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
+	auto font = getValue<FontPtr>(FontProperty());
 	auto text = getValue<std::string>(TextProperty());
 	float charSpacing = getValue<float>(CharSpacingProperty());
 	float lineHeight = getValue<float>(LineHeightProperty());
@@ -173,7 +173,7 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 {
 	auto x = 0.0f;// Offset().x();
 	auto y = 0.0f;// Offset().y();
-	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
+	auto font = getValue<FontPtr>(FontProperty());
 	auto text = getValue<std::string>(TextProperty());
 	float charSpacing = getValue<float>(CharSpacingProperty());
 	float lineHeight = getValue<float>(LineHeightProperty());
@@ -187,7 +187,7 @@ void TextBlock::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto x = offset.x();
 	auto y = offset.y();
-	auto font = getValue<std::shared_ptr<Font>>(FontProperty());
+	auto font = getValue<FontPtr>(FontProperty());
 	auto text = getValue<std::string>(TextProperty());
 	float charSpacing = getValue<float>(CharSpacingProperty());
 	float lineHeight = getValue<float>(LineHeightProperty());

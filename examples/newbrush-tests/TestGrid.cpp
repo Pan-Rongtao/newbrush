@@ -41,7 +41,7 @@ TEST_CASE("Test Grid", "[Grid]")
 	//coldef2->Width = 100;
 
 	std::vector<std::shared_ptr<ColumnDefinition>> colDefinitions = { coldef0, coldef1, coldef2 };
-//	grid->setValue(Grid::ColumnDefinitionsProperty(), colDefinitions);
+	grid->setValue(Grid::ColumnDefinitionsProperty(), colDefinitions);
 
 
 	auto rc0 = std::make_shared<Rectangle>();

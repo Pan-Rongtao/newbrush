@@ -7,7 +7,7 @@ Material::Material()
 {
 }
 
-Material::Material(const std::vector<std::shared_ptr<Texture>> &textures)
+Material::Material(const std::vector<TexturePtr> &textures)
 	: m_textures(textures)
 {
 }
@@ -19,12 +19,12 @@ Material::Material(const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm
 {
 }
 
-std::vector<std::shared_ptr<Texture>>& Material::textures()
+std::vector<TexturePtr>& Material::textures()
 {
 	return m_textures;
 }
 
-const std::vector<std::shared_ptr<Texture>>& Material::textures() const
+const std::vector<TexturePtr>& Material::textures() const
 {
 	return m_textures;
 }

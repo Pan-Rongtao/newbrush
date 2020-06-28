@@ -23,14 +23,15 @@ struct GlyphInfo
 };
 
 class Font;
+using FontPtr = std::shared_ptr<Font>;
 class NB_API GlyphMetrics
 {
 public:
 	//测量一个unicode字符
-	static GlyphInfo measureGlyp(std::shared_ptr<Font> font, wchar_t ch);
+	static GlyphInfo measureGlyp(FontPtr font, wchar_t ch);
 
 	//测量一个字符集，返回占用的像素尺寸
-	static Size measureGlyphAltas(std::shared_ptr<Font> font, const std::string &text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax);
+	static Size measureGlyphAltas(FontPtr font, const std::string &text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax);
 
 };
 

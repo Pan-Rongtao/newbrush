@@ -5,6 +5,10 @@
 
 namespace nb{
 
+class DataContext;
+using DataContextPtr = std::shared_ptr<DataContext>;
+class DataObject;
+using DataObjectPtr = std::shared_ptr<DataObject>;
 class NB_API DataContext
 {
 public:
@@ -12,7 +16,7 @@ public:
 
 	virtual void set(const var &value) &;
 	virtual var get() const;
-	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const;
+	virtual DataContextPtr lookup(const std::string &path) const;
 	virtual const std::type_info &type() const;
 
 	struct ValueChangedArgs { DataContext *root; std::string path; var value; };
@@ -38,7 +42,7 @@ public:
 	DataObject(const std::string &name);
 
 	//添加一个子节点
-	void add(std::shared_ptr<DataContext> child) &;
+	void add(DataContextPtr child) &;
 
 	//删除一个子节点
 	void remove(const std::string & childName) &;
@@ -47,20 +51,20 @@ public:
 	bool has(const std::string & childName) const;
 
 	//获取子节点，不存在返回空
-	std::shared_ptr<DataContext> get(const std::string &childName) const;
-	std::shared_ptr<DataObject> getObject(const std::string &childName) const;
+	DataContextPtr get(const std::string &childName) const;
+	DataObjectPtr getObject(const std::string &childName) const;
 
 	//按路径查询节点
 	//path：形如"a.b.c"，表示查找基于当前节点下的a/b/c节点
 	//找不到返回空
-	virtual std::shared_ptr<DataContext> lookup(const std::string &path) const override;
+	virtual DataContextPtr lookup(const std::string &path) const override;
 
 	virtual const std::type_info &type() const;
 
-	static std::shared_ptr<DataObject> gen(const std::string &name);
+	static DataObjectPtr gen(const std::string &name);
 
 private:
-	std::map<std::string, std::shared_ptr<DataContext>>	m_children;
+	std::map<std::string, DataContextPtr>	m_children;
 };
 
 template<class T>
@@ -122,23 +126,23 @@ class NB_API DataArray : public DataContext
 public:
 	DataArray(const std::string &name);
 
-	void setTemplate(std::shared_ptr<DataObject> temp);
+	void setTemplate(DataObjectPtr temp);
 
-	const std::shared_ptr<DataObject> &getTemplate() const;
+	const DataObjectPtr &getTemplate() const;
 
-	void addItem(std::shared_ptr<DataObject> item);
+	void addItem(DataObjectPtr item);
 
 	void removeItem(std::size_t index);
 
-	std::shared_ptr<DataObject> item(std::size_t index);
+	DataObjectPtr item(std::size_t index);
 
 	size_t itemCount() const;
 
 	static std::shared_ptr<DataArray> gen(const std::string &name);
 
 private:
-	std::vector<std::shared_ptr<DataObject>>	m_items;
-	std::shared_ptr<DataObject>					m_template;
+	std::vector<DataObjectPtr>	m_items;
+	DataObjectPtr				m_template;
 };
 
 }

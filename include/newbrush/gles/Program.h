@@ -20,6 +20,8 @@ namespace nb{
 
 class VertexShader;
 class FragmentShader;
+using VertexShaderPtr = std::shared_ptr<VertexShader>;
+using FragmentShaderPtr = std::shared_ptr<FragmentShader>;
 class NB_API Program
 {
 public:
@@ -42,21 +44,21 @@ public:
 	Program();
 
 	//构建一个Program，并为它指定了顶点着色器和片元着色器
-	Program(std::shared_ptr<VertexShader> verShader, std::shared_ptr<FragmentShader> fragShader);
+	Program(VertexShaderPtr verShader, FragmentShaderPtr fragShader);
 	virtual ~Program();
 
 public:
 	//设置顶点着色器
-	void setVertexShader(std::shared_ptr<VertexShader> verShader);
+	void setVertexShader(VertexShaderPtr verShader);
 
 	//获取顶点着色器
-	std::shared_ptr<VertexShader> vertexShader();
+	VertexShaderPtr vertexShader();
 
 	//设置片元着色器
-	void setFragmentShader(std::shared_ptr<FragmentShader> fragShader);
+	void setFragmentShader(FragmentShaderPtr fragShader);
 
 	//获取片元着色器
-	std::shared_ptr<FragmentShader> fragmentShader();
+	FragmentShaderPtr fragmentShader();
 
 	//链接
 	//异常：
@@ -118,36 +120,37 @@ public:
 	void uniform(int location, const std::vector<glm::mat4x4> &v);
 
 private:
-	std::shared_ptr<VertexShader>	m_vertexShader;
-	std::shared_ptr<FragmentShader>	m_fragmentShader;
+	VertexShaderPtr	m_vertexShader;
+	FragmentShaderPtr	m_fragmentShader;
 	unsigned int					m_programHandle;
 };
 
+using ProgramPtr = std::shared_ptr<Program>;
 class NB_API Programs
 {
 public:
 	//简单program
-	static std::shared_ptr<Program> primitive();
+	static ProgramPtr primitive();
 
 	//渐变图元
-	static std::shared_ptr<Program> gradientPrimitive();
+	static ProgramPtr gradientPrimitive();
 
 	//图片program
-	static std::shared_ptr<Program> image();
+	static ProgramPtr image();
 
 	//phong program
-	static std::shared_ptr<Program> phong();
+	static ProgramPtr phong();
 
 	//cube program
-	static std::shared_ptr<Program> cube();
+	static ProgramPtr cube();
 
-	static std::shared_ptr<Program> model();
+	static ProgramPtr model();
 
 	//glyp program
-	static std::shared_ptr<Program> glpy();
+	static ProgramPtr glpy();
 
 private:
-	static std::shared_ptr<Program> compileBindLink(const std::string &vs, const std::string &fs);
+	static ProgramPtr compileBindLink(const std::string &vs, const std::string &fs);
 };
 
 }

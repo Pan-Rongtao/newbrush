@@ -7,9 +7,9 @@ ControlTemplate::ControlTemplate()
 {
 }
 
-std::shared_ptr<UIElement> ControlTemplate::instance()
+UIElementPtr ControlTemplate::instance()
 {
-	std::shared_ptr<UIElement> instance;
+	UIElementPtr instance;
 	//loopTree(m_root.get(), instance);
 	instance = m_root->clone();
 	return instance;

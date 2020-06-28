@@ -8,7 +8,7 @@
 
 using namespace nb;
 
-GlyphInfo GlyphMetrics::measureGlyp(std::shared_ptr<Font> font, wchar_t ch)
+GlyphInfo GlyphMetrics::measureGlyp(FontPtr font, wchar_t ch)
 {
 	auto x = FT_Load_Char(font->m_face, ch, FT_LOAD_DEFAULT);
 	FT_Glyph glyph;
@@ -33,7 +33,7 @@ GlyphInfo GlyphMetrics::measureGlyp(std::shared_ptr<Font> font, wchar_t ch)
 		bmGlyph->root.advance.y, bmGlyph->bitmap.width, bmGlyph->bitmap.rows, bmGlyph->bitmap.pitch,  bmGlyph->bitmap.buffer };
 }
 
-Size GlyphMetrics::measureGlyphAltas(std::shared_ptr<Font> font, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
+Size GlyphMetrics::measureGlyphAltas(FontPtr font, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
 {
 	if (!font)
 		nbThrowException(std::invalid_argument, "font is nullptr");

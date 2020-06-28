@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
-#include "newbrush/core/DataContext.h"
+#include <vector>
+#include "newbrush/core/Def.h"
 
 namespace nb{
 

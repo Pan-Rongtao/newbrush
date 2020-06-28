@@ -30,6 +30,9 @@ enum class TextDecorationE
 };
 
 class RenderObject;
+class Brush;
+using RenderObjectPtr = std::shared_ptr<RenderObject>;
+using BrushPtr = std::shared_ptr<Brush>;
 class NB_API TextBlock : public UIElement
 {
 	RTTR_ENABLE(UIElement)
@@ -63,7 +66,7 @@ protected:
 	void onTextChanged(const std::string &_old, const std::string &_new);
 
 private:
-	std::shared_ptr<RenderObject>	m_renderObj;
+	RenderObjectPtr	m_renderObj;
 };
 
 }

@@ -10,14 +10,16 @@
 
 namespace nb {
 
-	class NB_API TransformGroup : public Transform
-	{
-	public:
-		TransformGroup();
+using TransformCollectionPtr = std::shared_ptr<TransformCollection>;
 
-		static DependencyPropertyPtr ChildrenProperty();
+class NB_API TransformGroup : public Transform
+{
+public:
+	TransformGroup();
 
-		virtual glm::mat4x4 value() override;
+	static DependencyPropertyPtr ChildrenProperty();
 
-	};
+	virtual glm::mat4x4 value() override;
+
+};
 }

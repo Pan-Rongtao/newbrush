@@ -28,7 +28,7 @@ void Ellipse::onRender(Viewport2D & drawContext)
 	if (m_fillObject)
 	{
 		Rect fillRc{ rc };
-		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (stroke)
 		{
 			fillRc.reset(rc.left() - strokeThickness, rc.top() - strokeThickness, rc.width() - strokeThickness * 2, rc.height() - strokeThickness * 2);
@@ -51,7 +51,7 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	if (args.property == FillProperty())
 	{
-		auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
+		auto fill = getValue<BrushPtr>(FillProperty());
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -78,7 +78,7 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 	}
 	else if (args.property == StrokeProperty())
 	{
-		auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
@@ -96,7 +96,7 @@ Size Ellipse::arrangeOverride(const Size & finalSize)
 
 void Ellipse::updateFillObject(float a, float b)
 {
-	auto fill = getValue<std::shared_ptr<Brush>>(FillProperty());
+	auto fill = getValue<BrushPtr>(FillProperty());
 	if (!fill)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;
@@ -137,6 +137,6 @@ void Ellipse::updateStrokeObject(const Rect &rc)
 	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
-	auto stroke = getValue<std::shared_ptr<Brush>>(StrokeProperty());
+	auto stroke = getValue<BrushPtr>(StrokeProperty());
 	updateMeterial(m_strokeObject, stroke);
 }

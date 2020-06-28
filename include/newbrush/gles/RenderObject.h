@@ -22,7 +22,11 @@ struct aiMesh;
 struct aiScene;
 namespace nb{
 	
+class Model;
 class Program;
+using ModelPtr = std::shared_ptr<Model>;
+using ProgramPtr = std::shared_ptr<Program>;
+
 class NB_API RenderObject
 {
 public:
@@ -30,10 +34,10 @@ public:
 	RenderObject();
 
 	//构建一个空的RenderObject，它的可渲染状态为bRenderable
-	RenderObject(std::shared_ptr<Model> model);
+	RenderObject(ModelPtr model);
 
 	//构建一个RenderObject，它的模型为model，程序为program，可渲染状态为true
-	RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Program> program);
+	RenderObject(ModelPtr model, ProgramPtr program);
 
 public:	
 	//从文件中加载
@@ -46,16 +50,16 @@ public:
 	bool renderable() const;
 
 	//设置模型
-	void setModel(std::shared_ptr<Model> model);
+	void setModel(ModelPtr model);
 
 	//获取模型
-	std::shared_ptr<Model> model();
+	ModelPtr model();
 
 	//设置program
-	void setProgram(std::shared_ptr<Program> program);
+	void setProgram(ProgramPtr program);
 
 	//获取program
-	std::shared_ptr<Program> program();
+	ProgramPtr program();
 
 	//存储uniform变量，以便下次刷新使用
 	template<class T>
@@ -107,10 +111,10 @@ private:
 	void loopNode(aiNode * node, const aiScene * scene, const std::string &picPath);
 	Mesh processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath);
 
-	std::shared_ptr<Model>		m_model;
-	std::shared_ptr<Program>	m_program;
-	std::map<std::string, var>	m_uniforms;
-	bool						m_renderable;
+	bool m_renderable;
+	ModelPtr m_model;
+	ProgramPtr m_program;
+	std::map<std::string, var> m_uniforms;
 };
 
 }

@@ -10,9 +10,9 @@ GlyphBunch::GlyphBunch()
 {
 }
 
-void GlyphBunch::arrage(std::shared_ptr<Font> font, float xStart, float yStart, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
+void GlyphBunch::arrage(FontPtr font, float xStart, float yStart, const std::string & text, float charSpacing, float lineHeight, TextWrappingE tw, float widthMax)
 {
-	auto handleOne = [](std::vector<Vertex> &vertexs, std::vector<uint16_t> &indices, int i, float x, float yy, std::shared_ptr<Glyph> glyph)
+	auto handleOne = [](std::vector<Vertex> &vertexs, std::vector<uint16_t> &indices, int i, float x, float yy, GlyphPtr glyph)
 	{
 		vertexs[i * 4 + 0] = { glm::vec3(x, yy + glyph->info.bm_height, 0.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec2(glyph->uv[0]) };
 		vertexs[i * 4 + 1] = { glm::vec3(x + glyph->info.bm_width, yy + glyph->info.bm_height, 0.0f), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec2(glyph->uv[1]) };

@@ -7,6 +7,8 @@
 
 namespace nb{
 
+using EasingBasePtr = std::shared_ptr<EasingBase>;
+
 template<class T>
 class NB_API PropertyAnimation : public AnimationTimeline
 {
@@ -21,8 +23,8 @@ public:
 	void setTo(T to) & { m_to = to; m_hasSetTo = true; }
 	T to() const { return m_to; }
 
-	void setEasingFunction(std::shared_ptr<EasingBase> easing) & { m_easingFunction = easing; }
-	std::shared_ptr<EasingBase> easingFunction() const { return m_easingFunction; }
+	void setEasingFunction(EasingBasePtr easing) & { m_easingFunction = easing; }
+	EasingBasePtr easingFunction() const { return m_easingFunction; }
 
 protected:
 	virtual void onStateChanged() override
@@ -54,13 +56,13 @@ protected:
 	}
 
 private:
-	T						m_from;
-	T						m_to;
-	T						m_actualFrom;
-	T						m_actualTo;
-	bool					m_hasSetFrom;
-	bool					m_hasSetTo;
-	std::shared_ptr<EasingBase>	m_easingFunction;
+	T				m_from;
+	T				m_to;
+	T				m_actualFrom;
+	T				m_actualTo;
+	bool			m_hasSetFrom;
+	bool			m_hasSetTo;
+	EasingBasePtr	m_easingFunction;
 };
 
 template<>

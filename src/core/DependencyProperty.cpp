@@ -2,7 +2,7 @@
 
 using namespace nb;
 
-std::map<std::string, std::shared_ptr<PropertyCategory>> PropertyCategory::s_propertyCategorys;
+std::map<std::string, PropertyCategoryPtr> PropertyCategory::s_propertyCategorys;
 
 Range::Range(var lowerBound, var upperBound, var step)
 	: m_lowerBound(lowerBound)
@@ -36,12 +36,12 @@ int PropertyCategory::order() const
 	return m_order;
 }
 
-const std::map<std::string, std::shared_ptr<PropertyCategory>>& PropertyCategory::getAll()
+const std::map<std::string, PropertyCategoryPtr>& PropertyCategory::getAll()
 {
 	return s_propertyCategorys;
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::get(const std::string & name, int order)
+PropertyCategoryPtr PropertyCategory::get(const std::string & name, int order)
 {
 	auto newPC = std::make_shared<PropertyCategory>();
 	newPC->m_name = name;
@@ -50,56 +50,55 @@ std::shared_ptr<PropertyCategory> PropertyCategory::get(const std::string & name
 	return ret.first->second;
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Brush()
+PropertyCategoryPtr PropertyCategory::Brush()
 {
 	return PropertyCategory::get("画笔", 0);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Appearance()
+PropertyCategoryPtr PropertyCategory::Appearance()
 {
 	return PropertyCategory::get("外观", 1);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Public()
+PropertyCategoryPtr PropertyCategory::Public()
 {
 	return PropertyCategory::get("公共", 2);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Automation()
+PropertyCategoryPtr PropertyCategory::Automation()
 {
 	return PropertyCategory::get("自动化", 3);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Layout()
+PropertyCategoryPtr PropertyCategory::Layout()
 {
 	return PropertyCategory::get("布局", 4);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Text()
+PropertyCategoryPtr PropertyCategory::Text()
 {
 	return PropertyCategory::get("文本", 5);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Transform()
+PropertyCategoryPtr PropertyCategory::Transform()
 {
 	return PropertyCategory::get("转换", 6);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Misc()
+PropertyCategoryPtr PropertyCategory::Misc()
 {
 	return PropertyCategory::get("杂项", 7);
 }
 
-std::shared_ptr<PropertyCategory> PropertyCategory::Custom()
+PropertyCategoryPtr PropertyCategory::Custom()
 {
 	return PropertyCategory::get("自定义", 8);
 }
 
-static std::map<std::size_t, std::shared_ptr<DependencyProperty>> g_dependencyProperties;
-std::map<std::shared_ptr<DependencyObject>, std::map<std::string, var>>	DependencyProperty::m_attProperties;
+static std::map<std::size_t, DependencyPropertyPtr> g_dependencyProperties;
 
 PropertyMetadata::PropertyMetadata(const var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback, 
-	PropertyCategoryPtr category, const std::string &description, int order, std::shared_ptr<Range> range)
+	PropertyCategoryPtr category, const std::string &description, int order, RangePtr range)
 	: m_defaultValue(defaulValue)
 	, m_propertyChangedCallback(propertyChangedCallback)
 	, m_coerceValueCallback(coerceValueCallback)
@@ -150,94 +149,18 @@ int PropertyMetadata::order() const
 	return m_order;
 }
 
-std::shared_ptr<Range>PropertyMetadata::range() const
+RangePtr PropertyMetadata::range() const
 {
 	return m_range;
 }
 
-void DependencyProperty::registerAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name, const var & property_v)
-{
-	auto iter = m_attProperties.find(element);
-	if (iter == m_attProperties.end())
-	{
-		std::map<std::string, var> mapNameV;
-		mapNameV[property_name] = property_v;
-		m_attProperties[element] = mapNameV;
-	}
-	else
-	{
-		auto &mapNameV = iter->second;
-		//auto iterNameV = mapNameV.find(property_name);
-		mapNameV[property_name] = property_v;
-	}
-}
-
-var DependencyProperty::findAttached(std::shared_ptr<DependencyObject> element, const std::string & property_name)
-{
-	auto iter = m_attProperties.find(element);
-	if (iter == m_attProperties.end())
-	{
-		return var();
-	}
-	else
-	{
-		auto iterInner = iter->second.find(property_name);
-		if (iterInner == iter->second.end())
-			return var();
-		else
-			return iterInner->second;
-	}
-}
-
-struct UnsetValueInternal
-{
-	std::string	_name;
-};
-static UnsetValueInternal staticUnsetValue{ "DependencyProperty.UnsetValue" };
-void DependencyProperty::getTypePropertys(rttr::type ownerType, std::vector<std::shared_ptr<DependencyProperty>> &ret)
-{
-	using namespace rttr;
-	auto baseClassesRange = ownerType.get_base_classes();
-	if (baseClassesRange.empty())
-	{
-		auto pros = getTypePropertys(ownerType);
-		ret.insert(ret.end(), pros.begin(), pros.end());
-	}
-	else
-	{
-		for (type t : baseClassesRange)
-		{
-			getTypePropertys(t, ret);
-		}
-	}
-}
-
-std::vector<std::shared_ptr<DependencyProperty>> DependencyProperty::getTypePropertys(rttr::type t)
-{
-	std::vector<std::shared_ptr<DependencyProperty>> ret;
-	for (auto pair : g_dependencyProperties)
-	{
-		auto const &p = pair.second;
-		if (p->ownerType() == t)
-		{
-			ret.push_back(p);
-		}
-	}
-	return ret;
-}
-
-var DependencyProperty::unsetValue()
-{
-	return staticUnsetValue;
-}
-
-std::shared_ptr<DependencyProperty> DependencyProperty::find(size_t globalIndex)
+DependencyPropertyPtr DependencyProperty::find(size_t globalIndex)
 {
 	auto iter = g_dependencyProperties.find(globalIndex);
 	return iter == g_dependencyProperties.end() ? nullptr : iter->second;
 }
 
-DependencyProperty::DependencyProperty(const std::string & name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback, size_t hash)
+DependencyProperty::DependencyProperty(const std::string & name, rttr::type ownerType, rttr::type propertyType, PropertyMetadataPtr metadata, ValidateValueCallback validateValueCallback, size_t hash)
 	: m_name(name)
 	, m_ownerType(ownerType)
 	, m_propertyType(propertyType)
@@ -247,11 +170,11 @@ DependencyProperty::DependencyProperty(const std::string & name, rttr::type owne
 {
 }
 
-std::shared_ptr<DependencyProperty> DependencyProperty::registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, std::shared_ptr<PropertyMetadata> metadata, ValidateValueCallback validateValueCallback)
+DependencyPropertyPtr DependencyProperty::registerCommon(const std::string &name, rttr::type ownerType, rttr::type propertyType, PropertyMetadataPtr metadata, ValidateValueCallback validateValueCallback)
 {
 	std::hash<std::string> _shash;
 	auto _hash = _shash(ownerType.get_name().data()) ^ _shash(name);
-	std::shared_ptr<DependencyProperty> dp(new DependencyProperty(name, ownerType, propertyType, metadata, validateValueCallback, _hash));
+	DependencyPropertyPtr dp(new DependencyProperty(name, ownerType, propertyType, metadata, validateValueCallback, _hash));
 	auto p = dependencyProperties().insert({ _hash, dp });
 	if (!p.second)
 	{
@@ -276,7 +199,7 @@ rttr::type DependencyProperty::propertyType() const
 	return m_propertyType;
 }
 
-std::shared_ptr<PropertyMetadata> DependencyProperty::defaultMetadata() const
+PropertyMetadataPtr DependencyProperty::defaultMetadata() const
 {
 	return m_metadata;
 }
@@ -306,7 +229,7 @@ bool DependencyProperty::operator != (const DependencyProperty &other) const
 	return m_hash != other.m_hash;
 }
 
-std::map<std::size_t, std::shared_ptr<DependencyProperty>> &DependencyProperty::dependencyProperties()
+std::map<std::size_t, DependencyPropertyPtr> &DependencyProperty::dependencyProperties()
 {
 	return g_dependencyProperties;
 }

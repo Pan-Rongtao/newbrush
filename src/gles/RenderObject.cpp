@@ -20,12 +20,12 @@ RenderObject::RenderObject()
 {
 }
 
-RenderObject::RenderObject(std::shared_ptr<Model> model)
+RenderObject::RenderObject(ModelPtr model)
 	: RenderObject(model, nullptr)
 {
 }
 
-RenderObject::RenderObject(std::shared_ptr<Model> model, std::shared_ptr<Program> program)
+RenderObject::RenderObject(ModelPtr model, ProgramPtr program)
 	: m_model(model)
 	, m_program(program)
 	, m_renderable(true)
@@ -69,22 +69,22 @@ bool RenderObject::renderable() const
 	return m_renderable;
 }
 
-void RenderObject::setModel(std::shared_ptr<Model> model)
+void RenderObject::setModel(ModelPtr model)
 {
 	m_model = model;
 }
 
-std::shared_ptr<Model> RenderObject::model()
+ModelPtr RenderObject::model()
 {
 	return m_model;
 }
 
-void RenderObject::setProgram(std::shared_ptr<Program> program)
+void RenderObject::setProgram(ProgramPtr program)
 {
 	m_program = program;
 }
 
-std::shared_ptr<Program> RenderObject::program()
+ProgramPtr RenderObject::program()
 {
 	return m_program;
 }
@@ -220,7 +220,8 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 		}
 	}
 	
-	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, int samplerUnit)->std::vector<std::shared_ptr<TextureMipmap>> {
+	using TextureMipmapPtr = std::shared_ptr<TextureMipmap>;
+	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, int samplerUnit)->std::vector<TextureMipmapPtr> {
 		std::vector<std::shared_ptr<TextureMipmap>> textures;
 		int ii = mat->GetTextureCount(type);
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
@@ -252,16 +253,16 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 		ma = Material(glm::vec3(ambient.r, ambient.g, ambient.b), glm::vec3(diffuse.r, diffuse.g, diffuse.b), glm::vec3(specular.r, specular.g, specular.b));
 
 		// 1. diffuse maps
-		std::vector<std::shared_ptr<TextureMipmap>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, GL_TEXTURE0);
+		auto diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, GL_TEXTURE0);
 		ma.textures().insert(ma.textures().end(), diffuseMaps.begin(), diffuseMaps.end());
 		// 2. specular maps
-		std::vector<std::shared_ptr<TextureMipmap>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, GL_TEXTURE1);
+		auto specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, GL_TEXTURE1);
 		ma.textures().insert(ma.textures().end(), specularMaps.begin(), specularMaps.end());
 		// 3. normal maps
-		std::vector<std::shared_ptr<TextureMipmap>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, GL_TEXTURE2);
+		auto normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, GL_TEXTURE2);
 		ma.textures().insert(ma.textures().end(), normalMaps.begin(), normalMaps.end());
 		// 4. height maps
-		std::vector<std::shared_ptr<TextureMipmap>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, GL_TEXTURE3);
+		auto heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, GL_TEXTURE3);
 		ma.textures().insert(ma.textures().end(), heightMaps.begin(), heightMaps.end());
 	}
 	

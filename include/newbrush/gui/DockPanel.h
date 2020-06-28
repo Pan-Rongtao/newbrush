@@ -15,15 +15,14 @@ class NB_API DockPanel : public Panel
 {
 	RTTR_ENABLE(Panel)
 public:
-	static constexpr const char *AttachedPropertyDock = "DockPanel.Dock";
-
 	DockPanel();
 	virtual ~DockPanel() = default;
 
-	void setDock(std::shared_ptr<UIElement> element, DockE dock);
-	DockE getDock(std::shared_ptr<UIElement> element);
-
+	static DependencyPropertyPtr DockProperty();			//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
 	static DependencyPropertyPtr LastChildFillProperty();	//Ä©ÔªËØÌîÂúµÄÒÀÀµÊôĞÔ
+
+	static void setDock(UIElementPtr element, DockE dock);
+	static DockE getDock(UIElementPtr element);
 
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;

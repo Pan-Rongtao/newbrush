@@ -10,6 +10,7 @@
 #include "GLFW/glfw3.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/gles/RenderObject.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb;
 
@@ -100,7 +101,7 @@ Point Window::getMousePosition() const
 
 Size Window::measureOverride(const Size & availableSize)
 {
-/*	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
+/*	auto content = getValue<UIElementPtr>(ContentProperty());
 	if (content)
 	{
 	//	auto w = getValue<float>(WidthProperty());
@@ -117,7 +118,7 @@ Size Window::measureOverride(const Size & availableSize)
 
 Size Window::arrangeOverride(const Size & finalSize)
 {
-	auto content = getValue<std::shared_ptr<UIElement>>(ContentProperty());
+	auto content = getValue<UIElementPtr>(ContentProperty());
 	if (content)
 	{
 		auto w = getValue<float>(WidthProperty());
@@ -383,7 +384,7 @@ DependencyPropertyPtr Window::TitleProperty()
 
 DependencyPropertyPtr Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::shared_ptr<ImageSource>>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<Window, ImageSourcePtr>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr,
 		PropertyCategory::Public(), "窗口图标", 2);
 	return dp;
 }
@@ -565,7 +566,7 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 		return;
 	}
 
-	auto source = args->newValue.get_value<std::shared_ptr<ImageSource>>();
+	auto source = args->newValue.get_value<ImageSourcePtr>();
 	auto &stream = source ? source->stream() : "";
 	GLFWimage img{ (int)source->width(), (int)source->height(), (unsigned char *)stream.data() };
 	glfwSetWindowIcon(w, 1, &img);			//图片大会挂死

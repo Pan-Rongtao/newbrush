@@ -9,13 +9,13 @@ ImageBrush::ImageBrush()
 {
 }
 
-ImageBrush::ImageBrush(std::shared_ptr<ImageSource> imgSource)
+ImageBrush::ImageBrush(ImageSourcePtr imgSource)
 {
 	setValue(SourceProperty(), imgSource);
 }
 
 DependencyPropertyPtr ImageBrush::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ImageBrush, std::shared_ptr<ImageSource>>("Source", nullptr);
+	static auto dp = DependencyProperty::registerDependency<ImageBrush, ImageSourcePtr>("Source", nullptr);
 	return dp;
 }

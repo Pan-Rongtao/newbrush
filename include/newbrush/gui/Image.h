@@ -16,6 +16,9 @@
 namespace nb{
 
 class RenderObject;
+class ImageSource;
+using RenderObjectPtr = std::shared_ptr<RenderObject>;
+using ImageSourcePtr = std::shared_ptr<ImageSource>;
 class NB_API Image : public UIElement
 {
 	RTTR_ENABLE(UIElement)
@@ -23,7 +26,7 @@ public:
 	Image();
 	virtual ~Image() = default;
 
-	static DependencyPropertyPtr SourceProperty();	//源的依赖属性（std::shared_ptr<ImageSource>）
+	static DependencyPropertyPtr SourceProperty();	//源的依赖属性（ImageSourcePtr）
 	static DependencyPropertyPtr StretchProperty();	//伸缩方式的依赖属性（StretchE）
 
 	Event<RoutedEventArgs>		ImageFailed;
@@ -37,8 +40,8 @@ private:
 	static void onSourcePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
 	static void onStretchPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
 
-	Size							m_availableSize;
-	std::shared_ptr<RenderObject>	m_renderObj;
+	Size			m_availableSize;
+	RenderObjectPtr	m_renderObj;
 };
 
 }

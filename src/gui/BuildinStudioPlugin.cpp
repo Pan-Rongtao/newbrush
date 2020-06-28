@@ -48,6 +48,7 @@ NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
 
 NB_API int nb::getMetaClassCount()
 {
+//	RttrRegistration::doRegister();
 	array_range<type> range = type::get_types();
 	auto count = std::count_if(range.begin(), range.end(), [](type t)->bool {
 		var vAsVisual = t.get_metadata(RttrClassMetadataIndex::AsVisual);
@@ -93,7 +94,7 @@ NB_API void nb::getMetaClasses(CClass * classes, int count)
 
 		//properties info
 		auto propertyLimit = sizeof(CClass::propertys) / sizeof(CProperty);
-		std::vector<std::shared_ptr<DependencyProperty>> allProperties = RttrRegistration::getTypeAllPropertys(t);
+		std::vector<DependencyPropertyPtr> allProperties = RttrRegistration::getTypeAllPropertys(t);
 		if (allProperties.size() > propertyLimit)
 		{
 			Log::warn("[%s]'s property count is overfollow property count limit[%d]", t.get_name().data(), propertyLimit);

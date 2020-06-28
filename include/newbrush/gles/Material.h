@@ -19,6 +19,7 @@ namespace nb{
 
 class Program;
 class Texture;
+using TexturePtr = std::shared_ptr<Texture>;
 class NB_API Material
 {
 public:
@@ -27,13 +28,13 @@ public:
 	~Material() = default;
 
 	//构建一个材质，它的Program为program，它的纹理texture
-	Material(const std::vector<std::shared_ptr<Texture>> &textures);
+	Material(const std::vector<TexturePtr> &textures);
 
 	Material(const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm::vec3 &specular);
 
 	//纹理
-	std::vector<std::shared_ptr<Texture>> &textures();
-	const std::vector<std::shared_ptr<Texture>> &textures() const;
+	std::vector<TexturePtr> &textures();
+	const std::vector<TexturePtr> &textures() const;
 
 	//颜色
 	glm::vec3 &getAmbient();
@@ -46,7 +47,7 @@ public:
 	const glm::vec3 &getSpecular() const;
 
 private:
-	std::vector<std::shared_ptr<Texture>>	m_textures;
+	std::vector<TexturePtr>	m_textures;
 	glm::vec3 m_ambient;
 	glm::vec3 m_diffuse;
 	glm::vec3 m_specular;

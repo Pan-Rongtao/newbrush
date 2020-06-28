@@ -1,10 +1,11 @@
 #pragma once
 #include "newbrush/gui/Setter.h"
-#include "newbrush/core/Binding.h"
 #include "TriggerAction.h"
 
 namespace nb{
 
+class Binding;
+using BindingPtr = std::shared_ptr<Binding>;
 class Condition
 {
 public:
@@ -86,10 +87,10 @@ class DataTrigger : public TriggerBase
 {
 public:
 	DataTrigger();
-	DataTrigger(std::shared_ptr<Binding> bd, const var &value);
+	DataTrigger(BindingPtr bd, const var &value);
 
-	void setBinding(std::shared_ptr<Binding> bd);
-	std::shared_ptr<Binding> binding() const;
+	void setBinding(BindingPtr bd);
+	BindingPtr binding() const;
 
 	std::vector<SetterBasePtr> &setters();
 

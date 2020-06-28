@@ -2,12 +2,12 @@
 
 using namespace nb;
 
-std::string RoutedEvent::name() const
+const std::string &RoutedEvent::name() const
 {
 	return m_name;
 }
 
-std::size_t RoutedEvent::hash() const
+const std::size_t &RoutedEvent::hash() const
 {
 	return m_hash;
 }

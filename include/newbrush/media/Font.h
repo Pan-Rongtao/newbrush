@@ -30,7 +30,8 @@ enum class FontStyleE
 	Oblique,
 };
 
-
+class Font;
+using FontPtr = std::shared_ptr<Font>;
 class NB_API Font
 {
 public:
@@ -65,14 +66,14 @@ class NB_API Fonts
 public:
 	//从名字中获取一个字体，如果没有，返回空
 	//name：字体名称，形如"Microsoft YaHei", "SimSun", "STKaiti"等
-	static std::shared_ptr<Font> getFont(const std::string &name);
+	static FontPtr getFont(const std::string &name);
 
 	//获取已存在的字体
-	static std::map<std::string, std::shared_ptr<Font>> systemFonts();
+	static std::map<std::string, FontPtr> systemFonts();
 
 private:
 	static void initSystemFonts();
-	static std::map<std::string, std::shared_ptr<Font>> s_systemFonts;
+	static std::map<std::string, FontPtr> s_systemFonts;
 };
 
 }

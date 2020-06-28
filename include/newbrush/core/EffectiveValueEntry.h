@@ -60,7 +60,7 @@ public:
 private:
 	ModifiedValue ensureModifiedValue();
 
-	size_t				m_propertyIndex;
+	size_t	m_propertyIndex;
 	var		BaseValue;
 	var		AnimatedValue;
 	var		CoercedValue;

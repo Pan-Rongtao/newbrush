@@ -3,9 +3,6 @@
 
 namespace nb {
 
-class DependencyProperty;
-using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
-
 class NB_API Object
 {
 	RTTR_ENABLE()

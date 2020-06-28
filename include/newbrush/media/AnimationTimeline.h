@@ -6,7 +6,6 @@ namespace nb{
 class DependencyObject;
 class DependencyProperty;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
-using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
 
 class NB_API AnimationTimeline : public Timeline
 {

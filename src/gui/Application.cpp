@@ -6,6 +6,7 @@
 #include "newbrush/core/Singleton.h"
 #include "newbrush/media/Color.h"
 #include "newbrush/gui/BuildinStudioPlugin.h"
+#include "newbrush/core/ResourceDictionary.h"
 
 using namespace nb;
 
@@ -60,7 +61,7 @@ Window * Application::mainWindow()
 	return Singleton<WindowCollection>::get()->mainWindow();
 }
 
-std::shared_ptr<ResourceDictionary> Application::resources()
+ResourceDictionaryPtr Application::resources()
 {
 	return m_resources;
 }
@@ -176,7 +177,7 @@ void Application::onWindowFocused(const WindowCollection::WindowFocusEventArgs &
 	}
 }
 
-void Application::_registerPlugin(std::shared_ptr<StudioPlugin> plugin)
+void Application::_registerPlugin(StudioPluginPtr plugin)
 {
 }
 

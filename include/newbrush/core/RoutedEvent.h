@@ -17,8 +17,8 @@ enum class RoutingStrategyE
 class NB_API RoutedEvent
 {
 public:
-	std::string name() const;
-	std::size_t hash() const;
+	const std::string &name() const;
+	const std::size_t &hash() const;
 	std::type_index ownerType() const;
 	std::type_index argsType() const;
 	RoutingStrategyE routingStrategy() const;
@@ -31,7 +31,7 @@ public:
 private:
 	RoutedEvent(const std::string & name, std::type_index ownerType, std::type_index eventArgsType, RoutingStrategyE routingStrategy, std::size_t hash);
 
-	std::size_t			m_hash{0};
+	std::size_t			m_hash;
 	std::string			m_name;
 	RoutingStrategyE	m_routingStrategy;
 	std::type_index		m_ownerType;
@@ -40,13 +40,14 @@ private:
 };
 
 class RoutedEventArgs;
+using RoutedEventArgsPtr = std::shared_ptr<RoutedEventArgs>;
 class NB_API RoutedEventHandler
 {
 public:
-	using CB = std::function<void(std::shared_ptr<RoutedEventArgs>)>;
+	using CB = std::function<void(RoutedEventArgsPtr)>;
 	RoutedEventHandler(CB callback) : m_callback(std::make_shared<CB>(std::move(callback))) { }
 
-	void invoke(std::shared_ptr<RoutedEventArgs> args) const { (*m_callback)(args); }
+	void invoke(RoutedEventArgsPtr args) const { (*m_callback)(args); }
 	bool operator ==(const RoutedEventHandler &other) const	{ return !(operator!=(other)); }
 	bool operator !=(const RoutedEventHandler &other) const	{ return m_callback != other.m_callback; }
 

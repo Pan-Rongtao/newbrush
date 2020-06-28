@@ -7,6 +7,7 @@ using namespace nb;
 
 int main(int argc, char **argv)
 {
+	auto x = sizeof(Object);
 	Application app;
 
 	RpcService rpc("127.0.0.1:8888");

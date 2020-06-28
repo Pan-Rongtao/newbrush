@@ -4,7 +4,6 @@
 #include "newbrush/core/Event.h"
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/WindowCollection.h"
-#include "newbrush/core/ResourceDictionary.h"
 
 namespace nb{
 
@@ -17,6 +16,9 @@ enum class ShutdownModeE : uint8_t
 
 class Window;
 class StudioPlugin;
+class ResourceDictionary;
+using ResourceDictionaryPtr = std::shared_ptr<ResourceDictionary>;
+using StudioPluginPtr = std::shared_ptr<StudioPlugin>;
 class NB_API Application
 {
 public:
@@ -39,7 +41,7 @@ public:
 	Window *mainWindow();
 
 	//资源
-	std::shared_ptr<ResourceDictionary> resources();
+	ResourceDictionaryPtr resources();
 
 	//运行
 	//返回值：退出码，默认情况下为0
@@ -81,11 +83,11 @@ protected:
 private:
 	void onWindowClosed(const WindowCollection::WindowClosedEventArgs &args);
 	void onWindowFocused(const WindowCollection::WindowFocusEventArgs &args);
-	void _registerPlugin(std::shared_ptr<StudioPlugin> plugin);
+	void _registerPlugin(StudioPluginPtr plugin);
 	
 	ShutdownModeE m_shutdownMode;
 	bool m_exitFlag;
-	std::shared_ptr<ResourceDictionary> m_resources;
+	ResourceDictionaryPtr m_resources;
 	static Application	*g_app;
 
 	CallBack				pick();

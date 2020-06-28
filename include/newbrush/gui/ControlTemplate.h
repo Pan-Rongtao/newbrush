@@ -11,7 +11,7 @@ public:
 	virtual ~ControlTemplate() = default;
 
 	//实例化，返回该实例的根节点
-	std::shared_ptr<UIElement> instance();
+	UIElementPtr instance();
 
 	//节点树根
 	void setRoot(UIElementPtr root);

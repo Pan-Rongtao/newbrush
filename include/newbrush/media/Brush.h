@@ -28,6 +28,4 @@ protected:
 
 };
 
-using BrushPtr = std::shared_ptr<Brush>;
-
 }

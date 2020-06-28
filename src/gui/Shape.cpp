@@ -18,7 +18,7 @@ Shape::Shape()
 
 DependencyPropertyPtr Shape::FillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, std::shared_ptr<Brush>>("Fill", nullptr, nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Fill", nullptr, nullptr, nullptr, nullptr,
 		PropertyCategory::Brush(), "该画笔指定如何绘制形状内部", 1);
 	return dp;
 }
@@ -32,7 +32,7 @@ DependencyPropertyPtr Shape::StretchProperty()
 
 DependencyPropertyPtr Shape::StrokeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, std::shared_ptr<Brush>>("Stroke", nullptr, nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Stroke", nullptr, nullptr, nullptr, nullptr,
 		PropertyCategory::Brush(), "该画笔指定如何绘制形状轮廓", 2);
 	return dp;
 }
@@ -86,12 +86,12 @@ DependencyPropertyPtr Shape::StrokeDashOffsetProperty()
 	return dp;
 }
 
-std::shared_ptr<RenderObject> Shape::renderObject()
+RenderObjectPtr Shape::renderObject()
 {
 	return m_fillObject;
 }
 
-void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Brush> brush)
+void Shape::updateMeterial(RenderObjectPtr ro, BrushPtr brush)
 {
 	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
 	{
@@ -122,7 +122,7 @@ void Shape::updateMeterial(std::shared_ptr<RenderObject> ro, std::shared_ptr<Bru
 	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
 	{
 		ro->setProgram(Programs::image());
-		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<std::shared_ptr<ImageSource>>(ImageBrush::SourceProperty());
+		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<ImageSourcePtr>(ImageBrush::SourceProperty());
 		if (source)
 		{
 			auto const &stream = source->stream();

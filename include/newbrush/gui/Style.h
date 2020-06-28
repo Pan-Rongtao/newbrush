@@ -9,6 +9,8 @@ namespace nb{
 class UIElement;
 class DependencyProperty;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+using DataTriggerPtr = std::shared_ptr<DataTrigger>;
+using MultiDataTriggerPtr = std::shared_ptr<MultiDataTrigger>;
 
 class NB_API Style
 {
@@ -33,9 +35,9 @@ public:
 
 	void handlePropertyChanged(UIElement * uie, DependencyPropertyPtr dp, const var &v);
 	
-	struct StyleDataTriggerArgs { std::shared_ptr<DataTrigger> dataTrigger; };
+	struct StyleDataTriggerArgs { DataTriggerPtr dataTrigger; };
 	Event<StyleDataTriggerArgs> StyleDataTrigger;
-	struct StyleMultiDataTriggerArgs { std::shared_ptr<MultiDataTrigger> multiDataTrigger; };
+	struct StyleMultiDataTriggerArgs { MultiDataTriggerPtr multiDataTrigger; };
 	Event<StyleMultiDataTriggerArgs> StyleMultiDataTrigger;
 
 private:

@@ -65,16 +65,16 @@ FT_LibraryRec_ *Font::getFT()
 
 //system fonts
 ////////////////////////
-std::map<std::string, std::shared_ptr<Font>> Fonts::s_systemFonts;
+std::map<std::string, FontPtr> Fonts::s_systemFonts;
 
-std::shared_ptr<Font> Fonts::getFont(const std::string &name)
+FontPtr Fonts::getFont(const std::string &name)
 {
 	initSystemFonts();
 	auto iter = s_systemFonts.find(name);
 	return iter != s_systemFonts.end() ? iter->second : nullptr;
 }
 
-std::map<std::string, std::shared_ptr<Font>> Fonts::systemFonts()
+std::map<std::string, FontPtr> Fonts::systemFonts()
 {
 	initSystemFonts();
 	return s_systemFonts;
@@ -82,9 +82,9 @@ std::map<std::string, std::shared_ptr<Font>> Fonts::systemFonts()
 
 void Fonts::initSystemFonts()
 {
-	auto loadSystemFonts = [](const std::string &path)->std::shared_ptr<Font>
+	auto loadSystemFonts = [](const std::string &path)->FontPtr
 	{
-		std::shared_ptr<Font> font;
+		FontPtr font;
 		try {
 			font = std::make_shared<Font>(path);
 		}

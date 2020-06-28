@@ -2,6 +2,7 @@
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DataContext.h"
 #include "newbrush/gui/VisualTreeHelper.h"
+#include "newbrush/core/Binding.h"
 #include "newbrush/core/Log.h"
 
 using namespace nb;
@@ -38,17 +39,17 @@ void TriggerBase::processSetters(UIElement *uie, std::vector<SetterBasePtr> sett
 		auto setter = std::dynamic_pointer_cast<Setter>(setterBase);
 		if (setter)
 		{
-			if (setter->targetName)
+			if (!setter->targetName().empty())
 			{
 				auto node = VisualTreeHelper::findLogicalNode(uie, "rc");
 				if (node)
 				{
-					node->setValue(setter->property, setter->value);
+					node->setValue(setter->property(), setter->value());
 				}
 			}
 			else
 			{
-				uie->setValue(setter->property, setter->value);
+				uie->setValue(setter->property(), setter->value());
 			}
 		}
 		else
@@ -158,13 +159,13 @@ DataTrigger::DataTrigger()
 {
 }
 
-DataTrigger::DataTrigger(std::shared_ptr<Binding> bd, const var & value)
+DataTrigger::DataTrigger(BindingPtr bd, const var & value)
 	: m_value(value)
 {
 	setBinding(bd);
 }
 
-void DataTrigger::setBinding(std::shared_ptr<Binding> bd)
+void DataTrigger::setBinding(BindingPtr bd)
 {
 	m_binding = bd;
 	if (m_binding)
@@ -175,7 +176,7 @@ void DataTrigger::setBinding(std::shared_ptr<Binding> bd)
 	}
 }
 
-std::shared_ptr<Binding> DataTrigger::binding() const
+BindingPtr DataTrigger::binding() const
 {
 	return m_binding;
 }
@@ -232,7 +233,7 @@ bool MultiDataTrigger::match() const
 
 void EventTrigger::attach(UIElement * uie)
 {
-	uie->addHandler(routedEvent, RoutedEventHandler([&](std::shared_ptr<RoutedEventArgs> args) {
+	uie->addHandler(routedEvent, RoutedEventHandler([&](RoutedEventArgsPtr args) {
 		for (auto action : actions)
 		{
 			action->invoke();

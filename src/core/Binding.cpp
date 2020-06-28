@@ -13,7 +13,7 @@ Binding::Binding(const std::string & path)
 {
 }
 
-Binding::Binding(std::shared_ptr<DataContext> source, const std::string & path, BindingModeE mode)
+Binding::Binding(DataContextPtr source, const std::string & path, BindingModeE mode)
 	: m_path(path)
 	, m_mode(mode)
 {
@@ -30,7 +30,7 @@ BindingModeE Binding::mode() const
 	return m_mode;
 }
 
-void Binding::setSource(std::shared_ptr<DataContext> source) &
+void Binding::setSource(DataContextPtr source) &
 {
 	m_source = source;
 	if (m_source)
@@ -42,7 +42,7 @@ void Binding::setSource(std::shared_ptr<DataContext> source) &
 	}
 }
 
-std::shared_ptr<DataContext> Binding::source() const
+DataContextPtr Binding::source() const
 {
 	return m_source;
 }

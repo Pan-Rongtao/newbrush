@@ -2,6 +2,9 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/gui/Style.h"
+#include "newbrush/gui/VisualStateMachine.h"
+#include "newbrush/media/Transform.h"
 
 using namespace nb;
 
@@ -124,11 +127,11 @@ DependencyPropertyPtr UIElement::FlowDirectionProperty()
 
 DependencyPropertyPtr UIElement::StyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Style>>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
+	static auto dp = DependencyProperty::registerDependency<UIElement, StylePtr>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
 		auto e = dynamic_cast<UIElement *>(object);
 
-		auto oldStyle = args->oldValue.get_value<std::shared_ptr<Style>>();
-		auto newStyle = args->newValue.get_value<std::shared_ptr<Style>>();
+		auto oldStyle = args->oldValue.get_value<StylePtr>();
+		auto newStyle = args->newValue.get_value<StylePtr>();
 		//由于style类型每次set都会触发changed，因此设置统一style也会进入此回调函数，应判断newStyle == oldStyle
 		if (newStyle == oldStyle)
 			return;
@@ -150,7 +153,7 @@ DependencyPropertyPtr UIElement::StyleProperty()
 
 DependencyPropertyPtr UIElement::StateMachineProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<VisualStateMachine>>("StateMachine", std::make_shared<VisualStateMachine>());
+	static auto dp = DependencyProperty::registerDependency<UIElement, VisualStateMachinePtr>("StateMachine", std::make_shared<VisualStateMachine>());
 	return dp;
 }
 
@@ -162,7 +165,7 @@ DependencyPropertyPtr UIElement::IsMouseOverProperty()
 
 DependencyPropertyPtr UIElement::RenderTransformProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::shared_ptr<Transform>>("RenderTransform", std::make_shared<Transform>(), nullptr, nullptr, nullptr,
+	static auto dp = DependencyProperty::registerDependency<UIElement, TransformPtr>("RenderTransform", std::make_shared<Transform>(), nullptr, nullptr, nullptr,
 		PropertyCategory::Transform(), "", 1);
 	return dp;
 }
@@ -343,12 +346,12 @@ Size UIElement::arrangeOverride(const Size & finalSize)
 	return finalSize;
 }
 
-void UIElement::addLogicalChild(std::shared_ptr<UIElement> child)
+void UIElement::addLogicalChild(UIElementPtr child)
 {
 	child->changedLogicParent(this);
 }
 
-void UIElement::removeLogicalChild(std::shared_ptr<UIElement> child)
+void UIElement::removeLogicalChild(UIElementPtr child)
 {
 	child->changedLogicParent(nullptr);
 }
@@ -359,14 +362,14 @@ void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	{
 		updateLayout();
 	}
-	auto style = getValue<std::shared_ptr<Style>>(StyleProperty());
+	auto style = getValue<StylePtr>(StyleProperty());
 	if (style)
 	{
 		style->handlePropertyChanged(this, args.property, args.newValue);
 	}
 }
 
-void UIElement::onStyleChanged(std::shared_ptr<Style> oldStyle, std::shared_ptr<Style> newStyle)
+void UIElement::onStyleChanged(StylePtr oldStyle, StylePtr newStyle)
 {
 }
 
@@ -724,7 +727,7 @@ void UIElement::removeHandler(const RoutedEvent & event, const RoutedEventHandle
 	}
 }
 
-void UIElement::raiseEvent(std::shared_ptr<RoutedEventArgs> args)
+void UIElement::raiseEvent(RoutedEventArgsPtr args)
 {
 	auto fireElementEvents = [&args](UIElement *element) {
 		auto const &eventHandles = element->m_eventHandlers;
@@ -1068,7 +1071,7 @@ const Size &UIElement::desiredSize() const
 	return m_desiredSize;
 }
 
-std::shared_ptr<UIElement> UIElement::clone() const
+UIElementPtr UIElement::clone() const
 {
 	return std::make_shared<UIElement>(*this);
 }
