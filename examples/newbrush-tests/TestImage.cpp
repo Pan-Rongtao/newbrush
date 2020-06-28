@@ -9,7 +9,7 @@ using namespace nb;
 TEST_CASE("Test Image", "[Image]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto img = std::make_shared<Image>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), img);
 	auto imgSource = std::make_shared<ImageSource>("../images/zelda0.jpg");

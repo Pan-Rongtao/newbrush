@@ -46,7 +46,7 @@ TEST_CASE("Test nb::Button", "[Button]")
 	//end template
 
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto btn = std::make_shared<Button>();
 
 	btn->setValue(Control::TemplateProperty(), templ);

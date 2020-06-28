@@ -16,7 +16,7 @@ using namespace nb;
 TEST_CASE("Test Grid", "[Grid]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto grid = std::make_shared<Grid>();
 	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(grid));
 	
@@ -30,7 +30,7 @@ TEST_CASE("Test Grid", "[Grid]")
 	auto rowdef2 = std::make_shared<RowDefinition>();
 	rowdef2->setValue(RowDefinition::HeightProperty(), GridLength(GridUnitType::Star, 3));
 
-	std::vector<std::shared_ptr<RowDefinition>> rowDefinitions = { rowdef0, rowdef1, rowdef2 };
+	std::vector<RowDefinitionPtr> rowDefinitions = { rowdef0, rowdef1, rowdef2 };
 	grid->setValue(Grid::RowDefinitionsProperty(), rowDefinitions);
 
 	auto coldef0 = std::make_shared<ColumnDefinition>();
@@ -40,7 +40,7 @@ TEST_CASE("Test Grid", "[Grid]")
 	auto coldef2 = std::make_shared<ColumnDefinition>();
 	//coldef2->Width = 100;
 
-	std::vector<std::shared_ptr<ColumnDefinition>> colDefinitions = { coldef0, coldef1, coldef2 };
+	std::vector<ColumnDefinitionPtr> colDefinitions = { coldef0, coldef1, coldef2 };
 	grid->setValue(Grid::ColumnDefinitionsProperty(), colDefinitions);
 
 

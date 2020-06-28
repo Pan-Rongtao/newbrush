@@ -24,17 +24,17 @@ TEST_CASE("test Rectangle", "[Rectangle]")
 	//rc->setValue(Shape::WidthProperty(), 100.0f);
 	//rc->setValue(Shape::HeightProperty(), 100.0f);
 	rc->setValue(Rectangle::MarginProperty(), Thickness(100));
-	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-	//rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
+	rc->setValue(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	//rc->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/shibuya.jpg")));
 	rc->setValue(Rectangle::RadiusXProperty(), 50);
 	rc->setValue(Rectangle::RadiusYProperty(), 50);
 
-	rc->setValue<std::shared_ptr<Brush>>(Rectangle::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc->setValue(Rectangle::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	rc->setValue(Rectangle::StrokeThicknessProperty(), 5.0f);
 	rc->setValue<std::vector<float>>(Rectangle::StrokeDashArrayProperty(), {  });
 	rc->setValue(Rectangle::StrokeDashOffsetProperty(), 0);
 	
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
+	w->setValue(Window::ContentProperty(), rc);
 
 	app.run(0, nullptr);
 }
@@ -54,15 +54,15 @@ TEST_CASE("Test Ellipse", "[Ellipse]")
 	linearBrush->setValue(LinearGradientBrush::GradientStopsProperty(), std::make_shared<GradientStopCollection>(std::vector<GradientStopPtr>{ gs0, gs1, gs2, gs3 }));
 
 	auto ep = std::make_shared<Ellipse>();
-	ep->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/boat.jpg")));
-//	ep->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-//	ep->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-	ep->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), linearBrush);
+	ep->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/boat.jpg")));
+//	ep->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+//	ep->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	ep->setValue<BrushPtr>(Shape::FillProperty(), linearBrush);
 	ep->setValue(Shape::StrokeThicknessProperty(), 50);
 	ep->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{1});
 	ep->setValue(Shape::MarginProperty(), Thickness(100));
 
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), ep);
+	w->setValue<UIElementPtr>(Window::ContentProperty(), ep);
 
 	app.run(0, nullptr);
 }
@@ -87,13 +87,13 @@ TEST_CASE("Test Line", "[Line]")
 	ln->setValue(Line::X2Property(), 500);
 	ln->setValue(Line::Y2Property(), 500);
 	//	ln->Stroke = std::make_shared<SolidColorBrush>(Colors::red());
-	ln->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/scene0.jpg")));
-	ln->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), linearBrush);
+	ln->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/scene0.jpg")));
+	ln->setValue<BrushPtr>(Shape::StrokeProperty(), linearBrush);
 	ln->setValue(Shape::StrokeThicknessProperty(), 50);
 	ln->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{});
 	ln->setValue<Thickness>(Shape::MarginProperty(), 100);
 
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), ln);
+	w->setValue<UIElementPtr>(Window::ContentProperty(), ln);
 
 	app.run(0, nullptr);
 }
@@ -124,11 +124,11 @@ TEST_CASE("Test Polyline", "[Polyline]")
 
 	pl->setValue(Polyline::PointsProperty(), points/*std::vector<Point>{ {0, 0}, { 100,100 }, { 100,200 }, { 300, 250 } }*/);
 	pl->setValue(Shape::StrokeThicknessProperty(), 20);
-	pl->setValue<std::shared_ptr<Brush>>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	pl->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 //	pl->setValue(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/doudou.jpg")));
 	//pl->Stroke = linearBrush;
 
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), pl);
+	w->setValue<UIElementPtr>(Window::ContentProperty(), pl);
 	app.run(0, nullptr);
 }
 
@@ -149,12 +149,12 @@ TEST_CASE("Test nb::Polygon", "[Polygon]")
 	auto pl = std::make_shared<Polygon>();
 	pl->setValue(Polygon::PointsProperty(), std::vector<Point>{ { 0, 0 }, { 500,0 }, { 300,100 }, { 0,800 }});
 	//pl->Fill = std::make_shared<SolidColorBrush>(Colors::red());
-	pl->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), linearBrush);
+	pl->setValue<BrushPtr>(Shape::FillProperty(), linearBrush);
 	pl->setValue(Shape::StrokeThicknessProperty(), 20);
 	//pl->Stroke = std::make_shared<SolidColorBrush>(Colors::red());
 	//pl->Stroke = std::make_shared<ImageBrush>(std::make_shared<ImageSource>("e:/Pics/5.jpg"));
 	//pl->Stroke = linearBrush;
 
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), pl);
+	w->setValue<UIElementPtr>(Window::ContentProperty(), pl);
 	app.run(0, nullptr);
 }

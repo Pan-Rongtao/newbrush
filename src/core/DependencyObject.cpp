@@ -11,13 +11,15 @@ using namespace rttr;
 void DependencyObject::setValue(DependencyPropertyPtr dp, const var &value)
 {
 	auto propertyType = dp->propertyType();
+	auto valueType = value.get_type();
 	var fixSetValue = value;
-	if (propertyType != value.get_type())
+	bool isDerived = valueType.get_wrapped_type().is_derived_from(propertyType.get_wrapped_type());
+	if (propertyType != valueType && !isDerived)
 	{
-		bool ok = fixSetValue.convert(rttr::type(propertyType));
+		bool ok = fixSetValue.convert(type(propertyType));
 		if (!ok)
 		{
-			nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp->name().data(), dp->propertyType().get_name().data(), value.get_type().get_name().data());
+			nbThrowException(std::logic_error, "set value for [%s] must be a [%s] type instead of [%s]", dp->name().data(), dp->propertyType().get_name().data(), valueType.get_name().data());
 		}
 	}
 

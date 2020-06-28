@@ -46,7 +46,7 @@ TEST_CASE("test RepeatButton", "[RepeatButton]")
 	//end template
 
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto rb = std::make_shared<RepeatButton>();
 
 	rb->setValue(Control::TemplateProperty(), templ);

@@ -156,7 +156,7 @@ Status ShaderStub::LoadModel(ServerContext * context, const LoadModelRequest * r
 	return waitForTaskReady(task);
 }
 
-std::shared_ptr<Program> ShaderStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
+ProgramPtr ShaderStub::makeProgram(const std::string &vShaderCode, const std::string &fShaderCode)
 {
 	auto vShader = std::make_shared<VertexShader>(vShaderCode);
 	auto fShader = std::make_shared<FragmentShader>(fShaderCode);

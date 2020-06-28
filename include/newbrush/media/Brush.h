@@ -18,6 +18,7 @@ namespace nb{
 
 class NB_API Brush : public DependencyObject
 {
+	RTTR_ENABLE(DependencyObject)
 public:
 	virtual ~Brush() = default;
 

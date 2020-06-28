@@ -6,7 +6,7 @@ using namespace nb;
 TEST_CASE("Test nb::UIElement", "[UIElement]")
 {
 	auto m_uielement = std::make_shared<UIElement>();
-	m_uielement->addHandler(UIElement::MouseDownEvent(), RoutedEventHandler([](std::shared_ptr<RoutedEventArgs> args) {
+	m_uielement->addHandler(UIElement::MouseDownEvent(), RoutedEventHandler([](RoutedEventArgsPtr args) {
 		auto x = std::dynamic_pointer_cast<MouseButtonEventArgs>(args)->ButtonState;
 		auto ts = std::dynamic_pointer_cast<MouseButtonEventArgs>(args)->Timestamp;
 	}));

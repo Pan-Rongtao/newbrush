@@ -18,7 +18,7 @@ using namespace nb;
 TEST_CASE("Test Canvas", "[Canvas]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto cv = std::make_shared<Canvas>();
 	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(cv));
 

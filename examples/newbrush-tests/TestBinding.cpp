@@ -35,7 +35,7 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	m_dataRoot->add(DataVar<VisibilityE>::gen("visible", VisibilityE::Hidden));
 	m_dataRoot->add(DataVar<Point>::gen("point", Point()));
 	m_dataRoot->add(DataVar<Thickness>::gen("margin", Thickness()));
-	m_dataRoot->add(DataVar<std::shared_ptr<Brush>>::gen("brush", nullptr));
+	m_dataRoot->add(DataVar<BrushPtr>::gen("brush", nullptr));
 
 	auto obj = DataObject::gen("obj");
 	obj->add(DataVar<float>::gen("x", 100.0));
@@ -95,7 +95,7 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	m_dataRoot->get("visible")->set(VisibilityE::Visible);
 	m_dataRoot->get("point")->set(Point(1.0, 1.0));
 	m_dataRoot->get("margin")->set(Thickness(10));
-	std::shared_ptr<Brush> brush = std::make_shared<SolidColorBrush>(Colors::red());
+	BrushPtr brush = std::make_shared<SolidColorBrush>(Colors::red());
 	m_dataRoot->get("brush")->set(brush);
 	m_dataRoot->getObject("obj")->get("x")->set(123.00);
 

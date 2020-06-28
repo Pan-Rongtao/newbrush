@@ -15,7 +15,7 @@ using namespace nb;
 TEST_CASE("Test UniformGrid", "[UniformGrid]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto uniformGrid = std::make_shared<UniformGrid>();
 	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(uniformGrid));
 	uniformGrid->setValue(UniformGrid::RowsProperty(), 8);

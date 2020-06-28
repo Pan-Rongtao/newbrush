@@ -13,7 +13,7 @@ using namespace nb;
 TEST_CASE("Test StackPanel", "[StackPanel]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto sp = std::make_shared<StackPanel>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), sp);
 	sp->setValue(StackPanel::OrientationProperty(), OrientationE::Horizontal);

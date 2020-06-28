@@ -222,7 +222,7 @@ Mesh RenderObject::processMesh(aiMesh * mesh, const aiScene * scene, const std::
 	
 	using TextureMipmapPtr = std::shared_ptr<TextureMipmap>;
 	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, int samplerUnit)->std::vector<TextureMipmapPtr> {
-		std::vector<std::shared_ptr<TextureMipmap>> textures;
+		std::vector<TextureMipmapPtr> textures;
 		int ii = mat->GetTextureCount(type);
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
 			aiString str;

@@ -13,7 +13,7 @@ using namespace nb;
 TEST_CASE("Test DockPanel", "[DockPanel]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto cv = std::make_shared<DockPanel>();
 	cv->setValue(DockPanel::LastChildFillProperty(), true);
 	w->setValue(Window::ContentProperty(), std::dynamic_pointer_cast<UIElement>(cv));

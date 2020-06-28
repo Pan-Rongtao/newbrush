@@ -13,7 +13,7 @@ using namespace nb;
 TEST_CASE("Test WrapPanel", "[WrapPanel]")
 {
 	Application app;
-	std::shared_ptr<Window> w = std::make_shared<Window>();
+	auto w = std::make_shared<Window>();
 	auto wp = std::make_shared<WrapPanel>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), wp);
 	wp->setValue(WrapPanel::OrientationProperty(), OrientationE::Horizontal);

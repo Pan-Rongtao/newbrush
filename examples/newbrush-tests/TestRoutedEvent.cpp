@@ -22,7 +22,7 @@ public:
 				handlers.erase(iterHandler);
 		}
 	}
-	void raiseEvent(std::shared_ptr<RoutedEventArgs> args)
+	void raiseEvent(RoutedEventArgsPtr args)
 	{
 		auto iter = m_eventHandlers.find(args->Event.hash());
 		if (iter != m_eventHandlers.end())
@@ -50,7 +50,7 @@ RoutedEvent TT::ClickEvent()
 TEST_CASE("Test nb::RoutedEvent", "[RoutedEvent]")
 {
 	TT t;
-	t.addHandler(TT::ClickEvent(), RoutedEventHandler([](std::shared_ptr<RoutedEventArgs> args) {
+	t.addHandler(TT::ClickEvent(), RoutedEventHandler([](RoutedEventArgsPtr args) {
 		printf("on click 0\n");
 	}));
 

@@ -21,19 +21,18 @@ TEST_CASE("test Transform", "[Transform]")
 	Application app;
 	auto w = std::make_shared<Window>();
 	w->setValue(Window::TitleProperty(), "Rectangle");
-
-
+	
 	auto rc = std::make_shared<Rectangle>();
 	//设置元素的外边距
 	rc->setValue(Rectangle::MarginProperty(), Thickness(200));
-	rc->setValue<std::shared_ptr<Brush>>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	rc->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 	rc->setValue(Rectangle::RadiusXProperty(), 0);
 	rc->setValue(Rectangle::RadiusYProperty(), 0);
-	rc->setValue<std::shared_ptr<Brush>>(Rectangle::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
+	rc->setValue<BrushPtr>(Rectangle::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 	rc->setValue(Rectangle::StrokeThicknessProperty(), 5.0f);
 	rc->setValue<std::vector<float>>(Rectangle::StrokeDashArrayProperty(), {});
 	rc->setValue(Rectangle::StrokeDashOffsetProperty(), 0);
-	w->setValue<std::shared_ptr<UIElement>>(Window::ContentProperty(), rc);
+	w->setValue<UIElementPtr>(Window::ContentProperty(), rc);
 
 	auto offset = rc->worldOffset();
 	//scale
@@ -62,8 +61,8 @@ TEST_CASE("test Transform", "[Transform]")
 
 	//transformGroup
 	auto transformGroupPtr = std::make_shared<TransformGroup>();
-	transformGroupPtr->setValue<std::shared_ptr<TransformCollection>>(TransformGroup::ChildrenProperty(), transformCollectionPtr);
+	transformGroupPtr->setValue<TransformCollectionPtr>(TransformGroup::ChildrenProperty(), transformCollectionPtr);
 
-	rc->setValue<std::shared_ptr<Transform>>(Rectangle::RenderTransformProperty(), transformGroupPtr);
+	rc->setValue<TransformPtr>(Rectangle::RenderTransformProperty(), transformGroupPtr);
 	app.run(0, nullptr);
 }
