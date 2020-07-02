@@ -13,7 +13,8 @@ void DependencyObject::setValue(DependencyPropertyPtr dp, const var &value)
 	auto propertyType = dp->propertyType();
 	auto valueType = value.get_type();
 	var fixSetValue = value;
-	bool isDerived = valueType.get_wrapped_type().is_derived_from(propertyType.get_wrapped_type());
+	bool isDerived = (valueType.get_wrapped_type().is_valid() && propertyType.get_wrapped_type().is_valid())
+		&& (valueType.get_wrapped_type().is_derived_from(propertyType.get_wrapped_type()));
 	if (propertyType != valueType && !isDerived)
 	{
 		bool ok = fixSetValue.convert(type(propertyType));

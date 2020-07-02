@@ -122,7 +122,8 @@ TEST_CASE("Test Polyline", "[Polyline]")
 			points.push_back({p.x, p.y});
 	}
 
-	pl->setValue(Polyline::PointsProperty(), points/*std::vector<Point>{ {0, 0}, { 100,100 }, { 100,200 }, { 300, 250 } }*/);
+	pl->setValue(Polyline::PointsProperty(), points);
+	//pl->setValue(Polyline::PointsProperty(), std::vector<Point>{ {0, 0}, { 100,100 }, { 100,200 }, { 300, 250 } });
 	pl->setValue(Shape::StrokeThicknessProperty(), 20);
 	pl->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::red()));
 //	pl->setValue(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/doudou.jpg")));
