@@ -3,12 +3,14 @@
 #include "newbrush/core/Log.h"
 #include "ShaderStub.h"
 #include "NodeStub.h"
+#include "newbrush/gui/RttrRegistration.h"
 
 using namespace nb;
 
 RpcServiceImpl::RpcServiceImpl(const std::string &address)
 	: m_address(address)
 {
+	RttrRegistration::doRegister();
 }
 
 const std::string &RpcServiceImpl::address() const

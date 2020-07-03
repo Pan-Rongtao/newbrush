@@ -4,6 +4,8 @@
 #include "newbrush/core/Rect.h"
 #include "newbrush/media/Thickness.h"
 #include "newbrush/core/RoutedEvent.h"
+#include "newbrush/core/Event.h"
+#include "newbrush/core/EventArgs.h"
 
 namespace nb{
 class Viewport2D;

@@ -2,6 +2,8 @@
 #include <string>
 #include "newbrush/core/DependencyObject.h"
 #include "newbrush/core/TimeSpan.h"
+#include "newbrush/core/Event.h"
+#include "newbrush/core/EventArgs.h"
 
 namespace nb{
 

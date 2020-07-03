@@ -75,15 +75,15 @@ Status NodeStub::SetProperty(ServerContext * context, const SetPropertyRequest *
 		auto const &dp = DependencyProperty::find(request->propertyid());
 		if (!propertyType)
 		{
-			response->set_msg("类型未注册");
+			response->set_msg("type not registered");
 		}
 		else if (!d)
 		{
-			response->set_msg("节点不存在");
+			response->set_msg("node not exists");
 		}
 		else if (!dp)
 		{
-			response->set_msg("属性不存在");
+			response->set_msg("property not exists");
 		}
 		else
 		{

@@ -35,7 +35,7 @@ using namespace rttr;
 
 RTTR_REGISTRATION
 {
-	RttrRegistration::doRegister();
+//	RttrRegistration::doRegister();
 }
 
 std::vector<DependencyPropertyPtr> RttrRegistration::getTypeSelfPropertys(rttr::type t)

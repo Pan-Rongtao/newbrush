@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "newbrush/core/Def.h"
 #include "newbrush/core/Event.h"
+#include "newbrush/core/EventArgs.h"
+#include "newbrush/core/Object.h"
 #include <map>
 #include <set>
 

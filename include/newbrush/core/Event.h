@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <functional>
 #include "newbrush/core/Def.h"
-#include "newbrush/core/EventArgs.h"
 
 namespace nb{
 

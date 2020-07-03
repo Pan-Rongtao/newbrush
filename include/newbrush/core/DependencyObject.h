@@ -1,5 +1,6 @@
 #pragma once
-#include "newbrush/core/Event.h"
+#include "newbrush/core/Object.h"
+#include "newbrush/core/EventArgs.h"
 #include "newbrush/core/EffectiveValueEntry.h"
 
 namespace nb {

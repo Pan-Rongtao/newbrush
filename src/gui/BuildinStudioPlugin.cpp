@@ -27,12 +27,14 @@ void BuildinStudioPlugin::getMetametaObjectsOverride()
 
 NB_API int nb::getCategoryOrderCount()
 {
+	RttrRegistration::doRegister();
 	auto const &allPropertyCategorys = PropertyCategory::getAll();
 	return allPropertyCategorys.size();
 }
 
 NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
 {
+	RttrRegistration::doRegister();
 	auto const &allPropertyCategorys = PropertyCategory::getAll();
 	int i = 0;
 	for (const auto &pair : allPropertyCategorys)
@@ -48,7 +50,7 @@ NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
 
 NB_API int nb::getMetaClassCount()
 {
-//	RttrRegistration::doRegister();
+	RttrRegistration::doRegister();
 	array_range<type> range = type::get_types();
 	auto count = std::count_if(range.begin(), range.end(), [](type t)->bool {
 		var vAsVisual = t.get_metadata(RttrClassMetadataIndex::AsVisual);
@@ -60,6 +62,7 @@ NB_API int nb::getMetaClassCount()
 
 NB_API void nb::getMetaClasses(CClass * classes, int count)
 {
+	RttrRegistration::doRegister();
 	array_range<type> range = type::get_types();
 	int i = 0;
 	for (type t : range)
