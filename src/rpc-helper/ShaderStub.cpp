@@ -13,7 +13,7 @@ Status ShaderStub::BuildShader(::ServerContext* context, const BuildShaderReques
 			if (rc)
 			{
 				rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
-				auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
+				auto const &sz = rc->getValue<Size>(Shape::ActualSizeProperty());
 				rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
 				rc->renderObject()->setProgram(program);
 				auto varInfos = response->mutable_uniforminfos();
@@ -136,7 +136,7 @@ Status ShaderStub::LoadModel(ServerContext * context, const LoadModelRequest * r
 		{
 			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
 			rc->renderObject()->setProgram(Programs::model());
-			auto sz = rc->getValue<Size>(Shape::ActualSizeProperty());
+			auto const &sz = rc->getValue<Size>(Shape::ActualSizeProperty());
 			auto modelPath = request->modelpath();
 			auto texturePath = request->texturepath();
 			rc->renderObject()->loadFromFile(modelPath, texturePath);

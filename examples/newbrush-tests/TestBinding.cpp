@@ -100,7 +100,7 @@ TEST_CASE("Test nb::Binding", "[Binding]")
 	m_dataRoot->getObject("obj")->get("x")->set(123.00);
 
 	auto e = m_element->getValue<VisibilityE>(UIElement::VisibilityProperty());
-	auto e1 = m_element->getValue<std::string>(TextBlock::TextProperty());
+	auto const &e1 = m_element->getValue<std::string>(TextBlock::TextProperty());
 
 	auto minHeight = m_element->getValue<float>(TextBlock::MinHeightProperty());
 	auto maxHeight = m_element->getValue<float>(TextBlock::MaxHeightProperty());

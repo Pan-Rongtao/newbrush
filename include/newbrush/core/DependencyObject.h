@@ -19,9 +19,9 @@ public:
 	}
 
 	//获取属性值
-	var getValue(DependencyPropertyPtr dp) const;
+	const var &getValue(DependencyPropertyPtr dp) const;
 	template<class T>
-	T getValue(DependencyPropertyPtr dp) const
+	const T &getValue(DependencyPropertyPtr dp) const
 	{
 		_checkType(dp, rttr::type::get<T>());
 		return getValue(dp).get_value<T>();

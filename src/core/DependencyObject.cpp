@@ -30,7 +30,7 @@ void DependencyObject::setValue(DependencyPropertyPtr dp, const var &value)
 
 //如果未存储有该属性的值，则返回defaultValue
 //反之，返回该存储值
-var DependencyObject::getValue(DependencyPropertyPtr dp) const
+const var &DependencyObject::getValue(DependencyPropertyPtr dp) const
 {
 	auto iter = m_valueEntrys.find(dp->globalIndex());
 	if (iter == m_valueEntrys.end())
@@ -39,8 +39,7 @@ var DependencyObject::getValue(DependencyPropertyPtr dp) const
 	}
 	else
 	{
-		auto x = iter->second.baseValue();
-		return x;
+		return iter->second.baseValue();
 	}
 }
 

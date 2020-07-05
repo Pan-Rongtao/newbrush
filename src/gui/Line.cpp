@@ -86,7 +86,7 @@ void Line::updateStrokeObject(const Rect &rc)
 	auto y1 = getValue<float>(Y1Property());
 	auto y2 = getValue<float>(Y2Property());
 	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
-	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto const &strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
 	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
 	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::vector<glm::vec2> breaks{ glm::vec2(x1, y1), glm::vec2(x2, y2) };

@@ -124,7 +124,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 
 Size TextBlock::measureOverride(const Size & availableSize)
 {
-	auto padding = getValue<Thickness>(PaddingProperty());
+	auto const &padding = getValue<Thickness>(PaddingProperty());
 	return Size(availableSize.width() - padding.left - padding.right, availableSize.height() - padding.top - padding.bottom);
 }
 
@@ -174,11 +174,11 @@ void TextBlock::onRender(Viewport2D & drawContext)
 	auto x = offset.x();
 	auto y = offset.y();
 	auto font = getValue<FontPtr>(FontProperty());
-	auto text = getValue<std::string>(TextProperty());
+	auto const &text = getValue<std::string>(TextProperty());
 	float charSpacing = getValue<float>(CharSpacingProperty());
 	float lineHeight = getValue<float>(LineHeightProperty());
 	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 	drawContext.queue(m_renderObj);
 }

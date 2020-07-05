@@ -28,7 +28,7 @@ void EffectiveValueEntry::setBaseValue(const var & value) &
 	BaseValue = value;
 }
 
-var EffectiveValueEntry::baseValue() const
+const var &EffectiveValueEntry::baseValue() const
 {
 //	return any_cast<ModifiedValue>(m_value).BaseValue;
 	return BaseValue;

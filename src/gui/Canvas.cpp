@@ -40,7 +40,7 @@ void Canvas::setLeft(UIElementPtr element, float left)
 float Canvas::getLeft(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(LeftProperty()).get_value<float>();
+	return element->getValue<float>(LeftProperty());
 }
 
 void Canvas::setRight(UIElementPtr element, float right)
@@ -52,7 +52,7 @@ void Canvas::setRight(UIElementPtr element, float right)
 float Canvas::getRight(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(RightProperty()).get_value<float>();
+	return element->getValue<float>(RightProperty());
 }
 
 void Canvas::setTop(UIElementPtr element, float top)
@@ -64,7 +64,7 @@ void Canvas::setTop(UIElementPtr element, float top)
 float Canvas::getTop(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(TopProperty()).get_value<float>();
+	return element->getValue<float>(TopProperty());
 }
 
 void Canvas::setBottom(UIElementPtr element, float bottom)
@@ -76,7 +76,7 @@ void Canvas::setBottom(UIElementPtr element, float bottom)
 float Canvas::getBottom(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(BottomProperty()).get_value<float>();
+	return element->getValue<float>(BottomProperty());
 }
 
 //未设置宽高则默认为0

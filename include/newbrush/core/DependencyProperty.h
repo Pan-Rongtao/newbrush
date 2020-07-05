@@ -28,7 +28,7 @@ public:
 	PropertyMetadata(const var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
 
 	void setDefaultValue(const var &value) &;
-	var defaultValue() const;
+	const var &defaultValue() const;
 
 	bool isSealed() const;
 

@@ -102,7 +102,7 @@ void Trigger::setValue(const var & value)
 	m_value = value;
 }
 
-const var & Trigger::getValue() const
+const var & Trigger::value() const
 {
 	return m_value;
 }

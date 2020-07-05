@@ -16,7 +16,7 @@ void PropertyMetadata::setDefaultValue(const var & value) &
 	m_defaultValue = value;
 }
 
-var PropertyMetadata::defaultValue() const
+const var &PropertyMetadata::defaultValue() const
 {
 	return m_defaultValue;
 }

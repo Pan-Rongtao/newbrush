@@ -52,7 +52,7 @@ public:
 	EffectiveValueEntry(DependencyPropertyPtr dp, FullValueSourceE fullValueSource);
 
 	void setBaseValue(const var &value) &;
-	var baseValue() const;
+	const var &baseValue() const;
 	void setExpressionValue(const var &value);
 	void setAnimatedValue(const var &value);
 	void setCoercedValue(const var &value, const var &baseValue, bool skipBaseValueChecks, bool coerceWithCurrentValue);

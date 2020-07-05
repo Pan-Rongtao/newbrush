@@ -160,7 +160,7 @@ void Grid::setRow(UIElementPtr element, uint32_t row)
 uint32_t Grid::getRow(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(RowProperty()).get_value<uint32_t>();
+	return element->getValue<uint32_t>(RowProperty());
 }
 
 void Grid::setColumn(UIElementPtr element, uint32_t col)
@@ -172,7 +172,7 @@ void Grid::setColumn(UIElementPtr element, uint32_t col)
 uint32_t Grid::getColumn(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(ColumnProperty()).get_value<uint32_t>();
+	return element->getValue<uint32_t>(ColumnProperty());
 }
 
 void Grid::setRowSpan(UIElementPtr element, uint32_t rowSpan)
@@ -184,7 +184,7 @@ void Grid::setRowSpan(UIElementPtr element, uint32_t rowSpan)
 uint32_t Grid::getRowSpan(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(RowSpanProperty()).get_value<uint32_t>();
+	return element->getValue<uint32_t>(RowSpanProperty());
 }
 
 void Grid::setColumnSpan(UIElementPtr element, uint32_t colSpan)
@@ -196,7 +196,7 @@ void Grid::setColumnSpan(UIElementPtr element, uint32_t colSpan)
 uint32_t Grid::getColumnSpan(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(ColumnSpanProperty()).get_value<uint32_t>();
+	return element->getValue<uint32_t>(ColumnSpanProperty());
 }
 
 //规则：每次根据RowDefinitions和ColumnDefinitions把每个网格单元的像素尺寸计算出来：

@@ -29,7 +29,7 @@ Image::Image()
 void Image::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
 	auto c = rc.center();
 	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;

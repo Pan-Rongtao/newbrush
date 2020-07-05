@@ -21,7 +21,7 @@ Ellipse::Ellipse()
 void Ellipse::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
 	auto strokeThickness = getValue<float>(StrokeThicknessProperty());

@@ -87,7 +87,7 @@ void Shape::updateMeterial(RenderObjectPtr ro, BrushPtr brush)
 	{
 		ro->setProgram(Programs::primitive());
 		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
-		auto color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
+		auto const &color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
 		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))

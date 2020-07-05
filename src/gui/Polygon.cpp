@@ -23,7 +23,7 @@ DependencyPropertyPtr Polygon::PointsProperty()
 void Polygon::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
 	if (m_fillObject)
@@ -70,7 +70,7 @@ Size Polygon::measureOverride(const Size & availableSize)
 
 Size Polygon::arrangeOverride(const Size & finalSize)
 {
-	auto points = getValue<std::vector<Point>>(PointsProperty());
+	auto const &points = getValue<std::vector<Point>>(PointsProperty());
 	if (points.empty())
 	{
 		return Size::zero();
@@ -87,7 +87,7 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 void Polygon::updateFillObject()
 {
 	auto fill = getValue<BrushPtr>(FillProperty());
-	auto points = getValue<std::vector<Point>>(PointsProperty());
+	auto const &points = getValue<std::vector<Point>>(PointsProperty());
 	if (!fill || points.size() < 2)
 		return;
 	auto &vertexs = m_fillObject->model()->meshes[0].vertexs;

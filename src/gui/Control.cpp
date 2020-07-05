@@ -182,20 +182,20 @@ void Control::updateMeterial(RenderObjectPtr ro, BrushPtr brush)
 	{
 		ro->setProgram(Programs::primitive());
 		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
-		auto color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
+		auto const &color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
 		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
 	}
 	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
 	{
 		ro->setProgram(Programs::gradientPrimitive());
 		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
-		auto stops = linearGradientBrush->getValue<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
+		auto const &stops = linearGradientBrush->getValue<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
 		std::vector<glm::vec4> colors;
 		std::vector<float> offsets;
 		for (auto i = 0; i != stops->count(); ++i)
 		{
 			auto stop = (*stops)[i];
-			auto color = stop->getValue<Color>(GradientStop::ColorProperty());
+			auto const &color = stop->getValue<Color>(GradientStop::ColorProperty());
 			auto offset = stop->getValue<float>(GradientStop::OffsetPropert());
 			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
 			offsets.push_back(offset);

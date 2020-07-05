@@ -52,7 +52,7 @@ public:
 	DependencyPropertyPtr property() const;
 
 	void setValue(const var &value);
-	const var &getValue() const;
+	const var &value() const;
 
 	std::vector<SetterBasePtr> &setters();
 

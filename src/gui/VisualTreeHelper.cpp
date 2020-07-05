@@ -26,7 +26,7 @@ UIElement * VisualTreeHelper::findChild(UIElement * element, const std::string &
 	for (auto i = 0u; i < getChildrenCount(element); ++i)
 	{
 		auto child = getChild(element, i);
-		auto childName = child->getValue<std::string>(UIElement::NameProperty());
+		auto const &childName = child->getValue<std::string>(UIElement::NameProperty());
 		if (childName == name)
 		{
 			return child;
@@ -58,7 +58,7 @@ UIElement *VisualTreeHelper::findLogicalNode(UIElement * logicalTreeNode, const 
 	}
 
 	UIElement* ret = nullptr;
-	auto _myName = logicalTreeNode->getValue<std::string>(UIElement::NameProperty());
+	auto const &_myName = logicalTreeNode->getValue<std::string>(UIElement::NameProperty());
 	if (_myName == name)
 	{
 		ret = logicalTreeNode;
@@ -84,7 +84,7 @@ UIElement * VisualTreeHelper::lookupNode(UIElement * node, const std::string & p
 	{
 		if (!p)	break;
 
-		auto curNodeName = p->getValue<std::string>(UIElement::NameProperty());
+		auto const &curNodeName = p->getValue<std::string>(UIElement::NameProperty());
 		if (curNodeName == nodeNames[i])
 		{
 			if (i == nodeNames.size() - 1)

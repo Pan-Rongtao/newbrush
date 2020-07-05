@@ -30,7 +30,7 @@ DependencyPropertyPtr Rectangle::RadiusYProperty()
 void Rectangle::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto c = rc.center();
 	if (m_fillObject)
@@ -193,7 +193,7 @@ void Rectangle::updateStrokeObject(const Rect &rc)
 		return;
 
 	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
-	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto const &strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
 	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
 	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::vector<glm::vec2> breaks{ glm::vec2(rc.x(), rc.y()), glm::vec2(rc.right(), rc.top()), glm::vec2(rc.right(), rc.bottom()), glm::vec2(rc.x(), rc.bottom()), glm::vec2(rc.x(), rc.y()) };

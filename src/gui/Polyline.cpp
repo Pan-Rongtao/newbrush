@@ -22,7 +22,7 @@ DependencyPropertyPtr Polyline::PointsProperty()
 void Polyline::onRender(Viewport2D & drawContext)
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	if (m_strokeObject)
 	{
@@ -48,7 +48,7 @@ Size Polyline::measureOverride(const Size & availableSize)
 
 Size Polyline::arrangeOverride(const Size & finalSize)
 {
-	auto points = getValue<std::vector<Point>>(PointsProperty());
+	auto const &points = getValue<std::vector<Point>>(PointsProperty());
 	if (points.empty())
 	{
 		return Size::zero();
@@ -68,13 +68,13 @@ void Polyline::updateStrokeObject(const Rect &rc)
 		return;
 
 	std::vector<glm::vec2> breaks;
-	auto points = getValue<std::vector<Point>>(PointsProperty());
+	auto const &points = getValue<std::vector<Point>>(PointsProperty());
 	for (auto const &p : points)
 	{
 		breaks.push_back({ p.x(), p.y() });
 	}
 	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
-	auto strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
+	auto const &strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
 	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
 	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
 	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);

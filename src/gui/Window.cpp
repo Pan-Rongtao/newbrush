@@ -386,7 +386,7 @@ void Window::onRender(Viewport2D & drawContext)
 {
 	ContentControl::onRender(drawContext);
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	auto width = rc.width();
 	auto height = rc.height();

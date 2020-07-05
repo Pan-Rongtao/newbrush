@@ -225,13 +225,13 @@ void UIElement::measure(const Size & availabelSize)
 
 	m_lastMesaaeAvailabelSize = availabelSize;
 
-	auto margin = getValue<Thickness>(MarginProperty());
-	auto width = getValue<float>(WidthProperty());
-	auto height = getValue<float>(HeightProperty());
-	auto minWidth = getValue<float>(MinWidthProperty());
-	auto minHeight = getValue<float>(MinHeightProperty());
-	auto maxWidth = getValue<float>(MaxWidthProperty());
-	auto maxHeight = getValue<float>(MaxHeightProperty());
+	auto const &margin = getValue<Thickness>(MarginProperty());
+	auto const &width = getValue<float>(WidthProperty());
+	auto const &height = getValue<float>(HeightProperty());
+	auto const &minWidth = getValue<float>(MinWidthProperty());
+	auto const &minHeight = getValue<float>(MinHeightProperty());
+	auto const &maxWidth = getValue<float>(MaxWidthProperty());
+	auto const &maxHeight = getValue<float>(MaxHeightProperty());
 	//减去magin计算出本来的constrainedSize
 	auto constrainedSize = Size(availabelSize.width() - margin.left - margin.right, availabelSize.height() - margin.top - margin.bottom);
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
@@ -265,21 +265,21 @@ void UIElement::arrage(const Rect & finalRect)
 	if (visibility != VisibilityE::Visible)
 		return;
 
-	auto margin = getValue<Thickness>(MarginProperty());
-	auto width = getValue<float>(WidthProperty());
-	auto height = getValue<float>(HeightProperty());
-	auto minWidth = getValue<float>(MinWidthProperty());
-	auto minHeight = getValue<float>(MinHeightProperty());
-	auto maxWidth = getValue<float>(MaxWidthProperty());
-	auto maxHeight = getValue<float>(MaxHeightProperty());
+	auto const &margin = getValue<Thickness>(MarginProperty());
+	auto const &width = getValue<float>(WidthProperty());
+	auto const &height = getValue<float>(HeightProperty());
+	auto const &minWidth = getValue<float>(MinWidthProperty());
+	auto const &minHeight = getValue<float>(MinHeightProperty());
+	auto const &maxWidth = getValue<float>(MaxWidthProperty());
+	auto const &maxHeight = getValue<float>(MaxHeightProperty());
 	//减去magin计算出本来的arrangeSize以及clientSize
 	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
 	//调整arrange大于DesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
-	auto horizontalAlignment = getValue<HorizontalAlignmentE>(HorizontalAlignmentProperty());
-	auto verticalAlignment = getValue<VerticalAlignmentE>(VerticalAlignmentProperty());
+	auto const &horizontalAlignment = getValue<HorizontalAlignmentE>(HorizontalAlignmentProperty());
+	auto const &verticalAlignment = getValue<VerticalAlignmentE>(VerticalAlignmentProperty());
 	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.setWidth(m_desiredSize.width());
 	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.setHeight(m_desiredSize.height());
 
@@ -619,7 +619,7 @@ void UIElement::changedLogicParent(UIElement * parent)
 void UIElement::onMouseMoveThunk(const MouseEventArgs &e, const Point &pt)
 {
 	auto hit = VisualTreeHelper::hitTest(this, pt);
-	auto isMouseOver = getValue(IsMouseOverProperty());
+	auto isMouseOver = getValue<bool>(IsMouseOverProperty());
 	if (hit)
 	{
 		if (!isMouseOver)
@@ -746,7 +746,7 @@ void UIElement::raiseEvent(RoutedEventArgsPtr args)
 bool UIElement::hitTestCore(const Point &pt) const
 {
 	auto offset = worldOffset();
-	auto actualSize = getValue<Size>(ActualSizeProperty());
+	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);
 	return rc.contains(pt);
 }

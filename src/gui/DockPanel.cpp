@@ -16,7 +16,7 @@ void DockPanel::setDock(UIElementPtr element, DockE dock)
 DockE DockPanel::getDock(UIElementPtr element)
 {
 	if (!element) { nbThrowException(std::invalid_argument, "element is null"); }
-	return element->getValue(DockProperty()).get_value<DockE>();
+	return element->getValue<DockE>(DockProperty());
 }
 
 DependencyPropertyPtr DockPanel::DockProperty()
