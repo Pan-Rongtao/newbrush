@@ -342,50 +342,43 @@ void Window::pollEvents()
 
 DependencyPropertyPtr Window::WindowStateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged, nullptr, nullptr,
-		PropertyCategory::Public(), "指示窗口是普通、最小化还是最大化状态", 10);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStateE>("WindowState", WindowStateE::Normal, onWindowStatePropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::WindowStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged, nullptr, nullptr,
-		PropertyCategory::Appearance(), "窗口的边框样式", 10);
+	static auto dp = DependencyProperty::registerDependency<Window, WindowStyleE>("WindowStyle", WindowStyleE::SizeBox, onWindowStyleChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::TopmostProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged, nullptr, nullptr, 
-		PropertyCategory::Public(), "窗口置顶", 7);
+	static auto dp = DependencyProperty::registerDependency<Window, bool>("Topmost", false, onTopmostPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged, nullptr, nullptr,
-		PropertyCategory::Layout(), "窗口距设备左端位置", 5);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Left", 0.0, onLeftPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged, nullptr, nullptr,
-		PropertyCategory::Layout(), "窗口距设备顶部位置", 7);
+	static auto dp = DependencyProperty::registerDependency<Window, float>("Top", 0.0, onTopPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::TitleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged, nullptr, nullptr,
-		PropertyCategory::Public(), "窗口标题", 6);
+	static auto dp = DependencyProperty::registerDependency<Window, std::string>("Title", std::string(), onTitlePropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Window::IconProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Window, ImageSourcePtr>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr,
-		PropertyCategory::Public(), "窗口图标", 2);
+	static auto dp = DependencyProperty::registerDependency<Window, ImageSourcePtr>("Icon", nullptr, onIconPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 

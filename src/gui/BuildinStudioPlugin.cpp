@@ -28,8 +28,7 @@ void BuildinStudioPlugin::getMetametaObjectsOverride()
 NB_API int nb::getCategoryOrderCount()
 {
 	RttrRegistration::doRegister();
-	auto const &allPropertyCategorys = PropertyCategory::getAll();
-	return allPropertyCategorys.size();
+	return PropertyCategory::getAll().size();
 }
 
 NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
@@ -43,23 +42,26 @@ NB_API void nb::getCategoryOrders(CCategoryOrder * categorys, int count)
 
 		auto &c = categorys[i++];
 		auto const &pc = pair.second;
-		strcpy(c.name, pc->name().data());
-		c.order = pc->order();
+		strcpy(c.name, pc.name().data());
+		c.order = pc.order();
 	}
+}
+
+ClassDescriptorPtr getClassDescriptor(type t)
+{
+	auto vCD = t.get_metadata(RttrMetadataIndex::ClassDescriptor);
+	return vCD.is_type<ClassDescriptorPtr>() ? vCD.get_value<ClassDescriptorPtr>() : nullptr;
 }
 
 NB_API int nb::getMetaClassCount()
 {
 	RttrRegistration::doRegister();
 	array_range<type> range = type::get_types();
-	auto count = std::count_if(range.begin(), range.end(), [](type t)->bool {
-		var vAsVisual = t.get_metadata(RttrClassMetadataIndex::AsVisual);
-		bool asVisual = vAsVisual.is_type<bool>() ? vAsVisual.get_value<bool>() : false;
-		return asVisual;
-	});
+	auto count = std::count_if(range.begin(), range.end(), [](type t)->bool { return getClassDescriptor(t) != nullptr; });
 	return count;
 }
 
+constexpr size_t PropertyLimit = sizeof(CClass::propertys) / sizeof(CProperty);
 NB_API void nb::getMetaClasses(CClass * classes, int count)
 {
 	RttrRegistration::doRegister();
@@ -67,59 +69,62 @@ NB_API void nb::getMetaClasses(CClass * classes, int count)
 	int i = 0;
 	for (type t : range)
 	{
-		if (i > count)	break;
-
-		//class info
-		auto typeName = t.get_name();
-		var vAsVisual = t.get_metadata(RttrClassMetadataIndex::AsVisual);
-		if (!vAsVisual.is_valid())
-			continue;
-		var vCategory = t.get_metadata(RttrClassMetadataIndex::Category);
-		var vDisplayName = t.get_metadata(RttrClassMetadataIndex::DisplayName);
-		var vDescription = t.get_metadata(RttrClassMetadataIndex::Description);
-
-		if (!vAsVisual.is_type<bool>())				Log::debug("metadata of [%s] must be set as [bool] type", t.get_name());
-		if (!vCategory.is_type<std::string>())		Log::debug("metadata of [%s] must be set as [std::string] type", t.get_name());
-		if (!vDisplayName.is_type<std::string>())	Log::debug("metadata of [%s] must be set as [std::string] type", t.get_name());
-		if (!vDescription.is_type<std::string>())	Log::debug("metadata of [%s] must be set as [std::string] type", t.get_name());
-
-		bool asVisual = vAsVisual.is_type<bool>() ? vAsVisual.get_value<bool>() : false;
-		std::string category = vCategory.is_type<std::string>() ? vCategory.get_value<std::string>() : "";
-		std::string displayName = vDisplayName.is_type<std::string>() ? vDisplayName.get_value<std::string>() : "";
-		std::string description = vDescription.is_type<std::string>() ? vDescription.get_value<std::string>() : "";
-
-
-		auto &cc = classes[i];
-		strcpy(cc.typeName, typeName.data());
-		strcpy(cc.category, category.data());
-		strcpy(cc.displayName, displayName.data());
-		strcpy(cc.description, description.data());
-
-		//properties info
-		auto propertyLimit = sizeof(CClass::propertys) / sizeof(CProperty);
-		std::vector<DependencyPropertyPtr> allProperties = RttrRegistration::getTypeAllPropertys(t);
-		if (allProperties.size() > propertyLimit)
+		if (i > count)
 		{
-			Log::warn("[%s]'s property count is overfollow property count limit[%d]", t.get_name().data(), propertyLimit);
+			break;
 		}
 
-		for (size_t j = 0; j < allProperties.size() && j < propertyLimit; ++j)
+		//类信息（没有则表示不需要展示在STUDIO中）
+		auto vCD = t.get_metadata(RttrMetadataIndex::ClassDescriptor);
+		if (!vCD.is_valid())
+		{
+			continue;
+		}
+
+		auto &cc = classes[i];
+		if (vCD.is_type<ClassDescriptorPtr>())
+		{
+			auto classDescriptor = vCD.get_value<ClassDescriptorPtr>();
+			std::string category = classDescriptor ? classDescriptor->category() : "";
+			std::string displayName = classDescriptor ? classDescriptor->displayName() : "";
+			std::string description = classDescriptor ? classDescriptor->description() : "";
+
+			strcpy(cc.typeName, t.get_name().data());
+			strcpy(cc.category, category.data());
+			strcpy(cc.displayName, displayName.data());
+			strcpy(cc.description, description.data());
+		}
+		else 
+		{
+			Log::debug("metadata of [%s] must be set as [ClassDescriptorPtr] type", t.get_name());
+		}
+
+		//属性信息
+		auto const &allPropertyDescriptors = RttrRegistration::getTypeAllPropertys(t);
+		if (allPropertyDescriptors.size() > PropertyLimit)
+		{
+			Log::warn("[%s]'s property count is overfollow property count limit[%d]", t.get_name().data(), PropertyLimit);
+		}
+
+		for (size_t j = 0; j < allPropertyDescriptors.size() && j < PropertyLimit; ++j)
 		{
 			auto &cProperty = cc.propertys[j];
-			auto p = allProperties[j];
-			auto propertyMeta = p->defaultMetadata();
-			cProperty.typeID = p->globalIndex();
-			strcpy(cProperty.valueTypeName, p->propertyType().get_name().data());
-			strcpy(cProperty.category, propertyMeta->category() ? propertyMeta->category()->name().data() : "");
-			strcpy(cProperty.displayName, p->name().data());
-			cProperty.order = propertyMeta->order();
-			strcpy(cProperty.description, propertyMeta->category() ? propertyMeta->description().data() : "");
-			if (p->propertyType().is_enumeration())
+			auto propertyDescriptor = allPropertyDescriptors[j];
+			auto sdkProperty = propertyDescriptor->property();
+
+			cProperty.typeID = propertyDescriptor->property()->globalIndex();
+			strcpy(cProperty.valueTypeName, sdkProperty->propertyType().get_name().data());
+			strcpy(cProperty.category, propertyDescriptor->category().name().data());
+			strcpy(cProperty.displayName, sdkProperty->name().data());
+			cProperty.order = propertyDescriptor->order();
+			strcpy(cProperty.description, propertyDescriptor->description().data());
+
+			if (sdkProperty->propertyType().is_enumeration())
 			{
-				enumeration e = p->propertyType().get_enumeration();
+				enumeration e = sdkProperty->propertyType().get_enumeration();
 				if (!e.is_valid())
 				{
-					Log::warn("[%s] is not register for rttr.", p->propertyType().get_name().data());
+					Log::warn("[%s] is not register for rttr.", sdkProperty->propertyType().get_name().data());
 				}
 				std::string enumSource;
 				auto r = e.get_names();

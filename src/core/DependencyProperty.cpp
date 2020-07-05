@@ -2,110 +2,12 @@
 
 using namespace nb;
 
-std::map<std::string, PropertyCategoryPtr> PropertyCategory::s_propertyCategorys;
-
-Range::Range(var lowerBound, var upperBound, var step)
-	: m_lowerBound(lowerBound)
-	, m_upperBound(upperBound)
-	, m_step(step)
-{
-}
-
-var Range::lowerBound() const
-{
-	return m_lowerBound;
-}
-
-var Range::upperBound() const
-{
-	return m_upperBound;
-}
-
-var Range::step() const
-{
-	return m_step;
-}
-
-const std::string & PropertyCategory::name() const
-{
-	return m_name;
-}
-
-int PropertyCategory::order() const
-{
-	return m_order;
-}
-
-const std::map<std::string, PropertyCategoryPtr>& PropertyCategory::getAll()
-{
-	return s_propertyCategorys;
-}
-
-PropertyCategoryPtr PropertyCategory::get(const std::string & name, int order)
-{
-	auto newPC = std::make_shared<PropertyCategory>();
-	newPC->m_name = name;
-	newPC->m_order = order;
-	auto ret = s_propertyCategorys.insert({ name, newPC });
-	return ret.first->second;
-}
-
-PropertyCategoryPtr PropertyCategory::Brush()
-{
-	return PropertyCategory::get("画笔", 0);
-}
-
-PropertyCategoryPtr PropertyCategory::Appearance()
-{
-	return PropertyCategory::get("外观", 1);
-}
-
-PropertyCategoryPtr PropertyCategory::Public()
-{
-	return PropertyCategory::get("公共", 2);
-}
-
-PropertyCategoryPtr PropertyCategory::Automation()
-{
-	return PropertyCategory::get("自动化", 3);
-}
-
-PropertyCategoryPtr PropertyCategory::Layout()
-{
-	return PropertyCategory::get("布局", 4);
-}
-
-PropertyCategoryPtr PropertyCategory::Text()
-{
-	return PropertyCategory::get("文本", 5);
-}
-
-PropertyCategoryPtr PropertyCategory::Transform()
-{
-	return PropertyCategory::get("转换", 6);
-}
-
-PropertyCategoryPtr PropertyCategory::Misc()
-{
-	return PropertyCategory::get("杂项", 7);
-}
-
-PropertyCategoryPtr PropertyCategory::Custom()
-{
-	return PropertyCategory::get("自定义", 8);
-}
-
 static std::map<std::size_t, DependencyPropertyPtr> g_dependencyProperties;
 
-PropertyMetadata::PropertyMetadata(const var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback, 
-	PropertyCategoryPtr category, const std::string &description, int order, RangePtr range)
+PropertyMetadata::PropertyMetadata(const var & defaulValue, PropertyChangedCallback propertyChangedCallback, CoerceValueCallback coerceValueCallback)
 	: m_defaultValue(defaulValue)
 	, m_propertyChangedCallback(propertyChangedCallback)
 	, m_coerceValueCallback(coerceValueCallback)
-	, m_category(category)
-	, m_description(description)
-	, m_order(order)
-	, m_range(range)
 {
 }
 
@@ -132,26 +34,6 @@ PropertyChangedCallback PropertyMetadata::propertyChangedCallback()
 CoerceValueCallback PropertyMetadata::coerceValueCallback()
 {
 	return m_coerceValueCallback;
-}
-
-PropertyCategoryPtr PropertyMetadata::category() const
-{
-	return m_category;
-}
-
-const std::string &PropertyMetadata::description() const
-{
-	return m_description;
-}
-
-int PropertyMetadata::order() const
-{
-	return m_order;
-}
-
-RangePtr PropertyMetadata::range() const
-{
-	return m_range;
 }
 
 DependencyPropertyPtr DependencyProperty::find(size_t globalIndex)

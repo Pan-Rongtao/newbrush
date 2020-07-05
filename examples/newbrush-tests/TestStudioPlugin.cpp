@@ -7,7 +7,6 @@ using namespace rttr;
 
 TEST_CASE("Test StudioPlugin", "[StudioPlugin]")
 {
-//	RttrRegistration::doRegister();
 	auto categoryOrderCount = getCategoryOrderCount();
 	CCategoryOrder *categoryOrders = new CCategoryOrder[categoryOrderCount];
 	getCategoryOrders(categoryOrders, categoryOrderCount);
@@ -17,8 +16,8 @@ TEST_CASE("Test StudioPlugin", "[StudioPlugin]")
 	auto classCount = getMetaClassCount();
 	CClass *classes = new CClass[classCount];
 	getMetaClasses(classes, classCount);
-	//std::vector<CClass> vtClasses(classes, classes + classCount);
-	//delete[]classes;
+	std::vector<CClass> vtClasses(classes, classes + classCount);
+	delete[]classes;
 
 #if 1
 	auto range = type::get_types();

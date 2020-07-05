@@ -44,15 +44,13 @@ void Image::onRender(Viewport2D & drawContext)
 
 DependencyPropertyPtr Image::SourceProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, ImageSourcePtr>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr,
-		PropertyCategory::Public(), "图像源", 1);
+	static auto dp = DependencyProperty::registerDependency<Image, ImageSourcePtr>("Source", nullptr, onSourcePropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Image::StretchProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged, nullptr, nullptr,
-		PropertyCategory::Public(), "拉伸或填充的方式", 2);
+	static auto dp = DependencyProperty::registerDependency<Image, StretchE>("Stretch", StretchE::Uniform, onStretchPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 

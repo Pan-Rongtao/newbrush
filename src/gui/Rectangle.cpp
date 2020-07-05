@@ -17,15 +17,13 @@ Rectangle::Rectangle()
 
 DependencyPropertyPtr Rectangle::RadiusXProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 x 轴半径", 4);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusX", 0.0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Rectangle::RadiusYProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "矩形的角变圆的椭圆的 y 轴半径", 5);
+	static auto dp = DependencyProperty::registerDependency<Rectangle, float>("RadiusY", 0.0, nullptr, nullptr, nullptr);
 	return dp;
 }
 

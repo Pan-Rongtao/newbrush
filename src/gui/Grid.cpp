@@ -129,29 +129,25 @@ DependencyPropertyPtr Grid::ColumnDefinitionsProperty()
 
 DependencyPropertyPtr Grid::RowProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("Row", 0, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "Grid中的子内容的行", 3);
+	static auto dp = DependencyProperty::registerAttached<Grid, uint32_t>("Row", 0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Grid::ColumnProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("Column", 0, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "Grid中的子内容的列", 3);
+	static auto dp = DependencyProperty::registerAttached<Grid, uint32_t>("Column", 0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Grid::RowSpanProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("RowSpan", 1, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "Grid中的子内容所跨域的总行数", 3);
+	static auto dp = DependencyProperty::registerAttached<Grid, uint32_t>("RowSpan", 1, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Grid::ColumnSpanProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Grid, uint32_t>("ColumnSpan", 1, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "Grid中的子内容所跨域的总列数", 3);
+	static auto dp = DependencyProperty::registerAttached<Grid, uint32_t>("ColumnSpan", 1, nullptr, nullptr, nullptr);
 	return dp;
 }
 

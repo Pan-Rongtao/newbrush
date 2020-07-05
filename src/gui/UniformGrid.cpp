@@ -9,22 +9,19 @@ UniformGrid::UniformGrid()
 
 DependencyPropertyPtr UniformGrid::RowsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Rows", -1, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "网格行数", 1);
+	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Rows", -1, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UniformGrid::ColumnsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Columns", -1, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "网格列数", 2);
+	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("Columns", -1, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UniformGrid::FirstColumnProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("FirstColumn", -1, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "第一行空白数（需显式指定了Colums才有效，如果大于等于Colums也无效）", 3);
+	static auto dp = DependencyProperty::registerDependency<UniformGrid, int>("FirstColumn", -1, nullptr, nullptr, nullptr);
 	return dp;
 }
 

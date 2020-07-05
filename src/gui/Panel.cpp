@@ -47,8 +47,7 @@ Panel & Panel::operator=(const Panel && other)
 
 DependencyPropertyPtr Panel::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Panel, BrushPtr>("Background", nullptr, nullptr, nullptr, nullptr,
-		PropertyCategory::Brush(), "元素背景的画笔", 1);
+	static auto dp = DependencyProperty::registerDependency<Panel, BrushPtr>("Background", nullptr, nullptr, nullptr, nullptr);
 	return dp;
 }
 

@@ -16,8 +16,7 @@ Polygon::Polygon()
 
 DependencyPropertyPtr Polygon::PointsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "描述多边形的所有顶点", 5);
+	static auto dp = DependencyProperty::registerDependency<Polygon, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr);
 	return dp;
 }
 

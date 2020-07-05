@@ -21,93 +21,91 @@ Control::Control()
 
 DependencyPropertyPtr Control::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Background", nullptr, onBackgroundPropertyChanged, nullptr, nullptr, PropertyCategory::Brush(), "描述元素背景的画笔", 1);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Background", nullptr, onBackgroundPropertyChanged, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::BorderBrushProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("BorderBrush", nullptr, nullptr, nullptr, nullptr, PropertyCategory::Brush(), "描述元素边框背景的画笔", 2);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("BorderBrush", nullptr, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::BorderThicknessProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("BorderThickness", Thickness(), nullptr, nullptr, nullptr, PropertyCategory::Appearance(), "元素边框的粗细", 4);
+	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("BorderThickness", Thickness(), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::FontFamilyProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, FontPtr>("FontFamily", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr, PropertyCategory::Text(), "字体名称", 1);
+	static auto dp = DependencyProperty::registerDependency<Control, FontPtr>("FontFamily", Fonts::getFont("Microsoft YaHei"), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::FontSizeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, float>("FontSize", 12.0, nullptr, nullptr, nullptr, PropertyCategory::Text(), "字号", 2);
+	static auto dp = DependencyProperty::registerDependency<Control, float>("FontSize", 12.0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::FontStretchProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, FontStretchE>("FontStretch", FontStretchE::Normal, nullptr, nullptr, nullptr, PropertyCategory::Text(), "字体在屏幕上缩紧或加宽的程度", 6);
+	static auto dp = DependencyProperty::registerDependency<Control, FontStretchE>("FontStretch", FontStretchE::Normal, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::FontStyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, FontStyleE>("FontStyle", FontStyleE::Normal, nullptr, nullptr, nullptr, PropertyCategory::Text(), "字形", 7);
+	static auto dp = DependencyProperty::registerDependency<Control, FontStyleE>("FontStyle", FontStyleE::Normal, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::FontWeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, int>("FontWeight", 0, nullptr, nullptr, nullptr, PropertyCategory::Text(), "字体粗细", 8);
+	static auto dp = DependencyProperty::registerDependency<Control, int>("FontWeight", 0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::ForegroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Foreground", std::make_shared<SolidColorBrush>(Colors::black()), nullptr, nullptr, nullptr, PropertyCategory::Brush(), "前景色画笔", 3);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Foreground", std::make_shared<SolidColorBrush>(Colors::black()), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::PaddingProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("Padding", Thickness(), nullptr, nullptr, nullptr, PropertyCategory::Layout(), "控件内部的填充边距，指在对象和其他边距或边框之间插入的边距", 21);
+	static auto dp = DependencyProperty::registerDependency<Control, Thickness>("Padding", Thickness(), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::HorizontalContentAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, HorizontalAlignmentE>("HorizontalContentAlignment", HorizontalAlignmentE::Stretch, nullptr, nullptr, nullptr, 
-		PropertyCategory::Layout(), "元素内容的水平对齐方式", 15);
+	static auto dp = DependencyProperty::registerDependency<Control, HorizontalAlignmentE>("HorizontalContentAlignment", HorizontalAlignmentE::Stretch, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::VerticalContentAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, VerticalAlignmentE>("VerticalContentAlignment", VerticalAlignmentE::Stretch, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "元素内容的垂直对齐方式", 18);
+	static auto dp = DependencyProperty::registerDependency<Control, VerticalAlignmentE>("VerticalContentAlignment", VerticalAlignmentE::Stretch, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::TabIndexProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, int>("TabIndex", -1, nullptr, nullptr, nullptr, PropertyCategory::Public(), "元素的逻辑定位顺序", 18);
+	static auto dp = DependencyProperty::registerDependency<Control, int>("TabIndex", -1, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::IsTabStopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, bool>("IsTabStop", true, nullptr, nullptr, nullptr, PropertyCategory::Public(), "模板", 17);
+	static auto dp = DependencyProperty::registerDependency<Control, bool>("IsTabStop", true, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Control::TemplateProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, ControlTemplatePtr>("Template", nullptr, onTemplateChanged, nullptr, nullptr, PropertyCategory::Public(), "模板");
+	static auto dp = DependencyProperty::registerDependency<Control, ControlTemplatePtr>("Template", nullptr, onTemplateChanged, nullptr, nullptr);
 	return dp;
 }
 

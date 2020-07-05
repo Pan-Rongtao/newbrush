@@ -17,29 +17,25 @@ UIElement::UIElement()
 
 DependencyPropertyPtr UIElement::NameProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, std::string>("Name", "", nullptr, nullptr, nullptr,
-		PropertyCategory::Public(), "元素的名字，同级元素不可同名", 0);
+	static auto dp = DependencyProperty::registerDependency<UIElement, std::string>("Name", "", nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::VisibilityProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的可见性", 2);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VisibilityE>("Visibility", VisibilityE::Visible, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::OpacityProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的不透明度系数", 1);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Opacity", 1.0f, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::FocusableProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "是否允许元素可获得焦点", 7);
+	static auto dp = DependencyProperty::registerDependency<UIElement, bool>("Focusable", true, nullptr, nullptr, nullptr);
 	return dp;
 }
 
@@ -51,43 +47,37 @@ DependencyPropertyPtr UIElement::IsFocusedProperty()
 
 DependencyPropertyPtr UIElement::WidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的宽度", 0);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Width", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::HeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的高度", 1);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("Height", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::MinWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的最小宽度约束", 6);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinWidth", 0.0f, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::MinHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的最小高度约束", 7);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MinHeight", 0.0f, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::MaxWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的最大宽度约束", 8);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxWidth", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::MaxHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的最大高度约束", 9);
+	static auto dp = DependencyProperty::registerDependency<UIElement, float>("MaxHeight", std::numeric_limits<float>::max(), nullptr, nullptr, nullptr);
 	return dp;
 }
 
@@ -99,29 +89,25 @@ DependencyPropertyPtr UIElement::ActualSizeProperty()
 
 DependencyPropertyPtr UIElement::MarginProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness(), nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "元素的外边距，指与其他相邻元素之间的间距", 5);
+	static auto dp = DependencyProperty::registerDependency<UIElement, Thickness>("Margin", Thickness(), nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::HorizontalAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "在父元素（如Panel或项控件）中组合此元素时所应用的水平对齐特征", 3);
+	static auto dp = DependencyProperty::registerDependency<UIElement, HorizontalAlignmentE>("HorizontalAlignment", HorizontalAlignmentE::Stretch, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::VerticalAlignmentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "在父元素（如Panel或项控件）中组合此元素时所应用的垂直特征", 4);
+	static auto dp = DependencyProperty::registerDependency<UIElement, VerticalAlignmentE>("VerticalAlignment", VerticalAlignmentE::Stretch, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr UIElement::FlowDirectionProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "方向，文本和其他元素在任何控制其布局的父元素中都按此方向流动", 12);
+	static auto dp = DependencyProperty::registerDependency<UIElement, FlowDirectionE>("FlowDirection", FlowDirectionE::LeftToRight, nullptr, nullptr, nullptr);
 	return dp;
 }
 
@@ -147,7 +133,7 @@ DependencyPropertyPtr UIElement::StyleProperty()
 			};*/
 			newStyle->attach(e);
 		}
-	}, nullptr, nullptr, PropertyCategory::Misc(), "样式");
+	});
 	return dp;
 }
 
@@ -165,8 +151,7 @@ DependencyPropertyPtr UIElement::IsMouseOverProperty()
 
 DependencyPropertyPtr UIElement::RenderTransformProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, TransformPtr>("RenderTransform", std::make_shared<Transform>(), nullptr, nullptr, nullptr,
-		PropertyCategory::Transform(), "", 1);
+	static auto dp = DependencyProperty::registerDependency<UIElement, TransformPtr>("RenderTransform", std::make_shared<Transform>(), nullptr, nullptr, nullptr);
 	return dp;
 }
 

@@ -11,57 +11,12 @@ class DependencyObject;
 using DependencyObjectPtr = std::shared_ptr<DependencyObject>;
 class PropertyMetadata;
 using PropertyMetadataPtr = std::shared_ptr<PropertyMetadata>;
-class PropertyCategory;
-using PropertyCategoryPtr = std::shared_ptr<PropertyCategory>;
 class DependencyProperty;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
 struct DependencyPropertyChangedEventArgs;
 using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs *)>;
 using CoerceValueCallback = std::function<var(DependencyObject *, var)>;
 using ValidateValueCallback = std::function<bool(const var &value)>;
-class Range;
-using RangePtr = std::shared_ptr<Range>;
-
-class NB_API Range
-{
-public:
-	Range(var lowerBound, var upperBound, var step);
-
-	var lowerBound() const;
-	var upperBound() const;
-	var step() const;
-
-private:
-	var m_lowerBound;
-	var m_upperBound;
-	var m_step;
-};
-
-class NB_API PropertyCategory
-{
-public:
-	const std::string &name() const;
-	int order() const;
-
-	static const std::map<std::string, PropertyCategoryPtr> &getAll();
-
-	static PropertyCategoryPtr get(const std::string &name, int order);
-
-	static PropertyCategoryPtr Brush();
-	static PropertyCategoryPtr Appearance();
-	static PropertyCategoryPtr Public();
-	static PropertyCategoryPtr Automation();
-	static PropertyCategoryPtr Layout();
-	static PropertyCategoryPtr Text();
-	static PropertyCategoryPtr Transform();
-	static PropertyCategoryPtr Misc();
-	static PropertyCategoryPtr Custom();
-
-private:
-	std::string m_name;
-	int			m_order;
-	static std::map<std::string, PropertyCategoryPtr> s_propertyCategorys;
-};
 
 class NB_API PropertyMetadata
 {
@@ -70,27 +25,20 @@ public:
 	//defaulValue：默认值
 	//propertyChangedCallback：属性已改变回调
 	//coerceValueCallback：属性值矫正回调
-	PropertyMetadata(const var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr, 
-		PropertyCategoryPtr category = nullptr, const std::string &description = "", int order = std::numeric_limits<int>::max(), RangePtr range = nullptr);
+	PropertyMetadata(const var &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr, CoerceValueCallback coerceValueCallback = nullptr);
 
 	void setDefaultValue(const var &value) &;
 	var defaultValue() const;
+
 	bool isSealed() const;
+
 	PropertyChangedCallback propertyChangedCallback();
 	CoerceValueCallback coerceValueCallback();
-	PropertyCategoryPtr category() const;
-	const std::string &description() const;
-	int order() const;
-	RangePtr range() const;
 	
 private:
 	var						m_defaultValue;
 	PropertyChangedCallback	m_propertyChangedCallback;
 	CoerceValueCallback		m_coerceValueCallback;
-	PropertyCategoryPtr		m_category;
-	std::string				m_description;
-	int						m_order;
-	RangePtr				m_range;
 };
 
 class NB_API DependencyProperty final
@@ -128,22 +76,20 @@ public:
 	//异常：std::logic_error已经注册过同类型属性
 	template<class OwnerType, class PropertyType>
 	static DependencyPropertyPtr registerDependency(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr,
-		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, PropertyCategoryPtr category = nullptr, const std::string &description = "",
-		int order = std::numeric_limits<int>::max(), RangePtr range = nullptr)
+		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
 	{
 		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
-		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback, category, description, order, range);
+		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
 		return registerCommon(name, rttr::type::get<OwnerType>(), rttr::type::get<PropertyType>(), metadata, validateValueCallback);
 	}
 
 	//注册附加属性
 	template<class OwnerType, class PropertyType>
 	static DependencyPropertyPtr registerAttached(const std::string &name, const PropertyType &defaultValue, PropertyChangedCallback propertyChangedCallback = nullptr,
-		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr, PropertyCategoryPtr category = nullptr, const std::string &description = "",
-		int order = std::numeric_limits<int>::max(), RangePtr range = nullptr)
+		CoerceValueCallback coerceValueCallback = nullptr, ValidateValueCallback validateValueCallback = nullptr)
 	{
 		static_assert(std::is_base_of<DependencyObject, OwnerType>::value, "[ownerType] must be DependencyObject type or DependencyObject derived type.");
-		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback, category, description, order, range);
+		auto metadata = std::make_shared<PropertyMetadata>(defaultValue, propertyChangedCallback, coerceValueCallback);
 		return registerCommon(name, rttr::type::get<OwnerType>(), rttr::type::get<PropertyType>(), metadata, validateValueCallback);
 	}
 

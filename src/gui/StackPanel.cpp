@@ -9,8 +9,7 @@ StackPanel::StackPanel()
 
 DependencyPropertyPtr StackPanel::OrientationProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 3);
+	static auto dp = DependencyProperty::registerDependency<StackPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr);
 	return dp;
 }
 

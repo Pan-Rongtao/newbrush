@@ -10,22 +10,19 @@ WrapPanel::WrapPanel()
 
 DependencyPropertyPtr WrapPanel::OrientationProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 3);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, OrientationE>("Orientation", OrientationE::Horizontal, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr WrapPanel::ItemWidthProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 6);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemWidth", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr WrapPanel::ItemHeightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "子内容是水平排列还是垂直排列", 7);
+	static auto dp = DependencyProperty::registerDependency<WrapPanel, float>("ItemHeight", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 

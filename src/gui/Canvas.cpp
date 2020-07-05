@@ -9,29 +9,25 @@ Canvas::Canvas()
 
 DependencyPropertyPtr Canvas::LeftProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Left", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "元素左侧与其父Canvas左侧之间的距离", 3);
+	static auto dp = DependencyProperty::registerAttached<Canvas, float>("Left", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Canvas::RightProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "元素右侧与其父Canvas右侧之间的距离", 5);
+	static auto dp = DependencyProperty::registerAttached<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Canvas::TopProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "元素顶部与其父Canvas顶部之间的距离", 4);
+	static auto dp = DependencyProperty::registerAttached<Canvas, float>("Top", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Canvas::BottomProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Canvas, float>("Right", NAN, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "元素底部与其父Canvas底部之间的距离", 6);
+	static auto dp = DependencyProperty::registerAttached<Canvas, float>("Bottom", NAN, nullptr, nullptr, nullptr);
 	return dp;
 }
 

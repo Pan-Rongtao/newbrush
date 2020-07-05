@@ -9,7 +9,7 @@ ContentControl::ContentControl()
 
 DependencyPropertyPtr ContentControl::ContentProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<ContentControl, UIElementPtr>("Content", nullptr, nullptr, nullptr, nullptr, PropertyCategory::Public(), "元素的内容", 1);
+	static auto dp = DependencyProperty::registerDependency<ContentControl, UIElementPtr>("Content", nullptr, nullptr, nullptr, nullptr);
 	return dp;
 }
 

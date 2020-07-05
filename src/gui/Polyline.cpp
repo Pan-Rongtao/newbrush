@@ -15,8 +15,7 @@ Polyline::Polyline()
 
 DependencyPropertyPtr Polyline::PointsProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "描述多线段的所有顶点", 5);
+	static auto dp = DependencyProperty::registerDependency<Polyline, std::vector<Point>>("Points", {}, nullptr, nullptr, nullptr);
 	return dp;
 }
 

@@ -1,18 +1,13 @@
 ﻿#pragma once
 #include "newbrush/core/Def.h"
-#include "rttr/registration.h"
 
 namespace nb {
 
 //请勿修改枚举值的顺序和定向指定值
-enum class RttrClassMetadataIndex
+enum class RttrMetadataIndex : int8_t
 {
-	AsVisual = 0,	//是否注册为可在STUDIO上创建的UI元素（如果该class不是继承于UIElement，将自动判定为false；该字段如果为false，Category、DisplayName、Description将无意义）
-	Category,		//分类
-	DisplayName,	//是否可视
-	Description,	//是否可视
-
-	Property0 = 5,
+	ClassDescriptor = 0,
+	Property0,
 	Property1,
 	Property2,
 	Property3,
@@ -65,8 +60,90 @@ enum class RttrClassMetadataIndex
 
 };
 
+class Range;
+class ClassDescriptor;
+class PropertyDescriptor;
 class DependencyProperty;
+using RangePtr = std::shared_ptr<Range>;
+using ClassDescriptorPtr = std::shared_ptr<ClassDescriptor>;
+using PropertyDescriptorPtr = std::shared_ptr<PropertyDescriptor>;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
+
+class NB_API ClassDescriptor
+{
+public:
+	ClassDescriptor(const std::string &category, const std::string &dispayName, const std::string &description);
+
+	const std::string &category() const;
+	const std::string &displayName() const;
+	const std::string &description() const;
+
+private:
+	std::string m_category;
+	std::string m_displayName;
+	std::string m_description;
+};
+
+class NB_API Range
+{
+public:
+	Range(var lowerBound, var upperBound, var step);
+
+	var lowerBound() const;
+	var upperBound() const;
+	var step() const;
+
+private:
+	var m_lowerBound;
+	var m_upperBound;
+	var m_step;
+};
+
+class NB_API PropertyCategory
+{
+public:
+	const std::string &name() const;
+	int order() const;
+
+	static const PropertyCategory &get(const std::string &name, int order);
+
+	static const PropertyCategory &brush();
+	static const PropertyCategory &appearance();
+	static const PropertyCategory &common();
+	static const PropertyCategory &automation();
+	static const PropertyCategory &layout();
+	static const PropertyCategory &text();
+	static const PropertyCategory &transform();
+	static const PropertyCategory &misc();
+	static const PropertyCategory &custom();
+
+	static const std::map<std::string, PropertyCategory> &getAll();
+
+private:
+	std::string m_name;
+	int			m_order;
+	static std::map<std::string, PropertyCategory> s_propertyCategorys;
+};
+
+class NB_API PropertyDescriptor
+{
+public:
+	PropertyDescriptor(DependencyPropertyPtr dp, const PropertyCategory &category, const std::string &description, int order, RangePtr range);
+
+	const DependencyPropertyPtr &property() const;
+	const PropertyCategory &category() const;
+	const std::string &description() const;
+	int order() const;
+	const RangePtr &range() const;
+
+private:
+	DependencyPropertyPtr m_property;
+	PropertyCategory m_category;
+	std::string m_description;
+	int m_order;
+	RangePtr m_range;
+};
+
 class NB_API RttrRegistration
 {
 public:
@@ -74,16 +151,19 @@ public:
 	static void doRegister();
 
 	//获取类型的自身属性（不包括继承的属性）
-	static std::vector<DependencyPropertyPtr> getTypeSelfPropertys(rttr::type t);
+	static std::vector<PropertyDescriptorPtr> getTypeSelfPropertys(rttr::type t);
 
 	//获取类型的所有属性（包括继承的属性）
-	static std::vector<DependencyPropertyPtr> getTypeAllPropertys(rttr::type ownerType);
+	static std::vector<PropertyDescriptorPtr> getTypeAllPropertys(rttr::type ownerType);
 
 private:
 	static void registerEnums();
 	static void registerUIElementTypes();
 	static void registerConverters();
 };
+
+NB_API rttr::detail::metadata ClassDescriptorMetadata(const std::string &category, const std::string &dispayName, const std::string &description);
+NB_API rttr::detail::metadata PropertyDescriptorMetadata(RttrMetadataIndex index, DependencyPropertyPtr dp, const PropertyCategory &category, const std::string &description, int order, RangePtr range = nullptr);
 
 
 }

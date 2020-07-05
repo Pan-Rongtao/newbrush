@@ -18,71 +18,61 @@ Shape::Shape()
 
 DependencyPropertyPtr Shape::FillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Fill", nullptr, nullptr, nullptr, nullptr,
-		PropertyCategory::Brush(), "该画笔指定如何绘制形状内部", 1);
+	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Fill", nullptr, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StretchProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, StretchE>("Stretch", StretchE::Fill, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "描述如何调整内容大小以使其填充占据所分配的空间", 9);
+	static auto dp = DependencyProperty::registerDependency<Shape, StretchE>("Stretch", StretchE::Fill, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Stroke", nullptr, nullptr, nullptr, nullptr,
-		PropertyCategory::Brush(), "该画笔指定如何绘制形状轮廓", 2);
+	static auto dp = DependencyProperty::registerDependency<Shape, BrushPtr>("Stroke", nullptr, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeDashCapProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeDashCap", PenLineCapE::Flat, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "指定如何绘制每一小段短划线的两端", 11);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeDashCap", PenLineCapE::Flat, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeLineJoinProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, PenLineJoinE>("StrokeLineJoin", PenLineJoinE::Beval, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "指定形状顶点处使用的连接类型，对没有顶点的元素不起作用（如线段）", 14);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineJoinE>("StrokeLineJoin", PenLineJoinE::Beval, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeThicknessProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeThickness", 1.0, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "形状轮廓的宽度（粗细）", 6);
+	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeThickness", 1.0, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeStartLineCapProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeStartLineCap", PenLineCapE::Flat, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "描述笔划起点处的形状，对没有笔划或者没有起点或终点（如椭圆）的形状不起作用", 16);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeStartLineCap", PenLineCapE::Flat, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeEndLineCapProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeEndLineCap", PenLineCapE::Flat, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "描述笔划终点处的形状，对没有笔划或者没有起点或终点（如椭圆）的形状不起作用", 13);
+	static auto dp = DependencyProperty::registerDependency<Shape, PenLineCapE>("StrokeEndLineCap", PenLineCapE::Flat, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeDashArrayProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, std::vector<float>>("StrokeDashArray", {}, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "用于绘制形状轮廓时的短划线和间隙的间隔长度，轮廓将呈现虚线", 10);
+	static auto dp = DependencyProperty::registerDependency<Shape, std::vector<float>>("StrokeDashArray", {}, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr Shape::StrokeDashOffsetProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeDashOffset", 0.0f, nullptr, nullptr, nullptr,
-		PropertyCategory::Appearance(), "指定短划线在短划线图案中开始的距离（偏移值）", 12);
+	static auto dp = DependencyProperty::registerDependency<Shape, float>("StrokeDashOffset", 0.0f, nullptr, nullptr, nullptr);
 	return dp;
 }
 

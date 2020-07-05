@@ -21,15 +21,13 @@ DockE DockPanel::getDock(UIElementPtr element)
 
 DependencyPropertyPtr DockPanel::DockProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<DockPanel, DockE>("Dock", DockE::Left, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "子元素在父DockPanel中的位置", 3);
+	static auto dp = DependencyProperty::registerAttached<DockPanel, DockE>("Dock", DockE::Left, nullptr, nullptr, nullptr);
 	return dp;
 }
 
 DependencyPropertyPtr DockPanel::LastChildFillProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false, nullptr, nullptr, nullptr,
-		PropertyCategory::Layout(), "最后一个子元素是否拉伸以填充剩余的可用空间", 5);
+	static auto dp = DependencyProperty::registerDependency<DockPanel, bool>("LastChildFill", false, nullptr, nullptr, nullptr);
 	return dp;
 }
 
