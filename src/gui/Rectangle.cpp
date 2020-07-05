@@ -58,9 +58,9 @@ void Rectangle::onRender(Viewport2D & drawContext)
 
 void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == FillProperty())
+	if (args.property() == FillProperty())
 	{
-		auto fill = args.newValue.get_value<BrushPtr>();
+		auto fill = args.newValue().get_value<BrushPtr>();
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -72,15 +72,15 @@ void Rectangle::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 		updateMeterial(m_fillObject, fill);
 		updateLayout();
 	}
-	else if (args.property == StrokeProperty())
+	else if (args.property() == StrokeProperty())
 	{
-		auto stroke = getValue<BrushPtr>(StrokeProperty());
+		auto stroke = args.newValue().get_value<BrushPtr>();
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
-	else if (args.property == RenderTransformProperty())
+	else if (args.property() == RenderTransformProperty())
 	{
-		auto transformationPtr = args.newValue.get_value<TransformPtr>();
+		auto transformationPtr = args.newValue().get_value<TransformPtr>();
 		glm::mat4 mat = transformationPtr->value();
 		m_fillObject->model()->matrix = mat * m_fillObject->model()->matrix;
 		m_strokeObject->model()->matrix = mat * m_strokeObject->model()->matrix;

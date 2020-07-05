@@ -4,6 +4,7 @@
 #include <map>
 #include <typeindex>
 #include "newbrush/core/Def.h"
+#include "newbrush/core/EventArgs.h"
 
 namespace nb{
 
@@ -13,8 +14,7 @@ class PropertyMetadata;
 using PropertyMetadataPtr = std::shared_ptr<PropertyMetadata>;
 class DependencyProperty;
 using DependencyPropertyPtr = std::shared_ptr<DependencyProperty>;
-struct DependencyPropertyChangedEventArgs;
-using PropertyChangedCallback = std::function<void(DependencyObject *, DependencyPropertyChangedEventArgs *)>;
+using PropertyChangedCallback = std::function<void(DependencyObject *, const DependencyPropertyChangedEventArgs &)>;
 using CoerceValueCallback = std::function<var(DependencyObject *, var)>;
 using ValidateValueCallback = std::function<bool(const var &value)>;
 

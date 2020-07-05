@@ -115,9 +115,9 @@ Size Image::arrangeOverride(const Size & finalSize)
 	}
 }
 
-void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Image::onSourcePropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
-	auto newSource = args->newValue.get_value<ImageSourcePtr>();
+	auto newSource = args.newValue().get_value<ImageSourcePtr>();
 	auto &stream = newSource->stream();
 	auto self = dynamic_cast<Image*>(obj);
 	auto texture = std::make_shared<Texture2D>();
@@ -128,7 +128,7 @@ void Image::onSourcePropertyChanged(DependencyObject * obj, DependencyPropertyCh
 	self->updateLayout();
 }
 
-void Image::onStretchPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Image::onStretchPropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto self = dynamic_cast<Image*>(obj);
 	self->updateLayout();

@@ -49,13 +49,13 @@ void Polygon::onRender(Viewport2D & drawContext)
 
 void Polygon::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == FillProperty())
+	if (args.property() == FillProperty())
 	{
 		auto fill = getValue<BrushPtr>(FillProperty());
 		if (!fill)				m_fillObject.reset();
 		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
 	}
-	else if (args.property == StrokeProperty())
+	else if (args.property() == StrokeProperty())
 	{
 		auto stroke = getValue<BrushPtr>(StrokeProperty());
 		if (!stroke)				m_strokeObject.reset();

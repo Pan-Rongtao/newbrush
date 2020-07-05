@@ -103,10 +103,10 @@ void ButtonBase::onMouseLeftButtonUp(const MouseButtonEventArgs & args)
 //	Log::info("%s", __FUNCTION__);
 }
 
-void ButtonBase::onIsPressedPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * args)
+void ButtonBase::onIsPressedPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs &args)
 {
 	auto ctrl = dynamic_cast<ButtonBase *>(d);
-	ctrl->onIsPressedChanged(*args);
+	ctrl->onIsPressedChanged(args);
 }
 
 void ButtonBase::updateIsPress()

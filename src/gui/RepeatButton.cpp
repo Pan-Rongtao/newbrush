@@ -69,12 +69,12 @@ void RepeatButton::onTick(const EventArgs & e)
 	}
 }
 
-void RepeatButton::onDelayPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void RepeatButton::onDelayPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 }
 
-void RepeatButton::onIntervalPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void RepeatButton::onIntervalPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto self = dynamic_cast<RepeatButton*>(d);
-	self->m_timer.setInterval(e->newValue.get_value<uint32_t>());
+	self->m_timer.setInterval(e.newValue().get_value<uint32_t>());
 }

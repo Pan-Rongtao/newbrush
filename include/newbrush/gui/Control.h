@@ -43,8 +43,8 @@ protected:
 	RenderObjectPtr	m_bkgObj;
 
 private:
-	static void onBackgroundPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
-	static void onTemplateChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
+	static void onBackgroundPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
+	static void onTemplateChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
 
 	bool m_handlingPropertyChanged{ false };
 };

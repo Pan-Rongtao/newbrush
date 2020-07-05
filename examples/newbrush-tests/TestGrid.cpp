@@ -66,7 +66,7 @@ TEST_CASE("Test Grid", "[Grid]")
 	rc3->setValue(Shape::HeightProperty(), 100);
 
 	auto es0 = std::make_shared<Ellipse>();
-	es0->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::floralWhite()));
+	es0->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<SolidColorBrush>(Colors::greenYellow()));
 //	es0->Width = 100;
 //	es0->Height = 100;
 

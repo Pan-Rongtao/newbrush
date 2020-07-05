@@ -113,11 +113,11 @@ DependencyPropertyPtr UIElement::FlowDirectionProperty()
 
 DependencyPropertyPtr UIElement::StyleProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<UIElement, StylePtr>("Style", nullptr, [](DependencyObject *object, DependencyPropertyChangedEventArgs *args) {
+	static auto dp = DependencyProperty::registerDependency<UIElement, StylePtr>("Style", nullptr, [](DependencyObject *object, const DependencyPropertyChangedEventArgs &args) {
 		auto e = dynamic_cast<UIElement *>(object);
 
-		auto oldStyle = args->oldValue.get_value<StylePtr>();
-		auto newStyle = args->newValue.get_value<StylePtr>();
+		auto oldStyle = args.oldValue().get_value<StylePtr>();
+		auto newStyle = args.newValue().get_value<StylePtr>();
 		//由于style类型每次set都会触发changed，因此设置统一style也会进入此回调函数，应判断newStyle == oldStyle
 		if (newStyle == oldStyle)
 			return;
@@ -343,14 +343,14 @@ void UIElement::removeLogicalChild(UIElementPtr child)
 
 void UIElement::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == UIElement::WidthProperty() || args.property == UIElement::HeightProperty() || args.property == MarginProperty())
+	if (args.property() == UIElement::WidthProperty() || args.property() == UIElement::HeightProperty() || args.property() == MarginProperty())
 	{
 		updateLayout();
 	}
 	auto style = getValue<StylePtr>(StyleProperty());
 	if (style)
 	{
-		style->handlePropertyChanged(this, args.property, args.newValue);
+		style->handlePropertyChanged(this, args.property(), args.newValue());
 	}
 }
 

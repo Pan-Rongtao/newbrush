@@ -410,7 +410,7 @@ void Window::onRender(Viewport2D & drawContext)
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	ContentControl::onPropertyChanged(args);
-	if (args.property == WidthProperty() || args.property == HeightProperty())
+	if (args.property() == WidthProperty() || args.property() == HeightProperty())
 	{
 		auto w = getValue<float>(WidthProperty());
 		auto h = getValue<float>(HeightProperty());
@@ -458,7 +458,7 @@ void Window::onContentRendered(const EventArgs & args)
 	ContentRendered.invoke({ args });
 }
 
-void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onWindowStatePropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto self = dynamic_cast<Window *>(obj);
 	auto w = self->m_implWindow;
@@ -467,8 +467,8 @@ void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyProp
 		return;
 	}
 
-	auto oldState = args->oldValue.get_value<WindowStateE>();
-	auto newState = args->newValue.get_value<WindowStateE>();
+	auto oldState = args.oldValue().get_value<WindowStateE>();
+	auto newState = args.newValue().get_value<WindowStateE>();
 	if (oldState == newState)
 	{
 		return;
@@ -491,7 +491,7 @@ void Window::onWindowStatePropertyChanged(DependencyObject * obj, DependencyProp
 	self->onStateChanged({});
 }
 
-void Window::onWindowStyleChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onWindowStyleChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (!w)
@@ -499,8 +499,8 @@ void Window::onWindowStyleChanged(DependencyObject * obj, DependencyPropertyChan
 		return;
 	}
 
-	auto oldStyle = args->oldValue.get_value<WindowStyleE>();
-	auto newStyle = args->newValue.get_value<WindowStyleE>();
+	auto oldStyle = args.oldValue().get_value<WindowStyleE>();
+	auto newStyle = args.newValue().get_value<WindowStyleE>();
 	if (oldStyle == newStyle)
 	{
 		return;
@@ -515,43 +515,43 @@ void Window::onWindowStyleChanged(DependencyObject * obj, DependencyPropertyChan
 	}
 }
 
-void Window::onTopmostPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onTopmostPropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowAttrib(w, GLFW_FLOATING, args->newValue.get_value<bool>());
+		glfwSetWindowAttrib(w, GLFW_FLOATING, args.newValue().get_value<bool>());
 	}
 }
 
-void Window::onLeftPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onLeftPropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowPos(w, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+		glfwSetWindowPos(w, (int)args.newValue().get_value<float>(), (int)obj->getValue<float>(TopProperty()));
 	}
 }
 
-void Window::onTopPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onTopPropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowPos(w, (int)obj->getValue<float>(LeftProperty()), (int)obj->getValue<float>(TopProperty()));
+		glfwSetWindowPos(w, (int)obj->getValue<float>(LeftProperty()), (int)args.newValue().get_value<float>());
 	}
 }
 
-void Window::onTitlePropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onTitlePropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (w)
 	{
-		glfwSetWindowTitle(w, args->newValue.get_value<std::string>().data());
+		glfwSetWindowTitle(w, args.newValue().get_value<std::string>().data());
 	}
 }
 
-void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyChangedEventArgs * args)
+void Window::onIconPropertyChanged(DependencyObject * obj, const DependencyPropertyChangedEventArgs & args)
 {
 	auto w = dynamic_cast<Window *>(obj)->m_implWindow;
 	if (!w)
@@ -559,7 +559,7 @@ void Window::onIconPropertyChanged(DependencyObject * obj, DependencyPropertyCha
 		return;
 	}
 
-	auto source = args->newValue.get_value<ImageSourcePtr>();
+	auto source = args.newValue().get_value<ImageSourcePtr>();
 	auto &stream = source ? source->stream() : "";
 	GLFWimage img{ (int)source->width(), (int)source->height(), (unsigned char *)stream.data() };
 	glfwSetWindowIcon(w, 1, &img);			//图片大会挂死

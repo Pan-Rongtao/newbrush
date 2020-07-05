@@ -54,9 +54,9 @@ void Line::onRender(Viewport2D & drawContext)
 
 void Line::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == StrokeProperty())
+	if (args.property() == StrokeProperty())
 	{
-		auto stroke = getValue<BrushPtr>(StrokeProperty());
+		auto stroke = args.newValue().get_value<BrushPtr>();
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}

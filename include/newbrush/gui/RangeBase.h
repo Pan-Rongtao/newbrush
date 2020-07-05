@@ -28,9 +28,9 @@ private:
 	static var coerceMaximum(DependencyObject *d, var baseValue);
 	static var coerceMinimum(DependencyObject *d, var baseValue);
 
-	static void onValuePropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
-	static void onMaxinumPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
-	static void onMinimumPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
+	static void onValuePropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
+	static void onMaxinumPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
+	static void onMinimumPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
 
 };
 

@@ -37,8 +37,8 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
-	static void onSourcePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onStretchPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onSourcePropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onStretchPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
 
 	Size			m_availableSize;
 	RenderObjectPtr	m_renderObj;

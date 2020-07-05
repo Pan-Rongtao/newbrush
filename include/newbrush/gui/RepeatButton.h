@@ -28,8 +28,8 @@ protected:
 private:
 	void onTick(const EventArgs &e);
 
-	static void onDelayPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
-	static void onIntervalPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *e);
+	static void onDelayPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
+	static void onIntervalPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
 
 	Timer		m_timer;
 	uint64_t	m_startTicks;

@@ -115,9 +115,9 @@ DependencyPropertyPtr TextBlock::TextDecorationProperty()
 
 void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == ForegroundProperty())
+	if (args.property() == ForegroundProperty())
 	{
-		auto c = args.newValue.get_value<Color>();
+		auto c = args.newValue().get_value<Color>();
 		m_renderObj->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}
 }

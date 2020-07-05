@@ -109,11 +109,10 @@ void DependencyObject::_checkType(DependencyPropertyPtr dp, rttr::type getType) 
 
 void DependencyObject::invokePropertyCallback(const DependencyPropertyChangedEventArgs & args)
 {
-	auto metadata = args.property->defaultMetadata();
+	auto metadata = args.property()->defaultMetadata();
 	if (metadata->propertyChangedCallback())
 	{
-		DependencyPropertyChangedEventArgs *p = const_cast<DependencyPropertyChangedEventArgs *>(&args);
-		metadata->propertyChangedCallback()(this, p);
+		metadata->propertyChangedCallback()(this, args);
 	}
 }
 

@@ -299,11 +299,19 @@ struct SizeChangedEventArgs : public RoutedEventArgs
 	bool HeightChanged;
 };
 
-struct DependencyPropertyChangedEventArgs
+class NB_API DependencyPropertyChangedEventArgs : public Object
 {
-	DependencyPropertyPtr	property;
-	var						oldValue;
-	var						newValue;
+public:
+	DependencyPropertyChangedEventArgs(DependencyPropertyPtr dp, var oldValue, var newValue);
+
+	DependencyPropertyPtr property() const;
+	const var &oldValue() const;
+	const var &newValue() const;
+
+private:
+	DependencyPropertyPtr	m_property;
+	var						m_oldValue;
+	var						m_newValue;
 };
 
 class RoutedProperyChangedEventArgs : public RoutedEventArgs

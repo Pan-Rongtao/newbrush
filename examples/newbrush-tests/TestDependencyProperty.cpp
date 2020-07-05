@@ -55,9 +55,9 @@ TEST_CASE("Test nb::DependencyProperty", "[DependencyProperty]")
 
 DependencyPropertyPtr MyObject::BoolPoperty()
 {
-	static auto dp = DependencyProperty::registerDependency<MyObject, bool>("Bool", true, [](DependencyObject *obj, DependencyPropertyChangedEventArgs *args) {
+	static auto dp = DependencyProperty::registerDependency<MyObject, bool>("Bool", true, [](DependencyObject *obj, const DependencyPropertyChangedEventArgs &args) {
 		auto tdp = dynamic_cast<MyObject *>(obj);
-		printf("%s changed from %d to %d\n", args->property->name().data(), args->oldValue.get_value<bool>(), args->newValue.get_value<bool>());
+		printf("%s changed from %d to %d\n", args.property()->name().data(), args.oldValue().get_value<bool>(), args.newValue().get_value<bool>());
 	});
 	return dp;
 }
@@ -100,9 +100,9 @@ DependencyPropertyPtr MyObject::PointProperty()
 
 DependencyPropertyPtr MyObject::SharedPtrProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<MyObject, std::shared_ptr<A>>("SharedPtr", nullptr, [](DependencyObject *dp, DependencyPropertyChangedEventArgs *args) {
+	static auto dp = DependencyProperty::registerDependency<MyObject, std::shared_ptr<A>>("SharedPtr", nullptr, [](DependencyObject *dp, const DependencyPropertyChangedEventArgs &args) {
 		auto tdp = dynamic_cast<MyObject *>(dp);
-		printf("%s changed\n", args->property->name().data());
+		printf("%s changed\n", args.property()->name().data());
 	});
 	return dp;
 }

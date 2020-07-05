@@ -37,7 +37,7 @@ protected:
 	virtual void onMouseLeftButtonUp(const MouseButtonEventArgs &args) override;
 
 private:
-	static void onIsPressedPropertyChanged(DependencyObject *d, DependencyPropertyChangedEventArgs *args);
+	static void onIsPressedPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &args);
 
 	void updateIsPress();
 	bool	m_leaveWithPressed;

@@ -79,32 +79,32 @@ var RangeBase::coerceMinimum(DependencyObject * d, var baseValue)
 	return baseValue > max ? max : baseValue;
 }
 
-void RangeBase::onValuePropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void RangeBase::onValuePropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	self->onMaxinumChanged(e->oldValue.to_float(), e->newValue.to_float());
+	self->onMaxinumChanged(e.oldValue().to_float(), e.newValue().to_float());
 }
 
-void RangeBase::onMaxinumPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void RangeBase::onMaxinumPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	auto max = e->newValue.get_value<float>();
+	auto max = e.newValue().get_value<float>();
 	auto value = self->getValue<float>(ValueProperty());
 	if (value > max)
 	{
 		self->setValue(ValueProperty(), max);
 	}
-	self->onMaxinumChanged(e->oldValue.get_value<float>(), max);
+	self->onMaxinumChanged(e.oldValue().get_value<float>(), max);
 }
 
-void RangeBase::onMinimumPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void RangeBase::onMinimumPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto self = dynamic_cast<RangeBase *>(d);
-	auto min = e->newValue.get_value<float>();
+	auto min = e.newValue().get_value<float>();
 	auto value = self->getValue<float>(ValueProperty());
 	if (value < min)
 	{
 		self->setValue(ValueProperty(), min);
 	}
-	self->onMaxinumChanged(e->oldValue.get_value<float>(), min);
+	self->onMaxinumChanged(e.oldValue().get_value<float>(), min);
 }

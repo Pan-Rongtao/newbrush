@@ -138,10 +138,10 @@ Size Control::arrangeOverride(const Size & finalSize)
 	return UIElement::arrangeOverride(finalSize);;
 }
 #include "newbrush/gui/ContentControl.h"
-void Control::onBackgroundPropertyChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void Control::onBackgroundPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto ctrl = static_cast<Control *>(d);
-	auto bkgBrush = e->newValue.get_value<BrushPtr>();
+	auto bkgBrush = e.newValue().get_value<BrushPtr>();
 	if (!bkgBrush)
 	{
 		ctrl->m_bkgObj.reset();
@@ -153,10 +153,10 @@ void Control::onBackgroundPropertyChanged(DependencyObject * d, DependencyProper
 	ctrl->updateMeterial(ctrl->m_bkgObj, bkgBrush);
 	ctrl->updateLayout();
 }
-void Control::onTemplateChanged(DependencyObject * d, DependencyPropertyChangedEventArgs * e)
+void Control::onTemplateChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
-	auto oldTemplate = e->oldValue.get_value<ControlTemplatePtr>();
-	auto newTemplate = e->newValue.get_value<ControlTemplatePtr>();
+	auto oldTemplate = e.oldValue().get_value<ControlTemplatePtr>();
+	auto newTemplate = e.newValue().get_value<ControlTemplatePtr>();
 	if (newTemplate == oldTemplate)
 	{
 		return;

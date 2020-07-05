@@ -41,9 +41,9 @@ UIElement * ContentControl::getChild(uint32_t index)
 void ContentControl::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
 	Control::onPropertyChanged(args);
-	if (args.property == ContentProperty())
+	if (args.property() == ContentProperty())
 	{
-		auto content = args.newValue.get_value<UIElementPtr>();
+		auto content = args.newValue().get_value<UIElementPtr>();
 		addLogicalChild(content);
 		updateLayout();
 	}

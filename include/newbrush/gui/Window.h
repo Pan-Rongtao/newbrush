@@ -102,13 +102,13 @@ private:
 	void destroyWindow();
 	void render();
 
-	static void onWindowStatePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onWindowStyleChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onTopmostPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onLeftPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onTopPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onTitlePropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
-	static void onIconPropertyChanged(DependencyObject *obj, DependencyPropertyChangedEventArgs *args);
+	static void onWindowStatePropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onWindowStyleChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onTopmostPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onLeftPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onTopPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onTitlePropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
+	static void onIconPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
 	
 	GLFWwindow		*m_implWindow;
 	bool			m_dispatchingCloseEvent;

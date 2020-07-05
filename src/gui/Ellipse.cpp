@@ -49,9 +49,9 @@ void Ellipse::onRender(Viewport2D & drawContext)
 
 void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property == FillProperty())
+	if (args.property() == FillProperty())
 	{
-		auto fill = getValue<BrushPtr>(FillProperty());
+		auto fill = args.newValue().get_value<BrushPtr>();
 		if (!fill)
 		{
 			m_fillObject.reset();
@@ -76,9 +76,9 @@ void Ellipse::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 			m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh(std::vector<Vertex>(vertexCount), getIndices()) }));
 		}
 	}
-	else if (args.property == StrokeProperty())
+	else if (args.property() == StrokeProperty())
 	{
-		auto stroke = getValue<BrushPtr>(StrokeProperty());
+		auto stroke = args.newValue().get_value<BrushPtr>();
 		if (!stroke)				m_strokeObject.reset();
 		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
 	}
