@@ -3,13 +3,13 @@
 
 using namespace nb;
 
-void testEasing(EasingBase &e, EasingBase::EasingModeE mode)
+void testEasing(EasingBase &e, EasingModeE mode)
 {
-	e.mode = mode;
+	e.setValue(EasingBase::EasingModeProperty(), mode);
 	printf("%s:mode[%d]\n", typeid(e).name(), mode);
 	for (double t = 0.0; t <= 1.000000001; t += 0.01)
 	{
-		double d = e.easeInCore(t);
+		auto d = e.easeInCore(t);
 		printf("f(%.5f)=%.5f\n", t, d);
 	}
 }
@@ -19,108 +19,108 @@ TEST_CASE("Test nb::Easing", "[Easing]")
 	SECTION("LinearEase")
 	{
 		LinearEase lineEase;
-		testEasing(lineEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(lineEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(lineEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(lineEase, EasingModeE::EaseIn);
+		testEasing(lineEase, EasingModeE::EaseOut);
+		testEasing(lineEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("BackEase")
 	{
 		BackEase backEase;
-		testEasing(backEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(backEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(backEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(backEase, EasingModeE::EaseIn);
+		testEasing(backEase, EasingModeE::EaseOut);
+		testEasing(backEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("BounceEase")
 	{
 		BounceEase boundEase;
-		testEasing(boundEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(boundEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(boundEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(boundEase, EasingModeE::EaseIn);
+		testEasing(boundEase, EasingModeE::EaseOut);
+		testEasing(boundEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("CircleEase")
 	{
 		CircleEase circleEase;
-		testEasing(circleEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(circleEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(circleEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(circleEase, EasingModeE::EaseIn);
+		testEasing(circleEase, EasingModeE::EaseOut);
+		testEasing(circleEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("CubicEase")
 	{
 		CubicEase cubicEase;
-		testEasing(cubicEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(cubicEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(cubicEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(cubicEase, EasingModeE::EaseIn);
+		testEasing(cubicEase, EasingModeE::EaseOut);
+		testEasing(cubicEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("ElasticEase")
 	{
 		ElasticEase elasticEase;
-		testEasing(elasticEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(elasticEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(elasticEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(elasticEase, EasingModeE::EaseIn);
+		testEasing(elasticEase, EasingModeE::EaseOut);
+		testEasing(elasticEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("ExponentialEase")
 	{
 		ExponentialEase expoEase;
-		testEasing(expoEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(expoEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(expoEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(expoEase, EasingModeE::EaseIn);
+		testEasing(expoEase, EasingModeE::EaseOut);
+		testEasing(expoEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("PowerEase")
 	{
 		PowerEase powerEase;
-		testEasing(powerEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(powerEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(powerEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(powerEase, EasingModeE::EaseIn);
+		testEasing(powerEase, EasingModeE::EaseOut);
+		testEasing(powerEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("QuadraticEase")
 	{
 		QuadraticEase quadEase;
-		testEasing(quadEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(quadEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(quadEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(quadEase, EasingModeE::EaseIn);
+		testEasing(quadEase, EasingModeE::EaseOut);
+		testEasing(quadEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("QuarticEase")
 	{
 		QuarticEase quarticEase;
-		testEasing(quarticEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(quarticEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(quarticEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(quarticEase, EasingModeE::EaseIn);
+		testEasing(quarticEase, EasingModeE::EaseOut);
+		testEasing(quarticEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("QuinticEase")
 	{
 		QuinticEase quinticEase;
-		testEasing(quinticEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(quinticEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(quinticEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(quinticEase, EasingModeE::EaseIn);
+		testEasing(quinticEase, EasingModeE::EaseOut);
+		testEasing(quinticEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 
 	SECTION("SineEase")
 	{
 		SineEase sineEase;
-		testEasing(sineEase, EasingBase::EasingModeE::EaseIn);
-		testEasing(sineEase, EasingBase::EasingModeE::EaseOut);
-		testEasing(sineEase, EasingBase::EasingModeE::EaseInOut);
+		testEasing(sineEase, EasingModeE::EaseIn);
+		testEasing(sineEase, EasingModeE::EaseOut);
+		testEasing(sineEase, EasingModeE::EaseInOut);
 		printf("\n");
 	}
 }

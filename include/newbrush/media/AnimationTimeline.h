@@ -12,22 +12,14 @@ class NB_API AnimationTimeline : public Timeline
 public:
 	virtual ~AnimationTimeline() = default;
 
-	void setTarget(std::weak_ptr<DependencyObject> target) &;
-	std::weak_ptr<DependencyObject> target() const;
-
-	void setTargetProperty(DependencyPropertyPtr property) &;
-	DependencyPropertyPtr targetProperty() const;
+	static DependencyPropertyPtr TargetProperty();			//目标对象依赖属性（std::weak_ptr<DependencyObject>，默认值为空）
+	static DependencyPropertyPtr TargetPropertyProperty();	//目标对象属性依赖属性（DependencyPropertyPtr，默认值为空）
 
 protected:
-	AnimationTimeline();
+	AnimationTimeline() = default;
 
 	virtual void onStateChanged() override;
 
-	void _unmatchThrow(std::type_index animationType);
-
-private:
-	std::weak_ptr<DependencyObject>	m_target;
-	DependencyPropertyPtr			m_property;
 };
 
 }

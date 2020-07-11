@@ -26,9 +26,10 @@ void Storyboard::begin()
 
 TimeSpan Storyboard::getActualDurationTimespan() const
 {
-	if (duration().hasTimeSpan())
+	auto const &duration = getValue<Duration>(DurationProperty());
+	if (duration.hasTimeSpan())
 	{
-		return duration().timeSpan();
+		return duration.timeSpan();
 	}
 	else
 	{

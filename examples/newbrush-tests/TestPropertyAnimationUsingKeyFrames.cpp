@@ -1,12 +1,25 @@
-#include "newbrush/media/PropertyAnimationUsingKeyFrames.h"
 #include "catch2/catch.hpp"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/media/Int8Animation.h"
+#include "newbrush/media/Int16Animation.h"
+#include "newbrush/media/Int32Animation.h"
+#include "newbrush/media/Int64Animation.h"
+#include "newbrush/media/FloatAnimation.h"
+#include "newbrush/media/DoubleAnimation.h"
+#include "newbrush/media/PointAnimation.h"
+#include "newbrush/media/SizeAnimation.h"
+#include "newbrush/media/ColorAnimation.h"
+#include "newbrush/media/RectAnimation.h"
+#include "newbrush/media/ThicknessAnimation.h"
+#include "newbrush/media/BooleanAnimation.h"
+#include "newbrush/media/StringAnimation.h"
 
 using namespace nb;
 
 class MyObject : public DependencyObject
 {
+	RTTR_ENABLE(DependencyObject)
 public:
 	static DependencyPropertyPtr TextProperty()
 	{
@@ -70,16 +83,16 @@ public:
 	}
 };
 
-TEST_CASE("test BoolAnimationUsingKeyFrames", "[BoolAnimationUsingKeyFrames]")
+TEST_CASE("test BooleanAnimationUsingKeyFrames", "[BooleanAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<UIElement>();
-	BoolAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(5));
-	animation.setTarget(ui);
-	animation.setTargetProperty(UIElement::IsFocusedProperty());
-	animation.keyFrames().insert(BoolKeyFrame(TimeSpan::fromSeconds(1), true));
-	animation.keyFrames().insert(BoolKeyFrame(TimeSpan::fromSeconds(2), false));
-	animation.keyFrames().insert(BoolKeyFrame(TimeSpan::fromSeconds(3), true));
+	BooleanAnimationUsingKeyFrames animation;
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(5)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), UIElement::IsFocusedProperty());
+	animation.keyFrames().insert(BooleanKeyFrame(TimeSpan::fromSeconds(1), true));
+	animation.keyFrames().insert(BooleanKeyFrame(TimeSpan::fromSeconds(2), false));
+	animation.keyFrames().insert(BooleanKeyFrame(TimeSpan::fromSeconds(3), true));
 
 	animation.StateChanged += [](const EventArgs &args) {
 		auto tl = static_cast<Timeline *>(args.sender);
@@ -108,9 +121,9 @@ TEST_CASE("test StringAnimationUsingKeyFrames", "[StringAnimationUsingKeyFrames]
 {
 	auto ui = std::make_shared<MyObject>();
 	StringAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(5));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::TextProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(5)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::TextProperty());
 	animation.keyFrames().insert(StringKeyFrame(TimeSpan::fromSeconds(0), "init"));
 	animation.keyFrames().insert(StringKeyFrame(TimeSpan::fromSeconds(1), "abc"));
 	animation.keyFrames().insert(StringKeyFrame(TimeSpan::fromSeconds(2), "def"));
@@ -143,9 +156,9 @@ TEST_CASE("test Int8AnimationUsingKeyFrames", "[Int8AnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	Int8AnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::CountProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::CountProperty());
 	animation.keyFrames().insert(Int8KeyFrame(TimeSpan::fromSeconds(0), 10));
 	animation.keyFrames().insert(Int8KeyFrame(TimeSpan::fromSeconds(1), 20));
 	animation.keyFrames().insert(Int8KeyFrame(TimeSpan::fromSeconds(2), 100));
@@ -177,9 +190,9 @@ TEST_CASE("test Int16AnimationUsingKeyFrames", "[Int16AnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	Int16AnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::SizeProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::SizeProperty());
 	animation.keyFrames().insert(Int16KeyFrame(TimeSpan::fromSeconds(0), 10));
 	animation.keyFrames().insert(Int16KeyFrame(TimeSpan::fromSeconds(1), 20));
 	animation.keyFrames().insert(Int16KeyFrame(TimeSpan::fromSeconds(2), 100));
@@ -211,9 +224,9 @@ TEST_CASE("test Int32AnimationUsingKeyFrames", "[Int32AnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	Int32AnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::IndexProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::IndexProperty());
 	animation.keyFrames().insert(Int32KeyFrame(TimeSpan::fromSeconds(0), -10));
 	animation.keyFrames().insert(Int32KeyFrame(TimeSpan::fromSeconds(1), 0));
 	animation.keyFrames().insert(Int32KeyFrame(TimeSpan::fromSeconds(2), 999));
@@ -245,9 +258,9 @@ TEST_CASE("test Int64AnimationUsingKeyFrames", "[Int64AnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	Int64AnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::TicksProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::TicksProperty());
 	animation.keyFrames().insert(Int64KeyFrame(TimeSpan::fromSeconds(0), -10));
 	animation.keyFrames().insert(Int64KeyFrame(TimeSpan::fromSeconds(1), 0));
 	animation.keyFrames().insert(Int64KeyFrame(TimeSpan::fromSeconds(2), 999));
@@ -279,9 +292,9 @@ TEST_CASE("test FloatAnimationUsingKeyFrames", "[FloatAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	FloatAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::WidthProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::WidthProperty());
 	animation.keyFrames().insert(FloatKeyFrame(TimeSpan::fromSeconds(0), 0.1f));
 	animation.keyFrames().insert(FloatKeyFrame(TimeSpan::fromSeconds(1), 0.9f));
 	animation.keyFrames().insert(FloatKeyFrame(TimeSpan::fromSeconds(2), 1.0f));
@@ -313,9 +326,9 @@ TEST_CASE("test DoubleAnimationUsingKeyFrames", "[DoubleAnimationUsingKeyFrames]
 {
 	auto ui = std::make_shared<MyObject>();
 	DoubleAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::HeightProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::HeightProperty());
 	animation.keyFrames().insert(DoubleKeyFrame(TimeSpan::fromSeconds(0), 0.1));
 	animation.keyFrames().insert(DoubleKeyFrame(TimeSpan::fromSeconds(1), 0.9));
 	animation.keyFrames().insert(DoubleKeyFrame(TimeSpan::fromSeconds(2), 1.0));
@@ -347,9 +360,9 @@ TEST_CASE("test PointAnimationUsingKeyFrames", "[PointAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	PointAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::XProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::XProperty());
 	animation.keyFrames().insert(PointKeyFrame(TimeSpan::fromSeconds(0), Point()));
 	animation.keyFrames().insert(PointKeyFrame(TimeSpan::fromSeconds(1), Point(100, 100)));
 	animation.keyFrames().insert(PointKeyFrame(TimeSpan::fromSeconds(2), Point(-50, 900)));
@@ -381,9 +394,9 @@ TEST_CASE("test SizeAnimationUsingKeyFrames", "[SizeAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	SizeAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::ActualSizeProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::ActualSizeProperty());
 	animation.keyFrames().insert(SizeKeyFrame(TimeSpan::fromSeconds(0), Size()));
 	animation.keyFrames().insert(SizeKeyFrame(TimeSpan::fromSeconds(1), Size(100, 100)));
 	animation.keyFrames().insert(SizeKeyFrame(TimeSpan::fromSeconds(2), Size(-50, 900)));
@@ -415,9 +428,9 @@ TEST_CASE("test ColorAnimationUsingKeyFrames", "[ColorAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	ColorAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::FontColorProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::FontColorProperty());
 	animation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(0), Color()));
 	animation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(1), Color(0, 125, 100)));
 	animation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(2), Color(255, 10, 233)));
@@ -449,9 +462,9 @@ TEST_CASE("test RectAnimationUsingKeyFrames", "[RectAnimationUsingKeyFrames]")
 {
 	auto ui = std::make_shared<MyObject>();
 	RectAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::RectProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::RectProperty());
 	animation.keyFrames().insert(RectKeyFrame(TimeSpan::fromSeconds(0), Rect()));
 	animation.keyFrames().insert(RectKeyFrame(TimeSpan::fromSeconds(1), Rect(10, 10, 100, 50)));
 	animation.keyFrames().insert(RectKeyFrame(TimeSpan::fromSeconds(2), Rect(100, 100, 233, 233)));
@@ -483,9 +496,9 @@ TEST_CASE("test ThicknessAnimationUsingKeyFrames", "[ThicknessAnimationUsingKeyF
 {
 	auto ui = std::make_shared<MyObject>();
 	ThicknessAnimationUsingKeyFrames animation;
-	animation.setDuration(TimeSpan::fromSeconds(3));
-	animation.setTarget(ui);
-	animation.setTargetProperty(MyObject::MargProperty());
+	animation.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(3)));
+	animation.setValue<std::weak_ptr<DependencyObject>>(AnimationTimeline::TargetProperty(), ui);
+	animation.setValue(AnimationTimeline::TargetPropertyProperty(), MyObject::MargProperty());
 	animation.keyFrames().insert(ThicknessKeyFrame(TimeSpan::fromSeconds(0), Thickness()));
 	animation.keyFrames().insert(ThicknessKeyFrame(TimeSpan::fromSeconds(1), Thickness(10, 10, 100, 50)));
 	animation.keyFrames().insert(ThicknessKeyFrame(TimeSpan::fromSeconds(2), Thickness(100, 100, 233, 233)));

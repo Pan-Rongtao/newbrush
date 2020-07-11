@@ -1,4 +1,5 @@
 ﻿#include "newbrush/media/Easing.h"
+#include "newbrush/core/DependencyProperty.h"
 #include <math.h>
 
 using namespace nb;
@@ -8,81 +9,67 @@ using namespace nb;
 //图形参考：https://easings.net/												
 //			https://www.cnblogs.com/xwlyun/archive/2012/09/11/2680579.html
 
-double EasingBase::easeInCore(double normalizedTime)
+DependencyPropertyPtr EasingBase::EasingModeProperty()
 {
-	return 0.0;
+	static auto dp = DependencyProperty::registerDependency<EasingBase, EasingModeE>("EasingMode", EasingModeE::EaseIn);
+	return dp;
 }
 
-EasingBase::EasingBase()
-	: mode(EasingModeE::EaseIn)
-{
-}
-
-double LinearEase::easeInCore(double t)
+float LinearEase::easeInCore(float t)
 {
 	return t;
 }
 
-BackEase::BackEase(double amplitude)
-	: m_amplitude(amplitude)
+DependencyPropertyPtr BackEase::AmplitudeProperty()
 {
+	static auto dp = DependencyProperty::registerDependency<BackEase, float>("Amplitude", 1.0);
+	return dp;
 }
 
-double BackEase::easeInCore(double t)
+float BackEase::easeInCore(float t)
 {
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:
 	{
 		double s = 1.70158; //Amplitude
-		return t * t * ((s + 1) * t - s);
+		return (float)(t * t * ((s + 1) * t - s));
 	}
-	break;
 	case EasingModeE::EaseOut:
 	{
 		double s = 1.70158; //Amplitude
-		return --t, t * t * ((s + 1) * t + s) + 1;
+		return --t, (float)(t * t * ((s + 1) * t + s) + 1);
 	}
-	break;
 	case EasingModeE::EaseInOut:
 	{
 		double s = 1.70158 * 1.525;//Amplitude* 1.525
 		if (t < 0.5)
 		{
-			return t *= 2, 0.5 * t * t * (t * s + t - s);
+			return t *= 2, (float)(0.5 * t * t * (t * s + t - s));
 		}
 		else
 		{
-			return t = t * 2 - 2, 0.5 * (2 + t * t * (t * s + t + s));
+			return t = t * 2 - 2, (float)(0.5 * (2 + t * t * (t * s + t + s)));
 		}
 	}
-	break;
-	default:
-		return 0.0;
-		break;
+	default: return 0.0;
 	}
 }
 
-void BackEase::setAmplitude(double amplitude) &
+DependencyPropertyPtr BounceEase::BouncesProperty()
 {
-	if(amplitude < 0.0)
-		nbThrowException(std::underflow_error, "amplitude[%.2f] < 0.0", amplitude);
-
-	m_amplitude = amplitude;
+	static auto dp = DependencyProperty::registerDependency<BounceEase, uint32_t>("Bounces", 3);
+	return dp;
 }
 
-double BackEase::amplitude() const
+DependencyPropertyPtr BounceEase::BouncinessProperty()
 {
-	return m_amplitude;
+	static auto dp = DependencyProperty::registerDependency<BounceEase, float>("Bounciness", 2.0);
+	return dp;
 }
 
-BounceEase::BounceEase(uint32_t bounces, double bounciness)
-	: m_bounces(bounces)
-	, m_bounciness(bounciness)
-{
-}
-
-double BounceEase::easeInCore(double t)
+float BounceEase::easeInCore(float t)
 {
 	auto bounceEaseOut = [](double p)->double
 	{
@@ -96,161 +83,105 @@ double BounceEase::easeInCore(double t)
 		return 1 - bounceEaseOut(1 - p);
 	};
 
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return bounceEaseIn(t);
-	case EasingModeE::EaseOut:		return bounceEaseOut(t);
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * bounceEaseIn(t * 2)) : (0.5 * bounceEaseOut(t * 2 - 1) + 0.5);
+	case EasingModeE::EaseIn:		return (float)(bounceEaseIn(t));
+	case EasingModeE::EaseOut:		return (float)(bounceEaseOut(t));
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (0.5 * bounceEaseIn(t * 2)) : (0.5 * bounceEaseOut(t * 2 - 1) + 0.5));
 	default:						return 0.0;
 	}
 }
 
-void BounceEase::setBounces(uint32_t bounces) &
+float CircleEase::easeInCore(float t)
 {
-	m_bounces = bounces;
-}
-
-uint32_t BounceEase::bounces() const
-{
-	return m_bounces;
-}
-
-void BounceEase::setBounciness(double bounciness) &
-{
-	if (bounciness < 0.0)
-		nbThrowException(std::underflow_error, "bounciness[%.2f] < 0.0", bounciness);
-
-	m_bounciness = bounciness;
-}
-
-double BounceEase::bounciness() const
-{
-	return m_bounciness;
-}
-
-double CircleEase::easeInCore(double t)
-{
-	t = nb::clamp(0.0, 1.0, t);
+	t = nb::clamp(0.0f, 1.0f, t);
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return 1 - sqrt(1 - (t * t));
 	case EasingModeE::EaseOut:		return sqrt((2 - t) * t);
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * (1 - sqrt(1 - 4 * (t * t)))) : (0.5 * (sqrt(-(2 * t - 3) * (2 * t - 1)) + 1));
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (0.5 * (1 - sqrt(1 - 4 * (t * t)))) : (0.5 * (sqrt(-(2 * t - 3) * (2 * t - 1)) + 1)));
 	default:						return 0.0;
 	}
 }
 
-double CubicEase::easeInCore(double t)
+float CubicEase::easeInCore(float t)
 {
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t;
 	case EasingModeE::EaseOut:		return t -= 1, t * t * t + 1;
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (4 * t * t * t) : (t = 2 * t - 2, 0.5 * t * t * t + 1);
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (4 * t * t * t) : (t = 2 * t - 2, 0.5 * t * t * t + 1));
 	default:						return 0.0;
 	}
 }
 
-ElasticEase::ElasticEase(uint32_t oscillations, double springiness)
-	: m_oscillations(oscillations)
-	, m_springiness(springiness)
+DependencyPropertyPtr ElasticEase::OscillationsProperty()
 {
+	static auto dp = DependencyProperty::registerDependency<ElasticEase, uint32_t>("Oscillations", 3);
+	return dp;
 }
 
-double ElasticEase::easeInCore(double t)
+DependencyPropertyPtr ElasticEase::SpringinessProperty()
 {
+	static auto dp = DependencyProperty::registerDependency<ElasticEase, float>("Springiness", 3.0);
+	return dp;
+}
+
+float ElasticEase::easeInCore(float t)
+{
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return sin(13 * M_PI_2 * t) * pow(2, 10 * (t - 1));
-	case EasingModeE::EaseOut:		return sin(-13 * M_PI_2 * (t + 1)) * pow(2, -10 * t) + 1;
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * sin(13 * M_PI_2 * (2 * t)) * pow(2, 10 * ((2 * t) - 1))) : (0.5 * (sin(-13 * M_PI_2 * ((2 * t - 1) + 1)) * pow(2, -10 * (2 * t - 1)) + 2));
+	case EasingModeE::EaseIn:		return (float)(sin(13 * M_PI_2 * t) * pow(2, 10 * (t - 1)));
+	case EasingModeE::EaseOut:		return (float)(sin(-13 * M_PI_2 * (t + 1)) * pow(2, -10 * t) + 1);
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (0.5 * sin(13 * M_PI_2 * (2 * t)) * pow(2, 10 * ((2 * t) - 1))) : (0.5 * (sin(-13 * M_PI_2 * ((2 * t - 1) + 1)) * pow(2, -10 * (2 * t - 1)) + 2)));
 	default:						return 0.0;
 	}
 }
 
-void ElasticEase::setOscillations(uint32_t oscillations) &
+DependencyPropertyPtr ExponentialEase::ExponentProperty()
 {
-	m_oscillations = oscillations;
+	static auto dp = DependencyProperty::registerDependency<ExponentialEase, float>("Exponent", 2.0);
+	return dp;
 }
 
-uint32_t ElasticEase::oscillations() const
+float ExponentialEase::easeInCore(float t)
 {
-	return m_oscillations;
-}
-
-void ElasticEase::setSpringiness(double springiness) &
-{
-	if (springiness < 0.0)
-		nbThrowException(std::underflow_error, "springiness[%f] < 0.0", springiness);
-
-	m_springiness = springiness;
-}
-
-double ElasticEase::springiness() const
-{
-	return m_oscillations;
-}
-
-ExponentialEase::ExponentialEase(double exponent)
-	: m_exponent(exponent)
-{
-}
-
-double ExponentialEase::easeInCore(double t)
-{
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return (t == 0.0) ? t : pow(2, 10 * (t - 1));
-	case EasingModeE::EaseOut:		return (t == 1.0) ? t : 1 - pow(2, -10 * t);
-	case EasingModeE::EaseInOut:	return (t == 0.0 || t == 1.0) ? t : (t < 0.5) ? (0.5 * pow(2, (20 * t) - 10)) : (-0.5 * pow(2, (-20 * t) + 10) + 1);
+	case EasingModeE::EaseIn:		return (float)((t == 0.0) ? t : pow(2, 10 * (t - 1)));
+	case EasingModeE::EaseOut:		return (float)((t == 1.0) ? t : 1 - pow(2, -10 * t));
+	case EasingModeE::EaseInOut:	return (float)((t == 0.0 || t == 1.0) ? t : (t < 0.5) ? (0.5 * pow(2, (20 * t) - 10)) : (-0.5 * pow(2, (-20 * t) + 10) + 1));
 	default:						return 0.0;
 	}
 }
 
-void ExponentialEase::setExponent(double exponent) &
+DependencyPropertyPtr PowerEase::PowerProperty()
 {
-	if (exponent < 0.0)
-		nbThrowException(std::underflow_error, "exponent[%f] < 0.0", exponent);
-
-	m_exponent = exponent;
+	static auto dp = DependencyProperty::registerDependency<PowerEase, float>("Power", 2.0);
+	return dp;
 }
 
-double ExponentialEase::exponent() const
+float PowerEase::easeInCore(float t)
 {
-	return 0.0;
-}
-
-PowerEase::PowerEase(double power)
-	: m_power(power)
-{
-}
-
-double PowerEase::easeInCore(double t)
-{
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
+	auto power = getValue<float>(PowerProperty());
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return pow(t, m_power);
-	case EasingModeE::EaseOut:		return 1 - pow(1 - t, m_power);
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (0.5 * pow(2 * t, m_power)) : (1 - 0.5 * pow(2 - 2 * t, m_power));
+	case EasingModeE::EaseIn:		return pow(t, power);
+	case EasingModeE::EaseOut:		return 1 - pow(1 - t, power);
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (0.5 * pow(2 * t, power)) : (1 - 0.5 * pow(2 - 2 * t, power)));
 	default:						return 0.0;
 	}
 }
 
-void PowerEase::setPower(double power) &
+float QuadraticEase::easeInCore(float t)
 {
-	if (power < 0.0)
-		nbThrowException(std::underflow_error, "power[%f] < 0.0", power);
-
-	m_power = power;
-}
-
-double PowerEase::power() const
-{
-	return m_power;
-}
-
-double QuadraticEase::easeInCore(double t)
-{
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t;
@@ -260,35 +191,38 @@ double QuadraticEase::easeInCore(double t)
 	}
 }
 
-double QuarticEase::easeInCore(double t)
+float QuarticEase::easeInCore(float t)
 {
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t * t;
-	case EasingModeE::EaseOut:		{ double f = (t - 1);	return f * f * f * (1 - t) + 1; }
+	case EasingModeE::EaseOut:		{ double f = (t - 1);	return (float)(f * f * f * (1 - t) + 1); }
 	case EasingModeE::EaseInOut:	return (t < 0.5) ? (8 * t * t * t * t) : (t -= 1, -8 * t * t * t * t + 1);
 	default:						return 0.0;
 	}
 }
 
-double QuinticEase::easeInCore(double t)
+float QuinticEase::easeInCore(float t)
 {
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
 	case EasingModeE::EaseIn:		return t * t * t * t * t;
-	case EasingModeE::EaseOut:		{ double f = (t - 1);	return f * f * f * f * f + 1; }
-	case EasingModeE::EaseInOut:	return (t < 0.5) ? (16 * t * t * t * t * t) : (t = 2 * t - 2, 0.5 * t * t * t * t * t + 1);
+	case EasingModeE::EaseOut:		{ double f = (t - 1);	return (float)(f * f * f * f * f + 1); }
+	case EasingModeE::EaseInOut:	return (float)((t < 0.5) ? (16 * t * t * t * t * t) : (t = 2 * t - 2, 0.5 * t * t * t * t * t + 1));
 	default:						return 0.0;
 	}
 }
 
-double SineEase::easeInCore(double t)
+float SineEase::easeInCore(float t)
 {
+	auto mode = getValue<EasingModeE>(EasingModeProperty());
 	switch (mode)
 	{
-	case EasingModeE::EaseIn:		return sin((t - 1) * M_PI_2) + 1;
-	case EasingModeE::EaseOut:		return sin(t * M_PI_2);
-	case EasingModeE::EaseInOut:	return 0.5 * (1 - cos(t * M_PI));
+	case EasingModeE::EaseIn:		return (float)(sin((t - 1) * M_PI_2) + 1);
+	case EasingModeE::EaseOut:		return (float)(sin(t * M_PI_2));
+	case EasingModeE::EaseInOut:	return (float)(0.5 * (1 - cos(t * M_PI)));
 	default:						return 0.0;
 	}
 }

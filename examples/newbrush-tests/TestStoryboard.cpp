@@ -1,8 +1,9 @@
 #include "newbrush/media/AnimationTimeline.h"
 #include "newbrush/media/Storyboard.h"
-#include "newbrush/media/PropertyAnimation.h"
 #include "newbrush/gui/UIElement.h"
+#include "newbrush/core/DependencyProperty.h"
 #include "catch2/catch.hpp"
+#include "newbrush/media/FloatAnimation.h"
 
 using namespace nb;
 
@@ -10,10 +11,10 @@ TEST_CASE("Test nb::Storyboard", "[Storyboard]")
 {
 	auto ui = std::make_shared<UIElement>();
 	auto wAni = std::make_shared<FloatAnimation>();// (0.0, 100.0);
-	wAni->setFrom(100.0f);
-	wAni->setDuration(TimeSpan::fromSeconds(2));
-	wAni->setTarget(ui);
-	wAni->setTargetProperty(UIElement::WidthProperty());
+	wAni->setValue(FloatAnimation::FromProperty(), 100.0f);
+	wAni->setValue(Timeline::DurationProperty(), TimeSpan::fromSeconds(2));
+	wAni->setValue(AnimationTimeline::TargetProperty(), ui);
+	wAni->setValue(AnimationTimeline::TargetPropertyProperty(), UIElement::WidthProperty());
 	wAni->StateChanged += [](const EventArgs &args) {
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto state = tl->currentState();
@@ -31,11 +32,11 @@ TEST_CASE("Test nb::Storyboard", "[Storyboard]")
 	};
 
 	auto hAni = std::make_shared<FloatAnimation>();// (0.0, 100.0);
-	hAni->setFrom(100.0f);
-	hAni->setBeginTime(TimeSpan::fromSeconds(1));
-	hAni->setDuration(TimeSpan::fromSeconds(3));
-	hAni->setTarget(ui);
-	hAni->setTargetProperty(UIElement::HeightProperty());
+	hAni->setValue(FloatAnimation::FromProperty(), 100.0f);
+	hAni->setValue(Timeline::BeginTimeProperty(), TimeSpan::fromSeconds(1));
+	hAni->setValue(Timeline::DurationProperty(), TimeSpan::fromSeconds(3));
+	hAni->setValue(AnimationTimeline::TargetProperty(), ui);
+	hAni->setValue(AnimationTimeline::TargetPropertyProperty(), UIElement::HeightProperty());
 	hAni->StateChanged += [](const EventArgs &args) {
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto state = tl->currentState();

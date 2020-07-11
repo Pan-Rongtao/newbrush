@@ -2,6 +2,7 @@
 #include "newbrush/core/TimeSpan.h"
 #include "newbrush/core/Timer.h"
 #include "newbrush/media/RepeatBehavior.h"
+#include "newbrush/core/DependencyObject.h"
 
 namespace nb{
 
@@ -22,22 +23,22 @@ private:
 	TimeSpan	*m_ts;
 };
 
-class NB_API Timeline : public Object
+//
+enum class HandoffBehaviorE : uint8_t
+{
+	Compose,
+	SnapshotAndReplace,
+};
+
+enum class FillBehaviorE : uint8_t
+{
+	HoldEnd,		//保持结束值
+	Stop,			//返回初始值
+};
+
+class NB_API Timeline : public DependencyObject
 {
 public:
-	//
-	enum class HandoffBehaviorE : uint8_t
-	{
-		Compose,
-		SnapshotAndReplace,
-	};
-
-	enum class FillBehaviorE : uint8_t
-	{
-		HoldEnd,		//保持结束值
-		Stop,			//返回初始值
-	};
-
 	enum class StateE : uint8_t
 	{
 		Active,
@@ -58,32 +59,14 @@ public:
 	void begin();
 	void stop();
 
-	//设置动画延时开始的时间
-	//异常：std::invalid_argumentbeginTime为负数
-	void setBeginTime(const TimeSpan &beginTime) &;
+	static DependencyPropertyPtr BeginTimeProperty();	//开始时间（TimeSpan，默认值TimeSpan(0)）
+	static DependencyPropertyPtr DurationProperty();	//持续时间（Duration，默认值Duration::automatic()）
+	static DependencyPropertyPtr AutoReverseProperty();	//完成正向播放后是否进行反向动画（bool，默认值false）
+	static DependencyPropertyPtr FillBehaviorProperty();//填充后的行为（FillBehaviorE，默认值FillBehaviorE::HoldEnd）
+	static DependencyPropertyPtr RepeatBehaviorProperty();//重复行为（RepeatBehavior，默认值RepeatBehavior(1)）
 
-	//获取动画延迟开始的时间
-	const TimeSpan &beginTime() const;
-	
-	//设置动画时长
-	//异常：std::invalid_argumentbeginTime为负数
-	void setDuration(const Duration &duration) &;
-
-	//获取动画时长
-	const Duration &duration() const;
+	//重写返回实际持续时间，不重写返回1s
 	virtual TimeSpan getActualDurationTimespan() const;
-
-	//自动反向动画
-	void setAutoReversel(bool autoReversel) &;
-	bool autoReversel() const;
-
-	//动画填充后的行为
-	void setFillBehavior(FillBehaviorE fillBehavior) &;
-	FillBehaviorE fillBehavior() const;
-
-	//重复行为
-	void setRepeatBehavior(const RepeatBehavior &repeatBehavior) &;
-	RepeatBehavior repeatBehavior() const;
 
 	//获取当前时间
 	StateE currentState() const;
@@ -108,11 +91,6 @@ private:
 	void onTick(const EventArgs &args);
 
 	StateE			m_state;
-	TimeSpan		m_beginTime;
-	Duration		m_duration;
-	bool			m_autoReversel;
-	FillBehaviorE	m_fillBehavior;
-	RepeatBehavior	m_repeatBehavior;
 	uint64_t		m_startTick;
 	Timer			m_timer;
 };

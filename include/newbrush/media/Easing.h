@@ -17,172 +17,152 @@
 
 *****************************************************************************/
 #pragma once
-#include "newbrush/core/Def.h"
+#include "newbrush/core/DependencyObject.h"
 
 namespace nb {
 
-//缓动函数基类
-class NB_API EasingBase
+enum class EasingModeE
 {
-public:
-	enum class EasingModeE
-	{
-		EaseIn,
-		EaseOut,
-		EaseInOut,
-	};
+	EaseIn,
+	EaseOut,
+	EaseInOut,
+};
 
+//缓动函数基类
+class NB_API EasingBase : public DependencyObject
+{
+	RTTR_ENABLE(DependencyObject)
 public:
 	virtual ~EasingBase() = default;
 
+	//差值模式的依赖属性（EasingModeE，默认值EasingModeE::EaseIn）
+	static DependencyPropertyPtr EasingModeProperty();
+
 	//子类需重写此方法来给出f(t)值，即随时间变化后的进度值（0.0~1.0)
 	//t：动画的规范化时间，0.0~1.0之间
-	virtual double easeInCore(double t);
-
-	EasingModeE		mode;
+	virtual float easeInCore(float t) = 0;
 
 protected:
-	EasingBase();
+	EasingBase() = default;
 };
 
 //LinearEase（线型缓冲）
 class NB_API LinearEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 
 };
 
 //BackEase（倒退缓冲)
 class NB_API BackEase : public EasingBase
 {
+	RTTR_ENABLE(EasingBase)
 public:
-	BackEase(double amplitude = 1.0);
-	virtual double easeInCore(double t) override;
+	static DependencyPropertyPtr AmplitudeProperty();	//回升幅度参数的依赖属性（float，默认值1.0）
+	
+protected:
+	virtual float easeInCore(float t) override;
 
-	//回升幅度参数
-	//异常：amplitude为负数
-	void setAmplitude(double amplitude) &;
-	double amplitude() const;
-
-private:
-	double	m_amplitude;
 };
 
 //BounceEase（弹跳缓冲）
 class NB_API BounceEase : public EasingBase
 {
+	RTTR_ENABLE(EasingBase)
 public:
-	BounceEase(uint32_t bounces = 3, double bounciness = 2.0);
-	virtual double easeInCore(double t) override;
+	static DependencyPropertyPtr BouncesProperty();		//弹跳次数的依赖属性（uint32_t，默认值3）
+	static DependencyPropertyPtr BouncinessProperty();	//弹跳系数的依赖属性（float，默认值2.0）
 
-	//弹跳次数
-	void setBounces(uint32_t bounces) &;
-	uint32_t bounces() const;
+protected:
+	virtual float easeInCore(float t) override;
 
-	//弹跳系数
-	//异常：bounciness为负数
-	void setBounciness(double bounciness) &;
-	double bounciness() const;
-
-private:
-	uint32_t	m_bounces;
-	double		m_bounciness;
 };
 
 //CircleEase（圆缓冲）
 class NB_API CircleEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 //CubicEase（立方体缓冲）
 class NB_API CubicEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 //ElasticEase（伸缩/弹簧缓冲）
 class NB_API ElasticEase : public EasingBase
 {
+	RTTR_ENABLE(EasingBase)
 public:
-	ElasticEase(uint32_t oscillations = 3, double springiness = 3.0);
-	virtual double easeInCore(double t) override;
+	static DependencyPropertyPtr OscillationsProperty();//弹跳次数的依赖属性（uint32_t，默认值3）
+	static DependencyPropertyPtr SpringinessProperty();	//弹跳系数的依赖属性（float，默认值3.0）
 
-	//弹动次数
-	void setOscillations(uint32_t oscillations) &;
-	uint32_t oscillations() const;
+protected:
+	virtual float easeInCore(float t) override;
 
-	//弹簧刚度
-	//异常：springiness为负数
-	void setSpringiness(double springiness) &;
-	double springiness() const;
-
-private:
-	uint32_t	m_oscillations;
-	double		m_springiness;
 };
 
 //ExponentialEase（指数缓冲）
 class NB_API ExponentialEase : public EasingBase
 {
+	RTTR_ENABLE(EasingBase)
 public:
-	ExponentialEase(double exponent = 2.0);
-	virtual double easeInCore(double t) override;
+	static DependencyPropertyPtr ExponentProperty();//内插指数的依赖属性（float，默认值2.0）
 
-	//内插指数
-	//异常：exponent为负数
-	void setExponent(double exponent) &;
-	double exponent() const;
+protected:
+	virtual float easeInCore(float t) override;
 
-private:
-	double	m_exponent;		
 };
 
 //PowerEase（乘方缓冲）
 class NB_API PowerEase : public EasingBase
 {
+	RTTR_ENABLE(EasingBase)
 public:
-	PowerEase(double power = 2.0);
-	virtual double easeInCore(double t) override;
+	static DependencyPropertyPtr PowerProperty();//内插的指数幂的依赖属性（float，默认值2.0,例如，值为 7 将创建遵循方程式 f(t) = t7）
 
-	//内插的指数幂
-	//异常：power为负数
-	void setPower(double power) &;
-	double power() const;
+protected:
+	virtual float easeInCore(float t) override;
 
-private:
-	double m_power;			//内插的指数幂。例如，值为 7 将创建遵循方程式 f(t) = t7
 };
 
 //QuadraticEase（平方缓冲）
 class NB_API QuadraticEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 //QuarticEase（四次方缓冲）
 class NB_API QuarticEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 //QuinticEase（五次方缓冲）
 class NB_API QuinticEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 //SineEase（正弦缓冲）
 class NB_API SineEase : public EasingBase
 {
-public:
-	virtual double easeInCore(double t) override;
+	RTTR_ENABLE(EasingBase)
+protected:
+	virtual float easeInCore(float t) override;
 };
 
 }

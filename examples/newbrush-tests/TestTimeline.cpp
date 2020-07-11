@@ -7,13 +7,14 @@ TEST_CASE("test Timeline", "[Timeline]")
 {
 	SECTION("timeline1")
 	{
+		Duration d = TimeSpan::fromDays(1);
 		Timeline tl1;
-		tl1.setBeginTime(TimeSpan::fromSeconds(0));
-		tl1.setDuration(TimeSpan::fromSeconds(1));
+		tl1.setValue(Timeline::BeginTimeProperty(), TimeSpan::fromSeconds(0));
+		tl1.setValue(Timeline::DurationProperty(), Duration(TimeSpan::fromSeconds(1)));
 		CHECK(tl1.getCurrentTime() == TimeSpan::zero());
 		CHECK(tl1.getCurrentProgress() == 0);
-		tl1.setAutoReversel(true);
-		tl1.setRepeatBehavior(RepeatBehavior::fromDuration(TimeSpan::fromSeconds(3)));
+		tl1 .setValue(Timeline::AutoReverseProperty(), true);
+		tl1.setValue(Timeline::RepeatBehaviorProperty(), RepeatBehavior(TimeSpan::fromSeconds(3)));
 		tl1.StateChanged += [](const EventArgs &args) {
 			auto tl = static_cast<Timeline *>(args.sender);
 			auto state = tl->currentState();
