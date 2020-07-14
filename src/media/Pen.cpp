@@ -32,9 +32,16 @@ DependencyPropertyPtr Pen::DashCapProperty()
 	return dp;
 }
 
-DependencyPropertyPtr Pen::DashStyleProperty()
+DependencyPropertyPtr Pen::DashOffsetProperty()
 {
-	return DependencyPropertyPtr();
+	static auto dp = DependencyProperty::registerDependency<Pen, float>("DashOffset", 0.0);
+	return dp;
+}
+
+DependencyPropertyPtr Pen::DashArrayProperty()
+{
+	static auto dp = DependencyProperty::registerDependency<Pen, std::vector<float>>("DashArray", {});
+	return dp;
 }
 
 DependencyPropertyPtr Pen::StartLineCapProperty()

@@ -8,13 +8,17 @@ namespace nb {
 class Pen;
 class Brush;
 class ImageSource;
+class Viewport2D;
 using PenPtr = std::shared_ptr<Pen>;
 using BrushPtr = std::shared_ptr<Brush>;
 using ImageSourcePtr = std::shared_ptr<ImageSource>;
+using Viewport2DePtr = std::shared_ptr<Viewport2D>;
 
-class DrawingContext : public Object
+class NB_API DrawingContext : public Object
 {
 public:
+	DrawingContext();
+
 	//绘制一条线段
 	void drawLine(PenPtr pen, const Point &p0, const Point &p1);
 
@@ -22,16 +26,19 @@ public:
 	void drawRectangle(BrushPtr brush, PenPtr pen, const Rect &rect);
 
 	//绘制一个圆角矩形
-	void drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect &rect, double radiusX, double radiusY);
+	void drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect &rect, float radiusX, float radiusY);
 
 	//绘制一个椭圆
-	void drawEllipse(BrushPtr brush, PenPtr pen, const Point &center, double radiusX, double radiusY);
+	void drawEllipse(BrushPtr brush, PenPtr pen, const Point &center, float radiusX, float radiusY);
 
 	//绘制图片
 	void drawImage(ImageSourcePtr source, const Rect &rect);
 
 	//绘制文本
 	void drawText(/*ImageSourcePtr source, FormattedText*/const Point &p);
+
+private:
+	Viewport2DePtr	m_viewport;
 };
 
 }

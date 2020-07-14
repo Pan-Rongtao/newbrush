@@ -31,6 +31,7 @@ public:
 	Vertex();
 	explicit Vertex(const glm::vec3 &position);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color);
+	Vertex(const glm::vec3 &position, const glm::vec2 &texCoord);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord);
 	Vertex(const glm::vec3 &position, const glm::vec4 &color, const glm::vec2 &texCoord, const glm::vec3 &normal);
 

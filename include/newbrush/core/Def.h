@@ -135,7 +135,7 @@ namespace nb
 	template<class T1, class T2>
 	bool is(const std::shared_ptr<T2> &other)
 	{
-		return as<T1, T2>() != nullptr;
+		return as<T1, T2>(other) != nullptr;
 	}
 
 	template<class T1, class T2>

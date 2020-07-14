@@ -44,7 +44,6 @@ public:
 
 	Point getMousePosition() const;
 	static void pollEvents();
-	static Viewport2D drawContext;
 
 	static DependencyPropertyPtr WindowStateProperty();	//窗口状态的依赖属性（WindowStateE）
 	static DependencyPropertyPtr WindowStyleProperty();	//窗口样式的依赖属性（WindowStyle）
@@ -115,9 +114,10 @@ private:
 	bool			m_processingCallback;
 	bool			m_processingWindowStateChanged;
 	WindowStateE	m_lastWindowState;
+	Viewport2D		m_drawContext;
 
 	friend class Application;
-
+	friend class UIElement;
 };
 
 }

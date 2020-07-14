@@ -13,17 +13,16 @@
 using namespace nb;
 
 Image::Image()
-	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }), Programs::image()))
 {
-	auto &mesh = m_renderObj->model()->meshes[0];
-	auto &vertexs = mesh.vertexs;
-	auto &indices = mesh.indices;
-	vertexs.resize(4);
-	vertexs[0].texCoord = glm::vec2(0.0, 1.0);
-	vertexs[1].texCoord = glm::vec2(1.0, 1.0);
-	vertexs[2].texCoord = glm::vec2(1.0, 0.0);
-	vertexs[3].texCoord = glm::vec2(0.0, 0.0);
-	indices.insert(indices.begin(), { 0, 1, 2, 0, 2, 3 });
+	auto model = std::make_shared<Model>(std::vector<Mesh>{ Mesh() });
+	auto &mesh = model->meshes[0];
+	mesh.vertexs.resize(4);
+	mesh.vertexs[0].texCoord = glm::vec2(0.0, 1.0);
+	mesh.vertexs[1].texCoord = glm::vec2(1.0, 1.0);
+	mesh.vertexs[2].texCoord = glm::vec2(1.0, 0.0);
+	mesh.vertexs[3].texCoord = glm::vec2(0.0, 0.0);
+	mesh.indices = { 0, 1, 2, 0, 2, 3 };
+	m_renderObj = std::make_shared<RenderObject>(model, Programs::image());
 }
 
 void Image::onRender(Viewport2D & drawContext)
@@ -31,15 +30,14 @@ void Image::onRender(Viewport2D & drawContext)
 	auto offset = worldOffset();
 	auto const &actualSize = getValue<Size>(ActualSizeProperty());
 	Rect rc(offset.x(), offset.y(), actualSize);//UIElement未做裁剪，所以render区域可能会超出范围
-	auto c = rc.center();
 	auto &vertexs = m_renderObj->model()->meshes[0].vertexs;
-	vertexs[0].position = glm::vec3{ -rc.width()* 0.5, rc.height() * 0.5, 0.0f };
-	vertexs[1].position = glm::vec3{ rc.width() * 0.5, rc.height() * 0.5, 0.0f };
-	vertexs[2].position = glm::vec3{ rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
-	vertexs[3].position = glm::vec3{ -rc.width() * 0.5, -rc.height() * 0.5, 0.0f };
+	vertexs[0].position = glm::vec3{ rc.left(), rc.bottom(), 0.0f };
+	vertexs[1].position = glm::vec3{ rc.right(), rc.bottom(), 0.0f };
+	vertexs[2].position = glm::vec3{ rc.right(), rc.top(), 0.0f };
+	vertexs[3].position = glm::vec3{ rc.left(), rc.top(), 0.0f };
 
 	drawContext.queue(m_renderObj);
-	m_renderObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+//	m_renderObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
 }
 
 DependencyPropertyPtr Image::SourceProperty()

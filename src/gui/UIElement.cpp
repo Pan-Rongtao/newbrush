@@ -206,7 +206,9 @@ void UIElement::updateLayout()
 	auto const &rootDesiredSize = root->desiredSize();
 	root->measure({ rootWidth, rootHeight });
 	root->arrage(Rect(0, 0, rootDesiredSize));
-	root->onRender(Window::drawContext);
+	auto window = nb::as<Window>(root);
+	
+	root->onRender(window->m_drawContext);
 }
 
 //直接忽略返回的情况

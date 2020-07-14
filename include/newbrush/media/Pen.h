@@ -5,7 +5,7 @@ namespace nb {
 
 class Brush;
 using BrushPtr = std::shared_ptr<Brush>;
-class Pen : public DependencyObject
+class NB_API Pen : public DependencyObject
 {
 public:
 	Pen();
@@ -14,7 +14,8 @@ public:
 	static DependencyPropertyPtr BrushProperty();
 	static DependencyPropertyPtr ThicknessProperty();
 	static DependencyPropertyPtr DashCapProperty();
-	static DependencyPropertyPtr DashStyleProperty();
+	static DependencyPropertyPtr DashOffsetProperty();
+	static DependencyPropertyPtr DashArrayProperty();
 	static DependencyPropertyPtr StartLineCapProperty();
 	static DependencyPropertyPtr EndLineCapProperty();
 	static DependencyPropertyPtr LineJoinProperty();

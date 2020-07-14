@@ -24,6 +24,11 @@ Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color)
 {
 }
 
+Vertex::Vertex(const glm::vec3 & position, const glm::vec2 & texCoord)
+	: Vertex(position, glm::vec4(0.0, 0.0, 0.0, 1.0), texCoord, glm::vec3())
+{
+}
+
 Vertex::Vertex(const glm::vec3 & position, const glm::vec4 & color, const glm::vec2 & texCoord)
 	: Vertex(position, color, texCoord, glm::vec3())
 {

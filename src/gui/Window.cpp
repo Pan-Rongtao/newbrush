@@ -14,7 +14,6 @@
 
 using namespace nb;
 
-Viewport2D Window::drawContext;
 static bool	g_windowSystemInitialized = false;
 
 //glfw document：https://www.glfw.org/docs/latest/window_guide.html#window_windowed_full_screen
@@ -171,8 +170,8 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-	drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
-	drawContext.viewport(0, 0, width, height);
+	m_drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
+	m_drawContext.viewport(0, 0, width, height);
 	glEnable(GL_DEPTH_TEST);
 	setValue(WidthProperty(), (float)width);
 	setValue(HeightProperty(), (float)height);
@@ -316,7 +315,7 @@ void Window::render()
 	{
 		static int frames = 0;
 		static uint64_t k = getTickCount();
-		drawContext.draw();
+		m_drawContext.draw();
 
 		++frames;
 		uint64_t kk = getTickCount();
