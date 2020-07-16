@@ -90,7 +90,7 @@ int Application::run(int argc, char *argv[])
 			}
 			for (auto const w : Singleton<WindowCollection>::get()->windows())
 			{
-				w->render();
+			//	w->render();
 			}
 			Timer::driveInLoop();
 			Window::pollEvents();

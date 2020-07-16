@@ -22,7 +22,7 @@ DependencyPropertyPtr Pen::BrushProperty()
 
 DependencyPropertyPtr Pen::ThicknessProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Pen, Thickness>("Thickness", Thickness(0));
+	static auto dp = DependencyProperty::registerDependency<Pen, float>("Thickness", 0.0);
 	return dp;
 }
 

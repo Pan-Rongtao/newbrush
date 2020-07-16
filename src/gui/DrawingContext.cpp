@@ -1,7 +1,6 @@
-#include "newbrush/gles/DrawingContext.h"
+#include "newbrush/gui/DrawingContext.h"
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/gles/Program.h"
-#include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/ImageSource.h"
 #include "newbrush/media/Pen.h"
@@ -11,6 +10,7 @@
 #include "newbrush/media/ImageBrush.h"
 #include "newbrush/media/EffectBrush.h"
 #include <math.h>
+#include <GLES2/gl2.h>
 
 using namespace nb;
 
@@ -62,7 +62,6 @@ void updateBrush(RenderObjectPtr ro, BrushPtr brush)
 }
 
 DrawingContext::DrawingContext()
-	: m_viewport(std::make_shared<Viewport2D>())
 {
 }
 
@@ -77,9 +76,10 @@ void DrawingContext::drawLine(PenPtr pen, const Point & p0, const Point & p1)
 	model->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
 
 	auto renderObj = std::make_shared<RenderObject>(model);
-	m_viewport->queue(renderObj);
 	auto brush = pen->getValue<BrushPtr>(Pen::BrushProperty());
 	updateBrush(renderObj, brush);
+
+	m_renderObjects.push_back(renderObj);
 }
 
 void DrawingContext::drawRectangle(BrushPtr brush, PenPtr pen, const Rect & rect)
@@ -89,12 +89,14 @@ void DrawingContext::drawRectangle(BrushPtr brush, PenPtr pen, const Rect & rect
 
 void DrawingContext::drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect & rect, float radiusX, float radiusY)
 {
-	auto makeFillRenderObject = [](float width, float height, float radiusX, float radiusY)->RenderObjectPtr
+	auto makeFillRenderObject = [](const Rect &rc, float radiusX, float radiusY)->RenderObjectPtr
 	{
 		auto model = std::make_shared<Model>(std::vector<Mesh>{ Mesh() });
 		auto &mesh = model->meshes[0];	
 		auto &vertexs = mesh.vertexs;
 		auto &indices = mesh.indices;
+		auto width = rc.width();
+		auto height = rc.height();
 		bool radius = (width != 0.0f && height != 0.0f) && (radiusX != 0.0f && radiusY != 0.0f);			//是否需要弧形
 		constexpr auto connerVertexSize = 20u;							//每个弧形的顶点数
 		constexpr auto connerIndicesSize = 3 * (connerVertexSize - 2);	//每个弧形的顶点序列大小
@@ -145,10 +147,10 @@ void DrawingContext::drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect
 			};
 			//左上角弧形、右上角弧形、右下角弧形、左下角弧形
 			auto connerIndex = 0u;
-			fillConner(glm::vec3{ _radiusX - width * 0.5, _radiusY - height * 0.5, 0.0f }, (float)M_PI, connerIndex++);
-			fillConner(glm::vec3{ width * 0.5 - _radiusX, _radiusY - height * 0.5, 0.0f }, (float)M_PI * 1.5f, connerIndex++);
-			fillConner(glm::vec3{ width * 0.5 - _radiusX, height * 0.5 - _radiusY, 0.0f }, M_PI * 0.0, connerIndex++);
-			fillConner(glm::vec3{ _radiusX - width * 0.5, height * 0.5 - _radiusY, 0.0f }, (float)M_PI * 0.5, connerIndex++);
+			fillConner(glm::vec3{ _radiusX + rc.left(), _radiusY + rc.top(), 0.0f }, (float)M_PI, connerIndex++);
+			fillConner(glm::vec3{ rc.right() - _radiusX, _radiusY + rc.top(), 0.0f }, (float)M_PI * 1.5f, connerIndex++);
+			fillConner(glm::vec3{ rc.right() - _radiusX, rc.bottom() - _radiusY, 0.0f }, M_PI * 0.0, connerIndex++);
+			fillConner(glm::vec3{ _radiusX + rc.left(), rc.bottom() - _radiusY, 0.0f }, (float)M_PI * 0.5, connerIndex++);
 			//中间十字两个矩形的顶点序列
 			auto beg = indices.size() - 12;
 			indices[beg++] = 1;						indices[beg++] = connerVertexSize * 2 - 1;	indices[beg++] = connerVertexSize * 2 + 1;
@@ -159,10 +161,10 @@ void DrawingContext::drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect
 		}
 		else
 		{
-			vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
-			vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
-			vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
-			vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+			vertexs[0].position = glm::vec3{ rc.left(), rc.bottom(), 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
+			vertexs[1].position = glm::vec3{ rc.right(), rc.bottom(), 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
+			vertexs[2].position = glm::vec3{ rc.right(), rc.top(), 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
+			vertexs[3].position = glm::vec3{ rc.left(), rc.top(), 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
 			indices = { 0, 1, 2, 0, 2, 3 };
 		}
 		auto renderObj = std::make_shared<RenderObject>(model);
@@ -182,21 +184,28 @@ void DrawingContext::drawRoundedRectangle(BrushPtr brush, PenPtr pen, const Rect
 		return renderObj;
 	};
 
-	auto const &strokeThickness = pen->getValue<float>(Pen::ThicknessProperty());
-	auto fillObj = makeFillRenderObject(rect.width() - strokeThickness, rect.height() - strokeThickness, radiusX, radiusY);
-	auto strokeObj = makeStrokeRenderObject(pen, rect);
-	updateBrush(fillObj, brush);
-	auto penBrush = pen->getValue<BrushPtr>(Pen::BrushProperty());
-	updateBrush(strokeObj, penBrush);
+	if (brush)
+	{
+		auto const &strokeThickness = pen ? pen->getValue<float>(Pen::ThicknessProperty()) : 0.0f;
+		Rect fillRect(rect.x() + 0.5f * strokeThickness, rect.y() + 0.5f * strokeThickness, rect.width() - strokeThickness, rect.height() - strokeThickness);
+		auto fillObj = makeFillRenderObject(fillRect, radiusX, radiusY);
+		updateBrush(fillObj, brush);
+		m_renderObjects.push_back(fillObj);
+	}
 
-	m_viewport->queue(fillObj);
-	m_viewport->queue(strokeObj);
+	if (pen)
+	{
+		auto strokeObj = makeStrokeRenderObject(pen, rect);
+		auto penBrush = pen->getValue<BrushPtr>(Pen::BrushProperty());
+		updateBrush(strokeObj, penBrush);
+		m_renderObjects.push_back(strokeObj);
+	}
 }
 
 constexpr auto vertexCount = 200;
 void DrawingContext::drawEllipse(BrushPtr brush, PenPtr pen, const Point & center, float radiusX, float radiusY)
 {
-	auto makeFillRenderObject = [](float a, float b)->RenderObjectPtr
+	auto makeFillRenderObject = [](const Point &center, float a, float b)->RenderObjectPtr
 	{
 		auto getIndices = []()->std::vector<uint16_t> 
 		{
@@ -215,26 +224,25 @@ void DrawingContext::drawEllipse(BrushPtr brush, PenPtr pen, const Point & cente
 			return indices;
 		};
 
-		auto model = std::make_shared<Model>(std::vector<Mesh>{ Mesh() });
+		auto model = std::make_shared<Model>(std::vector<Mesh>{ Mesh(std::vector<Vertex>(vertexCount), getIndices()) });
 		auto &mesh = model->meshes[0];
-		mesh.indices = getIndices();
 		auto &vertexs = mesh.vertexs;
 		//中心点
-		vertexs[0].position = glm::vec3();
+		vertexs[0].position = { center.x(), center.y(), 0.0 };
 		vertexs[0].texCoord = glm::vec2(0.5, 0.5);
 		//是否是笛卡尔坐标系，顶点和纹理坐标将不同
 		constexpr auto radianStep = 2 * M_PI / (vertexCount - 2);
 		for (int i = 1; i != vertexCount; ++i)
 		{
 			auto radian = radianStep * i;
-			vertexs[i].position = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
+			vertexs[i].position = glm::vec3(center.x() + a * cos(radian), center.y() + b * sin(radian), 0.0);
 			vertexs[i].texCoord = glm::vec2(0.5 * cos(radian) + 0.5, 1.0 - (0.5 * sin(radian) + 0.5));
 		}
 		auto renderObj = std::make_shared<RenderObject>(model);
 		return renderObj;
 	};
 
-	auto makeStrokeRenderObject = [](PenPtr pen, float a, float b)->RenderObjectPtr
+	auto makeStrokeRenderObject = [](PenPtr pen, const Point &center, float a, float b)->RenderObjectPtr
 	{
 		auto model = std::make_shared<Strips>();
 		std::vector<glm::vec2> breaks;
@@ -242,7 +250,7 @@ void DrawingContext::drawEllipse(BrushPtr brush, PenPtr pen, const Point & cente
 		for (int i = 1; i != vertexCount; ++i)
 		{
 			auto radian = radianStep * i;
-			auto p = glm::vec3(a * cos(radian), b * sin(radian), 0.0);
+			auto p = glm::vec3(center.x() + a * cos(radian), center.y() + b * sin(radian), 0.0);
 			breaks.push_back(p);
 		}
 		auto const &strokeThickness = pen->getValue<float>(Pen::ThicknessProperty());
@@ -255,15 +263,21 @@ void DrawingContext::drawEllipse(BrushPtr brush, PenPtr pen, const Point & cente
 		return renderObj;
 	};
 
-	auto const &strokeThickness = pen->getValue<float>(Pen::ThicknessProperty());
-	auto fillObj = makeFillRenderObject(radiusX - strokeThickness, radiusX - strokeThickness);
-	auto strokeObj = makeStrokeRenderObject(pen, radiusX, radiusY);
-	updateBrush(fillObj, brush);
-	auto penBrush = pen->getValue<BrushPtr>(Pen::BrushProperty());
-	updateBrush(strokeObj, penBrush);
+	if (brush)
+	{
+		auto const &strokeThickness = pen ? pen->getValue<float>(Pen::ThicknessProperty()) : 0.0f;
+		auto fillObj = makeFillRenderObject(center, radiusX - strokeThickness, radiusY - strokeThickness);
+		updateBrush(fillObj, brush);
+		m_renderObjects.push_back(fillObj);
+	}
 
-	m_viewport->queue(fillObj);
-	m_viewport->queue(strokeObj);
+	if (pen)
+	{
+		auto strokeObj = makeStrokeRenderObject(pen, center, radiusX, radiusY);
+		auto penBrush = pen->getValue<BrushPtr>(Pen::BrushProperty());
+		updateBrush(strokeObj, penBrush);
+		m_renderObjects.push_back(strokeObj);
+	}
 }
 
 void DrawingContext::drawImage(ImageSourcePtr source, const Rect & rect)
@@ -286,9 +300,24 @@ void DrawingContext::drawImage(ImageSourcePtr source, const Rect & rect)
 		renderObj->model()->meshes[0].material.textures().push_back(texture);
 	}
 
-	m_viewport->queue(renderObj);
+	m_renderObjects.push_back(renderObj);
 }
 
 void DrawingContext::drawText(const Point & p)
 {
+}
+
+void DrawingContext::resize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+	m_projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
+}
+
+void DrawingContext::draw()
+{
+	for (auto const &ro : m_renderObjects)
+	{
+		ro->draw(m_camera, m_projection);
+	}
+	m_renderObjects.clear();
 }

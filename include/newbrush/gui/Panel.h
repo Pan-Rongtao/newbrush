@@ -23,7 +23,7 @@ public:
 	void setZIndex(UIElementPtr element, int index);
 	int getZIndex(UIElementPtr element);
 
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 
 	virtual uint32_t childrenCount() const;
 

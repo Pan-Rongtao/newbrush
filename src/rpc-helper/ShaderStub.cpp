@@ -5,21 +5,21 @@ Status ShaderStub::BuildShader(::ServerContext* context, const BuildShaderReques
 {
 	auto task = [this, request, response]()
 	{
-		auto app = Application::current();
-		auto program = makeProgram(request->vshadercode(), request->fshadercode());
-		if (program)
-		{
-			auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
-			if (rc)
-			{
-				rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
-				auto const &sz = rc->getValue<Size>(Shape::ActualSizeProperty());
-				rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
-				rc->renderObject()->setProgram(program);
-				auto varInfos = response->mutable_uniforminfos();
-				getUniforms(varInfos, request->vshadercode(), request->fshadercode());
-			}
-		}
+		//auto app = Application::current();
+		//auto program = makeProgram(request->vshadercode(), request->fshadercode());
+		//if (program)
+		//{
+		//	auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
+		//	if (rc)
+		//	{
+		//		rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
+		//		auto const &sz = rc->getValue<Size>(Shape::ActualSizeProperty());
+		//		rc->renderObject()->storeUniform("resolution", glm::vec2(sz.width(), sz.height()));
+		//		rc->renderObject()->setProgram(program);
+		//		auto varInfos = response->mutable_uniforminfos();
+		//		getUniforms(varInfos, request->vshadercode(), request->fshadercode());
+		//	}
+		//}
 		this->taskReady();
 	};
 
@@ -49,7 +49,7 @@ Status ShaderStub::UniformFloat(ServerContext * context, const UniformFloatReque
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, uniformValue);
+		//rc->renderObject()->storeUniform(uniformName, uniformValue);
 		this->taskReady();
 	};
 
@@ -64,7 +64,7 @@ Status ShaderStub::UniformInteger(ServerContext * context, const UniformIntegerR
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, uniformValue);
+		//rc->renderObject()->storeUniform(uniformName, uniformValue);
 		this->taskReady();
 	};
 
@@ -79,7 +79,7 @@ Status ShaderStub::UniformVec2(ServerContext * context, const UniformVec2Request
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, glm::vec2{uniformValue.x(), uniformValue.y()});
+		//rc->renderObject()->storeUniform(uniformName, glm::vec2{uniformValue.x(), uniformValue.y()});
 		this->taskReady();
 	};
 
@@ -94,7 +94,7 @@ Status ShaderStub::UniformVec3(ServerContext * context, const UniformVec3Request
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, glm::vec3{ uniformValue.x(), uniformValue.y(), uniformValue.z() });
+		//rc->renderObject()->storeUniform(uniformName, glm::vec3{ uniformValue.x(), uniformValue.y(), uniformValue.z() });
 		this->taskReady();
 	};
 
@@ -109,7 +109,7 @@ Status ShaderStub::UniformVec4(ServerContext * context, const UniformVec4Request
 		auto rc = std::dynamic_pointer_cast<nb::Rectangle>(app->mainWindow()->getValue<UIElementPtr>(Window::ContentProperty()));
 		auto uniformName = request->name();
 		auto uniformValue = request->value();
-		rc->renderObject()->storeUniform(uniformName, glm::vec4{ uniformValue.x(), uniformValue.y(), uniformValue.z(), uniformValue.w() });
+		//rc->renderObject()->storeUniform(uniformName, glm::vec4{ uniformValue.x(), uniformValue.y(), uniformValue.z(), uniformValue.w() });
 		this->taskReady();
 	};
 
@@ -135,11 +135,11 @@ Status ShaderStub::LoadModel(ServerContext * context, const LoadModelRequest * r
 		if (rc)
 		{
 			rc->setValue<BrushPtr>(Rectangle::FillProperty(), std::make_shared<EffectBrush>());
-			rc->renderObject()->setProgram(Programs::model());
+			//rc->renderObject()->setProgram(Programs::model());
 			auto const &sz = rc->getValue<Size>(Shape::ActualSizeProperty());
 			auto modelPath = request->modelpath();
 			auto texturePath = request->texturepath();
-			rc->renderObject()->loadFromFile(modelPath, texturePath);
+			//rc->renderObject()->loadFromFile(modelPath, texturePath);
 
 			glm::mat4 model = glm::mat4(1.0f);
 			float strength = 20.0f;
@@ -147,7 +147,7 @@ Status ShaderStub::LoadModel(ServerContext * context, const LoadModelRequest * r
 			model = glm::scale(model, glm::vec3(strength, strength, strength));
 			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			rc->renderObject()->model()->matrix = model;
+			//rc->renderObject()->model()->matrix = model;
 
 		}
 		this->taskReady();

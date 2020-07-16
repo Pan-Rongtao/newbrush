@@ -2,11 +2,13 @@
 #include "newbrush/core/Event.h"
 #include "newbrush/core/EventArgs.h"
 #include "newbrush/gui/ContentControl.h"
-#include "newbrush/gles/Viewport2D.h"
 
 struct GLFWwindow;
 namespace nb{
 	
+class DrawingContext;
+using DrawingContextPtr = std::shared_ptr<DrawingContext>;
+
 enum class WindowStateE
 {
 	Normal,		//还原
@@ -63,7 +65,7 @@ public:
 	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
 
 protected:
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 
 	virtual void onActivated(const EventArgs &args);
@@ -114,7 +116,7 @@ private:
 	bool			m_processingCallback;
 	bool			m_processingWindowStateChanged;
 	WindowStateE	m_lastWindowState;
-	Viewport2D		m_drawContext;
+	DrawingContextPtr m_drawContext;
 
 	friend class Application;
 	friend class UIElement;

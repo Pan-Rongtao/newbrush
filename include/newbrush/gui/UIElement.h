@@ -8,7 +8,9 @@
 #include "newbrush/core/EventArgs.h"
 
 namespace nb{
-class Viewport2D;
+
+class DrawingContext;
+using DrawingContextPtr = std::shared_ptr<DrawingContext>;
 
 enum class VisibilityE
 {
@@ -216,7 +218,7 @@ public:
 
 	void measure(const Size &availabelSize);
 	void arrage(const Rect &finalRect);
-	virtual void onRender(Viewport2D & drawContext);
+	virtual void onRender(DrawingContextPtr dc);
 	
 	void addHandler(const RoutedEvent &event, const RoutedEventHandler &handler);
 	void removeHandler(const RoutedEvent &event, const RoutedEventHandler &handler);

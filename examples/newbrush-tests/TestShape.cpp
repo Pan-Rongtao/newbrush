@@ -56,7 +56,7 @@ TEST_CASE("Test Ellipse", "[Ellipse]")
 	auto ep = std::make_shared<Ellipse>();
 	ep->setValue<BrushPtr>(Shape::FillProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/boat.jpg")));
 //	ep->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
-//	ep->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
+	ep->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<SolidColorBrush>(Colors::blue()));
 	ep->setValue<BrushPtr>(Shape::FillProperty(), linearBrush);
 	ep->setValue(Shape::StrokeThicknessProperty(), 50);
 	ep->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{1});
@@ -90,7 +90,7 @@ TEST_CASE("Test Line", "[Line]")
 	ln->setValue<BrushPtr>(Shape::StrokeProperty(), std::make_shared<ImageBrush>(std::make_shared<ImageSource>("g:/pics/scene0.jpg")));
 	ln->setValue<BrushPtr>(Shape::StrokeProperty(), linearBrush);
 	ln->setValue(Shape::StrokeThicknessProperty(), 50);
-	ln->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{});
+	ln->setValue(Shape::StrokeDashArrayProperty(), std::vector<float>{1});
 	ln->setValue<Thickness>(Shape::MarginProperty(), 100);
 
 	w->setValue<UIElementPtr>(Window::ContentProperty(), ln);

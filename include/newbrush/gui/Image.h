@@ -15,24 +15,20 @@
 
 namespace nb{
 
-class RenderObject;
 class ImageSource;
-using RenderObjectPtr = std::shared_ptr<RenderObject>;
 using ImageSourcePtr = std::shared_ptr<ImageSource>;
 class NB_API Image : public UIElement
 {
 	RTTR_ENABLE(UIElement)
-public:
-	Image();
-	virtual ~Image() = default;
 
+public:
 	static DependencyPropertyPtr SourceProperty();	//源的依赖属性（ImageSourcePtr）
 	static DependencyPropertyPtr StretchProperty();	//伸缩方式的依赖属性（StretchE）
 
 	Event<RoutedEventArgs>		ImageFailed;
 
 protected:
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
@@ -41,7 +37,6 @@ private:
 	static void onStretchPropertyChanged(DependencyObject *obj, const DependencyPropertyChangedEventArgs &args);
 
 	Size			m_availableSize;
-	RenderObjectPtr	m_renderObj;
 };
 
 }

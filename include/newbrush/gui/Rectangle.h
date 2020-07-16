@@ -13,17 +13,14 @@ public:
 	static DependencyPropertyPtr RadiusXProperty();	//X弧度的依赖属性(float)
 	static DependencyPropertyPtr RadiusYProperty();	//Y弧度的依赖属性(float)
 
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 
 protected:
-	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 	virtual UIElementPtr clone() const;
-private:
-	void updateFillObject(float width, float height, float radiusX, float radiusY);
-	void updateStrokeObject(const Rect &rc);
+
 
 };
 

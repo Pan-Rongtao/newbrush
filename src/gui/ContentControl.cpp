@@ -13,7 +13,7 @@ DependencyPropertyPtr ContentControl::ContentProperty()
 	return dp;
 }
 
-void ContentControl::onRender(Viewport2D & drawContext)
+void ContentControl::onRender(DrawingContextPtr dc)
 {
 	auto offset = worldOffset();
 	auto const &actualSize = getValue<Size>(ActualSizeProperty());
@@ -22,7 +22,7 @@ void ContentControl::onRender(Viewport2D & drawContext)
 	auto content = getValue<UIElementPtr>(ContentProperty());
 	if (content)
 	{
-		content->onRender(drawContext);
+		content->onRender(dc);
 	}
 }
 

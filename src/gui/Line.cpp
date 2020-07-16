@@ -2,64 +2,44 @@
 #include "newbrush/gles/RenderObject.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/Texture2D.h"
-#include "newbrush/gles/Viewport2D.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/core/DependencyProperty.h"
+#include "newbrush/gui/DrawingContext.h"
 
 using namespace nb;
 
-Line::Line()
-{
-}
-
 DependencyPropertyPtr Line::X1Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f, nullptr, nullptr, nullptr);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X1", 0.0f);
 	return dp;
 }
 
 DependencyPropertyPtr Line::X2Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f, nullptr, nullptr, nullptr);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("X2", 0.0f);
 	return dp;
 }
 
 DependencyPropertyPtr Line::Y1Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f, nullptr, nullptr, nullptr);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y1", 0.0f);
 	return dp;
 }
 
 DependencyPropertyPtr Line::Y2Property()
 {
-	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f, nullptr, nullptr, nullptr);
+	static auto dp = DependencyProperty::registerDependency<Line, float>("Y2", 0.0f);
 	return dp;
 }
 
-void Line::onRender(Viewport2D & drawContext)
+void Line::onRender(DrawingContextPtr dc)
 {
-	auto offset = worldOffset();
 	auto x1 = getValue<float>(X1Property());
 	auto x2 = getValue<float>(X2Property());
 	auto y1 = getValue<float>(Y1Property());
 	auto y2 = getValue<float>(Y2Property());
-	Rect rc(Point(x1, y1), Point(x2, y2));
-	rc.move(offset.x(), offset.y());
-	if (m_strokeObject)
-	{
-		updateStrokeObject(rc);
-		drawContext.queue(m_strokeObject);
-	}
-}
 
-void Line::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
-{
-	if (args.property() == StrokeProperty())
-	{
-		auto stroke = args.newValue().get_value<BrushPtr>();
-		if (!stroke)				m_strokeObject.reset();
-		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-	}
+	dc->drawLine(getPen(), Point(x1, y1), Point(x2, y2));
 }
 
 Size Line::measureOverride(const Size & availableSize)
@@ -74,24 +54,4 @@ Size Line::arrangeOverride(const Size & finalSize)
 	auto y1 = getValue<float>(Y1Property());
 	auto y2 = getValue<float>(Y2Property());
 	return Size(std::abs(x2 - x1), std::abs(y2 - y1));
-}
-
-void Line::updateStrokeObject(const Rect &rc)
-{
-	if (!m_strokeObject)
-		return;
-
-	auto x1 = getValue<float>(X1Property());
-	auto x2 = getValue<float>(X2Property());
-	auto y1 = getValue<float>(Y1Property());
-	auto y2 = getValue<float>(Y2Property());
-	auto strokeThickness = getValue<float>(StrokeThicknessProperty());
-	auto const &strokeDashArray = getValue<std::vector<float>>(StrokeDashArrayProperty());
-	auto strokeDashOffset = getValue<float>(StrokeDashOffsetProperty());
-	auto strokeLineJoin = getValue<PenLineJoinE>(StrokeLineJoinProperty());
-	std::vector<glm::vec2> breaks{ glm::vec2(x1, y1), glm::vec2(x2, y2) };
-	std::dynamic_pointer_cast<Strips>(m_strokeObject->model())->update(breaks, strokeThickness, strokeDashArray, strokeDashOffset, strokeLineJoin);
-
-	auto stroke = getValue<BrushPtr>(StrokeProperty());
-	updateMeterial(m_strokeObject, stroke);
 }

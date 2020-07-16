@@ -1,6 +1,5 @@
 ﻿#include "newbrush/gui/Polygon.h"
 #include "newbrush/gles/Program.h"
-#include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/RenderObject.h"
@@ -20,47 +19,47 @@ DependencyPropertyPtr Polygon::PointsProperty()
 	return dp;
 }
 
-void Polygon::onRender(Viewport2D & drawContext)
+void Polygon::onRender(DrawingContextPtr dc)
 {
-	auto offset = worldOffset();
-	auto const &actualSize = getValue<Size>(ActualSizeProperty());
-	Rect rc(offset.x(), offset.y(), actualSize);
-	auto c = rc.center();
-	if (m_fillObject)
-	{
-		Rect fillRc{ rc };
-		auto stroke = getValue<BrushPtr>(StrokeProperty());
-		if (stroke)
-		{
-			auto strokeThickness = getValue<float>(StrokeThicknessProperty());
-			fillRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
-		}
-		updateFillObject();
-		drawContext.queue(m_fillObject);
-		//m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
-	}
-	if (m_strokeObject)
-	{
-		updateStrokeObject();
-		drawContext.queue(m_strokeObject);
-		//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
-	}
+	//auto offset = worldOffset();
+	//auto const &actualSize = getValue<Size>(ActualSizeProperty());
+	//Rect rc(offset.x(), offset.y(), actualSize);
+	//auto c = rc.center();
+	//if (m_fillObject)
+	//{
+	//	Rect fillRc{ rc };
+	//	auto stroke = getValue<BrushPtr>(StrokeProperty());
+	//	if (stroke)
+	//	{
+	//		auto strokeThickness = getValue<float>(StrokeThicknessProperty());
+	//		fillRc.reset(rc.left() - strokeThickness * 0.5f, rc.top() - strokeThickness * 0.5f, rc.width() - strokeThickness, rc.height() - strokeThickness);
+	//	}
+	//	updateFillObject();
+	//	drawContext.queue(m_fillObject);
+	//	//m_fillObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	//}
+	//if (m_strokeObject)
+	//{
+	//	updateStrokeObject();
+	//	drawContext.queue(m_strokeObject);
+	//	//	m_strokeObject->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	//}
 }
 
 void Polygon::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)
 {
-	if (args.property() == FillProperty())
-	{
-		auto fill = getValue<BrushPtr>(FillProperty());
-		if (!fill)				m_fillObject.reset();
-		else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
-	}
-	else if (args.property() == StrokeProperty())
-	{
-		auto stroke = getValue<BrushPtr>(StrokeProperty());
-		if (!stroke)				m_strokeObject.reset();
-		else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
-	}
+	//if (args.property() == FillProperty())
+	//{
+	//	auto fill = getValue<BrushPtr>(FillProperty());
+	//	if (!fill)				m_fillObject.reset();
+	//	else if (!m_fillObject)		m_fillObject = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
+	//}
+	//else if (args.property() == StrokeProperty())
+	//{
+	//	auto stroke = getValue<BrushPtr>(StrokeProperty());
+	//	if (!stroke)				m_strokeObject.reset();
+	//	else if (!m_strokeObject)	m_strokeObject = std::make_shared<RenderObject>(std::make_shared<Strips>());
+	//}
 }
 
 Size Polygon::measureOverride(const Size & availableSize)
@@ -86,7 +85,7 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 
 void Polygon::updateFillObject()
 {
-	auto fill = getValue<BrushPtr>(FillProperty());
+/*	auto fill = getValue<BrushPtr>(FillProperty());
 	auto const &points = getValue<std::vector<Point>>(PointsProperty());
 	if (!fill || points.size() < 2)
 		return;
@@ -105,7 +104,7 @@ void Polygon::updateFillObject()
 		indices[base + 1] = i + 1;
 		indices[base + 2] = i + 2;
 	}
-	updateMeterial(m_fillObject, fill);
+	updateMeterial(m_fillObject, fill);*/
 }
 
 void Polygon::updateStrokeObject()

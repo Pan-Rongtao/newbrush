@@ -1,6 +1,5 @@
 ﻿#include "newbrush/gui/Panel.h"
 #include "newbrush/media/Brush.h"
-#include "newbrush/gles/Viewport2D.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
@@ -56,12 +55,12 @@ UIElementCollection & Panel::children()
 	return m_children;
 }
 
-void Panel::onRender(Viewport2D & drawContext)
+void Panel::onRender(DrawingContextPtr dc)
 {
 	for (auto i = 0u; i < m_children.count(); ++i)
 	{
 		auto child = m_children.childAt(i);
-		child->onRender(drawContext);
+		child->onRender(dc);
 	}
 }
 

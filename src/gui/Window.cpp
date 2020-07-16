@@ -1,5 +1,6 @@
 ﻿#include "newbrush/gui/Window.h"
 #include "newbrush/gles/Projection.h"
+#include "newbrush/gui/DrawingContext.h"
 #include "newbrush/gui/Application.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/media/ImageSource.h"
@@ -23,6 +24,7 @@ Window::Window()
 	, m_processingCallback(false)
 	, m_processingWindowStateChanged(false)
 	, m_lastWindowState(WindowStateE::Normal)
+	, m_drawContext(std::make_shared<DrawingContext>())
 {
 	init();
 
@@ -170,8 +172,7 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-	m_drawContext.projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
-	m_drawContext.viewport(0, 0, width, height);
+	m_drawContext->resize(width, height);
 	glEnable(GL_DEPTH_TEST);
 	setValue(WidthProperty(), (float)width);
 	setValue(HeightProperty(), (float)height);
@@ -315,7 +316,7 @@ void Window::render()
 	{
 		static int frames = 0;
 		static uint64_t k = getTickCount();
-		m_drawContext.draw();
+		m_drawContext->draw();
 
 		++frames;
 		uint64_t kk = getTickCount();
@@ -381,29 +382,29 @@ DependencyPropertyPtr Window::IconProperty()
 	return dp;
 }
 
-void Window::onRender(Viewport2D & drawContext)
+void Window::onRender(DrawingContextPtr dc)
 {
-	ContentControl::onRender(drawContext);
-	auto offset = worldOffset();
-	auto const &actualSize = getValue<Size>(ActualSizeProperty());
-	Rect rc(offset.x(), offset.y(), actualSize);
-	auto width = rc.width();
-	auto height = rc.height();
-	auto c = rc.center();
-	if (m_bkgObj)
-	{
-		auto &vertexs = m_bkgObj->model()->meshes[0].vertexs;
-		auto &indices = m_bkgObj->model()->meshes[0].indices;
-		vertexs.resize(4);				//所有顶点数
-		indices.resize(6);		//所有顶点序列大小=四个弧度顶点序列 + 十字两个矩形顶点序列
-		vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
-		vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
-		vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
-		vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
-		indices = { 0, 1, 2, 0, 2, 3 };
-		drawContext.queue(m_bkgObj);
-		m_bkgObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
-	}
+	ContentControl::onRender(dc);
+	//auto offset = worldOffset();
+	//auto const &actualSize = getValue<Size>(ActualSizeProperty());
+	//Rect rc(offset.x(), offset.y(), actualSize);
+	//auto width = rc.width();
+	//auto height = rc.height();
+	//auto c = rc.center();
+	//if (m_bkgObj)
+	//{
+	//	auto &vertexs = m_bkgObj->model()->meshes[0].vertexs;
+	//	auto &indices = m_bkgObj->model()->meshes[0].indices;
+	//	vertexs.resize(4);				//所有顶点数
+	//	indices.resize(6);		//所有顶点序列大小=四个弧度顶点序列 + 十字两个矩形顶点序列
+	//	vertexs[0].position = glm::vec3{ -width * 0.5, height * 0.5, 0.0f };	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
+	//	vertexs[1].position = glm::vec3{ width * 0.5, height * 0.5, 0.0f };		vertexs[1].texCoord = glm::vec2(1.0, 0.0);
+	//	vertexs[2].position = glm::vec3{ width * 0.5, -height * 0.5, 0.0f };	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
+	//	vertexs[3].position = glm::vec3{ -width * 0.5, -height * 0.5, 0.0f };	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+	//	indices = { 0, 1, 2, 0, 2, 3 };
+	//	dc->queue(m_bkgObj);
+	//	m_bkgObj->model()->matrix = glm::translate(glm::mat4(1.0), glm::vec3(c.x(), c.y(), 0.0f));
+	//}
 }
 
 void Window::onPropertyChanged(const DependencyPropertyChangedEventArgs & args)

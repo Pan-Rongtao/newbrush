@@ -2,17 +2,19 @@
 #include "newbrush/core/Object.h"
 #include "newbrush/core/Point.h"
 #include "newbrush/core/Rect.h"
+#include "newbrush/gles/Camera.h"
+#include "newbrush/gles/Projection.h"
 
 namespace nb {
 
 class Pen;
 class Brush;
 class ImageSource;
-class Viewport2D;
+class RenderObject;
 using PenPtr = std::shared_ptr<Pen>;
 using BrushPtr = std::shared_ptr<Brush>;
 using ImageSourcePtr = std::shared_ptr<ImageSource>;
-using Viewport2DePtr = std::shared_ptr<Viewport2D>;
+using RenderObjectPtr = std::shared_ptr<RenderObject>;
 
 class NB_API DrawingContext : public Object
 {
@@ -38,7 +40,13 @@ public:
 	void drawText(/*ImageSourcePtr source, FormattedText*/const Point &p);
 
 private:
-	Viewport2DePtr	m_viewport;
+	void resize(int width, int height);
+	void draw();
+
+	Camera		m_camera;
+	Projection	m_projection;
+	std::vector<RenderObjectPtr> m_renderObjects;
+	friend class Window;
 };
 
 }

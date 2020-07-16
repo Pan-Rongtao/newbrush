@@ -12,7 +12,7 @@ public:
 
 	static DependencyPropertyPtr ContentProperty();	//内容依赖属性
 	
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 
 	virtual uint32_t childrenCount() const;
 

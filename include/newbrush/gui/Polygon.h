@@ -12,7 +12,7 @@ public:
 
 	static DependencyPropertyPtr PointsProperty();	//点集合的依赖属性
 
-	virtual void onRender(Viewport2D & drawContext) override;
+	virtual void onRender(DrawingContextPtr dc) override;
 
 protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs &args) override;

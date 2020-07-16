@@ -1,7 +1,6 @@
 ﻿#include "newbrush/gui/TextBlock.h"
 #include "newbrush/media/Font.h"
 #include "newbrush/gles/GlyphFactory.h"
-#include "newbrush/gles/Viewport2D.h"
 #include "newbrush/gles/Model.h"
 #include "newbrush/gles/Material.h"
 #include "newbrush/gles/Texture2D.h"
@@ -168,17 +167,17 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 }
 
-void TextBlock::onRender(Viewport2D & drawContext)
+void TextBlock::onRender(DrawingContextPtr dc)
 {
-	auto offset = worldOffset();
-	auto x = offset.x();
-	auto y = offset.y();
-	auto font = getValue<FontPtr>(FontProperty());
-	auto const &text = getValue<std::string>(TextProperty());
-	float charSpacing = getValue<float>(CharSpacingProperty());
-	float lineHeight = getValue<float>(LineHeightProperty());
-	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
-	auto const &actualSize = getValue<Size>(ActualSizeProperty());
-	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
-	drawContext.queue(m_renderObj);
+	//auto offset = worldOffset();
+	//auto x = offset.x();
+	//auto y = offset.y();
+	//auto font = getValue<FontPtr>(FontProperty());
+	//auto const &text = getValue<std::string>(TextProperty());
+	//float charSpacing = getValue<float>(CharSpacingProperty());
+	//float lineHeight = getValue<float>(LineHeightProperty());
+	//auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
+	//auto const &actualSize = getValue<Size>(ActualSizeProperty());
+	//(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
+	//drawContext.queue(m_renderObj);
 }

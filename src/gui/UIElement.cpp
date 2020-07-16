@@ -5,6 +5,7 @@
 #include "newbrush/gui/Style.h"
 #include "newbrush/gui/VisualStateMachine.h"
 #include "newbrush/media/Transform.h"
+#include "newbrush/gui/DrawingContext.h"
 
 using namespace nb;
 
@@ -201,14 +202,19 @@ void UIElement::updateLayout()
 	auto root = getRoot();
 	if (!root)	return;
 
+	auto w = nb::as<Window>(root);
+	if (!w)
+	{
+		return;
+	}
+
 	auto rootWidth = root->getValue<float>(WidthProperty());
 	auto rootHeight = root->getValue<float>(HeightProperty());
 	auto const &rootDesiredSize = root->desiredSize();
+
 	root->measure({ rootWidth, rootHeight });
 	root->arrage(Rect(0, 0, rootDesiredSize));
-	auto window = nb::as<Window>(root);
-	
-	root->onRender(window->m_drawContext);
+	root->onRender(w->m_drawContext);
 }
 
 //直接忽略返回的情况
@@ -693,7 +699,7 @@ void UIElement::onMouseButtonThunk(const MouseButtonEventArgs & e, const Point &
 	}
 }
 
-void UIElement::onRender(Viewport2D & drawContext)
+void UIElement::onRender(DrawingContextPtr dc)
 {
 }
 

@@ -5,9 +5,9 @@
 namespace nb{
 
 class Brush;
-class RenderObject;
+class Pen;
 using BrushPtr = std::shared_ptr<Brush>;
-using RenderObjectPtr = std::shared_ptr<RenderObject>;
+using PenPtr = std::shared_ptr<Pen>;
 
 class NB_API Shape : public UIElement
 {
@@ -24,14 +24,15 @@ public:
 	static DependencyPropertyPtr StrokeLineJoinProperty();		//顶点联接样式的依赖属性(PenLineJoinE)
 	static DependencyPropertyPtr StretchProperty();				//伸缩方式的依赖属性(StretchE)
 	
-	RenderObjectPtr renderObject();
-
 protected:
 	Shape();
-	void updateMeterial(RenderObjectPtr ro, BrushPtr brush);
 
-	RenderObjectPtr	m_fillObject;
-	RenderObjectPtr	m_strokeObject;
+	PenPtr getPen();
+
+private:
+	static void onPenChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);
+
+	PenPtr	m_pen;
 };
 
 }
