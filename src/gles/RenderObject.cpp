@@ -28,7 +28,6 @@ RenderObject::RenderObject(ModelPtr model)
 RenderObject::RenderObject(ModelPtr model, ProgramPtr program)
 	: m_model(model)
 	, m_program(program)
-	, m_renderable(true)
 {
 }
 
@@ -59,16 +58,6 @@ void RenderObject::loadFromFile(const std::string &modelPath, const std::string 
 #endif
 }
 
-void RenderObject::setRenderable(bool bRenderable)
-{
-	m_renderable = bRenderable;
-}
-
-bool RenderObject::renderable() const
-{
-	return m_renderable;
-}
-
 void RenderObject::setModel(ModelPtr model)
 {
 	m_model = model;
@@ -91,7 +80,7 @@ ProgramPtr RenderObject::program()
 
 void RenderObject::draw(const Camera &camera, const Projection &projection) const
 {
-	if (!m_renderable || !m_model || m_model->meshes.empty() || !m_program)
+	if (!m_model || m_model->meshes.empty() || !m_program)
 		return;
 
 	auto &program = m_program;

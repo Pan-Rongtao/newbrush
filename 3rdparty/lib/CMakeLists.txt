@@ -9,7 +9,7 @@ project(lib)
 
 # 5. Project Install
 if(MSVC)
-	file(GLOB LIBS ${CMAKE_CURRENT_SOURCE_DIR}/*.dll ${CMAKE_CURRENT_SOURCE_DIR}/*.lib)
+	file(GLOB LIBS ${CMAKE_CURRENT_SOURCE_DIR}/*.dll)
 elseif(UNIX AND NOT ANDROID)
 	file(GLOB LIBS linux-arm/release/*.so*)
 endif()

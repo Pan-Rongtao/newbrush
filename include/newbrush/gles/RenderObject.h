@@ -43,12 +43,6 @@ public:
 	//从文件中加载
 	void loadFromFile(const std::string &modelPath, const std::string &picPath = "");
 
-	//设置是否可渲染，这将决定物体是否绘制
-	void setRenderable(bool bRenderable);
-
-	//是否可渲染
-	bool renderable() const;
-
 	//设置模型
 	void setModel(ModelPtr model);
 
@@ -111,7 +105,6 @@ private:
 	void loopNode(aiNode * node, const aiScene * scene, const std::string &picPath);
 	Mesh processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath);
 
-	bool m_renderable;
 	ModelPtr m_model;
 	ProgramPtr m_program;
 	std::map<std::string, var> m_uniforms;
