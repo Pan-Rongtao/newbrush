@@ -5,7 +5,7 @@
 #include "newbrush/gles/Material.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/GlyphBunch.h"
-#include "newbrush/gles/RenderObject.h"
+#include "newbrush/gui/DrawingContext.h"
 #include "newbrush/media/Brush.h"
 #include "newbrush/media/Color.h"
 #include "newbrush/core/DependencyProperty.h"
@@ -19,13 +19,11 @@ TextBlock::TextBlock()
 }
 
 TextBlock::TextBlock(const std::string & text)
-	: m_renderObj(std::make_shared<RenderObject>(std::make_shared<GlyphBunch>(), Programs::glpy()))
 {
 	setValue(TextProperty(), text);
 	auto font = getValue<FontPtr>(FontProperty());
 	setValue(LineHeightProperty(), (float)(font->size()));
 	//m_renderObj->model()->meshes[0].material.textures().push_back(std::make_shared<Texture2D>(GlyphFactory::getGlyph(font, L'a')->texureId));
-	m_renderObj->storeUniform("fontColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 DependencyPropertyPtr TextBlock::TextProperty()
@@ -117,7 +115,7 @@ void TextBlock::onPropertyChanged(const DependencyPropertyChangedEventArgs & arg
 	if (args.property() == ForegroundProperty())
 	{
 		auto c = args.newValue().get_value<Color>();
-		m_renderObj->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
+	//	m_renderObj->storeUniform("fontColor", glm::vec4(c.redF(), c.greenF(), c.blueF(), c.alphaF()));
 	}
 }
 
@@ -164,7 +162,7 @@ void TextBlock::onTextChanged(const std::string & _old, const std::string & _new
 	float lineHeight = getValue<float>(LineHeightProperty());
 	auto textWrapping = getValue<TextWrappingE>(TextWrappingProperty());
 	auto actualSize = getValue<Size>(ActualSizeProperty());
-	(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
+	//(std::dynamic_pointer_cast<GlyphBunch>(m_renderObj->model()))->arrage(font, x, y, text, charSpacing, lineHeight, textWrapping, actualSize.width());
 }
 
 void TextBlock::onRender(DrawingContextPtr dc)

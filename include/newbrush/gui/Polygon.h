@@ -19,9 +19,6 @@ protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
-private:
-	void updateFillObject();
-	void updateStrokeObject();
 };
 
 }

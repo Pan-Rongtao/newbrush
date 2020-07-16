@@ -10,7 +10,6 @@
 #include "newbrush/media/Bitmap.h"
 #include "GLFW/glfw3.h"
 #include "newbrush/core/DependencyProperty.h"
-#include "newbrush/gles/RenderObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace nb;

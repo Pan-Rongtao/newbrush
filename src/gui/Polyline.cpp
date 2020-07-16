@@ -2,7 +2,6 @@
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/Strips.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/media/Brush.h"
 #include "newbrush/core/DependencyProperty.h"
 

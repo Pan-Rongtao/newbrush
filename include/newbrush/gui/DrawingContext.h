@@ -10,11 +10,11 @@ namespace nb {
 class Pen;
 class Brush;
 class ImageSource;
-class RenderObject;
+class Renderer;
 using PenPtr = std::shared_ptr<Pen>;
 using BrushPtr = std::shared_ptr<Brush>;
 using ImageSourcePtr = std::shared_ptr<ImageSource>;
-using RenderObjectPtr = std::shared_ptr<RenderObject>;
+using RendererPtr = std::shared_ptr<Renderer>;
 
 class NB_API DrawingContext : public Object
 {
@@ -45,7 +45,7 @@ private:
 
 	Camera		m_camera;
 	Projection	m_projection;
-	std::vector<RenderObjectPtr> m_renderObjects;
+	std::vector<RendererPtr> m_renderers;
 	friend class Window;
 };
 

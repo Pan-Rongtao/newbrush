@@ -29,9 +29,7 @@ enum class TextDecorationE
 	Underline
 };
 
-class RenderObject;
 class Brush;
-using RenderObjectPtr = std::shared_ptr<RenderObject>;
 using BrushPtr = std::shared_ptr<Brush>;
 class NB_API TextBlock : public UIElement
 {
@@ -65,8 +63,6 @@ protected:
 
 	void onTextChanged(const std::string &_old, const std::string &_new);
 
-private:
-	RenderObjectPtr	m_renderObj;
 };
 
 }

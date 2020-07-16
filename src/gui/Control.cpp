@@ -4,7 +4,6 @@
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/media/Font.h"
 #include "newbrush/gles/Model.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/media/SolidColorBrush.h"
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
@@ -138,21 +137,11 @@ Size Control::arrangeOverride(const Size & finalSize)
 	return UIElement::arrangeOverride(finalSize);;
 }
 #include "newbrush/gui/ContentControl.h"
+
 void Control::onBackgroundPropertyChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
-	auto ctrl = static_cast<Control *>(d);
-	auto bkgBrush = e.newValue().get_value<BrushPtr>();
-	if (!bkgBrush)
-	{
-		ctrl->m_bkgObj.reset();
-	}
-	else if (!ctrl->m_bkgObj)
-	{
-		ctrl->m_bkgObj = std::make_shared<RenderObject>(std::make_shared<Model>(std::vector<Mesh>{ Mesh() }));
-	}
-	ctrl->updateMeterial(ctrl->m_bkgObj, bkgBrush);
-	ctrl->updateLayout();
 }
+
 void Control::onTemplateChanged(DependencyObject * d, const DependencyPropertyChangedEventArgs & e)
 {
 	auto oldTemplate = e.oldValue().get_value<ControlTemplatePtr>();
@@ -173,55 +162,5 @@ void Control::onTemplateChanged(DependencyObject * d, const DependencyPropertyCh
 		{
 			triggerBase->attach(ctrl);
 		}
-	}
-}
-
-void Control::updateMeterial(RenderObjectPtr ro, BrushPtr brush)
-{
-	if (std::dynamic_pointer_cast<SolidColorBrush>(brush))
-	{
-		ro->setProgram(Programs::primitive());
-		auto solidColorBrush = std::dynamic_pointer_cast<SolidColorBrush>(brush);
-		auto const &color = solidColorBrush->getValue<Color>(SolidColorBrush::ColorProperty());
-		ro->storeUniform("color", glm::vec4(color.redF(), color.greenF(), color.blueF(), color.alphaF()));
-	}
-	else if (std::dynamic_pointer_cast<LinearGradientBrush>(brush))
-	{
-		ro->setProgram(Programs::gradientPrimitive());
-		auto linearGradientBrush = std::dynamic_pointer_cast<LinearGradientBrush>(brush);
-		auto const &stops = linearGradientBrush->getValue<GradientStopCollectionPtr>(LinearGradientBrush::GradientStopsProperty());
-		std::vector<glm::vec4> colors;
-		std::vector<float> offsets;
-		for (auto i = 0; i != stops->count(); ++i)
-		{
-			auto stop = (*stops)[i];
-			auto const &color = stop->getValue<Color>(GradientStop::ColorProperty());
-			auto offset = stop->getValue<float>(GradientStop::OffsetPropert());
-			colors.push_back({ color.redF(), color.greenF(), color.blueF(), color.alphaF() });
-			offsets.push_back(offset);
-		}
-		ro->storeUniform("size", stops->count());
-		ro->storeUniform("colors", colors);
-		ro->storeUniform("offsets", offsets);
-	}
-	else if (std::dynamic_pointer_cast<ImageBrush>(brush))
-	{
-		ro->setProgram(Programs::image());
-		auto source = std::dynamic_pointer_cast<ImageBrush>(brush)->getValue<ImageSourcePtr>(ImageBrush::SourceProperty());
-		if (source)
-		{
-			auto const &stream = source->stream();
-			auto texture = std::make_shared<Texture2D>();
-			auto glFormatAndType = Texture::getGlFormatAndType(source->channels());
-			texture->update((const unsigned char *)stream.data(), (int)source->width(), (int)source->height(), glFormatAndType.first, glFormatAndType.second);
-			ro->model()->meshes[0].material.textures().push_back(texture);
-		}
-	}
-	else if (std::dynamic_pointer_cast<EffectBrush>(brush))
-	{
-		bool b = false;
-		//	ro->storeUniform("size", 4);
-		//	ro->storeUniform("colors", colors);
-		//	ro->storeUniform("offsets", offsets);
 	}
 }

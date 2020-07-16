@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/Image.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/gles/Model.h"
 #include "newbrush/gles/Material.h"
 #include "newbrush/gles/Program.h"

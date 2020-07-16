@@ -1,9 +1,9 @@
 #pragma once
-#include "newbrush/gles/RenderObject.h"
+#include "newbrush/gles/Renderer.h"
 
 namespace nb {
 
-class NB_API ParticleVertexBuffer : public RenderObject
+class NB_API ParticleVertexBuffer : public Renderer
 {
 public:
 	ParticleVertexBuffer(uint32_t maxParticleCount, uint32_t poolcount);

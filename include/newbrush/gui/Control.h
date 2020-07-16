@@ -4,11 +4,9 @@
 
 namespace nb{
 
-class RenderObject;
 class Brush;
 class ControlTemplate;
 using BrushPtr = std::shared_ptr<Brush>;
-using RenderObjectPtr = std::shared_ptr<RenderObject>;
 using ControlTemplatePtr = std::shared_ptr<ControlTemplate>;
 class NB_API Control : public UIElement
 {
@@ -37,10 +35,6 @@ protected:
 	virtual void onPropertyChanged(const DependencyPropertyChangedEventArgs & args) override;
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
-
-	void updateMeterial(RenderObjectPtr ro, BrushPtr brush);
-
-	RenderObjectPtr	m_bkgObj;
 
 private:
 	static void onBackgroundPropertyChanged(DependencyObject *d, const DependencyPropertyChangedEventArgs &e);

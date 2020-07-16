@@ -2,7 +2,6 @@
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "newbrush/gles/Strips.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "newbrush/media/Transform.h"

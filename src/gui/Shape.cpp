@@ -7,7 +7,6 @@
 #include "newbrush/media/ImageSource.h"
 #include "newbrush/media/EffectBrush.h"
 #include "newbrush/media/Pen.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;

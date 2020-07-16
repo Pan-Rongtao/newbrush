@@ -1,5 +1,5 @@
 ﻿/*******************************************************
-**	RenderObject
+**	Renderer
 **
 **	渲染物
 **	
@@ -27,19 +27,18 @@ class Program;
 using ModelPtr = std::shared_ptr<Model>;
 using ProgramPtr = std::shared_ptr<Program>;
 
-class NB_API RenderObject
+class NB_API Renderer
 {
 public:
-	//构建一个空的RenderObject，它的可渲染状态为true
-	RenderObject();
+	//构建一个空的Renderer
+	Renderer();
 
-	//构建一个空的RenderObject，它的可渲染状态为bRenderable
-	RenderObject(ModelPtr model);
+	//构建一个空的Renderer，它的模型为model
+	Renderer(ModelPtr model);
 
-	//构建一个RenderObject，它的模型为model，程序为program，可渲染状态为true
-	RenderObject(ModelPtr model, ProgramPtr program);
+	//构建一个Renderer，它的模型为model，程序为program
+	Renderer(ModelPtr model, ProgramPtr program);
 
-public:	
 	//从文件中加载
 	void loadFromFile(const std::string &modelPath, const std::string &picPath = "");
 

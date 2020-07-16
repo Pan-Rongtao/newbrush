@@ -1,6 +1,6 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
-#include "newbrush/gles/RenderObject.h"
+#include "newbrush/gles/Renderer.h"
 #include "newbrush/gles/Program.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/glm.hpp"
@@ -14,7 +14,7 @@
 
 using namespace nb;
 
-TEST_CASE("test RenderObject", "[RenderObject]") {
+TEST_CASE("test Renderer", "[Renderer]") {
 
 	const GLuint WIDTH = 800, HEIGHT = 600;
 
@@ -34,7 +34,7 @@ TEST_CASE("test RenderObject", "[RenderObject]") {
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	auto renderObj = std::make_shared<RenderObject>();
+	auto renderObj = std::make_shared<Renderer>();
 	renderObj->setProgram(Programs::model());
 	renderObj->loadFromFile("../model/car.fbx", "../model");
 	

@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/Line.h"
-#include "newbrush/gles/RenderObject.h"
 #include "newbrush/gles/Strips.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/media/GradientBrush.h"
