@@ -9,6 +9,7 @@
 #include "newbrush/media/GradientBrush.h"
 #include "newbrush/media/ImageBrush.h"
 #include "newbrush/media/EffectBrush.h"
+#include "newbrush/gles/Camera.h"
 #include <math.h>
 #include <GLES2/gl2.h>
 
@@ -62,6 +63,7 @@ void updateBrush(RendererPtr ro, BrushPtr brush)
 }
 
 DrawingContext::DrawingContext()
+	: m_camera(std::make_shared<Camera>())
 {
 }
 
@@ -310,14 +312,14 @@ void DrawingContext::drawText(const Point & p)
 void DrawingContext::resize(int width, int height)
 {
 	glViewport(0, 0, width, height);
-	m_projection.ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
+	m_camera->ortho(0.0f, (float)width, (float)height, 0.0f, -1000.0f, 1000.0f);
 }
 
 void DrawingContext::draw()
 {
 	for (auto const &ro : m_renderers)
 	{
-		ro->draw(m_camera, m_projection);
+		ro->draw(m_camera);
 	}
 	m_renderers.clear();
 }

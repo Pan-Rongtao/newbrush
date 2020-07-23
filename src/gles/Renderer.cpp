@@ -7,6 +7,8 @@
 #include "newbrush/gles/Program.h"
 #include "newbrush/gles/Texture2D.h"
 #include "newbrush/gles/TextureMipmap.h"
+#include "newbrush/gles/Camera.h"
+
 #ifdef WIN32
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -31,33 +33,6 @@ Renderer::Renderer(ModelPtr model, ProgramPtr program)
 {
 }
 
-void Renderer::loadFromFile(const std::string &modelPath, const std::string &picPath)
-{
-#ifdef WIN32
-	m_model = std::make_shared<Model>();
-	Assimp::Importer importer;
-	//const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
-	const aiScene* scene = importer.ReadFile(modelPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	{
-		Log::error("load [%s] fail:%s", modelPath.data(), importer.GetErrorString());
-		return;
-	}
-
-	loopNode(scene->mRootNode, scene, picPath);
-
-	//设置光照
-	{
-		storeUniform("light.position", glm::vec3(0.0f, 0.0f, 5.0f));
-		storeUniform("viewPos", glm::vec3(0.0f, 0.0f, 3.0f));
-
-		storeUniform("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-		storeUniform("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-		storeUniform("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-	}
-#endif
-}
-
 void Renderer::setModel(ModelPtr model)
 {
 	m_model = model;
@@ -78,9 +53,9 @@ ProgramPtr Renderer::program()
 	return m_program;
 }
 
-void Renderer::draw(const Camera &camera, const Projection &projection) const
+void Renderer::draw(CameraPtr camera) const
 {
-	if (!m_model || m_model->meshes.empty() || !m_program)
+	if (!camera || !m_model || m_model->meshes.empty() || !m_program)
 		return;
 
 	auto &program = m_program;
@@ -89,11 +64,10 @@ void Renderer::draw(const Camera &camera, const Projection &projection) const
 
 	//计算后的mvp，以及分开的m/v/p
 	auto const &m = m_model->matrix;
-	auto const &v = camera.matrix;
-	auto const &p = projection.matrix;
+	auto const &v = camera->viewMatrix();
+	auto const &p = camera->projectionMatrix();
 	auto mvp = p * v * m;
 	program->uniform(program->getUniformLocation(Program::nbMvpStr), mvp);
-	program->uniform(program->getUniformLocation(Program::nbMStr), m);
 	program->uniform(program->getUniformLocation(Program::nbVStr), v);
 	program->uniform(program->getUniformLocation(Program::nbPStr), p);
 
@@ -141,8 +115,8 @@ void Renderer::draw(const Camera &camera, const Projection &projection) const
 		program->vertexAttributePointer(Program::nbColorLocation, Vertex::colorDimension, Vertex::stride, mesh.colorData());
 		program->vertexAttributePointer(Program::nbTexCoordLocaltion, Vertex::texCoordDimension, Vertex::stride, mesh.textureCoordinateData());
 		program->vertexAttributePointer(Program::nbNormalLocation, Vertex::normalDimension, Vertex::stride, mesh.normalData());
-
-		if (!mesh.material.textures().size()) 
+		
+		if (mesh.material.textures().empty()) 
 		{
 			program->uniform(program->getUniformLocation("flag"), true);
 			program->uniform(program->getUniformLocation("material.ambient"), mesh.material.getAmbient());
@@ -150,12 +124,13 @@ void Renderer::draw(const Camera &camera, const Projection &projection) const
 			program->uniform(program->getUniformLocation("material.specular"), mesh.material.getSpecular());
 			program->uniform(program->getUniformLocation("material.shininess"), 3.0f);
 		}
-		else {
+		else 
+		{
 			program->uniform(program->getUniformLocation("flag"), false);
-			for (size_t i = 0; i < mesh.material.textures().size(); i++)
+			for (auto const &tex : mesh.material.textures())
 			{
-				mesh.material.textures()[i]->bind();
-				mesh.material.textures()[i]->active();
+				tex->bind();
+				tex->active();
 			}
 		}
 		glDrawElements(m_model->mode, mesh.indices.size(), GL_UNSIGNED_SHORT, mesh.indices.data());
@@ -163,7 +138,30 @@ void Renderer::draw(const Camera &camera, const Projection &projection) const
 	program->disuse();
 }
 
-void Renderer::loopNode(aiNode * node, const aiScene * scene, const std::string &picPath)
+void Renderer3D::load(const std::string & path, const std::string &picPath)
+{
+#ifdef WIN32
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		Log::error("load [%s] fail:%s", path.data(), importer.GetErrorString());
+		return;
+	}
+
+	std::vector<Mesh> meshes;
+	loopNode(scene->mRootNode, scene, picPath, meshes);
+	auto model = std::make_shared<Model>(meshes);
+	setModel(model);
+
+#endif
+}
+
+void Renderer3D::load(const char * data, int lenght)
+{
+}
+
+void Renderer3D::loopNode(aiNode * node, const aiScene * scene, const std::string &picPath, std::vector<Mesh> &meshes)
 {
 #ifdef WIN32
 	static auto mat4_from_aimatrix4x4 = [](aiMatrix4x4 matrix) -> glm::mat4 {
@@ -177,14 +175,14 @@ void Renderer::loopNode(aiNode * node, const aiScene * scene, const std::string 
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
 		Mesh localMesh = processMesh(mesh, scene, picPath);
 		localMesh.transformation = mat4_from_aimatrix4x4(node->mTransformation);
-		m_model->meshes.push_back(localMesh);
+		meshes.push_back(localMesh);
 	}
 	for (int i = 0; i != node->mNumChildren; ++i)
-		loopNode(node->mChildren[i], scene, picPath);
+		loopNode(node->mChildren[i], scene, picPath, meshes);
 #endif
 }
 
-Mesh Renderer::processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath)
+Mesh Renderer3D::processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath)
 {
 	std::vector<Vertex> vertexs;
 	std::vector<uint16_t> indices;
@@ -208,7 +206,7 @@ Mesh Renderer::processMesh(aiMesh * mesh, const aiScene * scene, const std::stri
 			indices.push_back(face.mIndices[j]);
 		}
 	}
-	
+
 	using TextureMipmapPtr = std::shared_ptr<TextureMipmap>;
 	static auto loadMaterialTextures = [&](aiMaterial *mat, aiTextureType type, int samplerUnit)->std::vector<TextureMipmapPtr> {
 		std::vector<TextureMipmapPtr> textures;
@@ -218,7 +216,7 @@ Mesh Renderer::processMesh(aiMesh * mesh, const aiScene * scene, const std::stri
 			mat->GetTexture(type, i, &str);
 
 			std::string filename = std::string(str.C_Str());
-			filename = picPath + "/" +filename.substr(filename.find_last_of('\\') + 1);
+			filename = picPath + "/" + filename.substr(filename.find_last_of('\\') + 1);
 
 			Bitmap bm(filename);
 			auto textureMipPtr = std::make_shared<TextureMipmap>();
@@ -254,7 +252,7 @@ Mesh Renderer::processMesh(aiMesh * mesh, const aiScene * scene, const std::stri
 		auto heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, GL_TEXTURE3);
 		ma.textures().insert(ma.textures().end(), heightMaps.begin(), heightMaps.end());
 	}
-	
+
 #endif
 	return Mesh(vertexs, indices, ma);
 }

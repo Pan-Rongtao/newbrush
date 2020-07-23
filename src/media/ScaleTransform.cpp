@@ -47,14 +47,14 @@ DependencyPropertyPtr ScaleTransform::ScaleYProperty()
 
 glm::mat4x4 ScaleTransform::value()
 {
-	float m_centerX = getValue<float>(CenterXProperty());
-	float m_centerY = getValue<float>(CenterYProperty());
-	float m_scaleX = getValue<float>(ScaleXProperty());
-	float m_scaleY = getValue<float>(ScaleYProperty());
+	float centerX = getValue<float>(CenterXProperty());
+	float centerY = getValue<float>(CenterYProperty());
+	float scaleX = getValue<float>(ScaleXProperty());
+	float scaleY = getValue<float>(ScaleYProperty());
 
 	glm::mat4x4 matrix = glm::mat4x4(1.0f);
-	matrix = glm::translate(matrix, glm::vec3(m_centerX * (1 - m_scaleX), m_centerY * (1 - m_scaleY), 0.0f));
-	matrix = glm::scale(matrix, glm::vec3(m_scaleX, m_scaleY, 1.0f));
+	matrix = glm::translate(matrix, glm::vec3(centerX * (1 - scaleX), centerY * (1 - scaleY), 0.0f));
+	matrix = glm::scale(matrix, glm::vec3(scaleX, scaleY, 1.0f));
 
 	return matrix;
 }

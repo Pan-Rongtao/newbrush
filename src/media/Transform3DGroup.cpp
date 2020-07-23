@@ -1,19 +1,15 @@
-#include "newbrush/media/TransformGroup.h"
+#include "newbrush/media/Transform3DGroup.h"
 #include "newbrush/core/DependencyProperty.h"
 
 using namespace nb;
 
-TransformGroup::TransformGroup()
+DependencyPropertyPtr Transform3DGroup::ChildrenProperty()
 {
-}
-
-DependencyPropertyPtr TransformGroup::ChildrenProperty()
-{
-	static auto dp = DependencyProperty::registerDependency<TransformGroup, TransformCollectionPtr>("Children", TransformCollectionPtr());
+	static auto dp = DependencyProperty::registerDependency<Transform3DGroup, TransformCollectionPtr>("Children", TransformCollectionPtr());
 	return dp;
 }
 
-glm::mat4x4 TransformGroup::value()
+glm::mat4x4 Transform3DGroup::value() const
 {
 	auto m_transformCollection = getValue<TransformCollectionPtr>(ChildrenProperty());
 

@@ -19,11 +19,12 @@
 #pragma once
 #include <vector>
 #include "glm/glm.hpp"
-#include "newbrush/gles/Camera.h"
-#include "newbrush/gles/Projection.h"
 #include "newbrush/gles/Material.h"
 
 namespace nb{
+
+class Camera;
+using CameraPtr = std::shared_ptr<Camera>;
 
 class NB_API Vertex
 {
@@ -101,7 +102,7 @@ public:
 
 	//视线命中测试
 	//xNormalized,yNormalized：标准化坐标[-1.0, 1.0]
-	virtual bool sightHitTest(const Camera &camera, const Projection &projection, float xNormalized, float yNormalized) const;
+	virtual bool sightHitTest(CameraPtr camera, float xNormalized, float yNormalized) const;
 
 	//正交命中测试
 	//x,y：坐标

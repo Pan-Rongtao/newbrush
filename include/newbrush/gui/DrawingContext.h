@@ -3,7 +3,6 @@
 #include "newbrush/core/Point.h"
 #include "newbrush/core/Rect.h"
 #include "newbrush/gles/Camera.h"
-#include "newbrush/gles/Projection.h"
 
 namespace nb {
 
@@ -11,10 +10,12 @@ class Pen;
 class Brush;
 class ImageSource;
 class Renderer;
+class Camera;
 using PenPtr = std::shared_ptr<Pen>;
 using BrushPtr = std::shared_ptr<Brush>;
 using ImageSourcePtr = std::shared_ptr<ImageSource>;
 using RendererPtr = std::shared_ptr<Renderer>;
+using CameraPtr = std::shared_ptr<Camera>;
 
 class NB_API DrawingContext : public Object
 {
@@ -43,8 +44,7 @@ private:
 	void resize(int width, int height);
 	void draw();
 
-	Camera		m_camera;
-	Projection	m_projection;
+	CameraPtr m_camera;
 	std::vector<RendererPtr> m_renderers;
 	friend class Window;
 };

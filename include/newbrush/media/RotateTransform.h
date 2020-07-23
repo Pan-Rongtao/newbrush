@@ -14,19 +14,20 @@
 
 namespace nb {
 
-	class NB_API RotateTransform : public Transform
-	{
-	public:
-		RotateTransform();
-		RotateTransform(float angle);
-		RotateTransform(float angle, float centerX, float centerY);
-		virtual ~RotateTransform() = default;
+class NB_API RotateTransform : public Transform
+{
+public:
+	RotateTransform();
+	RotateTransform(float angle);
+	RotateTransform(float angle, float centerX, float centerY);
+	virtual ~RotateTransform() = default;
 
-		static DependencyPropertyPtr AngleProperty();
-		static DependencyPropertyPtr CenterXProperty();
-		static DependencyPropertyPtr CenterYProperty();
+	static DependencyPropertyPtr AngleProperty();
+	static DependencyPropertyPtr CenterXProperty();
+	static DependencyPropertyPtr CenterYProperty();
 
-		virtual glm::mat4x4 value() override;
+	virtual glm::mat4x4 value() override;
 
-	};
+};
+
 }

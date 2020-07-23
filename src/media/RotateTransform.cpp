@@ -40,14 +40,14 @@ DependencyPropertyPtr RotateTransform::CenterYProperty()
 
 glm::mat4x4 RotateTransform::value()
 {
-	float m_angle = getValue<float>(AngleProperty());
-	float m_centerX = getValue<float>(CenterXProperty());
-	float m_centerY = getValue<float>(CenterYProperty());
+	float angle = getValue<float>(AngleProperty());
+	float centerX = getValue<float>(CenterXProperty());
+	float centerY = getValue<float>(CenterYProperty());
 
 	glm::mat4x4 matrix = glm::mat4x4(1.0f);
-	matrix = glm::translate(matrix, glm::vec3(m_centerX, m_centerY, 0.0f));
-	matrix = glm::rotate(matrix, glm::radians(m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	matrix = glm::translate(matrix, glm::vec3(-m_centerX, -m_centerY, 0.0f));
+	matrix = glm::translate(matrix, glm::vec3(centerX, centerY, 0.0f));
+	matrix = glm::rotate(matrix, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+	matrix = glm::translate(matrix, glm::vec3(-centerX, -centerY, 0.0f));
 
 	return matrix;
 }

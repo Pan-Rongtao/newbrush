@@ -6,22 +6,21 @@
 ********************************************************/
 
 #pragma once
-#include "newbrush/media/Transform.h"
+#include "newbrush/media/Transform3D.h"
 
 namespace nb {
 	
-using TransformPtr = std::shared_ptr<Transform>;
-using TransformCollection = std::vector<TransformPtr>;
+using TransformCollection = std::vector<Transform3DPtr>;
 using TransformCollectionPtr = std::shared_ptr<TransformCollection>;
 
-class NB_API TransformGroup : public Transform
+class NB_API Transform3DGroup : public Transform3D
 {
 public:
-	TransformGroup();
+	Transform3DGroup() = default;
 
 	static DependencyPropertyPtr ChildrenProperty();
 
-	virtual glm::mat4x4 value() override;
+	virtual glm::mat4x4 value() const override;
 
 };
 }

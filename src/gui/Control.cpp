@@ -20,7 +20,7 @@ Control::Control()
 
 DependencyPropertyPtr Control::BackgroundProperty()
 {
-	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Background", nullptr, onBackgroundPropertyChanged, nullptr, nullptr);
+	static auto dp = DependencyProperty::registerDependency<Control, BrushPtr>("Background", nullptr, onBackgroundPropertyChanged);
 	return dp;
 }
 

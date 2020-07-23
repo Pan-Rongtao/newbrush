@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/ext/matrix_projection.hpp>
 #include "newbrush/gles/Material.h"
+#include "newbrush/gles/Camera.h"
 
 using namespace nb;
 
@@ -190,12 +191,12 @@ void Model::preprocess()
 }
 
 //https://stackoverflow.com/questions/29997209/opengl-c-mouse-ray-picking-glmunproject
-bool Model::sightHitTest(const Camera &camera, const Projection &projection, float xNormalized, float yNormalized) const
+bool Model::sightHitTest(CameraPtr camera, float xNormalized, float yNormalized) const
 {
-	glm::mat4 invVP = glm::inverse(projection.matrix * camera.matrix);
+	glm::mat4 invVP = glm::inverse(camera->projectionMatrix() * camera->viewMatrix());
 	glm::vec4 screenPos = glm::vec4(xNormalized, -yNormalized, 1.0f, 1.0f);
 	glm::vec4 worldPos = invVP * screenPos;
-	glm::vec3 raypos = camera.position();
+	glm::vec3 raypos = camera->position();
 	glm::vec3 raydir = glm::normalize(glm::vec3(worldPos));
 	return intersect(raypos, raydir);
 	return false;
@@ -220,8 +221,11 @@ bool Model::intersect(const glm::vec3 & raypos, const glm::vec3 & raydir) const
 			auto p2 = mesh.vertexs[idxs[i + 2]].position;
 			glm::vec2 bary;
 			float d;
-			if (glm::intersectRayTriangle(raypos, raydir, glm::vec3(matrix * glm::vec4(p0, 1.0)), glm::vec3(matrix * glm::vec4(p1, 1.0)), glm::vec3(matrix * glm::vec4(p2, 1.0)), bary, d))
+			if (glm::intersectRayTriangle(raypos, raydir, glm::vec3(matrix * glm::vec4(p0, 1.0)),
+				glm::vec3(matrix * glm::vec4(p1, 1.0)), glm::vec3(matrix * glm::vec4(p2, 1.0)), bary, d))
+			{
 				return true;
+			}
 		}
 	}
 	return false;

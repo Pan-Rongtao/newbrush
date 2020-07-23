@@ -55,9 +55,9 @@ TEST_CASE("test Transform", "[Transform]")
 
 	//Collection
 	auto transformCollectionPtr = std::make_shared<TransformCollection>();
-	transformCollectionPtr->add(scaleTransformPtr);
-	transformCollectionPtr->add(translateTransformPtr);
-	transformCollectionPtr->add(rotateTransformPtr);
+	transformCollectionPtr->push_back(scaleTransformPtr);
+	transformCollectionPtr->push_back(translateTransformPtr);
+	transformCollectionPtr->push_back(rotateTransformPtr);
 
 	//transformGroup
 	auto transformGroupPtr = std::make_shared<TransformGroup>();

@@ -14,8 +14,6 @@
 #pragma once
 #include <string>
 #include "newbrush/gles/Model.h"
-#include "newbrush/gles/Camera.h"
-#include "newbrush/gles/Projection.h"
 
 struct aiNode;
 struct aiMesh;
@@ -24,8 +22,10 @@ namespace nb{
 	
 class Model;
 class Program;
+class Camera;
 using ModelPtr = std::shared_ptr<Model>;
 using ProgramPtr = std::shared_ptr<Program>;
+using CameraPtr = std::shared_ptr<Camera>;
 
 class NB_API Renderer
 {
@@ -39,19 +39,12 @@ public:
 	//构建一个Renderer，它的模型为model，程序为program
 	Renderer(ModelPtr model, ProgramPtr program);
 
-	//从文件中加载
-	void loadFromFile(const std::string &modelPath, const std::string &picPath = "");
-
-	//设置模型
+	//模型
 	void setModel(ModelPtr model);
-
-	//获取模型
 	ModelPtr model();
 
-	//设置program
+	//program
 	void setProgram(ProgramPtr program);
-
-	//获取program
 	ProgramPtr program();
 
 	//存储uniform变量，以便下次刷新使用
@@ -98,15 +91,27 @@ public:
 	}
 	
 	//绘制，重写此方法以构建自己的渲染方式
-	virtual void draw(const Camera &camera, const Projection &projection) const;
+	virtual void draw(CameraPtr camera) const;
 
 private:
-	void loopNode(aiNode * node, const aiScene * scene, const std::string &picPath);
-	Mesh processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath);
-
 	ModelPtr m_model;
 	ProgramPtr m_program;
 	std::map<std::string, var> m_uniforms;
+};
+
+class NB_API Renderer3D : public Renderer
+{
+public:
+	//从文件中加载
+	void load(const std::string &path, const std::string &picPath);
+
+	//从数据读取
+	void load(const char *data, int lenght);
+
+private:
+	void loopNode(aiNode * node, const aiScene * scene, const std::string &picPath, std::vector<Mesh> &meshes);
+	Mesh processMesh(aiMesh * mesh, const aiScene * scene, const std::string &picPath);
+
 };
 
 }

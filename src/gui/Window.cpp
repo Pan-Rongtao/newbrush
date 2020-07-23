@@ -1,5 +1,4 @@
 ﻿#include "newbrush/gui/Window.h"
-#include "newbrush/gles/Projection.h"
 #include "newbrush/gui/DrawingContext.h"
 #include "newbrush/gui/Application.h"
 #include "newbrush/gui/VisualTreeHelper.h"

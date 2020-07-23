@@ -11,6 +11,7 @@
 #include "newbrush/gles/Shader.h"
 #include "GLFW/glfw3.h"
 #include <GLES2/gl2.h>
+#include "newbrush/gles/Camera.h"
 
 using namespace nb;
 
@@ -34,11 +35,16 @@ TEST_CASE("test Renderer", "[Renderer]") {
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, WIDTH, HEIGHT);
 
-	auto renderObj = std::make_shared<Renderer>();
+	auto renderObj = std::make_shared<Renderer3D>();
 	renderObj->setProgram(Programs::model());
-	renderObj->loadFromFile("../model/car.fbx", "../model");
-	
+	renderObj->load("../model/car.fbx", "../model");
 
+	renderObj->storeUniform("light.position", glm::vec3(0.0f, 0.0f, 5.0f));
+	renderObj->storeUniform("viewPos", glm::vec3(0.0f, 0.0f, 3.0f));
+	renderObj->storeUniform("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+	renderObj->storeUniform("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+	renderObj->storeUniform("light.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+	
 	enum WindowType
 	{
 		WINDOW2D = 0,
@@ -46,15 +52,14 @@ TEST_CASE("test Renderer", "[Renderer]") {
 	};
 
 	WindowType windowType = WINDOW2D;
-	Camera camera;
-	Projection projection;
+	auto camera = std::make_shared<Camera>();
 
 	if (windowType == WINDOW2D) {
-		projection.matrix = glm::ortho(0.0f, (float)WIDTH, (float)HEIGHT, 0.0f, -1000.0f, 1000.0f);
+		camera->ortho(0.0f, (float)WIDTH, (float)HEIGHT, 0.0f, -1000.0f, 1000.0f);
 	}
 	else if (windowType == WINDOW3D) {
-		camera.lookat(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		projection.perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		camera->lookat(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		camera->perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	}
 
 	while (!glfwWindowShouldClose(window)) {
@@ -77,7 +82,7 @@ TEST_CASE("test Renderer", "[Renderer]") {
 		}
 		
 		renderObj->model()->matrix = model;
-		renderObj->draw(camera, projection);
+		renderObj->draw(camera);
 
 		glfwSwapBuffers(window);
 	}
