@@ -1,10 +1,10 @@
 ﻿#include "NodeStub.h"
 #include "newbrush/core/DateTime.h"
-#include "newbrush/media/Thickness.h"
-#include "newbrush/media/SolidColorBrush.h"
-#include "newbrush/media/ImageBrush.h"
-#include "newbrush/media/ImageSource.h"
-#include "newbrush/media/GradientBrush.h"
+#include "newbrush/core/Thickness.h"
+#include "newbrush/core/media/SolidColorBrush.h"
+#include "newbrush/core/media/ImageBrush.h"
+#include "newbrush/core/media/ImageSource.h"
+#include "newbrush/core/media/GradientBrush.h"
 #include "newbrush/core/DependencyProperty.h"
 
 Status NodeStub::AddNode(ServerContext * context, const AddNodeRequest * request, CommonReply * response)

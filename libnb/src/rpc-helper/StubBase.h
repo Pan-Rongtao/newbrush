@@ -4,16 +4,16 @@
 #include "grpcpp/grpcpp.h"
 #include "google/protobuf/service.h"
 #include "newbrush/gui/Application.h"
-#include "newbrush/gles/SourceDecoder.h"
-#include "newbrush/gles/Shader.h"
-#include "newbrush/gles/Program.h"
+#include "newbrush/rvl/gles/SourceDecoder.h"
+#include "newbrush/rvl/gles/Shader.h"
+#include "newbrush/rvl/gles/Program.h"
 #include "newbrush/gui/Window.h"
-#include "newbrush/gui/Rectangle.h"
-#include "newbrush/media/EffectBrush.h"
-#include "newbrush/media/GradientBrush.h"
+#include "newbrush/gui/shapes/Rectangle.h"
+#include "newbrush/core/media/EffectBrush.h"
+#include "newbrush/core/media/GradientBrush.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/gui/Application.h"
-#include "newbrush/gui/Panel.h"
+#include "newbrush/gui/panels/Panel.h"
 
 using namespace grpc;
 using namespace google::protobuf;

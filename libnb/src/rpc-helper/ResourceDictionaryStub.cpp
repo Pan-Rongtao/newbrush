@@ -1,5 +1,5 @@
 #include "ResourceDictionaryStub.h"
-#include "newbrush/core/ResourceDictionary.h"
+#include "newbrush/core/data/ResourceDictionary.h"
 
 Status ResourceDictionaryStub::AddBool(ServerContext * context, const AddBoolRequest * request, CommonReply * response)
 {
