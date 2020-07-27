@@ -14,8 +14,8 @@
 ********************************************************/
 
 #pragma once
-#include "newbrush/core/Point.h"
-#include "newbrush/core/Size.h"
+#include "newbrush/core/base/Point.h"
+#include "newbrush/core/base/Size.h"
 
 namespace nb{
 

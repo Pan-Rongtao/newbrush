@@ -1,4 +1,4 @@
-#include "newbrush/media/Timeline.h"
+#include "newbrush/core/media/animation/Timeline.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

@@ -1,7 +1,6 @@
-#include "newbrush/gles/Texture2D.h"
 #include "catch2/catch.hpp"
 
-using namespace nb;
+//using namespace nb;
 
 TEST_CASE("Test nb::Texture2D", "[Texture2D]")
 {

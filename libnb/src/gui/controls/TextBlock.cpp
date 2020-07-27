@@ -2,7 +2,7 @@
 #include "newbrush/rvl/gles/GlyphBunch.h"
 #include "newbrush/core/media/Media.h"
 #include "newbrush/core/media/Color.h"
-#include "newbrush/core/Thickness.h"
+#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

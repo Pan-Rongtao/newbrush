@@ -1,16 +1,17 @@
 #include <catch2/catch.hpp>
-#include "newbrush/media/GradientBrush.h"
-#include "newbrush/media/ImageBrush.h"
-#include "newbrush/gui/Rectangle.h"
-#include "newbrush/gui/Button.h"
+#include "newbrush/core/media/GradientBrush.h"
+#include "newbrush/core/media/ImageBrush.h"
+#include "newbrush/gui/shapes/Rectangle.h"
+#include "newbrush/gui/controls/Button.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
 #include "newbrush/core/Log.h"
+#include "newbrush/core/base/Thickness.h"
 #include "newbrush/gui/ControlTemplate.h"
-#include "newbrush/gui/Grid.h"
-#include "newbrush/gui/Shape.h"
-#include "newbrush/gui/RepeatButton.h"
-#include "newbrush/media/SolidColorBrush.h"
+#include "newbrush/gui/panels/Grid.h"
+#include "newbrush/gui/shapes/Shape.h"
+#include "newbrush/gui/controls/RepeatButton.h"
+#include "newbrush/core/media/SolidColorBrush.h"
 
 using namespace nb;
 

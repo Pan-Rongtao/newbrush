@@ -2,7 +2,7 @@
 #include "newbrush/gui/controls/ContentControl.h"
 #include "newbrush/core/media/Font.h"
 #include "newbrush/core/media/SolidColorBrush.h"
-#include "newbrush/core/Thickness.h"
+#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "newbrush/core/Rect.h"
+#include "newbrush/core/base/Rect.h"
 #include "newbrush/core/media/Pen.h"
 #include "glm/glm.hpp"
 

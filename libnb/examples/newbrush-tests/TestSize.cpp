@@ -1,4 +1,4 @@
-#include "newbrush/core/Size.h"
+#include "newbrush/core/base/Size.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

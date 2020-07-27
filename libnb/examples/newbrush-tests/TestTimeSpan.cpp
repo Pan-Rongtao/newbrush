@@ -1,4 +1,4 @@
-#include "newbrush/core/TimeSpan.h"
+#include "newbrush/core/base/TimeSpan.h"
 #include <stdio.h>
 #include <fstream>
 #include "catch2/catch.hpp"

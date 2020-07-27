@@ -1,13 +1,12 @@
-#include "newbrush/gui/Image.h"
-#include "newbrush/media/ImageSource.h"
-#include "newbrush/media/Brush.h"
-#include "newbrush/gui/Shape.h"
-#include "newbrush/gui/Rectangle.h"
+#include "newbrush/gui/controls/Image.h"
+#include "newbrush/core/media/Brush.h"
+#include "newbrush/gui/shapes/Shape.h"
+#include "newbrush/gui/shapes/Rectangle.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/core/Timer.h"
 #include "newbrush/core/Log.h"
 #include "catch2/catch.hpp"
-#include "newbrush/media/SolidColorBrush.h"
+#include "newbrush/core/media/SolidColorBrush.h"
 
 using namespace nb;
 

@@ -1,8 +1,9 @@
 #include "newbrush/gui/Window.h"
-#include "newbrush/gui/Rectangle.h"
-#include "newbrush/media/SolidColorBrush.h"
-#include "newbrush/media/GradientBrush.h"
-#include "newbrush/media/ImageBrush.h"
+#include "newbrush/gui/shapes/Rectangle.h"
+#include "newbrush/core/media/SolidColorBrush.h"
+#include "newbrush/core/media/GradientBrush.h"
+#include "newbrush/core/media/ImageBrush.h"
+#include "newbrush/core/base/Thickness.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

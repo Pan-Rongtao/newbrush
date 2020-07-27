@@ -25,7 +25,7 @@ file(GLOB SRC_FILES "*.h" "*.cpp")
 
 add_executable(${BIN_NAME} ${SRC_FILES})
 set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${BIN_NAME})
-target_link_libraries(${BIN_NAME} core media gles gui rpc-helper)
+target_link_libraries(${BIN_NAME} core gles gui rpc-helper)
 
 # 4. Project Install
 install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -1,8 +1,9 @@
-#include "newbrush/media/SolidColorBrush.h"
-#include "newbrush/core/Binding.h"
-#include "newbrush/core/BindingMaster.h"
-#include "newbrush/core/DataContext.h"
-#include "newbrush/gui/TextBlock.h"
+#include "newbrush/core/media/SolidColorBrush.h"
+#include "newbrush/core/data/Binding.h"
+#include "newbrush/core/data/BindingMaster.h"
+#include "newbrush/core/data/DataContext.h"
+#include "newbrush/gui/controls/TextBlock.h"
+#include "newbrush/core/base/Thickness.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

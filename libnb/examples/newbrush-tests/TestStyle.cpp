@@ -1,6 +1,7 @@
 #include "newbrush/gui/Style.h"
 #include "catch2/catch.hpp"
-#include "newbrush/gui/Button.h"
+#include "newbrush/gui/controls/Button.h"
+#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

@@ -1,4 +1,4 @@
-#include "newbrush/media/Bitmap.h"
+#include "newbrush/core/media/Bitmap.h"
 #include <stdio.h>
 #include "catch2/catch.hpp"
 

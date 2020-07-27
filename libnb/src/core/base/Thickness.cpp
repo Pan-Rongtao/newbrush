@@ -1,4 +1,4 @@
-﻿#include "newbrush/core/Thickness.h"
+﻿#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

@@ -1,4 +1,4 @@
-#include "newbrush/core/Point.h"
+#include "newbrush/core/base/Point.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

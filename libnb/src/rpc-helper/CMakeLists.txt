@@ -47,7 +47,7 @@ endif()
 add_library(${LIB_NAME} STATIC ${GAPI_GEN_INC_LIST} ${GAPI_GEN_SRC_LIST} ${INC_LIST} ${SRC_LIST})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME ${LIB_NAME})
 
-target_link_libraries(${LIB_NAME} core media gles gui 
+target_link_libraries(${LIB_NAME} core gles gui 
 optimized libprotobuf debug libprotobufd
 optimized grpc debug grpcd
 optimized gpr debug gprd

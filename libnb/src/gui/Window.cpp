@@ -2,7 +2,7 @@
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/core/media/ImageSource.h"
 #include "newbrush/gui/WindowCollection.h"
-#include "newbrush/core/Singleton.h"
+#include "newbrush/core/base/Singleton.h"
 #include "newbrush/core/Log.h"
 #include "GLFW/glfw3.h"
 

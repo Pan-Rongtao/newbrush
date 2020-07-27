@@ -1,8 +1,8 @@
 #include "catch2/catch.hpp"
-#include "newbrush/gui/Image.h"
+#include "newbrush/gui/controls/Image.h"
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
-#include "newbrush/media/ImageSource.h"
+#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

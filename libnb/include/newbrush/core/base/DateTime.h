@@ -9,7 +9,7 @@
 **
 ********************************************************/
 #pragma once
-#include "newbrush/core/TimeSpan.h"
+#include "newbrush/core/base/TimeSpan.h"
 
 namespace nb{
 

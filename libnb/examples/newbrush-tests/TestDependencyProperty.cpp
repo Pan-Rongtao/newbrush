@@ -1,5 +1,5 @@
 #include "newbrush/core/DependencyObject.h"
-#include "newbrush/core/DependencyProperty.h"
+#include "newbrush/core/base/Point.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

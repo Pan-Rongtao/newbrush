@@ -1,6 +1,6 @@
 ﻿#include "NodeStub.h"
-#include "newbrush/core/DateTime.h"
-#include "newbrush/core/Thickness.h"
+#include "newbrush/core/base/DateTime.h"
+#include "newbrush/core/base/Thickness.h"
 #include "newbrush/core/media/SolidColorBrush.h"
 #include "newbrush/core/media/ImageBrush.h"
 #include "newbrush/core/media/ImageSource.h"

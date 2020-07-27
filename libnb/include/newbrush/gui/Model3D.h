@@ -17,7 +17,7 @@
 
 #pragma once
 #include "newbrush/core/DependencyObject.h"
-#include "newbrush/core/Point.h"
+#include "newbrush/core/base/Point.h"
 #include "glm/glm.hpp"
 
 namespace nb {

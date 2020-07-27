@@ -1,6 +1,6 @@
 #include "newbrush/core/media/TileBrush.h"
 #include "newbrush/core/media/Media.h"
-#include "newbrush/core/Rect.h"
+#include "newbrush/core/base/Rect.h"
 
 using namespace nb;
 

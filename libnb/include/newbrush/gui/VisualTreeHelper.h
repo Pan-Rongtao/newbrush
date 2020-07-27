@@ -1,6 +1,6 @@
 #pragma once
 #include "newbrush/core/Def.h"
-#include "newbrush/core/Point.h"
+#include "newbrush/core/base/Point.h"
 
 namespace nb{
 

@@ -3,7 +3,7 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/core/Log.h"
 #include <GLES2/gl2.h>
-#include "newbrush/core/Singleton.h"
+#include "newbrush/core/base/Singleton.h"
 #include "newbrush/core/media/Color.h"
 #include "newbrush/gui/BuildinStudioPlugin.h"
 

@@ -1,5 +1,5 @@
 ﻿#include "newbrush/gui/VisualStateMachine.h"
-#include "newbrush/core/TimeSpan.h"
+#include "newbrush/core/base/TimeSpan.h"
 
 using namespace nb;
 

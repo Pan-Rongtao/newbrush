@@ -1,4 +1,4 @@
-﻿#include "newbrush/core/Point.h"
+﻿#include "newbrush/core/base/Point.h"
 #include <cmath>
 
 using namespace nb;

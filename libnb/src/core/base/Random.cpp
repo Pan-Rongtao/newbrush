@@ -1,4 +1,4 @@
-﻿#include "newbrush/core/Random.h"
+﻿#include "newbrush/core/base/Random.h"
 #include <algorithm>
 #include <numeric>
 #include <time.h>

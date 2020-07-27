@@ -1,7 +1,7 @@
 #pragma once
 #include "newbrush/core/Object.h"
-#include "newbrush/core/Point.h"
-#include "newbrush/core/Rect.h"
+#include "newbrush/core/base/Point.h"
+#include "newbrush/core/base/Rect.h"
 #include "newbrush/core/media/Pen.h"
 #include "newbrush/core/media/ImageSource.h"
 

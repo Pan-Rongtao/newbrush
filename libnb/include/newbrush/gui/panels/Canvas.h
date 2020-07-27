@@ -16,7 +16,7 @@
  *****************************************************************************/
 #pragma once
 #include "newbrush/gui/panels/Panel.h"
-#include "newbrush/core/Size.h"
+#include "newbrush/core/base/Size.h"
 
 namespace nb{
 

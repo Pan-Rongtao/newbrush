@@ -1,4 +1,4 @@
-#include "newbrush/media/Font.h"
+#include "newbrush/core/media/Font.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

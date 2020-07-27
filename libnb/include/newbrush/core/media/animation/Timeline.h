@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "newbrush/core/TimeSpan.h"
+#include "newbrush/core/base/TimeSpan.h"
 #include "newbrush/core/Timer.h"
 #include "newbrush/core/media/RepeatBehavior.h"
 #include "newbrush/core/DependencyObject.h"

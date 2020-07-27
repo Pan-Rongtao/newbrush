@@ -2,7 +2,7 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/VisualTreeHelper.h"
 #include "newbrush/core/media/Transform.h"
-#include "newbrush/core/Thickness.h"
+#include "newbrush/core/base/Thickness.h"
 
 using namespace nb;
 

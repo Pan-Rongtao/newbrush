@@ -1,9 +1,9 @@
-#include "newbrush/media/AnimationTimeline.h"
-#include "newbrush/media/Storyboard.h"
+#include "newbrush/core/media/animation/AnimationTimeline.h"
+#include "newbrush/core/media/animation/Storyboard.h"
 #include "newbrush/gui/UIElement.h"
 #include "newbrush/core/DependencyProperty.h"
 #include "catch2/catch.hpp"
-#include "newbrush/media/FloatAnimation.h"
+#include "newbrush/core/media/animation/FloatAnimation.h"
 
 using namespace nb;
 

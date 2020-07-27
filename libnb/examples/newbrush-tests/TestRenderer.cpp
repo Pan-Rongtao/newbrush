@@ -1,17 +1,14 @@
 #include "newbrush/gui/Window.h"
 #include "newbrush/gui/Application.h"
-#include "newbrush/gles/Renderer.h"
-#include "newbrush/gles/Program.h"
+#include "newbrush/rvl/gles/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/glm.hpp"
 #include "catch2/catch.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "newbrush/gles/Shader.h"
 #include "GLFW/glfw3.h"
 #include <GLES2/gl2.h>
-#include "newbrush/gles/Camera.h"
 
 using namespace nb;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "newbrush/core/media/animation/AnimationTimeline.h"
-#include "newbrush/core/Thickness.h"
+#include "newbrush/core/base/Thickness.h"
 
 namespace nb {
 	

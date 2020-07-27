@@ -1,4 +1,4 @@
-#include "newbrush/media/Thickness.h"
+#include "newbrush/core/base/Thickness.h"
 #include "catch2/catch.hpp"
 
 using namespace nb;

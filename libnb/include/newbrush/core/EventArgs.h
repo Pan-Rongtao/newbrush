@@ -1,7 +1,7 @@
 #pragma once
 #include <bitset>
-#include "newbrush/core/Point.h"
-#include "newbrush/core/Size.h"
+#include "newbrush/core/base/Point.h"
+#include "newbrush/core/base/Size.h"
 #include "newbrush/core/RoutedEvent.h"
 
 namespace nb {

@@ -1,7 +1,7 @@
 #pragma once
 #include "newbrush/core/media3d/Transform3D.h"
 #include "newbrush/core/media3d/Rotation3D.h"
-#include "newbrush/core/Point.h"
+#include "newbrush/core/base/Point.h"
 
 namespace nb {
 

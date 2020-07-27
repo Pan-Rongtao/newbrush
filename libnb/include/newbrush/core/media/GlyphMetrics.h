@@ -1,5 +1,5 @@
 #pragma once
-#include "newbrush/core/Size.h"
+#include "newbrush/core/base/Size.h"
 #include "newbrush/core/media/Font.h"
 #include "newbrush/core/media/Media.h"
 

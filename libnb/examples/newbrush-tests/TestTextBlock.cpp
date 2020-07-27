@@ -1,7 +1,8 @@
 #include <thread>
 #include "newbrush/gui/Window.h"
-#include "newbrush/gui/TextBlock.h"
+#include "newbrush/gui/controls/TextBlock.h"
 #include "catch2/catch.hpp"
+#include "newbrush/core/media/Media.h"
 
 using namespace nb;
 
