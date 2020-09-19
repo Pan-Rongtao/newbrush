@@ -83,8 +83,8 @@ std::pair<int, int> Texture::getGlFormatAndType(int bmChannels)
 {
 	switch (bmChannels)
 	{
-	case 1:	return{ GL_RGB, GL_UNSIGNED_BYTE };
-	case 2:	return{ GL_ALPHA, GL_UNSIGNED_BYTE };
+	case 1:	return{ GL_LUMINANCE, GL_UNSIGNED_BYTE };
+	case 2:	return{ GL_RGB, GL_UNSIGNED_SHORT_5_6_5 };
 	case 3:	return{ GL_RGB, GL_UNSIGNED_BYTE };
 	case 4:	return{ GL_RGBA, GL_UNSIGNED_BYTE };
 	default: nbThrowException(std::invalid_argument, "bmChannels[%d] is invalid", bmChannels);	break;

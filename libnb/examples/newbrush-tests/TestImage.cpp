@@ -13,6 +13,7 @@ TEST_CASE("Test Image", "[Image]")
 	auto img = std::make_shared<Image>();
 	w->setValue<UIElementPtr>(Window::ContentProperty(), img);
 	auto imgSource = std::make_shared<ImageSource>("../images/zelda0.jpg");
+//	auto imgSource = std::make_shared<ImageSource>("d:/music_1.jpeg");
 	img->setValue(Image::SourceProperty(), imgSource);
 	img->setValue(Image::StretchProperty(), StretchE::Uniform);
 	img->setValue(Image::MarginProperty(), Thickness(20));

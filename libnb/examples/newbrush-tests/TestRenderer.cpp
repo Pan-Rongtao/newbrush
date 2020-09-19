@@ -78,7 +78,7 @@ TEST_CASE("test Renderer", "[Renderer]") {
 			model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 		
-		renderObj->model()->matrix = model;
+		//renderObj->model()->matrix = model;
 		renderObj->draw(camera);
 
 		glfwSwapBuffers(window);

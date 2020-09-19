@@ -106,6 +106,7 @@ void Renderer::draw(CameraPtr camera) const
 	//依次绘制meshs
 	for (auto const &mesh : m_model->meshes)
 	{
+		auto mat = m_model->matrix * mesh.transformation;
 		program->uniform(program->getUniformLocation(Program::nbMStr), m_model->matrix * mesh.transformation);
 
 		program->vertexAttributePointer(Program::nbPositionLocation, Vertex::positionDimension, Vertex::stride, mesh.positionData());
@@ -170,6 +171,7 @@ void Renderer3D::loopNode(aiNode * node, const aiScene * scene, const std::strin
 	for (int i = 0; i != node->mNumMeshes; ++i)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+		std::string name = mesh->mName.C_Str();
 		Mesh localMesh = processMesh(mesh, scene, picPath);
 		localMesh.transformation = mat4_from_aimatrix4x4(node->mTransformation);
 		meshes.push_back(localMesh);
@@ -230,6 +232,7 @@ Mesh Renderer3D::processMesh(aiMesh * mesh, const aiScene * scene, const std::st
 
 	if (mesh->mMaterialIndex >= 0) {
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		auto name = material->GetName();
 		aiColor3D ambient, diffuse, specular;
 		material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
 		material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
