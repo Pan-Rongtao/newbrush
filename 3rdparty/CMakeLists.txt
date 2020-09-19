@@ -1,21 +1,16 @@
-
-# 0. CMake Defs
-
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-
-cmake_policy(VERSION 2.6)
-
 # 1. Project Name
 
-project(3rdparty)
+project(lib)
 
 # 2. Env (Include/Lib Path, C/CXX/LD FLAGS)
 
 
 # 4. Sub Projects
-add_subdirectory(include)
-add_subdirectory(lib)
-
 
 # 5. Project Install
-# N/A
+if(MSVC)
+	file(GLOB LIBS ${CMAKE_CURRENT_SOURCE_DIR}/lib/*.dll)
+elseif(UNIX AND NOT ANDROID)
+	file(GLOB LIBS linux-arm/release/*.so*)
+endif()
+	install(FILES ${LIBS} DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -1,0 +1,98 @@
+{
+	"Screen":
+	{
+		"Window0":
+		{
+			"Type": "nb::Window",
+			"Props":
+			[
+				[ 0, false],
+				[ 1, 1 ],
+				[ 2, 2.0 ],
+				[ 3, "" ],
+				[ 4, [] ]
+			],
+			"Children":
+			{
+				"Canvas0":
+				{
+					"Type" : "nb::Canvas"
+					
+				}
+			}
+			
+		}
+	
+	
+	},
+	
+	
+	"Library":
+	{
+		"Brushes":
+		{
+			"RedBrush": "255,0,0,255",
+			"GreenBrush": "0,125,0,255",
+			"BlueBrush": "0,0,255,255",
+			"LinearGrandentBrush": "",
+			"ImageBrush": "ImgData/a/b/c/d/1.jpg"
+		},
+		"Fonts":
+		{
+			"Yahei": "FontData/a/b/c/d/yahei.ttc"
+		},
+		"Models":
+		{
+			"BX11_Model": "ModelData/a/b/c/d/yahei.fbx"
+		},
+		"Animations":
+		{
+			"BooleanAnimationUsingKeyFrames": 
+			{
+				"Type": "nb::BooleanAnimationUsingKeyFrames",
+				"Target": "Screen/Window",
+				"TargetProperty": 1001,
+				"AutoReverse": false,
+				"BeginTime": 0,
+				"Duration": 200,
+				"KeyFrames": [0,false,100,true,200,false]
+			},
+			"Int32Animation":
+			{
+				"Type": "nb::Int32Animation",
+				"Target": "Screen/Window",
+				"TargetProperty": 1001,
+				"AutoReverse": false,
+				"BeginTime": 0,
+				"Duration": 200,
+				"From": 0,
+				"To": 100,
+				"Easing":0
+			},
+			"Int32AnimationUsingKeyFrames": 
+			{
+				"Type": "nb::Int32AnimationUsingKeyFrames",
+				"Target": "Screen/Window",
+				"TargetProperty": 1001,
+				"AutoReverse": false,
+				"BeginTime": 0,
+				"Duration": 200,
+				"KeyFrames": [0,100,100,200,200,300]
+			}
+		},
+		"Materials":
+		{
+		
+		},
+		"StateMachines":
+		{
+			
+		}
+	
+	},
+	"DataContext":
+	{
+	
+	}
+
+}
