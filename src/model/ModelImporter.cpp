@@ -32,17 +32,11 @@ ModelImporter::~ModelImporter()
 	m_importer->FreeScene();
 }
 
-void ModelImporter::load(const char * data, int lenght)
-{
-	m_importer->ReadFileFromMemory(data, lenght, LOAD_FLAGS);
-	handling();
-}
-
-void ModelImporter::load(const std::string & path, const std::string &textureDir)
+void ModelImporter::setPath(const std::string & path)
 {
 	auto k = getTickCount();
 	m_importer->ReadFile(path, LOAD_FLAGS);
-	m_textureDir = textureDir.empty() ? getParentDir(path) : textureDir;
+	m_textureDir = getParentDir(path);
 	auto t0 = nb::getTickCount() - k;
 
 	k = getTickCount();
@@ -57,6 +51,12 @@ void ModelImporter::load(const std::string & path, const std::string &textureDir
 	{
 		Log::info("load [{}] success. error message:{}", path, m_importer->GetErrorString());
 	}
+	m_path = path;
+}
+
+const std::string & ModelImporter::path() const
+{
+	return m_path;
 }
 
 const NodePtr & ModelImporter::getRootNode() const
@@ -244,11 +244,42 @@ void ModelImporter::handleAnimations(const aiScene *scene)
 		{
 			auto aChannel = aAnimation->mChannels[j];
 			auto nbNode = m_root->find(aChannel->mNodeName.C_Str());
-			auto scaleAnimation = std::make_shared<Vec3AnimationUsingKeyFrames>();
-			auto rotateAnimation = std::make_shared<FloatAnimationUsingKeyFrames>();
-			auto translateAnimation = std::make_shared<Vec3AnimationUsingKeyFrames>();
+			//平移关键帧帧动画
+			{
+				auto translateAnimation = std::make_shared<Vec3AnimationUsingKeyFrames>();
+				translateAnimation->setTargetPropertyName("Position");
+				translateAnimation->setTarget(nbNode->transform());
+				for (auto k = 0u; k != aChannel->mNumPositionKeys; ++k)
+				{
+					auto aKey = aChannel->mPositionKeys[k];
+					auto keyTime = (int)(aKey.mTime / aChannel->mNumPositionKeys * duration);
+					auto nbKeyFrame = Vec3KeyFrame(TimeSpan::fromMilliseconds(keyTime), glm::vec3(aKey.mValue.x, aKey.mValue.y, aKey.mValue.z));
+					translateAnimation->keyFrames().insert(nbKeyFrame);
+				}
+				storyboard->children().push_back(translateAnimation);
+			}
+			//旋转关键帧帧动画
+			{
+				auto rotateAnimation = std::make_shared<Vec3AnimationUsingKeyFrames>();
+				rotateAnimation->setTarget(nbNode->transform());
+				rotateAnimation->setTargetPropertyName("Rotate");
+				for (auto k = 0u; k != aChannel->mNumRotationKeys; ++k)
+				{
+					auto aKey = aChannel->mRotationKeys[k];
+					auto keyTime = (int)(aKey.mTime / aChannel->mNumRotationKeys * duration);
+					aiQuaternion aQuat = aKey.mValue;
+					glm::quat q(aQuat.w, aQuat.x, aQuat.y, aQuat.z);
+					auto rMatrix = glm::mat4_cast(q);
+					glm::vec3 rotate;
+					glm::extractEulerAngleYXZ(rMatrix, rotate.y, rotate.x, rotate.z);
+					auto nbKeyFrame = Vec3KeyFrame(TimeSpan::fromMilliseconds(keyTime), rotate);
+					rotateAnimation->keyFrames().insert(nbKeyFrame);
+				}
+				storyboard->children().push_back(rotateAnimation);
+			}
 			//缩放关键帧帧动画
 			{
+				auto scaleAnimation = std::make_shared<Vec3AnimationUsingKeyFrames>();
 				scaleAnimation->setTarget(nbNode->transform());
 				scaleAnimation->setTargetPropertyName("Scale");
 				for (auto k = 0u; k != aChannel->mNumScalingKeys; ++k)
@@ -258,39 +289,8 @@ void ModelImporter::handleAnimations(const aiScene *scene)
 					auto nbKeyFrame = Vec3KeyFrame(TimeSpan::fromMilliseconds(keyTime), glm::vec3(aKey.mValue.x, aKey.mValue.y, aKey.mValue.z));
 					scaleAnimation->keyFrames().insert(nbKeyFrame);
 				}
+				storyboard->children().push_back(scaleAnimation);
 			}
-			//旋转关键帧帧动画
-			{
-				rotateAnimation->setTarget(nbNode->transform());
-				rotateAnimation->setTargetPropertyName("RotateAngle");
-				for (auto k = 0u; k != aChannel->mNumRotationKeys; ++k)
-				{
-					auto aKey = aChannel->mRotationKeys[k];
-					auto keyTime = (int)(aKey.mTime / aChannel->mNumRotationKeys * duration);
-					aiQuaternion aQuat = aKey.mValue;
-					glm::quat q(aQuat.w, aQuat.x, aQuat.y, aQuat.z);
-					auto angle = glm::degrees(glm::angle(q));
-					auto axis = glm::axis(q);
-					auto mat = glm::toMat4(q);
-					auto nbKeyFrame = FloatKeyFrame(TimeSpan::fromMilliseconds(keyTime), angle);
-					rotateAnimation->keyFrames().insert(nbKeyFrame);
-				}
-			}
-			//平移关键帧帧动画
-			{
-				translateAnimation->setTarget(nbNode->transform());
-				translateAnimation->setTargetPropertyName("Position");
-				for (auto k = 0u; k != aChannel->mNumPositionKeys; ++k)
-				{
-					auto aKey = aChannel->mPositionKeys[k];
-					auto keyTime = (int)(aKey.mTime / aChannel->mNumPositionKeys * duration);
-					auto nbKeyFrame = Vec3KeyFrame(TimeSpan::fromMilliseconds(keyTime), glm::vec3(aKey.mValue.x, aKey.mValue.y, aKey.mValue.z));
-					translateAnimation->keyFrames().insert(nbKeyFrame);
-				}
-			}
-			//storyboard->children().push_back(scaleAnimation);
-			storyboard->children().push_back(rotateAnimation);
-			//storyboard->children().push_back(translateAnimation);
 		}
 	}
 }
@@ -334,9 +334,9 @@ MeshNodePtr ModelImporter::convertMesh(aiNode * aParentNode, aiMesh * aMesh)
 	return nbMeshNode;
 }
 
-TextureMipmapPtr ModelImporter::getTexture(aiMaterial *aMaterial, int aType)
+TexturePtr ModelImporter::getTexture(aiMaterial *aMaterial, int aType)
 {
-	TextureMipmapPtr ret;
+	TexturePtr ret;
 	aiString originalPath;
 	aiReturn r = aMaterial->GetTexture((aiTextureType)aType, 0, &originalPath);
 	if (r == aiReturn_FAILURE)
@@ -359,9 +359,10 @@ TextureMipmapPtr ModelImporter::getTexture(aiMaterial *aMaterial, int aType)
 
 	if (bm->isValid())
 	{
-		ret = std::make_shared<TextureMipmap>();
+		ret = std::make_shared<Texture>(TextureTypeE::Texture2D);
 		auto glFormatAndType = Texture::getGlFormatAndType(bm->channels());
-		ret->update(bm->data(), bm->width(), bm->height(), glFormatAndType.first, glFormatAndType.second);
+		ret->update(0, bm->data(), bm->width(), bm->height(), glFormatAndType.first, glFormatAndType.second);
+		ret->genMipmap();
 	}
 	else
 	{

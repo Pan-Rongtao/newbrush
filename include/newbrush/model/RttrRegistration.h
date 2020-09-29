@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "newbrush/model/Def.h"
+#include "newbrush/model/Object.h"
 
 namespace nb {
 

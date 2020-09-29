@@ -17,15 +17,15 @@ namespace Assimp {
 
 namespace nb{
 
-class ModelImporter
+class NB_API ModelImporter
 {
 public:
 	ModelImporter();
 	~ModelImporter();
 
-	void load(const char * data, int lenght);
-	void load(const std::string & path, const std::string &textureDir);
-
+	void setPath(const std::string & path);
+	const std::string &path() const;
+	
 	const NodePtr &getRootNode() const;
 	const std::vector<CameraPtr> &getCameras() const;
 	const std::vector<LightPtr> &getLights() const;
@@ -41,7 +41,7 @@ private:
 	void handleAnimations(const aiScene *scene);
 	void handleNodes(const aiScene *scene);
 
-	TextureMipmapPtr getTexture(aiMaterial *aMaterial, int aType);
+	TexturePtr getTexture(aiMaterial *aMaterial, int aType);
 	MeshNodePtr convertMesh(aiNode * aParentNode, aiMesh * aMesh);
 	void loopNode(aiNode * aNode, NodePtr nbNode);
 
@@ -53,6 +53,7 @@ private:
 	std::vector<MaterialPtr> m_materials;
 	std::vector<StoryboardPtr> m_animations;
 	std::shared_ptr<Assimp::Importer> m_importer;
+	std::string m_path;
 	std::string m_textureDir;
 
 	std::map<std::string, BitmapPtr> m_bmCache;

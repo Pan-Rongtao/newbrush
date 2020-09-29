@@ -20,7 +20,7 @@ TEST_CASE(TEST_TAG, TEST_TAG)
 	lightDiffuseAnimation.setTo(Colors::blue());
 	lightDiffuseAnimation.setDuration(TimeSpan::fromSeconds(3));
 	lightDiffuseAnimation.setBeginTime(TimeSpan::fromSeconds(2));
-	auto target = sc.getScene()->lightAt(0);
+	auto target = sc.getScene()->lights().at(0);
 	lightDiffuseAnimation.setTarget(target);
 	lightDiffuseAnimation.setTargetPropertyName("Ambient");
 	lightDiffuseAnimation.begin();

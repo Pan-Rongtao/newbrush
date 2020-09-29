@@ -17,37 +17,48 @@ void Animation::setTarget(std::weak_ptr<Object> target)
 	}
 }
 
+void Animation::setTargetName(const std::string & name)
+{
+}
+
 std::weak_ptr<Object> Animation::target() const
 {
 	return m_target;
 }
 
-void Animation::setTargetProperty(rttr::property property)
+void Animation::setTargetProperty(property property)
 {
 	m_targetProperty = property;
+	m_targetPropertyNameMode = false;
 }
 
 void Animation::setTargetPropertyName(const std::string & propertyName)
 {
-	auto target = m_target.lock();
-	if (target)
-	{
-		auto targetProperty = type::get(*target).get_property(propertyName);
-		if (!targetProperty)
-		{
-			int x = 10;
-		}
-		m_targetProperty = targetProperty;
-	}
+	m_targetPropertyName = propertyName;
+	m_targetPropertyNameMode = true;
+	m_needUpdateTargetProperty = true;
 }
 
-rttr::property Animation::targetProperty() const
+const std::string & Animation::targetPropertyName() const
 {
+	return m_targetPropertyName;
+}
+
+property Animation::targetProperty()
+{
+	auto target = m_target.lock();
+	if (m_targetPropertyNameMode && m_needUpdateTargetProperty)
+	{
+		m_targetProperty = type::get(*target).get_property(m_targetPropertyName);
+		m_needUpdateTargetProperty = false;
+	}
 	return m_targetProperty;
 }
 
 Animation::Animation()
-	: m_targetProperty(rttr::type::get<Object>().get_property("none"))
+	: m_targetProperty(type::get<Object>().get_property("none"))
+	, m_targetPropertyNameMode(false)
+	, m_needUpdateTargetProperty(false)
 {
 }
 
@@ -55,8 +66,8 @@ void Animation::onStateChanged()
 {
 	if (currentState() == StateE::Active)
 	{
-		if (!m_target.lock())	nbThrowException(std::runtime_error, "'target' is nullptr for animation");
-		if (!m_targetProperty)	nbThrowException(std::runtime_error, "'targetProperty' is invalid for animation");
+		if (!target().lock())	nbThrowException(std::runtime_error, "'target' is nullptr for animation");
+		if (!targetProperty())	nbThrowException(std::runtime_error, "'targetProperty' is invalid for animation");
 	}
 }
 
@@ -88,7 +99,8 @@ void Storyboard::begin()
 
 TimeSpan Storyboard::getActualDurationTimespan() const
 {
-	auto iter = std::max_element(m_children.begin(), m_children.end(), [](std::shared_ptr<Timeline> tl0, std::shared_ptr<Timeline> tl1) {
+	auto iter = std::max_element(m_children.begin(), m_children.end(), [](std::shared_ptr<Timeline> tl0, std::shared_ptr<Timeline> tl1) 
+	{
 		return tl1->getActualDurationTimespan() > tl0->getActualDurationTimespan();
 	});
 	return (*iter)->getActualDurationTimespan();

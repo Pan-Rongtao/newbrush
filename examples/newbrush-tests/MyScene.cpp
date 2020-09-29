@@ -82,7 +82,8 @@ void MyScene::onKey(const int & key)
 
 void MyScene::onResize(const Size & sz)
 {
-	m_sc->resize(sz.width, sz.height);
+	m_sc->setWidth(sz.width);
+	m_sc->setHeight(sz.height);
 }
 
 void MyScene::onCursorPos(const Point & pt)

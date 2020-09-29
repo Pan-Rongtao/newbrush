@@ -30,9 +30,39 @@ const glm::vec3 & Transform::position() const
 	return m_position;
 }
 
+void Transform::setRotateX(const float &rotateX)
+{
+	m_rotate.x = rotateX;
+}
+
+void Transform::setRotateY(const float &rotateY)
+{
+	m_rotate.y = rotateY;
+}
+
+void Transform::setRotateZ(const float &rotateZ)
+{
+	m_rotate.z = rotateZ;
+}
+
 void Transform::setRotate(const glm::vec3 & rotate)
 {
 	m_rotate = rotate;
+}
+
+const float & Transform::rotateX() const
+{
+	return m_rotate.x;
+}
+
+const float & Transform::rotateY() const
+{
+	return m_rotate.y;
+}
+
+const float & Transform::rotateZ() const
+{
+	return m_rotate.z;
 }
 
 const glm::vec3 & Transform::rotate() const

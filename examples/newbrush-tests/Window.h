@@ -23,18 +23,18 @@
 struct GLFWwindow;
 namespace nb {
 
-struct Size { int width; int height; };
+struct Size { float width; float height; };
 struct Point { float x; float y; };
 
 class Window
 {
 public:
-	Window(int width = 800, int height = 600, const std::string &title = "newbrush");
+	Window(float width = 800, float height = 600, const std::string &title = "newbrush");
 	~Window();
 
 	void swapBuffers();
 
-	void resize(int width, int height);
+	void resize(float width, float height);
 
 	int width() const;
 	int height() const;

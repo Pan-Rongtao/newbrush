@@ -13,8 +13,8 @@
 ********************************************************/
 #pragma once
 #include "newbrush/model/Shader.h"
-#include "newbrush/model/Any.h"
 #include "newbrush/glm.h"
+#include "newbrush/model/Object.h"
 
 namespace nb{
 
@@ -39,26 +39,25 @@ public:
 	//构建一个Program，未指定顶点着色器和片元着色器
 	Program();
 
-	//构建一个Program，并为它指定了顶点着色器和片元着色器
-	Program(VertexShaderPtr verShader, FragmentShaderPtr fragShader);
-	virtual ~Program();
+	~Program();
+	Program(const Program &other) = delete;
+	void operator =(const Program &other) = delete;
 
-public:
-	//设置顶点着色器
-	void setVertexShader(VertexShaderPtr verShader);
+	//设置顶点着色器代码
+	void setVertexShaderSource(const std::string &source);
 
-	//获取顶点着色器
-	VertexShaderPtr vertexShader();
+	//获取顶点着色器代码
+	const std::string &vertexShaderSource() const;
 
-	//设置片元着色器
-	void setFragmentShader(FragmentShaderPtr fragShader);
+	//设置片元着色器代码
+	void setFragmentShaderSource(const std::string &source);
 
-	//获取片元着色器
-	FragmentShaderPtr fragmentShader();
+	//获取片元着色器代码
+	const std::string &fragmentShaderSource() const;
 
-	//链接
-	//异常：
-	void link();
+	//编译链接
+	//异常：std::runtime_error
+	void compileLink();
 
 	//获取program中attribute类型变量sName的位置/地址
 	//如果未找到变量，返回-1
@@ -72,11 +71,9 @@ public:
 	void bindAttributeLocation(unsigned int location, const char *name);
 
 	//使用
-	//异常：
 	void use();
 
 	//取消使用
-	//异常：
 	void disuse();
 
 	//更新位置为location的attribute
@@ -118,9 +115,9 @@ public:
 	void uniformVar(int location, const var &v);
 
 private:
-	VertexShaderPtr	m_vertexShader;
-	FragmentShaderPtr m_fragmentShader;
-	unsigned int m_programHandle;
+	ShaderPtr m_vertexShader;
+	ShaderPtr m_fragmentShader;
+	uint32_t m_programHandle;
 };
 
 using ProgramPtr = std::shared_ptr<Program>;

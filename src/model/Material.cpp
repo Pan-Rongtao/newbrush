@@ -64,18 +64,18 @@ ImageMaterial::ImageMaterial()
 {
 }
 
-ImageMaterial::ImageMaterial(const Texture2DPtr &texture)
+ImageMaterial::ImageMaterial(const TexturePtr &texture)
 	: Material(Programs::image())
 	, m_texture(texture)
 {
 }
 
-void ImageMaterial::setTexture(const Texture2DPtr &texture)
+void ImageMaterial::setTexture(const TexturePtr &texture)
 {
 	m_texture = texture;
 }
 
-const Texture2DPtr &ImageMaterial::texture() const
+const TexturePtr &ImageMaterial::texture() const
 {
 	return m_texture;
 }
@@ -230,32 +230,32 @@ const float & PhongMaterial::shineness() const
 	return m_shineness;
 }
 
-void PhongMaterial::setDiffuseMapping(TextureMipmapPtr diffuseMapping)
+void PhongMaterial::setDiffuseMapping(TexturePtr diffuseMapping)
 {
 	m_diffuseMapping = diffuseMapping;
 }
 
-TextureMipmapPtr PhongMaterial::diffuseMapping()
+TexturePtr PhongMaterial::diffuseMapping()
 {
 	return m_diffuseMapping;
 }
 
-void PhongMaterial::setSpecularMapping(TextureMipmapPtr specularMapping)
+void PhongMaterial::setSpecularMapping(TexturePtr specularMapping)
 {
 	m_specularMapping = specularMapping;
 }
 
-TextureMipmapPtr PhongMaterial::specularMapping()
+TexturePtr PhongMaterial::specularMapping()
 {
 	return m_specularMapping;
 }
 
-void PhongMaterial::setEmissionMapping(TextureMipmapPtr emissionMapping)
+void PhongMaterial::setEmissionMapping(TexturePtr emissionMapping)
 {
 	m_emissionMapping = emissionMapping;
 }
 
-TextureMipmapPtr PhongMaterial::emissionMapping()
+TexturePtr PhongMaterial::emissionMapping()
 {
 	return m_emissionMapping;
 }
@@ -330,22 +330,22 @@ const Color& CubemapMaterial::specular() const
 	return m_specular;
 }
 
-void CubemapMaterial::setDiffuseMapping(TextureMipmapPtr diffuseMapping)
+void CubemapMaterial::setDiffuseMapping(TexturePtr diffuseMapping)
 {
 	m_diffuseMapping = diffuseMapping;
 }
 
-TextureMipmapPtr CubemapMaterial::diffuseMapping()
+TexturePtr CubemapMaterial::diffuseMapping()
 {
 	return m_diffuseMapping;
 }
 
-void CubemapMaterial::setCubeMapping(TextureCubemapPtr cubeMapping)
+void CubemapMaterial::setCubeMapping(TexturePtr cubeMapping)
 {
 	m_cubeMapping = cubeMapping;
 }
 
-TextureCubemapPtr CubemapMaterial::cubeMapping()
+TexturePtr CubemapMaterial::cubeMapping()
 {
 	return m_cubeMapping;
 }

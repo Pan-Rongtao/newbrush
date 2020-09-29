@@ -13,7 +13,7 @@ Camera::Camera()
 
 Camera::Camera(const glm::vec3 & position, const glm::vec3 & front, const glm::vec3 & up, float pitch, float yaw, float fov, float aspect, float nearPlane, float farPlane)
 	: m_position(position)
-	, m_front(front)
+	, m_front(glm::vec3(0.0, 0.0, -1.0))
 	, m_up(up)
 	, m_pitch(pitch)
 	, m_yaw(yaw)

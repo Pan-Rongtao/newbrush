@@ -18,15 +18,11 @@ public:
 	virtual ~Node() = default;
 
 	void setName(const std::string &name);
-	const std::string &name();
-
-	const Node *const parent() const;
+	const std::string &name() const;
 
 	void addChild(NodePtr child);
-	void removeChild(NodePtr child);
-	void removeAt(uint32_t index);
-	NodePtr childAt(uint32_t index);
-	uint32_t childCount() const;
+	void setChildren(const std::vector<NodePtr> &children);
+	const std::vector<NodePtr> &children() const;
 
 	void setTransform(TransformPtr transform);
 	TransformPtr transform();

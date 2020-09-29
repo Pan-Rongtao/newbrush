@@ -8,12 +8,12 @@
 #include <typeindex>
 #include "rttr/registration.h"
 using namespace rttr;
+using var = rttr::variant;
 
 //要求c++11
 //#if __cplusplus < 201103L
 //	#error "c++11 supported requested."
 //#endif
-//#define GLM_FORCE_SSE2	//强制定义SSE2，调试方便看glm变量
 
 //平台识别,如果识别不了平台，编译器则会输出报错，并终止编译
 //类UNIX下可使用g++ -dM -E - </dev/null命令查看编译器默认宏

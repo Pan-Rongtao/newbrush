@@ -81,16 +81,16 @@ class NB_API ImageMaterial : public Material
 	RTTR_ENABLE(Material)
 public:
 	ImageMaterial();
-	ImageMaterial(const Texture2DPtr &texture);
+	ImageMaterial(const TexturePtr &texture);
 
-	void setTexture(const Texture2DPtr &texture);
-	const Texture2DPtr &texture() const;
+	void setTexture(const TexturePtr &texture);
+	const TexturePtr &texture() const;
 
 protected:
 	virtual void uploadUniform(CameraPtr camera) override;
 
 private:
-	Texture2DPtr m_texture;
+	TexturePtr m_texture;
 };
 
 /////////////////////////////
@@ -123,16 +123,16 @@ public:
 	const float &shineness() const;
 
 	//漫反射贴图
-	void setDiffuseMapping(TextureMipmapPtr diffuseMapping);
-	TextureMipmapPtr diffuseMapping();
+	void setDiffuseMapping(TexturePtr diffuseMapping);
+	TexturePtr diffuseMapping();
 
 	//高光贴图
-	void setSpecularMapping(TextureMipmapPtr specularMapping);
-	TextureMipmapPtr specularMapping();
+	void setSpecularMapping(TexturePtr specularMapping);
+	TexturePtr specularMapping();
 
 	//自发光贴图
-	void setEmissionMapping(TextureMipmapPtr emissionMapping);
-	TextureMipmapPtr emissionMapping();
+	void setEmissionMapping(TexturePtr emissionMapping);
+	TexturePtr emissionMapping();
 
 private:
 	Color m_ambient;
@@ -141,9 +141,9 @@ private:
 	Color m_emission;
 	float m_shineness;
 
-	TextureMipmapPtr m_diffuseMapping;
-	TextureMipmapPtr m_specularMapping;
-	TextureMipmapPtr m_emissionMapping;
+	TexturePtr m_diffuseMapping;
+	TexturePtr m_specularMapping;
+	TexturePtr m_emissionMapping;
 };
 
 class NB_API CubemapMaterial : public Material
@@ -167,20 +167,20 @@ public:
 	const Color &specular() const;
 
 	//漫反射贴图
-	void setDiffuseMapping(TextureMipmapPtr diffuseMapping);
-	TextureMipmapPtr diffuseMapping();
+	void setDiffuseMapping(TexturePtr diffuseMapping);
+	TexturePtr diffuseMapping();
 
 	//立方体贴图
-	void setCubeMapping(TextureCubemapPtr cubeMapping);
-	TextureCubemapPtr cubeMapping();
+	void setCubeMapping(TexturePtr cubeMapping);
+	TexturePtr cubeMapping();
 
 private:
 	Color m_ambient;
 	Color m_diffuse;
 	Color m_specular;
 
-	TextureMipmapPtr m_diffuseMapping;
-	TextureCubemapPtr m_cubeMapping;
+	TexturePtr m_diffuseMapping;
+	TexturePtr m_cubeMapping;
 };
 
 /////////////////////////////

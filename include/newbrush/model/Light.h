@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "newbrush/model/Object.h"
-#include "newbrush/model/Any.h"
 #include "newbrush/model/Color.h"
 #include "newbrush/glm.h"
 

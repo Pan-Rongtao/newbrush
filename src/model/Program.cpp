@@ -4,19 +4,18 @@
 
 using namespace nb;
 
-Program::Program()
-	: Program(nullptr, nullptr)
-{
-}
+static const std::string emptyStr;
 
-Program::Program(VertexShaderPtr verShader, FragmentShaderPtr fragShader)
-	: m_vertexShader(verShader)
-	, m_fragmentShader(fragShader)
-	, m_programHandle(0)
+Program::Program()
+	: m_programHandle(0)
 {
+	m_vertexShader = std::make_shared<Shader>(ShaderTypeE::Vertex);
+	m_fragmentShader = std::make_shared<Shader>(ShaderTypeE::Fragment);
 	m_programHandle = glCreateProgram();
 	if (m_programHandle == 0)
+	{
 		nbThrowException(std::runtime_error, "glCreateProgram fail, glGetError[%d]", glGetError());
+	}
 }
 
 Program::~Program()
@@ -24,32 +23,34 @@ Program::~Program()
 	if(m_programHandle != 0)
 	{
 		glDeleteProgram(m_programHandle);
-		m_programHandle = 0;
 	}
 }
 
-void Program::setVertexShader(VertexShaderPtr verShader)
+void Program::setVertexShaderSource(const std::string & source)
 {
-	m_vertexShader = verShader;
+	m_vertexShader->setSource(source);
 }
 
-VertexShaderPtr Program::vertexShader()
+const std::string & Program::vertexShaderSource() const
 {
-	return m_vertexShader;
+	return m_vertexShader->source();
 }
 
-void Program::setFragmentShader(FragmentShaderPtr fragShader)
+void Program::setFragmentShaderSource(const std::string & source)
 {
-	m_fragmentShader = fragShader;
+	m_fragmentShader->setSource(source);
 }
 
-FragmentShaderPtr Program::fragmentShader()
+const std::string & Program::fragmentShaderSource() const
 {
-	return m_fragmentShader;
+	return m_fragmentShader->source();
 }
 
-void Program::link()
+void Program::compileLink()
 {
+	m_vertexShader->compile();
+	m_fragmentShader->compile();
+
 	glAttachShader(m_programHandle, m_vertexShader->handle());
 	glAttachShader(m_programHandle, m_fragmentShader->handle());
 	glLinkProgram(m_programHandle);
@@ -76,7 +77,6 @@ int Program::getAttributeLocation(const char *name) const
 int Program::getUniformLocation(const char *name) const
 {
 	auto ret = glGetUniformLocation(m_programHandle, name);
-	//if (ret == -1)	Log::warn("[{}] is not a valid uniform var.", name);
 	return ret;
 }
 
@@ -238,36 +238,36 @@ void Program::uniform(int location, const std::vector<glm::mat4x4> &v)
 
 void Program::uniformVar(int location, const var & v)
 {
-	if (v.is<int>())							uniform(location, any_cast<int>(v));
-	else if (v.is<unsigned int>())				uniform(location, (int)any_cast<unsigned int>(v));
-	else if (v.is<short>())						uniform(location, (int)any_cast<short>(v));
-	else if (v.is<unsigned short>())			uniform(location, (int)any_cast<unsigned short>(v));
-	else if (v.is<long>())						uniform(location, (int)any_cast<long>(v));
-	else if (v.is<unsigned long>())				uniform(location, (int)any_cast<unsigned long>(v));
-	else if (v.is<float>())						uniform(location, any_cast<float>(v));
-	else if (v.is<double>())					uniform(location, (float)any_cast<double>(v));
-	else if (v.is<glm::vec2>())					uniform(location, any_cast<glm::vec2>(v));
-	else if (v.is<glm::vec3>())					uniform(location, any_cast<glm::vec3>(v));
-	else if (v.is<glm::vec4>())					uniform(location, any_cast<glm::vec4>(v));
-	else if (v.is<glm::mat2x2>())				uniform(location, any_cast<glm::mat2x2>(v));
-	else if (v.is<glm::mat3x3>())				uniform(location, any_cast<glm::mat3x3>(v));
-	else if (v.is<glm::mat4x4>())				uniform(location, any_cast<glm::mat4x4>(v));
-	else if (v.is<glm::ivec2>())				uniform(location, any_cast<glm::ivec2>(v));
-	else if (v.is<glm::ivec3>())				uniform(location, any_cast<glm::ivec3>(v));
-	else if (v.is<glm::ivec4>())				uniform(location, any_cast<glm::ivec4>(v));
-	else if (v.is<std::vector<int>>())			uniform(location, any_cast<std::vector<int>>(v));
-	else if (v.is<std::vector<float>>())		uniform(location, any_cast<std::vector<float>>(v));
-	else if (v.is<std::vector<glm::vec2>>())	uniform(location, any_cast<std::vector<glm::vec2>>(v));
-	else if (v.is<std::vector<glm::vec3>>())	uniform(location, any_cast<std::vector<glm::vec3>>(v));
-	else if (v.is<std::vector<glm::vec4>>())	uniform(location, any_cast<std::vector<glm::vec4>>(v));
-	else if (v.is<std::vector<glm::mat2x2>>())	uniform(location, any_cast<std::vector<glm::mat2x2>>(v));
-	else if (v.is<std::vector<glm::mat3x3>>())	uniform(location, any_cast<std::vector<glm::mat3x3>>(v));
-	else if (v.is<std::vector<glm::mat4x4>>())	uniform(location, any_cast<std::vector<glm::mat4x4>>(v));
-	else if (v.is<std::vector<glm::ivec2>>())	uniform(location, any_cast<std::vector<glm::ivec2>>(v));
-	else if (v.is<std::vector<glm::ivec3>>())	uniform(location, any_cast<std::vector<glm::ivec3>>(v));
-	else if (v.is<std::vector<glm::ivec4>>())	uniform(location, any_cast<std::vector<glm::ivec4>>(v));
-	else if (v.is<bool>())						uniform(location, any_cast<bool>(v));
-	else										Log::warn("[{}] is not a supported type for glsl uniform.", v.type().name());
+	if (v.is_type<int>())							uniform(location, v.get_value<int>());
+	else if (v.is_type<unsigned int>())				uniform(location, (int)v.get_value<unsigned int>());
+	else if (v.is_type<short>())					uniform(location, (int)v.get_value<short>());
+	else if (v.is_type<unsigned short>())			uniform(location, (int)v.get_value<unsigned short>());
+	else if (v.is_type<long>())						uniform(location, (int)v.get_value<long>());
+	else if (v.is_type<unsigned long>())			uniform(location, (int)v.get_value<unsigned long>());
+	else if (v.is_type<float>())					uniform(location, v.get_value<float>());
+	else if (v.is_type<double>())					uniform(location, (float)v.get_value<double>());
+	else if (v.is_type<glm::vec2>())				uniform(location, v.get_value<glm::vec2>());
+	else if (v.is_type<glm::vec3>())				uniform(location, v.get_value<glm::vec3>());
+	else if (v.is_type<glm::vec4>())				uniform(location, v.get_value<glm::vec4>());
+	else if (v.is_type<glm::mat2x2>())				uniform(location, v.get_value<glm::mat2x2>());
+	else if (v.is_type<glm::mat3x3>())				uniform(location, v.get_value<glm::mat3x3>());
+	else if (v.is_type<glm::mat4x4>())				uniform(location, v.get_value<glm::mat4x4>());
+	else if (v.is_type<glm::ivec2>())				uniform(location, v.get_value<glm::ivec2>());
+	else if (v.is_type<glm::ivec3>())				uniform(location, v.get_value<glm::ivec3>());
+	else if (v.is_type<glm::ivec4>())				uniform(location, v.get_value<glm::ivec4>());
+	else if (v.is_type<std::vector<int>>())			uniform(location, v.get_value<std::vector<int>>());
+	else if (v.is_type<std::vector<float>>())		uniform(location, v.get_value<std::vector<float>>());
+	else if (v.is_type<std::vector<glm::vec2>>())	uniform(location, v.get_value<std::vector<glm::vec2>>());
+	else if (v.is_type<std::vector<glm::vec3>>())	uniform(location, v.get_value<std::vector<glm::vec3>>());
+	else if (v.is_type<std::vector<glm::vec4>>())	uniform(location, v.get_value<std::vector<glm::vec4>>());
+	else if (v.is_type<std::vector<glm::mat2x2>>())	uniform(location, v.get_value<std::vector<glm::mat2x2>>());
+	else if (v.is_type<std::vector<glm::mat3x3>>())	uniform(location, v.get_value<std::vector<glm::mat3x3>>());
+	else if (v.is_type<std::vector<glm::mat4x4>>())	uniform(location, v.get_value<std::vector<glm::mat4x4>>());
+	else if (v.is_type<std::vector<glm::ivec2>>())	uniform(location, v.get_value<std::vector<glm::ivec2>>());
+	else if (v.is_type<std::vector<glm::ivec3>>())	uniform(location, v.get_value<std::vector<glm::ivec3>>());
+	else if (v.is_type<std::vector<glm::ivec4>>())	uniform(location, v.get_value<std::vector<glm::ivec4>>());
+	else if (v.is_type<bool>())						uniform(location, v.get_value<bool>());
+	else											Log::warn("[{}] is not a supported type for glsl uniform.", v.get_type().get_name().data());
 }
 
 ////////////////programs
@@ -505,14 +505,14 @@ ProgramPtr Programs::cube()
 
 ProgramPtr Programs::compileBindLink(const std::string &vs, const std::string &fs)
 {
-	auto p = std::make_shared<Program>(std::make_shared<VertexShader>(vs), std::make_shared<FragmentShader>(fs));
-	p->vertexShader()->compile();
-	p->fragmentShader()->compile();
+	auto p = std::make_shared<Program>();
+	p->setVertexShaderSource(vs);
+	p->setFragmentShaderSource(fs);
 	//必须在link之前绑定
 	p->bindAttributeLocation(Program::nbPositionLocation, Program::nbPositionLocationStr);
 	p->bindAttributeLocation(Program::nbColorLocation, Program::nbColorLocationStr);
 	p->bindAttributeLocation(Program::nbTexCoordLocaltion, Program::nbTexCoordLocaltionStr);
 	p->bindAttributeLocation(Program::nbNormalLocation, Program::nbNormalLocationStr);
-	p->link();
+	p->compileLink();
 	return p;
 }

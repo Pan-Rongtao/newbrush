@@ -19,52 +19,25 @@ void Node::setName(const std::string & name)
 	m_name = name;
 }
 
-const std::string & Node::name()
+const std::string & Node::name() const
 {
 	return m_name;
 }
 
-const Node *const Node::parent() const
+void Node::setChildren(const std::vector<NodePtr>& children)
 {
-	return m_parent;
+	m_children = children;
+}
+
+const std::vector<NodePtr>& nb::Node::children() const
+{
+	return m_children;
 }
 
 void Node::addChild(NodePtr child)
 {
 	child->m_parent = this;
 	m_children.push_back(child);
-}
-
-void Node::removeChild(NodePtr child)
-{
-	auto iter = std::find(m_children.begin(), m_children.end(), child);
-	if (iter != m_children.end())
-	{
-		m_children.erase(iter);
-	}
-}
-
-void Node::removeAt(uint32_t index)
-{
-	if (index >= m_children.size())
-	{
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %zu)", index, m_children.size());
-	}
-	m_children.erase(m_children.begin() + index);
-}
-
-NodePtr Node::childAt(uint32_t index)
-{
-	if (index >= m_children.size())
-	{
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %zu)", index, m_children.size());
-	}
-	return m_children[index];
-}
-
-uint32_t Node::childCount() const
-{
-	return m_children.size();
 }
 
 void Node::setTransform(TransformPtr transform)
@@ -103,9 +76,8 @@ NodePtr Node::find(const std::string & name)
 		//未找到就才需要再继续了
 		if (ret == nullptr)
 		{
-			for (auto i = 0u; i != node->childCount(); ++i)
+			for (auto child : node->children())
 			{
-				auto child = node->childAt(i);
 				loopFind(child, name, ret);
 			}
 		}
@@ -137,9 +109,8 @@ void Node::getInfo(int32_t & meshCount, int32_t & triangleCount, int32_t & verte
 		}
 		else
 		{
-			for (auto i = 0u; i != node->childCount(); ++i)
+			for (auto child : node->children())
 			{
-				auto child = node->childAt(i);
 				loopGet(child.get(), meshCount, triangleCount, vertexCount);
 			}
 		}
@@ -158,9 +129,8 @@ void Node::loopSetMaterial(Node * node, MaterialPtr material)
 	}
 	else
 	{
-		for (auto i = 0u; i != node->childCount(); ++i)
+		for (auto child : node->children())
 		{
-			auto child = node->childAt(i);
 			loopSetMaterial(child.get(), material);
 		}
 	}

@@ -20,10 +20,19 @@
 
 namespace nb{
 
+enum class ShaderTypeE
+{
+	Vertex,
+	Fragment,
+};
+
 class NB_API Shader
 {
 public:
-	virtual ~Shader();
+	Shader(ShaderTypeE type);
+	Shader(ShaderTypeE type, const std::string &source);
+
+	~Shader();
 	Shader(const Shader &other) = delete;
 	void operator =(const Shader &other) = delete;
 
@@ -42,39 +51,13 @@ public:
 	bool hasCompiled() const;
 
 	//获取shader句柄
-	unsigned int handle() const;
+	uint32_t handle() const;
 
-protected:
-	Shader();
-	Shader(const std::string &source);
-
-	std::string			m_source;
-	unsigned int		m_shaderHandle;
-};
-
-class NB_API VertexShader : public Shader
-{
-public:
-	//构建一个顶点着色器，源码为空
-	VertexShader();
-
-	//构建一个顶点着色器，源码为source
-	VertexShader(const std::string &source);
-
-};
-
-class NB_API FragmentShader : public Shader
-{
-public:
-	//构建一个片源着色器，源码为空
-	FragmentShader();
-
-	//构建一个片源着色器，源码为source
-	FragmentShader(const std::string &source);
-
+private:
+	ShaderTypeE m_type;
+	std::string m_source;
+	uint32_t m_shaderHandle;
 };
 
 using ShaderPtr = std::shared_ptr<Shader>;
-using VertexShaderPtr = std::shared_ptr<VertexShader>;
-using FragmentShaderPtr = std::shared_ptr<FragmentShader>;
 }

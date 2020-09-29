@@ -26,7 +26,13 @@ public:
 	const glm::vec3 &position() const;
 
 	//旋转（欧拉角旋转弧度，传入请按{x, y, z}顺序传入）
+	void setRotateX(const float &rotateX);
+	void setRotateY(const float &rotateY);
+	void setRotateZ(const float &rotateZ);
 	void setRotate(const glm::vec3 &rotate);
+	const float &rotateX() const;
+	const float &rotateY() const;
+	const float &rotateZ() const;
 	const glm::vec3 &rotate() const;
 
 	//缩放

@@ -24,7 +24,7 @@ TEST_CASE(TEST_TAG, TEST_TAG)
 	//lightDiffuseAnimation.setTarget(target);
 	//lightDiffuseAnimation.setTargetPropertyName("Ambient");
 
-	auto target = sc.getScene()->lightAt(0);
+	auto target = sc.getScene()->lights().at(0);
 	auto targetProperty = type::get<Light>().get_property("Ambient");
 	ColorAnimationUsingKeyFrames animation;
 	animation.setBeginTime(TimeSpan::fromSeconds(3));

@@ -5,64 +5,148 @@
 
 using namespace nb;
 
-int TextureWrapping::glValue(TextureWrapping::WrappingModeE wrapping)
+int glWrapping(TextureWrappingE wrapping)
 {
 	GLint nGl = GL_REPEAT;
 	switch (wrapping)
 	{
-	case WrappingModeE::Repeat:				nGl = GL_REPEAT;					break;
-	case WrappingModeE::MirroredRepeat:		nGl = GL_MIRRORED_REPEAT;			break;
-	case WrappingModeE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;				break;
-	case WrappingModeE::ClampToBorder:		Log::error("not supported in opengl es 2.0");	break;
+	case TextureWrappingE::Repeat:			nGl = GL_REPEAT;					break;
+	case TextureWrappingE::MirroredRepeat:	nGl = GL_MIRRORED_REPEAT;			break;
+	case TextureWrappingE::ClampToEdge:		nGl = GL_CLAMP_TO_EDGE;				break;
+	case TextureWrappingE::ClampToBorder:	Log::error("not supported in opengl es 2.0");	break;
 	default:																	break;
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, nGl);
 	return nGl;
 }
 
-int TextureFilter::glValue(TextureFilter::FilterE filter)
+int glFilter(TextureFilterE filter)
 {
 	GLint nGl = GL_NEAREST;
 	switch (filter)
 	{
-	case FilterE::Point:		nGl = GL_NEAREST;															break;
-	case FilterE::Bilinear:		nGl = GL_LINEAR;															break;
-	case FilterE::Trilinear:	nGl = GL_LINEAR_MIPMAP_LINEAR;												break;
-	case FilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT; Log::error("check if gpu supports");	break;
-	default:																								break;
+	case TextureFilterE::Point:			nGl = GL_NEAREST;															break;
+	case TextureFilterE::Bilinear:		nGl = GL_LINEAR;															break;
+	case TextureFilterE::Trilinear:		nGl = GL_LINEAR_MIPMAP_LINEAR;												break;
+	case TextureFilterE::Anisotropic:	nGl = GL_TEXTURE_MAX_ANISOTROPY_EXT; Log::error("check if gpu supports");	break;
+	default:																										break;
 	}
 	return nGl;
 }
 
-//class Texture
-Texture::Texture()
-	: m_samplerUnit(0)
+Texture::Texture(TextureTypeE type)
+	: m_wrappingS(TextureWrappingE::Repeat)
+	, m_wrappingT(TextureWrappingE::Repeat)
+	, m_magnifyFilter(TextureFilterE::Point)
+	, m_narrowFilter(TextureFilterE::Point)
+	, m_samplerUnit(0)
+	, m_type(type)
 {
 	glGenTextures(1, &m_handle);
-	if (glGetError() == GL_INVALID_OPERATION)
+	auto err = glGetError();
+	if (err != GL_NO_ERROR)
 	{
-		nbThrowException(std::logic_error, "gl configure has not set.");
+		nbThrowException(std::logic_error, "glGenTextures fail, error=%d", err);
 	}
 }
 
-TextureWrapping &Texture::wrapping()
+Texture::~Texture()
 {
-	return m_wrapping;
+	glDeleteTextures(1, &m_handle);
 }
 
-const TextureWrapping &Texture::wrapping() const
+void Texture::active()
 {
-	return m_wrapping;
+	glActiveTexture(m_samplerUnit);
 }
 
-TextureFilter &Texture::filter()
+void Texture::bind()
 {
-	return m_filter;
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glBindTexture(GL_TEXTURE_2D, m_handle);									break;
+	case TextureTypeE::TextureCubemap:	glBindTexture(GL_TEXTURE_CUBE_MAP, m_handle);							break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type); break;
+	}
 }
 
-const TextureFilter &Texture::filter() const
+void Texture::unbind()
 {
-	return m_filter;
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glBindTexture(GL_TEXTURE_2D, 0);										break;
+	case TextureTypeE::TextureCubemap:	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);									break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type); break;
+	}
+}
+
+void Texture::setWrappingS(TextureWrappingE wrapping)
+{
+	bind();
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapping(wrapping));		break;
+	case TextureTypeE::TextureCubemap:	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, glWrapping(wrapping));	break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type);			break;
+	}
+	unbind();
+	m_wrappingS = wrapping;
+}
+
+void Texture::setWrappingT(TextureWrappingE wrapping)
+{
+	bind();
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapping(wrapping));		break;
+	case TextureTypeE::TextureCubemap:	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, glWrapping(wrapping));	break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type);			break;
+	}
+	unbind();
+	m_wrappingT = wrapping;
+}
+
+TextureWrappingE Texture::wrappingS() const
+{
+	return m_wrappingS;
+}
+
+TextureWrappingE Texture::wrappingT() const
+{
+	return m_wrappingT;
+}
+
+void Texture::setMagnifyFilter(TextureFilterE filter)
+{
+	bind();
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter(filter));		break;
+	case TextureTypeE::TextureCubemap:	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, glFilter(filter));	break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type);			break;
+	}
+	unbind(); 
+}
+
+void Texture::setNarrowFilter(TextureFilterE filter)
+{
+	bind();
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter(filter));		break;
+	case TextureTypeE::TextureCubemap:	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, glFilter(filter));	break;
+	default:							nbThrowException(std::logic_error, "unknown texture type[%d]", m_type);			break;
+	}
+	unbind();
+}
+
+TextureFilterE Texture::magnifyFilter() const
+{
+	return m_magnifyFilter;
+}
+
+TextureFilterE Texture::narrowFilter() const
+{
+	return m_narrowFilter;
 }
 
 void Texture::setSamplerUnit(int unit)
@@ -75,136 +159,49 @@ int Texture::samplerUnit()
 	return m_samplerUnit;
 }
 
-void Texture::active()
+void Texture::update(uint32_t index, const unsigned char * data, int width, int height, int glFormat, int glType)
 {
-	glActiveTexture(m_samplerUnit);
+	bind();
+	switch (m_type)
+	{
+	case TextureTypeE::Texture2D:
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
+		break;
+	}
+	case TextureTypeE::TextureCubemap:
+	{
+		if (index >= 6)
+		{
+			nbThrowException(std::out_of_range, "index[%d] is out of range[0, 6)", index);
+		}
+		glTexImage2D(index, 0, glFormat, width, height, 0, glFormat, glType, data);
+		break;
+	}
+	default:	nbThrowException(std::logic_error, "unknown texture type[%d]", m_type); break;
+	}
+	unbind();
 }
 
-std::pair<int, int> Texture::getGlFormatAndType(int bmChannels)
+void Texture::genMipmap()
 {
-	switch (bmChannels)
+	if (m_type != TextureTypeE::Texture2D)
+	{
+		nbThrowException(std::logic_error, "not a texture2d type");
+	}
+	bind();
+	glGenerateMipmap(GL_TEXTURE_2D);
+	unbind();
+}
+
+std::pair<int, int> Texture::getGlFormatAndType(int channels)
+{
+	switch (channels)
 	{
 	case 1:	return{ GL_LUMINANCE, GL_UNSIGNED_BYTE };
 	case 2:	return{ GL_RGB, GL_UNSIGNED_SHORT_5_6_5 };
 	case 3:	return{ GL_RGB, GL_UNSIGNED_BYTE };
 	case 4:	return{ GL_RGBA, GL_UNSIGNED_BYTE };
-	default: nbThrowException(std::invalid_argument, "bmChannels[%d] is invalid", bmChannels);	break;
+	default: nbThrowException(std::invalid_argument, "channels[%d] is invalid", channels);	break;
 	}
-}
-
-Texture::~Texture()
-{
-	glDeleteTextures(1, &m_handle);
-}
-
-////////////////////
-Texture2D::Texture2D()
-{
-	setWrapping(TextureWrapping());
-	setFilter(TextureFilter());
-}
-
-void Texture2D::bind()
-{
-	glBindTexture(GL_TEXTURE_2D, m_handle);
-}
-
-void Texture2D::unbind()
-{
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void Texture2D::setWrapping(const TextureWrapping &wrapping)
-{
-	bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureWrapping::glValue(wrapping.s));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureWrapping::glValue(wrapping.t));
-	unbind();
-	m_wrapping = wrapping;
-}
-
-void Texture2D::setFilter(const TextureFilter &filter)
-{
-	bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter::glValue(filter.magnifyFilter));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter::glValue(filter.narrowFilter));
-	unbind();
-	m_filter = filter;
-}
-
-void Texture2D::update(const unsigned char * data, int width, int height, int glFormat, int glType)
-{
-	bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
-	unbind();
-}
-
-int Texture2D::maxWidthSupported()
-{
-	int nRet = 0;
-	glEnable(GL_TEXTURE_2D);
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &nRet);
-	return nRet;
-}
-
-int Texture2D::maxHeightSupported()
-{
-	return maxWidthSupported();
-}
-
-/////////////////
-TextureCubemap::TextureCubemap()
-{
-	setWrapping(TextureWrapping());
-	setFilter(TextureFilter());
-}
-
-void TextureCubemap::bind()
-{
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_handle);
-}
-
-void TextureCubemap::unbind()
-{
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-}
-
-void TextureCubemap::setWrapping(const TextureWrapping &wrapping)
-{
-	bind();
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, TextureWrapping::glValue(wrapping.s));
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, TextureWrapping::glValue(wrapping.t));
-	//	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_GENERATE_MIPMAP, TextureWrapping::glValue(wrapping.r()));
-	unbind();
-	m_wrapping = wrapping;
-}
-
-void TextureCubemap::setFilter(const TextureFilter &filter)
-{
-	bind();
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, TextureFilter::glValue(filter.magnifyFilter));
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, TextureFilter::glValue(filter.narrowFilter));
-	unbind();
-	m_filter = filter;
-}
-
-void TextureCubemap::update(unsigned int index, const unsigned char * data, int width, int height, int glFormat, int glType)
-{
-	if (index >= 6)
-	{
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, 6)", index);
-	}
-
-	bind();
-	glTexImage2D(index, 0, glFormat, width, height, 0, glFormat, glType, data);
-	unbind();
-}
-
-/////////////
-void TextureMipmap::update(const unsigned char * data, int width, int height, int glFormat, int glType)
-{
-	bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, glType, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	unbind();
 }

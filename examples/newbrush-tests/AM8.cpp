@@ -26,7 +26,7 @@ TEST_CASE(TEST_TAG, TEST_TAG)
 	pointLight->setAmbient(Colors::white());
 	pointLight->setDiffuse(Colors::red());
 	pointLight->setSpecular(Colors::white());
-	sc.getScene()->addLight(pointLight);
+	sc.getScene()->lights().push_back(pointLight);
 
 	sc.loopDraw();
 }

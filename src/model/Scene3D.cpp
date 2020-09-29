@@ -4,23 +4,53 @@
 
 using namespace nb;
 
-Scene3D::Scene3D(int width, int height)
-	: m_camera(std::make_shared<Camera>())
+Scene3D::Scene3D()
+	: Scene3D(800, 480)
 {
-	resize(width, height);
+
+}
+
+Scene3D::Scene3D(float width, float height)
+	: m_camera(std::make_shared<Camera>())
+	, m_width(width)
+	, m_height(height)
+{
+	resize();
 	//默认添加一个点光源，否则渲染很黑
 	PointLightPtr pointLight = std::make_shared<PointLight>();
 	pointLight->setPosition(glm::vec3(0.0f, 5.0f, 5.0f));
 	pointLight->setAmbient(Color::fromRgbF(0.5f, 0.5f, 0.5f));
 	pointLight->setDiffuse(Color::fromRgbF(1.0, 1.0, 1.0));
 	pointLight->setSpecular(Color::fromRgbF(0.5f, 0.5f, 0.5f));
-	addLight(pointLight);
+	m_lights.push_back(pointLight);
 }
 
-void Scene3D::resize(int width, int height)
+void Scene3D::setWidth(float width)
 {
-	m_camera->setAspect((float)width / (float)height);
-	glViewport(0, 0, width, height);
+	m_width = width;
+	resize();
+}
+
+float Scene3D::width() const
+{
+	return m_width;
+}
+
+void Scene3D::setHeight(float height)
+{
+	m_height = height;
+	resize();
+}
+
+float Scene3D::height() const
+{
+	return m_height;
+}
+
+void Scene3D::resize()
+{
+	m_camera->setAspect(m_width / m_height);
+	glViewport(0, 0, (int)m_width, (int)m_height);
 }
 
 void Scene3D::setCamera(CameraPtr camera)
@@ -33,41 +63,19 @@ CameraPtr Scene3D::camera()
 	return m_camera;
 }
 
-void Scene3D::addLight(LightPtr light)
+void Scene3D::setLights(const std::vector<LightPtr> &lights)
 {
-	m_lights.push_back(light);
+	m_lights = lights;
 }
 
-void Scene3D::removeLight(LightPtr light)
+std::vector<LightPtr> &Scene3D::lights()
 {
-	auto iter = std::find(m_lights.begin(), m_lights.end(), light);
-	if (iter != m_lights.end())
-	{
-		m_lights.erase(iter);
-	}
+	return m_lights;
 }
 
-void Scene3D::removeLightAt(uint32_t index)
+const std::vector<LightPtr> &Scene3D::lights() const
 {
-	if (index >= m_lights.size())
-	{
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %zu)", index, m_lights.size());
-	}
-	m_lights.erase(m_lights.begin() + index);
-}
-
-LightPtr Scene3D::lightAt(uint32_t index)
-{
-	if (index >= m_lights.size())
-	{
-		nbThrowException(std::out_of_range, "index[%d] is out of range[0, %zu)", index, m_lights.size());
-	}
-	return m_lights[index];
-}
-
-uint32_t Scene3D::lightCount() const
-{
-	return m_lights.size();
+	return m_lights;
 }
 
 void Scene3D::setModel(NodePtr model)
@@ -80,17 +88,13 @@ NodePtr Scene3D::model()
 	return m_model;
 }
 
-void Scene3D::load(const std::string & path, const std::string & textureDir)
+void Scene3D::load(const std::string & path)
 {
 	ModelImporter importer;
-	importer.load(path, textureDir);
-	auto model = importer.getRootNode();
-	setModel(model);
+	importer.setPath(path);
+	m_model = importer.getRootNode();
 	auto lights = importer.getLights();
-	for (auto l : lights)
-	{
-		addLight(l);
-	}
+	m_lights.insert(m_lights.end(), lights.begin(), lights.end());
 	m_animations = importer.getAnimations();
 }
 
@@ -119,9 +123,8 @@ void Scene3D::loopDraw(NodePtr node)
 	}
 	else
 	{
-		for (auto i = 0u; i != node->childCount(); ++i)
+		for (auto child : node->children())
 		{
-			auto child = node->childAt(i);
 			loopDraw(child);
 		}
 	}

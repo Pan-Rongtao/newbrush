@@ -86,7 +86,7 @@ struct drm_fb * drm_fb_get_from_bo(struct gbm_bo *bo)
 
 #endif
 
-Window::Window(int width, int height, const std::string &title)
+Window::Window(float width, float height, const std::string &title)
 {
 	init();
 
@@ -148,10 +148,10 @@ void Window::swapBuffers()
 #endif
 }
 
-void Window::resize(int width, int height)
+void Window::resize(float width, float height)
 {
 #ifdef WIN32
-	glfwSetWindowSize(m_implWindow, width, height);
+	glfwSetWindowSize(m_implWindow, (int)width, (int)height);
 #endif
 }
 
@@ -236,7 +236,7 @@ void Window::init()
 
 void Window::sizeCallback(int width, int height)
 {
-	ResizeEvent.invoke(Size{ width, height });
+	ResizeEvent.invoke(Size{ (float)width, (float)height });
 }
 
 void Window::keyCallback(int key, int scancode, int action, int mods)

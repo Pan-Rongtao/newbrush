@@ -3,21 +3,34 @@
 
 using namespace nb;
 
-Shader::Shader()
-	: m_shaderHandle(0)
+Shader::Shader(ShaderTypeE type)
+	: Shader(type, "")
 {
+}
+
+Shader::Shader(ShaderTypeE type, const std::string &source)
+	: m_type(type)
+	, m_source(source)
+	, m_shaderHandle(0)
+{
+	switch (m_type)
+	{
+	case ShaderTypeE::Vertex:	m_shaderHandle = glCreateShader(GL_VERTEX_SHADER);		break;
+	case ShaderTypeE::Fragment:	m_shaderHandle = glCreateShader(GL_FRAGMENT_SHADER);	break;
+	default:					nbThrowException(std::logic_error, "unknown shader type[%d]", m_type);		break;
+	}
+	if (m_shaderHandle == 0)
+	{
+		nbThrowException(std::logic_error, "glCreateShader fail, make sure has make current context. glGetError[%d]", glGetError());
+	}
 }
 
 Shader::~Shader()
 {
 	if (m_shaderHandle != 0)
+	{
 		glDeleteShader(m_shaderHandle);
-}
-
-Shader::Shader(const std::string &source)
-	: m_source(source)
-	, m_shaderHandle(0)
-{
+	}
 }
 
 void Shader::setSource(const std::string &source)
@@ -63,35 +76,7 @@ bool Shader::hasCompiled() const
 	return status != 0;
 }
 
-unsigned int Shader::handle() const
+uint32_t Shader::handle() const
 {
 	return m_shaderHandle;
-}
-
-/////////////
-VertexShader::VertexShader()
-	: VertexShader("")
-{
-}
-
-VertexShader::VertexShader(const std::string &source)
-	: Shader(source)
-{
-	m_shaderHandle = glCreateShader(GL_VERTEX_SHADER);
-	if (m_shaderHandle == 0)
-		nbThrowException(std::logic_error, "glCreateShader fail, make sure has make current context. glGetError[%d]", glGetError());
-}
-
-/////
-FragmentShader::FragmentShader()
-	: FragmentShader("")
-{
-}
-
-FragmentShader::FragmentShader(const std::string &source)
-	: Shader(source)
-{
-	m_shaderHandle = glCreateShader(GL_FRAGMENT_SHADER);
-	if(m_shaderHandle == 0)
-		nbThrowException(std::logic_error, "glCreateShader fail, make sure has make current context. glGetError[%d]", glGetError());
 }

@@ -9,15 +9,18 @@ namespace nb {
 
 class NB_API Animation : public Timeline
 {
+	RTTR_ENABLE(Timeline)
 public:
 	virtual ~Animation() = default;
 
 	void setTarget(std::weak_ptr<Object> target);
+	void setTargetName(const std::string &name);
 	std::weak_ptr<Object> target() const;
 
 	void setTargetProperty(property property);
+	property targetProperty();
 	void setTargetPropertyName(const std::string &propertyName);
-	property targetProperty() const;
+	const std::string &targetPropertyName() const;
 
 protected:
 	Animation();
@@ -27,11 +30,15 @@ protected:
 private:
 	std::weak_ptr<Object> m_target;	//使用弱指针（目标可能在动画过程中被析构）
 	property m_targetProperty;
+	std::string m_targetPropertyName;
+	bool m_targetPropertyNameMode;
+	bool m_needUpdateTargetProperty;
 };
 
 template<class T>
 class NB_API PropertyAnimation : public Animation
 {
+	RTTR_ENABLE(Animation)
 public:
 	PropertyAnimation() : m_from(T()), m_to(T()), m_hasSetFrom(false), m_hasSetTo(false) {}
 	PropertyAnimation(T to) : m_from(T()), m_to(to), m_hasSetFrom(false), m_hasSetTo(true) {}
@@ -57,7 +64,7 @@ protected:
 				nbThrowException(std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().get_type().get_name().data());
 			}
 
-			m_actualFrom = m_hasSetFrom ? m_from : targetProperty().get_value(target()).get_value<T>();
+			m_actualFrom = m_hasSetFrom ? m_from : target().lock()->getValue<T>(targetProperty());
 			m_actualTo = m_hasSetTo ? m_to : m_actualFrom;
 		}
 	}
@@ -73,7 +80,7 @@ protected:
 			progress = (float)m_easingFunction->easeInCore(progress);
 		}
 		auto value = m_actualFrom + (m_actualTo - m_actualFrom) * progress;
-		bool b = targetProperty().set_value(target(), (T)value);
+		target().lock()->setValue(targetProperty(), (T)value);
 	}
 
 private:
@@ -103,7 +110,7 @@ template<> void PropertyAnimation<Color>::onProcessing()
 	r = clamp(0, 255, r);
 	g = clamp(0, 255, g);
 	b = clamp(0, 255, b);
-	bool bb = targetProperty().set_value(target(), Color(r, g, b));
+	target().lock()->setValue(targetProperty(), Color(r, g, b));
 }
 
 using AnimationPtr = std::shared_ptr<Animation>;
@@ -167,6 +174,7 @@ using Vec4KeyFrame = KeyFrame<glm::vec4>;
 template<class T>
 class NB_API PropertyAnimationUsingKeyFrames : public Animation
 {
+	RTTR_ENABLE(Animation)
 public:
 	PropertyAnimationUsingKeyFrames() {}
 	PropertyAnimationUsingKeyFrames(const std::set<KeyFrame<T>> &keyFrames) : m_keyFrames(keyFrames) {}
@@ -223,7 +231,7 @@ protected:
 				curFrameProgress = curFrameEasing->easeInCore(curFrameProgress);
 			}
 			auto value = static_cast<T>(fromValue + (toValue - fromValue) * (float)curFrameProgress);
-			bool b = targetProperty().set_value(target(), (T)value);
+			target().lock()->setValue(targetProperty(), (T)value);
 		}
 	}
 
@@ -245,13 +253,13 @@ template<> void PropertyAnimationUsingKeyFrames<bool>::onProcessing()
 		{
 			//前一个关键帧不为空
 			if (--iter != m_keyFrames.end())
-				bool b = targetProperty().set_value(target(), (iter++)->value());
+				target().lock()->setValue(targetProperty(), (iter++)->value());
 			break;
 		}
 	}
 	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
-		bool b = targetProperty().set_value(target(), m_keyFrames.crbegin()->value());
+		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}
 
 }
@@ -270,13 +278,13 @@ template<> void PropertyAnimationUsingKeyFrames<std::string>::onProcessing()
 		{
 			//前一个关键帧不为空
 			if (--iter != m_keyFrames.end())
-				bool b = targetProperty().set_value(target(), (iter++)->value());
+				target().lock()->setValue(targetProperty(), (iter++)->value());
 			break;
 		}
 	}
 	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
-		bool b = targetProperty().set_value(target(), m_keyFrames.crbegin()->value());
+		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}
 }
 
@@ -308,7 +316,7 @@ template<> void PropertyAnimationUsingKeyFrames<Color>::onProcessing()
 		r = clamp(0, 255, r);
 		g = clamp(0, 255, g);
 		b = clamp(0, 255, b);
-		bool bb = targetProperty().set_value(target(), Color(r, g, b));
+		target().lock()->setValue(targetProperty(), Color(r, g, b));
 	}
 }
 

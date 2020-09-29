@@ -17,6 +17,7 @@ project(model)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
+include_directories(${CMAKE_SOURCE_DIR}/include/newbrush/model)
 
 # 3. Project Build
 
