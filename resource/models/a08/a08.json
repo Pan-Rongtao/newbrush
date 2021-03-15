@@ -1,0 +1,55 @@
+{
+	"Scene":
+	{
+		"Type": "nb::Scene3D",
+		"Width": 1440.0,
+		"Height": 900.0,
+		"Camera":
+		{
+			"Type": "nb::Camera",
+			"Position": "0.0, 0.0, 3.0",
+			"Fov": 45.0,
+			"Aspect": 0.0,
+			"NearPlane": 0.1,
+			"FarPlane": 1000.0
+		},
+		"Model":
+		{
+			"Type": "nb::Node",
+			"Ref": "Library/3DAssets/A08.Node",
+			"Transform": 
+			{
+				"Type": "nb::Transform",
+				"Position": "0.0,-0.3,0.0",
+				"Rotate": "0.0,0.0,0.0",
+				"Scale": "0.003,0.003,0.003"
+			}
+		}
+	},
+	
+	
+	"Library":
+	{
+		"3DAssets":
+		{
+			"A08":
+			{
+				"Type": "nb::ModelImporter",
+				"Path": "../models/a08/fbx.fbx"
+			}
+		},
+		"Animations":
+		{
+			"TireAnimation":
+			{
+				"Type": "nb::FloatAnimation",
+				"TargetPropertyName": "RotateZ",
+				"AutoReverse": false,
+				"BeginTime": 0,
+				"Duration": 200,
+				"From": 0,
+				"To": 100
+			}
+		}
+	}
+}

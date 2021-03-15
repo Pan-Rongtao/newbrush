@@ -1,0 +1,516 @@
+{"frames": {
+
+"C_default-cover.png":
+{
+	"frame": {"x":179,"y":406,"w":205,"h":205},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":205,"h":205},
+	"sourceSize": {"w":205,"h":205}
+},
+"C_music_progress.png":
+{
+	"frame": {"x":374,"y":989,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"DrivingInfo/Front tyre_n.png":
+{
+	"frame": {"x":152,"y":1009,"w":13,"h":34},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":34},
+	"sourceSize": {"w":13,"h":34}
+},
+"DrivingInfo/Front tyre_warm.png":
+{
+	"frame": {"x":116,"y":1009,"w":13,"h":34},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":34},
+	"sourceSize": {"w":13,"h":34}
+},
+"DrivingInfo/Front tyre_yellow.png":
+{
+	"frame": {"x":80,"y":1009,"w":13,"h":34},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":34},
+	"sourceSize": {"w":13,"h":34}
+},
+"DrivingInfo/Left back_red.png":
+{
+	"frame": {"x":298,"y":613,"w":37,"h":51},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":37,"h":51},
+	"sourceSize": {"w":37,"h":51}
+},
+"DrivingInfo/Left back_yellow.png":
+{
+	"frame": {"x":245,"y":613,"w":37,"h":51},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":37,"h":51},
+	"sourceSize": {"w":37,"h":51}
+},
+"DrivingInfo/Left front.png":
+{
+	"frame": {"x":122,"y":940,"w":58,"h":67},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":58,"h":67},
+	"sourceSize": {"w":58,"h":67}
+},
+"DrivingInfo/Left front_red.png":
+{
+	"frame": {"x":62,"y":940,"w":58,"h":67},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":58,"h":67},
+	"sourceSize": {"w":58,"h":67}
+},
+"DrivingInfo/Left front_yellow.png":
+{
+	"frame": {"x":2,"y":940,"w":58,"h":67},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":58,"h":67},
+	"sourceSize": {"w":58,"h":67}
+},
+"DrivingInfo/Right back_red.png":
+{
+	"frame": {"x":733,"y":979,"w":46,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":43},
+	"sourceSize": {"w":46,"h":43}
+},
+"DrivingInfo/Right back_yellow.png":
+{
+	"frame": {"x":733,"y":931,"w":46,"h":43},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":43},
+	"sourceSize": {"w":46,"h":43}
+},
+"DrivingInfo/Right front_red.png":
+{
+	"frame": {"x":630,"y":938,"w":52,"h":57},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":57},
+	"sourceSize": {"w":52,"h":57}
+},
+"DrivingInfo/Right front_yellow.png":
+{
+	"frame": {"x":630,"y":879,"w":52,"h":57},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":57},
+	"sourceSize": {"w":52,"h":57}
+},
+"DrivingInfo/back tyre_n.png":
+{
+	"frame": {"x":41,"y":1009,"w":13,"h":37},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":37},
+	"sourceSize": {"w":13,"h":37}
+},
+"DrivingInfo/back tyre_warm.png":
+{
+	"frame": {"x":116,"y":1009,"w":13,"h":34},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":34},
+	"sourceSize": {"w":13,"h":34}
+},
+"DrivingInfo/back tyre_yellow.png":
+{
+	"frame": {"x":2,"y":1009,"w":13,"h":37},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":37},
+	"sourceSize": {"w":13,"h":37}
+},
+"DrivingInfo/btn_OK frame.png":
+{
+	"frame": {"x":374,"y":921,"w":53,"h":40},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":53,"h":40},
+	"sourceSize": {"w":53,"h":40}
+},
+"DrivingInfo/btn_list down.png":
+{
+	"frame": {"x":212,"y":613,"w":31,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":27},
+	"sourceSize": {"w":31,"h":27}
+},
+"DrivingInfo/btn_list up.png":
+{
+	"frame": {"x":179,"y":613,"w":31,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":27},
+	"sourceSize": {"w":31,"h":27}
+},
+"DrivingInfo/ic_tire_warning.png":
+{
+	"frame": {"x":684,"y":879,"w":50,"h":49},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":49},
+	"sourceSize": {"w":50,"h":49}
+},
+"DrivingInfo/img_Tire pressure_car.png":
+{
+	"frame": {"x":2,"y":660,"w":278,"h":156},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":43,"w":278,"h":156},
+	"sourceSize": {"w":328,"h":220}
+},
+"DrivingInfo/left back line.png":
+{
+	"frame": {"x":264,"y":926,"w":9,"h":57},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":57},
+	"sourceSize": {"w":9,"h":57}
+},
+"DrivingInfo/left front line.png":
+{
+	"frame": {"x":329,"y":1001,"w":9,"h":36},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":36},
+	"sourceSize": {"w":9,"h":36}
+},
+"DrivingInfo/left_white_line.png":
+{
+	"frame": {"x":215,"y":1001,"w":112,"h":18},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":112,"h":18},
+	"sourceSize": {"w":112,"h":18}
+},
+"DrivingInfo/right back line.png":
+{
+	"frame": {"x":160,"y":926,"w":9,"h":102},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":102},
+	"sourceSize": {"w":9,"h":102}
+},
+"DrivingInfo/right front line.png":
+{
+	"frame": {"x":122,"y":643,"w":9,"h":108},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":108},
+	"sourceSize": {"w":9,"h":108}
+},
+"Setting/Backlight_n.png":
+{
+	"frame": {"x":160,"y":654,"w":126,"h":270},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":126,"h":270},
+	"sourceSize": {"w":126,"h":270}
+},
+"Setting/Backlight_p.png":
+{
+	"frame": {"x":122,"y":134,"w":160,"h":270},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":270},
+	"sourceSize": {"w":160,"h":270}
+},
+"Setting/btn_cancel.png":
+{
+	"frame": {"x":542,"y":638,"w":130,"h":47},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":130,"h":47},
+	"sourceSize": {"w":130,"h":47}
+},
+"Setting/btn_cancelp.png":
+{
+	"frame": {"x":493,"y":638,"w":130,"h":47},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":130,"h":47},
+	"sourceSize": {"w":130,"h":47}
+},
+"Setting/btn_confirm.png":
+{
+	"frame": {"x":465,"y":857,"w":130,"h":47},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":130,"h":47},
+	"sourceSize": {"w":130,"h":47}
+},
+"Setting/btn_confirmp.png":
+{
+	"frame": {"x":416,"y":857,"w":130,"h":47},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":130,"h":47},
+	"sourceSize": {"w":130,"h":47}
+},
+"Setting/btn_plus.png":
+{
+	"frame": {"x":408,"y":989,"w":31,"h":31},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":31,"h":31},
+	"sourceSize": {"w":31,"h":31}
+},
+"Setting/btn_reduce.png":
+{
+	"frame": {"x":182,"y":1001,"w":31,"h":5},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":13,"w":31,"h":5},
+	"sourceSize": {"w":31,"h":31}
+},
+"Setting/list_Selection.png":
+{
+	"frame": {"x":62,"y":134,"w":524,"h":58},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":0,"w":524,"h":58},
+	"sourceSize": {"w":540,"h":58}
+},
+"Setting/list_Selectionp.png":
+{
+	"frame": {"x":2,"y":134,"w":524,"h":58},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":0,"w":524,"h":58},
+	"sourceSize": {"w":540,"h":58}
+},
+"Setting/pop_bg_btn.png":
+{
+	"frame": {"x":284,"y":134,"w":256,"h":128},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":128},
+	"sourceSize": {"w":256,"h":128}
+},
+"Setting/radio_n.png":
+{
+	"frame": {"x":385,"y":613,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":32,"h":32},
+	"sourceSize": {"w":40,"h":40}
+},
+"Setting/radio_p.png":
+{
+	"frame": {"x":351,"y":613,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":32,"h":32},
+	"sourceSize": {"w":40,"h":40}
+},
+"ic_Answer.png":
+{
+	"frame": {"x":684,"y":931,"w":47,"h":49},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":4,"w":47,"h":49},
+	"sourceSize": {"w":53,"h":57}
+},
+"ic_driving_n.png":
+{
+	"frame": {"x":419,"y":574,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_driving_p.png":
+{
+	"frame": {"x":352,"y":857,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_driving_pp.png":
+{
+	"frame": {"x":288,"y":857,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_maintain_n.png":
+{
+	"frame": {"x":572,"y":950,"w":60,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":12,"w":60,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_maintain_p.png":
+{
+	"frame": {"x":514,"y":950,"w":60,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":12,"w":60,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_maintain_pp.png":
+{
+	"frame": {"x":555,"y":770,"w":60,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":12,"w":60,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_music_n.png":
+{
+	"frame": {"x":310,"y":937,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_music_p.png":
+{
+	"frame": {"x":246,"y":937,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_music_pp.png":
+{
+	"frame": {"x":182,"y":937,"w":62,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":9,"w":62,"h":62},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_navi_n.png":
+{
+	"frame": {"x":630,"y":819,"w":58,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":13,"w":58,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_navi_p.png":
+{
+	"frame": {"x":613,"y":759,"w":58,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":13,"w":58,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_navi_pp.png":
+{
+	"frame": {"x":591,"y":699,"w":58,"h":56},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":13,"w":58,"h":56},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_setting_n.png":
+{
+	"frame": {"x":545,"y":574,"w":62,"h":60},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":10,"w":62,"h":60},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_setting_p.png":
+{
+	"frame": {"x":493,"y":770,"w":62,"h":60},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":10,"w":62,"h":60},
+	"sourceSize": {"w":80,"h":80}
+},
+"ic_setting_pp.png":
+{
+	"frame": {"x":483,"y":574,"w":62,"h":60},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":10,"w":62,"h":60},
+	"sourceSize": {"w":80,"h":80}
+},
+"img_head.png":
+{
+	"frame": {"x":288,"y":652,"w":203,"h":203},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":203,"h":203},
+	"sourceSize": {"w":203,"h":203}
+},
+"img_radio.png":
+{
+	"frame": {"x":386,"y":392,"w":180,"h":180},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":180,"h":180},
+	"sourceSize": {"w":180,"h":180}
+},
+"img_shadow.png":
+{
+	"frame": {"x":122,"y":406,"w":235,"h":55},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":235,"h":55},
+	"sourceSize": {"w":235,"h":55}
+},
+"moren_music.png":
+{
+	"frame": {"x":591,"y":638,"w":53,"h":59},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":53,"h":59},
+	"sourceSize": {"w":53,"h":59}
+},
+"pop_bg.png":
+{
+	"frame": {"x":576,"y":2,"w":446,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":180,"y":0,"w":446,"h":130},
+	"sourceSize": {"w":802,"h":130}
+},
+"radio cover_n.png":
+{
+	"frame": {"x":514,"y":834,"w":114,"h":114},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":114,"h":114},
+	"sourceSize": {"w":114,"h":114}
+},
+"top pop_bg.png":
+{
+	"frame": {"x":2,"y":2,"w":572,"h":130},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":119,"y":0,"w":572,"h":130},
+	"sourceSize": {"w":800,"h":130}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "menu.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:9b226440941ea2780a5cbb3be354f367$"
+}
+}
