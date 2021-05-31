@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "newbrush/Core.h"
+#include "newbrush/Types.h"
 #include "rttr/registration.h"
 using namespace rttr;
 using var = rttr::variant;
 
-namespace nb 
+namespace nb
 {
 
 class NB_API Object

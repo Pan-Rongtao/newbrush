@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 #include "newbrush/Brush.h"
-#include "newbrush/Shader.h"
+#include "newbrush/Components.h"
 
 using namespace nb;
 

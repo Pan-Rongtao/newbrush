@@ -1,19 +1,13 @@
-#include "Renderer2D.h"
-#include "newbrush/GLUnit.h"
+ï»¿#include "Renderer2D.h"
 #include <array>
-#include "newbrush/Shader.h"
-#include "newbrush/Camera.h"
 #include "newbrush/Mesh.h"
-#include "glm/gtx/matrix_decompose.hpp"
-#include "glm/gtx/matrix_query.hpp"
-#include "glm/gtx/euler_angles.hpp"
-#include "clipper.hpp"
-#include "earcut.hpp"
+#include "clipper/clipper.hpp"
+#include "mapbox/earcut.hpp"
 
 using namespace nb;
 using namespace ClipperLib;
 
-static const unsigned MaxQuadCount = 20000;
+static const unsigned MaxQuadCount = 2000;
 static const unsigned MaxVertexCount = MaxQuadCount * 4;
 static const unsigned MaxIndexCount = MaxQuadCount * 6;
 static const unsigned MaxTextureCount = 32;
@@ -46,13 +40,13 @@ static ref<Shader> s_renderer2dShader;
 
 void Renderer2D::init()
 {
-	//Èç¹ûÒÑ¾­³õÊ¼»¯¹ı£¬ÔòÌø³ö
+	//å¦‚æœå·²ç»åˆå§‹åŒ–è¿‡ï¼Œåˆ™è·³å‡º
 	if (s_Data.quadBuffer)
 		return;
 
 	s_Data.quadBuffer = new VertexData[MaxVertexCount];
 
-	//³õÊ¼»¯vao, vbo, ebo
+	//åˆå§‹åŒ–vao, vbo, ebo
 	glGenVertexArrays(1, &s_Data.vao);
 	glBindVertexArray(s_Data.vao);
 
@@ -88,7 +82,7 @@ void Renderer2D::init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	// 1x1°×É«ÎÆÀí
+	// 1x1ç™½è‰²çº¹ç†
 	glGenTextures(1, &s_Data.whiteTexture);
 	glBindTexture(GL_TEXTURE_2D, s_Data.whiteTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -100,7 +94,7 @@ void Renderer2D::init()
 
 	s_Data.textureIDs[0] = s_Data.whiteTexture;
 
-	//³õÊ¼»¯²ÉÑùÆ÷Êı×éuniform
+	//åˆå§‹åŒ–é‡‡æ ·å™¨æ•°ç»„uniform
 	s_renderer2dShader = ShaderLibrary::get("system_2d");
 	s_renderer2dShader->use();
 
@@ -194,7 +188,8 @@ void Renderer2D::drawPolygon(ref<Brush> brush, const std::vector<glm::vec2> &poi
 		{
 			stops.push_back({ pair.first, pair.second });
 		}
-		auto linearMaterial = createRef<LinearGrandientMaterial>(1000.0f, stops);
+		auto linearMaterial = createRef<LinearGrandientMaterial>(_brush->lenght, stops);
+		linearMaterial->vertical = _brush->vertical;
 		material = linearMaterial;
 	}
 	else if (is<ImageBrush>(brush))
@@ -219,7 +214,7 @@ void Renderer2D::endBatch()
 	glBindBuffer(GL_ARRAY_BUFFER, s_Data.vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.quadBuffer);
 
-	//¼¤»îÊ¹ÓÃµÄËùÓĞ²ÉÑùµ¥Ôª
+	//æ¿€æ´»ä½¿ç”¨çš„æ‰€æœ‰é‡‡æ ·å•å…ƒ
 	for (auto i = 0u; i < s_Data.usedTextureCount; ++i)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -360,4 +355,25 @@ void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Mat
 	mesh->draw(glm::mat4(1.0), sharedCamera2D(), lights);
 
 	_beginBatch(false);
+}
+
+#include <codecvt>
+void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & text)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
+	std::wstring unicodeStr = cvt.from_bytes(text);
+
+	Point offset = pt;
+	for (int i = 0; i != unicodeStr.size(); ++i)
+	{
+		auto glyph = nb::getGlyph(font, unicodeStr[i]);
+		Rect drawRC(glyph->rc.x() + offset.x, glyph->rc.y() + offset.y, glyph->rc.size());
+		offset += { glyph->advanceX, 0.0f };
+
+		auto tex = glyph->texture;
+		Rect texRect = Rect(glyph->uv[3].x * tex->width(), glyph->uv[3].y * tex->height(), 
+			(glyph->uv[2].x - glyph->uv[3].x) * tex->width(), (glyph->uv[0].y - glyph->uv[3].y) * tex->height());
+
+		drawImage(drawRC, glm::mat4(1.0f), tex, texRect, false, 1.0f);
+	}
 }

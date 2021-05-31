@@ -1,4 +1,4 @@
-#include "newbrush/Object.h"
+﻿#include "newbrush/Object.h"
 
 using namespace nb;
 

@@ -1,4 +1,4 @@
-#include "catch2/catch.hpp"
+﻿#include "catch2/catch.hpp"
 #include "newbrush/Binding.h"
 #include "newbrush/Log.h"
 

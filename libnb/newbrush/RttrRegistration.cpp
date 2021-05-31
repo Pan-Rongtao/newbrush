@@ -3,13 +3,11 @@
 #include "newbrush/Animation.h"
 #include "newbrush/Scene.h"
 #include "newbrush/Log.h"
-#include "newbrush/Texture.h"
-#include "newbrush/ModelImporter.h"
 #include "newbrush/Mesh.h"
 #include "newbrush/Transform.h"
-#include "newbrush/Shader.h"
 #include "newbrush/Brush.h"
 #include "newbrush/Node2D.h"
+#include "newbrush/Components.h"
 
 #include "IconFontCpp/IconsFontAwesome5Pro.h"
 #include "IconFontCpp/IconsMaterialDesign.h"
@@ -55,7 +53,7 @@ void RttrRegistration::doRegister()
 	std::string s;
 	for (auto t : vtTypes)
 	{
-		s = s + t.get_name().data() + "\r\n";
+		s = s + t.get_name().data() + "\n";
 	}
 
 }
@@ -98,16 +96,13 @@ void RttrRegistration::registerTypes()
 	registration::class_<nb::Node>("nb::Node") ()
 		.constructor<>() (policy::ctor::as_std_shared_ptr)
 		.property("Name", &Node::getName, &Node::setName)
-		.property("Translate", &Node::getTranslate, &Node::setTranslate)
-		.property("Rotate", &Node::getRotate, &Node::setRotate)
-		.property("Scale", &Node::getScale, &Node::setScale)
 		;
 
 	registration::class_<Transform>("nb::Transform") ()
 		.constructor<>() (policy::ctor::as_std_shared_ptr)
 		.property("Translate", &Transform::getTranslate, &Transform::setTranslate)
 		.property("Rotate", &Transform::getRotate, &Transform::setRotate)
-		//.property("Scale", &Transform::getScale, &Transform::setScale)
+		.property("Scale", &Transform::getScale, &Transform::setScale)
 		;
 
 	registration::class_<Transform2D>("nb::Transform2D") ()
@@ -134,10 +129,10 @@ void RttrRegistration::registerTypes()
 		;
 
 	registration::class_<PhongMaterial>("nb::PhongMaterial") ()
-		.property("Ambient", &PhongMaterial::ambient)
-		.property("Diffuse", &PhongMaterial::diffuse)
-		.property("Specular", &PhongMaterial::specular)
-		.property("Emission", &PhongMaterial::emission)
+		.property("Ambient", &PhongMaterial::ambientColor)
+		.property("Diffuse", &PhongMaterial::diffuseColor)
+		.property("Specular", &PhongMaterial::specularColor)
+		.property("Emission", &PhongMaterial::emissionColor)
 		.property("Shineness", &PhongMaterial::shineness)
 		.property("DiffuseMapping", &PhongMaterial::diffuseMapping)
 		.property("SpecularMapping", &PhongMaterial::specularMapping)
@@ -223,12 +218,6 @@ void RttrRegistration::registerTypes()
 		.constructor<>() (policy::ctor::as_std_shared_ptr)
 		;
 
-	registration::class_<ModelImporter>("nb::ModelImporter") ()
-		.constructor<>() (policy::ctor::as_std_shared_ptr)
-		.property("Path", &ModelImporter::path, &ModelImporter::load)
-		.property_readonly("Node", &ModelImporter::getRoot)
-		;
-
 	registration::class_<ImageBrush>("nb::ImageBrush") ()
 		.constructor<>() (policy::ctor::as_std_shared_ptr)
 		.property("Texture", &ImageBrush::texture)
@@ -301,7 +290,7 @@ void RttrRegistration::registerConverters()
 		return ret;
 	});
 
-	//string to nb::Color( "a,r,g,b")
+	//string to nb::Color( "r,g,b,a")
 	type::register_converter_func([](const std::string &s, bool &ok)->Color 
 	{
 		Color ret;

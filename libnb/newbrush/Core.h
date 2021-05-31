@@ -85,12 +85,14 @@ do{\
 	size_t n = std::string::npos;\
 	if (((n = file.rfind('/')) != std::string::npos) || ((n = file.rfind('\\')) != std::string::npos))\
 		file = file.substr(n + 1);\
-	snprintf(buffer, sizeof(buffer), "[%s, line %d, %s] throw an '%s'.\r\n\twhat: " argfmt "\r\n", file.data(), __LINE__, __FUNCTION__, typeid(exception).name(), ##__VA_ARGS__); \
+	snprintf(buffer, sizeof(buffer), "[%s, line %d, %s] throw an '%s'.\n\twhat: " argfmt "\n", file.data(), __LINE__, __FUNCTION__, typeid(exception).name(), ##__VA_ARGS__); \
 	throw exception(buffer);\
 }while(0);\
 }
 #define nbThrowException(exception, argfmt, ...) nbThrowExceptionIf(true, exception, argfmt, ##__VA_ARGS__)
 #define nbBindEventFunction(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
+#define nbArraySize(arr) sizeof(arr) / sizeof(arr[0])
 
 namespace nb
 {

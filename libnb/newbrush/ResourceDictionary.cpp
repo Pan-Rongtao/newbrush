@@ -1,4 +1,4 @@
-#include "newbrush/ResourceDictionary.h"
+﻿#include "newbrush/ResourceDictionary.h"
 
 using namespace nb;
 

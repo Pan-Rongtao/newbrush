@@ -2,7 +2,6 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #include "newbrush/Log.h"
-#include "newbrush/GLUnit.h"
 #include "newbrush/Node2D.h"
 #include "newbrush/Helper.h"
 #include "newbrush/Renderer2D.h"
@@ -11,14 +10,27 @@ using namespace nb;
 
 static bool	g_windowSystemInitialized = false;
 
+Window::Window()
+	: Window(1280.0f, 720.0f, "newbrush")
+{}
+
+Window::Window(float width, float heith)
+	: Window(width, heith, "newbrush")
+{}
+
+Window::Window(const std::string & title)
+	: Window(1280.0f, 720.0f, title)
+{}
+
 Window::Window(float width, float height, const std::string &title)
 	: m_dispatchingCloseEvent(false)
 	, m_processingCallback(false)
 	, m_processingWindowStateChanged(false)
 	, m_lastWindowState(WindowStateE::Normal)
+	, m_title(title)
 {
 #if NB_OS == NB_OS_ANDROID
-	nbThrowException(std::runtime_error, "should not create nb::Window on android");
+	nbThrowException(std::runtime_error, "should not create Window on android");
 #else
 	init();
 
@@ -44,7 +56,7 @@ Window::Window(float width, float height, const std::string &title)
 	gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress));
 	Log::info("OpenGL Version{}.{}", GLVersion.major, GLVersion.minor);
 	WindowCollection::get()->push(this);
-//	glfwSwapInterval(1);
+	glfwSwapInterval(1);
 #endif
 	frameBufferSizeCallback((int)width, (int)height);
 }
@@ -64,9 +76,9 @@ void Window::setTitle(const std::string & title)
 #endif
 }
 
-std::string Window::title() const
+const std::string &Window::title() const
 {
-	return std::string();
+	return m_title;
 }
 
 void Window::setPosition(float x, float y)
@@ -248,20 +260,12 @@ void Window::posCallback(int x, int y)
 
 void Window::sizeCallback(int width, int height)
 {
-/*	m_drawContext->resize(width, height);
-	glEnable(GL_DEPTH_TEST);
-	setValue(WidthProperty(), (float)width);
-	setValue(HeightProperty(), (float)height);
-	updateLayout();*/
 }
 
 void Window::frameBufferSizeCallback(int width, int height)
 {
-	glViewport(0, 0, width, height);
-	nb::sharedCamera2D()->resize((float)width, (float)height);
-
-	if (root && nb::is<Scene>(root))
-		nb::as<Scene>(root)->onResize((float)width, (float)height);
+	GLUtils::viewport((float)0, (float)0, (float)width, (float)height);
+	sharedCamera2D()->resize((float)width, (float)height);
 }
 
 void Window::mouseButtonCallback(int button, int action, int mods)
@@ -269,23 +273,16 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 #if NB_OS != NB_OS_ANDROID
 	if (button == GLFW_MOUSE_BUTTON_1)
 	{
-		TouchEventArgs e;
-		e.action = action == GLFW_PRESS ? TouchActionE::down : TouchActionE::up;
 		double x = 0, y = 0;
 		glfwGetCursorPos(m_implWindow, &x, &y);
+
+		TouchEventArgs e;
+		e.action = action == GLFW_PRESS ? TouchActionE::down : TouchActionE::up;
 		e.x = (float)x;
 		e.y = (float)y;
 
-		TouchEvent.invoke(e);
-
-		if (nb::is<Node2D>(root))
-		{
-			auto nodes = TreeHelper::getAllChildren(nb::as<Node2D>(root));
-			for (auto node : nodes)
-			{
-				node->touchThunk(e);
-			}
-		}
+		Touch.invoke(e);
+		TreeHelper::touchThunk(root, e);
 	}
 #endif
 }
@@ -298,16 +295,8 @@ void Window::cusorPosCallback(double x, double y)
 	e.x = (float)x;
 	e.y = (float)y;
 
-	TouchEvent.invoke(e);
-
-	if (nb::is<Node2D>(root))
-	{
-		auto nodes = TreeHelper::getAllChildren(nb::as<Node2D>(root));
-		for (auto node : nodes)
-		{
-			node->touchThunk(e);
-		}
-	}
+	Touch.invoke(e);
+	TreeHelper::touchThunk(root, e);
 #endif
 }
 
@@ -330,18 +319,25 @@ void Window::cusorPosEnterCallback(int entered)
 
 void Window::scrollCallback(double x, double y)
 {
-	Scroll.invoke(Point((float)x, (float)y));
+	ScrollEventArgs e;
+	e.delta = (int)y;
+	Scroll.invoke(e);
+	TreeHelper::scrollThunk(root, e);
 }
 
 void Window::keyCallback(int key, int scancode, int action, int mods)
 {
-	KeyEventArgs args;
-	args.sender = this;
-	args.key = key;
-	args.scancode = scancode;
-	args.action = action;
-	args.mods = mods;
-	KeyEvent.invoke(args);
+	if (key == GLFW_KEY_ESCAPE)
+		exit(0);
+
+	KeyEventArgs e;
+	e.sender = this;
+	e.key = KeyCode(key);
+	e.scancode = scancode;
+	e.action = action == GLFW_PRESS ? KeyAction::down : action == GLFW_RELEASE ? KeyAction::up : KeyAction::repeat;
+	e.mods = mods;
+	Key.invoke(e);
+	TreeHelper::keyThunk(root, e);
 }
 
 void Window::focusCallback(int focused)
@@ -400,16 +396,7 @@ void Window::render()
 	glfwMakeContextCurrent(m_implWindow);
 
 	if (root)
-	{
-		if (nb::is<Node2D>(root))
-		{
-			nb::as<Node2D>(root)->updateLayout(Size(width(), height()));
-		}
-		else if (nb::is<Scene>(root))
-		{
-			nb::as<Scene>(root)->onRender();
-		}
-	}
+		root->updateLayout(Size(width(), height()));
 
 	glfwSwapBuffers(m_implWindow);
 #endif

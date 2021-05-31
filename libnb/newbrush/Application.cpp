@@ -1,8 +1,24 @@
-#include "newbrush/Application.h"
+﻿#include "newbrush/Application.h"
 #include "newbrush/Timer.h"
 #include "newbrush/Log.h"
 
 using namespace nb;
+
+void MessageQueue::post(const Task &task)
+{
+	std::lock_guard<std::mutex> lock(m_mutex);
+	m_msgQueue.push(task);
+}
+
+MessageQueue::Task MessageQueue::pick()
+{
+	std::lock_guard<std::mutex> lock(m_mutex);
+	if (m_msgQueue.empty()) return nullptr;
+
+	auto task = m_msgQueue.front();
+	m_msgQueue.pop();
+	return task;
+}
 
 Application *g_app = nullptr;
 Application::Application()
@@ -64,10 +80,10 @@ int Application::run(int argc, char *argv[])
 	{
 		while (!m_exitFlag)
 		{
-			auto cb = pick();
-			if (cb)
+			auto task = m_msgQueue.pick();
+			if (task)
 			{
-				cb();
+				task();
 			}
 			for (auto const &w : WindowCollection::get()->windows())
 			{
@@ -77,14 +93,9 @@ int Application::run(int argc, char *argv[])
 			Window::pollEvents();
 		}
 	}
-	catch (std::exception &e) {/* UnhandledException.invoke({ e }); */Log::error("\n\n{}\n", e.what()); }
+	catch (std::exception &e) { UnhandledException.invoke({ e }); }
 	catch (...) { UnhandledExtraException.invoke({}); }
 	return 0;
-}
-
-void Application::shutdown()
-{
-	shutdown(0);
 }
 
 void Application::shutdown(int exitCode)
@@ -99,10 +110,9 @@ void Application::shutdown(int exitCode)
 	onExit({ exitCode });
 }
 
-void Application::connect(CallBack callback)
+void Application::post(const MessageQueue::Task &task)
 {
-	std::lock_guard<std::mutex> lock(m_mutex);
-	m_msgQueue.push({ callback });
+	m_msgQueue.post(task);
 }
 
 void Application::onActivated(const EventArgs & args)
@@ -156,16 +166,4 @@ void Application::onWindowFocused(const bool &focused)
 	{
 
 	}
-}
-
-Application::CallBack Application::pick()
-{
-	std::lock_guard<std::mutex> lock(m_mutex);
-	CallBack ret = nullptr;
-	if (!m_msgQueue.empty())
-	{
-		ret = m_msgQueue.front();
-		m_msgQueue.pop();
-	}
-	return ret;
 }

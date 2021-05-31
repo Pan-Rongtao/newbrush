@@ -1,9 +1,5 @@
 ﻿#include "newbrush/Mesh.h"
-#include "newbrush/GLUnit.h"
-#include "newbrush/Camera.h"
-#include "newbrush/Light.h"
-#include "newbrush/Material.h"
-#include "newbrush/Shader.h"
+#include "newbrush/Components.h"
 
 using namespace nb;
 
@@ -12,6 +8,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indi
 	, vao(0)
 	, vbo(0)
 	, ebo(0)
+	, hasBone(false)
+	, renderAble(true)
 {
 	setup(vertexs, indices);
 }
@@ -31,7 +29,7 @@ void Mesh::drawFlags() const
 
 void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights) const
 {
-	if (!material || !material->shader)
+	if (!renderAble || !material || !material->shader)
 		return;
 
 	auto shader = material->shader;
@@ -44,6 +42,7 @@ void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<r
 
 	shader->setMat4("nbM", m);
 	shader->setMat4("nbVP", vp);
+	shader->setBool("hasBones", hasBone);
 
 	//材质更新uniforms
 	material->uploadUniform(camera);
@@ -82,6 +81,12 @@ void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));	//texture
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));	//normal
+
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, BONE_MAX, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneIndexs)); //bones
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, BONE_MAX, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));//weights
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//ebo
@@ -109,18 +114,21 @@ Cube::Cube(const glm::vec3 & center, float uniformLenght)
 Cube::Cube(const glm::vec3 &center, float lenght, float width, float height)
 	: Mesh({}, {}, nullptr)
 {
+	Vertex v0, v1, v2, v3, v4, v5, v6, v7;
+	v0.position = glm::vec3(-lenght / 2, height / 2, width / 2);
+	v1.position = glm::vec3(lenght / 2, height / 2, width / 2);
+	v2.position = glm::vec3(lenght / 2, -height / 2, width / 2);
+	v3.position = glm::vec3(-lenght / 2, -height / 2, width / 2);
+	v4.position = glm::vec3(-lenght / 2, height / 2, -width / 2);
+	v5.position = glm::vec3(lenght / 2, height / 2, -width / 2);
+	v6.position = glm::vec3(lenght / 2, -height / 2, -width / 2);
+	v7.position = glm::vec3(-lenght / 2, -height / 2, -width / 2);
 	auto vertexs =
 	{
 		//前一个面（四个点，左上前，右上前，左下前，右下前）
-		Vertex{ glm::vec3(-lenght / 2, height / 2, width / 2) },
-		Vertex{ glm::vec3(lenght / 2, height / 2, width / 2) },
-		Vertex{ glm::vec3(lenght / 2, -height / 2, width / 2) },
-		Vertex{ glm::vec3(-lenght / 2, -height / 2, width / 2) },
+		v0, v1, v2, v3,
 		//后一个面（四个点，左上后，右上后，右下后，左下后）
-		Vertex{ glm::vec3(-lenght / 2, height / 2, -width / 2) },
-		Vertex{ glm::vec3(lenght / 2, height / 2, -width / 2) },
-		Vertex{ glm::vec3(lenght / 2, -height / 2, -width / 2) },
-		Vertex{ glm::vec3(-lenght / 2, -height / 2, -width / 2) }
+		v4, v5, v6, v7,
 	};
 	//上下左右前后
 	std::vector<uint16_t> indices =
@@ -152,4 +160,19 @@ void SkyBox::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector
 	auto cm = createRef<PerspectiveCamera>(*(nb::as<PerspectiveCamera>(camera).get()));
 	cm->setTranslate(glm::vec3(0.0, 0.0, 0.0));
 	Mesh::draw(matrix, cm, lights);
+}
+
+bool Vertex::addBone(float boneIndex, float boneWeight)
+{
+	auto arrSize = nbArraySize(boneIndexs);
+	for (auto i = 0u; i != arrSize; ++i)
+	{
+		if (boneWeights[i] == 0.0f)
+		{
+			boneIndexs[i] = boneIndex;
+			boneWeights[i] = boneWeight;
+			return true;
+		}
+	}
+	return false;
 }

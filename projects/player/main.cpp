@@ -1,4 +1,4 @@
-#include "newbrush/Application.h"
+﻿#include "newbrush/Application.h"
 #include "RpcHelper.h"
 #include "newbrush/Log.h"
 

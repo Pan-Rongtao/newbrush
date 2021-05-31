@@ -9,7 +9,7 @@ add_definitions("-D_WIN32_WINNT=0x0601")
 # 3. Project Build
 set(BIN_NAME "player")
 
-set(INCLUDE_PREFIX ${CMAKE_SOURCE_DIR}/examples/player)
+set(INCLUDE_PREFIX ${CMAKE_SOURCE_DIR}/projects/player)
 file(GLOB_RECURSE INC_LIST ${INCLUDE_PREFIX}/*.h ${INCLUDE_PREFIX}/*.hpp)
 file(GLOB_RECURSE SRC_LIST *.cpp *.c)
 

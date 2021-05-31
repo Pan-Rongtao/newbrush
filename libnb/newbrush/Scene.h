@@ -1,33 +1,36 @@
 ﻿#pragma once
-#include "newbrush/Light.h"
-#include "newbrush/Camera.h"
-#include "newbrush/Node.h"
+#include "newbrush/Node3D.h"
 #include "newbrush/Animation.h"
-#include "newbrush/Mesh.h"
+#include "newbrush/Components.h"
+#include "assimp/scene.h"
 
 namespace nb 
 {
 
-class NB_API Scene : public Node
+class NB_API Scene : public Node3D
 {
-	RTTR_ENABLE(Node)
+	RTTR_ENABLE(Node3D)
 public:
 	Scene();
 
+	//摄像头
 	void setCamera(ref<PerspectiveCamera> camera);
 	ref<PerspectiveCamera> getCamera() const;
 
-	virtual void onResize(float width, float height) override;
-
-	std::vector<ref<Light>> lights;
-	std::vector<ref<Storyboard>> animations;
+	//灯光
+	void addLight(ref<Light> light);
+	void removeLight(unsigned index);
+	unsigned lightCount() const;
+	bool hasLight() const;
+	ref<Light> getLightAt(unsigned index);
+	void clearLights();
+	const std::vector<ref<Light>> lights() const;
 
 	virtual void onRender() override;
 
 private:
-	void loopDraw(ref<Node> node);
-
 	ref<PerspectiveCamera> m_camera;
+	std::vector<ref<Light>> m_lights;
 };
 
 }

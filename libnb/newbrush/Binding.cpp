@@ -1,4 +1,4 @@
-#include "newbrush/Binding.h"
+ï»¿#include "newbrush/Binding.h"
 
 using namespace nb;
 
@@ -43,10 +43,10 @@ void Binding::setSource(ref<DataContext> source)
 	}
 }
 
-//Ã¿¸öbindingÊµÀı¿ÉÒÔ¶ÔÓ¦¶à¸öobj-property
-//sourceºÍpathÏàÍ¬µÄ²»Í¬bindingÊµÀı£¬·Ö±ğ¶ÔÓ¦²»Í¬obj-property
-//Òò´Ëmap×ö³ÉÕâ¸ö½á¹û£¬´Ë½á¹ûĞÔÄÜ²¢·Ç×î¼Ñ£¬ºóĞø¿ÉÄÜ¿¼ÂÇÓÅ»¯
-//g_bindingmapµÄkey²»¿ÉÊ¹ÓÃBinding*£¬·ñÔòÁ¬ĞøµÄstd::make_shared<Binding>»á·µ»ØÏàÍ¬µÄthis£¬²»ÖªµÀÎªÊ²Ã´£¡£¡£¡
+//æ¯ä¸ªbindingå®ä¾‹å¯ä»¥å¯¹åº”å¤šä¸ªobj-property
+//sourceå’Œpathç›¸åŒçš„ä¸åŒbindingå®ä¾‹ï¼Œåˆ†åˆ«å¯¹åº”ä¸åŒobj-property
+//å› æ­¤mapåšæˆè¿™ä¸ªç»“æœï¼Œæ­¤ç»“æœæ€§èƒ½å¹¶éæœ€ä½³ï¼Œåç»­å¯èƒ½è€ƒè™‘ä¼˜åŒ–
+//g_bindingmapçš„keyä¸å¯ä½¿ç”¨Binding*ï¼Œå¦åˆ™è¿ç»­çš„std::make_shared<Binding>ä¼šè¿”å›ç›¸åŒçš„thisï¼Œä¸çŸ¥é“ä¸ºä»€ä¹ˆï¼ï¼ï¼
 using ObjectPropertysContainer = std::vector<std::pair<ref<Object>, property>>;
 std::map<ref<Binding>, ObjectPropertysContainer> g_bindingmap;
 
@@ -66,7 +66,7 @@ void BindingMaster::addBinding(ref<Object> target, const property &prop, ref<Bin
 	setToTarget(target, prop, dataNode->get());
 
 	auto ret = g_bindingmap.insert({ bd, ObjectPropertysContainer{ std::make_pair(target, prop) } });
-	//²åÈë³É¹¦£¬±íÊ¾¸Ãbinding²»´æÔÚ£¬·ñÔò¸ÃbindingÒÑ¾­ÓĞ°ó¶¨µÄÊôĞÔ£¬ĞèÒª×·¼Ó¶ÔÓ¦¹ØÏµ¼´¿É
+	//æ’å…¥æˆåŠŸï¼Œè¡¨ç¤ºè¯¥bindingä¸å­˜åœ¨ï¼Œå¦åˆ™è¯¥bindingå·²ç»æœ‰ç»‘å®šçš„å±æ€§ï¼Œéœ€è¦è¿½åŠ å¯¹åº”å…³ç³»å³å¯
 	if (ret.second)
 	{
 		bd->BindDataChanged += [&](const Binding::BindDataChangedEventArgs &args) 

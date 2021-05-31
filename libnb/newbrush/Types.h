@@ -1,8 +1,8 @@
-#pragma once
+Ôªø#pragma once
 #include <regex>
 #include <ratio>
 #include "newbrush/Core.h"
-#include "glm/gtx/color_space.hpp"
+#include "newbrush/glm.h"
 
 namespace nb
 {
@@ -131,19 +131,12 @@ public:
 	void setLeftBottom(float left, float bottom)		{ setX(left); setBottom(bottom); }
 	void setRightBottom(float right, float bottom)		{ setRight(right); setBottom(bottom); }
 
-	bool contains(const Point &p) const { return contains(p.x, p.y); }
+	bool contains(const Point &p) const					{ return contains(p.x, p.y); }
 	bool contains(float x, float y) const;
 
 private:
 	float m_x,m_y,m_width,m_height;
 };
-
-inline bool Rect::contains(float x, float y) const
-{
-	bool bHorizontal = width() >= 0.0f ? (x >= left() && x < right()) : (x <= left() && x > right());
-	bool bVertical = height() >= 0.0f ? (y >= top() && y < bottom()) : (y <= top() && y > bottom());
-	return bHorizontal && bVertical;
-}
 
 enum class Colors
 {
@@ -293,45 +286,45 @@ enum class Colors
 class NB_API Color
 {
 public:
-	Color() : Color(255, 0, 0, 0) {}
-	Color(uint8_t _r, uint8_t _g, uint8_t _b) : Color(255, _r, _g, _b) {}
-	Color(uint8_t _a, uint8_t _r, uint8_t _g, uint8_t _b) : a(_a), r(_r), g(_g), b(_b) {}
+	Color() : Color(0, 0, 0, 255) {}
+	Color(uint8_t _r, uint8_t _g, uint8_t _b) : Color(_r, _g, _b, 255) {}
+	Color(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a) : r(_r), g(_g), b(_b), a(_a) {}
 	Color(uint32_t argb) : a((argb & 0xFF000000) >> 24), r((argb & 0x00FF0000) >> 16), g((argb & 0x0000FF00) >> 8), b(argb & 0x000000FF){}
 	Color(Colors c) : Color((uint32_t)c | 0xFF000000) { }
 
-	static Color fromArgbF(float af, float rf, float gf, float bf)	{ Color c; c.setArgbf(af, rf, gf, bf); return c; }
-	static Color fromRgbF(float rf, float gf, float bf)				{ return fromArgbF(1.0f, rf, gf, bf); }
+	static Color fromRgbaF(float rf, float gf, float bf, float af)	{ Color c; c.setRgbaf(rf, gf, bf, af); return c; }
+	static Color fromRgbF(float rf, float gf, float bf)				{ Color c; c.setRgbf(rf, gf, bf); return c; }
 
 	bool operator ==(const Color &c) const					{ return !(operator!=(c)); }
 	bool operator !=(const Color &c) const					{ return (a != c.a) || (r != c.r || g != c.g) || (b != c.b); }
 
-	//∏°µ„–Œ Ω£®0.0-1.0)
-	void setArgbf(float af, float rf, float gf, float bf)	{ setaf(af); setrf(rf); setgf(gf); setbf(bf); }
+	//ÊµÆÁÇπÂΩ¢ÂºèÔºà0.0-1.0)
+	void setRgbaf(float rf, float gf, float bf, float af)	{ setrf(rf); setgf(gf); setbf(bf); setaf(af); }
 	void setRgbf(float rf, float gf, float bf)				{ setrf(rf); setgf(gf); setbf(bf); }
-	void setaf(float af)									{ a = (uint8_t)std::round(nb::clamp(af, 0.0f, 1.0f) * 255); }
 	void setrf(float rf)									{ r = (uint8_t)std::round(nb::clamp(rf, 0.0f, 1.0f) * 255); }
 	void setgf(float gf)									{ g = (uint8_t)std::round(nb::clamp(gf, 0.0f, 1.0f) * 255); }
 	void setbf(float bf)									{ b = (uint8_t)std::round(nb::clamp(bf, 0.0f, 1.0f) * 255); }
-	float af() const										{ return a / 255.0f; }
+	void setaf(float af)									{ a = (uint8_t)std::round(nb::clamp(af, 0.0f, 1.0f) * 255); }
 	float rf() const										{ return r / 255.0f; }
 	float gf() const										{ return g / 255.0f; }
 	float bf() const										{ return b / 255.0f; }
+	float af() const										{ return a / 255.0f; }
 
-	//…´µ˜/±•∫Õ∂»/¡¡∂»
-	void setHsv(const glm::vec3 &hsv) &						{ auto rgbf = glm::rgbColor(hsv); setrf(rgbf.x); setrf(rgbf.y); setrf(rgbf.z); }
-	glm::vec3 hsv() const									{ return glm::hsvColor(glm::vec3(rf(), gf(), bf())); }
+	//Ëâ≤Ë∞É/È•±ÂíåÂ∫¶/‰∫ÆÂ∫¶
+	void setHsv(const glm::vec3 &hsv) &						{ /*auto rgbf = glm::rgbColor(hsv); setrf(rgbf.x); setrf(rgbf.y); setrf(rgbf.z);*/ }
+	glm::vec3 hsv() const									{ return glm::vec3{}; /*return glm::hsvColor(glm::vec3(rf(), gf(), bf()));*/ }
 
-	//’˚ ˝
+	//Êï¥Êï∞
 	void setIntegerArgb(uint32_t argb)						{ a = (argb & 0xFF000000) >> 24; r = (argb & 0x00FF0000) >> 16; g = (argb & 0x0000FF00) >> 8; b = (argb & 0x000000FF); }
 	void setIntegerRgb(uint32_t rgb)						{ setIntegerArgb(rgb | 0xFF000000); }
 	uint32_t integerArgb() const							{ return (a << 24) | integerRgb(); }
 	uint32_t integerRgb() const								{ return (r << 16) | (g << 8) | (b); }
 
-	//◊™ªªŒ™◊÷∑˚¥ÆRGB£¨–Œ»Á#FFFFFF
+	//ËΩ¨Êç¢‰∏∫Â≠óÁ¨¶‰∏≤RGBÔºåÂΩ¢Â¶Ç#FFFFFF
 	void setStringValue(const std::string &sHex);
 	std::string stringValue() const							{ char arr[10] = { 0 }; snprintf(arr, sizeof(arr), "#%6X", integerRgb()); return arr; }
 
-	uint8_t a,r,g,b;
+	uint8_t r,g,b,a;
 };
 
 class NB_API Thickness
@@ -353,26 +346,17 @@ public:
 	float left,top,right,bottom;
 };
 
-inline void Color::setStringValue(const std::string &sHex)
-{
-	std::regex reg("^#[0-9A-Za-z]{6}$");
-	nbThrowExceptionIf(!std::regex_match(sHex, reg), std::invalid_argument, "sHex[%s] is not match '#FFFFFF'", sHex.data());
-
-	try { setIntegerRgb(std::stoi("0x" + sHex.substr(1), 0, 16)); }
-	catch (...) { nbThrowException(std::invalid_argument, "sHex[%s] is not match color format string", sHex.data()); }
-}
-
 class NB_API TimeSpan
 {
 public:
-	//ππΩ®“ª∏ˆ ±º‰º‰∏ÙTimeSpan£¨0
+	//ÊûÑÂª∫‰∏Ä‰∏™Êó∂Èó¥Èó¥ÈöîTimeSpanÔºå0
 	TimeSpan() : TimeSpan(0, 0, 0, 0, 0, 0) {}
 	TimeSpan(int hours, int minutes, int seconds) : TimeSpan(0, hours, minutes, seconds, 0, 0) {}
 	TimeSpan(int hours, int minutes, int seconds, int milliseconds) : TimeSpan(0, hours, minutes, seconds, milliseconds, 0) {}
 	TimeSpan(int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) : TimeSpan(0, hours, minutes, seconds, milliseconds, microseconds) {}
 	TimeSpan(int days, int hours, int minutes, int seconds, int milliseconds, int64_t microseconds) : m_micros(days * 86400000000 + hours * (int64_t)3600000000 + minutes * (int64_t)60000000 + seconds * std::micro::den + milliseconds * std::milli::den + microseconds) {}
 
-	//¥”ÃÏ°¢ ±°¢∑÷°¢√Î°¢∫¡√ÎππΩ®TimeSpan
+	//‰ªéÂ§©„ÄÅÊó∂„ÄÅÂàÜ„ÄÅÁßí„ÄÅÊØ´ÁßíÊûÑÂª∫TimeSpan
 	static TimeSpan fromDays(int days)						{ return TimeSpan(days, 0, 0, 0, 0, 0); }
 	static TimeSpan fromHours(int hours)					{ return TimeSpan(0, hours, 0, 0, 0, 0); }
 	static TimeSpan fromMinutes(int minutes)				{ return TimeSpan(0, 0, minutes, 0, 0, 0); }
@@ -394,7 +378,7 @@ public:
 	TimeSpan operator -(const TimeSpan &other) const		{ return operator+(-other); }
 	void operator -=(const TimeSpan &other) &				{ operator = (operator -(other)); }
 
-	//ÃÏ ˝°¢–° ± ˝£®-23µΩ23£©°¢∑÷÷” ˝£®-59µΩ59£©°¢√Î ˝£®-59µΩ59£©°¢∫¡√Î ˝£®-999µΩ999£©°¢Œ¢√Î ˝£®-999µΩ999£©
+	//Â§©Êï∞„ÄÅÂ∞èÊó∂Êï∞Ôºà-23Âà∞23Ôºâ„ÄÅÂàÜÈíüÊï∞Ôºà-59Âà∞59Ôºâ„ÄÅÁßíÊï∞Ôºà-59Âà∞59Ôºâ„ÄÅÊØ´ÁßíÊï∞Ôºà-999Âà∞999Ôºâ„ÄÅÂæÆÁßíÊï∞Ôºà-999Âà∞999Ôºâ
 	int days() const										{ return (int)(totalMicroseconds() / 86400000000); }
 	int hours() const										{ return (int)(totalMicroseconds() % 86400000000 / 3600000000); }
 	int minutes() const										{ return (int)(totalMicroseconds() % 86400000000 % 3600000000 / 60000000); }
@@ -402,25 +386,213 @@ public:
 	int milliseconds() const								{ return (int)(totalMicroseconds() % 86400000000 % 3600000000 % 60000000 % std::micro::den / std::milli::den); }
 	int microseconds() const								{ return (int)(totalMicroseconds() % 86400000000 % 3600000000 % 60000000 % std::micro::den % std::milli::den); }
 
-	//◊™ªª≥…œ‡”¶µƒÃÏ ˝°¢ ± ˝°¢∑÷ ˝°¢√Î ˝°¢∫¡√Î ˝°¢Œ¢√Î ˝
+	//ËΩ¨Êç¢ÊàêÁõ∏Â∫îÁöÑÂ§©Êï∞„ÄÅÊó∂Êï∞„ÄÅÂàÜÊï∞„ÄÅÁßíÊï∞„ÄÅÊØ´ÁßíÊï∞„ÄÅÂæÆÁßíÊï∞
 	double totalDays() const								{ return (double)totalMicroseconds() / 86400000000; }
 	double totalHours() const								{ return (double)totalMicroseconds() / 3600000000; }
 	double totalMinutes() const								{ return (double)totalMicroseconds() / 60000000; }
 	double totalSeconds() const								{ return (double)totalMicroseconds() / std::micro::den; }
 	double totalMilliseconds() const						{ return (double)totalMicroseconds() / std::milli::den; }
 	int64_t totalMicroseconds() const						{ return m_micros; }
-
-	std::string toString() const
-	{
-		char buf[128] = {0};
-		sprintf(buf, "%s%d.%02d:%02d:%02d.%03d.%03d",
-			*this < TimeSpan::zero() ? "-" : "", std::abs(days()), std::abs(hours()), 
-			std::abs(minutes()), std::abs(seconds()), std::abs(milliseconds()), std::abs(microseconds()));
-		return buf;
-	}
+	std::string toString() const;
 
 private:
 	int64_t	m_micros;
+};
+
+enum class WeekE
+{
+	Sunday = 0,
+	Monday,
+	Tuesday,
+	Wednesday,
+	Thursday,
+	Friday,
+	Saturday,
+};
+
+class NB_API Date
+{
+public:
+	Date() : Date(1, 1, 1)															{}
+	Date(int year, int month, int day) : m_year(year), m_month(month), m_day(day)	{ nbThrowExceptionIf(!isValid(year, month, day), std::out_of_range, "y(%d) or m(%d) or d(%d) is out of range", year, month, day); }
+	Date(const Date &other) : Date(other.year(), other.month(), other.day())		{}
+
+	static Date minValue()									{ return Date(1, 1, 1); }
+	static Date maxValue()									{ return Date(9999, 12, 31); }
+	static bool isValid(int year, int month, int day)		{ return !(year < 1 || year > 9999 || month < 1 || month > 12 || day < 1 || day > daysInMonth(year, month)); }
+	static Date today()										{ auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); auto Tm = localtime(&t); return Date(Tm->tm_year + 1900, Tm->tm_mon + 1, Tm->tm_mday); }
+	static bool isLeapYear(int year)						{ return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0); }
+	static int daysInYear(int year)							{ return isLeapYear(year) ? 366 : 365; }
+	static int daysInMonth(int year, int month)				{ return month == 2 ? (isLeapYear(year) ? 29 : 28) : (month == 4 || month == 6 || month == 9 || month == 11 ? 30 : 31); }
+
+	void operator =(const Date &other)						{ m_year = other.year(); m_month = other.month(); m_day = other.day(); }
+	bool operator !=(const Date &other) const				{ return m_year != other.year() || m_month != other.month() || m_day == other.day(); }
+	bool operator <(const Date &other) const				{ return (m_year < other.year()) || (m_year == other.year() && m_month < other.month()) || (m_year == other.year() && m_month == other.month() && m_day < other.day()); }
+	inline bool operator >(const Date &other) const			{ return other < *this; }
+	inline bool operator ==(const Date &other) const		{ return !(*this != other); }
+	inline bool operator <=(const Date &other) const		{ return !(*this > other); }
+	inline bool operator >=(const Date &other) const		{ return !(*this < other); }
+	Date operator +(const TimeSpan &value) const			{ return addDays(value.days()); }
+	void operator +=(const TimeSpan &value)					{ operator = (operator +(value)); }
+	Date operator -(const TimeSpan &value) const			{ return operator +(-value); }
+	void operator -=(const TimeSpan &value)					{ operator = (operator -(value)); }
+	TimeSpan operator -(const Date &other) const			{ return sub(other); }
+
+	int year() const										{ return m_year; }
+	int month() const										{ return m_month; }
+	int day() const											{ return m_day; }
+	WeekE week() const;
+
+	//Ëá™1Êúà1Êó•ÁªèËøáÁöÑÂ§©Êï∞ÔºåÂåÖÊã¨ÂΩìÂ§©
+	int dayOfYear() const									{ int days = 0; for (int i = 1; i <= m_month - 1; ++i) days += daysInMonth(m_year, i); return days + m_day; }
+
+	//Ëá™1Êúà1Êó•ÁªèËøáÁöÑÂë®Êï∞ÔºåÂåÖÊã¨ÂΩìÂë®ÔºåÊåâÁÖßISO 8601Ê†áÂáÜÔºåÊòüÊúü‰∏Ä‰Ωú‰∏∫‰∏ÄÂë®ÁöÑÂºÄÂßã
+	int weekOfYear() const									{ int nWeekBeg = static_cast<int>(Date(m_year, 1, 1).week()); int nPassedDays = dayOfYear(); return nPassedDays < (7 - nWeekBeg + 2) ? 1 : (nPassedDays - (7 - nWeekBeg + 2)) / 7 + 2; }
+
+	//‰∏éTimeSpanÁöÑËøêÁÆóÂ∞ÜÂè™ÂèñÁî®Âà∞Êó•ÔºåÊîØÊåÅË¥üÊï∞
+	Date &add(const TimeSpan &value)						{ *this = operator+(value); return *this; }
+	Date &sub(const TimeSpan &value)						{ return add(-value); }
+
+	//Â∑ÆÂÄº
+	TimeSpan sub(const Date &value) const					{ return TimeSpan::fromDays(dayOfOrigin() - value.dayOfOrigin()); }
+
+	//Ê∑ªÂä†Âπ¥/Êúà/Êó•ÔºåÂ¶ÇÊûúdayÂú®Êñ∞Âπ¥Êúà‰∏≠ÊòØ‰∏çÂêàÊ≥ïÁöÑÔºådayÂ∞ÜË¢´ËÆæÁΩÆÊàêÊúÄËøëÁöÑÂêàÊ≥ïÂÄº
+	Date addYears(int years) const;
+	Date addMonths(int months) const;
+	Date addDays(int days) const;
+
+private:
+	//Ë∑ùÁ¶ªÊúÄÂ∞èÊó•ÊúüÂ§©Êï∞
+	int dayOfOrigin() const									{ int nDays = 0; for (int i = minValue().year(); i <= m_year - 1; ++i) nDays += daysInYear(i); return nDays + dayOfYear(); }
+	int m_year, m_month, m_day;
+};
+
+class NB_API Time
+{
+public:
+	Time() : Time(0, 0, 0, 0, 0) {}
+	Time(int hour, int minute, int second) : Time(hour, minute, second, 0, 0) {}
+	Time(int hour, int minute, int second, int millisecond) : Time(hour, minute, second, millisecond, 0){}
+	Time(int hour, int minute, int second, int millisecond, int microsecond) : m_hour(hour), m_minute(minute), m_second(second), m_millisecond(millisecond), m_microsecond(microsecond) { nbThrowExceptionIf(!isValid(hour, minute, second, millisecond, microsecond), std::out_of_range, "[%d:%d:%d.%03d.%03d] is invalid.", hour, minute, second, millisecond, microsecond); }
+	Time(const Time &other) : Time(other.hour(), other.minute(), other.second(), other.millisecond(), other.microsecond()) {}
+
+	static Time maxValue()									{ static Time t(23, 59, 59, 999, 999); return t; }
+	static Time minValue()									{ static Time t(0, 0, 0, 0, 0); return t; }
+	static bool isValid(int h, int m, int s, int ms = 0, int mis = 0) { return !(h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59 || ms < 0 || ms > 999 || mis < 0 || mis > 999); }
+	static Time midnight()									{ static Time t(0, 0, 0, 0, 0);  return t; }
+
+	//ÂΩìÂâçÊó∂Èó¥
+	static Time now();
+
+	void operator =(const Time &other)						{ m_hour = other.hour(); m_minute = other.minute(); m_second = other.second(); m_millisecond = other.millisecond(); m_microsecond = other.microsecond(); }
+	bool operator !=(const Time &other) const				{ return timeOfDay() != other.timeOfDay(); }
+	bool operator <(const Time &other) const				{ return timeOfDay() < other.timeOfDay(); }
+	inline bool operator >(const Time &other) const			{ return other < *this; }
+	inline bool operator ==(const Time &other) const		{ return !(*this != other); }
+	inline bool operator <=(const Time &other) const		{ return !(*this > other); }
+	inline bool operator >=(const Time &other) const		{ return !(*this < other); }
+	Time operator +(const TimeSpan &value) const;
+	inline void operator +=(const TimeSpan &value)			{ operator =(operator +(value)); }
+	inline Time operator -(const TimeSpan &value) const		{ return operator +(-value); }
+	inline void operator -=(const TimeSpan &value)			{ operator =(operator +(value)); }
+	inline TimeSpan operator -(const Time &value) const		{ return sub(value); }
+
+	int hour() const										{ return m_hour; }
+	int minute() const										{ return m_minute; }
+	int second() const										{ return m_second; }
+	int millisecond() const									{ return m_millisecond; }
+	int microsecond() const									{ return m_microsecond; }
+	bool isMidnight() const									{ return *this == midnight(); }
+
+	//Ëá™ÂçàÂ§úÂ∑≤ÁªèËøáÁöÑÊó∂ÊÆµ
+	TimeSpan timeOfDay() const								{ return TimeSpan::fromMicroseconds(m_hour * (int64_t)3600000000 + m_minute * (int64_t)60000000 + m_second * std::micro::den + m_millisecond * std::milli::den + m_microsecond); }
+
+	//Âä†ÂáèTimsSpanÔºåÂèÇÊï∞ÊîØÊåÅË¥üÊï∞
+	Time &add(const TimeSpan &value)						{ *this = operator+(value); return *this; }
+	Time &sub(const TimeSpan &value)						{ return add(-value); }
+	TimeSpan sub(const Time &value) const					{ return timeOfDay() - value.timeOfDay(); }
+
+	//Ê∑ªÂä†Êó∂ÂàÜÁßí
+	Time &addHours(int hours)								{ return add(TimeSpan::fromHours(hours)); }
+	Time &addMinutes(int minutes)							{ return add(TimeSpan::fromMinutes(minutes)); }
+	Time &addSeconds(int seconds)							{ return add(TimeSpan::fromSeconds(seconds)); }
+	Time &addMilliseconds(int milliseconds)					{ return add(TimeSpan::fromMilliseconds(milliseconds)); }
+	Time &addMicroseconds(int microseconds)					{ return add(TimeSpan::fromMicroseconds(microseconds)); }
+
+private:
+	uint8_t m_hour, m_minute, m_second;
+	uint16_t m_millisecond, m_microsecond;
+};
+
+class NB_API DateTime
+{
+public:
+	DateTime() {}
+	DateTime(int year, int month, int day) : m_date(year, month, day) {}
+	DateTime(int year, int month, int day, int hour, int minute, int second) : m_date(year, month, day), m_time(hour, minute, second) {}
+	DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond) : m_date(year, month, day), m_time(hour, minute, second, millisecond) {}
+	DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond) : m_date(year, month, day), m_time(hour, minute, second, millisecond, microsecond) {}
+	DateTime(const Date &date, const Time &time) : m_date(date), m_time(time) {}
+	DateTime(const Date &date, int hour, int minute, int second, int millisecond) : m_date(date), m_time(hour, minute, second, millisecond) {}
+	DateTime(const Date &date, int hour, int minute, int second, int millisecond, int microsecond) : m_date(date), m_time(hour, minute, second, millisecond, microsecond) {}
+	DateTime(int year, int month, int day, const Time &time) : m_date(year, month, day), m_time(time) {}
+	DateTime(const DateTime &other) : m_date(other.date()), m_time(other.time()) {}
+
+	static DateTime maxValue()								{ return DateTime(Date::maxValue(), Time::maxValue()); }
+	static DateTime minValue()								{ return DateTime(Date::minValue(), Time::minValue()); }
+	static bool isValid(int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond) { return Date::isValid(year, month, day) && Time::isValid(hour, minute, second, millisecond, microsecond); }
+	static DateTime current()								{ return DateTime(Date::today(), Time::now()); }
+	static bool isLeapYear(int year)						{ return Date::isLeapYear(year); }
+	static int daysInYear(int year)							{ return Date::daysInYear(year); }
+	static int daysInMonth(int year, int month)				{ return Date::daysInMonth(year, month); }
+
+	void operator = (const DateTime &other)					{ m_date = other.date(); m_time = other.time(); }
+	bool operator !=(const DateTime &other) const			{ return m_date != other.date() || m_time != other.time(); }
+	bool operator <(const DateTime &other) const			{ return m_date < other.date() || (m_date == other.date() && m_time < other.time()); }
+	inline bool operator >(const DateTime &other) const		{ return other < *this; }
+	inline bool operator ==(const DateTime &other) const	{ return !(*this != other); }
+	inline bool operator <=(const DateTime &other) const	{ return !(*this > other); }
+	inline bool operator >=(const DateTime &other) const	{ return !(*this < other); }
+	DateTime operator +(const TimeSpan &value) const;
+	void operator +=(const TimeSpan &value)					{ operator = (operator +(value)); }
+	DateTime operator -(const TimeSpan &value) const		{ return operator+(-value); }
+	void operator -=(const TimeSpan &value)					{ operator = (operator -(value)); }
+	TimeSpan operator -(const DateTime &other) const		{ return sub(other); }
+
+	int year() const										{ return m_date.year(); }
+	int month() const										{ return m_date.month(); }
+	int day() const											{ return m_date.day(); }
+	WeekE week() const										{ return m_date.week(); }
+	int hour() const										{ return m_time.hour(); }
+	int minute() const										{ return m_time.minute(); }
+	int second() const										{ return m_time.second(); }
+	int millisecond() const									{ return m_time.millisecond(); }
+	int microsecond() const									{ return m_time.microsecond(); }
+	const Date &date() const								{ return m_date; }
+	const Time &time() const								{ return m_time; }
+
+	int dayOfYear() const									{ return m_date.dayOfYear(); }
+	int weekOfYear() const									{ return m_date.weekOfYear(); }
+	TimeSpan timeOfDay() const								{ return m_time.timeOfDay(); }
+
+	//‰∏ãÈù¢ÊñπÊ≥ïÂ∞ÜËøîÂõû‰∏Ä‰∏™Êñ∞ÁöÑDateÔºåÊîØÊåÅË¥üÊï∞
+	DateTime &add(const TimeSpan &value)					{ *this = operator+(value); return *this; }
+	DateTime &sub(const TimeSpan &value)					{ return add(-value); }
+	TimeSpan sub(const DateTime &value) const				{ return (date() - value.date()) + (time() - value.time()); }
+
+	//Â¢ûÂä†Âπ¥ÊúàÊó•Êó∂ÂàÜÁßíÔºåÊîØÊåÅË¥üÊï∞
+	DateTime &addYears(int years)							{ *this = DateTime(m_date.addYears(years), m_time); return *this; }
+	DateTime &addMonths(int months)							{ *this = DateTime(m_date.addMonths(months), m_time); return *this; }
+	DateTime &addDays(int days)								{ *this = DateTime(m_date.addDays(days), m_time); return *this; }
+	DateTime &addHours(int hours)							{ return add(TimeSpan::fromHours(hours)); }
+	DateTime &addMinutes(int minutes)						{ return add(TimeSpan::fromMinutes(minutes)); }
+	DateTime &addSeconds(int seconds)						{ return add(TimeSpan::fromSeconds(seconds)); }
+	DateTime &addMilliseconds(int milliseconds)				{ return add(TimeSpan::fromMilliseconds(milliseconds)); }
+	DateTime &addMicroseconds(int microseconds)				{ return add(TimeSpan::fromMicroseconds(microseconds)); }
+
+private:
+	Date m_date;
+	Time m_time;
 };
 
 }

@@ -1,12 +1,7 @@
-#include "newbrush/UserControl.h"
+﻿#include "newbrush/UserControl.h"
 #include "newbrush/Renderer2D.h"
 
 using namespace nb;
-
-Button::Button()
-	: m_checked(false)
-{
-}
 
 void Button::setBkgndNormal(ref<Brush> brush)
 {
@@ -43,6 +38,21 @@ bool Button::isChecked() const
 	return m_checked;
 }
 
+ref<Button> Button::createWithTextureFrame(const TextureFrame & texFrame, bool useBrush, float x, float y)
+{
+	auto node = createRef<Button>(x, y, texFrame.size.x, texFrame.size.y);
+	node->setMargin(Thickness(texFrame.trimmedSize.x, texFrame.trimmedSize.y, texFrame.trimmedSize.x, texFrame.trimmedSize.y));
+	if (useBrush)
+		node->setBkgndNormal(ImageBrush::createWitchTextureFrame(texFrame));
+	return node;
+}
+
+ref<Button> Button::createWithTextureFrameName(const std::string & texAtlasKey, const std::string & frameName, bool useBrush, float x, float y)
+{
+	auto texFrame = TextureLibrary::getFrameFromTextureAtlas(texAtlasKey, frameName);
+	return createWithTextureFrame(texFrame, useBrush, x, y);
+}
+
 void Button::onTouch(const TouchEventArgs & e)
 {
 	ButtonBase::onTouch(e);
@@ -54,6 +64,9 @@ void Button::onFocusChanged(const FocusEventArgs & e)
 
 void Button::onRender()
 {
+	if (visibility() != VisibilityE::Visible)
+		return;
+
 	Rect rc = getRenderRect();
 	ref<Brush> brush;
 	if (isEnable())

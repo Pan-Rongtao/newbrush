@@ -1,4 +1,5 @@
 ﻿#include "newbrush/Timer.h"
+#include <set>
 
 using namespace nb;
 
@@ -42,7 +43,7 @@ bool Timer::isSingleShot() const
 	return m_singleShot;
 }
 
-void Timer::start(int msec)
+void Timer::start(uint64_t msec)
 {
 	setInterval(msec);
 	start();

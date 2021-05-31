@@ -1,5 +1,4 @@
-#pragma once
-#include "newbrush/Node2D.h"
+﻿#pragma once
 #include "../Common.h"
 
 using namespace nb;

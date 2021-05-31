@@ -1,10 +1,10 @@
-#include "newbrush/Node2D.h"
-#include "newbrush/Camera.h"
+ï»¿#include "newbrush/Node2D.h"
 #include "newbrush/Mesh.h"
 #include "newbrush/Helper.h"
 #include "newbrush/Renderer2D.h"
-#include "newbrush/GLUnit.h"
+#include "newbrush/Scene.h"
 #include "newbrush/Log.h"
+#include "newbrush/Application.h"
 
 using namespace nb;
 
@@ -29,6 +29,8 @@ Node2D::Node2D(float x, float y, float w, float h)
 	, m_horizontalAlignment(HorizontalAlignmentE::Left)
 	, m_verticalAlignment(VerticalAlignmentE::Top)
 	, m_isEnable(true)
+	, m_isMouseOver(false)
+	, m_parent(nullptr)
 {
 }
 
@@ -97,6 +99,18 @@ void Node2D::setSize(const Size & size)
 Size Node2D::size() const
 {
 	return Size(m_width, m_height);
+}
+
+void Node2D::setRect(const Rect & rc)
+{
+	m_position = rc.leftTop();
+	m_width = rc.width();
+	m_height = rc.height();
+}
+
+Rect Node2D::rect() const
+{
+	return Rect(m_position, m_width, m_height);
 }
 
 void Node2D::setMargin(const Thickness & margin)
@@ -204,12 +218,12 @@ bool Node2D::hasFocus() const
 	return m_hasFocus;
 }
 
-//Ö±½ÓºöÂÔ·µ»ØµÄÇé¿ö
-//1¡¢Èç¹û²»¿É¼û
-//2¡¢ÓëÉÏ´Îmeasure²ÎÊıÒ»ÖÂ
-//3¡¢ÒÑ¾­ÔÚ´¦ÀímeasureÖĞ£¬·ÀÖ¹measureº¯ÊıÄÚÓĞÄ³ÖÖ²Ù×÷µ¼ÖÂÖØĞÂ½øÈëmeasureº¯Êı£¨±ÈÈçÉèÖÃÄ³Ğ©ÊôĞÔ£©
-//4¡¢child²»Ôà£¨»¹Î´ÁË½â£©
-//¸Ãº¯ÊıÊÇÎªÁËÈ·ÈÏDesiredSize
+//ç›´æ¥å¿½ç•¥è¿”å›çš„æƒ…å†µ
+//1ã€å¦‚æœä¸å¯è§
+//2ã€ä¸ä¸Šæ¬¡measureå‚æ•°ä¸€è‡´
+//3ã€å·²ç»åœ¨å¤„ç†measureä¸­ï¼Œé˜²æ­¢measureå‡½æ•°å†…æœ‰æŸç§æ“ä½œå¯¼è‡´é‡æ–°è¿›å…¥measureå‡½æ•°ï¼ˆæ¯”å¦‚è®¾ç½®æŸäº›å±æ€§ï¼‰
+//4ã€childä¸è„ï¼ˆè¿˜æœªäº†è§£ï¼‰
+//è¯¥å‡½æ•°æ˜¯ä¸ºäº†ç¡®è®¤DesiredSize
 void Node2D::measure(const Size & availabelSize)
 {
 	if (m_visibility != VisibilityE::Visible)
@@ -224,25 +238,25 @@ void Node2D::measure(const Size & availabelSize)
 	auto const &minHeight = 0.0f;
 	auto const &maxWidth = std::numeric_limits<float>::max();
 	auto const &maxHeight = std::numeric_limits<float>::max();
-	//¼õÈ¥magin¼ÆËã³ö±¾À´µÄconstrainedSize
+	//å‡å»maginè®¡ç®—å‡ºæœ¬æ¥çš„constrainedSize
 	auto constrainedSize = Size(availabelSize.width - margin.left - margin.right, availabelSize.height - margin.top - margin.bottom);
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½bound(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, constrainedSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°bound(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, constrainedSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	constrainedSize.width = clamp<float>(minWidth, maxWidth, std::isnan(width) ? constrainedSize.width : width);
 	constrainedSize.height = clamp<float>(minHeight, maxHeight, std::isnan(height) ? constrainedSize.height : height);
 
-	//measureOverride·µ»Ø¿Ø¼şÆÚÍû´óĞ¡desiredSizeTemp£¬ĞèÒªµ÷Õûµ½±£Ö¤ÔÚ(Min, Max)Çø¼ä
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, constrainedSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//measureOverrideè¿”å›æ§ä»¶æœŸæœ›å¤§å°desiredSizeTempï¼Œéœ€è¦è°ƒæ•´åˆ°ä¿è¯åœ¨(Min, Max)åŒºé—´
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, constrainedSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	auto desiredSizeTemp = measureOverride(constrainedSize);
 	desiredSizeTemp.width = clamp<float>(minWidth, maxWidth, std::isnan(width) ? desiredSizeTemp.width : width);
 	desiredSizeTemp.height = clamp<float>(minHeight, maxHeight, std::isnan(height) ? desiredSizeTemp.height : height);
 
-	//ÓÉÓÚchild²»¹Ø×¢ºÍ¼ÆËãmagin£¬Òò´ËĞèÖØĞÂ+margin
+	//ç”±äºchildä¸å…³æ³¨å’Œè®¡ç®—maginï¼Œå› æ­¤éœ€é‡æ–°+margin
 	desiredSizeTemp += Size(margin.left + margin.right, margin.top + margin.bottom);
-	//±£Ö¤ÔÚ£¨0, availabelSize)Çø¼ä
+	//ä¿è¯åœ¨ï¼ˆ0, availabelSize)åŒºé—´
 	desiredSizeTemp.width = clamp(0.0f, availabelSize.width, desiredSizeTemp.width);
 	desiredSizeTemp.height = clamp(0.0f, availabelSize.height, desiredSizeTemp.height);
 	m_desiredSize = desiredSizeTemp;
@@ -260,27 +274,27 @@ void Node2D::arrage(const Rect & finalRect)
 	auto const &minHeight = 0.0f;
 	auto const &maxWidth = std::numeric_limits<float>::max();
 	auto const &maxHeight = std::numeric_limits<float>::max();
-	//¼õÈ¥magin¼ÆËã³ö±¾À´µÄarrangeSizeÒÔ¼°clientSize
+	//å‡å»maginè®¡ç®—å‡ºæœ¬æ¥çš„arrangeSizeä»¥åŠclientSize
 	auto arrangeSize = Size(finalRect.width() - margin.left - margin.right, finalRect.height() - margin.top - margin.bottom);
 	auto clientSize = arrangeSize;
-	//µ÷Õûarrange´óÓÚDesiredSize
+	//è°ƒæ•´arrangeå¤§äºDesiredSize
 	//arrangeSize.reset(std::max(DesiredSize().width(), arrangeSize.width()), std::max(DesiredSize().height(), arrangeSize.height()));
-	//Èç¹ûAligment²»ÊÇStretch£¬Ö±½Ó½«arrangeSizeÉèÖÃÎªDesiredSize£¬ÒÔ±£Ö¤´«ÈëarrangeOverrideµÄarrangeSizeÃ»ÓĞStretch
+	//å¦‚æœAligmentä¸æ˜¯Stretchï¼Œç›´æ¥å°†arrangeSizeè®¾ç½®ä¸ºDesiredSizeï¼Œä»¥ä¿è¯ä¼ å…¥arrangeOverrideçš„arrangeSizeæ²¡æœ‰Stretch
 	auto const &horizontalAlignment = m_horizontalAlignment;
 	auto const &verticalAlignment = m_verticalAlignment;
 	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.width = m_desiredSize.width;
 	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.height = m_desiredSize.height;
 
-	//Èç¹ûÊÖ¶¯ÉèÖÃÁËWidth£¬µ÷ÕûWidthµ½bound(MinWidth, MaxWidth, Width)
-	//·ñÔò£¬µ÷ÕûWidthµ½(MinWidth, MaxWidth, arrangeSize.width())
-	//Í¬ÑùµÄ¹æÔòÓ¦ÓÃÓÚHeight
+	//å¦‚æœæ‰‹åŠ¨è®¾ç½®äº†Widthï¼Œè°ƒæ•´Widthåˆ°bound(MinWidth, MaxWidth, Width)
+	//å¦åˆ™ï¼Œè°ƒæ•´Widthåˆ°(MinWidth, MaxWidth, arrangeSize.width())
+	//åŒæ ·çš„è§„åˆ™åº”ç”¨äºHeight
 	arrangeSize.width = clamp(minWidth, maxWidth, std::isnan(width) ? arrangeSize.width : width);
 	arrangeSize.height = clamp(minHeight, maxHeight, std::isnan(height) ? arrangeSize.height : height);
 
-	//arrangeOverrideºóµÄRenderSizeÊÇ²»ĞèÒªµ÷ÕûµÄ·Ç²Ã¼ôÇøÓò£¬¶ø²»ÊÇ×îÖÕµÄ¿É¼ûÇøÓò
+	//arrangeOverrideåçš„RenderSizeæ˜¯ä¸éœ€è¦è°ƒæ•´çš„éè£å‰ªåŒºåŸŸï¼Œè€Œä¸æ˜¯æœ€ç»ˆçš„å¯è§åŒºåŸŸ
 	auto innerInkSize = arrangeOverride(arrangeSize);
 	auto renderSize = innerInkSize;
-	//²Ã¼ô£¬±£Ö¤innerInkSizeÔÚMaxÖ®ÄÚ
+	//è£å‰ªï¼Œä¿è¯innerInkSizeåœ¨Maxä¹‹å†…
 	if (std::isnan(width) && innerInkSize.width > maxWidth)	
 		innerInkSize.width = maxWidth;
 	if (std::isnan(height) && innerInkSize.height > maxHeight)	
@@ -310,10 +324,9 @@ Size Node2D::measureOverride(const Size & availableSize)
 {
 	for (auto child : children())
 	{
-		auto c = as<Node2D>(child);
-		auto w = c->width();
-		auto h = c->height();
-		c->measure(Size((std::isnan(w) ? availableSize.width : w), (std::isnan(h) ? availableSize.height : h)));
+		auto w = child->width();
+		auto h = child->height();
+		child->measure(Size((std::isnan(w) ? availableSize.width : w), (std::isnan(h) ? availableSize.height : h)));
 	}
 	return availableSize;
 }
@@ -322,15 +335,25 @@ Size Node2D::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : children())
 	{
-		auto c = as<Node2D>(child);
-		auto desiredSize = c->getDesiredSize();
-		c->arrage(Rect(0.0, 0.0, finalSize));
+		auto desiredSize = child->getDesiredSize();
+		child->arrage(Rect(0.0, 0.0, finalSize));
 	}
 	return finalSize;
 }
 
 void Node2D::onTouch(const TouchEventArgs & e)
 {
+	Touch.invoke(e);
+}
+
+void Node2D::onScroll(const ScrollEventArgs & e)
+{
+	Scroll.invoke(e);
+}
+
+void Node2D::onKey(const KeyEventArgs & e)
+{
+	Key.invoke(e);
 }
 
 void Node2D::onFocusChanged(const FocusEventArgs & e)
@@ -347,6 +370,27 @@ void Node2D::onRender()
 	for (auto child : children())
 	{
 		child->onRender();
+	}
+
+	if (m_scene)
+	{
+		Renderer2D::endBatch();
+
+		float oldViewportX, oldViewportY, oldViewportWidth, oldViewportHeight;
+		GLUtils::getViewport(oldViewportX, oldViewportY, oldViewportWidth, oldViewportHeight);
+
+		auto camera = m_scene->getCamera();
+		Rect rc = getRenderRect();
+
+		GLUtils::viewport(rc.x(), oldViewportHeight - rc.bottom(), rc.width(), rc.height());
+		camera->setAspect(rc.width() / rc.height());
+
+		m_scene->onRender();
+
+		GLUtils::viewport(oldViewportX, oldViewportY, oldViewportWidth, oldViewportHeight);
+		camera->setAspect(oldViewportWidth / oldViewportHeight);
+
+		Renderer2D::_beginBatch(false);
 	}
 }
 
@@ -392,8 +436,84 @@ Rect Node2D::getRenderRect() const
 	return rc;
 }
 
+void Node2D::addChild(ref<Node2D> child)
+{
+	insertChild(childCount(), child);
+}
+
+void Node2D::insertChild(unsigned index, ref<Node2D> child)
+{
+	nbThrowExceptionIf(!child, std::invalid_argument, "child is nullptr");
+	nbThrowExceptionIf(index > childCount(), std::out_of_range, "index");
+
+	child->m_parent = this;
+	m_children.insert(m_children.begin() + index, child);
+}
+
+void Node2D::removeChild(unsigned index)
+{
+	nbThrowExceptionIf(index >= childCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)childCount());
+	m_children.erase(m_children.begin() + index);
+}
+
+void Node2D::removeChild(ref<Node2D> child)
+{
+	for (auto iter = m_children.begin(); iter != m_children.end(); ++iter)
+	{
+		if (*iter == child)
+		{
+			m_children.erase(iter);
+			return;
+		}
+	}
+}
+
+unsigned Node2D::childCount() const
+{
+	return m_children.size();
+}
+
+bool Node2D::hasChild() const
+{
+	return childCount() > 0;
+}
+
+ref<Node2D> Node2D::getChildAt(unsigned index)
+{
+	nbThrowExceptionIf(index >= childCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)childCount());
+	return m_children[index];
+}
+
+void Node2D::clearChildren()
+{
+	m_children.clear();
+}
+
+const std::vector<ref<Node2D>>& Node2D::children() const
+{
+	return m_children;
+}
+
+Node2D * Node2D::getParent() const
+{
+	return m_parent;
+}
+
+void Node2D::setScene(ref<Scene> scene)
+{
+	m_scene = scene;
+}
+
+ref<Scene> Node2D::getScene()
+{
+	return m_scene;
+}
+
 void Node2D::touchThunk(const TouchEventArgs & e)
 {
+	if (m_visibility != VisibilityE::Visible)
+		return;
+
 	auto hit = Node2D::hitTest(Point(e.x, e.y));
 
 	TouchEventArgs ex = e;
@@ -417,11 +537,19 @@ void Node2D::touchThunk(const TouchEventArgs & e)
 			ex.action = TouchActionE::move;
 			onTouch(ex);
 		}
-		else if(m_isMouseOver)
+		else
 		{
-			ex.action = TouchActionE::leave;
-			onTouch(ex);
-			m_isMouseOver = false;
+			if (m_isMouseOver)
+			{
+				ex.action = TouchActionE::leave;
+				onTouch(ex);
+				m_isMouseOver = false;
+			}
+			else
+			{
+				ex.action = TouchActionE::move;
+				onTouch(ex);
+			}
 		}
 	}
 	else if (e.action == TouchActionE::up)
@@ -430,17 +558,27 @@ void Node2D::touchThunk(const TouchEventArgs & e)
 	}
 }
 
+void Node2D::scrollThunk(const ScrollEventArgs & e)
+{
+	onScroll(e);
+}
+
+void Node2D::keyThunk(const KeyEventArgs & e)
+{
+	onKey(e);
+}
+
 void Node2D::updateLayout(const Size & availabelSize)
 {
 	this->measure(availabelSize);
 	auto const &rootDesiredSize = this->getDesiredSize();
 	this->arrage(Rect(0.0, 0.0, availabelSize));
-
-
+	
 	static int frames = 0;
 	static uint64_t t0 = getMilliseconds();
 
 	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	{
 		Renderer2D::beginBatch();

@@ -1,8 +1,7 @@
-#include "newbrush/Application.h"
-#include "newbrush/Node2D.h"
-#include "newbrush/Controls.h"
+﻿#pragma once
 #include "../Common.h"
 #include "ECO.h"
+#include "Normal.h"
 
 using namespace nb;
 
@@ -18,12 +17,11 @@ class MainView : public ViewBase
 {
 public:
 	virtual void init() override;
-	virtual ref<Node> getRoot() override;
 
 private:
+	void onKey(const KeyEventArgs &e);
 	void switchDrivingMode(DrivingModeE mode);
 
-	ref<Node2D> m_root;
 	ref<Node2D> m_ecoNode;
 	ref<Node2D> m_normalNode;
 	ref<Node2D> m_sportNode;

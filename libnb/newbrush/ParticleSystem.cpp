@@ -1,11 +1,11 @@
-#include "newbrush/ParticleSystem.h"
+﻿#include "newbrush/ParticleSystem.h"
 #include "newbrush/ParticleEmitter.h"
 
 using namespace nb;
 
 /****************************************************
-*	�������ܹ������������š������ڴ�ع�����'
-*	���ĳ�ʼ������ʼ���������ڴ�ع�����'
+*	‘粒子总管理器’管理着‘粒子内存池管理器'
+*	它的初始化即初始化‘粒子内存池管理器'
 *	
 *****************************************************/
 #define MAX_PARTICLES 50000
@@ -65,9 +65,9 @@ ParticleMemoryPool::ParticleMemoryPool(uint32_t particleCount, uint32_t emitterC
 }
 
 /****************************************************
-*	�����ǰ�����±�С����������Ĵ�С����ֱ�ӷ��ظ��±������
-*	����������ظ�ʹ���������鲻Ϊ�գ�ȡ���������һ������
-*	���򣬷��ؿ�
+*	如果当前粒子下标小于粒子数组的大小，则直接返回该下标的粒子
+*	否则如果可重复使用粒子数组不为空，取该数组最后一个粒子
+*	否则，返回空
 *****************************************************/
 Particle * ParticleMemoryPool::applyParticle()
 {
@@ -86,9 +86,9 @@ Particle * ParticleMemoryPool::applyParticle()
 }
 
 /****************************************************
-*	�ͷ�����
-*	�ͷź󣬸�����������������
-*	�ͷź󣬸����Ӵ��롮���ظ�ʹ���������顯�й��ظ�ʹ��
+*	释放粒子
+*	释放后，该粒子所有属性重置
+*	释放后，该粒子存入‘可重复使用粒子数组’中供重复使用
 *****************************************************/
 void ParticleMemoryPool::freeParticle(Particle * particle)
 {
@@ -97,9 +97,9 @@ void ParticleMemoryPool::freeParticle(Particle * particle)
 }
 
 /****************************************************
-*	��ȡ�Ѽ������������
-*	�����ظ�ʹ���������顯Ҳ��ʾ�ͷ��˵����ӣ�
-*	ʹ�õ�ǰ�����±�-�����ظ�ʹ���������顯�ĸ�����Ϊ��ǰ���ڻ������
+*	获取已激活的粒子数量
+*	‘可重复使用粒子数组’也表示释放了的粒子，
+*	使用当前粒子下标-‘可重复使用粒子数组’的个数即为当前处于活动的粒子
 *****************************************************/
 size_t ParticleMemoryPool::getActiveParticleCount() const
 {

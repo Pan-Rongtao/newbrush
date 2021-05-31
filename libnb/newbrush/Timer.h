@@ -2,7 +2,6 @@
 #include "newbrush/Object.h"
 #include "newbrush/Event.h"
 #include <map>
-#include <set>
 
 namespace nb 
 {
@@ -28,7 +27,7 @@ public:
 	//启动
 	//msec：间隔将被置为msec
 	void start();
-	void start(int msec);
+	void start(uint64_t msec);
 
 	//停止
     void stop();

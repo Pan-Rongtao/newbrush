@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/Scene.h"
-#include "newbrush/simdjson.h"
+#include "simdjson/simdjson.h"
 using namespace simdjson; // optional
 
 namespace nb 
@@ -12,7 +12,7 @@ public:
 	void parse(const std::string &path, ref<Scene> &scene);
 
 private:
-	//value£ºÃ¿Ò»²ã½âÎö³öµÄnb::Object¶ÔÏó»òÕßÆäÅÉÉúÀàµÄvar°ü×°
+	//valueï¼šæ¯ä¸€å±‚è§£æå‡ºçš„nb::Objectå¯¹è±¡æˆ–è€…å…¶æ´¾ç”Ÿç±»çš„varåŒ…è£…
 	void loopVisual(const dom::object &jObj, var &value, std::string &jPath);
 	void loopLibrary(const dom::object &jObj, var &value, std::string &jPath);
 

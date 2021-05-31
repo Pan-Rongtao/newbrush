@@ -4,7 +4,7 @@ cmake_policy(VERSION 2.6)
 
 # 1. Project Name
 project(newbrush)
- 
+
 # 2. Env (Include/Lib Path, C/CXX/LD FLAGS)
 SET(SUPPORT_TARGETS win32 linux64 linux-arm android qnx64 qnx-aarch64)
 IF(WIN32)

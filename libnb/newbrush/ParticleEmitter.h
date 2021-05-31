@@ -1,18 +1,155 @@
-//Á£×Ó·¢ÉäÆ÷
-//Á£×Ó·¢ÉäÆ÷¸ù¾İ×ÔÉíµÄ¸÷ÖÖÊôĞÔ£¬À´¾ö¶¨Á£×Ó¸÷ÊôĞÔµÄ±ä»¯¹æÔò
-//Á£×Ó·¢ÉäÆ÷ÊôĞÔÓĞ¼¸Àà¸ÅÄî£º
-//1¡¢¶¯»­Öµ£¬±íÊ¾·¢Éä¸öÊı£¬Ã¿´Î»Ø¼ÆËãÏßĞÔ¶¯»­Öµ£¬¶ø·Ç¹Ì¶¨µÄÖµ
-//2¡¢±ä»¯¶È£¬±íÊ¾Ò»¸ö±ä»¯Çø¼ä·¶Î§£¬Ò»°ãÊÇ¸¡µãĞÍ£¬±ä»¯¶ÈÈ¡ÖµÎª[-var, var]
+ï»¿//ç²’å­å‘å°„å™¨
+//ç²’å­å‘å°„å™¨æ ¹æ®è‡ªèº«çš„å„ç§å±æ€§ï¼Œæ¥å†³å®šç²’å­å„å±æ€§çš„å˜åŒ–è§„åˆ™
+//ç²’å­å‘å°„å™¨å±æ€§æœ‰å‡ ç±»æ¦‚å¿µï¼š
+//1ã€åŠ¨ç”»å€¼ï¼Œè¡¨ç¤ºå‘å°„ä¸ªæ•°ï¼Œæ¯æ¬¡å›è®¡ç®—çº¿æ€§åŠ¨ç”»å€¼ï¼Œè€Œéå›ºå®šçš„å€¼
+//2ã€å˜åŒ–åº¦ï¼Œè¡¨ç¤ºä¸€ä¸ªå˜åŒ–åŒºé—´èŒƒå›´ï¼Œä¸€èˆ¬æ˜¯æµ®ç‚¹å‹ï¼Œå˜åŒ–åº¦å–å€¼ä¸º[-var, var]
 #pragma once
 #include <vector>
 #include <set>
 #include <array>
 #include "newbrush/Core.h"
-#include "newbrush/AnimationValue.h"
-#include "glm/glm.hpp"
+#include "newbrush/glm.h"
 
 namespace nb {
-	
+
+/**************************************
+*	åŠ¨ç”»æ’å€¼
+*
+*	åŠ¨ç”»å…³é”®å¸§ AnimatedValueKey
+*	å€¼åŠ¨ç”» AnimationValue
+*	
+****************************************/
+template<class T>
+class AnimatedValueKey
+{
+public:
+	AnimatedValueKey() : time(0), v(T()) {}
+	AnimatedValueKey(float _time, const T &_v) : time(_time), v(_v) {}
+	bool operator > (const AnimatedValueKey &other) const { return time > other.time; }
+	bool operator < (const AnimatedValueKey &other) const { return time < other.time; }
+
+	float time;
+	T v;
+};
+
+template<class T>
+class AnimationValue
+{
+public:
+	AnimationValue() : m_loop(false), m_currentTime(-1.0f) {}
+
+	void add(float time, T v)
+	{
+		m_keyFrames.emplace_back(time, v);
+		std::sort(m_keyFrames.begin(), m_keyFrames.end());
+	}
+
+	//è·å–æ—¶é—´çš„ä¸Šä¸‹å…³é”®å¸§
+	void getPrevNextFramesByTime(float time, uint32_t &prevFrame, uint32_t &nextFrame)
+	{
+		uint32_t begin = 0;
+		uint32_t end = (uint32_t)m_keyFrames.size() - 1;
+
+		while (begin != end)
+		{
+			int middle = (begin + end) / 2;
+			if (m_keyFrames[middle].time < time)
+			{
+				begin = middle + 1;
+			}
+			else
+			{
+				end = middle;
+			}
+		}
+
+		prevFrame = begin > 0 ? begin - 1 : 0;
+		nextFrame = begin;
+	}
+
+	//è·å–æ—¶é—´ç‚¹çš„æ’å€¼ï¼šæ‰¾åˆ°ä¸Šä¸‹å…³é”®å¸§åçš„çº¿æ€§æ’å€¼
+	T getValueByTime(float time)
+	{
+		auto numKeys = m_keyFrames.size();
+
+		if (numKeys < 2)
+		{
+			return T(); // we need to have at least 2 keys
+		}
+
+		if (time <= m_keyFrames[0].time)
+		{
+			return m_keyFrames[0].v;
+		}
+
+		if (time >= m_keyFrames[numKeys - 1].time)
+		{
+			return m_keyFrames[numKeys - 1].v;
+		}
+
+		uint32_t prevFrame = 0;
+		uint32_t nextFrame = 0;
+		getPrevNextFramesByTime(time, prevFrame, nextFrame);
+
+		float timeBetweenFrames = m_keyFrames[nextFrame].time - m_keyFrames[prevFrame].time;
+		float percentageThroughFrame = (time - m_keyFrames[prevFrame].time) / timeBetweenFrames;
+
+		T keyValue = m_keyFrames[nextFrame].v * percentageThroughFrame + m_keyFrames[prevFrame].v * (1.0f - percentageThroughFrame);
+
+		return keyValue;
+	}
+
+	T getValueByDelta(float deltaTime)
+	{
+		auto numKeys = m_keyFrames.size();
+
+		if (numKeys < 2)
+		{
+			return T(); // we need to have at least 2 keys
+		}
+
+		float firstFrameTime = m_keyFrames[0].time;
+		float lastFrameTime = m_keyFrames[numKeys - 1].time;
+
+		if (m_currentTime >= lastFrameTime)
+		{
+			if (m_loop)
+			{
+				m_currentTime = firstFrameTime;
+			}
+			else
+			{
+				return m_keyFrames[numKeys - 1].v;
+			}
+		}
+
+		if (m_currentTime <= firstFrameTime)
+		{
+			m_currentTime = firstFrameTime + deltaTime;
+			return m_keyFrames[0].v;
+		}
+
+		uint32_t prevFrame = 0;
+		uint32_t nextFrame = 0;
+		getPrevNextFramesByTime(m_currentTime, prevFrame, nextFrame);
+
+		float timeBetweenFrames = m_keyFrames[nextFrame].time - m_keyFrames[prevFrame].time;
+		float percentageThroughFrame = timeBetweenFrames <= 0 ? 0 : (m_currentTime - m_keyFrames[prevFrame].time) / timeBetweenFrames;
+
+		T keyValue = m_keyFrames[nextFrame].v * percentageThroughFrame + m_keyFrames[prevFrame].v * (1.0f - percentageThroughFrame);
+
+		m_currentTime += deltaTime;
+
+		return keyValue;
+	}
+
+	bool m_loop;
+	float m_currentTime;	//0.0-1.0
+	std::vector<AnimatedValueKey<T>> m_keyFrames;
+};
+
+
+
 enum class ParticleFacingTypeE
 {
 	Billboard2D,
@@ -59,58 +196,58 @@ class Particle;
 class ParticleEmitter
 {
 public:
-	//¹¹½¨Ò»¸öÁ£×Ó·¢ÉäÆ÷£¬ËüÁ¥ÊôÓÚÄÚ´æ³ØpoolId£¬Ö§³ÖµÄ×î´óÁ£×ÓÊıÎªmaxParticleCount
+	//æ„å»ºä¸€ä¸ªç²’å­å‘å°„å™¨ï¼Œå®ƒéš¶å±äºå†…å­˜æ± poolIdï¼Œæ”¯æŒçš„æœ€å¤§ç²’å­æ•°ä¸ºmaxParticleCount
 	ParticleEmitter();
 
 	//
 	void init(uint32_t poolId, uint32_t maxParticleCount);
 
-	//¿ªÊ¼/Í£Ö¹
+	//å¼€å§‹/åœæ­¢
 	void start();
 	void stop();
 
-	//ÊÇ·ñÒÑ¾­Íê³É
+	//æ˜¯å¦å·²ç»å®Œæˆ
 	bool isComplete() const;
 
-	//äÖÈ¾
+	//æ¸²æŸ“
 	void render();
 
-	//·¢ÉäÁ£×ÓµÄ³õÊ¼»¯¸üĞÂ
+	//å‘å°„ç²’å­çš„åˆå§‹åŒ–æ›´æ–°
 	void update(float deltaTime);
 
 private:
 
-	uint32_t						m_poolId;						//Á¥ÊôµÄÄÚ´æ³ØID
-	bool							m_shouldEmit;					//ÊÇ·ñĞèÒª·¢Éä±êÖ¾
+	uint32_t						m_poolId;						//éš¶å±çš„å†…å­˜æ± ID
+	bool							m_shouldEmit;					//æ˜¯å¦éœ€è¦å‘å°„æ ‡å¿—
 
-	float							m_emitterLifeTime;				//·¢ÉäÆ÷ÉúÃü
-	float							m_emitterCurrentLife;			//·¢ÉäÆ÷Àú¾­Ê±¼ä
-	uint32_t						m_maxParticleCount;				//×î´óÁ£×ÓÊı
-	uint32_t						m_minParticleCount;				//×îĞ¡Á£×ÓÊı
-	float							m_floatingParticle;				//·¢ÉäÁ£×ÓĞ¡ÊıÀÛ»ı²¿·Ö£¬´óÓÚµÈÓÚ1.0ºó³ÉÎªÒ»Õû¸ö·¢ÉäÁ£×Ó£¬È»ºóËüÖØÖÃÎª0.0£¬Õâ¶ÔÓÚÔÚ·¢ÉäÆ÷·¢ÉäÉÙÁ¿Á£×ÓµÄcaseĞ§¹û¸ü¼ÓÂúÒâ
-	std::vector<Particle *>			m_particles;					//ÒÑ·¢ÉäµÄÁ£×Ó
-	AnimationValue<float>			m_emiteCountPerSecond;			//Ã¿Ãë·¢ÉäÁ£×Ó¸öÊı£¬ÏßĞÔ¶¯»­Öµ£¬¼´Ã¿´Î·¢Éä¸öÊı¶¼¿ÉÒÔÊÇ¸ö¸¡¶¯Öµ
+	float							m_emitterLifeTime;				//å‘å°„å™¨ç”Ÿå‘½
+	float							m_emitterCurrentLife;			//å‘å°„å™¨å†ç»æ—¶é—´
+	uint32_t						m_maxParticleCount;				//æœ€å¤§ç²’å­æ•°
+	uint32_t						m_minParticleCount;				//æœ€å°ç²’å­æ•°
+	float							m_floatingParticle;				//å‘å°„ç²’å­å°æ•°ç´¯ç§¯éƒ¨åˆ†ï¼Œå¤§äºç­‰äº1.0åæˆä¸ºä¸€æ•´ä¸ªå‘å°„ç²’å­ï¼Œç„¶åå®ƒé‡ç½®ä¸º0.0ï¼Œè¿™å¯¹äºåœ¨å‘å°„å™¨å‘å°„å°‘é‡ç²’å­çš„caseæ•ˆæœæ›´åŠ æ»¡æ„
+	std::vector<Particle *>			m_particles;					//å·²å‘å°„çš„ç²’å­
+	AnimationValue<float>			m_emiteCountPerSecond;			//æ¯ç§’å‘å°„ç²’å­ä¸ªæ•°ï¼Œçº¿æ€§åŠ¨ç”»å€¼ï¼Œå³æ¯æ¬¡å‘å°„ä¸ªæ•°éƒ½å¯ä»¥æ˜¯ä¸ªæµ®åŠ¨å€¼
 
-	float							m_particleLifeTime;				//Á£×ÓÉúÃüÖÜÆÚ
-	float							m_particleLifeTimeVar;			//Á£×ÓÉúÃü±äÁ¿£¿
-	glm::vec3						m_spawnArea;					//·õ»¯Î»ÖÃ
-	AnimationValue<glm::vec4>		m_colorMultiplier;				//ÑÕÉ«³ËÊı
-	glm::vec4						m_colorVar;						//ÑÕÉ«¶¯»­Öµ
-	AnimationValue<float>			m_rotationalVelocity;			//Ğı×ªËÙÂÊ¶¯»­Öµ
-	float							m_rotationVar;					//Ğı×ª±ä»¯¶È
-	float							m_rotationRateVar;				//Ğı×ªËÙ¶È±ä»¯¶È
-	AnimationValue<glm::vec3>		m_scale;						//Ëõ·Å¶¯»­Öµ
-	float							m_scaleVar;						//Ëõ·Å±ä»¯¶È
-	std::array<AnimationValue<glm::vec2>, 3>	m_uvScroll;			//ÎÆÀí×ø±ê¶¯»­Öµ£¬Ö§³ÖÈı¸öÎÆÀí
-	std::array<glm::vec2, 3> 		m_uvScrollOffsets;				//ÎÆÀí×ø±êÆ«ÒÆ£¬Ö§³ÖÈı¸öÎÆÀí
-	std::array<glm::vec2, 3>		m_uvScroolVar;					//ÎÆÀí×ø±êÆ«ÒÆ¶¯»­Öµ£¬Ö§³ÖÈı¸öÎÆÀí
-	AnimationValue<float>			m_materialIntensity;			//²ÄÖÊÇ¿¶È¶¯»­Öµ
-	float							m_materialIntensityVar;			//²ÄÖÊÇ¿¶È±ä»¯¶È
-	ParticleEmitterTextureAnimation	m_texutreAnimation;				//ÎÆÀí¶¯»­
+	float							m_particleLifeTime;				//ç²’å­ç”Ÿå‘½å‘¨æœŸ
+	float							m_particleLifeTimeVar;			//ç²’å­ç”Ÿå‘½å˜é‡ï¼Ÿ
+	glm::vec3						m_spawnArea;					//å­µåŒ–ä½ç½®
+	AnimationValue<glm::vec4>		m_colorMultiplier;				//é¢œè‰²ä¹˜æ•°
+	glm::vec4						m_colorVar;						//é¢œè‰²åŠ¨ç”»å€¼
+	AnimationValue<float>			m_rotationalVelocity;			//æ—‹è½¬é€Ÿç‡åŠ¨ç”»å€¼
+	float							m_rotationVar;					//æ—‹è½¬å˜åŒ–åº¦
+	float							m_rotationRateVar;				//æ—‹è½¬é€Ÿåº¦å˜åŒ–åº¦
+	AnimationValue<glm::vec3>		m_scale;						//ç¼©æ”¾åŠ¨ç”»å€¼
+	float							m_scaleVar;						//ç¼©æ”¾å˜åŒ–åº¦
+	std::array<AnimationValue<glm::vec2>, 3>	m_uvScroll;			//çº¹ç†åæ ‡åŠ¨ç”»å€¼ï¼Œæ”¯æŒä¸‰ä¸ªçº¹ç†
+	std::array<glm::vec2, 3> 		m_uvScrollOffsets;				//çº¹ç†åæ ‡åç§»ï¼Œæ”¯æŒä¸‰ä¸ªçº¹ç†
+	std::array<glm::vec2, 3>		m_uvScroolVar;					//çº¹ç†åæ ‡åç§»åŠ¨ç”»å€¼ï¼Œæ”¯æŒä¸‰ä¸ªçº¹ç†
+	AnimationValue<float>			m_materialIntensity;			//æè´¨å¼ºåº¦åŠ¨ç”»å€¼
+	float							m_materialIntensityVar;			//æè´¨å¼ºåº¦å˜åŒ–åº¦
+	ParticleEmitterTextureAnimation	m_texutreAnimation;				//çº¹ç†åŠ¨ç”»
 
-	AnimationValue<float>			m_velocity;						//ËÙÂÊ¶¯»­Öµ
-	glm::vec3						m_velocityVar;					//ËÙÂÊ±ä»¯¶È
-	glm::vec3						m_gravity;						//ÖØÁ¦
+	AnimationValue<float>			m_velocity;						//é€Ÿç‡åŠ¨ç”»å€¼
+	glm::vec3						m_velocityVar;					//é€Ÿç‡å˜åŒ–åº¦
+	glm::vec3						m_gravity;						//é‡åŠ›
 
 	uint32_t						m_startVert;
 	uint32_t						m_endVert;

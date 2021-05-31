@@ -1,10 +1,8 @@
-#pragma once
-#include "glm/glm.hpp"
-#include "newbrush/Material.h"
-#include "newbrush/Light.h"
+﻿#pragma once
 #include "newbrush/Types.h"
-#include "newbrush/Texture.h"
 #include "newbrush/Brush.h"
+#include "newbrush/Components.h"
+#include "newbrush/Font.h"
 
 namespace nb
 {
@@ -21,7 +19,10 @@ public:
 	static void drawImage(const Rect &rc, const glm::mat4 &transform, ref<Texture2D> tex, const Rect &texRect, bool rotated, float opacity);
 	static void drawEffect(const Rect &rc, const glm::mat4 &transform, ref<Material> material, const std::vector<ref<Light>> &lights);
 
+	static void drawText(ref<Font> font, const Point &pt, const std::string &text);
+
 	static void endBatch();
+	static void _beginBatch(bool resetStats);
 
 
 	struct Stats
@@ -34,7 +35,6 @@ public:
 
 private:
 	static void init();
-	static void _beginBatch(bool resetStats);
 	static void shutdown();
 	static void _drawQuad(const Rect &rc, const glm::mat4 &transform, const glm::vec4& color, float textureIndex, ref<Texture2D> tex, const Rect &texRect, bool rotated, float opacity);
 };

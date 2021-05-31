@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <map>
 #include "newbrush/Object.h"
 #include "newbrush/Event.h"
@@ -60,7 +60,7 @@ public:
 		: DataContext(name) 
 	{}
 
-	//Ìí¼ÓÒ»¸ö×Ó½Úµã
+	//æ·»åŠ ä¸€ä¸ªå­èŠ‚ç‚¹
 	void add(ref<DataContext> child) &
 	{
 		nbThrowExceptionIf(!child, std::invalid_argument, "child is nullptr.");
@@ -70,7 +70,7 @@ public:
 		child->parent = this;
 	}
 
-	//É¾³ıÒ»¸ö×Ó½Úµã
+	//åˆ é™¤ä¸€ä¸ªå­èŠ‚ç‚¹
 	void remove(const std::string & childName) &
 	{
 		auto iter = m_children.find(childName);
@@ -80,7 +80,7 @@ public:
 		}
 	}
 
-	//»ñÈ¡×Ó½Úµã£¬²»´æÔÚ·µ»Ø¿Õ
+	//è·å–å­èŠ‚ç‚¹ï¼Œä¸å­˜åœ¨è¿”å›ç©º
 	ref<DataContext> get(const std::string &childName) const
 	{
 		auto iter = m_children.find(childName);
@@ -92,9 +92,9 @@ public:
 		return std::dynamic_pointer_cast<DataObject>(get(childName));
 	}
 
-	//°´Â·¾¶²éÑ¯½Úµã
-	//path£ºĞÎÈç"a.b.c"£¬±íÊ¾²éÕÒ»ùÓÚµ±Ç°½ÚµãÏÂµÄa/b/c½Úµã
-	//ÕÒ²»µ½·µ»Ø¿Õ
+	//æŒ‰è·¯å¾„æŸ¥è¯¢èŠ‚ç‚¹
+	//pathï¼šå½¢å¦‚"a.b.c"ï¼Œè¡¨ç¤ºæŸ¥æ‰¾åŸºäºå½“å‰èŠ‚ç‚¹ä¸‹çš„a/b/cèŠ‚ç‚¹
+	//æ‰¾ä¸åˆ°è¿”å›ç©º
 	virtual ref<DataContext> lookup(const std::string &path) const override
 	{
 		auto pathSegments = nb::stringSplit(path, ".", false);

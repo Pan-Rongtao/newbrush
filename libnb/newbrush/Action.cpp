@@ -1,4 +1,4 @@
-#include "Action.h"
+﻿#include "Action.h"
 #include "newbrush/Animation.h"
 
 using namespace nb;

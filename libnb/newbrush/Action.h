@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "newbrush/Object.h"
 
 namespace nb

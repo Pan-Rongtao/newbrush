@@ -5,14 +5,17 @@ class ModelBrowser : public ViewBase
 {
 public:
 	virtual void init() override;
-	virtual ref<Node> getRoot() override;
 	virtual void onDataChanged(const std::string &path, const var &value) override;
-	virtual void onKey(int key) override;
 
 private:
 	ref<DataObject> buildData();
 	void binding();
+	void onTouch(const TouchEventArgs &e);
+	void onScroll(const ScrollEventArgs &e);
+	void onKey(const KeyEventArgs &e);
 
+	Point m_pressedPoint;
+	bool m_pressed{ false };
 	ref<Scene> m_scene;
 	ColorAnimationUsingKeyFrames m_lightAnimation;
 };

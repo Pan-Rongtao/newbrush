@@ -1,8 +1,225 @@
-#include "newbrush/Controls.h"
+﻿#include "newbrush/Controls.h"
 #include "newbrush/Helper.h"
 #include "newbrush/Renderer2D.h"
+#include <queue>
 
 using namespace nb;
+
+void Panel::onRender()
+{
+	drawBrush(background());
+	for (auto child : children())
+	{
+		child->onRender();
+	}
+}
+
+WrapPanel::WrapPanel()
+	: WrapPanel(OrientationE::Horizontal)
+{
+}
+
+WrapPanel::WrapPanel(OrientationE orientation)
+	: m_orientation(orientation)
+	, m_itemWidth(NAN)
+	, m_itemHeight(NAN)
+{
+}
+
+void WrapPanel::setOrientation(OrientationE orientation)
+{
+	m_orientation = orientation;
+}
+
+OrientationE WrapPanel::orientation() const
+{
+	return m_orientation;
+}
+
+void WrapPanel::setItemWidth(float width)
+{
+	m_itemWidth = width;
+}
+
+float WrapPanel::itemWidth() const
+{
+	return m_itemWidth;
+}
+
+void WrapPanel::setItemHeight(float height)
+{
+	m_itemHeight = height;
+}
+
+float WrapPanel::itemHeight() const
+{
+	return m_itemHeight;
+}
+
+//当测量一个子元素时，遵循这样的原则：每个子元素的childMeasureSize，如果设置了ItemWidth和ItemHeight，则measure宽高固定为ItemWidth,ItemHeight。
+//否则取availableSize
+Size WrapPanel::measureOverride(const Size & availableSize)
+{
+	Size childMeasureSize;
+	for (auto child : children())
+	{
+		auto childWidth = child->width();
+		auto childHeight = child->height();
+		childMeasureSize.width = !std::isnan(m_itemWidth) ? m_itemWidth : !std::isnan(childWidth) ? childWidth : 0.0f;
+		childMeasureSize.height = !std::isnan(m_itemHeight) ? m_itemHeight : !std::isnan(childHeight) ? childHeight : 0.0f;
+		child->measure(childMeasureSize);
+	}
+	return availableSize;
+}
+//arrange两个方向维度进行：
+//当Orientation == OrientationE::Horizontal时，分两种情况：1、指定了ItemHeight，则每一行高度为ItemHeight，累加每个item，当累加宽度超过finnalSize.width时，换行；2、未指定ItemHeight，先遍历items，确定行信息（每一行的开头下标，以及最高项作为该行的高）
+//当Orientation == OrientationE::Vertical时，分两种情况：1、指定了ItemWdith，则每一行高度为ItemWidth，累加每个item，当累加高度超过finalSize.height时，换列；2、未指定ItemWidth，先遍历items，确定列信息（每一列的开头下标，以及最宽项作为该列的宽）
+Size WrapPanel::arrangeOverride(const Size & finalSize)
+{
+	//计算行（列）信息，返回没行（列）的起始index和高（宽）std::queue<std::pair<int, float>>
+	auto calcLinesInfo = [&]()->std::queue<std::pair<int, float>>
+	{
+		std::queue<std::pair<int, float>> ret;
+		if (!hasChild())
+			return ret;
+
+		auto sum = 0.0f;
+		ret.push({ 0, 0.0f });
+		for (int i = 0; i != childCount(); ++i)
+		{
+			auto child = getChildAt(i);
+			auto one = 0.0f;
+			auto maxLen = 0.0f;
+			auto const &childDesiredSize = child->getDesiredSize();
+			if (m_orientation == OrientationE::Horizontal)
+			{
+				maxLen = finalSize.width;
+				one = !std::isnan(m_itemWidth) ? m_itemWidth : childDesiredSize.width;
+			}
+			else
+			{
+				maxLen = finalSize.height;
+				one = !std::isnan(m_itemHeight) ? m_itemHeight : childDesiredSize.height;
+			}
+
+			if (sum + one <= maxLen)
+			{
+				ret.back().first = i;
+				ret.back().second = std::max<float>(ret.back().second, m_orientation == OrientationE::Horizontal ? childDesiredSize.height : childDesiredSize.width);
+				sum += one;
+			}
+			else
+			{
+				ret.push({ i, (m_orientation == OrientationE::Horizontal ? childDesiredSize.height : childDesiredSize.width) });
+				sum = one;
+			}
+		}
+		return ret;
+	};
+
+	auto x = 0.0f;
+	auto y = 0.0f;
+	Rect arrangeRect;
+	if (m_orientation == OrientationE::Horizontal)
+	{
+		//指定了ItemHeight，每个item的高度都为iItemHeight
+		//否则，需要先计算每一行的最高item作为那一行的高度
+		if (!std::isnan(m_itemHeight))
+		{
+			for (auto child : children())
+			{
+				auto const &childDesiredSize = child->getDesiredSize();
+				auto w = !std::isnan(m_itemWidth) ? m_itemWidth : childDesiredSize.width;
+				//如果该行放置得下，或者child的arrage.width大于finalSize.width且尝试放置child在新行的第一个，不换行，否则换行
+				if ((x + w <= finalSize.width) || (x == 0.0 && w > finalSize.width))
+				{
+					arrangeRect.reset(x, y, w, m_itemHeight);
+					x += w;
+				}
+				else
+				{
+					y += m_itemHeight;
+					arrangeRect.reset(0.0, y, w, m_itemHeight);
+					x = w;
+				}
+				child->arrage(arrangeRect);
+			}
+		}
+		else
+		{
+			auto linesInfo = calcLinesInfo();
+			for (int i = 0; i != childCount(); ++i)
+			{
+				auto child = getChildAt(i);
+				auto const &childDesiredSize = child->getDesiredSize();
+				auto w = !std::isnan(m_itemWidth) ? m_itemWidth : childDesiredSize.width;
+				if (i <= linesInfo.front().first)
+				{
+					arrangeRect.reset(x, y, w, linesInfo.front().second);
+					x += w;
+				}
+				else
+				{
+					y += linesInfo.front().second;
+					linesInfo.pop();
+					arrangeRect.reset(0.0, y, w, linesInfo.front().second);
+					x = w;
+				}
+				child->arrage(arrangeRect);
+			}
+		}
+	}
+	else//垂直方向
+	{
+		//指定了ItemWidth，则每一列高度为ItemWidth
+		//否则，需要先计算每一列的最宽item作为那一列的宽度
+		if (!std::isnan(m_itemWidth))
+		{
+			for (auto child : children())
+			{
+				auto const &childDesiredSize = child->getDesiredSize();
+				auto h = !std::isnan(m_itemHeight) ? m_itemHeight : childDesiredSize.height;
+				//如果该列放置得下，或者child的arrage.height大于finalSize.width且尝试放置child在新列的第一个，不换列，否则换列
+				if ((y + h <= finalSize.height) || (y == 0.0 && h > finalSize.height))
+				{
+					arrangeRect.reset(x, y, m_itemWidth, h);
+					y += h;
+				}
+				else
+				{
+					x += m_itemWidth;
+					arrangeRect.reset(x, 0.0f, m_itemWidth, h);
+					y = h;
+				}
+				child->arrage(arrangeRect);
+			}
+		}
+		else
+		{
+			auto linesInfo = calcLinesInfo();
+			for (int i = 0; i != childCount(); ++i)
+			{
+				auto child = getChildAt(i);
+				auto const &childDesiredSize = child->getDesiredSize();
+				auto h = !std::isnan(m_itemHeight) ? m_itemHeight : childDesiredSize.height;
+				if (i <= linesInfo.front().first)
+				{
+					arrangeRect.reset(x, y, linesInfo.front().second, h);
+					y += h;
+				}
+				else
+				{
+					x += linesInfo.front().second;
+					linesInfo.pop();
+					arrangeRect.reset(x, 0.0f, linesInfo.front().second, h);
+					y = h;
+				}
+				child->arrage(arrangeRect);
+			}
+		}
+	}
+	return finalSize;
+}
 
 Image::Image()
 	: m_stretch(StretchE::Origion)
@@ -96,12 +313,41 @@ void Image::onRender()
 	}
 }
 
-/////////////////
-ButtonBase::ButtonBase()
-	: m_isPressed(false)
+///////////////////
+TextBlock::TextBlock(const std::string & text)
+	: m_text(text)
 {
 }
 
+void TextBlock::setText(const std::string & text)
+{
+	m_text = text;
+}
+
+const std::string & TextBlock::text() const
+{
+	return m_text;
+}
+
+Size TextBlock::measureOverride(const Size & availableSize)
+{
+	return availableSize;
+}
+
+Size TextBlock::arrangeOverride(const Size & finalSize)
+{
+	return finalSize;
+}
+
+void TextBlock::onRender()
+{
+	Rect rc = getRenderRect();
+	auto font = m_font ? m_font : FontLibrary::getDefaultFont();
+	Renderer2D::drawText(font, rc.leftTop(), m_text);
+}
+
+
+/////////////////
 bool ButtonBase::isPressed() const
 {
 	return m_isPressed;
@@ -133,6 +379,7 @@ void ButtonBase::onTouch(const TouchEventArgs & e)
 	{
 		bool bShouldClick = m_isPressed;
 		m_isPressed = false;
+		m_leaveWithPressed = false;
 		if (bShouldClick)
 		{
 			onClick();

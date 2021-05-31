@@ -1,6 +1,4 @@
-#include "ECO.h"
-#include "newbrush/Shader.h"
-#include "newbrush/DateTime.h"
+ï»¿#include "ECO.h"
 
 float circleR = 300.0f;
 
@@ -70,6 +68,10 @@ public:
 
 ECONode::ECONode()
 {
+	setWidth(756.0f);
+	setHeight(756.0f);
+	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/eco_background.png")));
+
 	ShaderLibrary::add("ecoShader", clockECO_vs, clockECO_fs);
 
 	m_dotPanel = createRef<Node2D>(0.0f, 0.0f, 584.0f, 538.0f);
@@ -161,7 +163,7 @@ bool isInCircle(float x, float y, float circleX, float circleY, float r)
 	return dis <= r || dis - r <= 12;
 }
 
-//»ñÈ¡µãÓëxÖáµÄ¼Ğ½Ç£¨0~360£©
+//è·å–ç‚¹ä¸xè½´çš„å¤¹è§’ï¼ˆ0~360ï¼‰
 float getAngle(float x, float y, float centerX, float centerY)
 {
 	auto a = glm::degrees(atan2(y - centerY, x - centerX));
@@ -210,7 +212,7 @@ void ECONode::makeDots(float startAngle, float angleRange, float r)
 			auto ptAngle = getAngle(xp, y, circleCenterX, circleCenterY);
 			auto angleMin = angleEnd - angleRange;
 			auto angleMax = angleEnd;
-			//angleMinĞ¡ÓÚ0£¬±íÊ¾angleMinºÍangleMax·Ö±ğÔÚµÚÒ»ÏóÏŞºÍµÚËÄÏóÏŞ
+			//angleMinå°äº0ï¼Œè¡¨ç¤ºangleMinå’ŒangleMaxåˆ†åˆ«åœ¨ç¬¬ä¸€è±¡é™å’Œç¬¬å››è±¡é™
 			if ((angleMin < 0.0f && ((ptAngle >= angleMin + 360 && ptAngle <= 360) || (ptAngle >= 0 && ptAngle <= angleMax)))
 				|| (angleMin >= 0.0f && ptAngle >= angleMin && ptAngle <= angleMax))
 			{
@@ -225,7 +227,7 @@ void ECONode::setDotsAngle(float angle, float angleRange, float r)
 	auto angleEnd = int(angle + 360) % 360;
 	for (auto i = 0u; i < m_dotPanel->childCount(); ++i)
 	{
-		auto child = nb::as<Node2D>(m_dotPanel->getChildAt(i));
+		auto child = m_dotPanel->getChildAt(i);
 		auto x = child->x();
 		auto y = child->y();
 		if (!isInCircle(x, y, circleCenterX, circleCenterY, r))
@@ -238,7 +240,7 @@ void ECONode::setDotsAngle(float angle, float angleRange, float r)
 			auto angleMin = angleEnd - angleRange;
 			auto angleMax = angleEnd;
 			child->setVisibility(VisibilityE::Hidden);
-			//angleMinĞ¡ÓÚ0£¬±íÊ¾angleMinºÍangleMax·Ö±ğÔÚµÚÒ»ÏóÏŞºÍµÚËÄÏóÏŞ
+			//angleMinå°äº0ï¼Œè¡¨ç¤ºangleMinå’ŒangleMaxåˆ†åˆ«åœ¨ç¬¬ä¸€è±¡é™å’Œç¬¬å››è±¡é™
 			if ((angleMin < 0.0f && ((ptAngle >= angleMin + 360 && ptAngle <= 360) || (ptAngle >= 0 && ptAngle <= angleMax)))
 				|| (angleMin >= 0.0f && ptAngle >= angleMin && ptAngle <= angleMax))
 			{

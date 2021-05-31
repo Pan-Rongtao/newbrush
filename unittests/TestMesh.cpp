@@ -1,10 +1,10 @@
-#include "catch2/catch.hpp"
+﻿#include "catch2/catch.hpp"
 #include "newbrush/Application.h"
-#include "newbrush/Material.h"
 #include "newbrush/Mesh.h"
 #include "newbrush/Node2D.h"
 #include "newbrush/Controls.h"
 #include "newbrush/UserControl.h"
+#include "newbrush/Components.h"
 
 using namespace nb;
 
@@ -51,6 +51,25 @@ TEST_CASE("TestButton", "[TestButton]")
 	btn->setBkgndPress(createRef<SolidColorBrush>(Colors::blue));
 
 	w.root = btn;
+
+	app.run(0, 0);
+}
+
+TEST_CASE("TestClip", "[TestClip]")
+{
+	Application app;
+
+	Window w(800, 600);
+
+	auto root = createRef<Node2D>(0.0f, 0.0f, 200.0f, 200.0f);
+	root->setBackground(SolidColorBrush::red());
+
+	auto child = createRef<Node2D>(100.0f, 100.0f, 150.0f, 150.0f);
+	child->setBackground(SolidColorBrush::blue());
+
+	root->addChild(child);
+
+	w.root = root;
 
 	app.run(0, 0);
 }

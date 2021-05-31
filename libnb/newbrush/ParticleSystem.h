@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #include <array>
 #include <vector>
 #include <thread>
-#include "glm/glm.hpp"
 #include "newbrush/Core.h"
+#include "newbrush/glm.h"
 
 namespace nb
 {
@@ -13,23 +13,23 @@ class ParticleSystem;
 class ParticleEmitter;
 class ParticleMemoryPool;
 
-//Á£×Ó×Ü¹ÜÀí
-//Ëü½«¹ÜÀíÁ£×ÓÏµÍ³¡¢Á£×Ó·¢ÉäÆ÷¡¢Á£×ÓµÄ³õÊ¼»¯
-//Á£×Ó¹ÜÀíÆ÷¿ÉÒÔÔÚÈ«¾Ö·¶Î§ÄÚ´¦ÀíËùÓĞÊÂÇé¡£ 
-//Ëü°üº¬Á£×ÓÏµÍ³Êı×éµÄÕóÁĞ£¬Ö÷Á£×Ó¶¥µã»º³åÇø£¬²¢´¦ÀíÖ÷ÒªäÖÈ¾ºÍ¸üĞÂÑ­»·¡£ 
+//ç²’å­æ€»ç®¡ç†
+//å®ƒå°†ç®¡ç†ç²’å­ç³»ç»Ÿã€ç²’å­å‘å°„å™¨ã€ç²’å­çš„åˆå§‹åŒ–
+//ç²’å­ç®¡ç†å™¨å¯ä»¥åœ¨å…¨å±€èŒƒå›´å†…å¤„ç†æ‰€æœ‰äº‹æƒ…ã€‚ 
+//å®ƒåŒ…å«ç²’å­ç³»ç»Ÿæ•°ç»„çš„é˜µåˆ—ï¼Œä¸»ç²’å­é¡¶ç‚¹ç¼“å†²åŒºï¼Œå¹¶å¤„ç†ä¸»è¦æ¸²æŸ“å’Œæ›´æ–°å¾ªç¯ã€‚ 
 class ParticleManager
 {
 public:
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	static void init();
 
-	//äÖÈ¾¸üĞÂ
+	//æ¸²æŸ“æ›´æ–°
 	static void update(float deltaTime, const glm::vec3 &cameraDirection);
 };
 
-//Á£×ÓÄÚ´æ³Ø¹ÜÀíÆ÷
-//Ëü¹ÜÀí×Å¶à¸öParticleMemoryPool
-//¸ºÔğÎªĞÂµÄÁ£×ÓÏµÍ³Ñ¡Ôñ×î¼ÑµÄÄÚ´æ³Ø
+//ç²’å­å†…å­˜æ± ç®¡ç†å™¨
+//å®ƒç®¡ç†ç€å¤šä¸ªParticleMemoryPool
+//è´Ÿè´£ä¸ºæ–°çš„ç²’å­ç³»ç»Ÿé€‰æ‹©æœ€ä½³çš„å†…å­˜æ± 
 class ParticleMemoryPoolManager
 {
 public:
@@ -41,62 +41,62 @@ private:
 	static std::vector<ParticleMemoryPool *>	m_memoryPools;
 };
 
-//Á£×ÓÄÚ´æ³Ø
-//¸´ÖÆÉêÇëÁ£×ÓºÍÊÍ·Åµ÷¶È
-//ÊÜParticleMemoryPoolManager
+//ç²’å­å†…å­˜æ± 
+//å¤åˆ¶ç”³è¯·ç²’å­å’Œé‡Šæ”¾è°ƒåº¦
+//å—ParticleMemoryPoolManager
 class ParticleMemoryPool
 {
 public:
-	//¹¹½¨Ò»¸öÁ£×ÓÄÚ´æ³Ø£¬Ëü½«ÓµÓĞÁ£×ÓÏµÍ³particleSystemCount¸ö£¬·¢ÉäÆ÷emitterCount¸ö£¬Á£×ÓÊıparticleCount
+	//æ„å»ºä¸€ä¸ªç²’å­å†…å­˜æ± ï¼Œå®ƒå°†æ‹¥æœ‰ç²’å­ç³»ç»ŸparticleSystemCountä¸ªï¼Œå‘å°„å™¨emitterCountä¸ªï¼Œç²’å­æ•°particleCount
 	ParticleMemoryPool(uint32_t particleCount, uint32_t emitterCount, uint32_t particleSystemCount);
 
-	//ÉêÇëĞÂµÄÁ£×Ó
+	//ç”³è¯·æ–°çš„ç²’å­
 	Particle *applyParticle();
 
-	//ÊÍ·ÅÁ£×Ó
+	//é‡Šæ”¾ç²’å­
 	void freeParticle(Particle *particle);
 
-	//»ñÈ¡»î¶¯µÄÁ£×ÓÊı
+	//è·å–æ´»åŠ¨çš„ç²’å­æ•°
 	size_t getActiveParticleCount() const;
 
 private:
-	Particle		*m_particles;				//Á£×ÓÖ¸Õë
-	uint32_t 		m_particleCount;			//Á£×Ó¸öÊı
-	uint32_t		m_curParticleIndex;			//Á£×ÓÏÂ±ê
-	ParticleEmitter	*m_emitters;				//Á£×Ó·¢ÉäÆ÷Ö¸Õë
-	uint32_t 		m_emitterCount;				//Á£×Ó·¢ÉäÆ÷¸öÊı
-	uint32_t		m_curEmitterIndex;			//Á£×Ó·¢ÉäÆ÷ÏÂ±ê
-	ParticleSystem *m_particleSystems;			//Á£×ÓÏµÍ³Ö¸Õë
-	uint32_t 		m_particleSystemsCount;		//Á£×ÓÏµÍ³¸öÊı
-	uint32_t		m_curParticleSystemIndex;	//Á£×ÓÏµÍ³ÏÂ±ê
+	Particle		*m_particles;				//ç²’å­æŒ‡é’ˆ
+	uint32_t 		m_particleCount;			//ç²’å­ä¸ªæ•°
+	uint32_t		m_curParticleIndex;			//ç²’å­ä¸‹æ ‡
+	ParticleEmitter	*m_emitters;				//ç²’å­å‘å°„å™¨æŒ‡é’ˆ
+	uint32_t 		m_emitterCount;				//ç²’å­å‘å°„å™¨ä¸ªæ•°
+	uint32_t		m_curEmitterIndex;			//ç²’å­å‘å°„å™¨ä¸‹æ ‡
+	ParticleSystem *m_particleSystems;			//ç²’å­ç³»ç»ŸæŒ‡é’ˆ
+	uint32_t 		m_particleSystemsCount;		//ç²’å­ç³»ç»Ÿä¸ªæ•°
+	uint32_t		m_curParticleSystemIndex;	//ç²’å­ç³»ç»Ÿä¸‹æ ‡
 
-	std::vector<Particle *>	m_reusableParticles;//¿ÉÖØ¸´Ê¹ÓÃÁ£×ÓÊı×é
+	std::vector<Particle *>	m_reusableParticles;//å¯é‡å¤ä½¿ç”¨ç²’å­æ•°ç»„
 };
 
-//Á£×ÓÏµÍ³£¬¹ÜÀíµ¥¸öĞ§¹ûµÄ¶à¸ö·¢ÉäÆ÷
+//ç²’å­ç³»ç»Ÿï¼Œç®¡ç†å•ä¸ªæ•ˆæœçš„å¤šä¸ªå‘å°„å™¨
 class ParticleSystem
 {
 public:
 
 };
 
-//Á£×Ó
+//ç²’å­
 class Particle
 {
 public:
-	glm::vec3					position;			//Î»ÖÃ
-	glm::vec4					colorMul;			//?²»ÊÇcolor£¿£¿
-	glm::vec4					colorVar;			//£¿£¿
-	std::array<glm::vec2, 3>	texOffsets;			//ÎÆÀí×ø±ê£¬Ö§³ÖÈı¸öÎÆÀí
-	float						rotation;			//Ğı×ª£¨ÎªÉ¶ÊÇfloat²»ÊÇvec3£¿£©
-	float						ratationRate;		//Ğı×ªËÙ¶È
-	glm::vec3					initialScale;		//³õÊ¼Ëõ·Å
-	glm::vec3					scale;				//Ëõ·Å
-	glm::vec3					velocity;			//ËÙ¶È£¨x,y,zÈı¸öÎ¬¶È£©
-	glm::vec3					acceleration;		//¼ÓËÙ¶È
-	float						lifeTime;			//ÉúÃüÖÜÆÚ
-	float						currentLife;		//µ±Ç°ÉúÃü
-	float						intensity;			//Ç¿¶È
+	glm::vec3					position;			//ä½ç½®
+	glm::vec4					colorMul;			//?ä¸æ˜¯colorï¼Ÿï¼Ÿ
+	glm::vec4					colorVar;			//ï¼Ÿï¼Ÿ
+	std::array<glm::vec2, 3>	texOffsets;			//çº¹ç†åæ ‡ï¼Œæ”¯æŒä¸‰ä¸ªçº¹ç†
+	float						rotation;			//æ—‹è½¬ï¼ˆä¸ºå•¥æ˜¯floatä¸æ˜¯vec3ï¼Ÿï¼‰
+	float						ratationRate;		//æ—‹è½¬é€Ÿåº¦
+	glm::vec3					initialScale;		//åˆå§‹ç¼©æ”¾
+	glm::vec3					scale;				//ç¼©æ”¾
+	glm::vec3					velocity;			//é€Ÿåº¦ï¼ˆx,y,zä¸‰ä¸ªç»´åº¦ï¼‰
+	glm::vec3					acceleration;		//åŠ é€Ÿåº¦
+	float						lifeTime;			//ç”Ÿå‘½å‘¨æœŸ
+	float						currentLife;		//å½“å‰ç”Ÿå‘½
+	float						intensity;			//å¼ºåº¦
 	glm::vec2					textureFrame;		//??
 	float						textureFrameTime;	//??
 	float						textureFrameTimeVar;//??

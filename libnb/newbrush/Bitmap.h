@@ -5,12 +5,8 @@
 **	
 **	提供点阵图的构造方式和对图像的简单操作，如伸缩等
 **	
-**
-**	
 **	图片数据可来源于文件，或者内存块数据
 **	
-**  
-**
 **		潘荣涛
 **	
 ********************************************************/
@@ -23,7 +19,6 @@ namespace nb
 class NB_API Bitmap
 {
 public:
-	//创建一个空的Bitmap对象，它将不包含任何图像数据
 	Bitmap();
 
 	//从文件创建一个Bitmap
@@ -55,7 +50,7 @@ public:
 	//获取纯数据字节总数
 	int bytes() const;
 
-	//通道数（返回1到4）
+	//通道数（返回1到4，0表示bitmap无效）
 	int channels() const;
 
 	//伸缩
@@ -66,6 +61,7 @@ public:
 	//quality：仅对jpg格式有效的图片质量参数（0-100）
 	//返回值：成功返回true，否则返回false
 	bool save(const std::string &path, uint32_t quality = 1) const;
+	static bool save(const std::string &path, unsigned char *data, int32_t width, int32_t height, int channels, uint32_t quality = 1);
 	
 private:
 	unsigned char	*m_data;

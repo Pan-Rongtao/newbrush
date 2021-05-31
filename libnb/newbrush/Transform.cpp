@@ -1,7 +1,4 @@
-#include "newbrush/Transform.h"
-#include "glm/gtx/matrix_decompose.hpp"
-#include "glm/gtx/matrix_query.hpp"
-#include "glm/gtx/euler_angles.hpp"
+ï»¿#include "newbrush/Transform.h"
 
 using namespace nb;
 
@@ -11,6 +8,8 @@ Transform::Transform(const glm::vec3 &translate, const glm::vec3 &rotation, cons
 	: m_translate(translate)
 	, m_rotate(rotation)
 	, m_scale(scale)
+	, m_rotateCenter(0.0f)
+	, m_scaleCenter(0.0f)
 {
 	updateMatrix();
 }
@@ -71,22 +70,22 @@ const Transform &Transform::identity()
 	return t;
 }
 
-//×ª»»ÎªÆ½ÒÆ¡¢Ğı×ª¡¢Ëõ·Å¡£×¢Òâ£¬×ª»»ºóµÄËõ·Åvec¿ÉÄÜºÍC4DµÈ±à¼­Æ÷ÖĞÏÔÊ¾µÄ·ûºÅÏà·´£¬
-//Å·À­½ÇÒ²ºÍC4DµÈ±à¼­Æ÷ÉÏµÄÊıÖµ²»Ò»ÖÂ¡£²»±ØÔÚÒâ£¬ÒòÎªC4DÊ¹ÓÃµÄÊÇ×óÊÖ¶¨Ôò£¬
-//Ö»Òª×îºóÏà³Ë¼ÆËãµÃµ½µÄ¾ØÕó=value¾Í¿ÉÒÔÁË
+//è½¬æ¢ä¸ºå¹³ç§»ã€æ—‹è½¬ã€ç¼©æ”¾ã€‚æ³¨æ„ï¼Œè½¬æ¢åçš„ç¼©æ”¾vecå¯èƒ½å’ŒC4Dç­‰ç¼–è¾‘å™¨ä¸­æ˜¾ç¤ºçš„ç¬¦å·ç›¸åï¼Œ
+//æ¬§æ‹‰è§’ä¹Ÿå’ŒC4Dç­‰ç¼–è¾‘å™¨ä¸Šçš„æ•°å€¼ä¸ä¸€è‡´ã€‚ä¸å¿…åœ¨æ„ï¼Œå› ä¸ºC4Dä½¿ç”¨çš„æ˜¯å·¦æ‰‹å®šåˆ™ï¼Œ
+//åªè¦æœ€åç›¸ä¹˜è®¡ç®—å¾—åˆ°çš„çŸ©é˜µ=valueå°±å¯ä»¥äº†
 void Transform::setValue(const glm::mat4x4 & value)
 {
-	//glm::vec3 skew;
-	//glm::quat orientation;
-	//glm::vec4 perspective;
-	////·Ö½âÎªscale¡¢orientationËÄÔªËØºÍposition
-	//glm::decompose(value, m_scale, orientation, m_translate, skew, perspective);
+	glm::vec3 skew;
+	glm::quat orientation;
+	glm::vec4 perspective;
+	//åˆ†è§£ä¸ºscaleã€orientationå››å…ƒç´ å’Œposition
+	glm::decompose(value, m_scale, orientation, m_translate, skew, perspective);
 
-	////ËÄÔªËØ×ªĞı×ª¾ØÕó
-	//auto rMatrix = glm::mat4_cast(orientation);
+	//å››å…ƒç´ è½¬æ—‹è½¬çŸ©é˜µ
+	auto rMatrix = glm::mat4_cast(orientation);
 
-	////Ğı×ª¾ØÕóÌáÈ¡Å·À­½Ç
-	//glm::extractEulerAngleYXZ(rMatrix, m_rotate.y, m_rotate.x, m_rotate.z);
+	//æ—‹è½¬çŸ©é˜µæå–æ¬§æ‹‰è§’
+	glm::extractEulerAngleYXZ(rMatrix, m_rotate.y, m_rotate.x, m_rotate.z);
 	m_matrix = value;
 }
 
@@ -97,20 +96,12 @@ const glm::mat4x4 &Transform::value() const
 
 void Transform::updateMatrix()
 {
-	glm::mat4x4 matrix = glm::mat4x4(1.0f);
-	matrix = glm::translate(matrix, m_translate);
 	auto translateMatrix = glm::translate(glm::mat4x4(1.0f), m_translate);
-	matrix = glm::translate(matrix, m_rotateCenter);
-	matrix = glm::rotate(matrix, glm::radians(m_rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	matrix = glm::translate(matrix, -m_rotateCenter);
-	matrix = glm::translate(matrix, glm::vec3(m_scaleCenter.x * (1 - m_scale.x), m_scaleCenter.y * (1 - m_scale.y), 0.0f));
-	matrix = glm::scale(matrix, glm::vec3(m_scale.x, m_scale.y, 1.0f));
-	//Ğı×ª	HPB{³¯Ïò£¬Ñö¸©£¬²àÇã}£¬»òÕßYPR £º yaw(º½Ïò) pitch(Ñö¸©) roll(¹ö×ª)£¬·Ö±ğ¶ÔÓ¦YXZÖáĞı×ª
-	//auto rotateMatrix = glm::yawPitchRoll(m_rotate.y, m_rotate.x, m_rotate.z);
-	//auto scaleMatrix = glm::scale(glm::mat4x4(1.0f), m_scale);
+	//æ—‹è½¬	HPB{æœå‘ï¼Œä»°ä¿¯ï¼Œä¾§å€¾}ï¼Œæˆ–è€…YPR ï¼š yaw(èˆªå‘) pitch(ä»°ä¿¯) roll(æ»šè½¬)ï¼Œåˆ†åˆ«å¯¹åº”YXZè½´æ—‹è½¬
+	auto rotateMatrix = glm::yawPitchRoll(m_rotate.y, m_rotate.x, m_rotate.z);
+	auto scaleMatrix = glm::scale(glm::mat4x4(1.0f), m_scale);
 
-	//m_matrix = translateMatrix * rotateMatrix * scaleMatrix;
-	m_matrix = matrix;
+	m_matrix = translateMatrix * rotateMatrix * scaleMatrix;
 }
 
 TranslateTransform2D::TranslateTransform2D()

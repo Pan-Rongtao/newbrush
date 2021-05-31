@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <unordered_map>
 #include "newbrush/Object.h"
 
@@ -11,21 +11,21 @@ public:
 	ResourceDictionary() = default;
 	static ResourceDictionary fromFile(const std::string &path);
 
-	//Ìí¼ÓÒ»¸ö×ÊÔ´
-	//Òì³££ºstd::logic_error£¬ÒÑ¾­ÓĞÏàÍ¬keyµÄ×ÊÔ´
+	//æ·»åŠ ä¸€ä¸ªèµ„æº
+	//å¼‚å¸¸ï¼šstd::logic_errorï¼Œå·²ç»æœ‰ç›¸åŒkeyçš„èµ„æº
 	void add(const std::string &key, const var &v);
 
-	//ÒÆ³ıÒ»¸ö×ÊÔ´
+	//ç§»é™¤ä¸€ä¸ªèµ„æº
 	void remove(const std::string &key);
 
-	//Çå¿Õ×ÊÔ´
+	//æ¸…ç©ºèµ„æº
 	void clear();
 
-	//²éÕÒ×ÊÔ´
+	//æŸ¥æ‰¾èµ„æº
 	var &find(const std::string &key);
 	const var &find(const std::string &key) const;
 
-	//¸öÊı
+	//ä¸ªæ•°
 	int count() const;
 	
 

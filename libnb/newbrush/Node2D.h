@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/Node.h"
 #include "newbrush/Brush.h"
 #include "newbrush/Event.h"
@@ -9,9 +9,9 @@ namespace nb
 		
 enum class VisibilityE
 {
-	Hidden,		//²»ÒªÏÔÊ¾µÄÔªËØ£¬µ«ÊÇ£¬±£Áô¿Õ¼äÖĞµÄÔªËØ¸ñÊ½£¨²ÎÓëÅÅ°æ²ßÂÔµÈ£©
-	Visible,	//ÏÔÊ¾×é¼ş
-	Collapsed,	//²»ÒªÏÔÊ¾ÔªËØ£¬²¢ÇÒ²»Ï£ÍûËüµÄ±£Áô¿Õ¼ä
+	Hidden,		//ä¸è¦æ˜¾ç¤ºçš„å…ƒç´ ï¼Œä½†æ˜¯ï¼Œä¿ç•™ç©ºé—´ä¸­çš„å…ƒç´ æ ¼å¼ï¼ˆå‚ä¸æ’ç‰ˆç­–ç•¥ç­‰ï¼‰
+	Visible,	//æ˜¾ç¤ºç»„ä»¶
+	Collapsed,	//ä¸è¦æ˜¾ç¤ºå…ƒç´ ï¼Œå¹¶ä¸”ä¸å¸Œæœ›å®ƒçš„ä¿ç•™ç©ºé—´
 };
 
 enum class HorizontalAlignmentE
@@ -42,6 +42,7 @@ enum class OrientationE
 	Vertical,
 };
 
+class Scene;
 class NB_API Node2D : public Node
 {
 	RTTR_ENABLE(Node)
@@ -68,6 +69,9 @@ public:
 
 	void setSize(const Size &size);
 	Size size() const;
+
+	void setRect(const Rect &rc);
+	Rect rect() const;
 
 	void setMargin(const Thickness &margin);
 	const Thickness &margin() const;
@@ -103,7 +107,27 @@ public:
 	const Point &getOffsetToParent() const;
 	Rect getRenderRect() const;
 
+	void addChild(ref<Node2D> child);
+	void insertChild(unsigned index, ref<Node2D> child);
+	void removeChild(unsigned index);
+	void removeChild(ref<Node2D> child);
+	unsigned childCount() const;
+	bool hasChild() const;
+	ref<Node2D> getChildAt(unsigned index);
+	void clearChildren();
+	const std::vector<ref<Node2D>> &children() const;
+	Node2D *getParent() const;
+
+	void setScene(ref<Scene> scene);
+	ref<Scene> getScene();
+
 	void touchThunk(const TouchEventArgs &e);
+	void scrollThunk(const ScrollEventArgs &e);
+	void keyThunk(const KeyEventArgs &e);
+
+	Event<TouchEventArgs> Touch;
+	Event<ScrollEventArgs> Scroll;
+	Event<KeyEventArgs> Key;
 
 public:
 	void updateLayout(const Size &availabelSize);
@@ -122,6 +146,8 @@ protected:
 	virtual Size measureOverride(const Size &availableSize);
 	virtual Size arrangeOverride(const Size &finalSize);
 	virtual void onTouch(const TouchEventArgs &e);
+	virtual void onScroll(const ScrollEventArgs &e);
+	virtual void onKey(const KeyEventArgs &e);
 	virtual void onFocusChanged(const FocusEventArgs &e);
 
 	void drawBrush(ref<Brush> brush);
@@ -147,6 +173,10 @@ private:
 
 	bool m_isMouseOver;
 	bool m_isEnable;
+
+	Node2D *m_parent;
+	std::vector<ref<Node2D>> m_children;
+	ref<Scene> m_scene;
 };
 
 }

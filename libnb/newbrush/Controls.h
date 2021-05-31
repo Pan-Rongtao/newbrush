@@ -1,18 +1,65 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/Node2D.h"
-#include "newbrush/Texture.h"
+#include "newbrush/Components.h"
+#include "newbrush/Font.h"
 
 namespace nb
 {
 
 enum class StretchE
 {
-	Origion			= 0,	//±£³ÖÔ­ÄÚÈİ´óĞ¡
-	Fill			= 1,	//²»±£³ÖÄÚÈİ×İºá±È£¬µ÷½ÚÄÚÈİ´óĞ¡ÒÔÍêÈ«ÇÒ¸ÕºÃÌî³äÄ¿±ê³ß´ç
-	Uniform			= 2,	//±£³ÖÄÚÈİ×İºá±È£¬Í¬Ê±µ÷½Ú´óĞ¡ÒÔÊÊÓ¦Ä¿±ê³ß´ç
-	UniformToFill	= 3,	//±£³ÖÄÚÈİ×İºá±È£¬Í¬Ê±µ÷½Ú´óĞ¡ÒÔÌî³äÄ¿±ê³ß´ç
+	Origion			= 0,	//ä¿æŒåŸå†…å®¹å¤§å°
+	Fill			= 1,	//ä¸ä¿æŒå†…å®¹çºµæ¨ªæ¯”ï¼Œè°ƒèŠ‚å†…å®¹å¤§å°ä»¥å®Œå…¨ä¸”åˆšå¥½å¡«å……ç›®æ ‡å°ºå¯¸
+	Uniform			= 2,	//ä¿æŒå†…å®¹çºµæ¨ªæ¯”ï¼ŒåŒæ—¶è°ƒèŠ‚å¤§å°ä»¥é€‚åº”ç›®æ ‡å°ºå¯¸
+	UniformToFill	= 3,	//ä¿æŒå†…å®¹çºµæ¨ªæ¯”ï¼ŒåŒæ—¶è°ƒèŠ‚å¤§å°ä»¥å¡«å……ç›®æ ‡å°ºå¯¸
 };
 
+/*****************************************************
+*	é¢æ¿
+*
+*	å †æ ˆå®¹å™¨ç±» StackPanel
+*	è‡ªåŠ¨æ¢è¡Œå¸ƒå±€å®¹å™¨ç±» WrapPanel
+*
+******************************************************/
+class NB_API Panel : public Node2D
+{
+protected:
+	Panel() = default;
+	virtual void onRender() override;
+};
+
+class NB_API WrapPanel : public Panel
+{
+public:
+	WrapPanel();
+	WrapPanel(OrientationE orientation);
+
+	void setOrientation(OrientationE orientation);
+	OrientationE orientation() const;
+
+	void setItemWidth(float width);
+	float itemWidth() const;
+
+	void setItemHeight(float height);
+	float itemHeight() const;
+
+protected:
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
+
+private:
+	OrientationE m_orientation;
+	float m_itemWidth;
+	float m_itemHeight;
+};
+
+/*****************************************************
+*	å½¢çŠ¶
+*
+*	å¤šçº¿æ®µç±» Polyline
+*	å¤šè¾¹å½¢ç±» Polygon
+*
+******************************************************/
 class NB_API Polyline : public Node2D
 {
 public:
@@ -66,16 +113,29 @@ private:
 	Size m_availableSize;
 };
 
-class TextBlock : public Node2D
+class NB_API TextBlock : public Node2D
 {
 public:
+	using Node2D::Node2D;
+	TextBlock(const std::string &text);
 
+	void setText(const std::string &text);
+	const std::string &text() const;
+
+protected:
+	virtual Size measureOverride(const Size &availableSize) override;
+	virtual Size arrangeOverride(const Size &finalSize) override;
+	virtual void onRender() override;
+
+private:
+	ref<Font> m_font;
+	std::string m_text;
 };
 
 class NB_API ButtonBase : public Node2D
 {
 public:
-	ButtonBase();
+	using Node2D::Node2D;
 
 	bool isPressed() const;
 
@@ -86,8 +146,8 @@ protected:
 	virtual void onClick();
 
 private:
-	bool m_isPressed;
-	bool m_leaveWithPressed;
+	bool m_isPressed{ false };
+	bool m_leaveWithPressed{ false };
 };
 
 }

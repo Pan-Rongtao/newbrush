@@ -4,7 +4,7 @@ using namespace nb;
 
 Node2D * TreeHelper::getRoot(Node2D * node)
 {
-	Node *root = node;
+	auto *root = node;
 	while (root->getParent())
 	{
 		root = root->getParent();
@@ -27,41 +27,51 @@ std::vector<ref<Node2D>> TreeHelper::getAllChildren(ref<Node2D> node)
 {
 	std::function<void(ref<Node2D> node, std::vector<ref<Node2D>> &nodes)> loop = [&loop](ref<Node2D> node, std::vector<ref<Node2D>> &nodes)
 	{
-		nodes.push_back(node);
 		for (auto child : node->children())
 		{
+			nodes.push_back(child);
 			if (!child->children().empty())
-				loop(nb::as<Node2D>(child), nodes);
+				loop(child, nodes);
 		}
 	};
-	std::vector<ref<Node2D>> ret;
+	std::vector<ref<Node2D>> ret{ node };
 	loop(node, ret);
 	return ret;
 }
 
-ref<Node> TreeHelper::find(ref<Node> node, const std::string & name)
+void TreeHelper::touchThunk(ref<Node2D> node, const TouchEventArgs &e)
 {
-	std::function<void(ref<Node> node, const std::string &name, ref<Node> &ret)> loopFind = [&loopFind](ref<Node> node, const std::string &name, ref<Node> &ret)
+	if (node)
 	{
-		if (!node) return;
-		if (ret) return;
-
-		if (node && node->getName() == name)
+		auto nodes = TreeHelper::getAllChildren(node);
+		for (auto node : nodes)
 		{
-			ret = node;
+			node->touchThunk(e);
 		}
+	}
 
-		//未找到就才需要再继续了
-		if (ret == nullptr)
+}
+
+void TreeHelper::scrollThunk(ref<Node2D> node, const ScrollEventArgs & e)
+{
+	if (node)
+	{
+		auto nodes = TreeHelper::getAllChildren(node);
+		for (auto node : nodes)
 		{
-			for (auto child : node->children())
-			{
-				loopFind(child, name, ret);
-			}
+			node->scrollThunk(e);
 		}
-	};
+	}
+}
 
-	ref<Node> ret;
-	loopFind(node, name, ret);
-	return ret;
+void TreeHelper::keyThunk(ref<Node2D> node, const KeyEventArgs & e)
+{
+	if (node)
+	{
+		auto nodes = TreeHelper::getAllChildren(node);
+		for (auto node : nodes)
+		{
+			node->keyThunk(e);
+		}
+	}
 }

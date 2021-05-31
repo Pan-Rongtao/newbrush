@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <queue>
 #include <mutex>
 #include "newbrush/Event.h"
@@ -6,11 +6,11 @@
 #include "newbrush/Window.h"
 
 namespace nb{
-
+	
 enum class ReasonSessionEnding
 {
-	Logoff,					//ÓÉÓÚÓÃ»§×¢ÏúÒı·¢µÄ»á»°ÖÕÖ¹
-	Shutdown,				//ÓÉÓÚÓÃ»§¹Ø»úÒı·¢µÄ»á»°ÖÕÖ¹
+	Logoff,					//ç”±äºç”¨æˆ·æ³¨é”€å¼•å‘çš„ä¼šè¯ç»ˆæ­¢
+	Shutdown,				//ç”±äºç”¨æˆ·å…³æœºå¼•å‘çš„ä¼šè¯ç»ˆæ­¢
 };
 
 struct UnhandledExceptionEventArgs	{ std::exception e; };
@@ -20,62 +20,72 @@ struct StartupEventArgs				{ std::vector<std::string> args; };
 
 enum class ShutdownModeE : uint8_t
 {
-	OnExplicitShutdown,		//½öµ÷ÓÃshutdownÊ±¹Ø±ÕÓ¦ÓÃ³ÌĞò
-	OnLastWindowClose,		//×îºóÒ»¸ö´°¿Ú¹Ø±Õ»òµ÷ÓÃshutdownÊ±¹Ø±ÕÓ¦ÓÃ³ÌĞò
-	OnMainWindowClose,		//Ö÷´°¿Ú¹Ø±Õ»òµ÷ÓÃshutdownÊ±¹Ø±ÕÓ¦ÓÃ³ÌĞò
+	OnExplicitShutdown,		//ä»…è°ƒç”¨shutdownæ—¶å…³é—­åº”ç”¨ç¨‹åº
+	OnLastWindowClose,		//æœ€åä¸€ä¸ªçª—å£å…³é—­æˆ–è°ƒç”¨shutdownæ—¶å…³é—­åº”ç”¨ç¨‹åº
+	OnMainWindowClose,		//ä¸»çª—å£å…³é—­æˆ–è°ƒç”¨shutdownæ—¶å…³é—­åº”ç”¨ç¨‹åº
+};
+
+class NB_API MessageQueue
+{
+public:
+	using Task = std::function<void(void)>;
+
+	void post(const Task &task);
+	Task pick();
+
+private:
+	std::mutex m_mutex;
+	std::queue<Task> m_msgQueue;
 };
 
 class NB_API Application
 {
 public:
-	//¹¹½¨Ò»¸öapp£¬Èç¹û¹¹½¨³¬¹ıÒ»´Î£¬»á·¢³öÒì³£std::logic_error
+	//æ„å»ºä¸€ä¸ªappï¼Œå¦‚æœæ„å»ºè¶…è¿‡ä¸€æ¬¡ï¼Œä¼šå‘å‡ºå¼‚å¸¸std::logic_error
 	Application();
 	virtual ~Application() = default;
 
-	//»ñÈ¡appÊµÀı£¬Èç¹ûÎ´´´½¨£¬½«·µ»Ø¿Õ
+	//è·å–appå®ä¾‹ï¼Œå¦‚æœæœªåˆ›å»ºï¼Œå°†è¿”å›ç©º
 	static Application *get();
 
-	//¹Ø±ÕÄ£Ê½
+	//å…³é—­æ¨¡å¼
 	void setShutdownMode(ShutdownModeE mode);
 	ShutdownModeE shutdownMode() const;
 
-	//ËùÓĞ´°¿Ú
+	//çª—å£
 	const WindowCollection &windows() const;
-
-	//Ö÷´°¿Ú£¨Ä¬ÈÏÎªµÚÒ»¸ö´°¿Ú£©
 	void setMainWindow(Window *w);
 	Window *mainWindow();
 
-	//×ÊÔ´
+	//èµ„æº
 	ref<ResourceDictionary> resources();
 
-	//ÔËĞĞ
-	//·µ»ØÖµ£ºÍË³öÂë£¬Ä¬ÈÏÇé¿öÏÂÎª0
+	//è¿è¡Œ
+	//è¿”å›å€¼ï¼šé€€å‡ºç ï¼Œé»˜è®¤æƒ…å†µä¸‹ä¸º0
 	int run(int argc, char *argv[]);
 
-	//¹Ø±ÕÓ¦ÓÃ³ÌĞò
-	//exitCode£º¹Ø±ÕÂë£¨¼´Ó¦ÓÃ³ÌĞò·µ»ØÖµ£©
-	void shutdown();
-	void shutdown(int exitCode);
+	//å…³é—­åº”ç”¨ç¨‹åº
+	//exitCodeï¼šå…³é—­ç ï¼ˆå³åº”ç”¨ç¨‹åºè¿”å›å€¼ï¼‰
+	void shutdown(int exitCode = 0);
 
-	//×¢²á²å¼ş
+	//å‘ä¸»çº¿ç¨‹æŠ›å…¥ä»»åŠ¡
+	void post(const MessageQueue::Task &task);
+
+	//æ³¨å†Œæ’ä»¶
 	template<class PluginT>
 	void registerStudioPlugin()
 	{
 		_registerPlugin(createRef<PluginT>());
 	}
 
-	using CallBack = std::function<void(void)>;
-	void connect(CallBack callback);
-
-	Event<EventArgs>						Activated;				//µ±Ó¦ÓÃ³ÌĞò³ÉÎªÇ°Ì¨Ó¦ÓÃ³ÌĞò£¬·¢Éú
-	Event<EventArgs>						Deactivated;			//µ±Ó¦ÓÃ³ÌĞò²»ÔÙÊÇÇ°Ì¨Ó¦ÓÃ³ÌĞò£¬·¢Éú
-	Event<UnhandledExceptionEventArgs>		UnhandledException;		//Èç¹ûÒì³£ÊÇÓÉÓ¦ÓÃ³ÌĞòÒı·¢£¬ÇÒ¼Ì³ĞÓÚstd::exception£¬Òì³£Î´´¦ÀíÊ±·¢Éú
-	Event<EventArgs>						UnhandledExtraException;//Èç¹ûÒì³£ÊÇÓÉÓ¦ÓÃ³ÌĞòÒı·¢£¬µ«×Ô¶¨ÒåµÄÒì³££¬Òì³£Î´´¦ÀíÊ±·¢Éú
-	Event<ExitEventArgs>					Exit;					//¹Ø±Õ¹ı³ÌµÄ×îºóÍ¨Öª
-	Event<EventArgs>						LoadCompleted;			//¼ÓÔØÍê³É²¢³ÊÏÖÊ±·¢Éú
-	Event<SessionEndingCancelEventArgs>		SessionEnding;			//ÓÃ»§ÔÚ×¢Ïú»ò¹Ø±Õ²Ù×÷ÏµÍ³Ê±·¢Éú
-	Event<StartupEventArgs>					Startup;				//µ±Æô¶¯Ê±·¢Éú
+	Event<EventArgs>						Activated;				//å½“åº”ç”¨ç¨‹åºæˆä¸ºå‰å°åº”ç”¨ç¨‹åºï¼Œå‘ç”Ÿ
+	Event<EventArgs>						Deactivated;			//å½“åº”ç”¨ç¨‹åºä¸å†æ˜¯å‰å°åº”ç”¨ç¨‹åºï¼Œå‘ç”Ÿ
+	Event<UnhandledExceptionEventArgs>		UnhandledException;		//å¦‚æœå¼‚å¸¸æ˜¯ç”±åº”ç”¨ç¨‹åºå¼•å‘ï¼Œä¸”ç»§æ‰¿äºstd::exceptionï¼Œå¼‚å¸¸æœªå¤„ç†æ—¶å‘ç”Ÿ
+	Event<EventArgs>						UnhandledExtraException;//å¦‚æœå¼‚å¸¸æ˜¯ç”±åº”ç”¨ç¨‹åºå¼•å‘ï¼Œä½†è‡ªå®šä¹‰çš„å¼‚å¸¸ï¼Œå¼‚å¸¸æœªå¤„ç†æ—¶å‘ç”Ÿ
+	Event<ExitEventArgs>					Exit;					//å…³é—­è¿‡ç¨‹çš„æœ€åé€šçŸ¥
+	Event<EventArgs>						LoadCompleted;			//åŠ è½½å®Œæˆå¹¶å‘ˆç°æ—¶å‘ç”Ÿ
+	Event<SessionEndingCancelEventArgs>		SessionEnding;			//ç”¨æˆ·åœ¨æ³¨é”€æˆ–å…³é—­æ“ä½œç³»ç»Ÿæ—¶å‘ç”Ÿ
+	Event<StartupEventArgs>					Startup;				//å½“å¯åŠ¨æ—¶å‘ç”Ÿ
 
 protected:
 	virtual void onActivated(const EventArgs &args);
@@ -93,9 +103,7 @@ private:
 	ShutdownModeE m_shutdownMode;
 	ref<ResourceDictionary> m_resources;
 
-	CallBack				pick();
-	std::queue<CallBack>	m_msgQueue;
-	std::mutex				m_mutex;
+	MessageQueue m_msgQueue;
 };
 
 }

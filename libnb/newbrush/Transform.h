@@ -7,10 +7,7 @@
 #pragma once
 #include <vector>
 #include "newbrush/Object.h"
-#include "glm/glm.hpp"
-#include "glm/gtx/matrix_decompose.hpp"
-#include "glm/gtx/matrix_query.hpp"
-#include "glm/gtx/euler_angles.hpp"
+#include "newbrush/glm.h"
 
 namespace nb 
 {

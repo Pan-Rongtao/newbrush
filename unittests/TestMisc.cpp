@@ -1,8 +1,10 @@
-#include "catch2/catch.hpp"
+Ôªø#include "catch2/catch.hpp"
 #include "newbrush/Application.h"
 #include "newbrush/NBBParser.h"
 #include "newbrush/Log.h"
 #include "GLFW/glfw3.h"
+#include "newbrush/Font.h"
+#include "newbrush/Controls.h"
 
 using namespace nb;
 
@@ -235,12 +237,12 @@ TEST_CASE("TestShader", "[TestShader]")
  			lowp float lambert = max(dot(lightvec,normal),0.0);
  			lambert*=0.5;
  			lowp vec3 floatvector = normalize(eyeDir+lightvec); 
- 			lowp float specular;
+ 			lowp float specularColor;
  			lowp vec3 Specular = vec3(1.0,1.0,1.0);
- 			specular = max(dot(floatvector, normal),0.0); 
- 			specular = pow(specular, 100.0); 
- 			specular *= lambert; 
- 			Specular *= specular;
+ 			specularColor = max(dot(floatvector, normal),0.0); 
+ 			specularColor = pow(specularColor, 100.0); 
+ 			specularColor *= lambert; 
+ 			Specular *= specularColor;
  	
  			totaldiffuse+=lambert;
  			totalspecular+=0.5*Specular;
@@ -267,7 +269,7 @@ TEST_CASE("TestGLFW", "[TestGLFW]")
 	glfwWindowHint(GLFW_SAMPLES, 32);
 	//glEnable(GL_MULTISAMPLE);
 
-	//¥¥Ω®¥∞ø⁄
+	//ÂàõÂª∫Á™óÂè£
 	GLFWwindow* window = glfwCreateWindow(1280, 720, "LearnOpenGL", nullptr, nullptr);
 	if (window == nullptr) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -278,7 +280,7 @@ TEST_CASE("TestGLFW", "[TestGLFW]")
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glfwWaitEvents();//ºÏ≤È ¬º˛
+		glfwWaitEvents();//Ê£ÄÊü•‰∫ã‰ª∂
 		glfwSwapBuffers(window);
 	}
 }
@@ -297,4 +299,60 @@ TEST_CASE("TestTimer", "[TestTimer]")
 	{
 		Timer::driveInLoop();
 	}
+}
+
+TEST_CASE("Texture2D", "[Texture2D]")
+{
+	Application app;
+	Window w;
+
+	//auto tex = createRef<Texture2D>("../resource/radarACM/NumGreen0.png");
+	auto tex = createRef<Texture2D>("d:/text.png");
+	tex->save("222.png");
+
+	app.run(0, nullptr);
+}
+
+TEST_CASE("Font", "[Font]")
+{
+	auto font = FontLibrary::getDefaultFont();
+	font->saveTextBitmap("d:/text.png", "OpenGL");
+}
+
+TEST_CASE("TextBlock", "[TextBlock]")
+{
+	Application app;
+	Window w;
+
+	auto text = createRef<TextBlock>("OpenGL");
+
+	auto root = createRef<Node2D>();
+	BrushLibrary::addImageBrush("bgBrush", "../resource/cxd706/img_text_colour.png");
+	root->setBackground(BrushLibrary::get("bgBrush"));
+	//root->setBackground(SolidColorBrush::red());
+
+	root->addChild(text);
+
+	w.root = root;
+
+	app.run(0, nullptr);
+}
+
+TEST_CASE("Log", "[Log]")
+{
+	Log::info("point={}", Point(1.1f, 1.2f));
+	Log::info("point3d={}", Point3D(2.1f, 2.2f, 2.3f));
+	Log::info("size={}", Size(3.3f, 3.4f));
+	Log::info("rect={}", Rect(4.4f, 4.5f, 4.6f, 4.7f));
+	Log::info("color={}", Color(1, 2, 3, 4));
+	Log::info("thickness={}", Thickness(0.1f, 0.2f, 0.3f, 0.4f));
+	Log::info("timespan={}", -TimeSpan(1, 2, 3, 4, 5, 6));
+	DateTime dt = DateTime::current();
+	Log::info("date={}", dt.date());
+	Log::info("time={}", dt.time());
+	Log::info("date={}", dt);
+	Log::info("vec2={}", glm::vec2(1.0f, 2.0f));
+	Log::info("vec3={}", glm::vec3(1.0f, 2.0f, 3.0f));
+	Log::info("vec4={}", glm::vec4(1.0f, 2.0f, 3.0f, 4.0f));
+	Log::info("mat4={}", glm::mat4(1.0f));
 }

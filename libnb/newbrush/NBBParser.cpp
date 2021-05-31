@@ -1,4 +1,4 @@
-#include "newbrush/NBBParser.h"
+ï»¿#include "newbrush/NBBParser.h"
 #include "newbrush/Log.h"
 #include "newbrush/ResourceDictionary.h"
 
@@ -44,7 +44,7 @@ void NBBParser::parse(const std::string & path, ref<Scene> &scene)
 
 void NBBParser::loopVisual(const dom::object &jObj, var &value, std::string &jPath)
 {
-	//Èç¹ûÓĞÒıÓÃ£¬Ôò´ÓÒıÓÃÂ·¾¶¹¹½¨£¬·ñÔò´ÓTypeÃû×Ö¹¹½¨¶ÔÏó
+	//å¦‚æœæœ‰å¼•ç”¨ï¼Œåˆ™ä»å¼•ç”¨è·¯å¾„æ„å»ºï¼Œå¦åˆ™ä»Typeåå­—æ„å»ºå¯¹è±¡
 	var obj;
 	std::string_view refPath;
 	if (!jObj[JSON_FIELD_REF].get(refPath))
@@ -62,14 +62,14 @@ void NBBParser::loopVisual(const dom::object &jObj, var &value, std::string &jPa
 		nbThrowExceptionIf(!obj, std::runtime_error, "create instance [%s] fail, maybe constructor is not registered", classTypeName.data());
 	}
 	
-	//Îª¶ÔÏóÒÀ´ÎÉèÖÃÊôĞÔ£¨ÅÅ³ı¹Ì¶¨"Type"×Ö¶ÎºÍ"Ref"×Ö¶Î£©
+	//ä¸ºå¯¹è±¡ä¾æ¬¡è®¾ç½®å±æ€§ï¼ˆæ’é™¤å›ºå®š"Type"å­—æ®µå’Œ"Ref"å­—æ®µï¼‰
 	for (auto const &e : jObj)
 	{
 		auto const &jPropName = e.key;
 		auto const &jPropValue = e.value;
 		if (jPropName == JSON_FIELD_TYPE || jPropName == JSON_FIELD_REF)	continue;
-		//Èç¹ûÊôĞÔÊÇobjectÀàĞÍ£¬±íÃ÷¸ÃÊôĞÔÊÇ¸öÓĞÊôĞÔµÄÊôĞÔ¶ÔÏó£¬Ç¶Ì×¹¹½¨¸ÃÊôĞÔ¶ÔÏó
-		//·ñÔòÈç¹ûÊÇÆÕÍ¨ÊôĞÔÖµ£¬Ö±½ÓÉèÖÃ
+		//å¦‚æœå±æ€§æ˜¯objectç±»å‹ï¼Œè¡¨æ˜è¯¥å±æ€§æ˜¯ä¸ªæœ‰å±æ€§çš„å±æ€§å¯¹è±¡ï¼ŒåµŒå¥—æ„å»ºè¯¥å±æ€§å¯¹è±¡
+		//å¦åˆ™å¦‚æœæ˜¯æ™®é€šå±æ€§å€¼ï¼Œç›´æ¥è®¾ç½®
 		var propValue;
 		if (jPropValue.is_object())
 		{
@@ -91,7 +91,7 @@ void NBBParser::loopLibrary(const dom::object & jObj, var & value, std::string &
 {
 	std::string_view classTypeName;
 	auto error = jObj[JSON_FIELD_TYPE].get(classTypeName);
-	//Ã»ÓĞType×Ö¶Î±íÊ¾ÊÇÂ·¾¶¶ø·Ç¶ÔÏó
+	//æ²¡æœ‰Typeå­—æ®µè¡¨ç¤ºæ˜¯è·¯å¾„è€Œéå¯¹è±¡
 	if (error)
 	{
 		for (auto const &e : jObj)

@@ -4,7 +4,7 @@ PROJECT(effects)
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
 # 3. Project Build
-file(GLOB_RECURSE SRC_LIST *.h *.cpp)
+file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
 
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${SRC_LIST})

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "newbrush/Node2D.h"
 
 namespace nb
@@ -13,9 +13,9 @@ public:
 
 	static std::vector<ref<Node2D>> getAllChildren(ref<Node2D> node);
 
-	//Ä£ĞÍÏÂËùÓĞµÄ×Ó½ÚµãÃû³Æ¶¼ÊÇÎ¨Ò»µÄ£¬ÎŞÀıÍâ
-	static ref<Node> find(ref<Node> node, const std::string &name);
-
+	static void touchThunk(ref<Node2D> node, const TouchEventArgs &e);
+	static void scrollThunk(ref<Node2D> node, const ScrollEventArgs &e);
+	static void keyThunk(ref<Node2D> node, const KeyEventArgs &e);
 };
 
 }

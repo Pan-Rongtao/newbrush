@@ -1,6 +1,5 @@
-#include "newbrush/ParticleEmitter.h"
+ï»¿#include "newbrush/ParticleEmitter.h"
 #include "newbrush/ParticleSystem.h"
-#include "glm/gtc/random.hpp"
 
 using namespace nb;
 
@@ -62,7 +61,7 @@ void ParticleEmitter::update(float deltaTime)
 	}
 
 	//if m_minParticleCount > m_particles.size(), to fix toBeEmitCount to m_minParticleCount at least
-	int diff = m_minParticleCount - (uint32_t)m_particles.size();	//¸Ð¾õÕâÀïÓÐbug£¬m_particles.size()Ó¦¸ÃÊÇtoBeEmitCount²Å¶Ô
+	int diff = m_minParticleCount - (uint32_t)m_particles.size();	//æ„Ÿè§‰è¿™é‡Œæœ‰bugï¼Œm_particles.size()åº”è¯¥æ˜¯toBeEmitCountæ‰å¯¹
 	if (diff > 0)
 	{
 		toBeEmitCount += diff;

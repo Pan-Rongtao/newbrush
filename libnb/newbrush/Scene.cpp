@@ -1,6 +1,6 @@
 ﻿#include "newbrush/Scene.h"
-#include "newbrush/GLUnit.h"
 #include "newbrush/Log.h"
+#include "newbrush/Mesh.h"
 
 using namespace nb;
 
@@ -18,52 +18,53 @@ ref<PerspectiveCamera> Scene::getCamera() const
 	return m_camera;
 }
 
-void Scene::onResize(float width, float height)
+void Scene::addLight(ref<Light> light)
 {
-	m_camera->setAspect(width / height);
-	glViewport(0, 0, (int)width, (int)height);
+	nbThrowExceptionIf(!light, std::invalid_argument, "light is nullptr");
+	m_lights.push_back(light);
+}
+
+void Scene::removeLight(unsigned index)
+{
+	nbThrowExceptionIf(index >= lightCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)lightCount());
+	m_lights.erase(m_lights.begin() + index);
+}
+
+unsigned Scene::lightCount() const
+{
+	return m_lights.size();
+}
+
+bool Scene::hasLight() const
+{
+	return lightCount() != 0;
+}
+
+ref<Light> Scene::getLightAt(unsigned index)
+{
+	nbThrowExceptionIf(index >= lightCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)lightCount());
+	return m_lights[index];
+}
+
+void Scene::clearLights()
+{
+	m_lights.clear();
+}
+
+const std::vector<ref<Light>> Scene::lights() const
+{
+	return m_lights;
 }
 
 void Scene::onRender()
 {
-	static int frames = 0;
-	static uint64_t t0 = getMilliseconds();
-
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	//在android下耗时非常高，达到10ms...
-	glClearColor(0.96f, 0.96f, 0.96f, 1.0f);
+	glClear(/*GL_COLOR_BUFFER_BIT | */GL_DEPTH_BUFFER_BIT);	//在android下耗时非常高，达到10ms...，不要GL_COLOR_BUFFER_BIT，否则遮挡下面的node
+
 	for (auto child : children())
 	{
-		loopDraw(child);
-	}
-
-	++frames;
-	uint64_t t1 = getMilliseconds();
-	if (t1 - t0 >= 5000)
-	{
-		float fps = frames * 1000.0f / (t1 - t0);
-		frames = 0;
-		t0 = t1;
-		Log::info("fps:{}", fps);
-	}
-}
-
-void Scene::loopDraw(ref<Node> node)
-{
-	if (!node) return;
-
-	if (node->mesh())
-	{
-		auto const &matrix = node->getRenderTransform();
-		node->mesh()->draw(matrix, m_camera, lights);
-	}
-	else
-	{
-		for (auto &child : node->children())
-		{
-			loopDraw(child);
-		}
+		child->onRender(m_camera, m_lights);
 	}
 }

@@ -1,85 +1,29 @@
 ﻿#include "Common.h"
 #ifdef __ANDROID__
 #include <jni.h>
-#else
-#include "newbrush/Application.h"
 #endif
-#include "newbrush/Node2D.h"
-#include "newbrush/GLUnit.h"
-#include "newbrush/Camera.h"
+#include "newbrush/Helper.h"
 
-void ViewBase::onTouchDown(const Point &p)
+MessageQueue g_msgQueue;
+extern ref<ViewBase> g_view;
+
+void ViewBase::resize(const Size &size)
 {
-	m_pressed = true;
-	m_pressedPoint = p;
-}
-
-void ViewBase::onTouchMove(const Point &p)
-{
-	auto root = getRoot();
-	auto scene = nb::as<Scene>(root);
-
-	if (!m_pressed || !scene) return;
-
-	Point ptOffset = { p.x - m_pressedPoint.x, m_pressedPoint.y - p.y };
-	m_pressedPoint = p;
-	for (auto child : scene->children())
-	{
-		if (nb::is<SkyBox>(child->mesh()))	continue;
-
-		auto rotate = child->getRotate();
-		auto newAngle = glm::degrees(rotate.y) + ptOffset.x;
-		rotate.y = glm::radians(newAngle);
-		child->setRotate(rotate);
-	}
-}
-
-void ViewBase::onTouchUp(const Point &p)
-{
-	m_pressed = false;
-}
-
-void ViewBase::onResize(const Size &size)
-{
-	auto root = getRoot();
-	if (nb::is<Node2D>(getRoot()))
-	{
-		GLUnit::viewport(0, 0, (int)size.width, (int)size.height);
-		nb::sharedCamera2D()->resize(size.width, size.height);
-	}
-	else if (nb::is<Scene>(root))
-	{
-		nb::as<Scene>(root)->onResize(size.width, size.height);
-	}
-	else
-	{
-		Log::error("root is nullptr, not ready");
-	}
+	GLUtils::viewport(0.0f, 0.0f, size.width, size.height);
+	nb::sharedCamera2D()->resize(size.width, size.height);
 	m_size = size;
 }
 
-void ViewBase::onRender()
+void ViewBase::render()
 {
-	auto root = getRoot();
-	if (nb::is<Node2D>(root))
-	{
-		nb::as<Node2D>(getRoot())->updateLayout(m_size);
-	}
-	else if (nb::is<Scene>(root))
-	{
-		nb::as<Scene>(root)->onRender();
-	}
-	else
-	{
-		Log::error("root is nullptr, not ready");
-	}
+	m_root->updateLayout(m_size);
 }
 
 void ViewBase::setData(const std::string & path, const var & value)
 {
 	if (!m_data)
 	{
-		Log::error("dataContext is nullptr, ignore");
+		Log::error("m_data is nullptr, ignore");
 		return;
 	}
 
@@ -94,118 +38,23 @@ void ViewBase::setData(const std::string & path, const var & value)
 	}
 }
 
-void ViewBase::loadBackground(ref<Scene> scene, const std::string & skyboxPath)
+ref<Node2D> ViewBase::getRoot() const
 {
-	auto skyBox = createRef<SkyBox>();
-	auto cubeMap = createRef<TextureCubemap>();
-	std::string dir = skyboxPath;
-	cubeMap->update(dir + "top.jpg", dir + "bottom.jpg", dir + "left.jpg", dir + "right.jpg", dir + "front.jpg", dir + "back.jpg");
-	skyBox->material = createRef<SkyBoxMaterial>(cubeMap);
-
-	auto background = createRef<Node>();
-	background->setMesh(skyBox);
-	if (scene->childCount() >= 2)
-	{
-		scene->removeChild(1);
-	}
-	scene->addChild(background);
+	return m_root;
 }
 
-void ViewBase::loadModel(ref<Scene> scene, const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale)
+ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale)
 {
-	assert(scene);
-
-	auto k = nb::getMilliseconds();
-
-	ModelImporter importer;
-	importer.load(path);
-	auto model = importer.getRoot();
-	auto lights = importer.getLights();
-	scene->lights.insert(scene->lights.end(), lights.begin(), lights.end());
-	//默认添加一个点光源，否则渲染很黑
-	if (scene->lights.empty())
-	{
-		scene->lights.push_back(createRef<PointLight>());
-	}
-	scene->animations = importer.getAnimations();
-
-	auto cost = nb::getMilliseconds() - k;
-	if (model)
-	{
-		scene->addChild(model);
-		Log::info("load [{}] success cost [{}] ms. MeshCount:[{}], TriangleCount:[{}], VertexCount=[{}]", path, cost, importer.getMeshCount(), importer.getTriangleCount(), importer.getVertexCount());
-		model->setTranslate(translate);
-		model->setRotate(rotate);
-		model->setScale(scale);
-	}
-	else
-	{
-		Log::error("load [{}] fail cost [{}] ms.", path, cost);
-	}
-
+	auto model = createRef<Model>();
+	model->load(path);
+	model->setTransform(createRef<Transform>(translate, rotate, scale));
+	return model;
 }
-
-void ViewBase::changeMaterial(ref<Node> model)
-{
-	std::function<void(ref<Node> node, ref<Material> material)> loopSet = [&loopSet](ref<Node> node, ref<Material> material)
-	{
-		if (!node || !material) return;
-
-		auto mesh = node->mesh();
-		if (mesh)
-		{
-			mesh->material = material;
-		}
-		else
-		{
-			for (auto child : node->children())
-			{
-				loopSet(child, material);
-			}
-		}
-	};
-
-	auto cubeMaterial = createRef<CubemapMaterial>();
-	auto cubeMap = createRef<TextureCubemap>();
-	cubeMap->update(RES_DIR"/models/skybox1/top.jpg", RES_DIR"/models/skybox1/bottom.jpg", RES_DIR"/models/skybox1/left.jpg",
-		RES_DIR"/models/skybox1/right.jpg", RES_DIR"/models/skybox1/front.jpg", RES_DIR"/models/skybox1/back.jpg");
-	cubeMaterial->cubeMapping = cubeMap;
-
-	loopSet(model, cubeMaterial);
-}
-
-MessageQueue * MessageQueue::get()
-{
-	static MessageQueue *p = nullptr;
-	if (!p) p = new MessageQueue();
-	return p;
-}
-
-void MessageQueue::post(Task task)
-{
-	std::lock_guard<std::mutex> lock(m_mutex);
-	m_msgQueue.push(task);
-}
-
-Task MessageQueue::pick()
-{
-	std::lock_guard<std::mutex> lock(m_mutex);
-	if (m_msgQueue.empty()) return nullptr;
-
-	Task task = m_msgQueue.front();
-	m_msgQueue.pop();
-	return task;
-}
-
-extern ref<ViewBase> g_view;
 
 #ifdef __ANDROID__
-bool g_OnRendering = false;
-bool m_hasCache = false;
-Point m_cacheMove;
+
 extern "C"
 {
-
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_init(JNIEnv *env, jobject thiz)
 	{
 		Log::info("Java_nb_jni_Newbrush_init begin");
@@ -217,55 +66,32 @@ extern "C"
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_resize(JNIEnv *env, jobject thiz, jint width, jint height)
 	{
 		Log::info("Java_nb_jni_Newbrush_resize, width={}, height={}", width, height);
-		g_view->onResize(Size((float)width, (float)height));
+		g_view->resize(Size((float)width, (float)height));
 	}
 
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_render(JNIEnv *env, jobject thiz)
 	{
 		//如果有消息任务，则在GL渲染线程执行
-		auto task = MessageQueue::get()->pick();
+		auto task = g_msgQueue.pick();
 		if (task)
 		{
 			task();
 		}
 		Timer::driveInLoop();
-
-		g_OnRendering = true;
-		g_view->onRender();
-		g_OnRendering = false;
-		if (m_hasCache)
-		{
-			m_hasCache = false;
-			g_view->onTouchMove(m_cacheMove);
-		}
+		g_view->render();
 	}
 
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_touch(JNIEnv *env, jobject thiz, jint action, jfloat x, jfloat y)
 	{
 		//0:down,1:up,2:move
-		if (action == 0)
-		{
-			Log::info("Java_nb_jni_Newbrush_touch down, x={}, y={}", action, x, y);
-			g_view->onTouchDown(Point(x, y));
-		}
-		else if (action == 1)
-		{
-			Log::info("Java_nb_jni_Newbrush_touch up, x={}, y={}", action, x, y);
-		}
-		else if (action == 2)
-		{
-			if (g_OnRendering)
-			{
-				m_hasCache = true;
-				m_cacheMove = Point(x, y);
-			}
-			else
-			{
-				m_hasCache = false;
-				g_view->onTouchMove(Point(x, y));
-			}
-		}
+		if (action == 0) Log::info("Java_nb_jni_Newbrush_touch down, x={}, y={}", x, y);
+		if (action == 1) Log::info("Java_nb_jni_Newbrush_touch up, x={}, y={}", x, y);
 
+		TouchEventArgs e;
+		e.action = (action == 0 ? TouchActionE::down : action == 1 ? TouchActionE::up : TouchActionE::move);
+		e.x = (float)x;
+		e.y = (float)y;
+		g_msgQueue.post([e]() {TreeHelper::touchThunk(g_view->getRoot(), e); });
 	}
 
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_setData(JNIEnv *env, jobject thiz, jstring path, jstring value)
@@ -281,34 +107,19 @@ extern "C"
 
 int main(int argc, char **argv)
 {
-	Application app;
-	auto window = createRef<Window>();
-	nbThrowExceptionIf(!g_view, std::logic_error, "g_view is nullptr.");
-
-	g_view->init();
-	window->root = g_view->getRoot();
-
-	window->KeyEvent += [](const KeyEventArgs &args)
+	try
 	{
-		if (args.action == 1 || args.action == 2)
-		{
-			g_view->onKey(args.key);
-		}
-	};
+		Application app;
+		Window window;
 
-	window->TouchEvent += [](const TouchEventArgs &e)
-	{
-		Point p = { e.x, e.y };
-		switch (e.action)
-		{
-		case TouchActionE::down: g_view->onTouchDown(p); break;
-		case TouchActionE::move: g_view->onTouchMove(p); break;
-		case TouchActionE::up: g_view->onTouchUp(p); break;
-		default: break;
-		}
-	};
+		auto k = nb::getMilliseconds();
+		g_view->init();
+		Log::info("g_view init cost {} ms", nb::getMilliseconds() - k);
 
-	return app.run(argc, argv);
+		window.root = g_view->getRoot();
+		return app.run(argc, argv);
+	}
+	catch (const std::exception &e) { Log::error("\n\n{}\n", e.what()); }
 }
 
 #endif

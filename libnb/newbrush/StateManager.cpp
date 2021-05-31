@@ -1,4 +1,4 @@
-#include "newbrush/StateManager.h"
+﻿#include "newbrush/StateManager.h"
 
 using namespace nb;
 

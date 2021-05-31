@@ -5,7 +5,7 @@ PROJECT(radarACM)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # 3. Project Build
-file(GLOB_RECURSE SRC_LIST *.h *.cpp)
+file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
 
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${SRC_LIST})

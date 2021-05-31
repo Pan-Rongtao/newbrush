@@ -117,16 +117,21 @@ bool Bitmap::scale(uint32_t width, uint32_t height)
 
 bool Bitmap::save(const std::string &path, uint32_t quality) const
 {
+	return save(path, m_data, m_width, m_height, m_channels, quality);
+}
+
+bool Bitmap::save(const std::string & path, unsigned char * data, int32_t width, int32_t height, int channels, uint32_t quality)
+{
 	/*bmp, png, jpeg, tga*/
 	int n = 0;
 	if (std::regex_match(path, std::regex("(.*)(.png)")))
-		n = stbi_write_png(path.data(), m_width, m_height, m_channels, m_data, 0);
+		n = stbi_write_png(path.data(), width, height, channels, data, 0);
 	else if (std::regex_match(path, std::regex("(.*)(.jpg)")) || std::regex_match(path, std::regex("(.*)(.jpeg)")))
-		n = stbi_write_jpg(path.data(), m_width, m_height, m_channels, m_data, quality);
+		n = stbi_write_jpg(path.data(), width, height, channels, data, quality);
 	else if (std::regex_match(path, std::regex("(.*)(.tga)")))
-		n = stbi_write_tga(path.data(), m_width, m_height, m_channels, m_data);
+		n = stbi_write_tga(path.data(), width, height, channels, data);
 	else
-		n = stbi_write_bmp(path.data(), m_width, m_height, m_channels, m_data);
+		n = stbi_write_bmp(path.data(), width, height, channels, data);
 	return n != 0;
 }
 

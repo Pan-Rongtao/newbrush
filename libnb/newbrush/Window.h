@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include <string>
+#include "newbrush/Object.h"
 #include "newbrush/Event.h"
 #include "newbrush/Types.h"
-#include "newbrush/Scene.h"
 
 struct GLFWwindow;
 namespace nb 
@@ -22,15 +22,19 @@ enum class WindowStyleE
 	SizeBox,	//有边框（默认）
 };
 
+class Node2D;
 class NB_API Window : public Object
 {
 public:
-	Window(float width = 1280, float height = 720, const std::string &title = "newbrush");
+	Window();
+	Window(float width, float heith);
+	Window(const std::string &title);
+	Window(float width, float height, const std::string &title);
 	~Window();
 
 	//标题
 	void setTitle(const std::string &title);
-	std::string title() const;
+	const std::string &title() const;
 
 	void setPosition(float x, float y);
 
@@ -66,12 +70,11 @@ public:
 	//获取鼠标位置
 	Point getMousePosition() const;
 
-	ref<Node> root;
+	ref<Node2D> root;
 
-	Event<KeyEventArgs>			KeyEvent;
-	Event<TouchEventArgs>		TouchEvent;
-	Event<Point> Scroll;
-
+	Event<KeyEventArgs>			Key;
+	Event<TouchEventArgs>		Touch;
+	Event<ScrollEventArgs>		Scroll;
 	Event<EventArgs>			Activated;				//当窗口成为前台窗口时发生
 	Event<EventArgs>			Deactivated;			//当窗口成为后台窗口时发生
 	Event<EventArgs>			Closed;					//当窗口将关闭时发生
@@ -112,7 +115,7 @@ private:
 	bool			m_processingCallback;
 	bool			m_processingWindowStateChanged;
 	WindowStateE	m_lastWindowState;
-
+	std::string		m_title;
 	friend class Application;
 };
 
