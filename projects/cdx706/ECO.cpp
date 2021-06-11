@@ -3,40 +3,39 @@
 float circleR = 300.0f;
 
 constexpr char clockECO_vs[] = R"(
-attribute vec3 nbPos;
-attribute vec2 nbTexCoord;
-uniform mat4 nbM;
-uniform mat4 nbVP;
-varying vec2 vTexCoord;
+attribute vec3 position;
+attribute vec2 uv;
+uniform mat4 u_modelMatrix;
+uniform mat4 u_viewProjectionMatrix;
+varying vec2 v_uv;
 void main()
 {
-	vTexCoord = nbTexCoord;
-	gl_Position = nbVP * nbM * vec4(nbPos, 1.0);
+	v_uv = uv;
+	gl_Position = u_viewProjectionMatrix * u_modelMatrix * vec4(position, 1.0);
 }
 )";
 
 constexpr char clockECO_fs[] = R"(
 precision mediump float;
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-varying vec2 vTexCoord;
-uniform float radius;
+uniform sampler2D u_sampler0;
+uniform sampler2D u_sampler1;
+varying vec2 v_uv;
+uniform float u_radius;
 
 void main( void )
 {
-	vec2 pos, size;
-	vec2 npos = gl_FragCoord.xy / vec2(756.0, 756.0);   // 0.0 .. 1.0
-	vec2 uv = (1.0 - npos);
+	vec2 _npos = gl_FragCoord.xy / vec2(756.0, 756.0);   // 0.0 .. 1.0
+	vec2 _uv = (1.0 - _npos);
 
-	uv -= vec2(0.5, 0.5);
-	uv = vec2(uv.x * cos(radius) - uv.y * sin(radius), uv.x * sin(radius) + uv.y * cos(radius));
-	uv += vec2(0.5, 0.5);
+	_uv -= vec2(0.5, 0.5);
+	_uv = vec2(_uv.x * cos(u_radius) - _uv.y * sin(u_radius), _uv.x * sin(u_radius) + _uv.y * cos(u_radius));
+	_uv += vec2(0.5, 0.5);
 					
-	vec4 color1 = texture2D(texture1, uv);
-	vec4 color2 = texture2D(texture2, vTexCoord);
+	vec4 _color0 = texture2D(u_sampler0, _uv);
+	vec4 _color1 = texture2D(u_sampler1, v_uv);
 	vec4 color;
-	if(color2.r >= 0.9)
-		color = mix(color1, color2, 0.2);
+	if(_color1.r >= 0.9)
+		color = mix(_color0, _color1, 0.2);
 	gl_FragColor = color;
 }
 )";
@@ -45,18 +44,17 @@ class NumberMaterial : public Material
 {
 public:
 	NumberMaterial(ref<Texture2D> tex1, ref<Texture2D> tex2)
-		: Material(ShaderLibrary::get("ecoShader"))
+		: Material(ShaderLibrary::get("shader_clockECO", clockECO_vs, clockECO_fs))
 		, texture1(tex1)
 		, texture2(tex2)
 		, angle(0.0f)
-	{
-	}
+	{}
 
 	virtual void uploadUniform(ref<Camera> camera) override
 	{
-		shader->setFloat("radius", glm::radians(angle));
-		shader->setInt("texture1", 0);
-		shader->setInt("texture2", 1);
+		shader->setFloat("u_radius", glm::radians(angle));
+		shader->setInt("u_sampler0", 0);
+		shader->setInt("u_sampler1", 1);
 		if (texture1) texture1->activeAndBind();
 		if (texture2) texture2->activeAndBind();
 	}
@@ -71,8 +69,6 @@ ECONode::ECONode()
 	setWidth(756.0f);
 	setHeight(756.0f);
 	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/eco_background.png")));
-
-	ShaderLibrary::add("ecoShader", clockECO_vs, clockECO_fs);
 
 	m_dotPanel = createRef<Node2D>(0.0f, 0.0f, 584.0f, 538.0f);
 	m_dotPanel->setAlignmentCenter();

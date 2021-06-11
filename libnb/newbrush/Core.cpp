@@ -5,6 +5,12 @@
 	#include <unistd.h>
 #endif
 
+static const uint64_t g_starupMilliseconds = nb::getMilliseconds();
+NB_API uint64_t nb::getStarupMilliseconds()
+{
+	return g_starupMilliseconds;
+}
+
 uint32_t nb::getPid()
 {
 #ifdef NB_OS_FAMILY_WINDOWS

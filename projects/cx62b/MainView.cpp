@@ -122,7 +122,7 @@ void MainView::init()
 
 	m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true);
 	m_TopMenu->setHorizontalAlignment(HorizontalAlignmentE::Center);
-	m_TopMenu->addChild(Node2D::createWithTextureFrameName("menu", "ic_Answer.png", true, 0.0f, 43.9f));
+	m_TopMenu->addChild(Node2D::createWithTextureFrameName("menu", "ic_Answer.png", true, 206.6f, 43.9f));
 
 	m_Menu = Node2D::createWithTextureFrameName("menu", "DrivingInfo/img_Tire pressure_car.png", true, 0.0f, 29.0f);
 	m_Menu->setAlignmentCenter();
@@ -198,38 +198,38 @@ void MainView::init()
 void MainView::initStateMachines()
 {
 	m_smEleSteerLock = createRef<StateManager>(2);
-	(*m_smEleSteerLock)[0]->assignProperty(m_LED_EleSteerLock, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("", ""));
-	(*m_smEleSteerLock)[1]->assignProperty(m_LED_EleSteerLock, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_EngineTheft-Red.png"));
+	(*m_smEleSteerLock)[0]->assignProperty(m_LED_EleSteerLock, prop<Node2D>("Background"), createRef<ImageBrush>("", ""));
+	(*m_smEleSteerLock)[1]->assignProperty(m_LED_EleSteerLock, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_EngineTheft-Red.png"));
 	m_smEleSteerLock->gotoState(1);
 	
 	m_smHMA = createRef<StateManager>(4);
-	(*m_smHMA)[0]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("", ""));
-	(*m_smHMA)[1]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_HMA-Yellow.png"));
-	(*m_smHMA)[2]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_HMA-Green.png"));
-	(*m_smHMA)[3]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_HMA-White.png"));
+	(*m_smHMA)[0]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), createRef<ImageBrush>("", ""));
+	(*m_smHMA)[1]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_HMA-Yellow.png"));
+	(*m_smHMA)[2]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_HMA-Green.png"));
+	(*m_smHMA)[3]->assignProperty(m_LED_HMA, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_HMA-White.png"));
 	m_smHMA->gotoState(1);
 
 	m_smLeftTurn = createRef<StateManager>(2);
-	(*m_smLeftTurn)[0]->assignProperty(m_LED_LeftTurn, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("", ""));
-	(*m_smLeftTurn)[1]->assignProperty(m_LED_LeftTurn, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_LeftTurn.png"));
+	(*m_smLeftTurn)[0]->assignProperty(m_LED_LeftTurn, prop<Node2D>("Background"), createRef<ImageBrush>("", ""));
+	(*m_smLeftTurn)[1]->assignProperty(m_LED_LeftTurn, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_LeftTurn.png"));
 	m_smLeftTurn->gotoState(0);
 
 	m_smRightTurn = createRef<StateManager>(2);
-	(*m_smRightTurn)[0]->assignProperty(m_LED_RightTurn, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("", ""));
-	(*m_smRightTurn)[1]->assignProperty(m_LED_RightTurn, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_RightTurn.png"));
+	(*m_smRightTurn)[0]->assignProperty(m_LED_RightTurn, prop<Node2D>("Background"), createRef<ImageBrush>("", ""));
+	(*m_smRightTurn)[1]->assignProperty(m_LED_RightTurn, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_RightTurn.png"));
 	m_smRightTurn->gotoState(0);
 
 	m_smDrivingMode = createRef<StateManager>(4);
-	(*m_smDrivingMode)[0]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_DrivingModeECO.png"));
-	(*m_smDrivingMode)[1]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_DrivingModeNormal.png"));
-	(*m_smDrivingMode)[2]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_DrivingModeSport.png"));
-	(*m_smDrivingMode)[3]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_DrivingModeSnow.png"));
+	(*m_smDrivingMode)[0]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_DrivingModeECO.png"));
+	(*m_smDrivingMode)[1]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_DrivingModeNormal.png"));
+	(*m_smDrivingMode)[2]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_DrivingModeSport.png"));
+	(*m_smDrivingMode)[3]->assignProperty(m_LED_DrivingMode, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_DrivingModeSnow.png"));
 	m_smDrivingMode->gotoState(0);
 
 	m_smCoolantTemp = createRef<StateManager>(3);
-	(*m_smCoolantTemp)[0]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_CoolantTempNormal.png"));
-	(*m_smCoolantTemp)[1]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_CoolantTemp-Blue.png"));
-	(*m_smCoolantTemp)[2]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), ImageBrush::createWitchTextureFrameName("indicator", "LED_CoolantTemp-Red.png"));
+	(*m_smCoolantTemp)[0]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_CoolantTempNormal.png"));
+	(*m_smCoolantTemp)[1]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_CoolantTemp-Blue.png"));
+	(*m_smCoolantTemp)[2]->assignProperty(m_LED_CoolantTemp, prop<Node2D>("Background"), createRef<ImageBrush>("indicator", "LED_CoolantTemp-Red.png"));
 	m_smCoolantTemp->gotoState(0);
 }
 float angle = 0.0f;

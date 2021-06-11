@@ -40,10 +40,10 @@ bool Button::isChecked() const
 
 ref<Button> Button::createWithTextureFrame(const TextureFrame & texFrame, bool useBrush, float x, float y)
 {
-	auto node = createRef<Button>(x, y, texFrame.size.x, texFrame.size.y);
-	node->setMargin(Thickness(texFrame.trimmedSize.x, texFrame.trimmedSize.y, texFrame.trimmedSize.x, texFrame.trimmedSize.y));
+	auto node = createRef<Button>(x, y, texFrame.sourceSize.x, texFrame.sourceSize.y);
+	//node->setMargin(Thickness(texFrame.trimmedSize.x, texFrame.trimmedSize.y, texFrame.trimmedSize.x, texFrame.trimmedSize.y));
 	if (useBrush)
-		node->setBkgndNormal(ImageBrush::createWitchTextureFrame(texFrame));
+		node->setBkgndNormal(createRef<ImageBrush>(texFrame));
 	return node;
 }
 
@@ -99,4 +99,27 @@ void Button::onRender()
 	}
 
 	drawBrush(brush);
+}
+
+void ToggleButton::setCheck(bool check)
+{
+	m_checked = check;
+}
+
+bool ToggleButton::isChecked() const
+{
+	return m_checked;
+}
+
+void ToggleButton::onTouch(const TouchEventArgs & e)
+{
+}
+
+void ToggleButton::onFocusChanged(const FocusEventArgs & e)
+{
+}
+
+void ToggleButton::onRender()
+{
+	drawBrush(background());
 }

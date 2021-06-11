@@ -50,15 +50,15 @@ Window::Window(float width, float height, const std::string &title)
 	glfwSetWindowCloseCallback(m_implWindow, [](GLFWwindow*w) { static_cast<Window *>(glfwGetWindowUserPointer(w))->closeCallback(); });
 	glfwSetWindowIconifyCallback(m_implWindow, [](GLFWwindow*w, int iconified) { static_cast<Window *>(glfwGetWindowUserPointer(w))->iconifyCallback(iconified); });
 	glfwSetWindowMaximizeCallback(m_implWindow, [](GLFWwindow * w, int maximized) { static_cast<Window *>(glfwGetWindowUserPointer(w))->maximizeCallback(maximized); });
-
+	glfwSetDropCallback(m_implWindow, [](GLFWwindow * w, int count, const char* paths[]) { static_cast<Window *>(glfwGetWindowUserPointer(w))->dropCallback(count, paths); });
 
 	glfwMakeContextCurrent(m_implWindow);
 	gladLoadGLLoader((GLADloadproc)(glfwGetProcAddress));
-	Log::info("OpenGL Version{}.{}", GLVersion.major, GLVersion.minor);
 	WindowCollection::get()->push(this);
 	glfwSwapInterval(1);
-#endif
 	frameBufferSizeCallback((int)width, (int)height);
+	Log::info("{}", SystemHelper::getSystemInfos());
+#endif
 }
  
 Window::~Window()
@@ -328,7 +328,7 @@ void Window::scrollCallback(double x, double y)
 void Window::keyCallback(int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE)
-		exit(0);
+		quick_exit(0);
 
 	KeyEventArgs e;
 	e.sender = this;
@@ -373,6 +373,16 @@ void Window::maximizeCallback(int maximized)
 		setWindowState(maximized ? WindowStateE::Maximized : WindowStateE::Normal);
 	}
 	m_processingCallback = false;
+}
+
+void Window::dropCallback(int count, const char * paths[])
+{
+	DropEventArgs e;
+	e.sender = this;
+	e.paths.reserve(count);
+	for (auto i = 0; i < count; ++i)
+		e.paths.emplace_back(paths[i]);
+	Drop.invoke(e);
 }
 
 void Window::destroyWindow()

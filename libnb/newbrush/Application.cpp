@@ -1,6 +1,6 @@
 ﻿#include "newbrush/Application.h"
-#include "newbrush/Timer.h"
 #include "newbrush/Log.h"
+#include "newbrush/Components.h"
 
 using namespace nb;
 
@@ -20,7 +20,7 @@ MessageQueue::Task MessageQueue::pick()
 	return task;
 }
 
-Application *g_app = nullptr;
+static Application *g_app = nullptr;
 Application::Application()
 	: m_shutdownMode(ShutdownModeE::OnLastWindowClose)
 	, m_exitFlag(false)
@@ -70,31 +70,27 @@ ref<ResourceDictionary> Application::resources()
 int Application::run(int argc, char *argv[])
 {
 	std::vector<std::string> args;
+	args.reserve(argc);
 	for (int i = 0; i < argc; ++i)
 	{
-		args.push_back(argv[i]);
+		args.emplace_back(argv[i]);
 	}
-	onStartUp({ args });
+	StartupEventArgs e;
+	e.sender = this;
+	e.args = std::move(args);
+	onStartUp(e);
 
-	try
+	while (!m_exitFlag)
 	{
-		while (!m_exitFlag)
-		{
-			auto task = m_msgQueue.pick();
-			if (task)
-			{
-				task();
-			}
-			for (auto const &w : WindowCollection::get()->windows())
-			{
-				w->render();
-			}
-			Timer::driveInLoop();
-			Window::pollEvents();
-		}
+		auto task = m_msgQueue.pick();
+		if (task) task();
+
+		for (auto const &w : WindowCollection::get()->windows()) w->render();
+
+		Timer::driveInLoop();
+		Window::pollEvents();
 	}
-	catch (std::exception &e) { UnhandledException.invoke({ e }); }
-	catch (...) { UnhandledExtraException.invoke({}); }
+
 	return 0;
 }
 
@@ -107,7 +103,10 @@ void Application::shutdown(int exitCode)
 	}
 
 	WindowCollection::get()->windows().clear();
-	onExit({ exitCode });
+	ExitEventArgs e;
+	e.sender = this;
+	e.exitCode = exitCode;
+	onExit(e);
 }
 
 void Application::post(const MessageQueue::Task &task)
@@ -133,11 +132,6 @@ void Application::onExit(const ExitEventArgs & args)
 void Application::onLoadCompleted(const EventArgs & args)
 {
 	LoadCompleted.invoke(args);
-}
-
-void Application::onSessionEnding(const SessionEndingCancelEventArgs & args)
-{
-	SessionEnding.invoke(args);
 }
 
 void Application::onStartUp(const StartupEventArgs & args)

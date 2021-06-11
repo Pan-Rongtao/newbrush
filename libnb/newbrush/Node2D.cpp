@@ -1,5 +1,4 @@
 ﻿#include "newbrush/Node2D.h"
-#include "newbrush/Mesh.h"
 #include "newbrush/Helper.h"
 #include "newbrush/Renderer2D.h"
 #include "newbrush/Scene.h"
@@ -190,17 +189,6 @@ void Node2D::setTransform(ref<Transform2D> transform)
 ref<Transform2D> Node2D::getTransform() const
 {
 	return m_transform;
-}
-
-glm::mat4 Node2D::getRenderTransform() const
-{
-	glm::mat4 mat(1.0);
-	auto p = this;
-	do {
-		if (p->m_transform)
-			mat = p->m_transform->value() * mat;
-	} while ((p->getParent()) && (p = (Node2D *)p->getParent()));
-	return mat;
 }
 
 void Node2D::setEnable(bool bEnable)
@@ -402,10 +390,9 @@ bool Node2D::hitTest(const Point & pt) const
 
 ref<Node2D> Node2D::createWithTextureFrame(const TextureFrame & texFrame, bool useBrush, float x, float y)
 {
-	auto node = createRef<Node2D>(x, y, texFrame.size.x, texFrame.size.y);
-	node->setMargin(Thickness(texFrame.trimmedSize.x, texFrame.trimmedSize.y, texFrame.trimmedSize.x, texFrame.trimmedSize.y));
+	auto node = createRef<Node2D>(x, y, texFrame.sourceSize.x, texFrame.sourceSize.y);
 	if(useBrush)
-		node->setBackground(ImageBrush::createWitchTextureFrame(texFrame));
+		node->setBackground(createRef<ImageBrush>(texFrame));
 	return node;
 }
 
@@ -570,40 +557,26 @@ void Node2D::keyThunk(const KeyEventArgs & e)
 
 void Node2D::updateLayout(const Size & availabelSize)
 {
-	this->measure(availabelSize);
-	auto const &rootDesiredSize = this->getDesiredSize();
-	this->arrage(Rect(0.0, 0.0, availabelSize));
-	
-	static int frames = 0;
-	static uint64_t t0 = getMilliseconds();
+	SystemHelper::updateFPS();
 
 	glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	{
-		Renderer2D::beginBatch();
-		this->onRender();
-		Renderer2D::endBatch();
-	}
-	++frames;
-	uint64_t t1 = getMilliseconds();
-	if (t1 - t0 >= 5000)
-	{
-		float fps = frames * 1000.0f / (t1 - t0);
-		frames = 0;
-		t0 = t1;
-		auto state = Renderer2D::getStats();
-		Log::info("drawCount={}, quadCount={}, batch fps:{}", state.drawCount, state.quadCount, fps);
-	}
+
+	this->measure(availabelSize);
+	auto const &rootDesiredSize = this->getDesiredSize();
+	this->arrage(Rect(0.0, 0.0, availabelSize));
+	
+	Renderer2D::beginBatch();
+	this->onRender();
+	Renderer2D::endBatch();
 }
 
 void Node2D::drawBrush(ref<Brush> brush)
 {
 	if (brush)
 	{
-		static glm::mat4 mat(1.0f);
-		auto renderTransform = m_transform ? m_transform->value() : mat;
-		//auto renderTransform = getRenderTransform();
+		auto renderTransform = m_transform ? m_transform->value() : Transform::identityMatrix4();
 		Rect rc = getRenderRect();
 		auto opacity = m_opacity * brush->opacity;
 		if (is<SolidColorBrush>(brush))
@@ -615,8 +588,7 @@ void Node2D::drawBrush(ref<Brush> brush)
 		else if (is<ImageBrush>(brush))
 		{
 			auto _brush = as<ImageBrush>(brush);
-			Rect texRect = { _brush->targetOffset.x, _brush->targetOffset.y, _brush->targetSize.x, _brush->targetSize.y };
-			Renderer2D::drawImage(rc, renderTransform, _brush->texture, texRect, _brush->rotated, opacity);
+			Renderer2D::drawImage(rc, renderTransform, _brush->frame, opacity);
 		}
 		else if (is<EffectBrush>(brush))
 		{

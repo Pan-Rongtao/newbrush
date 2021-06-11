@@ -1,23 +1,11 @@
 ﻿#pragma once
 #include <queue>
 #include <mutex>
-#include "newbrush/Event.h"
 #include "newbrush/ResourceDictionary.h"
 #include "newbrush/Window.h"
 
 namespace nb{
 	
-enum class ReasonSessionEnding
-{
-	Logoff,					//由于用户注销引发的会话终止
-	Shutdown,				//由于用户关机引发的会话终止
-};
-
-struct UnhandledExceptionEventArgs	{ std::exception e; };
-struct ExitEventArgs				{ int exitCode; };
-struct SessionEndingCancelEventArgs { bool cancel{ false }; ReasonSessionEnding reason; };
-struct StartupEventArgs				{ std::vector<std::string> args; };
-
 enum class ShutdownModeE : uint8_t
 {
 	OnExplicitShutdown,		//仅调用shutdown时关闭应用程序
@@ -38,7 +26,7 @@ private:
 	std::queue<Task> m_msgQueue;
 };
 
-class NB_API Application
+class NB_API Application : public Object
 {
 public:
 	//构建一个app，如果构建超过一次，会发出异常std::logic_error
@@ -62,7 +50,7 @@ public:
 
 	//运行
 	//返回值：退出码，默认情况下为0
-	int run(int argc, char *argv[]);
+	int run(int argc = 0, char *argv[] = nullptr);
 
 	//关闭应用程序
 	//exitCode：关闭码（即应用程序返回值）
@@ -80,11 +68,8 @@ public:
 
 	Event<EventArgs>						Activated;				//当应用程序成为前台应用程序，发生
 	Event<EventArgs>						Deactivated;			//当应用程序不再是前台应用程序，发生
-	Event<UnhandledExceptionEventArgs>		UnhandledException;		//如果异常是由应用程序引发，且继承于std::exception，异常未处理时发生
-	Event<EventArgs>						UnhandledExtraException;//如果异常是由应用程序引发，但自定义的异常，异常未处理时发生
 	Event<ExitEventArgs>					Exit;					//关闭过程的最后通知
 	Event<EventArgs>						LoadCompleted;			//加载完成并呈现时发生
-	Event<SessionEndingCancelEventArgs>		SessionEnding;			//用户在注销或关闭操作系统时发生
 	Event<StartupEventArgs>					Startup;				//当启动时发生
 
 protected:
@@ -92,7 +77,6 @@ protected:
 	virtual void onDeactivated(EventArgs &args);
 	virtual void onExit(const ExitEventArgs &args);
 	virtual void onLoadCompleted(const EventArgs &args);
-	virtual void onSessionEnding(const SessionEndingCancelEventArgs &args);
 	virtual void onStartUp(const StartupEventArgs &args);
 
 private:
@@ -102,7 +86,6 @@ private:
 	bool m_exitFlag;
 	ShutdownModeE m_shutdownMode;
 	ref<ResourceDictionary> m_resources;
-
 	MessageQueue m_msgQueue;
 };
 

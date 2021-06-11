@@ -66,6 +66,9 @@ public:
 	Polyline();
 	Polyline(const std::vector<glm::vec2> &points, float size);
 
+	void setPoints(const std::vector<glm::vec2> &points);
+	const std::vector<glm::vec2> &points() const;
+
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
@@ -74,6 +77,7 @@ protected:
 private:
 	std::vector<glm::vec2> m_points;
 	float m_size;
+	glm::vec4 m_box;
 };
 
 class NB_API Polygon : public Node2D
@@ -82,6 +86,9 @@ public:
 	Polygon();
 	Polygon(const std::vector<glm::vec2> &points);
 
+	void setPoints(const std::vector<glm::vec2> &points);
+	const std::vector<glm::vec2> &points() const;
+
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
@@ -89,6 +96,7 @@ protected:
 
 private:
 	std::vector<glm::vec2> m_points;
+	glm::vec4 m_box;
 };
 
 class NB_API Image : public Node2D

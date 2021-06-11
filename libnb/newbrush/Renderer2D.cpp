@@ -1,6 +1,6 @@
 ﻿#include "Renderer2D.h"
 #include <array>
-#include "newbrush/Mesh.h"
+#include "newbrush/Helper.h"
 #include "clipper/clipper.hpp"
 #include "mapbox/earcut.hpp"
 
@@ -16,7 +16,7 @@ struct VertexData
 {
 	glm::vec3 position;
 	glm::vec4 color;
-	glm::vec2 texCoord;
+	glm::vec2 uv;
 	float texIndex;
 	float opacity;
 };
@@ -35,35 +35,35 @@ struct RendererData
 	VertexData *quadBufferPtr = nullptr;
 	Renderer2D::Stats RenderStats;
 };
-static RendererData s_Data;
-static ref<Shader> s_renderer2dShader;
+static RendererData g_data;
+static ref<Shader> g_renderer2dShader;
 
 void Renderer2D::init()
 {
 	//如果已经初始化过，则跳出
-	if (s_Data.quadBuffer)
+	if (g_data.quadBuffer)
 		return;
 
-	s_Data.quadBuffer = new VertexData[MaxVertexCount];
+	g_data.quadBuffer = new VertexData[MaxVertexCount];
 
 	//初始化vao, vbo, ebo
-	glGenVertexArrays(1, &s_Data.vao);
-	glBindVertexArray(s_Data.vao);
+	glGenVertexArrays(1, &g_data.vao);
+	glBindVertexArray(g_data.vao);
 
-	glGenBuffers(1, &s_Data.vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, s_Data.vbo);
+	glGenBuffers(1, &g_data.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, g_data.vbo);
 	glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(VertexData), nullptr, GL_DYNAMIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offsetof(VertexData, position));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, position));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offsetof(VertexData, color));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, color));
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offsetof(VertexData, texCoord));
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offsetof(VertexData, texIndex));
-	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offsetof(VertexData, opacity));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, uv));
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, texIndex));
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, opacity));
 
 	unsigned indices[MaxIndexCount];
 	unsigned offset = 0;
@@ -78,13 +78,13 @@ void Renderer2D::init()
 		offset += 4;
 	}
 
-	glGenBuffers(1, &s_Data.ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.ebo);
+	glGenBuffers(1, &g_data.ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_data.ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// 1x1白色纹理
-	glGenTextures(1, &s_Data.whiteTexture);
-	glBindTexture(GL_TEXTURE_2D, s_Data.whiteTexture);
+	glGenTextures(1, &g_data.whiteTexture);
+	glBindTexture(GL_TEXTURE_2D, g_data.whiteTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -92,37 +92,37 @@ void Renderer2D::init()
 	unsigned color = 0xffffffff;
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
-	s_Data.textureIDs[0] = s_Data.whiteTexture;
+	g_data.textureIDs[0] = g_data.whiteTexture;
 
 	//初始化采样器数组uniform
-	s_renderer2dShader = ShaderLibrary::get("system_2d");
-	s_renderer2dShader->use();
+	g_renderer2dShader = ShaderLibrary::get("shader_2d");
+	g_renderer2dShader->use();
 
 	int samplers[MaxTextureCount];
 	for (int i = 0; i < MaxTextureCount; ++i) samplers[i] = i;
-	s_renderer2dShader->setIntArray("samplers", samplers, MaxTextureCount);
+	g_renderer2dShader->setIntArray("u_samplers", samplers, MaxTextureCount);
 
-	s_renderer2dShader->disuse();
+	g_renderer2dShader->disuse();
 }
 
 void Renderer2D::_beginBatch(bool resetStats)
 {
 	if (resetStats)
-		memset(&s_Data.RenderStats, 0, sizeof(Stats));
-	s_Data.quadBufferPtr = s_Data.quadBuffer;
-	s_Data.usedIndexCount = 0;
-	s_Data.usedTextureCount = 1;
+		memset(&g_data.RenderStats, 0, sizeof(Stats));
+	g_data.quadBufferPtr = g_data.quadBuffer;
+	g_data.usedIndexCount = 0;
+	g_data.usedTextureCount = 1;
 }
 
 void Renderer2D::shutdown()
 {
-	glDeleteVertexArrays(1, &s_Data.vao);
-	glDeleteBuffers(1, &s_Data.vbo);
-	glDeleteBuffers(1, &s_Data.ebo);
-	glDeleteTextures(1, &s_Data.whiteTexture);
+	glDeleteVertexArrays(1, &g_data.vao);
+	glDeleteBuffers(1, &g_data.vbo);
+	glDeleteBuffers(1, &g_data.ebo);
+	glDeleteTextures(1, &g_data.whiteTexture);
 
-	delete[] s_Data.quadBuffer;
-	s_Data.quadBuffer = nullptr;
+	delete[] g_data.quadBuffer;
+	g_data.quadBuffer = nullptr;
 }
 
 void Renderer2D::beginBatch()
@@ -178,18 +178,18 @@ void Renderer2D::drawPolygon(ref<Brush> brush, const std::vector<glm::vec2> &poi
 	if (is<SolidColorBrush>(brush))
 	{
 		auto _brush = as<SolidColorBrush>(brush);
-		material = createRef<SolidColorMaterial>(_brush->color);
+		material = createRef<FlatMaterial>(_brush->color);
 	}
 	else if (is<LinearGradientBrush>(brush))
 	{
+		auto box = TreeHelper::getBox(points);
+		box.x += offset.x;
+		box.y += offset.y;
 		auto _brush = as<LinearGradientBrush>(brush);
-		std::vector<GradientStop> stops;
-		for (auto pair : _brush->stops)
-		{
-			stops.push_back({ pair.first, pair.second });
-		}
-		auto linearMaterial = createRef<LinearGrandientMaterial>(_brush->lenght, stops);
-		linearMaterial->vertical = _brush->vertical;
+		auto linearMaterial = createRef<LinearGrandientMaterial>();
+		linearMaterial->gradientStops = _brush->gradientStops;
+		linearMaterial->box = box;
+		linearMaterial->horizontal = _brush->horizontal;
 		material = linearMaterial;
 	}
 	else if (is<ImageBrush>(brush))
@@ -210,33 +210,33 @@ void Renderer2D::drawPolygon(ref<Brush> brush, const std::vector<glm::vec2> &poi
 
 void Renderer2D::endBatch()
 {
-	GLsizeiptr size = (uint8_t *)s_Data.quadBufferPtr - (uint8_t *)s_Data.quadBuffer;
-	glBindBuffer(GL_ARRAY_BUFFER, s_Data.vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.quadBuffer);
+	GLsizeiptr size = (uint8_t *)g_data.quadBufferPtr - (uint8_t *)g_data.quadBuffer;
+	glBindBuffer(GL_ARRAY_BUFFER, g_data.vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, g_data.quadBuffer);
 
 	//激活使用的所有采样单元
-	for (auto i = 0u; i < s_Data.usedTextureCount; ++i)
+	for (auto i = 0u; i < g_data.usedTextureCount; ++i)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, s_Data.textureIDs[i]);
+		glBindTexture(GL_TEXTURE_2D, g_data.textureIDs[i]);
 	}
 	
-	s_renderer2dShader->use();
+	g_renderer2dShader->use();
 
 	auto const &matVP = nb::sharedCamera2D()->getViewProjectionMatrix();
-	s_renderer2dShader->setMat4("nbVP", matVP);
+	g_renderer2dShader->setMat4("u_viewProjectionMatrix", matVP);
 
-	glBindVertexArray(s_Data.vao);
-	glDrawElements(GL_TRIANGLES, s_Data.usedIndexCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(g_data.vao);
+	glDrawElements(GL_TRIANGLES, g_data.usedIndexCount, GL_UNSIGNED_INT, nullptr);
 	
-	s_renderer2dShader->disuse();
+	g_renderer2dShader->disuse();
 
-	s_Data.RenderStats.drawCount++;
+	g_data.RenderStats.drawCount++;
 }
 
 void Renderer2D::drawRect(const Rect &rc, const glm::mat4 &transform, const glm::vec4 & color, float opacity)
 {
-	if (s_Data.usedIndexCount >= MaxIndexCount)
+	if (g_data.usedIndexCount >= MaxIndexCount)
 	{
 		endBatch();
 		_beginBatch(false);
@@ -244,24 +244,26 @@ void Renderer2D::drawRect(const Rect &rc, const glm::mat4 &transform, const glm:
 	 
 	const glm::vec4 &_color = color;
 	const float &_textureIndex = 0.0f;
-	_drawQuad(rc, transform, _color, _textureIndex, nullptr, Rect(0.0f, 0.0f, 1.0f, 1.0f), false, opacity);
+	static const TextureFrame texFrame;
+	_drawQuad(rc, transform, _color, _textureIndex, texFrame, opacity);
 }
 
-void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, ref<Texture2D> tex, const Rect &texRect, bool rotated, float opacity)
+void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity)
 {
+	auto const &tex = texFrame.texture;
 	if (!tex)
 		return;
 
-	if (s_Data.usedIndexCount >= MaxIndexCount || s_Data.usedTextureCount > 31)
+	if (g_data.usedIndexCount >= MaxIndexCount || g_data.usedTextureCount > 31)
 	{
 		endBatch();
 		_beginBatch(false);
 	}
 
 	float textureIndex = 0.0f;
-	for (auto i = 1u; i < s_Data.usedTextureCount; ++i)
+	for (auto i = 1u; i < g_data.usedTextureCount; ++i)
 	{
-		if (s_Data.textureIDs[i] == tex->id())
+		if (g_data.textureIDs[i] == tex->id())
 		{
 			textureIndex = (float)i;
 			break;
@@ -270,66 +272,72 @@ void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, ref<Textu
 
 	if (textureIndex == 0.0f)
 	{
-		textureIndex = (float)s_Data.usedTextureCount;
-		s_Data.textureIDs[s_Data.usedTextureCount] = tex->id();
-		s_Data.usedTextureCount++;
+		textureIndex = (float)g_data.usedTextureCount;
+		g_data.textureIDs[g_data.usedTextureCount] = tex->id();
+		g_data.usedTextureCount++;
 	}
 
 	static const glm::vec4 &color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	_drawQuad(rc,transform, color, textureIndex, tex, texRect, rotated, opacity);
+	_drawQuad(rc,transform, color, textureIndex, texFrame, opacity);
 }
 
 const Renderer2D::Stats & Renderer2D::getStats()
 {
-	return s_Data.RenderStats;
+	return g_data.RenderStats;
 }
 
-void Renderer2D::_drawQuad(const Rect &rc, const glm::mat4 &transform,
-	const glm::vec4 & color, float textureIndex, ref<Texture2D> tex, const Rect &texRect, bool rotated, float opacity)
+/**************************************
+*	rc是需要整个矩形的区域
+*	而p0,p1,p2,p3是实际渲染区域，
+*	如果渲染的纹理四周为空，则p0,p1,p2,p3的区域小于rc
+***************************************/
+void Renderer2D::_drawQuad(const Rect &rc, const glm::mat4 &transform, const glm::vec4 & color, float textureIndex, const TextureFrame &texFrame, float opacity)
 {
+	auto const &tex = texFrame.texture;
+	auto rotated = texFrame.rotated;
 	glm::vec4 position = { rc.x(), rc.y(), 0.0f, 1.0f };
-	glm::vec4 p0 = { 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 p1 = { rc.width(), 0.0f, 0.0f, 1.0f };
-	glm::vec4 p2 = { rc.width(), rc.height(), 0.0f, 1.0f };
-	glm::vec4 p3 = { 0.0f, rc.height(), 0.0f, 1.0f };
+	glm::vec4 p0 = { texFrame.pinch.x, texFrame.pinch.y, 0.0f, 1.0f };
+	glm::vec4 p1 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), texFrame.pinch.y, 0.0f, 1.0f };
+	glm::vec4 p2 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), rc.height() - (texFrame.sourceSize.y - texFrame.frame.w - texFrame.pinch.y), 0.0f, 1.0f };
+	glm::vec4 p3 = { texFrame.pinch.x, rc.height() - (texFrame.sourceSize.y - texFrame.frame.w - texFrame.pinch.y), 0.0f, 1.0f };
 	glm::vec2 texSourceSize = tex ? glm::vec2(tex->width(), tex->height()) : glm::vec2(0.0f);
-	glm::vec2 texTargetOffset = { texRect.x(), texRect.y() };
-	glm::vec2 texTargetSize = { texRect.width(), texRect.height() };
-	glm::vec2 texCoord0 = { texTargetOffset / texSourceSize };
-	glm::vec2 texCoord1 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, texTargetOffset.y / texSourceSize.y };
-	glm::vec2 texCoord2 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
-	glm::vec2 texCoord3 = { texTargetOffset.x / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
+	glm::vec2 texTargetOffset = { texFrame.frame.x, texFrame.frame.y };
+	glm::vec2 texTargetSize = rotated ? glm::vec2(texFrame.frame.w, texFrame.frame.z) : glm::vec2(texFrame.frame.z, texFrame.frame.w);
+	glm::vec2 uv0 = { texTargetOffset / texSourceSize };
+	glm::vec2 uv1 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, texTargetOffset.y / texSourceSize.y };
+	glm::vec2 uv2 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
+	glm::vec2 uv3 = { texTargetOffset.x / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
 
-	s_Data.quadBufferPtr->position = transform * p0 + position;
-	s_Data.quadBufferPtr->color = color;
-	s_Data.quadBufferPtr->texCoord = rotated ? texCoord1 : texCoord0;// { 0.0f, 0.0f };
-	s_Data.quadBufferPtr->texIndex = textureIndex;
-	s_Data.quadBufferPtr->opacity = opacity;
-	s_Data.quadBufferPtr++;
+	g_data.quadBufferPtr->position = transform * p0 + position;
+	g_data.quadBufferPtr->color = color;
+	g_data.quadBufferPtr->uv = rotated ? uv1 : uv0;// { 0.0f, 0.0f };
+	g_data.quadBufferPtr->texIndex = textureIndex;
+	g_data.quadBufferPtr->opacity = opacity;
+	g_data.quadBufferPtr++;
 
-	s_Data.quadBufferPtr->position = transform * p1 + position;
-	s_Data.quadBufferPtr->color = color;
-	s_Data.quadBufferPtr->texCoord = rotated ? texCoord2 : texCoord1;// { 1.0f, 0.0f };
-	s_Data.quadBufferPtr->texIndex = textureIndex;
-	s_Data.quadBufferPtr->opacity = opacity;
-	s_Data.quadBufferPtr++;
+	g_data.quadBufferPtr->position = transform * p1 + position;
+	g_data.quadBufferPtr->color = color;
+	g_data.quadBufferPtr->uv = rotated ? uv2 : uv1;// { 1.0f, 0.0f };
+	g_data.quadBufferPtr->texIndex = textureIndex;
+	g_data.quadBufferPtr->opacity = opacity;
+	g_data.quadBufferPtr++;
 
-	s_Data.quadBufferPtr->position = transform * p2 + position;
-	s_Data.quadBufferPtr->color = color;
-	s_Data.quadBufferPtr->texCoord = rotated ? texCoord3 : texCoord2;// { 1.0f, 1.0f };
-	s_Data.quadBufferPtr->texIndex = textureIndex;
-	s_Data.quadBufferPtr->opacity = opacity;
-	s_Data.quadBufferPtr++;
+	g_data.quadBufferPtr->position = transform * p2 + position;
+	g_data.quadBufferPtr->color = color;
+	g_data.quadBufferPtr->uv = rotated ? uv3 : uv2;// { 1.0f, 1.0f };
+	g_data.quadBufferPtr->texIndex = textureIndex;
+	g_data.quadBufferPtr->opacity = opacity;
+	g_data.quadBufferPtr++;
 
-	s_Data.quadBufferPtr->position = transform * p3 + position;
-	s_Data.quadBufferPtr->color = color;
-	s_Data.quadBufferPtr->texCoord = rotated ? texCoord0 : texCoord3;// { 0.0f, 1.0f };
-	s_Data.quadBufferPtr->texIndex = textureIndex;
-	s_Data.quadBufferPtr->opacity = opacity;
-	s_Data.quadBufferPtr++;
+	g_data.quadBufferPtr->position = transform * p3 + position;
+	g_data.quadBufferPtr->color = color;
+	g_data.quadBufferPtr->uv = rotated ? uv0 : uv3;// { 0.0f, 1.0f };
+	g_data.quadBufferPtr->texIndex = textureIndex;
+	g_data.quadBufferPtr->opacity = opacity;
+	g_data.quadBufferPtr++;
 
-	s_Data.usedIndexCount += 6;
-	s_Data.RenderStats.quadCount++;
+	g_data.usedIndexCount += 6;
+	g_data.RenderStats.quadCount++;
 }
 
 void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Material> material, const std::vector<ref<Light>> &lights)
@@ -346,10 +354,10 @@ void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Mat
 	vertexs[1].position = transform * p1 + position;
 	vertexs[2].position = transform * p2 + position;
 	vertexs[3].position = transform * p3 + position;
-	vertexs[0].texCoord = glm::vec2(0.0, 0.0);
-	vertexs[1].texCoord = glm::vec2(1.0, 0.0);
-	vertexs[2].texCoord = glm::vec2(1.0, 1.0);
-	vertexs[3].texCoord = glm::vec2(0.0, 1.0);
+	vertexs[0].uv = glm::vec2(0.0, 0.0);
+	vertexs[1].uv = glm::vec2(1.0, 0.0);
+	vertexs[2].uv = glm::vec2(1.0, 1.0);
+	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 	auto mesh = createRef<Mesh>(vertexs, indices, material);
 	mesh->draw(glm::mat4(1.0), sharedCamera2D(), lights);
@@ -374,6 +382,6 @@ void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & 
 		Rect texRect = Rect(glyph->uv[3].x * tex->width(), glyph->uv[3].y * tex->height(), 
 			(glyph->uv[2].x - glyph->uv[3].x) * tex->width(), (glyph->uv[0].y - glyph->uv[3].y) * tex->height());
 
-		drawImage(drawRC, glm::mat4(1.0f), tex, texRect, false, 1.0f);
+		drawImage(drawRC, glm::mat4(1.0f), TextureFrame(tex, texRect), 1.0f);
 	}
 }

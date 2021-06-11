@@ -301,12 +301,9 @@ ref<Glyph> FontAtlas::appendChar(wchar_t unicode)
 	return glyph;
 }
 
-#define FontAltasWidth	1024.0f
-#define FontAltasHeight	1024.0f
-static std::map<ref<Font>, ref<FontAtlas>> g_FontAtlas;
-
 //查找font对应的FontAtlas，如果找到且未满，返回找到Glyph
 //否则新建一个FontAtlas
+static std::map<ref<Font>, ref<FontAtlas>> g_FontAtlas;
 ref<Glyph> nb::getGlyph(ref<Font> font, wchar_t unicode)
 {
 	auto iter = g_FontAtlas.find(font);
@@ -317,12 +314,12 @@ ref<Glyph> nb::getGlyph(ref<Font> font, wchar_t unicode)
 			return glyph;
 	}
 
-	auto newFontAtlas = createRef<FontAtlas>(font, FontAltasWidth, FontAltasHeight);
+	auto newFontAtlas = createRef<FontAtlas>(font, 1024.0f, 1024.0f);
 	g_FontAtlas[font] = newFontAtlas;
 	return newFontAtlas->getGlyph(unicode);
 }
 
-std::set<ref<Font>> g_fonts;
+static std::set<ref<Font>> g_fonts;
 ref<Font> FontLibrary::addFont(const std::string & path, uint32_t size)
 {
 	auto font = createRef<Font>(path, size);

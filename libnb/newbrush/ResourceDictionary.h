@@ -9,7 +9,6 @@ class NB_API ResourceDictionary
 {
 public:
 	ResourceDictionary() = default;
-	static ResourceDictionary fromFile(const std::string &path);
 
 	//添加一个资源
 	//异常：std::logic_error，已经有相同key的资源

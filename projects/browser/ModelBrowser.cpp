@@ -1,22 +1,17 @@
 ﻿#include "ModelBrowser.h"
+#include "ghc/filesystem.hpp"
 
 using namespace nb;
+namespace fs = ghc::filesystem;
 
 bool g_useBkg = false;
+bool g_rotate360 = false;
 extern MessageQueue g_msgQueue;
 
 void ModelBrowser::init()
 {
 	m_scene = createRef<Scene>();
-	auto model = loadModel(RES_DIR"/models/girl/3.fbx", glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec3(0.015f));
-
-	//默认添加一个点光源，否则渲染很黑
-	m_scene->addLight(createRef<PointLight>());
-	m_scene->addChild(model);
-
 	m_data = buildData();
-	binding();
-
 	if (m_data)
 	{
 		m_data->ValueChanged += [&](const DataContext::ValueChangedArgs & args)
@@ -24,6 +19,7 @@ void ModelBrowser::init()
 			onDataChanged(args.path, args.value);
 		};
 	}
+	load(RES_DIR"/browser/girl/3.fbx");
 	m_root = createRef<Node2D>();
 	m_root->setHorizontalAlignment(HorizontalAlignmentE::Center);
 	m_root->setVerticalAlignment(VerticalAlignmentE::Bottom);
@@ -32,7 +28,9 @@ void ModelBrowser::init()
 	m_root->Touch += nbBindEventFunction(onTouch);
 	m_root->Scroll += nbBindEventFunction(onScroll);
 	m_root->Key += nbBindEventFunction(onKey);
-
+#ifdef WIN32
+	Application::get()->mainWindow()->Drop += nbBindEventFunction(onDrop);
+#endif
 }
 
 void ModelBrowser::onDataChanged(const std::string &path, const var &value)
@@ -69,11 +67,7 @@ void ModelBrowser::onDataChanged(const std::string &path, const var &value)
 		auto newModelPath = value.get_value<std::string>();
 		auto task = [this, newModelPath]()
 		{
-			auto model = loadModel(newModelPath, glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec3(0.015f));
-			m_scene->clearChildren();
-			m_scene->addChild(model);
-			//重新加载模型，场景发送变化，需重新绑定
-			binding();
+			load(newModelPath);
 		};
 
 #ifdef __ANDROID__
@@ -83,6 +77,16 @@ void ModelBrowser::onDataChanged(const std::string &path, const var &value)
 #endif
 
 	}
+}
+
+void ModelBrowser::load(const std::string & path)
+{
+	auto model = loadModel(path, glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f), glm::vec3(0.015f));
+	m_scene->clearLights();
+	m_scene->clearChildren();
+	m_scene->addLight(createRef<PointLight>());
+	m_scene->addChild(model);
+	binding();
 }
 
 void ModelBrowser::onTouch(const TouchEventArgs & e)
@@ -105,8 +109,13 @@ void ModelBrowser::onTouch(const TouchEventArgs & e)
 			return;
 
 		auto rotate = model->getTransform()->getRotate();
-		auto newAngle = glm::degrees(rotate.y) + ptOffset.x;
-		rotate.y = glm::radians(newAngle);
+		auto newAngleY = glm::degrees(rotate.y) + ptOffset.x;
+		rotate.y = glm::radians(newAngleY);
+		if (g_rotate360)
+		{
+			auto newAngleX = glm::degrees(rotate.x) - ptOffset.y;
+			rotate.x = glm::radians(newAngleX);
+		}
 		model->getTransform()->setRotate(rotate);
 	}
 	else if (e.action == TouchActionE::up)
@@ -125,7 +134,7 @@ void ModelBrowser::onScroll(const ScrollEventArgs & e)
 void ModelBrowser::onKey(const KeyEventArgs &e)
 {
 	auto keyDown = e.action == KeyAction::down;
-	auto model = m_scene->getChildAt(0);
+	auto model = as<Model>( m_scene->getChildAt(0) );
 	auto light = m_scene->hasLight() ? nb::as<PointLight>(m_scene->getLightAt(0)) : nullptr;
 	auto camera = m_scene->getCamera();
 	Log::info("key[{}] press", (int)e.key);
@@ -145,16 +154,16 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 	case KeyCode::F:	modelRotate.x += 0.1f; model->getTransform()->setRotate(modelRotate);	break;
 	case KeyCode::G:	modelRotate.x -= 0.1f; model->getTransform()->setRotate(modelRotate);	break;
 
-	case KeyCode::_1:	if (keyDown) setData("NewPath", RES_DIR"/models/a08/fbx.fbx");		break;
-	case KeyCode::_2:	if (keyDown) setData("NewPath", RES_DIR"/models/am8/fbx.fbx");		break;
-	case KeyCode::_3:	if (keyDown) setData("NewPath", RES_DIR"/models/assassin/fbx.fbx");	break;
-	case KeyCode::_4:	if (keyDown) setData("NewPath", RES_DIR"/models/bmw/fbx.fbx");		break;
-	case KeyCode::_5:	if (keyDown) setData("NewPath", RES_DIR"/models/bugatti/fbx.fbx");	break;
-	case KeyCode::_6:	if (keyDown) setData("NewPath", RES_DIR"/models/nanosuit/obj.obj");	break;
-	case KeyCode::_7:	if (keyDown) setData("NewPath", RES_DIR"/models/siqi/fbx.fbx");		break;
-	case KeyCode::_8:	if (keyDown) setData("NewPath", RES_DIR"/models/dancer/fbx.fbx");	break;
-	case KeyCode::_9:	if (keyDown) setData("NewPath", RES_DIR"/models/girl/3.fbx");		break;
-	case KeyCode::_0:	if (keyDown) setData("NewPath", RES_DIR"/models/robert0/fbx.fbx");	break;
+	case KeyCode::_1:	if (keyDown) setData("NewPath", RES_DIR"/browser/a08/fbx.fbx");		break;
+	case KeyCode::_2:	if (keyDown) setData("NewPath", RES_DIR"/browser/am8/fbx.fbx");		break;
+	case KeyCode::_3:	if (keyDown) setData("NewPath", RES_DIR"/browser/assassin/fbx.fbx");break;
+	case KeyCode::_4:	if (keyDown) setData("NewPath", RES_DIR"/browser/bmw/fbx.fbx");		break;
+	case KeyCode::_5:	if (keyDown) setData("NewPath", RES_DIR"/browser/bugatti/fbx.fbx");	break;
+	case KeyCode::_6:	if (keyDown) setData("NewPath", RES_DIR"/browser/nanosuit/obj.obj");break;
+	case KeyCode::_7:	if (keyDown) setData("NewPath", RES_DIR"/browser/siqi/fbx.fbx");	break;
+	case KeyCode::_8:	if (keyDown) setData("NewPath", RES_DIR"/browser/dancer/fbx.fbx");	break;
+	case KeyCode::_9:	if (keyDown) setData("NewPath", RES_DIR"/browser/girl/3.fbx");		break;
+	case KeyCode::_0:	if (keyDown) setData("NewPath", RES_DIR"/browser/robert0/fbx.fbx");	break;
 
 	case KeyCode::J:	cameraRotate.y += 0.1f; camera->setRotate(cameraRotate);break;
 	case KeyCode::L:	cameraRotate.y -= 0.1f; camera->setRotate(cameraRotate);break;
@@ -218,12 +227,65 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 	{
 		if (keyDown)
 		{
-			auto isPlaying = as<Model>(model)->isPlaying();
-			!isPlaying ? as<Model>(model)->play() : as<Model>(model)->pause();
+			auto isPlaying = model->isPlaying();
+			!isPlaying ? model->play() : model->pause();
+		}
+	}
+	break;
+	case KeyCode::F1:
+	{
+		if (keyDown) g_rotate360 = !g_rotate360;
+	}
+	break;
+	case KeyCode::F2:
+	{
+		if (keyDown)
+		{
+			auto material = createRef<Material>();
+			auto *vs =
+#include "../../libnb/newbrush/shader/Normal.vs"
+				;
+			auto *fs =
+#include "../../libnb/newbrush/shader/Normal.fs"
+				;
+			material->shader = ShaderLibrary::get("shader_normal", vs, fs);
+			model->setMaterial(material);
+		}
+	}
+	break;
+	case KeyCode::F3:
+	{
+		if (keyDown)
+		{
+			auto material = createRef<Material>();
+			auto *vs =
+#include "../../libnb/newbrush/shader/Fresnel.vs"
+				;
+			auto *fs =
+#include "../../libnb/newbrush/shader/Fresnel.fs"
+				;
+			material->shader = ShaderLibrary::get("shader_fresnel", vs, fs);
+			model->setMaterial(material);
 		}
 	}
 	break;
 	default: break;
+	}
+}
+
+void ModelBrowser::onDrop(const DropEventArgs & e)
+{
+	auto paths = e.paths;
+
+	if (paths.size() == 1)
+	{
+		load(paths[0]);
+	}
+	else if (paths.size() == 2)
+	{
+		auto const &vs = paths[0];
+		auto const &fs = paths[1];
+
 	}
 }
 

@@ -2,8 +2,7 @@
 #include <array>
 #include <vector>
 #include <thread>
-#include "newbrush/Core.h"
-#include "newbrush/glm.h"
+#include "newbrush/Types.h"
 
 namespace nb
 {

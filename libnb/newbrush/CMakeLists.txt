@@ -9,13 +9,13 @@ SET(LIB_NAME "libnb")
 set(INCLUDE_PREFIX ${CMAKE_SOURCE_DIR}/libnb/newbrush)
 file(GLOB_RECURSE INC_LIST *.h *.hpp) 
 file(GLOB_RECURSE SRC_LIST *.cpp *.c)
-set(SRC_LIST ${SRC_LIST} ${3RDPARTY_DIR}/include/glad/glad.c ${3RDPARTY_DIR}/include/clipper/clipper.cpp  ${3RDPARTY_DIR}/include/simdjson/simdjson.cpp)
+file(GLOB_RECURSE SHADER_LIST shader/*.vs shader/*.fs)
+set(SRC_LIST ${SRC_LIST} ${3RDPARTY_DIR}/include/glad/glad.c ${3RDPARTY_DIR}/include/clipper/clipper.cpp ${3RDPARTY_DIR}/include/simdjson/simdjson.cpp)
 if(WIN32)
-#	group_by_dir(${INCLUDE_PREFIX} ${INC_LIST})
-#	group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} ${SRC_LIST})
+	group_by_dir(${INCLUDE_PREFIX} ${SHADER_LIST})
 endif()
-
-add_library(${LIB_NAME} SHARED ${INC_LIST} ${SRC_LIST})
+ 
+add_library(${LIB_NAME} SHARED ${INC_LIST} ${SRC_LIST} ${SHADER_LIST})
 set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME nb)
 
 IF("${TARGET}" MATCHES "win")

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "newbrush/Node.h"
 #include "newbrush/Components.h"
-#include "newbrush/Transform.h"
 
 namespace nb{
 

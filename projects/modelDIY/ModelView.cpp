@@ -1,6 +1,5 @@
 #include "ModelView.h"
 #include "MainView.h"
-#include "glm/glm.hpp"
 
 ModelView::ModelView()
 {
@@ -22,7 +21,7 @@ void ModelView::load(ModelType type)
 	if (type == ModelType::XiaoV)
 	{
 		if(!m_xiaovModel)
-			m_xiaovModel = loadModel(RES_DIR"/models/xiaov/1.fbx", glm::vec3(0.0f, -2.3f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.030f));
+			m_xiaovModel = loadModel(RES_DIR"/modelDIY/xiaov/1.fbx", glm::vec3(0.0f, -2.3f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.030f));
 
 		scene->clearChildren();
 		scene->addChild(m_xiaovModel);
@@ -40,42 +39,42 @@ void ModelView::load(ModelType type)
 			camera->setTranslate(translate);
 			camera->setRotate(rotate);
 
-			m_diyModel = loadModel(RES_DIR"/models/modelDiy/1.fbx", glm::vec3(0.0f, -3.2f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.030f));
+			m_diyModel = loadModel(RES_DIR"/modelDIY/diy/1.fbx", glm::vec3(0.0f, -3.2f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.030f));
 			MainView::get()->diyNode->initDresses();
 
 			auto hairStandar0Material = createRef<PhongMaterial>();
 			hairStandar0Material->emissionColor = { 128, 128, 128 };
-			hairStandar0Material->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-polySurfaceShape9.png");
+			hairStandar0Material->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-polySurfaceShape9.png");
 			auto zhamaoMaterial = createRef<PhongMaterial>();
 			zhamaoMaterial->emissionColor = { 128, 128, 128 };
-			zhamaoMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-ZhaMaoShape.png");
+			zhamaoMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-ZhaMaoShape.png");
 			auto ceMaterial = createRef<PhongMaterial>();
 			ceMaterial->emissionColor = { 128, 128, 128 };
-			ceMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-hair_CeShape.png");
+			ceMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-hair_CeShape.png");
 			auto bianMaterial = createRef<PhongMaterial>();
 			bianMaterial->emissionColor = { 128, 128, 128 };
-			bianMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-pSphereShape17.png");
+			bianMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-pSphereShape17.png");
 			auto smallMaterial = createRef<PhongMaterial>();
 			smallMaterial->emissionColor = { 128, 128, 128 };
-			smallMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-pSphereShape19.png");
+			smallMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-pSphereShape19.png");
 			auto mouseMiaoMaterial = createRef<PhongMaterial>();
 			mouseMiaoMaterial->emissionColor = { 128, 128, 128 };
-			mouseMiaoMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-polySurface408Shape.png");
+			mouseMiaoMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-polySurface408Shape.png");
 			auto mouseCloseMaterial = createRef<PhongMaterial>();
 			mouseCloseMaterial->emissionColor = { 128, 128, 128 };
-			mouseCloseMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-Mouth_closeShape.png");
+			mouseCloseMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-Mouth_closeShape.png");
 			auto mouseHahaMaterial = createRef<PhongMaterial>();
 			mouseHahaMaterial->emissionColor = { 128, 128, 128 };
-			mouseHahaMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-Mouth_HaHa1Shape.png");
+			mouseHahaMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-Mouth_HaHa1Shape.png");
 			auto yifuAMaterial = createRef<PhongMaterial>();
 			yifuAMaterial->emissionColor = { 128, 128, 128 };
-			yifuAMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-YiFu_A_polySurface9_polySurface9Shape.png");
+			yifuAMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-YiFu_A_polySurface9_polySurface9Shape.png");
 			auto shoesBlackMaterial = createRef<PhongMaterial>();
 			shoesBlackMaterial->emissionColor = { 128, 128, 128 };
-			shoesBlackMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-polySurface398Shape.png");
+			shoesBlackMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-polySurface398Shape.png");
 			auto shoesBoyMaterial = createRef<PhongMaterial>();
 			shoesBoyMaterial->emissionColor = { 128, 128, 128 };
-			shoesBoyMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/models/modelDiy/baked-polySurface229Shape.png");
+			shoesBoyMaterial->emissionMapping = createRef<Texture2D>(RES_DIR"/modelDIY/diy/baked-polySurface229Shape.png");
 			m_diyModel->setMaterial("polySurface10", hairStandar0Material);
 			m_diyModel->setMaterial("ZhaMao", zhamaoMaterial);
 			m_diyModel->setMaterial("hair_Ce", ceMaterial);
@@ -128,12 +127,6 @@ void ModelView::onTouch(const TouchEventArgs & e)
 		auto newAngle = glm::degrees(rotate.y) + ptOffset.x;
 		rotate.y = glm::radians(newAngle);
 		model->getTransform()->setRotate(rotate);
-
-		//auto camera = getScene()->getCamera();
-		//auto rotate = camera->getRotate();
-		//auto newAngle = glm::degrees(rotate.y) + ptOffset.x;
-		//rotate.y = glm::radians(newAngle);
-		//camera->setRotate(rotate);
 	}
 	else if (e.action == TouchActionE::up)
 	{

@@ -96,11 +96,14 @@ do{\
 
 namespace nb
 {
-	//获取距1970.1.1的秒/毫秒/微秒/纳秒数
+	//获取距1970.1.1的 纳秒/微秒/毫秒/秒数
 	NB_API inline uint64_t getNanoseconds()		{ return std::chrono::steady_clock::now().time_since_epoch().count(); }
 	NB_API inline uint64_t getMicroseconds()	{ return getNanoseconds() / 1000; }
 	NB_API inline uint64_t getMilliseconds()	{ return getNanoseconds() / 1000000; }
 	NB_API inline uint64_t getSeconds()			{ return getNanoseconds() / 1000000000; }
+
+	//获取模块启动时间
+	NB_API uint64_t getStarupMilliseconds();
 
 	//获取本进程id
 	NB_API uint32_t getPid();

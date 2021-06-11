@@ -2,7 +2,6 @@
 #include "newbrush/Node.h"
 #include "newbrush/Brush.h"
 #include "newbrush/Event.h"
-#include "newbrush/Transform.h"
 
 namespace nb
 {
@@ -95,8 +94,6 @@ public:
 
 	void setTransform(ref<Transform2D> transform);
 	ref<Transform2D> getTransform() const;
-
-	glm::mat4 getRenderTransform() const;
 
 	void setEnable(bool bEnable);
 	bool isEnable() const;

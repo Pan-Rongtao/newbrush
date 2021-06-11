@@ -26,6 +26,8 @@ android {
             jniLibs.srcDirs = ['../../../../dist/android/lib']
         }
     }
+    /*
+
     //-------------添加系统签名 begin -------------
     signingConfigs {
         platform {
@@ -39,6 +41,8 @@ android {
         bt.signingConfig = signingConfigs.platform
     }
     //----------------签名 end-------------------
+
+     */
 }
 
 dependencies {

@@ -24,6 +24,133 @@ public:
 };
 
 /**************************************
+*	变换
+*
+*	摄像头基类 Camera
+*	透视摄像头 PerspectiveCamera
+*	正交摄像头 OrthographicCamera
+****************************************/
+
+class NB_API Transform : public Object
+{
+	RTTR_ENABLE(Object)
+public:
+	Transform(const glm::vec3 &position = glm::vec3(0.0f), const glm::vec3 &rotation = glm::vec3(0.0), const glm::vec3 &scale = glm::vec3(1.0));
+
+	//单位矩阵
+	bool isIdentity() const							{ return glm::isIdentity(value(), 0.00001f); }
+	static const Transform &identity()				{ static Transform t; return t; }
+	static const glm::mat4 &identityMatrix4()		{ static const glm::mat4 m(1.0f); return m; };
+
+	//矩阵（设置矩阵值后，平移、旋转、缩放会被计算）
+	void setValue(const glm::mat4x4 &value);
+	const glm::mat4x4 &value() const				{ return m_matrix; }
+
+	void setTranslate(const glm::vec3 &translate)	{ m_translate = translate; updateMatrix(); }
+	void setRotate(const glm::vec3 &rotate)			{ m_rotate = rotate; updateMatrix(); }
+	void setRotateCenter(const glm::vec3 &center)	{ m_rotateCenter = center; updateMatrix(); }
+	void setScale(const glm::vec3 &scale)			{ m_scale = scale; updateMatrix(); }
+	void setScaleCenter(const glm::vec3 &center)	{ m_scaleCenter = center; updateMatrix(); }
+	const glm::vec3 &getTranslate() const			{ return m_translate; }
+	const glm::vec3 &getRotate() const				{ return m_rotate; }
+	const glm::vec3 &getScale() const				{ return m_scale; }
+
+private:
+	void updateMatrix();
+
+	glm::vec3 m_translate, m_rotate, m_rotateCenter, m_scale, m_scaleCenter;	//旋转（欧拉角旋转弧度，传入请按{x, y, z}顺序传入）
+	glm::mat4 m_matrix;
+};
+
+class NB_API Transform2D : public Object
+{
+	RTTR_ENABLE(Object)
+public:
+	Transform2D() = default;
+	virtual ~Transform2D() = default;
+	virtual glm::mat4x4 value() = 0;
+};
+
+class NB_API TranslateTransform2D : public Transform2D
+{
+	RTTR_ENABLE(Transform2D)
+public:
+	TranslateTransform2D() : TranslateTransform2D(0.0f, 0.0f)	{}
+	TranslateTransform2D(float x, float y) : m_x(x), m_y(y)		{}
+	virtual ~TranslateTransform2D() = default;
+
+	void setX(float x)											{ m_x = x; }
+	float getX() const											{ return m_x; }
+	void setY(float y)											{ m_y = y; }
+	float getY() const											{ return m_y; }
+	virtual glm::mat4x4 value() override;
+
+private:
+	float m_x, m_y;
+};
+
+class NB_API RotateTransform2D : public Transform2D
+{
+	RTTR_ENABLE(Transform2D)
+public:
+	RotateTransform2D() : RotateTransform2D(0.0f, 0.0f, 0.0f) {}
+	RotateTransform2D(float angle) : RotateTransform2D(angle, 0.0f, 0.0f) {}
+	RotateTransform2D(float angle, float centerX, float centerY) : m_angle(angle), m_centerX(centerX), m_centerY(centerY) {}
+	virtual ~RotateTransform2D() = default;
+
+	void setAngle(float angle)									{ m_angle = angle; }
+	float getAngle() const										{ return m_angle; }
+	void setCenterX(float centerX)								{ m_centerX = centerX; }
+	float getCenterX() const									{ return m_centerX; }
+	void setCenterY(float centerY)								{ m_centerY = centerY; }
+	float getCenterY() const									{ return m_centerY; }
+	virtual glm::mat4x4 value() override;
+
+private:
+	float m_angle, m_centerX, m_centerY;
+};
+
+class NB_API ScaleTransform2D : public Transform2D
+{
+	RTTR_ENABLE(Transform2D)
+public:
+	ScaleTransform2D() : ScaleTransform2D(1.0f, 1.0f, 0.0f, 0.0f) {}
+	ScaleTransform2D(float scaleX, float scaleY) : ScaleTransform2D(scaleX, scaleY, 0.0f, 0.0f) {}
+	ScaleTransform2D(float scaleX, float scaleY, float centerX, float centerY) : m_scaleX(scaleX), m_scaleY(scaleY), m_centerX(centerX), m_centerY(centerY) {}
+	virtual ~ScaleTransform2D() = default;
+
+	void setScaleX(float scaleX)								{ m_scaleX = scaleX; }
+	float getScaleX() const										{ return m_scaleX; }
+	void setScaleY(float scaleY)								{ m_scaleY = scaleY; }
+	float getScaleY() const										{ return m_scaleY; }
+	void setScale(glm::vec2 scale)								{ m_scaleX = scale.x; m_scaleY = scale.y; }
+	glm::vec2 getScale() const									{ return{ m_scaleX, m_scaleY }; }
+	void setCenterX(float centerX)								{ m_centerX = centerX; }
+	float getCenterX() const									{ return m_centerX; }
+	void setCenterY(float centerY)								{ m_centerY = centerY; }
+	float getCenterY() const									{ return m_centerY; }
+	virtual glm::mat4x4 value() override;
+
+private:
+	float m_scaleX, m_scaleY, m_centerX, m_centerY;
+};
+
+class NB_API TransformGroup2D : public Transform2D
+{
+	RTTR_ENABLE(Transform2D)
+public:
+	TransformGroup2D();
+	TransformGroup2D(const std::vector<ref<Transform2D>> &children) : m_children(children) {}
+
+	void add(ref<Transform2D> t)								{ m_children.push_back(t); }
+	uint32_t count() const										{ return m_children.size(); }
+	virtual glm::mat4x4 value() override;
+
+private:
+	std::vector<ref<Transform2D>> m_children;
+};
+
+/**************************************
 *	摄像头
 *
 *	摄像头基类 Camera
@@ -48,35 +175,30 @@ public:
 	//水平夹角为fov，宽高比为aspect，近截面为nearPlane，远截面为farPlane
 	PerspectiveCamera();
 
-	void setTranslate(const glm::vec3 &translate);
-	void setRotate(const glm::vec3 &rotate);
-	void setScale(const glm::vec3 &scale);
-	const glm::vec3 &getTranslate() const;
-	const glm::vec3 &getRotate() const;
-	const glm::vec3 &getScale() const;
+	void setTranslate(const glm::vec3 &translate)				{ m_translate = translate; updateMatrix(); }
+	void setRotate(const glm::vec3 &rotate)						{ m_rotate = rotate; updateMatrix(); }
+	void setScale(const glm::vec3 &scale)						{ m_scale = scale; updateMatrix(); }
+	const glm::vec3 &getTranslate() const						{ return m_translate; }
+	const glm::vec3 &getRotate() const							{ return m_rotate; }
+	const glm::vec3 &getScale() const							{ return m_scale; }
 
-	void setFov(float fov);
-	void setAspect(float aspect);
-	void setNearPlane(float nearPlane);
-	void setFarPlane(float farPlane);
-	float getFov() const;
-	float getAspect() const;
-	float getNearPlane() const;
-	float getFarPlane() const;
+	void setFov(float fov)										{ m_fov = fov; updateMatrix(); }
+	void setAspect(float aspect)								{ if (std::isnan(aspect) || aspect == m_aspect) return; m_aspect = aspect; updateMatrix(); }
+	void setNearPlane(float nearPlane)							{ m_nearPlane = nearPlane; updateMatrix(); }
+	void setFarPlane(float farPlane)							{ m_farPlane = farPlane; updateMatrix(); }
+	float getFov() const										{ return m_fov; }
+	float getAspect() const										{ return m_aspect; }
+	float getNearPlane() const									{ return m_nearPlane; }
+	float getFarPlane() const									{ return m_farPlane; }
 
 	//获取观察矩阵/透视矩阵
-	const glm::mat4 &getViewProjectionMatrix() const override;
+	const glm::mat4 &getViewProjectionMatrix() const override	{ return m_viewProjectionMatrix; }
 
 private:
 	void updateMatrix();
 
-	glm::vec3 m_translate;		//平移
-	glm::vec3 m_rotate;			//旋转（欧拉角旋转弧度，传入请按{x, y, z}顺序传入）
-	glm::vec3 m_scale;			//缩放
-	float m_fov;
-	float m_aspect;
-	float m_nearPlane;
-	float m_farPlane;
+	glm::vec3 m_translate, m_rotate, m_scale;					//旋转（欧拉角旋转弧度，传入请按{x, y, z}顺序传入）
+	float m_fov, m_aspect, m_nearPlane, m_farPlane;
 	glm::mat4 m_viewProjectionMatrix;
 };
 
@@ -84,30 +206,30 @@ class NB_API OrthographicCamera : public Camera
 {
 	RTTR_ENABLE(Camera)
 public:
-	OrthographicCamera();
+	OrthographicCamera() : m_matrix(1.0f) {}
 
-	void resize(float width, float height);
-	const glm::mat4 &getViewProjectionMatrix() const override;
+	void resize(float width, float height)						{ m_matrix = glm::ortho(0.0f, width, height, 0.0f, -1000.0f, 1000.0f); }
+	const glm::mat4 &getViewProjectionMatrix() const override	{ return m_matrix; }
 
 private:
 	glm::mat4 m_matrix;
 };
 
-NB_API ref<OrthographicCamera> sharedCamera2D();
+NB_API inline ref<OrthographicCamera> sharedCamera2D()			{ static auto sharedCamera = createRef<OrthographicCamera>(); return sharedCamera; }
 
 /**************************************
 *	着色器
 *
 *	着色器 Shader
 *	着色器库 ShaderLibrary
-*	立方体纹理	TextureCubemap
+*	
 ****************************************/
 class NB_API Shader
 {
 public:
+	~Shader();
 	Shader(const Shader &other) = delete;
 	void operator =(const Shader &other) = delete;
-	~Shader();
 
 	//编译链接
 	//异常：std::runtime_error
@@ -117,23 +239,20 @@ public:
 	int getUniformLocation(const char *name) const;
 	void bindAttributeLocation(uint32_t location, const char *name);
 
-	uint32_t id();
+	uint32_t id() { return m_programHandle; }
 
-	//激活/反激活
 	void use();
 	void disuse();
 
-	//更新位置为location的attribute
+	//更新的attribute
 	void vertexAttribute(int location, float v);
 	void vertexAttribute(int location, const glm::vec2 &vec);
 	void vertexAttribute(int location, const glm::vec3 &vec);
 	void vertexAttribute(int location, const glm::vec4 &vec);
 	void vertexAttributePointer(int location, int dimension, int stride, const void *data);
 
-	//更新位置为name的unform
+	//更新uniform
 	void setBool(const char *name, bool v);
-
-	//float
 	void setFloat(const char *name, float v);
 	void setFloatArray(const char *name, const std::vector<float> &v);
 	void setFloat2(const char *name, const glm::vec2 &v);
@@ -142,8 +261,6 @@ public:
 	void setFloat3Array(const char *name, const std::vector<glm::vec3> &v);
 	void setFloat4(const char *name, const glm::vec4 &v);
 	void setFloat4Array(const char *name, const std::vector<glm::vec4> &v);
-
-	//int
 	void setInt(const char *name, int v);
 	void setIntArray(const char *name, const std::vector<int> &v);
 	void setIntArray(const char *name, int *v, int count);
@@ -153,17 +270,15 @@ public:
 	void setInt3Array(const char *name, const std::vector<glm::ivec3> &v);
 	void setInt4(const char *name, const glm::ivec4 &vec);
 	void setInt4Array(const char *name, const std::vector<glm::ivec4> &v);
-
-	//mat
 	void setMat2(const char *name, const glm::mat2 &v);
 	void setMat2Array(const char *name, const std::vector<glm::mat2> &v);
-	void setMat3(const char *name, const glm::mat3 &matrix);
+	void setMat3(const char *name, const glm::mat3 &v);
 	void setMat3Array(const char *name, const std::vector<glm::mat3> &v);
-	void setMat4(const char *name, const glm::mat4 &matrix);
+	void setMat4(const char *name, const glm::mat4 &v);
 	void setMat4Array(const char *name, const std::vector<glm::mat4> &v);
 
 private:
-	Shader();
+	Shader() : m_programHandle(0) {}
 
 	uint32_t m_programHandle;
 	friend class ShaderLibrary;
@@ -172,11 +287,9 @@ private:
 class NB_API ShaderLibrary
 {
 public:
-	static ref<Shader> add(const std::string &name, const std::string &vsSource, const std::string &fsSource);
-	static ref<Shader> addFromFile(const std::string &name, const std::string &filePath);
-	static bool exists(const std::string &name);
+	static ref<Shader> get(const std::string &name, const std::string &vsSource, const std::string &fsSource);
 	static ref<Shader> get(const std::string &name);
-
+	static ref<Shader> getFromFile(const std::string &name, const std::string &filePath);
 private:
 	static void initSystemShader();
 };
@@ -209,22 +322,17 @@ class NB_API Texture
 public:
 	virtual ~Texture();
 
-	unsigned id() const;
-
-	//激活当前采用单元
+	unsigned id() const					{ return m_handle; }
 	void active();
+	void activeAndBind()				{ active(); bind(); }
+	void setSamplerUnit(unsigned unit)	{ m_samplerUnit = unit; }
+	unsigned samplerUnit()				{ return m_samplerUnit; }
 
-	//纹理采样单元，默认0
-	void setSamplerUnit(unsigned unit);
-	unsigned samplerUnit();
-
-	//绑定/解除当前纹理
+	//绑定纹理
 	virtual void bind() = 0;
 	virtual void unbind() = 0;
 
-	void activeAndBind();
-
-	//设置纹理环绕方式
+	//纹理环绕方式
 	virtual void setWrappingS(TextureWrappingE wrapping) = 0;
 	virtual void setWrappingT(TextureWrappingE wrapping) = 0;
 	virtual TextureWrappingE wrappingS() const = 0;
@@ -248,7 +356,6 @@ class NB_API Texture2D : public Texture
 public:
 	Texture2D();
 	Texture2D(const std::string &path);
-
 	virtual ~Texture2D() = default;
 
 	virtual void bind() override;
@@ -268,18 +375,17 @@ public:
 
 	void genMipmap();
 
-	int32_t getChannels() const;
-	bool isValid() const;
-
-	float width() const;
-	float height() const;
+	bool isValid() const			{ return m_channels != 0; }
+	int32_t getChannels() const		{ return m_channels; }
+	float width() const				{ return m_width; }
+	float height() const			{ return m_height; }
 
 	bool save(const std::string &path, uint32_t quality = 1);
 
 protected:
-	float m_width{ 0.0f };
-	float m_height{ 0.0f };
-	int32_t m_channels{ 0 };
+	float m_width;
+	float m_height;
+	int32_t m_channels;
 };
 
 class NB_API TextureCubemap : public Texture
@@ -301,16 +407,20 @@ public:
 
 	//更新六面数据(右、左、底、顶、后、前)
 	void update(const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back);
-
 };
 
 struct NB_API TextureFrame
 {
+	TextureFrame();
+	TextureFrame(ref<Texture2D> _texture);
+	TextureFrame(ref<Texture2D> _texture, const Rect &rc);
+
 	ref<Texture2D> texture;
-	glm::vec2 offset;
-	glm::vec2 size;
-	bool rotated;
-	glm::vec2 trimmedSize;
+	glm::vec4 frame;		//x,y：帧图片相对于texture的偏移量;w,z：帧图片实际（trimmed之后）的尺寸（对应于"frame"）
+	glm::vec2 sourceSize;	//图片原始的尺寸（对应于"sourceSize")
+	glm::vec2 pinch;		//图片的缩进xy（对应于"spriteSourceSize.xy"）
+	bool rotated;			//是否旋转（对应于"rotated"，顺时针90°）
+
 };
 
 class NB_API TextureLibrary
@@ -336,7 +446,6 @@ public:
 *	点光源 PointLight
 *	聚光灯 SpotLight
 ******************************************************/
-class Shader;
 class NB_API Light : public Object
 {
 	RTTR_ENABLE(Object)
@@ -400,51 +509,44 @@ public:
 	float outerConeAngle{ 180.0f };				//外圈锥形投影部分的角度
 };
 
-
 /*****************************************************
 *	材质
 *
 *	材质基类 Material
-*	纯色材质 SolidColorMaterial
+*	纯色材质 FlatMaterial
 *	渐变色材质 LinearGrandientMaterial
 *	Phong材质 PhongMaterial
 *	天空盒材质 SkyBoxMaterial
 *	立方体贴图材质 CubemapMaterial
 ******************************************************/
-class Camera;
-class Shader;
-class Texture;
 class NB_API Material : public Object
 {
 	RTTR_ENABLE(Object)
 public:
-	//执行更新uniform的动作，在mesh渲染时调用
-	virtual void uploadUniform(ref<Camera> camera) = 0;
-
-	std::string name;
-	ref<Shader> shader;
-
-protected:
 	Material() = default;
 	Material(ref<Shader> _shader);
 
+	//执行更新uniform的动作，在mesh渲染时调用
+	virtual void uploadUniform(ref<Camera> camera) {}
+
+	std::string name;
+	ref<Shader> shader;
 };
 
-class NB_API SolidColorMaterial : public Material
+class NB_API FlatMaterial : public Material
 {
 	RTTR_ENABLE(Material)
 public:
-	SolidColorMaterial();
-	SolidColorMaterial(const Color &_color);
+	FlatMaterial() : FlatMaterial(Colors::black) {}
+	FlatMaterial(const Color &_color);
 
 	virtual void uploadUniform(ref<Camera> camera) override;
 
 	Color color;
 };
 
-class NB_API GradientStop
+struct GradientStop
 {
-public:
 	float offset;
 	Color color;
 };
@@ -454,13 +556,12 @@ class NB_API LinearGrandientMaterial : public Material
 	RTTR_ENABLE(Material)
 public:
 	LinearGrandientMaterial();
-	LinearGrandientMaterial(float _lenght, const std::vector<GradientStop> &_grandients);
 
 	virtual void uploadUniform(ref<Camera> camera) override;
 
-	bool vertical;
-	float lenght;
-	std::vector<GradientStop> grandients;
+	glm::vec4 box;
+	bool horizontal;
+	std::vector<GradientStop> gradientStops;
 };
 
 class NB_API PhongMaterial : public Material
@@ -508,6 +609,77 @@ public:
 	Color cubeMapColor;			//底色
 	ref<Texture> diffuseMapping;//漫反射贴图
 	ref<Texture> cubeMapping;	//立方体贴图
+};
+
+/*****************************************************
+*	面片
+*
+*	顶点类 Vertex
+*	面片 Mesh
+*
+******************************************************/
+struct Vertex
+{
+	glm::vec3 position;
+	glm::vec4 color;
+	glm::vec2 uv;
+	glm::vec3 normal;
+	glm::vec4 boneIndexs{ 0.0f };
+	glm::vec4 boneWeights{ 0.0f };
+	bool addBone(float boneIndex, float boneWeight);
+};
+
+class NB_API Mesh
+{
+public:
+	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, ref<Material> materia);
+	~Mesh();
+
+	virtual void draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>> &lights) const;
+
+	std::string name;
+	ref<Material> material;
+	bool hasBone;
+	bool renderAble;
+
+protected:
+	void setup(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
+
+private:
+	uint32_t vao, vbo, ebo, indicesSize;
+};
+
+/*****************************************************
+*	定时器
+*
+*	定时器类 Timer
+******************************************************/
+class NB_API Timer : public Object
+{
+public:
+	//构建一个定时器，它的间隔为ms，单次触发模式为singleShot
+	explicit Timer(uint64_t ms = 1000, bool singleShot = false) : m_interval(ms), m_singleShot(singleShot) {}
+	~Timer()							{ stop(); }
+
+	void setInterval(uint64_t msec)		{ m_interval = msec; }
+	uint64_t interval() const			{ return m_interval; }
+	void setSingleShot(bool singleShot)	{ m_singleShot = singleShot; }
+	bool isSingleShot() const			{ return m_singleShot; }
+	void start()						{ remove(this); add(this); }
+	void start(uint64_t msec)			{ setInterval(msec); start(); }
+	void stop()							{ remove(this); }
+	bool isActive() const;
+
+	Event<EventArgs> Tick;
+
+	static void driveInLoop();			//引发定时器引擎，在循环中调用
+
+private:
+	static void add(Timer *timer);
+	static std::multimap<uint64_t, Timer *>::iterator remove(Timer *timer);
+
+	uint64_t m_interval;
+	bool m_singleShot;
 };
 
 }

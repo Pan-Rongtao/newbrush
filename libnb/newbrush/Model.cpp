@@ -1,16 +1,329 @@
 ﻿#include "newbrush/Model.h"
 #include "newbrush/Log.h"
-#include "newbrush/SceneAnimator.h"
 #include "assimp/cimport.h"
+#include "assimp/scene.h"
+#include "assimp/ai_assert.h"
+#include "assimp/postprocess.h"
 #include "ghc/filesystem.hpp"
+
+/*namespace AssimpView是assimp_view的代码，请勿改动*/
+namespace AssimpView
+{
+class AnimEvaluator
+{
+public:
+	AnimEvaluator(const aiAnimation* pAnim) : mAnim(pAnim), mLastTime(0.0) { mLastPositions.resize(pAnim->mNumChannels, std::make_tuple(0, 0, 0)); }
+	void Evaluate(double pTime);
+	const std::vector<aiMatrix4x4>& GetTransformations() const { return mTransforms; }
+
+protected:
+	const aiAnimation* mAnim;
+	double mLastTime;
+	std::vector<std::tuple<unsigned int, unsigned int, unsigned int> > mLastPositions;
+	std::vector<aiMatrix4x4> mTransforms;
+};
+
+struct SceneAnimNode 
+{
+	std::string mName;
+	SceneAnimNode* mParent;
+	std::vector<SceneAnimNode*> mChildren;
+	aiMatrix4x4 mLocalTransform;
+	aiMatrix4x4 mGlobalTransform;
+	int mChannelIndex;
+
+	SceneAnimNode() : mName(), mParent(nullptr), mChildren(), mLocalTransform(), mGlobalTransform(), mChannelIndex(-1) {}
+	SceneAnimNode(const std::string& pName) : mName(pName), mParent(nullptr), mChildren(), mLocalTransform(), mGlobalTransform(), mChannelIndex(-1) {}
+	~SceneAnimNode() { for (std::vector<SceneAnimNode*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it) { delete *it; } }
+};
+
+class SceneAnimator 
+{
+public:
+	SceneAnimator(const aiScene* pScene, size_t pAnimIndex = 0);
+	~SceneAnimator();
+
+	void SetAnimIndex(size_t pAnimIndex);
+	void Calculate(double pTime);
+	const aiMatrix4x4& GetLocalTransform(const aiNode* node) const;
+	const aiMatrix4x4& GetGlobalTransform(const aiNode* node) const;
+	const std::vector<aiMatrix4x4>& GetBoneMatrices(const aiNode* pNode, size_t pMeshIndex = 0);
+	size_t CurrentAnimIndex() const { return mCurrentAnimIndex; }
+	aiAnimation* CurrentAnim() const { return  static_cast<unsigned int>(mCurrentAnimIndex) < mScene->mNumAnimations ? mScene->mAnimations[mCurrentAnimIndex] : NULL;}
+
+protected:
+	SceneAnimNode* CreateNodeTree(aiNode* pNode, SceneAnimNode* pParent);
+	void UpdateTransforms(SceneAnimNode* pNode, const std::vector<aiMatrix4x4>& pTransforms);
+	void CalculateGlobalTransform(SceneAnimNode* pInternalNode);
+
+protected:
+	const aiScene* mScene;
+	int mCurrentAnimIndex;
+	AnimEvaluator* mAnimEvaluator;
+	SceneAnimNode* mRootNode;
+	typedef std::map<const aiNode*, SceneAnimNode*> NodeMap;
+	NodeMap mNodesByName;
+	typedef std::map<const char*, const aiNode*> BoneMap;
+	BoneMap mBoneNodesByName;
+	std::vector<aiMatrix4x4> mTransforms;
+};
+
+void AnimEvaluator::Evaluate(double pTime)
+{
+	double ticksPerSecond = mAnim->mTicksPerSecond != 0.0 ? mAnim->mTicksPerSecond : 25.0;
+	pTime *= ticksPerSecond;
+
+	double time = 0.0f;
+	if (mAnim->mDuration > 0.0) {
+		time = fmod(pTime, mAnim->mDuration);
+	}
+
+	if (mTransforms.size() != mAnim->mNumChannels) {
+		mTransforms.resize(mAnim->mNumChannels);
+	}
+
+	for (unsigned int a = 0; a < mAnim->mNumChannels; ++a) {
+		const aiNodeAnim* channel = mAnim->mChannels[a];
+
+		// ******** Position *****
+		aiVector3D presentPosition(0, 0, 0);
+		if (channel->mNumPositionKeys > 0) {
+			unsigned int frame = (time >= mLastTime) ? std::get<0>(mLastPositions[a]) : 0;
+			while (frame < channel->mNumPositionKeys - 1) {
+				if (time < channel->mPositionKeys[frame + 1].mTime) {
+					break;
+				}
+				++frame;
+			}
+
+			unsigned int nextFrame = (frame + 1) % channel->mNumPositionKeys;
+			const aiVectorKey& key = channel->mPositionKeys[frame];
+			const aiVectorKey& nextKey = channel->mPositionKeys[nextFrame];
+			double diffTime = nextKey.mTime - key.mTime;
+			if (diffTime < 0.0) {
+				diffTime += mAnim->mDuration;
+			}
+			if (diffTime > 0) {
+				float factor = float((time - key.mTime) / diffTime);
+				presentPosition = key.mValue + (nextKey.mValue - key.mValue) * factor;
+			}
+			else {
+				presentPosition = key.mValue;
+			}
+
+			std::get<0>(mLastPositions[a]) = frame;
+		}
+
+		// ******** Rotation *********
+		aiQuaternion presentRotation(1, 0, 0, 0);
+		if (channel->mNumRotationKeys > 0) {
+			unsigned int frame = (time >= mLastTime) ? std::get<1>(mLastPositions[a]) : 0;
+			while (frame < channel->mNumRotationKeys - 1) {
+				if (time < channel->mRotationKeys[frame + 1].mTime) {
+					break;
+				}
+				++frame;
+			}
+
+			unsigned int nextFrame = (frame + 1) % channel->mNumRotationKeys;
+			const aiQuatKey& key = channel->mRotationKeys[frame];
+			const aiQuatKey& nextKey = channel->mRotationKeys[nextFrame];
+			double diffTime = nextKey.mTime - key.mTime;
+			if (diffTime < 0.0) {
+				diffTime += mAnim->mDuration;
+			}
+			if (diffTime > 0) {
+				float factor = float((time - key.mTime) / diffTime);
+				aiQuaternion::Interpolate(presentRotation, key.mValue, nextKey.mValue, factor);
+			}
+			else {
+				presentRotation = key.mValue;
+			}
+
+			std::get<1>(mLastPositions[a]) = frame;
+		}
+
+		// ******** Scaling **********
+		aiVector3D presentScaling(1, 1, 1);
+		if (channel->mNumScalingKeys > 0) {
+			unsigned int frame = (time >= mLastTime) ? std::get<2>(mLastPositions[a]) : 0;
+			while (frame < channel->mNumScalingKeys - 1) {
+				if (time < channel->mScalingKeys[frame + 1].mTime) {
+					break;
+				}
+				++frame;
+			}
+
+			presentScaling = channel->mScalingKeys[frame].mValue;
+			std::get<2>(mLastPositions[a]) = frame;
+		}
+
+		// build a transformation matrix from it
+		aiMatrix4x4& mat = mTransforms[a];
+		mat = aiMatrix4x4(presentRotation.GetMatrix());
+		mat.a1 *= presentScaling.x; mat.b1 *= presentScaling.x; mat.c1 *= presentScaling.x;
+		mat.a2 *= presentScaling.y; mat.b2 *= presentScaling.y; mat.c2 *= presentScaling.y;
+		mat.a3 *= presentScaling.z; mat.b3 *= presentScaling.z; mat.c3 *= presentScaling.z;
+		mat.a4 = presentPosition.x; mat.b4 = presentPosition.y; mat.c4 = presentPosition.z;
+	}
+
+	mLastTime = time;
+}
+
+const aiMatrix4x4 IdentityMatrix;
+SceneAnimator::SceneAnimator(const aiScene* pScene, size_t pAnimIndex)
+	: mScene(pScene)
+	, mCurrentAnimIndex(-1)
+	, mAnimEvaluator(nullptr)
+	, mRootNode(nullptr)
+{
+	for (unsigned int i = 0; i < pScene->mNumMeshes; ++i) {
+		const aiMesh* mesh = pScene->mMeshes[i];
+		for (unsigned int n = 0; n < mesh->mNumBones; ++n) {
+			const aiBone* bone = mesh->mBones[n];
+			auto node = pScene->mRootNode->FindNode(bone->mName);
+			mBoneNodesByName[bone->mName.data] = node;
+		}
+	}
+	SetAnimIndex(pAnimIndex);
+}
+
+SceneAnimator::~SceneAnimator() {
+	delete mRootNode;
+	delete mAnimEvaluator;
+}
+
+void SceneAnimator::SetAnimIndex(size_t pAnimIndex) {
+	if (pAnimIndex == static_cast<unsigned int>(mCurrentAnimIndex)) {
+		return;
+	}
+
+	delete mRootNode;  mRootNode = nullptr;
+	delete mAnimEvaluator;  mAnimEvaluator = nullptr;
+	mNodesByName.clear();
+
+	mCurrentAnimIndex = static_cast<int>(pAnimIndex);
+	mRootNode = CreateNodeTree(mScene->mRootNode, nullptr);
+	if (static_cast<unsigned int>(mCurrentAnimIndex) >= mScene->mNumAnimations) {
+		return;
+	}
+
+	mAnimEvaluator = new AnimEvaluator(mScene->mAnimations[mCurrentAnimIndex]);
+}
+
+void SceneAnimator::Calculate(double pTime) {
+	if (!mAnimEvaluator) {
+		return;
+	}
+
+	mAnimEvaluator->Evaluate(pTime);
+	UpdateTransforms(mRootNode, mAnimEvaluator->GetTransformations());
+}
+
+const aiMatrix4x4& SceneAnimator::GetLocalTransform(const aiNode* node) const {
+	NodeMap::const_iterator it = mNodesByName.find(node);
+	if (it == mNodesByName.end()) {
+		return IdentityMatrix;
+	}
+
+	return it->second->mLocalTransform;
+}
+
+const aiMatrix4x4& SceneAnimator::GetGlobalTransform(const aiNode* node) const {
+	NodeMap::const_iterator it = mNodesByName.find(node);
+	if (it == mNodesByName.end()) {
+		return IdentityMatrix;
+	}
+
+	return it->second->mGlobalTransform;
+}
+
+const std::vector<aiMatrix4x4>& SceneAnimator::GetBoneMatrices(const aiNode* pNode, size_t pMeshIndex /* = 0 */) {
+	ai_assert(pMeshIndex < pNode->mNumMeshes);
+	size_t meshIndex = pNode->mMeshes[pMeshIndex];
+	ai_assert(meshIndex < mScene->mNumMeshes);
+	const aiMesh* mesh = mScene->mMeshes[meshIndex];
+
+	// resize array and initialize it with identity matrices
+	mTransforms.resize(mesh->mNumBones, aiMatrix4x4());
+
+	//修改点：与assimp_viewer不同，不需要计算globalInverseMeshTransform
+	// calculate the mesh's inverse global transform
+	//aiMatrix4x4 globalInverseMeshTransform = GetGlobalTransform( pNode);
+	//globalInverseMeshTransform.Inverse();
+
+	// Bone matrices transform from mesh coordinates in bind pose to mesh coordinates in skinned pose
+	// Therefore the formula is offsetMatrix * currentGlobalTransform * inverseCurrentMeshTransform
+	for (size_t a = 0; a < mesh->mNumBones; ++a) {
+		const aiBone* bone = mesh->mBones[a];
+		const aiMatrix4x4& currentGlobalTransform = GetGlobalTransform(mBoneNodesByName[bone->mName.data]);
+		mTransforms[a] = /*globalInverseMeshTransform * */currentGlobalTransform * bone->mOffsetMatrix;
+	}
+
+	return mTransforms;
+}
+
+SceneAnimNode* SceneAnimator::CreateNodeTree(aiNode* pNode, SceneAnimNode* pParent) {
+	// create a node
+	SceneAnimNode* internalNode = new SceneAnimNode(pNode->mName.data);
+	internalNode->mParent = pParent;
+	mNodesByName[pNode] = internalNode;
+
+	// copy its transformation
+	internalNode->mLocalTransform = pNode->mTransformation;
+	CalculateGlobalTransform(internalNode);
+
+	// find the index of the animation track affecting this node, if any
+	if (static_cast<unsigned int>(mCurrentAnimIndex) < mScene->mNumAnimations) {
+		internalNode->mChannelIndex = -1;
+		const aiAnimation* currentAnim = mScene->mAnimations[mCurrentAnimIndex];
+		for (unsigned int a = 0; a < currentAnim->mNumChannels; a++) {
+			if (currentAnim->mChannels[a]->mNodeName.data == internalNode->mName) {
+				internalNode->mChannelIndex = a;
+				break;
+			}
+		}
+	}
+
+	// continue for all child nodes and assign the created internal nodes as our children
+	for (unsigned int a = 0; a < pNode->mNumChildren; ++a) {
+		SceneAnimNode* childNode = CreateNodeTree(pNode->mChildren[a], internalNode);
+		internalNode->mChildren.push_back(childNode);
+	}
+
+	return internalNode;
+}
+
+void SceneAnimator::UpdateTransforms(SceneAnimNode* pNode, const std::vector<aiMatrix4x4>& pTransforms) {
+	if (pNode->mChannelIndex != -1) {
+		ai_assert(static_cast<unsigned int>(pNode->mChannelIndex) < pTransforms.size());
+		pNode->mLocalTransform = pTransforms[pNode->mChannelIndex];
+	}
+
+	CalculateGlobalTransform(pNode);
+	for (std::vector<SceneAnimNode*>::iterator it = pNode->mChildren.begin(); it != pNode->mChildren.end(); ++it) {
+		UpdateTransforms(*it, pTransforms);
+	}
+}
+
+void SceneAnimator::CalculateGlobalTransform(SceneAnimNode* pInternalNode)
+{
+	pInternalNode->mGlobalTransform = pInternalNode->mLocalTransform;
+	SceneAnimNode* node = pInternalNode->mParent;
+	while (node)
+	{
+		pInternalNode->mGlobalTransform = node->mLocalTransform * pInternalNode->mGlobalTransform;
+		node = node->mParent;
+	}
+}
+
+}
 
 using namespace nb;
 using namespace AssimpView;
 namespace fs = ghc::filesystem;
 
 #define LOAD_FLAGS	aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_RemoveRedundantMaterials| aiProcess_LimitBoneWeights
-//#define LOAD_FLAGS aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights
-
 glm::mat4 toGlmMatrix(const aiMatrix4x4 &aMat)
 {
 	glm::mat4 mat;
@@ -55,7 +368,7 @@ void Model::load(const std::string & path)
 	auto t1 = getMilliseconds() - k;
 	//后解析结束
 
-	Log::info("load [{}] success. assimp cost [{}] ms, post handling cost [{}] ms, all cost [{}] ms. MeshCount[{}], TriangleCount[{}], VertexCount[{}]",
+	Log::info("load [{}] success. [assimp|post handing|all] cost [{}+{}={}] ms. [Meshs,Triangles,Vertexs] counts [{},{},{}].",
 			path, t0, t1, t0 + t1, m_aScene->mNumMeshes, m_triangleCount, m_vertexCount);
 }
 
@@ -155,6 +468,14 @@ void Model::setMaterial(const std::string & meshName, ref<Material> material)
 	}
 }
 
+void Model::setMaterial(ref<Material> material)
+{
+	for (auto mesh : m_meshes)
+	{
+		mesh->material = material;
+	}
+}
+
 void Model::parseMaterials()
 {
 	if (!m_aScene) return;
@@ -243,7 +564,7 @@ ref<Mesh> Model::toNBMesh(const aiMesh * aMesh)
 		Vertex ver;
 		if (aMesh->HasPositions())		ver.position = { aMesh->mVertices[i].x, aMesh->mVertices[i].y, aMesh->mVertices[i].z };
 		if (aMesh->mColors[0])			ver.color = { aMesh->mColors[0][i].r, aMesh->mColors[0][i].g, aMesh->mColors[0][i].b, aMesh->mColors[0][i].a };
-		if (aMesh->mTextureCoords[0])	ver.texCoord = { aMesh->mTextureCoords[0][i].x, aMesh->mTextureCoords[0][i].y };
+		if (aMesh->mTextureCoords[0])	ver.uv = { aMesh->mTextureCoords[0][i].x, aMesh->mTextureCoords[0][i].y };
 		if (aMesh->HasNormals())		ver.normal = { aMesh->mNormals[i].x, aMesh->mNormals[i].y, aMesh->mNormals[i].z };
 		vertexs.emplace_back(ver);
 	}
@@ -289,7 +610,7 @@ void Model::onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights)
 	{
 		shader->use();
 		auto const &mat = getTransform()->value();
-		shader->setMat4("modelMat", mat);
+		shader->setMat4("u_rootMatrix", mat);
 		shader->disuse();
 	}
 
@@ -303,14 +624,14 @@ void Model::onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights)
 		auto nbMat = toGlmMatrix(nodeMat);
 
 		//上传骨骼矩阵
-		if (node)
+		if (node && mesh->hasBone)
 		{
 			auto const &boneMats = mAnimator->GetBoneMatrices(node, 0);
 			auto s = mesh->material->shader;
 			s->use();
 			for (auto i = 0u; i != boneMats.size(); ++i)
 			{
-				std::string name = "bonesMats[" + std::to_string(i) + "]";
+				std::string name = "u_bonesMatrixs[" + std::to_string(i) + "]";
 				auto location = shader->getUniformLocation(name.data());
 				glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*)&(boneMats[i]));
 			}

@@ -2,7 +2,17 @@
 #include <regex>
 #include <ratio>
 #include "newbrush/Core.h"
-#include "newbrush/glm.h"
+//要使GLM_FORCE_XYZW_ONLY生效，不能include单独的glm/glm.hpp或者其他glm头文件，只能include此文件
+#ifndef GLM_FORCE_XYZW_ONLY
+#define GLM_FORCE_XYZW_ONLY
+#endif
+#include "glm/glm.hpp"
+#include "glm/ext.hpp"
+#include "glm/gtx/quaternion.hpp"
+#include "glm/gtx/matrix_query.hpp"
+#include "glm/gtx/matrix_decompose.hpp"
+#include "glm/gtx/euler_angles.hpp"
+#include "glm/gtc/random.hpp"
 
 namespace nb
 {
@@ -331,7 +341,7 @@ class NB_API Thickness
 {
 public:
 	Thickness() : Thickness(0, 0, 0, 0) {}
-	Thickness(float uniform) : Thickness(uniform, uniform, uniform, uniform) {}
+	Thickness(float n) : Thickness(n, n, n, n) {}
 	Thickness(float _left, float _top, float _right, float _bottom) : left(_left) , top(_top) , right(_right) , bottom(_bottom) {}
 
 	bool operator == (const Thickness &other) const			{ return left == other.left && top == other.top && right == other.right && bottom == other.bottom; }

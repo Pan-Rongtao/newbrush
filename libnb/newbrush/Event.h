@@ -100,6 +100,16 @@ enum class TouchActionE : uint8_t
 	leave,
 };
 
+struct ExitEventArgs : public EventArgs
+{
+	int exitCode; 
+};
+
+struct StartupEventArgs : public EventArgs
+{ 
+	std::vector<std::string> args;
+};
+
 struct CancelEventArgs : public EventArgs 
 { 
 	bool cancel = false; 
@@ -110,6 +120,11 @@ struct TouchEventArgs : public EventArgs
 	TouchActionE action;
 	float x;
 	float y;
+};
+
+struct DropEventArgs : public EventArgs
+{
+	std::vector<std::string> paths;
 };
 
 struct ScrollEventArgs : public EventArgs

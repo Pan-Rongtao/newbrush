@@ -10,10 +10,10 @@ using namespace simdjson;
 /**************************************
 *	OpenGL函数相关
 ***************************************/
-float g_viewportX = 0.0f;
-float g_viewportY = 0.0f;
-float g_viewportWidth = 0.0f;
-float g_viewportHeight = 0.0f;
+static float g_viewportX = 0.0f;
+static float g_viewportY = 0.0f;
+static float g_viewportWidth = 0.0f;
+static float g_viewportHeight = 0.0f;
 void GLUtils::viewport(float x, float y, float width, float height)
 {
 	glViewport((int)x, (int)y, (int)width, (int)height);
@@ -31,6 +31,78 @@ void GLUtils::getViewport(float &x, float &y, float &width, float &height)
 	height = g_viewportHeight;
 }
 /**************************************
+*	变换相关
+***************************************/
+static const glm::mat4 g_sIdentityMat4(1.0f);
+Transform::Transform(const glm::vec3 &translate, const glm::vec3 &rotation, const glm::vec3 &scale)
+	: m_translate(translate)
+	, m_rotate(rotation)
+	, m_scale(scale)
+	, m_rotateCenter(0.0f)
+	, m_scaleCenter(0.0f)
+{
+	updateMatrix();
+}
+
+//转换为平移、旋转、缩放。注意，转换后的缩放vec可能和C4D等编辑器中显示的符号相反，
+//欧拉角也和C4D等编辑器上的数值不一致。不必在意，因为C4D使用的是左手定则，
+//只要最后相乘计算得到的矩阵=value就可以了
+void Transform::setValue(const glm::mat4x4 & value)
+{
+	glm::vec3 skew;
+	glm::quat orientation;
+	glm::vec4 perspective;
+	//分解为scale、orientation四元素和position
+	glm::decompose(value, m_scale, orientation, m_translate, skew, perspective);
+
+	//四元素转旋转矩阵
+	auto rMatrix = glm::mat4_cast(orientation);
+
+	//旋转矩阵提取欧拉角
+	glm::extractEulerAngleYXZ(rMatrix, m_rotate.y, m_rotate.x, m_rotate.z);
+	m_matrix = value;
+}
+
+void Transform::updateMatrix()
+{
+	auto translateMatrix = glm::translate(g_sIdentityMat4, m_translate);
+	//旋转	HPB{朝向，仰俯，侧倾}，或者YPR ： yaw(航向) pitch(仰俯) roll(滚转)，分别对应YXZ轴旋转
+	auto rotateMatrix = glm::yawPitchRoll(m_rotate.y, m_rotate.x, m_rotate.z);
+	auto scaleMatrix = glm::scale(g_sIdentityMat4, m_scale);
+	m_matrix = translateMatrix * rotateMatrix * scaleMatrix;
+}
+
+glm::mat4x4 TranslateTransform2D::value()
+{ 
+	return glm::translate(g_sIdentityMat4, glm::vec3(m_x, m_y, 0.0f));
+}
+
+glm::mat4x4 RotateTransform2D::value()
+{
+	auto matrix = glm::translate(g_sIdentityMat4, glm::vec3(m_centerX, m_centerY, 0.0f));
+	matrix = glm::rotate(matrix, glm::radians(m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
+	matrix = glm::translate(matrix, glm::vec3(-m_centerX, -m_centerY, 0.0f));
+	return matrix;
+}
+
+glm::mat4x4 ScaleTransform2D::value()
+{
+	auto matrix = glm::translate(g_sIdentityMat4, glm::vec3(m_centerX * (1 - m_scaleX), m_centerY * (1 - m_scaleY), 0.0f));
+	matrix = glm::scale(matrix, glm::vec3(m_scaleX, m_scaleY, 1.0f));
+	return matrix;
+}
+
+glm::mat4x4 TransformGroup2D::value()
+{
+	glm::mat4x4 matrix = g_sIdentityMat4;
+	for (size_t i = 0; i < m_children.size(); i++)
+	{
+		matrix = m_children[i]->value() * matrix;
+	}
+	return matrix;
+}
+
+/**************************************
 *	摄像头相关
 ***************************************/
 PerspectiveCamera::PerspectiveCamera()
@@ -45,410 +117,21 @@ PerspectiveCamera::PerspectiveCamera()
 	updateMatrix();
 }
 
-void PerspectiveCamera::setTranslate(const glm::vec3 &translate)
-{
-	m_translate = translate;
-	updateMatrix();
-}
-
-void PerspectiveCamera::setRotate(const glm::vec3 &rotate)
-{
-	m_rotate = rotate;
-	updateMatrix();
-}
-
-void PerspectiveCamera::setScale(const glm::vec3 &scale)
-{
-	m_scale = scale;
-	updateMatrix();
-}
-
-const glm::vec3 &PerspectiveCamera::getTranslate() const
-{
-	return m_translate;
-}
-
-const glm::vec3 &PerspectiveCamera::getRotate() const
-{
-	return m_rotate;
-}
-
-const glm::vec3 &PerspectiveCamera::getScale() const
-{
-	return m_scale;
-}
-
-void PerspectiveCamera::setFov(float fov)
-{
-	m_fov = fov;
-	updateMatrix();
-}
-
-void PerspectiveCamera::setAspect(float aspect)
-{
-	if (std::isnan(aspect))	return;
-	if (aspect == m_aspect) return;
-	m_aspect = aspect;
-	updateMatrix();
-}
-
-void PerspectiveCamera::setNearPlane(float nearPlane)
-{
-	m_nearPlane = nearPlane;
-	updateMatrix();
-}
-
-void PerspectiveCamera::setFarPlane(float farPlane)
-{
-	m_farPlane = farPlane;
-	updateMatrix();
-}
-
-float PerspectiveCamera::getFov() const
-{
-	return m_fov;
-}
-
-float PerspectiveCamera::getAspect() const
-{
-	return m_aspect;
-}
-
-float PerspectiveCamera::getNearPlane() const
-{
-	return m_nearPlane;
-}
-
-float PerspectiveCamera::getFarPlane() const
-{
-	return m_farPlane;
-}
-
-const glm::mat4 &PerspectiveCamera::getViewProjectionMatrix() const
-{
-	return m_viewProjectionMatrix;
-}
-
 void PerspectiveCamera::updateMatrix()
 {
-	auto translateMatrix = glm::translate(glm::mat4x4(1.0f), m_translate);
+	auto translateMatrix = glm::translate(g_sIdentityMat4, m_translate);
 	//旋转	HPB{朝向，仰俯，侧倾}，或者YPR ： yaw(航向) pitch(仰俯) roll(滚转)，分别对应YXZ轴旋转
 	auto rotateMatrix = glm::yawPitchRoll(m_rotate.y, m_rotate.x, m_rotate.z);
-	auto scaleMatrix = glm::scale(glm::mat4x4(1.0f), m_scale);
+	auto scaleMatrix = glm::scale(g_sIdentityMat4, m_scale);
 
 	auto viewMatrix = translateMatrix * rotateMatrix * scaleMatrix;
 
 	m_viewProjectionMatrix = glm::perspective(glm::radians(m_fov), m_aspect, m_nearPlane, m_farPlane) * viewMatrix;
 }
 
-OrthographicCamera::OrthographicCamera()
-	: m_matrix(1.0f)
-{}
-
-void OrthographicCamera::resize(float width, float height)
-{
-	m_matrix = glm::ortho(0.0f, width, height, 0.0f, -1000.0f, 1000.0f);
-}
-
-const glm::mat4 &OrthographicCamera::getViewProjectionMatrix() const
-{
-	return m_matrix;
-}
-
-ref<OrthographicCamera> nb::sharedCamera2D()
-{
-	static auto sharedCamera = createRef<OrthographicCamera>();
-	return sharedCamera;
-}
-
 /**************************************
 *	着色器相关
 ***************************************/
-
-/* color shader code begin */
-constexpr char color_vs[] = R"(
-attribute vec3 nbPos;
-uniform mat4 nbM;
-uniform mat4 nbVP;
-void main()
-{
-	gl_Position = nbVP * nbM * vec4(nbPos, 1.0);
-}
-)";
-constexpr char color_fs[] = R"(
-precision mediump float;
-uniform vec4 color;
-void main()
-{
-	gl_FragColor = color;
-}
-)";
-/* base shader code end */
-
-/* base shader code begin */
-constexpr char base_vs[] = R"(
-attribute vec4 nbPos;
-attribute vec4 nbColor;
-attribute vec2 nbTexCoord;
-attribute float nbTexIndex;
-attribute float nbOpacity;
-uniform mat4 nbVP;
-varying vec4 vColor;
-varying vec2 vTexCoord;
-varying float vTexIndex;
-varying float vOpacity;
-void main()
-{
-	vColor = nbColor;
-	vTexCoord = nbTexCoord;
-	vTexIndex = nbTexIndex;
-	vOpacity = nbOpacity;
-	gl_Position = nbVP * nbPos;
-}
-)";
-
-constexpr char base_fs[] = R"(
-precision mediump float;
-varying vec4 vColor;
-varying vec2 vTexCoord;
-varying float vTexIndex;
-varying float vOpacity;
-uniform sampler2D samplers[16];	//android中最高支持16
-void main()
-{
-	int index = int(vTexIndex);
-	gl_FragColor = texture2D(samplers[index], vTexCoord) * vColor;
-	gl_FragColor.a = gl_FragColor.a * vOpacity;
-}
-)";
-
-/* base shader code end */
-
-/* linear shader code begin */
-constexpr char linear_vs[] = R"(
-attribute vec3 nbPos;
-uniform mat4 nbM;
-uniform mat4 nbVP;
-void main()
-{
-	gl_Position = nbVP * nbM * vec4(nbPos, 1.0);
-}
-)";
-constexpr char linear_fs[] = R"(
-precision mediump float;
-uniform int size;
-uniform vec4 colors[100];
-uniform float offsets[100];
-uniform float lenght;
-uniform bool vertical;
-void main()
-{
-	float n;
-	if(vertical)
-		n = gl_FragCoord.y / lenght;
-	else
-		n = gl_FragCoord.x / lenght;
-	vec4 color = mix(colors[0], colors[1], smoothstep(offsets[0], offsets[1], n));
-	//for(int i = 2; i < 3; ++i)
-	//	color = mix(color, colors[i], smoothstep(offsets[i-1], offsets[i], n));
-	gl_FragColor = color;
-}
-)";
-/* linear shader code end */
-
-/* phong shader code begin */
-constexpr char phong_vs[] = R"(
-attribute vec3 nbPos;
-attribute vec2 nbTexCoord;
-attribute vec3 nbNormal;
-attribute vec4 nbBoneIndexs;
-attribute vec4 nbBoneWeights;
-uniform mat4 nbM;
-uniform mat4 nbVP;
-uniform mat4 modelMat;
-uniform bool hasBones;
-uniform mat4 bonesMats[60];	//有些驱动无法支持到100
-varying vec2 vTexCoord;
-varying vec3 vNormal;
-varying vec3 vFragPos;
-void main()
-{
-	mat4 meshMat = mat4(1.0);
-	if(hasBones)
-	{
-		meshMat = bonesMats[int(nbBoneIndexs[0])] * nbBoneWeights[0];
-		meshMat += bonesMats[int(nbBoneIndexs[1])] * nbBoneWeights[1];
-		meshMat += bonesMats[int(nbBoneIndexs[2])] * nbBoneWeights[2];
-		meshMat += bonesMats[int(nbBoneIndexs[3])] * nbBoneWeights[3];
-	}
-	else
-	{
-		meshMat = nbM;
-	}
-	mat4 mat = modelMat * meshMat;
-	vTexCoord = nbTexCoord;
-	vFragPos = vec3(mat * vec4(nbPos, 1.0));
-	vNormal = mat3(mat) * nbNormal;
-	gl_Position = nbVP * mat * vec4(nbPos, 1.0);
-}
-)";
-constexpr char phong_fs[] = R"(
-precision mediump float;
-struct Material
-{
-	vec3 ambientColor;
-	vec3 diffuseColor;
-	vec3 specularColor;
-	vec3 emissionColor;
-	float shininess;
-	sampler2D diffuse_sampler;
-	sampler2D specular_sampler;
-	sampler2D emission_sampler;
-};
-struct Light
-{
-	vec3 position;
-	vec3 ambientColor;
-	vec3 diffuseColor;
-	vec3 specularColor;
-};
-varying vec2 vTexCoord;
-varying vec3 vNormal;
-varying vec3 vFragPos;
-uniform vec3 viewPos;
-uniform Material material;
-uniform Light light;
-uniform bool hasTexture;
-uniform float opacity;
-void main()
-{
-	vec3 _ambient, _diffuse, _specular;
-	float _alpha = 0.0;
-	if(!hasTexture)
-	{
-		_ambient = material.ambientColor;
-		_diffuse = material.diffuseColor;
-		_specular = material.specularColor;
-		_alpha = opacity;
-	}
-	else
-	{
-		vec4 diffuseRgba = texture2D(material.diffuse_sampler, vTexCoord);
-		_ambient = _diffuse = diffuseRgba.rgb;
-		_specular = texture2D(material.specular_sampler, vTexCoord).rgb;
-		_alpha = diffuseRgba.a;
-	}
-	//ambient
-	vec3 ambient = light.ambientColor * _ambient;
-	//diffuse
-	vec3 norm = normalize(vNormal);
-	vec3 lightDir = normalize(light.position - vFragPos);
-	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = light.diffuseColor * diff * _diffuse;
-	//specular
-	vec3 viewDir = normalize(-viewPos + vFragPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-	vec3 specular = light.specularColor * spec * _specular;
-	//emissive
-	vec3 emission = material.emissionColor * texture2D(material.emission_sampler, vTexCoord).rgb;
-	vec3 result = ambient + diffuse /*+ specular*/ + emission;
-	gl_FragColor = vec4(result, 1.0);
-}
-)";
-/* phong shader code end */
-
-/* skybox shader code begin */
-constexpr char skybox_vs[] = R"(
-attribute vec4 nbPos;
-uniform mat4 nbM;
-uniform mat4 nbVP;
-varying vec3 vTexCoord;
-void main()
-{
-	vTexCoord = nbPos.xyz;
-	gl_Position = (nbVP * nbM * nbPos).xyww;
-}
-)";
-constexpr char skybox_fs[] = R"(
-precision mediump float;
-uniform samplerCube sampler;
-varying vec3 vTexCoord;
-void main()
-{
-	gl_FragColor = textureCube(sampler, vTexCoord);
-}
-)";
-/* skybox shader code end */
-
-/* cubePhong shader code begin */
-constexpr char cubePhong_vs[] = R"(
-attribute vec3 nbPos;
-attribute vec2 nbTexCoord;
-attribute vec3 nbNormal;
-uniform mat4 nbM;
-uniform mat4 nbV;
-uniform mat4 nbP;
-varying vec2 vTexCoord;
-varying vec3 vNormal;
-varying vec3 vFragPos;
-void main()
-{
-	vFragPos = vec3(nbM * vec4(nbPos, 1.0));
-	vNormal = mat3(nbM) * nbNormal;
-	vTexCoord = nbTexCoord;
-	gl_Position = nbP * nbV * nbM * vec4(nbPos, 1.0);
-}
-)";
-constexpr char cubePhong_fs[] = R"(
-precision mediump float;
-struct Material
-{
-	vec3 ambientColor;
-	vec3 diffuseColor;
-	vec3 specularColor;
-	sampler2D diffuse_sampler;
-	samplerCube cube_sampler;
-	vec3 cubemapColor;
-};
-varying vec2 vTexCoord;
-varying vec3 vNormal;
-varying vec3 vFragPos;
-uniform vec3 viewPos;
-uniform Material material;
-uniform bool hasTextures;
-uniform bool hasCubemap;
-	
-void main()
-{
-	vec4 baseColor = vec4(0.0);
-	if(hasTextures)
-	{
-		baseColor = texture2D(material.diffuse_sampler, vTexCoord).rgba;
-	}
-	else
-	{
-		baseColor = vec4(material.diffuseColor, 1.0);
-	}
-	vec3 color = baseColor.rgb;
-	if(hasCubemap)
-	{
-		color *= material.ambientColor;
-		color += material.specularColor;
-		vec3 I = normalize(vFragPos - viewPos);
-		vec3 R = reflect(I, normalize(vNormal));
-		color += textureCube(material.cube_sampler, R).rgb * material.cubemapColor;
-	}
-	gl_FragColor = vec4(color, baseColor.a);
-}
-)";
-/* cubePhong shader code end */
-
-Shader::Shader()
-	: m_programHandle(0)
-{
-}
-
 Shader::~Shader()
 {
 	glDeleteProgram(m_programHandle);
@@ -480,16 +163,16 @@ void Shader::compileLink(const std::string & vsSource, const std::string & fsSou
 	nbThrowExceptionIf((!vertexHandle || !fragmentHandle || !m_programHandle), std::runtime_error, "create shader fail, glGetError[%d]", glGetError());
 
 	//必须在link之前绑定
-	bindAttributeLocation(0, "nbPos");
-	bindAttributeLocation(1, "nbColor");
-	bindAttributeLocation(2, "nbTexCoord");
-	bindAttributeLocation(3, "nbNormal");
-	//for renderer2D
-	bindAttributeLocation(4, "nbTexIndex");
-	bindAttributeLocation(5, "nbOpacity");
+	bindAttributeLocation(0, "position");
+	bindAttributeLocation(1, "color");
+	bindAttributeLocation(2, "uv");
+	bindAttributeLocation(3, "normal");
 	//for bones
-	bindAttributeLocation(6, "nbBoneIndexs");
-	bindAttributeLocation(7, "nbBoneWeights");
+	bindAttributeLocation(6, "boneIndexs");
+	bindAttributeLocation(7, "boneWeights");
+	//for renderer2D
+	bindAttributeLocation(8, "texIndex");
+	bindAttributeLocation(9, "opacity");
 
 	const char *pVertexSource = vsSource.data();
 	glShaderSource(vertexHandle, 1, &pVertexSource, NULL);
@@ -536,11 +219,6 @@ int Shader::getUniformLocation(const char *name) const
 void Shader::bindAttributeLocation(uint32_t location, const char *name)
 {
 	glBindAttribLocation(m_programHandle, location, name);
-}
-
-uint32_t Shader::id()
-{
-	return m_programHandle;
 }
 
 void Shader::use()
@@ -700,54 +378,45 @@ void Shader::setMat4Array(const char *name, const std::vector<glm::mat4> &v)
 }
 
 static std::unordered_map<std::string, ref<Shader>> g_shaders;
-ref<Shader> ShaderLibrary::add(const std::string & name, const std::string & vsSource, const std::string & fsSource)
-{
-	if (exists(name))
-	{
-		nbThrowException(std::logic_error, "%s is already exists.", name.data());
-		return nullptr;
-	}
-	else
-	{
-		ref<Shader> shader(new Shader());
-		shader->compileLink(vsSource, fsSource);
-		g_shaders[name] = shader;
-		return shader;
-	}
-
-}
-
-ref<Shader> ShaderLibrary::addFromFile(const std::string & name, const std::string & filePath)
-{
-	return nullptr;
-}
-
-bool ShaderLibrary::exists(const std::string & name)
-{
-	return g_shaders.find(name) != g_shaders.end();
-}
-
-ref<Shader> ShaderLibrary::get(const std::string & name)
-{
-	initSystemShader();
-
-	auto iter = g_shaders.find(name);
-	return g_shaders.find(name) == g_shaders.end() ? nullptr : iter->second;
-}
-
 void ShaderLibrary::initSystemShader()
 {
 	static bool systemShaderInit = false;
 	if (!systemShaderInit)
 	{
-		add("system_2d", base_vs, base_fs);
-		add("system_color", color_vs, color_fs);
-		add("system_linear", linear_vs, linear_fs);
-		add("system_phong", phong_vs, phong_fs);
-		add("system_skybox", skybox_vs, skybox_fs);
-		add("system_cubePhong", cubePhong_vs, cubePhong_fs);
 		systemShaderInit = true;
+		auto vs =
+#include "shader/2d.vs"
+			;
+		auto fs =
+#include "shader/2d.fs"
+			;
+		get("shader_2d", vs, fs);
 	}
+}
+
+ref<Shader> ShaderLibrary::get(const std::string & name, const std::string & vsSource, const std::string & fsSource)
+{
+	initSystemShader();
+	auto iter = g_shaders.find(name);
+	if (iter == g_shaders.end())
+	{
+		ref<Shader> shader(new Shader());
+		shader->compileLink(vsSource, fsSource);
+		iter = g_shaders.insert({name, shader}).first;
+	}
+	return iter->second;
+}
+
+ref<Shader> ShaderLibrary::get(const std::string & name)
+{
+	initSystemShader();
+	auto iter = g_shaders.find(name);
+	return iter == g_shaders.end() ? nullptr : iter->second;
+}
+
+ref<Shader> ShaderLibrary::getFromFile(const std::string & name, const std::string & filePath)
+{
+	return nullptr;
 }
 
 /**************************************
@@ -779,51 +448,36 @@ Texture::~Texture()
 	glDeleteTextures(1, &m_handle);
 }
 
-unsigned Texture::id() const
-{
-	return m_handle;
-}
-
-void Texture::setSamplerUnit(unsigned unit)
-{
-	m_samplerUnit = unit;
-}
-
-unsigned Texture::samplerUnit()
-{
-	return m_samplerUnit;
-}
-
-void Texture::activeAndBind()
-{
-	active();
-	bind();
-}
-
 void Texture::active()
 {
 	glActiveTexture(GL_TEXTURE0 + m_samplerUnit);
 }
 
 ////////////////////
-Texture2D::Texture2D()
+void initTextureParams(Texture *tex)
 {
-	bind();
-	setWrappingS(TextureWrappingE::Repeat);
-	setWrappingT(TextureWrappingE::Repeat);
-	setMagnifyFilter(TextureFilterE::Point);
-	setNarrowFilter(TextureFilterE::Point);
-	unbind();
+	tex->bind();
+	tex->setWrappingS(TextureWrappingE::Repeat);
+	tex->setWrappingT(TextureWrappingE::Repeat);
+	tex->setMagnifyFilter(TextureFilterE::Point);
+	tex->setNarrowFilter(TextureFilterE::Point);
+	tex->unbind();
+}
+
+Texture2D::Texture2D()
+	: m_width(0.0f)
+	, m_height(0.0f)
+	, m_channels(0)
+{
+	initTextureParams(this);
 }
 
 Texture2D::Texture2D(const std::string & path)
+	: m_width(0.0f)
+	, m_height(0.0f)
+	, m_channels(0)
 {
-	bind();
-	setWrappingS(TextureWrappingE::Repeat);
-	setWrappingT(TextureWrappingE::Repeat);
-	setMagnifyFilter(TextureFilterE::Point);
-	setNarrowFilter(TextureFilterE::Point);
-	unbind();
+	initTextureParams(this);
 	update(path);
 }
 
@@ -914,26 +568,6 @@ void Texture2D::genMipmap()
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-int32_t Texture2D::getChannels() const
-{
-	return m_channels;
-}
-
-bool Texture2D::isValid() const
-{
-	return m_channels != 0;
-}
-
-float Texture2D::width() const
-{
-	return m_width;
-}
-
-float Texture2D::height() const
-{
-	return m_height;
-}
-
 bool Texture2D::save(const std::string & path, uint32_t quality)
 {
 	GLubyte* data = new GLubyte[(int)(m_width * m_height * m_channels)];
@@ -954,12 +588,7 @@ bool Texture2D::save(const std::string & path, uint32_t quality)
 /////////////////
 TextureCubemap::TextureCubemap()
 {
-	bind();
-	setWrappingS(TextureWrappingE::Repeat);
-	setWrappingT(TextureWrappingE::Repeat);
-	setMagnifyFilter(TextureFilterE::Point);
-	setNarrowFilter(TextureFilterE::Point);
-	unbind();
+	initTextureParams(this);
 }
 
 void TextureCubemap::bind()
@@ -1008,12 +637,16 @@ void TextureCubemap::setNarrowFilter(TextureFilterE filter)
 
 TextureFilterE TextureCubemap::magnifyFilter() const
 {
-	return TextureFilterE();
+	int v = 0;
+	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, &v);
+	return (TextureFilterE)v;
 }
 
 TextureFilterE TextureCubemap::narrowFilter() const
 {
-	return TextureFilterE();
+	int v = 0;
+	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, &v);
+	return (TextureFilterE)v;
 }
 
 void TextureCubemap::update(const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back)
@@ -1037,6 +670,24 @@ void TextureCubemap::update(const std::string & top, const std::string & bottom,
 	updateOne(back, GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
 	updateOne(front, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 	unbind();
+}
+
+TextureFrame::TextureFrame()
+{}
+
+TextureFrame::TextureFrame(ref<Texture2D> _texture)
+	: TextureFrame(_texture, Rect(0.0f, 0.0f, _texture ? _texture->width() : 0.0f, _texture ? _texture->height() : 0.0f))
+{}
+
+TextureFrame::TextureFrame(ref<Texture2D> _texture, const Rect & rc)
+{
+	auto w = _texture ? _texture->width() : 0.0f;
+	auto h = _texture ? _texture->height() : 0.0f;
+	texture = _texture;
+	frame = { rc.x(), rc.y(), rc.width(), rc.height() };
+	sourceSize = { frame.z, frame.w };
+	pinch = { 0.0f, 0.0f };
+	rotated = false;
 }
 
 namespace nb
@@ -1067,15 +718,15 @@ TextureFrame TextureAtlas::parseOneFrame(const dom::object &frameObj)
 	auto frameH = frame["h"].get_int64().first;
 	auto spriteSourceX = spriteSourceSize["x"].get_int64().first;
 	auto spriteSourceY = spriteSourceSize["y"].get_int64().first;
-	auto spriteSourceW = spriteSourceSize["w"].get_int64().first;
-	auto spriteSourceH = spriteSourceSize["h"].get_int64().first;
+//	auto spriteSourceW = spriteSourceSize["w"].get_int64().first;
+//	auto spriteSourceH = spriteSourceSize["h"].get_int64().first;
 	auto sourceW = sourceSize["w"].get_int64().first;
 	auto sourceH = sourceSize["h"].get_int64().first;
 
 	TextureFrame texFrame;
-	texFrame.offset = { (float)frameX, (float)frameY };
-	texFrame.size = { (float)spriteSourceW, (float)spriteSourceH };
-	texFrame.trimmedSize = { (float)spriteSourceX, (float)spriteSourceY };
+	texFrame.frame = { frameX, frameY, frameW, frameH };
+	texFrame.sourceSize = { sourceW, sourceH };
+	texFrame.pinch = { spriteSourceX, spriteSourceY };
 	texFrame.rotated = { rotated };
 	return texFrame;
 }
@@ -1094,7 +745,7 @@ void TextureAtlas::load(const std::string &imagePath, const std::string & cfgPat
 	{
 		std::string key = f.key.data();
 		TextureFrame texFrame = parseOneFrame(f.value.get_object().first);
-		texFrame.texture = shared_from_this();// m_texture;
+		texFrame.texture = shared_from_this();
 		m_frames.insert({ key, texFrame });
 	}
 }
@@ -1105,7 +756,7 @@ const TextureFrame &TextureAtlas::getFrame(const std::string & frameName)
 	return iter == m_frames.end() ? g_sInvalidFrame : iter->second;
 }
 
-std::map<std::string, ref<Texture>> g_textures;
+static std::map<std::string, ref<Texture>> g_textures;
 ref<Texture2D> TextureLibrary::addTexture2D(const std::string & name, const std::string & imagePath)
 {
 	auto iter = g_textures.find(name);
@@ -1183,16 +834,15 @@ Light::Light()
 	: ambient(127, 127, 127)
 	, diffuse(5, 5, 5)
 	, specular(127, 127, 127)
-{
-}
+{}
 
 void Light::uploadUniform(ref<Shader> shader) const
 {
 	if (!shader) return;
 
-	shader->setFloat3("light.ambientColor", glm::vec3(ambient.rf(), ambient.gf(), ambient.bf()));
-	shader->setFloat3("light.diffuseColor", glm::vec3(diffuse.rf(), diffuse.gf(), diffuse.bf()));
-	shader->setFloat3("light.specularColor", glm::vec3(specular.rf(), specular.gf(), specular.bf()));
+	shader->setFloat3("u_light.ambientColor", glm::vec3(ambient.rf(), ambient.gf(), ambient.bf()));
+	shader->setFloat3("u_light.diffuseColor", glm::vec3(diffuse.rf(), diffuse.gf(), diffuse.bf()));
+	shader->setFloat3("u_light.specularColor", glm::vec3(specular.rf(), specular.gf(), specular.bf()));
 }
 
 void DirectionalLight::uploadUniform(ref<Shader> shader) const
@@ -1200,7 +850,7 @@ void DirectionalLight::uploadUniform(ref<Shader> shader) const
 	if (!shader) return;
 
 	Light::uploadUniform(shader);
-	shader->setFloat3("light.direction", direction);
+	shader->setFloat3("u_light.direction", direction);
 }
 
 void PointLightBase::uploadUniform(ref<Shader> shader) const
@@ -1208,10 +858,10 @@ void PointLightBase::uploadUniform(ref<Shader> shader) const
 	if (!shader) return;
 
 	Light::uploadUniform(shader);
-	shader->setFloat3("light.position", position);
-	shader->setFloat("light.constantAttenuation", constantAttenuation);
-	shader->setFloat("light.linearAttenuation", linearAttenuation);
-	shader->setFloat("light.quadraticAttenuation", quadraticAttenuation);
+	shader->setFloat3("u_light.position", position);
+	shader->setFloat("u_light.constantAttenuation", constantAttenuation);
+	shader->setFloat("u_light.linearAttenuation", linearAttenuation);
+	shader->setFloat("u_light.quadraticAttenuation", quadraticAttenuation);
 }
 
 void SpotLight::uploadUniform(ref<Shader> shader) const
@@ -1219,9 +869,9 @@ void SpotLight::uploadUniform(ref<Shader> shader) const
 	if (!shader) return;
 
 	PointLightBase::uploadUniform(shader);
-	shader->setFloat3("light.direction", direction);
-	shader->setFloat("light.innerConeAngle", innerConeAngle);
-	shader->setFloat("light.outerConeAngle", outerConeAngle);
+	shader->setFloat3("u_light.direction", direction);
+	shader->setFloat("u_light.innerConeAngle", innerConeAngle);
+	shader->setFloat("u_light.outerConeAngle", outerConeAngle);
 }
 
 /**************************************
@@ -1231,59 +881,73 @@ Material::Material(ref<Shader> _shader)
 	: shader(_shader)
 {}
 
-////////////////
-SolidColorMaterial::SolidColorMaterial()
-	: SolidColorMaterial(Colors::black)
-{}
-
-SolidColorMaterial::SolidColorMaterial(const Color &_color)
-	: Material(ShaderLibrary::get("system_color"))
-	, color(_color)
-{}
-
-void SolidColorMaterial::uploadUniform(ref<Camera> camera)
+FlatMaterial::FlatMaterial(const Color &_color)
+	: color(_color)
 {
-	if (!shader)
-		return;
+	auto *vs =
+#include "shader/Flat.vs"
+		;
+	auto *fs =
+#include "shader/Flat.fs"
+		;
+	shader = ShaderLibrary::get("shader_color", vs, fs);
+}
 
-	shader->setFloat4("color", glm::vec4(color.rf(), color.gf(), color.bf(), color.af()));
+void FlatMaterial::uploadUniform(ref<Camera> camera)
+{
+	if (!shader) return;
+
+	shader->setFloat4("u_flatColor", glm::vec4(color.rf(), color.gf(), color.bf(), color.af()));
 }
 
 LinearGrandientMaterial::LinearGrandientMaterial()
-	: LinearGrandientMaterial(800.0f, {})
-{}
-
-LinearGrandientMaterial::LinearGrandientMaterial(float _lenght, const std::vector<GradientStop> &_grandients)
-	: Material(ShaderLibrary::get("system_linear"))
-	, lenght(_lenght)
-	, grandients(_grandients)
-	, vertical(true)
-{}
+	: horizontal(true)
+{
+	auto *vs =
+#include "shader/LinearGradient.vs"
+		;
+	auto *fs =
+#include "shader/LinearGradient.fs"
+		;
+	shader = ShaderLibrary::get("shader_linearGradient", vs, fs);
+}
 
 void LinearGrandientMaterial::uploadUniform(ref<Camera> camera)
 {
-	if (!shader || grandients.empty())	return;
+	nbThrowExceptionIf(gradientStops.size() > 10, std::out_of_range, "gradientStops'size[%d] is out of range[0, 10]", (int)gradientStops.size());
+	if (!shader || gradientStops.empty())	return;
+
+	float x, y, w, h;
+	GLUtils::getViewport(x, y, w, h);
 
 	std::vector<glm::vec4> colors;
 	std::vector<float> offsets;
-	for (auto const &one : grandients)
+	for (auto const &one : gradientStops)
 	{
 		colors.push_back(glm::vec4(one.color.rf(), one.color.gf(), one.color.bf(), one.color.af()));
-		offsets.push_back(one.offset);
+		auto offsetForViewport = horizontal ? (box.x + one.offset * box.z) / w : 1.0f - (box.y + one.offset * box.w) / h;
+		offsets.push_back(offsetForViewport);
 	}
 
-	shader->setFloat("lenght", lenght);
-	shader->setInt("size", grandients.size());
-	shader->setFloatArray("offsets", offsets);
-	shader->setFloat4Array("colors", colors);
-	shader->setBool("vertical", vertical);
+	shader->setFloat2("u_resolution", glm::vec2(w, h));
+	shader->setFloatArray("u_offsets", offsets);
+	shader->setFloat4Array("u_colors", colors);
+	shader->setInt("u_gradientCount", offsets.size());
+	shader->setBool("u_horizontal", horizontal);
 }
 
 PhongMaterial::PhongMaterial()
-	: Material(ShaderLibrary::get("system_phong"))
-	, shineness(32.0f)
+	: shineness(32.0f)
 	, opacity(1.0f)
-{}
+{
+	auto *vs =
+#include "shader/Phong.vs"
+		;
+	auto *fs =
+#include "shader/Phong.fs"
+		;
+	shader = ShaderLibrary::get("shader_phong", vs, fs);
+}
 
 void PhongMaterial::uploadUniform(ref<Camera> camera)
 {
@@ -1292,7 +956,7 @@ void PhongMaterial::uploadUniform(ref<Camera> camera)
 
 	auto cm = as<PerspectiveCamera>(camera);
 	if (cm)
-		shader->setFloat3("viewPos", cm->getTranslate());
+		shader->setFloat3("u_cameraPosition", cm->getTranslate());
 
 	if (emissionMapping) emissionMapping->activeAndBind();
 	if (diffuseMapping)
@@ -1302,15 +966,15 @@ void PhongMaterial::uploadUniform(ref<Camera> camera)
 	}
 	else
 	{
-		shader->setFloat3("material.ambientColor", { ambientColor.rf(), ambientColor.gf(), ambientColor.bf() });
-		shader->setFloat3("material.diffuseColor", { diffuseColor.rf(), diffuseColor.gf(), diffuseColor.bf() });
-		shader->setFloat3("material.specularColor", { specularColor.rf(), specularColor.gf(), specularColor.bf() });
-		shader->setFloat3("material.emissionColor", { emissionColor.rf(), emissionColor.gf(), emissionColor.bf() });
-		shader->setFloat("opacity", opacity);
+		shader->setFloat3("u_material.ambientColor", { ambientColor.rf(), ambientColor.gf(), ambientColor.bf() });
+		shader->setFloat3("u_material.diffuseColor", { diffuseColor.rf(), diffuseColor.gf(), diffuseColor.bf() });
+		shader->setFloat3("u_material.specularColor", { specularColor.rf(), specularColor.gf(), specularColor.bf() });
+		shader->setFloat3("u_material.emissionColor", { emissionColor.rf(), emissionColor.gf(), emissionColor.bf() });
+		shader->setFloat("u_opacity", opacity);
 	}
 
-	shader->setBool("hasTexture", diffuseMapping || specularMapping || emissionMapping);
-	shader->setFloat("material.shininess", shineness);
+	shader->setBool("u_hasTexture", diffuseMapping || specularMapping || emissionMapping);
+	shader->setFloat("u_material.shininess", shineness);
 }
 
 SkyBoxMaterial::SkyBoxMaterial()
@@ -1318,9 +982,16 @@ SkyBoxMaterial::SkyBoxMaterial()
 {}
 
 SkyBoxMaterial::SkyBoxMaterial(ref<Texture> _cubeMapping)
-	: Material(ShaderLibrary::get("system_skybox"))
-	, cubeMapping(_cubeMapping)
-{}
+	: cubeMapping(_cubeMapping)
+{
+	auto *vs =
+#include "shader/SkyBox.vs"
+		;
+	auto *fs =
+#include "shader/SkyBox.fs"
+		;
+	shader = ShaderLibrary::get("shader_skybox", vs, fs);
+}
 
 void SkyBoxMaterial::uploadUniform(ref<Camera> camera)
 {
@@ -1332,12 +1003,19 @@ void SkyBoxMaterial::uploadUniform(ref<Camera> camera)
 }
 
 CubemapMaterial::CubemapMaterial()
-	: Material(ShaderLibrary::get("system_cubePhong"))
-	, ambient(Color(128, 128, 128))
+	: ambient(Color(128, 128, 128))
 	, diffuse(Color(0, 0, 0))
 	, specular(Color(0, 0, 0))
 	, cubeMapColor(Color(255, 255, 255))
-{}
+{
+	auto *vs =
+#include "shader/Reflect.vs"
+		;
+	auto *fs =
+#include "shader/Reflect.fs"
+		;
+	shader = ShaderLibrary::get("shader_reflect", vs, fs);
+}
 
 void CubemapMaterial::uploadUniform(ref<Camera> camera)
 {
@@ -1346,28 +1024,197 @@ void CubemapMaterial::uploadUniform(ref<Camera> camera)
 
 	auto cm = as<PerspectiveCamera>(camera);
 	if (cm)
-		shader->setFloat3("viewPos", cm->getTranslate());
+		shader->setFloat3("u_cameraPosition", cm->getTranslate());
 	if (diffuseMapping)
 	{
-		shader->setBool("hasTextures", true);
+		shader->setBool("u_hasTexture", true);
 		diffuseMapping->activeAndBind();
 	}
 	else
 	{
-		shader->setBool("hasTextures", false);
+		shader->setBool("u_hasTexture", false);
 	}
 
 	if (cubeMapping)
 	{
-		shader->setBool("hasCubemap", true);
+		shader->setBool("u_hasCubemap", true);
 		cubeMapping->activeAndBind();
 	}
 	else
 	{
-		shader->setBool("hasCubemap", false);
+		shader->setBool("u_hasCubemap", false);
 	}
-	shader->setFloat3("material.ambientColor", { ambient.rf(), ambient.gf(), ambient.bf() });
-	shader->setFloat3("material.diffuseColor", { diffuse.rf(), diffuse.gf(), diffuse.bf() });
-	shader->setFloat3("material.specularColor", { specular.rf(), specular.gf(), specular.bf() });
-	shader->setFloat3("material.cubemapColor", { cubeMapColor.rf(), cubeMapColor.gf(), cubeMapColor.bf() });
+	shader->setFloat3("u_material.ambientColor", { ambient.rf(), ambient.gf(), ambient.bf() });
+	shader->setFloat3("u_material.diffuseColor", { diffuse.rf(), diffuse.gf(), diffuse.bf() });
+	shader->setFloat3("u_material.specularColor", { specular.rf(), specular.gf(), specular.bf() });
+	shader->setFloat3("u_material.cubemapColor", { cubeMapColor.rf(), cubeMapColor.gf(), cubeMapColor.bf() });
+}
+
+/**************************************
+*	面片相关
+***************************************/
+bool Vertex::addBone(float boneIndex, float boneWeight)
+{
+	auto arrSize = nbArraySize(boneIndexs);
+	for (auto i = 0u; i != arrSize; ++i)
+	{
+		if (boneWeights[i] == 0.0f)
+		{
+			boneIndexs[i] = boneIndex;
+			boneWeights[i] = boneWeight;
+			return true;
+		}
+	}
+	return false;
+}
+
+Mesh::Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, ref<Material> materia)
+	: material(materia)
+	, vao(0)
+	, vbo(0)
+	, ebo(0)
+	, hasBone(false)
+	, renderAble(true)
+{
+	setup(vertexs, indices);
+}
+
+Mesh::~Mesh()
+{
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ebo);
+}
+
+void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights) const
+{
+	if (!renderAble || !material || !material->shader)
+		return;
+
+	auto shader = material->shader;
+	shader->use();
+
+	//计算后的mvp，以及分开的m/v/p
+	auto const &m = matrix;
+	auto const &vp = camera->getViewProjectionMatrix();
+
+	shader->setMat4("u_modelMatrix", m);
+	shader->setMat4("u_viewProjectionMatrix", vp);
+	shader->setBool("u_hasBones", hasBone);
+
+	//材质更新uniforms
+	material->uploadUniform(camera);
+
+	//灯光更新uniforms
+	for (auto const &light : lights)
+	{
+		if (light) light->uploadUniform(shader);
+	}
+
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_SHORT, 0);
+	glBindVertexArray(0);
+
+	shader->disuse();
+}
+
+void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
+{
+	if (vertexs.empty() || indices.empty())
+		return;
+
+	//vao begin
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	//vbo
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexs.size(), &vertexs[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneIndexs));
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//ebo
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int16_t), &indices[0], GL_STATIC_DRAW);
+
+	//end vao
+	glBindVertexArray(0);
+
+	indicesSize = indices.size();
+}
+
+/**************************************
+*	Timer相关
+***************************************/
+static bool m_onDispatching = false;					//标记正在dispatch期间
+static std::set<Timer *> m_timerRemovedOnDispatching;	//记录在dispatch期间调用stop()/remove()的timer
+static std::multimap<uint64_t, Timer *> m_tickSequence;//tick队列
+bool Timer::isActive() const
+{
+	return std::find_if(m_tickSequence.begin(), m_tickSequence.end(), [this](const std::pair<uint64_t, Timer *> &p) { return (p.second == this); }) 
+		!= m_tickSequence.end();
+}
+
+void Timer::driveInLoop()
+{
+	uint64_t currentTick = nb::getMilliseconds();
+	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); )
+	{
+		//大于等于表示到点的timer，发送事件并移除此timer，
+		//小于代表后面的都未到点，全部忽略
+		if (currentTick >= iter->first)
+		{
+			Timer *timer = iter->second;
+			m_onDispatching = true;			//标记以使记录在dispatch期间调用stop()/remove()的timer，供是否重新add该timer提供判断依据
+			timer->Tick.invoke({ timer });
+			m_onDispatching = false;
+			iter = remove(timer);
+			// 假如timer是单次触发模式，或者在dispatch期间已经被stop，不再将此timer重新加入到队列中
+			if (!timer->isSingleShot() && m_timerRemovedOnDispatching.find(timer) == m_timerRemovedOnDispatching.end())
+			{
+				add(timer);
+			}
+			m_timerRemovedOnDispatching.clear();
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+void Timer::add(Timer * timer)
+{
+	m_tickSequence.insert({ nb::getMilliseconds() + timer->interval(), timer });
+}
+
+std::multimap<uint64_t, Timer *>::iterator Timer::remove(Timer *timer)
+{
+	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); ++iter)
+	{
+		if (iter->second == timer)
+		{
+			if (m_onDispatching)
+			{
+				m_timerRemovedOnDispatching.insert(timer);
+			}
+			return m_tickSequence.erase(iter);
+		}
+	}
+	return m_tickSequence.end();
 }

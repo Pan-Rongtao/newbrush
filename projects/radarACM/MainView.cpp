@@ -116,8 +116,11 @@ void MainView::init()
 
 MainView::~MainView()
 {
-	tcpSend(0);
-	tcpClose();
+	if (m_tcpConnect >= 0)
+	{
+		tcpSend(0);
+		tcpClose();
+	}
 }
 
 void MainView::setRecognitionFlag(bool flag)
@@ -183,11 +186,11 @@ void MainView::setBreathGraphic(float value)
 
 	auto points = valuesToPoints(m_breathGraphics, { 483.0f, 123.0f }, BreathValueCacheCount);
 	auto linearBrushPolygon = createRef<LinearGradientBrush>();
-	linearBrushPolygon->lenght = Application::get()->mainWindow()->height();
-	linearBrushPolygon->stops = { { 0.656f, Color(134, 189, 95, 0) },{ 0.8f, Color(134, 189, 95, 120) } };;// { { 0.5f, Color(134, 189, 95, 10) }, { 0.85f, Color(134, 189, 95, 120) } };
+	linearBrushPolygon->horizontal = false;
+	linearBrushPolygon->gradientStops = { { 0.0f, Color(134, 189, 95, 120) },{ 1.0f, Color(134, 189, 95, 0) } };;// { { 0.5f, Color(134, 189, 95, 10) }, { 0.85f, Color(134, 189, 95, 120) } };
 	auto linearBrushPolyline = createRef<LinearGradientBrush>();
-	linearBrushPolyline->lenght = Application::get()->mainWindow()->height();
-	linearBrushPolyline->stops = { { 0.7f, Colors::green },{ 0.8f, Color(184,233,134,255) } };
+	linearBrushPolyline->horizontal = false;
+	linearBrushPolyline->gradientStops = { { 0.0f, Color(184,233,134,255) },{ 1.0f, Colors::green } };
 	setPoints(m_breathGraph, { 483.0f, 173.0f }, points, linearBrushPolygon, linearBrushPolyline);
 	auto p = points.back() - glm::vec2(5.0f);
 	m_breathPoint = createRef<Node2D>(p.x, p.y, 10.0f, 10.0f);
@@ -208,11 +211,11 @@ void MainView::setHeartBeatGraphic(float value)
 
 	std::vector<glm::vec2> points = valuesToPoints(m_heartBeatGraphics, { 484.0f, 90.0f }, BreathValueCacheCount);
 	auto linearBrushPolygon = createRef<LinearGradientBrush>();
-	linearBrushPolygon->stops = { { 0.46f, Color(248, 178, 95, 0) },{ 0.6f, Color(248, 197, 113, 120) } };// { { 0.1f, Color(248, 178, 95, 10) }, { 0.353f, Color(248, 197, 113, 120) } };
-	linearBrushPolygon->lenght = Application::get()->mainWindow()->height();
+	linearBrushPolygon->horizontal = false;
+	linearBrushPolygon->gradientStops = { { 0.0f, Color(248, 197, 113, 120) },{ 1.0f, Color(248, 178, 95, 0) } };// { { 0.1f, Color(248, 178, 95, 10) }, { 0.353f, Color(248, 197, 113, 120) } };
 	auto linearBrushPolyline = createRef<LinearGradientBrush>();
-	linearBrushPolyline->stops = { { 0.55f, Color(249, 135, 95, 255) },{ 0.6f, Color(254, 190, 60, 255) } };//{ { 0.2f, Color(249, 135, 95, 255) },{ 0.353f, Color(254,190, 60, 255) } };
-	linearBrushPolyline->lenght = Application::get()->mainWindow()->height();
+	linearBrushPolyline->horizontal = false;
+	linearBrushPolyline->gradientStops = { { 0.0f, Color(254, 190, 60, 255) },{ 1.0f, Color(249, 135, 95, 255) } };//{ { 0.2f, Color(249, 135, 95, 255) },{ 0.353f, Color(254,190, 60, 255) } };
 	setPoints(m_heartBeatGraph, { 484.0f, 140.0f }, points, linearBrushPolygon, linearBrushPolyline);
 	auto p = points.back() - glm::vec2(5.0f);
 	m_heartBeatPoint = createRef<Node2D>(p.x, p.y, 10.0f, 10.0f);

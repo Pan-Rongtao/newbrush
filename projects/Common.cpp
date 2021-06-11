@@ -58,6 +58,7 @@ extern "C"
 	JNIEXPORT void JNICALL Java_nb_jni_Newbrush_init(JNIEnv *env, jobject thiz)
 	{
 		Log::info("Java_nb_jni_Newbrush_init begin");
+		SystemHelper::printSystemInfos();
 		auto k = getMilliseconds();
 		g_view->init();
 		Log::info("Java_nb_jni_Newbrush_init finish cost {} ms", getMilliseconds() - k);
@@ -117,6 +118,7 @@ int main(int argc, char **argv)
 		Log::info("g_view init cost {} ms", nb::getMilliseconds() - k);
 
 		window.root = g_view->getRoot();
+		Log::info("first view show cost {} ms", nb::getMilliseconds() - nb::getStarupMilliseconds());
 		return app.run(argc, argv);
 	}
 	catch (const std::exception &e) { Log::error("\n\n{}\n", e.what()); }

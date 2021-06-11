@@ -727,33 +727,29 @@ ref<SolidColorBrush> SolidColorBrush::yellowGreen()
 	RETURN_SOLIDCOLOR_RGB(154, 205, 50);
 }
 
+LinearGradientBrush::LinearGradientBrush()
+	: LinearGradientBrush(std::vector<GradientStop>{})
+{}
+
+LinearGradientBrush::LinearGradientBrush(const std::vector<GradientStop> &stops)
+	: gradientStops(stops)
+	, horizontal(true)
+{}
+
 ImageBrush::ImageBrush()
-	: ImageBrush(nullptr)
 {}
 
-ImageBrush::ImageBrush(ref<Texture2D> _texture)
-	: ImageBrush(_texture, { 0.0f, 0.0f }, { _texture ? _texture->width() : 0.0f, _texture ? _texture->height() : 0.0f }, false)
+ImageBrush::ImageBrush(ref<Texture2D> texture)
+	: frame(texture)
 {}
 
-ImageBrush::ImageBrush(ref<Texture2D> _texture, const glm::vec2 & _targetOffset, const glm::vec2 & _targetSize, bool _rotated)
-	: texture(_texture)
-	, targetOffset(_targetOffset)
-	, targetSize(_targetSize)
-	, rotated(_rotated)
+ImageBrush::ImageBrush(const TextureFrame & _frame)
+	: frame(_frame)
 {}
 
-ref<ImageBrush> ImageBrush::createWitchTextureFrame(const TextureFrame & texFrame)
-{
-	glm::vec2 targetSize = texFrame.rotated ? glm::vec2(texFrame.size.y, texFrame.size.x) : glm::vec2(texFrame.size.x, texFrame.size.y);
-	auto brush = createRef<ImageBrush>(texFrame.texture, texFrame.offset, targetSize, texFrame.rotated);
-	return brush;
-}
-
-ref<ImageBrush> ImageBrush::createWitchTextureFrameName(const std::string & texAtlasKey, const std::string & frameName)
-{
-	auto texFrame = TextureLibrary::getFrameFromTextureAtlas(texAtlasKey, frameName);
-	return createWitchTextureFrame(texFrame);
-}
+ImageBrush::ImageBrush(const std::string & texAtlasKey, const std::string & frameName)
+	: frame(TextureLibrary::getFrameFromTextureAtlas(texAtlasKey, frameName))
+{}
 
 EffectBrush::EffectBrush()
 	: EffectBrush(nullptr, nullptr)
@@ -785,7 +781,7 @@ void BrushLibrary::addImageBrush(const std::string & name, const std::string & i
 
 void BrushLibrary::addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName)
 {
-	add(name, ImageBrush::createWitchTextureFrameName(texAtlasKey, frameName));
+	add(name, createRef<ImageBrush>(texAtlasKey, frameName));
 }
 
 ref<Brush> BrushLibrary::get(const std::string & name)

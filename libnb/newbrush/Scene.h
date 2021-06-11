@@ -2,7 +2,6 @@
 #include "newbrush/Node3D.h"
 #include "newbrush/Animation.h"
 #include "newbrush/Components.h"
-#include "assimp/scene.h"
 
 namespace nb 
 {

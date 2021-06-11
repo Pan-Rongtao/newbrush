@@ -75,6 +75,7 @@ public:
 	Event<KeyEventArgs>			Key;
 	Event<TouchEventArgs>		Touch;
 	Event<ScrollEventArgs>		Scroll;
+	Event<DropEventArgs>		Drop;
 	Event<EventArgs>			Activated;				//当窗口成为前台窗口时发生
 	Event<EventArgs>			Deactivated;			//当窗口成为后台窗口时发生
 	Event<EventArgs>			Closed;					//当窗口将关闭时发生
@@ -100,6 +101,7 @@ private:
 	void closeCallback();
 	void iconifyCallback(int iconified);
 	void maximizeCallback(int maximized);
+	void dropCallback(int count, const char* paths[]);
 
 	void destroyWindow();
 	void render();

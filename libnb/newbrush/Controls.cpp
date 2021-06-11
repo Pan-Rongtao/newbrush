@@ -16,15 +16,13 @@ void Panel::onRender()
 
 WrapPanel::WrapPanel()
 	: WrapPanel(OrientationE::Horizontal)
-{
-}
+{}
 
 WrapPanel::WrapPanel(OrientationE orientation)
 	: m_orientation(orientation)
 	, m_itemWidth(NAN)
 	, m_itemHeight(NAN)
-{
-}
+{}
 
 void WrapPanel::setOrientation(OrientationE orientation)
 {
@@ -223,8 +221,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 
 Image::Image()
 	: m_stretch(StretchE::Origion)
-{
-}
+{}
 
 void Image::setStretch(const StretchE &stretch)
 {
@@ -309,15 +306,14 @@ void Image::onRender()
 	Rect rc = getRenderRect();
 	if (m_texture)
 	{
-		Renderer2D::drawImage(rc, glm::mat4(1.0f), m_texture, Rect(0.0f, 0.0f, m_texture->width(), m_texture->height()), false, getOpacity());
+		Renderer2D::drawImage(rc, glm::mat4(1.0f), TextureFrame(m_texture), getOpacity());
 	}
 }
 
 ///////////////////
 TextBlock::TextBlock(const std::string & text)
 	: m_text(text)
-{
-}
+{}
 
 void TextBlock::setText(const std::string & text)
 {
@@ -398,13 +394,23 @@ void ButtonBase::onClick()
 
 Polyline::Polyline()
 	: Polyline({}, 10.0f)
-{
-}
+{}
 
 Polyline::Polyline(const std::vector<glm::vec2>& points, float size)
-	: m_points(points)
-	, m_size(size)
+	: m_size(size)
 {
+	setPoints(points);
+}
+
+void Polyline::setPoints(const std::vector<glm::vec2> &points)
+{
+	m_points = points;
+	m_box = TreeHelper::getBox(m_points);
+}
+
+const std::vector<glm::vec2> &Polyline::points() const
+{
+	return m_points;
 }
 
 Size Polyline::measureOverride(const Size & availableSize)
@@ -414,33 +420,34 @@ Size Polyline::measureOverride(const Size & availableSize)
 
 Size Polyline::arrangeOverride(const Size & finalSize)
 {
-	if (m_points.empty())
-	{
-		return Size(0.0f, 0.0f);
-	}
-	else
-	{
-		auto xMinMax = std::minmax_element(m_points.begin(), m_points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
-		auto yMinMax = std::minmax_element(m_points.begin(), m_points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.y > p0.y; });
-		auto sz = Size(xMinMax.second->x - xMinMax.first->x, yMinMax.second->y - yMinMax.first->y);
-		return sz;
-	}
+	return Size(m_box.z, m_box.w);
 }
 
 void Polyline::onRender()
 {
 	Rect rc = getRenderRect();
-	Renderer2D::drawPolyline(background(), m_points, m_size, {rc.x(), rc.y()});
+	Renderer2D::drawPolyline(background(), m_points, m_size, { rc.x(), rc.y() });
 }
 
 ////////////////////
 Polygon::Polygon()
-{
-}
+	: Polygon(std::vector<glm::vec2>{})
+{}
 
 Polygon::Polygon(const std::vector<glm::vec2>& points)
-	: m_points(points)
 {
+	setPoints(points);
+}
+
+void Polygon::setPoints(const std::vector<glm::vec2>& points)
+{
+	m_points = points;
+	m_box = TreeHelper::getBox(m_points);
+}
+
+const std::vector<glm::vec2>& Polygon::points() const
+{
+	return m_points;
 }
 
 Size Polygon::measureOverride(const Size & availableSize)
@@ -450,17 +457,7 @@ Size Polygon::measureOverride(const Size & availableSize)
 
 Size Polygon::arrangeOverride(const Size & finalSize)
 {
-	if (m_points.empty())
-	{
-		return Size(0.0f, 0.0f);
-	}
-	else
-	{
-		auto xMinMax = std::minmax_element(m_points.begin(), m_points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.x > p0.x; });
-		auto yMinMax = std::minmax_element(m_points.begin(), m_points.end(), [](const glm::vec2 &p0, const glm::vec2 &p1) { return p1.y > p0.y; });
-		auto sz = Size(xMinMax.second->x - xMinMax.first->x, yMinMax.second->y - yMinMax.first->y);
-		return sz;
-	}
+	return Size(m_box.z, m_box.w);
 }
 
 void Polygon::onRender()

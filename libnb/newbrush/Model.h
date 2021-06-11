@@ -11,8 +11,8 @@
 #pragma once
 #include "newbrush/Node3D.h"
 #include "newbrush/Components.h"
-#include "newbrush/Mesh.h"
 #include "newbrush/Animation.h"
+
 
 struct aiMesh;
 struct aiScene;
@@ -39,6 +39,7 @@ public:
 
 	void setRenderAble(const std::string &meshName, bool renderAble);
 	void setMaterial(const std::string &meshName, ref<Material> material);
+	void setMaterial(ref<Material> material);
 	
 protected:
 	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights) override;

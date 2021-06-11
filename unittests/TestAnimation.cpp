@@ -72,7 +72,7 @@ TEST_CASE("test Int8Animation", "[Int8Animation]")
 TEST_CASE("test Int16Animation", "[Int16Animation]")
 {
 	auto target = createRef<RttrObject>();
-	auto targetProperty = type::get<RttrObject>().get_property("int32_v");
+	auto targetProperty = type::get<RttrObject>().get_property("int16_v");
 	Int16Animation animation(0, 100);
 	animation.setTarget(target);
 	animation.setTargetProperty(targetProperty);
@@ -87,7 +87,7 @@ TEST_CASE("test Int16Animation", "[Int16Animation]")
 		auto tl = static_cast<Timeline *>(args.sender);
 		auto time = tl->getCurrentTime();
 		auto progress = tl->getCurrentProgress();
-		auto width = target ? target->int32_v : NAN;
+		auto width = target ? target->int16_v : NAN;
 		Log::info("animation procesing: time[{}], progress[{}], width[{}]", time.toString().data(), progress, width);
 	};
 	animation.Completed += [](const EventArgs &args) {

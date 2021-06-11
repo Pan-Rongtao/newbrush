@@ -94,19 +94,19 @@ DIYView::DIYView()
 	////////////////
 	m_stageBkg = Node2D::createWithTextureFrameName("modelDIY", "change_bg.png", true, 0.0f, 0.0f);
 	m_btnBack = Button::createWithTextureFrameName("modelDIY", "go_back_96_n.png", true, 24.0f, 24.0f);
-	m_btnBack->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "go_back_96_p.png"));
+	m_btnBack->setBkgndPress(createRef<ImageBrush>("modelDIY", "go_back_96_p.png"));
 	m_btnBack->Click += nbBindEventFunction(onBtnClick);
 
 	auto panel = Node2D::createWithTextureFrameName("modelDIY", "bg_96_192.png", true, 24.0f, 145.0f);
 	m_btnBackToGraphics = Button::createWithTextureFrameName("modelDIY", "back_to_graphics_96_n.png", true, 0.0f, 0.0f);
-	m_btnBackToGraphics->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "back_to_graphics_96_p.png"));
+	m_btnBackToGraphics->setBkgndPress(createRef<ImageBrush>("modelDIY", "back_to_graphics_96_p.png"));
 	m_btnReset = Button::createWithTextureFrameName("modelDIY", "reset_graphics_96_n.png", true, 0.0f, 96.0f);
-	m_btnReset->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "reset_graphics_96_p.png"));
+	m_btnReset->setBkgndPress(createRef<ImageBrush>("modelDIY", "reset_graphics_96_p.png"));
 	panel->addChild(m_btnBackToGraphics);
 	panel->addChild(m_btnReset);
 
 	m_btnSave = Button::createWithTextureFrameName("modelDIY", "btn_save_n.png", true, 24.0f, 611.0f);
-	m_btnSave->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "btn_save_p.png"));
+	m_btnSave->setBkgndPress(createRef<ImageBrush>("modelDIY", "btn_save_p.png"));
 
 	m_stageBkg->addChild(m_btnBack);
 	//m_stageBkg->addChild(panel);
@@ -117,17 +117,17 @@ DIYView::DIYView()
 	const float itemHeight = 110.0f;
 	const float itemSpace = 5.0f;
 	m_btnFace = Button::createWithTextureFrameName("modelDIY", "pinch_face_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 0);
-	m_btnFace->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "pinch_face_96_p.png"));
+	m_btnFace->setBkgndCheck(createRef<ImageBrush>("modelDIY", "pinch_face_96_p.png"));
 	m_btnHair = Button::createWithTextureFrameName("modelDIY", "hairstyle_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 1);
-	m_btnHair->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "hairstyle_96_p.png"));
+	m_btnHair->setBkgndCheck(createRef<ImageBrush>("modelDIY", "hairstyle_96_p.png"));
 	m_btnEye = Button::createWithTextureFrameName("modelDIY", "eyes_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 2);
-	m_btnEye->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "eyes_96_p.png"));
+	m_btnEye->setBkgndCheck(createRef<ImageBrush>("modelDIY", "eyes_96_p.png"));
 	m_btnMouth = Button::createWithTextureFrameName("modelDIY", "mouth_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 3);
-	m_btnMouth->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "mouth_96_p.png"));
+	m_btnMouth->setBkgndCheck(createRef<ImageBrush>("modelDIY", "mouth_96_p.png"));
 	m_btnClothes = Button::createWithTextureFrameName("modelDIY", "suit_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 4);
-	m_btnClothes->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "suit_96_p.png"));
+	m_btnClothes->setBkgndCheck(createRef<ImageBrush>("modelDIY", "suit_96_p.png"));
 	m_btnShoes = Button::createWithTextureFrameName("modelDIY", "shoes_96_n.png", true, 0.0f, y + (itemHeight + itemSpace) * 5);
-	m_btnShoes->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "shoes_96_p.png"));
+	m_btnShoes->setBkgndCheck(createRef<ImageBrush>("modelDIY", "shoes_96_p.png"));
 	auto sliderBg = Node2D::createWithTextureFrameName("modelDIY", "slider_bg_1112.png", true, 784.0f - 664.0f, 24.0f);
 	m_itemsRoot = createRef<Node2D>(784.0f - 664.0f, /*150.0f*/y, 1112.0f, 530.0f);
 	//m_itemsRoot->setBackground(SolidColorBrush::red());
@@ -145,9 +145,9 @@ DIYView::DIYView()
 	auto popBG = Node2D::createWithTextureFrameName("modelDIY", "pop_690.png", true, 784.0f - 664.0f, 24.0f);
 	popBG->setAlignmentCenter();
 	m_btnNo = Button::createWithTextureFrameName("modelDIY", "btn_bg174_no_n.png", true, 103.0f, 228.0f);
-	m_btnNo->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "btn_bg174_no_p.png"));
+	m_btnNo->setBkgndPress(createRef<ImageBrush>("modelDIY", "btn_bg174_no_p.png"));
 	m_btnYes = Button::createWithTextureFrameName("modelDIY", "btn_bg174_yes_n.png", true, 413.0f, 228.0f);
-	m_btnYes->setBkgndPress(ImageBrush::createWitchTextureFrameName("modelDIY", "btn_bg174_yes_p.png"));
+	m_btnYes->setBkgndPress(createRef<ImageBrush>("modelDIY", "btn_bg174_yes_p.png"));
 	m_btnNo->Click += nbBindEventFunction(onBtnClick);
 	m_btnYes->Click += nbBindEventFunction(onBtnClick);
 	auto txt = createRef<TextBlock>(u8"人物形象已更改，是否保存？");
@@ -203,11 +203,11 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageFace = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_face_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_face_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_face_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_face_02.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_face_02_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_face_02_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_face_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_face_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_face_03_s.png"));
 			m_pageFace->add(btn0);
 			m_pageFace->add(btn1);
 			m_pageFace->add(btn2);
@@ -224,17 +224,17 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageHair = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_02.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_02_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_02_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_03_s.png"));
 			auto btn3 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_04.png", true, itemSize.width * 3, 0.0f);
-			btn3->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_04_s.png"));
+			btn3->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_04_s.png"));
 			auto btn4 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_05.png", true, itemSize.width * 4, 0.0f);
-			btn4->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_05_s.png"));
+			btn4->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_05_s.png"));
 			auto btn5 = Button::createWithTextureFrameName("modelDIY", "parts_hairstyle_06.png", true, itemSize.width * 0, itemSize.height);
-			btn5->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_hairstyle_06_s.png"));
+			btn5->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_hairstyle_06_s.png"));
 			m_pageHair->add(btn0);
 			m_pageHair->add(btn1);
 			m_pageHair->add(btn2);
@@ -254,11 +254,11 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageEye = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_eyes_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_eyes_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_eyes_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_eyes_04.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_eyes_04_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_eyes_04_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_eyes_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_eyes_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_eyes_03_s.png"));
 			m_pageEye->add(btn0);
 			m_pageEye->add(btn1);
 			m_pageEye->add(btn2);
@@ -275,11 +275,11 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageMouth = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_mouth_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_mouth_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_mouth_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_mouth_02.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_mouth_02_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_mouth_02_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_mouth_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_mouth_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_mouth_03_s.png"));
 			m_pageMouth->add(btn0);
 			m_pageMouth->add(btn1);
 			m_pageMouth->add(btn2);
@@ -296,17 +296,17 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageClothes = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_suit_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_suit_02.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_02_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_02_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_suit_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_03_s.png"));
 			auto btn3 = Button::createWithTextureFrameName("modelDIY", "parts_suit_04.png", true, itemSize.width * 3, 0.0f);
-			btn3->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_04_s.png"));
+			btn3->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_04_s.png"));
 			auto btn4 = Button::createWithTextureFrameName("modelDIY", "parts_suit_05.png", true, itemSize.width * 4, 0.0f);
-			btn4->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_05_s.png"));
+			btn4->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_05_s.png"));
 			auto btn5 = Button::createWithTextureFrameName("modelDIY", "parts_suit_06.png", true, itemSize.width * 0, itemSize.height);
-			btn5->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_suit_06_s.png"));
+			btn5->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_suit_06_s.png"));
 			m_pageClothes->add(btn0);
 			m_pageClothes->add(btn1);
 			m_pageClothes->add(btn2);
@@ -326,17 +326,17 @@ void DIYView::swithPage(PageE page)
 		{
 			m_pageShoes = createRef<Page>();
 			auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_01.png", true, itemSize.width * 0, 0.0f);
-			btn0->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_01_s.png"));
+			btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_01_s.png"));
 			auto btn1 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_02.png", true, itemSize.width * 1, 0.0f);
-			btn1->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_02_s.png"));
+			btn1->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_02_s.png"));
 			auto btn2 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_03.png", true, itemSize.width * 2, 0.0f);
-			btn2->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_03_s.png"));
+			btn2->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_03_s.png"));
 			auto btn3 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_04.png", true, itemSize.width * 3, 0.0f);
-			btn3->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_04_s.png"));
+			btn3->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_04_s.png"));
 			auto btn4 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_05.png", true, itemSize.width * 4, 0.0f);
-			btn4->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_05_s.png"));
+			btn4->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_05_s.png"));
 			auto btn5 = Button::createWithTextureFrameName("modelDIY", "parts_shoes_06.png", true, itemSize.width * 0, itemSize.height);
-			btn5->setBkgndCheck(ImageBrush::createWitchTextureFrameName("modelDIY", "parts_shoes_06_s.png"));
+			btn5->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_shoes_06_s.png"));
 			m_pageShoes->add(btn0);
 			m_pageShoes->add(btn1);
 			m_pageShoes->add(btn2);

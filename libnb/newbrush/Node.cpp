@@ -1,5 +1,4 @@
 ﻿#include "newbrush/Node.h"
-#include "newbrush/Mesh.h"
 
 using namespace nb;
 

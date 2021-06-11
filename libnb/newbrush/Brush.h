@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "newbrush/Types.h"
 #include "newbrush/Components.h"
 
 namespace nb
@@ -173,11 +172,11 @@ public:
 class NB_API LinearGradientBrush : public Brush
 {
 public:
-	glm::vec2 startPoint;
-	glm::vec2 endPoint;
-	float lenght{ 0.0f };
-	bool vertical{ true };
-	std::vector<std::pair<float, Color>> stops;
+	LinearGradientBrush();
+	LinearGradientBrush(const std::vector<GradientStop> &stops);
+
+	bool horizontal;
+	std::vector<GradientStop> gradientStops;
 };
 
 class NB_API ImageBrush : public Brush
@@ -186,15 +185,10 @@ class NB_API ImageBrush : public Brush
 public:
 	ImageBrush();
 	ImageBrush(ref<Texture2D> texture);
-	ImageBrush(ref<Texture2D> texture, const glm::vec2 &targetOffset, const glm::vec2 &targetSize, bool _rotated);
+	ImageBrush(const TextureFrame &frame);
+	ImageBrush(const std::string &texAtlasKey, const std::string &frameName);
 
-	static ref<ImageBrush> createWitchTextureFrame(const TextureFrame &texFrame);
-	static ref<ImageBrush> createWitchTextureFrameName(const std::string &texAtlasKey, const std::string &frameName);
-
-	ref<Texture2D> texture;
-	glm::vec2 targetOffset;
-	glm::vec2 targetSize;
-	bool rotated;
+	TextureFrame frame;
 };
 
 class NB_API EffectBrush : public Brush

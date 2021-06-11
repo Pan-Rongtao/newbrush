@@ -7,8 +7,7 @@
 #include <vector>
 #include <set>
 #include <array>
-#include "newbrush/Core.h"
-#include "newbrush/glm.h"
+#include "newbrush/Types.h"
 
 namespace nb {
 

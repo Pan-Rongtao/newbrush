@@ -1,6 +1,5 @@
 ﻿#include "newbrush/Scene.h"
 #include "newbrush/Log.h"
-#include "newbrush/Mesh.h"
 
 using namespace nb;
 

@@ -6,4 +6,5 @@ class MainView : public ViewBase
 public:
 	virtual void init() override;
 
+	void onKey(const KeyEventArgs &e);
 };

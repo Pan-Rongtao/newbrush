@@ -48,8 +48,7 @@ void Binding::setSource(ref<DataContext> source)
 //因此map做成这个结果，此结果性能并非最佳，后续可能考虑优化
 //g_bindingmap的key不可使用Binding*，否则连续的std::make_shared<Binding>会返回相同的this，不知道为什么！！！
 using ObjectPropertysContainer = std::vector<std::pair<ref<Object>, property>>;
-std::map<ref<Binding>, ObjectPropertysContainer> g_bindingmap;
-
+static std::map<ref<Binding>, ObjectPropertysContainer> g_bindingmap;
 void BindingMaster::addBinding(ref<Object> target, const property &prop, ref<Binding> bd)
 {
 	nbThrowExceptionIf(!target, std::invalid_argument, "target is nullptr.");

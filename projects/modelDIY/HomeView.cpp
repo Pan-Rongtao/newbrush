@@ -1,6 +1,7 @@
 #include "HomeView.h"
 #include "MainView.h"
 
+static bool g_move = false;
 HomeView::HomeView()
 {
 	setWidth(1920.0f);
@@ -12,13 +13,20 @@ HomeView::HomeView()
 	//m_area->setBkgndNormal(SolidColorBrush::red());
 	m_area->setAlignmentCenter();
 	m_area->Click += nbBindEventFunction(onBtnClick);
+	m_area->Touch += [](const TouchEventArgs &e)
+	{
+		if (e.action == TouchActionE::move)
+			g_move = true;
+		else if(e.action == TouchActionE::down)
+			g_move = false;
+	};
 	 
 	addChild(m_area);
 }
 
 void HomeView::onBtnClick(const EventArgs & e)
 {
-	if (e.sender == m_area.get())
+	if (e.sender == m_area.get() && !g_move)
 	{
 		MainView::get()->switchView(ViewE::Selector);
 	}

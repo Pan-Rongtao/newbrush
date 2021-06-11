@@ -64,10 +64,10 @@ public:
 	static bool save(const std::string &path, unsigned char *data, int32_t width, int32_t height, int channels, uint32_t quality = 1);
 	
 private:
-	unsigned char	*m_data;
-	int32_t			m_width;
-	int32_t			m_height;
-	int32_t			m_channels;
+	unsigned char *m_data;
+	int32_t m_width;
+	int32_t m_height;
+	int32_t m_channels;
 };
 
 }
