@@ -186,6 +186,31 @@ Point Window::getMousePosition() const
 #endif
 }
 
+GLFWwindow *Window::getGLFW() const
+{
+	return m_implWindow;
+}
+
+ref<Node2D> Window::getSelectItem() const
+{
+	return m_selectItem;
+}
+
+void Window::selectItem(float x, float y)
+{
+	auto nodes = TreeHelper::getAllChildren(root);
+	for (int i = nodes.size() - 1; i >= 0; --i)
+	{
+		auto node = nodes[i];
+		if (node->hitTest(Point(x, y)))
+		{
+			m_selectItem = node;
+			return;
+		}
+	}
+	m_selectItem = nullptr;
+}
+
 void Window::pollEvents()
 {
 #if NB_OS != NB_OS_ANDROID
@@ -407,6 +432,16 @@ void Window::render()
 
 	if (root)
 		root->updateLayout(Size(width(), height()));
+
+	PreRender.invoke({});
+
+	if (m_selectItem)
+	{
+		auto rc = m_selectItem->getRenderRect();
+		Renderer2D::drawBorder(rc, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+
+	PostRender.invoke({});
 
 	glfwSwapBuffers(m_implWindow);
 #endif

@@ -3,6 +3,7 @@
 #include <jni.h>
 #endif
 #include "newbrush/Helper.h"
+#include "imgui/ImGuiHelper.h"
 
 MessageQueue g_msgQueue;
 extern ref<ViewBase> g_view;
@@ -106,12 +107,50 @@ extern "C"
 
 #else
 
+class EditorView : public ImGuiView
+{
+public:
+	using ImGuiView::ImGuiView;
+
+	virtual void onInit() {}
+	virtual void onRender()
+	{
+		static bool show = false;
+		ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
+		ImGui::Begin(u8"Properties", &show);
+
+		ImGuiWidget::showPropertyEditor(instance(Obj));
+
+		auto pos = ImGui::GetWindowPos();
+		auto size = ImGui::GetWindowSize();
+		MouseInWindow = ImGui::IsMouseHoveringRect(pos, ImVec2(pos.x + size.x, pos.y + size.y));
+
+		ImGui::End();
+	}
+
+	ref<Object> Obj;
+	bool MouseInWindow;
+};
+
 int main(int argc, char **argv)
 {
 	try
 	{
 		Application app;
 		Window window;
+		auto imView = createRef<EditorView>(window.getGLFW());
+		window.Touch += [imView, &window](const TouchEventArgs &e)
+		{
+			if (e.action == TouchActionE::down && !imView->MouseInWindow)
+				window.selectItem(e.x, e.y);
+		};
+		window.PostRender += [imView, &window](const EventArgs &e)
+		{
+			imView->Obj = window.getSelectItem();
+			ImGuiHelper::render(imView.get());
+		};
 
 		auto k = nb::getMilliseconds();
 		g_view->init();

@@ -70,6 +70,11 @@ public:
 	//获取鼠标位置
 	Point getMousePosition() const;
 
+	GLFWwindow *getGLFW() const;
+
+	void selectItem(float x, float y);
+	ref<Node2D> getSelectItem() const;
+
 	ref<Node2D> root;
 
 	Event<KeyEventArgs>			Key;
@@ -84,6 +89,8 @@ public:
 	Event<EventArgs>			StateChanged;			//WindowState更改时发生
 	Event<EventArgs>			SourceInitiallized;		//资源初始化完成时发生，可在此获得该窗体的句柄用来与Win32交互
 	Event<EventArgs>			ContentRendered;		//当窗口的内容呈现后发生
+	Event<EventArgs>			PreRender;
+	Event<EventArgs>			PostRender;
 
 private:
 	void _close(bool eraseFromCollection);
@@ -118,6 +125,7 @@ private:
 	bool			m_processingWindowStateChanged;
 	WindowStateE	m_lastWindowState;
 	std::string		m_title;
+	ref<Node2D>		m_selectItem;
 	friend class Application;
 };
 

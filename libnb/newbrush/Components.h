@@ -635,7 +635,7 @@ public:
 	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, ref<Material> materia);
 	~Mesh();
 
-	virtual void draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>> &lights) const;
+	virtual void draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>> &lights, int mode = GL_TRIANGLES) const;
 
 	std::string name;
 	ref<Material> material;

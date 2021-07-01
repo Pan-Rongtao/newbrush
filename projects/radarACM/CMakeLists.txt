@@ -3,9 +3,10 @@ PROJECT(radarACM)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${3RDPARTY_DIR}/include/imgui)
 
 # 3. Project Build
-file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
+file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp ${3RDPARTY_DIR}/include/imgui/*.h ${3RDPARTY_DIR}/include/imgui/*.cpp)
 
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${SRC_LIST})

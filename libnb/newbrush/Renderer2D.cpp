@@ -385,3 +385,25 @@ void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & 
 		drawImage(drawRC, glm::mat4(1.0f), TextureFrame(tex, texRect), 1.0f);
 	}
 }
+
+void Renderer2D::drawBorder(const Rect & rc, const glm::vec4 & color)
+{
+	endBatch();
+
+	glm::vec4 position = { rc.x(), rc.y(), 0.0f, 1.0f };
+	glm::vec4 p0 = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glm::vec4 p1 = { rc.width(), 0.0f, 0.0f, 1.0f };
+	glm::vec4 p2 = { rc.width(), rc.height(), 0.0f, 1.0f };
+	glm::vec4 p3 = { 0.0f, rc.height(), 0.0f, 1.0f };
+	std::vector<Vertex> vertexs(4);
+	vertexs[0].position = { rc.x(), rc.y(), 0.0f };
+	vertexs[1].position = { rc.right(), rc.y(), 0.0f };
+	vertexs[2].position = { rc.right(), rc.bottom(), 0.0f };
+	vertexs[3].position = { rc.x(), rc.bottom(), 0.0f };
+	std::vector<uint16_t> indices = { 0, 1, 2, 3 };
+	auto material = createRef<FlatMaterial>(Color::fromRgbaF(color.x, color.y, color.z, color.w));
+	auto mesh = createRef<Mesh>(vertexs, indices, material);
+	mesh->draw(glm::mat4(1.0), sharedCamera2D(), {}, GL_LINE_LOOP);
+
+	_beginBatch(false);
+}

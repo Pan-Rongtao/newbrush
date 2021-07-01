@@ -2,9 +2,10 @@
 PROJECT(cx62b)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
+include_directories(${3RDPARTY_DIR}/include/imgui)
 
 # 3. Project Build
-file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
+file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp ${3RDPARTY_DIR}/include/imgui/*.h ${3RDPARTY_DIR}/include/imgui/*.cpp)
 
 if(ANDROID)
 	add_library(${PROJECT_NAME} SHARED ${SRC_LIST})

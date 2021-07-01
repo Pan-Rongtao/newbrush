@@ -49,7 +49,7 @@ void MainView::init()
 	m_LED_DrivingMode	= Node2D::createWithTextureFrameName("indicator", "LED_DrivingModeSport.png", false, 738.0f, 664.0f);
 	m_LED_Charging		= Node2D::createWithTextureFrameName("indicator", "LED_Charging-Red.png", true, 1039.0f, 660.0f);
 	m_LED_RightTurn		= Node2D::createWithTextureFrameName("indicator", "LED_RightTurn.png", true, 1323.0f, 12.0f);
-	m_LED_AVH			= Node2D::createWithTextureFrameName("indicator", "LED_AVH-Yellow.png", false, 1364.0f, 214.0f);
+	m_LED_AVH			= Node2D::createWithTextureFrameName("indicator", "LED_AVH-Yellow.png", true, 1364.0f, 214.0f);
 	m_LED_CoolantTemp	= Node2D::createWithTextureFrameName("indicator", "LED_CoolantTemp-Blue.png", false, 1533.0f, 605.0f);
 	m_LED_GearBox		= Node2D::createWithTextureFrameName("indicator", "LED_GearBoxFault-Red.png", true, 1774.0f, 55.0f);
 	m_LED_ElecStability = Node2D::createWithTextureFrameName("indicator", "LED_ElecStabilityOFF-Yellow.png", true, 1823.0f, 99.0f);
@@ -97,16 +97,17 @@ void MainView::init()
 	m_RpmValue->setAlignmentCenter();
 	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "img_ECU_car.png", true, -20.0f, 193.0f));
 	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "ECU_horizon.png", true, 91.0f, 252.0f));
-	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "ic_ECU_gas station.png", true, 280.0f, 211.5f));
 	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "ECU_scale.png", true, 115.0f, 328.0f));
 	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "L100km.png", true, 222.0f, 205.0f));
+	m_RpmValue->addChild(Node2D::createWithTextureFrameName("guage", "ic_ECU_gas station.png", true, 280.0f, 211.5f));
 	m_ECU_Pointer = Node2D::createWithTextureFrameName("guage", "ECU_Pointer.png", true, 284.0f, 256.0f);
 	m_RpmValue->addChild(m_ECU_Pointer);
 	m_RpmPointer = Node2D::createWithTextureFrameName("guage", "pointer.png", true, 0.0f, 264.0f);
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "RPM_BG.png", true, 0.0f, 0.0f));
-	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "x1000rpm.png", true, 284.0f, 142.0f));
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "ECU_fuel consumption_n.png", true, 197.0f, 332.0f));
 	m_DialRightRoot->addChild(bg_inner);
+	m_DialRightRoot->addChild(m_RpmValue);
+	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "x1000rpm.png", true, 284.0f, 142.0f));
 	//m_DialRightRoot->addChild(bg_waterTemp);
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_0_n.png", true, 84.0f, 482.0f));
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_1_n.png", true, 29.0f, 344.0f));
@@ -117,7 +118,6 @@ void MainView::init()
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_6_n.png", true, 570.0f, 191.0f));
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_7_n.png", true, 586.0f, 355.0f));
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_8_n.png", true, 533.0f, 486.0f));
-	m_DialRightRoot->addChild(m_RpmValue);
 	m_DialRightRoot->addChild(m_RpmPointer);
 
 	m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true);
@@ -127,6 +127,9 @@ void MainView::init()
 	m_Menu = Node2D::createWithTextureFrameName("menu", "DrivingInfo/img_Tire pressure_car.png", true, 0.0f, 29.0f);
 	m_Menu->setAlignmentCenter();
 
+	m_root->addChild(m_DialLeftRoot);
+	m_root->addChild(m_DialRightRoot);
+	m_root->addChild(m_TopMenu);
 	m_root->addChild(m_LED_EleSteerLock);
 	m_root->addChild(m_LED_OilPressure);
 	m_root->addChild(m_LED_BrakeFluidLv);
@@ -166,9 +169,6 @@ void MainView::init()
 	m_root->addChild(m_LED_MaintenanceTip);
 	m_root->addChild(m_LED_AirBag);
 	m_root->addChild(m_LED_TPMS);
-	m_root->addChild(m_DialLeftRoot);
-	m_root->addChild(m_DialRightRoot);
-	m_root->addChild(m_TopMenu);
 	m_root->addChild(m_Menu);
 
 	initStateMachines();

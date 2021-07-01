@@ -38,11 +38,23 @@ public:
 	std::wstring wstring_p = L"";
 	Enum enum_p = Enum::v0;
 	Point point_p = {0};
+	Point3D point3d_p;
+	Size size_p;
+	Rect rect_p;
+	Color color_p;
 	ref<Color> colorptr_p = nullptr;
+	Thickness thickness_p;
+	TimeSpan timespan_p;
+	Date date_p;
+	Time time_p;
 
 	int int32_p1= 0;
 	int int32_p2= 0;
 	std::string string_p1 = "";
+
+	glm::vec2 vec2_p{ 0.0f };
+	glm::vec3 vec3_p{ 0.0f };
+	glm::vec4 vec4_p{ 0.0f };
 };
 
 RTTR_REGISTRATION
@@ -71,11 +83,23 @@ RTTR_REGISTRATION
 	.property("wstring_p", &BindingObject::wstring_p)
 	.property("enum_p", &BindingObject::enum_p)
 	.property("point_p", &BindingObject::point_p)
+	.property("point3d_p", &BindingObject::point3d_p)
+	.property("size_p", &BindingObject::size_p)
+	.property("rect_p", &BindingObject::rect_p)
+	.property("color_p", &BindingObject::color_p)
 	.property("colorptr_p", &BindingObject::colorptr_p)
+	.property("thickness_p", &BindingObject::thickness_p)
+	.property("timespan_p", &BindingObject::timespan_p)
+	.property("date_p", &BindingObject::date_p)
+	.property("time_p", &BindingObject::time_p)
 
 	.property("int32_p1", &BindingObject::int32_p1)
 	.property("int32_p2", &BindingObject::int32_p2)
 	.property("string_p1", &BindingObject::string_p1)
+
+	.property("vec2_p", &BindingObject::vec2_p)
+	.property("vec3_p", &BindingObject::vec3_p)
+	.property("vec4_p", &BindingObject::vec4_p)
 	;
 
 }

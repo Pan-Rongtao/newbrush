@@ -1086,7 +1086,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &ebo);
 }
 
-void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights) const
+void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights, int mode) const
 {
 	if (!renderAble || !material || !material->shader)
 		return;
@@ -1112,7 +1112,7 @@ void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<r
 	}
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(mode, indicesSize, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
 
 	shader->disuse();

@@ -19,6 +19,8 @@ public:
 
 	static void drawText(ref<Font> font, const Point &pt, const std::string &text);
 
+	static void drawBorder(const Rect &rc, const glm::vec4& color);
+
 	static void endBatch();
 	static void _beginBatch(bool resetStats);
 
