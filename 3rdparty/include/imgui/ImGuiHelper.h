@@ -31,7 +31,8 @@ class ImGuiHelper
 public:
 	static void render(ImGuiView *view);
 	static int run(ImGuiView *view);
-	static void enableRender(bool b);
+	static void enableRender(bool enable);
+	static bool isEnableRender();
 };
 
 class ImGuiWidget

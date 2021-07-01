@@ -115,9 +115,14 @@ int ImGuiHelper::run(ImGuiView * view)
 	return 0;
 }
 
-void ImGuiHelper::enableRender(bool b)
+void ImGuiHelper::enableRender(bool enable)
 {
-	g_enableRender = b;
+	g_enableRender = enable;
+}
+
+bool ImGuiHelper::isEnableRender()
+{
+	return g_enableRender;
 }
 
 void ImGuiWidget::showPropertyEditor(instance &obj)

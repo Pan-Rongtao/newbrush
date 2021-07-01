@@ -151,6 +151,13 @@ int main(int argc, char **argv)
 			imView->Obj = window.getSelectItem();
 			ImGuiHelper::render(imView.get());
 		};
+		window.Key += [](const KeyEventArgs &e)
+		{
+			if (e.action == KeyAction::down && e.key == KeyCode::space)
+			{
+				ImGuiHelper::enableRender(!ImGuiHelper::isEnableRender());
+			}
+		};
 
 		auto k = nb::getMilliseconds();
 		g_view->init();
