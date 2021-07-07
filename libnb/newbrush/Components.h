@@ -3,10 +3,12 @@
 #include "newbrush/Object.h"
 #include "newbrush/Types.h"
 #include "newbrush/Event.h"
-#if NB_OS == NB_OS_ANDROID
-	#include <GLES3/gl3.h>
-#else
+
+#if (defined NB_OS_FAMILY_WINDOWS) || (NB_OS == NB_OS_LINUX && NB_ARCH != NB_ARCH_ARM)
+	#define NB_USE_GLAD
 	#include "glad/glad.h"
+#else
+	#include <GLES3/gl3.h>
 #endif
 
 namespace nb

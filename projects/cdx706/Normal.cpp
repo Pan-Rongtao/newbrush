@@ -1,4 +1,5 @@
 #include "Normal.h"
+#include "MainView.h"
 
 constexpr char clockNormal_vs[] = R"(
 attribute vec3 position;
@@ -38,6 +39,10 @@ void main( void )
 }
 )";
 
+constexpr float R = 278.0f;
+constexpr int DotsCount = 36 * 4;
+const float RadiusStep = glm::two_pi<float>() / DotsCount;
+constexpr float DotsAngleRange = 360.0f;
 class NumberMaterial : public Material
 {
 public:
@@ -69,17 +74,12 @@ NormalNode::NormalNode()
 	setHeight(756.0f);
 	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/background.png")));
 
-	m_dots0 = createRef<Node2D>(0.0f, 0.0f, 756.0f, 756.0f);
-	m_dots0->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/a_00.png")));
-	m_dots0->setTransform(createRef<RotateTransform2D>(0.0f, 378.0f, 378.0f));
+	TextureLibrary::addTexture2D("dot5x5", RES_DIR"cxd706/normal/spot2.png");
+	TextureLibrary::addTexture2D("dot4x4", RES_DIR"cxd706/normal/spot4x4.png");
+	TextureLibrary::addTexture2D("dot2x2", RES_DIR"cxd706/normal/spot2x2.png");
 
-	m_dots1 = createRef<Node2D>(0.0f, 0.0f, 756.0f, 756.0f);
-	m_dots1->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/dot.png")));
-	m_dots1->setTransform(createRef<RotateTransform2D>(0.0f, 378.0f, 378.0f));
-
-	m_secondPointer = createRef<Node2D>(0.0f, 0.0f, 756.0f, 756.0f);
-	m_secondPointer->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/b_00.png")));
-	m_secondPointer->setTransform(createRef<RotateTransform2D>(0.0f, 378.0f, 378.0f));
+	m_secondPointer = createRef<Node2D>(0.0f, 0.0f, 8.0f, 8.0f);
+	m_secondPointer->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/b_008x8.png")));
 
 	m_hourShadowParent = createRef<Node2D>(0.0f, -80.0f, 180.0f, 151.0f);
 	m_hourShadowParent->setAlignmentCenter();
@@ -93,8 +93,12 @@ NormalNode::NormalNode()
 	m_minuteParent = createRef<Node2D>(0.0f, 80.0f, 150.0f, 120.0f);
 	m_minuteParent->setAlignmentCenter();
 
-	//addChild(m_dots0);
-	addChild(m_dots1);
+	m_dotPanel = createRef<Node2D>();
+
+	glm::vec2 center(size().width / 2.0f, size().height / 2.0f);
+	updateDots(center, R, 270.0f, DotsAngleRange);
+
+	addChild(m_dotPanel);
 	addChild(m_secondPointer);
 	addChild(m_hourShadowParent);
 	addChild(m_minuteShadowParent);
@@ -106,31 +110,34 @@ NormalNode::NormalNode()
 
 	m_secondPointerAnimation.setTarget(m_secondPointer);
 	m_secondPointerAnimation.setTargetPropertyName("Opacity");
-	m_secondPointerAnimation.setFrom(0.3f);
+	m_secondPointerAnimation.setFrom(0.0f);
 	m_secondPointerAnimation.setTo(1.0f);
-	m_secondPointerAnimation.duration = TimeSpan::fromMilliseconds(400);
-	m_secondPointerAnimation.repeatBehavior = RepeatBehavior::forever();
-	m_secondPointerAnimation.begin();
+	m_secondPointerAnimation.duration = TimeSpan::fromMilliseconds(200);
+	m_secondPointerAnimation.autoReverse = true;
+	auto easing = createRef<CubicEase>();
+
+	setSecondPointerForTime(R - 3*8, -90);
+
 }
 
 void NormalNode::onTick(const EventArgs & e)
 {
 	if (e.sender == &m_timer)
 	{
-		static float anglePerMS = 0.006f;
-		auto now = Time::now();
-		auto mses = now.second() * 1000 + now.millisecond();
-		auto timeAngle = anglePerMS * mses;
+		auto timeAngle = MainView::getAngleForTime();
+		auto timeRadius = glm::radians(timeAngle);
 
-		nb::as<RotateTransform2D>(m_dots0->getTransform())->setAngle(timeAngle + 180);
-		nb::as<RotateTransform2D>(m_dots1->getTransform())->setAngle(timeAngle + 180);
-		nb::as<RotateTransform2D>(m_secondPointer->getTransform())->setAngle(timeAngle + 180);
+		//setSecondPointerForTime(R, timeAngle - 90);
 
+		glm::vec2 center(size().width / 2.0f, size().height / 2.0f);
+		//updateDots(center, R, timeAngle - 90, DotsAngleRange);
+
+		return;
 		static constexpr float circleR = 40.0f;
 		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle + 90);
 		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle + 90);
 
-		static auto lastMinute = now.minute();
+		//static auto lastMinute = now.minute();
 		//if (lastMinute != now.minute())
 		{
 			setTime(m_hourShadowParent, 10, "_shadow", 50.0f, false, timeAngle);
@@ -198,5 +205,60 @@ void NormalNode::setTime(ref<Node2D> parent, int value, const std::string &image
 		node->setX(space * k);
 		parent->addChild(nodes[i]);
 		++k;
+	}
+}
+
+void NormalNode::updateDots(const glm::vec2 &center, float r, float centerAngle, float angleRange)
+{
+	auto angleEnd = int(centerAngle + angleRange / 2 + 360) % 360;
+	auto angleMin = angleEnd - angleRange;
+	auto angleMax = angleEnd;
+
+	auto tex = TextureLibrary::getTexture2D("dot4x4");
+	float w = tex->width();
+	float h = tex->height();
+
+	m_dotPanel->clearChildren();
+	for (int k = 0; k <= 20; ++k)
+	{
+		for (int i = 0; i != DotsCount; ++i)
+		{
+			auto radiuses = RadiusStep * i;
+			auto angle = glm::degrees(radiuses);
+			if ((angleMin < 0.0f && ((angle >= angleMin + 360 && angle <= 360) || (angle >= 0 && angle <= angleMax)))
+				|| (angleMin >= 0.0f && angle >= angleMin && angle <= angleMax))
+			{
+				glm::vec2 pt = glm::vec2(r * cos(radiuses), r * sin(radiuses)) + center - glm::vec2(w / 2, h / 2);
+
+				auto node = createRef<Node2D>(pt.x, pt.y, w, h);
+				node->setBackground(createRef<ImageBrush>(tex));
+				//node->setTransform(createRef<ScaleTransform2D>(scale, scale, w / 2, h / 2));
+				m_dotPanel->addChild(node);
+			}
+		}
+		r -= 8.0f;
+	}
+}
+
+float lastRadius = 0.0f;
+void NormalNode::setSecondPointerForTime(float r, float angle)
+{
+	angle = (float)(int(angle + 360) % 360);
+	float radius = glm::radians(angle);
+	glm::vec2 center(size().width / 2.0f, size().height / 2.0f);
+	for (int i = DotsCount; i >= 0; --i)
+	{
+		auto radiuses = RadiusStep * i;
+		if (radius >= radiuses)
+		{
+			glm::vec2 pt = glm::vec2(r * cos(radiuses), r * sin(radiuses)) + center - glm::vec2(m_secondPointer->size().width / 2.0f, m_secondPointer->size().height / 2.0f);
+			m_secondPointer->setPosition({ pt.x, pt.y });
+			if (lastRadius != radiuses)
+			{
+				lastRadius = radiuses;
+			//	m_secondPointerAnimation.begin();
+			}
+			return;
+		}
 	}
 }

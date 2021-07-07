@@ -7,4 +7,5 @@ public:
 	virtual void init() override;
 
 	void onKey(const KeyEventArgs &e);
+	void onTouch(const TouchEventArgs &e);
 };

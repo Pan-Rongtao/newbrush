@@ -75,5 +75,5 @@ private:
 	Timer m_timerRightTurn;
 	Timer m_timerHMA;
 
-	ref<FloatAnimation> m_carAnimation;
+	ref<PointAnimation> m_carAnimation;
 };

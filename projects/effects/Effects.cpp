@@ -14,6 +14,7 @@ void main()
 )";
 
 constexpr char GaussianBlur_fs[] = R"(
+precision mediump float;
 uniform sampler2D u_sampler0;
 varying vec2 v_uv;
 uniform float u_intensity;
@@ -86,6 +87,7 @@ void main()
 )";
 
 constexpr char Vortex_fs[] = R"(
+precision mediump float;
 uniform sampler2D texture0;
 varying vec2 v_uv;	//旋涡半径,范围(0 ~ 0.5)
 uniform float u_r;	//旋涡旋转角度
@@ -144,6 +146,7 @@ void main()
 )";
 
 constexpr char Flame_fs[] = R"(
+precision mediump float;
 uniform sampler2D texture0;
 varying vec2 v_uv;
 uniform float u_time;

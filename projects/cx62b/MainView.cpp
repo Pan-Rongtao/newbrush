@@ -180,9 +180,9 @@ void MainView::init()
 	m_timerRightTurn.start(500);
 	m_timerHMA.start(10);
 
-	m_carAnimation = createRef<FloatAnimation>(120.0f, 284.0f);
+	m_carAnimation = createRef<PointAnimation>(Point(120.0f, 256.0f), Point(284.0f, 256.0f));
 	m_carAnimation->setTarget(m_ECU_Pointer);
-	m_carAnimation->setTargetPropertyName("X");
+	m_carAnimation->setTargetPropertyName("Position");
 	m_carAnimation->duration = TimeSpan::fromSeconds(2);
 	m_carAnimation->setEasingFunction(createRef<ElasticEase>());
 	m_carAnimation->autoReverse = true;

@@ -25,11 +25,11 @@ void ModelBrowser::init()
 	m_root->setVerticalAlignment(VerticalAlignmentE::Bottom);
 	m_root->setBackground(createRef<SolidColorBrush>(Color(100, 100, 100)));
 	m_root->setScene(m_scene);
-	m_root->Touch += nbBindEventFunction(onTouch);
-	m_root->Scroll += nbBindEventFunction(onScroll);
-	m_root->Key += nbBindEventFunction(onKey);
+	m_root->Touch += nbBindEventFunction(ModelBrowser::onTouch);
+	m_root->Scroll += nbBindEventFunction(ModelBrowser::onScroll);
+	m_root->Key += nbBindEventFunction(ModelBrowser::onKey);
 #ifdef WIN32
-	Application::get()->mainWindow()->Drop += nbBindEventFunction(onDrop);
+	Application::get()->mainWindow()->Drop += nbBindEventFunction(ModelBrowser::onDrop);
 #endif
 }
 

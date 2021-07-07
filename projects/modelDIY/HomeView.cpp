@@ -12,7 +12,7 @@ HomeView::HomeView()
 	m_area = createRef<Button>(0.0f, 0.0f, 300.0f, 300.0f);
 	//m_area->setBkgndNormal(SolidColorBrush::red());
 	m_area->setAlignmentCenter();
-	m_area->Click += nbBindEventFunction(onBtnClick);
+	m_area->Click += nbBindEventFunction(HomeView::onBtnClick);
 	m_area->Touch += [](const TouchEventArgs &e)
 	{
 		if (e.action == TouchActionE::move)

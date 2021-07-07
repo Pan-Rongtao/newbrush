@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <regex>
 #include <ratio>
+#include <mutex>
 #include "newbrush/Core.h"
 //要使GLM_FORCE_XYZW_ONLY生效，不能include单独的glm/glm.hpp或者其他glm头文件，只能include此文件
 #ifndef GLM_FORCE_XYZW_ONLY
@@ -603,6 +604,18 @@ public:
 private:
 	Date m_date;
 	Time m_time;
+};
+
+/*注意：!!!不可使用在两个动态库之间，否则不会保证是一个实例，可能会产生两个以上的实例!!!*/
+template<class T> struct Singleton
+{
+	static T *get()	{ static T *t = nullptr; if (!t) t = new T(); return t; }
+};
+
+//加一层判断，减少lock消耗
+template<class T> struct SingletonS
+{
+	static T *get()	{ static T *t = nullptr; static std::mutex lock; if (!t) { lock.lock(); if (!t)	t = new T(); lock.unlock(); } return t; }
 };
 
 }

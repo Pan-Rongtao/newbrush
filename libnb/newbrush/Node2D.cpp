@@ -9,18 +9,15 @@ using namespace nb;
 
 Node2D::Node2D()
 	: Node2D(0, 0, NAN, NAN)
-{
-}
+{}
 
 Node2D::Node2D(const Rect & rc)
 	: Node2D(rc.x(), rc.y(), rc.width(), rc.height())
-{
-}
+{}
 
 Node2D::Node2D(float x, float y, float w, float h)
 	: m_position(x, y)
-	, m_width(w)
-	, m_height(h)
+	, m_size(w, h)
 	, m_opacity(1.0f)
 	, m_focusAble(true)
 	, m_hasFocus(false)
@@ -58,58 +55,50 @@ void Node2D::setPosition(const Point & pt)
 	m_position = pt;
 }
 
-Point Node2D::position() const
+const Point &Node2D::position() const
 {
-	return Point();
+	return m_position;
 }
 
 void Node2D::setWidth(float width)
 {
-	if (width != m_width)
-	{
-		m_width = width;
-	}
+	m_size.width = width;
 }
 
 float Node2D::width() const
 {
-	return m_width;
+	return m_size.width;
 }
 
 void Node2D::setHeight(float height)
 {
-	if (height != m_height)
-	{
-		m_height = height;
-	}
+	m_size.height = height;
 }
 
 float Node2D::height() const
 {
-	return m_height;
+	return m_size.height;
 }
 
 void Node2D::setSize(const Size & size)
 {
-	m_width = size.width;
-	m_height = size.height;
+	m_size = size;
 }
 
-Size Node2D::size() const
+const Size &Node2D::size() const
 {
-	return Size(m_width, m_height);
+	return m_size;
 }
 
 void Node2D::setRect(const Rect & rc)
 {
 	m_position = rc.leftTop();
-	m_width = rc.width();
-	m_height = rc.height();
+	m_size = rc.size();
 }
 
 Rect Node2D::rect() const
 {
-	return Rect(m_position, m_width, m_height);
+	return Rect(m_position, m_size);
 }
 
 void Node2D::setMargin(const Thickness & margin)
@@ -220,8 +209,8 @@ void Node2D::measure(const Size & availabelSize)
 	}
 
 	auto const &margin = m_margin;// Thickness(m_position.x, m_position.y, 0.0f, 0.0f);
-	auto const &width = m_width;
-	auto const &height = m_height;
+	auto const &width = m_size.width;
+	auto const &height = m_size.height;
 	auto const &minWidth = 0.0f;
 	auto const &minHeight = 0.0f;
 	auto const &maxWidth = std::numeric_limits<float>::max();
@@ -256,8 +245,8 @@ void Node2D::arrage(const Rect & finalRect)
 		return;
 
 	auto const &margin = m_margin;// Thickness(m_position.x, m_position.y, 0.0f, 0.0f);
-	auto const &width = m_width;
-	auto const &height = m_height;
+	auto const &width = m_size.width;
+	auto const &height = m_size.height;
 	auto const &minWidth = 0.0f;
 	auto const &minHeight = 0.0f;
 	auto const &maxWidth = std::numeric_limits<float>::max();
@@ -305,7 +294,6 @@ void Node2D::arrage(const Rect & finalRect)
 	}
 	m_offsetToParent = Point(offsetX, offsetY) + m_position;
 	m_actualSize = renderSize;
-
 }
 
 Size Node2D::measureOverride(const Size & availableSize)

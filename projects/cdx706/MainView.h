@@ -18,6 +18,11 @@ class MainView : public ViewBase
 public:
 	virtual void init() override;
 
+	static float getAngleForTime();
+
+	static bool isInCircle(float x, float y, float circleX, float circleY, float r);
+	static float getAngle(float x, float y, float centerX, float centerY);
+
 private:
 	void onKey(const KeyEventArgs &e);
 	void switchDrivingMode(DrivingModeE mode);

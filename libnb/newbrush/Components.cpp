@@ -1120,6 +1120,7 @@ void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<r
 
 void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
 {
+	indicesSize = indices.size();
 	if (vertexs.empty() || indices.empty())
 		return;
 
@@ -1154,8 +1155,6 @@ void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>
 
 	//end vao
 	glBindVertexArray(0);
-
-	indicesSize = indices.size();
 }
 
 /**************************************
@@ -1205,6 +1204,10 @@ void Timer::add(Timer * timer)
 
 std::multimap<uint64_t, Timer *>::iterator Timer::remove(Timer *timer)
 {
+	//有可能程序已经退出m_tickSequence已经被销毁，进入此函数，加入这个判断防止访问下面的iter
+	if (m_tickSequence.empty())
+		return m_tickSequence.end();
+
 	for (auto iter = m_tickSequence.begin(); iter != m_tickSequence.end(); ++iter)
 	{
 		if (iter->second == timer)

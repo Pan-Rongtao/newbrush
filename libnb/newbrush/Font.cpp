@@ -118,7 +118,7 @@ Font::Font(const std::string & path, uint32_t size)
 	auto fileSize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	unsigned char *buffer = new unsigned char[fileSize];
-	fread(buffer, fileSize, 1, f);
+	auto n = fread(buffer, fileSize, 1, f);
 
 	if (!stbtt_InitFont(m_ttFontInfo, buffer, 0))
 	{

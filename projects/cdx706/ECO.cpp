@@ -1,4 +1,5 @@
 ﻿#include "ECO.h"
+#include "MainView.h"
 
 float circleR = 300.0f;
 
@@ -21,10 +22,11 @@ uniform sampler2D u_sampler0;
 uniform sampler2D u_sampler1;
 varying vec2 v_uv;
 uniform float u_radius;
+uniform vec2 u_resolution;
 
 void main( void )
 {
-	vec2 _npos = gl_FragCoord.xy / vec2(756.0, 756.0);   // 0.0 .. 1.0
+	vec2 _npos = gl_FragCoord.xy / u_resolution;   // 0.0 .. 1.0
 	vec2 _uv = (1.0 - _npos);
 
 	_uv -= vec2(0.5, 0.5);
@@ -48,10 +50,15 @@ public:
 		, texture1(tex1)
 		, texture2(tex2)
 		, angle(0.0f)
-	{}
+	{
+		tex2->setSamplerUnit(1);
+	}
 
 	virtual void uploadUniform(ref<Camera> camera) override
 	{
+		float x, y, w, h;
+		GLUtils::getViewport(x, y, w, h);
+		shader->setFloat2("u_resolution", glm::vec2(w, h));
 		shader->setFloat("u_radius", glm::radians(angle));
 		shader->setInt("u_sampler0", 0);
 		shader->setInt("u_sampler1", 1);
@@ -153,19 +160,6 @@ void ECONode::moveEffectNumberCircle(ref<Node2D> node, float angle)
 	material->angle = angle;
 }
 
-bool isInCircle(float x, float y, float circleX, float circleY, float r)
-{
-	auto dis = sqrt((x - circleX) * (x - circleX) + (y - circleY) * (y - circleY));
-	return dis <= r || dis - r <= 12;
-}
-
-//获取点与x轴的夹角（0~360）
-float getAngle(float x, float y, float centerX, float centerY)
-{
-	auto a = glm::degrees(atan2(y - centerY, x - centerX));
-	return (float)((int)(a + 360) % 360);
-}
-
 static float circleCenterX = 278.0f;
 static float circleCenterY = 272.0f;
 static float horSpace = 16.0f;
@@ -202,10 +196,10 @@ void ECONode::makeDots(float startAngle, float angleRange, float r)
 		for (auto x = 0.0f; x <= m_dotPanel->width(); x += nodeDistanceX)
 		{
 			auto xp = x + offsetX;
-			if (!isInCircle(xp, y, circleCenterX, circleCenterY, r))
+			if (!MainView::isInCircle(xp, y, circleCenterX, circleCenterY, r))
 				continue;
 
-			auto ptAngle = getAngle(xp, y, circleCenterX, circleCenterY);
+			auto ptAngle = MainView::getAngle(xp, y, circleCenterX, circleCenterY);
 			auto angleMin = angleEnd - angleRange;
 			auto angleMax = angleEnd;
 			//angleMin小于0，表示angleMin和angleMax分别在第一象限和第四象限
@@ -226,13 +220,13 @@ void ECONode::setDotsAngle(float angle, float angleRange, float r)
 		auto child = m_dotPanel->getChildAt(i);
 		auto x = child->x();
 		auto y = child->y();
-		if (!isInCircle(x, y, circleCenterX, circleCenterY, r))
+		if (!MainView::isInCircle(x, y, circleCenterX, circleCenterY, r))
 		{
 			child->setVisibility(VisibilityE::Hidden);
 		}
 		else
 		{
-			auto ptAngle = getAngle(x, y, circleCenterX, circleCenterY);
+			auto ptAngle = MainView::getAngle(x, y, circleCenterX, circleCenterY);
 			auto angleMin = angleEnd - angleRange;
 			auto angleMax = angleEnd;
 			child->setVisibility(VisibilityE::Hidden);
@@ -272,7 +266,6 @@ void ECONode::setTime(ref<Node2D> parent, int value, const std::string &imagePre
 
 		static auto tex1 = createRef<Texture2D>(RES_DIR"cxd706/img_text_colour.png");
 		auto tex2 = tex;
-		tex2->setSamplerUnit(1);
 		auto numberMaterial = createRef<NumberMaterial>(tex1, tex2);
 		numberMaterial->angle = angle;
 		auto numberBrush = createRef<EffectBrush>(numberMaterial, nullptr);

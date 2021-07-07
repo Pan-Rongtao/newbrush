@@ -58,7 +58,7 @@ public:
 	void setY(float y);
 
 	void setPosition(const Point &pt);
-	Point position() const;
+	const Point &position() const;
 
 	void setWidth(float width);
 	float width() const;
@@ -67,7 +67,7 @@ public:
 	float height() const;
 
 	void setSize(const Size &size);
-	Size size() const;
+	const Size &size() const;
 
 	void setRect(const Rect &rc);
 	Rect rect() const;
@@ -151,8 +151,7 @@ protected:
 
 private:
 	Point m_position;
-	float m_width;
-	float m_height;
+	Size m_size;
 	float m_opacity;
 	bool m_focusAble;
 	bool m_hasFocus;

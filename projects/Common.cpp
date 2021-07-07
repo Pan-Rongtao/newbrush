@@ -1,9 +1,10 @@
 ﻿#include "Common.h"
-#ifdef __ANDROID__
-#include <jni.h>
-#endif
 #include "newbrush/Helper.h"
-#include "imgui/ImGuiHelper.h"
+#if NB_OS == NB_OS_WINDOWS_NT
+	#include "imgui/ImGuiHelper.h"
+#elif NB_OS == NB_OS_ANDROID
+	#include <jni.h>
+#endif
 
 MessageQueue g_msgQueue;
 extern ref<ViewBase> g_view;
@@ -52,7 +53,7 @@ ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const
 	return model;
 }
 
-#ifdef __ANDROID__
+#if NB_OS == NB_OS_ANDROID
 
 extern "C"
 {
@@ -107,6 +108,7 @@ extern "C"
 
 #else
 
+#if NB_OS == NB_OS_WINDOWS_NT
 class EditorView : public ImGuiView
 {
 public:
@@ -133,6 +135,7 @@ public:
 	ref<Object> Obj;
 	bool MouseInWindow;
 };
+#endif
 
 int main(int argc, char **argv)
 {
@@ -140,6 +143,7 @@ int main(int argc, char **argv)
 	{
 		Application app;
 		Window window;
+#if NB_OS == NB_OS_WINDOWS_NT
 		auto imView = createRef<EditorView>(window.getGLFW());
 		window.Touch += [imView, &window](const TouchEventArgs &e)
 		{
@@ -151,13 +155,18 @@ int main(int argc, char **argv)
 			imView->Obj = window.getSelectItem();
 			ImGuiHelper::render(imView.get());
 		};
-		window.Key += [](const KeyEventArgs &e)
+		window.Key += [&window](const KeyEventArgs &e)
 		{
-			if (e.action == KeyAction::down && e.key == KeyCode::space)
+			if (e.action == KeyAction::down && e.key == KeyCode::F1)
 			{
 				ImGuiHelper::enableRender(!ImGuiHelper::isEnableRender());
+				if (!ImGuiHelper::isEnableRender())
+				{
+					window.selectItem(-1.0f, -1.0f);
+				}
 			}
 		};
+#endif
 
 		auto k = nb::getMilliseconds();
 		g_view->init();

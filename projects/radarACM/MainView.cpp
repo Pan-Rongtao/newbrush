@@ -2,13 +2,16 @@
 #include "effolkronium/random.hpp"
 #include "newbrush/Log.h"
 
-#include "TCPClient.h"
+#if NB_OS == NB_OS_WINDOWS_NT
+	#include "TCPClient.h"
+#endif // 
+
 
 /********************************************
 * 发布给项目给出release版本，不要给debug版本
 *********************************************/
 
-#ifdef NDEBUG
+#if NDEBUG && NB_OS == NB_OS_WINDOWS_NT
 	#undef RES_DIR
 	#define RES_DIR "D:/2021SH/nb/win32/resource/radarACM/"
 #endif
@@ -31,6 +34,7 @@ void MainView::init()
 
 	m_root = createRef<Node2D>();
 	//root->setBackground(SolidColorBrush::black());
+	m_root->setAlignmentCenter();
 
 	m_recognizeRect = createRef<Image>();
 	m_recognizeRect->setStretch(StretchE::Origion);
@@ -68,39 +72,18 @@ void MainView::init()
 	m_popRoot->addChild(m_heartBeatValueRoot);
 	m_popRoot->addChild(m_breathGraph);
 	m_popRoot->addChild(m_heartBeatGraph);
-
-	//root->addChild(m_recognizeRect);
-	//root->addChild(m_recognizeRect1);
 	m_root->addChild(m_popRoot);
 
-	//m_opacityAnimation.setTarget(m_recognizeRect1);
-	//m_opacityAnimation.setTargetPropertyName("Opacity");
-	//m_opacityAnimation.duration = TimeSpan::fromMilliseconds(1500);
-	//m_opacityAnimation.setEasingFunction(createRef<BackEase>());
-	//m_opacityAnimation.autoReverse = true;
-	//m_opacityAnimation.repeatBehavior = RepeatBehavior::forever();
-	//m_opacityAnimation.setFrom(0.0f);
-	//m_opacityAnimation.setTo(1.0f);
-	//m_opacityAnimation.begin();
-
-	m_popAnimation.setTarget(m_popRoot);
-	m_popAnimation.setTargetPropertyName("X");
-	m_popAnimation.duration = TimeSpan::fromMilliseconds(300);
-	m_popAnimation.setEasingFunction(createRef<LinearEase>());
-	m_popAnimation.autoReverse = true;
-	m_popAnimation.repeatBehavior = RepeatBehavior::forever();
-	m_popAnimation.setFrom(1194.0f);
-	m_popAnimation.setTo(1920.0f);
-	//m_popAnimation.begin();
-
-	m_timerGetData.Tick += nbBindEventFunction(onTick);
+	m_timerGetData.Tick += nbBindEventFunction(MainView::onTick);
 	m_timerGetData.start(35);
-	m_timerUpdate.Tick += nbBindEventFunction(onTick);
+	m_timerUpdate.Tick += nbBindEventFunction(MainView::onTick);
 	m_timerUpdate.start(100);
 
-#ifdef NDEBUG
+#if NDEBUG && NB_OS == NB_OS_WINDOWS_NT
 	m_tcpConnect = tcpConnect("192.168.1.100", 8888);//-1获取socket失败,-2创建socket失败，-3连接失败，1连接成功
 #endif
+
+#if NB_OS == NB_OS_WINDOWS_NT
 	if (m_tcpConnect < 0)
 	{
 		Log::warn("tcp not ready, ret={}", m_tcpConnect);
@@ -111,16 +94,18 @@ void MainView::init()
 		tcpSend(1);
 		Log::info("tcp ready.");
 	}
-
+#endif
 }
 
 MainView::~MainView()
 {
+#if NB_OS == NB_OS_WINDOWS_NT
 	if (m_tcpConnect >= 0)
 	{
 		tcpSend(0);
 		tcpClose();
 	}
+#endif
 }
 
 void MainView::setRecognitionFlag(bool flag)
@@ -254,7 +239,9 @@ void MainView::onTick(const EventArgs &e)
 		else
 		{
 			float breath = 0.0f, heart = 0.0f, breathingPhase = 0.0f, heartPhase = 0.0f;
+#if NB_OS == NB_OS_WINDOWS_NT
 			auto ret = tcpReceive(m_existStatus, breathingPhase, heartPhase, breath, heart);
+#endif
 			nb::Log::info("breath={}, heart={}", breath, heart);
 			m_breathValue = (int)breath;
 			m_heartBeatValue = (int)heart;

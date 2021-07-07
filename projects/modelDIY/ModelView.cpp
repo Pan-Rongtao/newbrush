@@ -5,7 +5,7 @@ ModelView::ModelView()
 {
 	setSize({ 650, 720 });
 	//setBackground(SolidColorBrush::red());
-	Touch += nbBindEventFunction(onTouch);
+	Touch += nbBindEventFunction(ModelView::onTouch);
 
 	auto scene = createRef<Scene>();
 	scene->addLight(createRef<PointLight>());

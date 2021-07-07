@@ -4,7 +4,14 @@
 #include "newbrush/Event.h"
 #include "newbrush/Types.h"
 
-struct GLFWwindow;
+#if NB_OS == NB_OS_WINDOWS_NT
+	struct GLFWwindow;
+#elif NB_OS == NB_OS_QNX
+	#include <screen/screen.h>
+	#include <sys/keycodes.h>
+	#include <EGL/egl.h>
+#endif
+
 namespace nb 
 {
 
@@ -70,8 +77,16 @@ public:
 	//获取鼠标位置
 	Point getMousePosition() const;
 
-	GLFWwindow *getGLFW() const;
+	//
+	void setZOrder(int order);
+	void setSwapInterval(int interval);
 
+	//获取GLFW
+#if NB_OS == NB_OS_WINDOWS_NT
+	GLFWwindow *getGLFW() const;
+#endif
+
+	//选中项
 	void selectItem(float x, float y);
 	ref<Node2D> getSelectItem() const;
 
@@ -117,8 +132,14 @@ private:
 	static void deinit();
 	static void pollEvents();
 
-#if NB_OS != NB_OS_ANDROID
+#if NB_OS == NB_OS_WINDOWS_NT
 	GLFWwindow		*m_implWindow;
+#elif NB_OS == NB_OS_QNX
+	screen_window_t 	m_qnxWindow;
+	EGLSurface 		m_eglSurface;
+	EGLDisplay		m_eglDisplay;
+	EGLConfig		m_eglConfig;
+	EGLContext		m_eglContext;
 #endif
 	bool			m_dispatchingCloseEvent;
 	bool			m_processingCallback;

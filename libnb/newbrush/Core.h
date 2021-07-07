@@ -8,6 +8,7 @@
 #include <typeindex>
 #include <thread>
 #include <sstream>
+#include <cmath>
 
 //要求c++11
 //#if __cplusplus < 201103L
@@ -90,7 +91,8 @@ do{\
 }while(0);\
 }
 #define nbThrowException(exception, argfmt, ...) nbThrowExceptionIf(true, exception, argfmt, ##__VA_ARGS__)
-#define nbBindEventFunction(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+//#define nbBindEventFunction(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } //need c++14 support
+#define nbBindEventFunction(fn) std::bind(&fn, this, std::placeholders::_1)
 
 #define nbArraySize(arr) sizeof(arr) / sizeof(arr[0])
 
@@ -136,7 +138,8 @@ namespace nb
 	template<typename T, typename ... Args>
 	constexpr scope<T> createScope(Args&& ... args)
 	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
+	//	return std::make_unique<T>(std::forward<Args>(args)...);	//need c++14 support
+		return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 	}
 
 	template<typename T>

@@ -179,7 +179,7 @@ struct ParticleEmitterTextureAnimation
 	uint32_t			frameCountY					{ 0 };
 	float				framesPersecond				{ 0.0f };
 	float				frameTimeVar				{ 0.0f };
-	std::array<bool, 3>	isAnimatedForTextureIndex	{ false };
+	std::array<bool, 3>	isAnimatedForTextureIndex	{{ false }};
 };
 
 struct ParticleEmitterWideUpdates

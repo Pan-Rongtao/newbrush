@@ -106,9 +106,10 @@ std::string SystemHelper::getSystemInfos()
 {
 	auto sRenderer = glGetString(GL_RENDERER);
 	auto sVendor = glGetString(GL_VENDOR);
+	auto sGLVersion = glGetString(GL_VERSION);
 	auto sLanVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
 	int r, g, b, a, depth, stencil;
-#ifdef WIN32
+#ifdef NB_USE_GLAD
 	glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_BACK_LEFT, GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE, &r);
 	glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_BACK_LEFT, GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE, &g);
 	glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_BACK_LEFT, GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE, &b);
@@ -128,14 +129,16 @@ std::string SystemHelper::getSystemInfos()
 	glGetIntegerv(GL_SAMPLES, &samples);
 	glGetIntegerv(GL_SAMPLE_BUFFERS, &samplebuffers);
 
+	const unsigned char *nul = (const unsigned char *)"";
 	auto s = fmt::format("\n\
 System Info:\n\
 	OpenGL context renderer	: {}\n\
 	OpenGL context vendor	: {}\n\
+	OpenGL context OpenGL	: {}\n\
 	OpenGL context GLSL	: {}\n\
 	OpenGL context config	: r,g,b,a,depth,stencil=[{},{},{},{},{},{}]\n\
 	OpenGL context samplers	: {},{}\n\
-", sRenderer, sVendor, sLanVersion, r, g, b, a, depth, stencil, samples, samplebuffers);
+", sRenderer ? sRenderer : nul, sVendor ? sVendor : nul, sGLVersion ? sGLVersion : nul, sLanVersion ? sLanVersion : nul, r, g, b, a, depth, stencil, samples, samplebuffers);
 
 	return s;
 }
@@ -231,25 +234,33 @@ void RttrRegistration::doRegister()
 
 void RttrRegistration::registerEnums()
 {
+	registration::enumeration<HorizontalAlignmentE>("nb::HorizontalAlignmentE")
+		(
+			value("Left", HorizontalAlignmentE::Left),
+			value("Center", HorizontalAlignmentE::Center),
+			value("Right", HorizontalAlignmentE::Right),
+			value("Stretch", HorizontalAlignmentE::Stretch)
+		);
+
 	registration::enumeration<EasingModeE>("nb::EasingModeE")
 		(
 			value("EaseIn", EasingModeE::EaseIn),
 			value("EaseOut", EasingModeE::EaseOut),
 			value("EaseInOut", EasingModeE::EaseInOut)
-			);
+		);
 
 	registration::enumeration<FillBehaviorE>("nb::FillBehaviorE")
 		(
 			value("HoldEnd", FillBehaviorE::HoldEnd),
 			value("Stop", FillBehaviorE::Stop)
-			);
+		);
 
 	registration::enumeration<TimelineStateE>("nb::TimelineStateE")
 		(
 			value("Active", TimelineStateE::Active),
 			value("Filling", TimelineStateE::Filling),
 			value("Stopped", TimelineStateE::Stopped)
-			);
+		);
 
 }
 
@@ -395,9 +406,12 @@ void RttrRegistration::registerTypes()
 
 	registration::class_<Node2D>("nb::Node2D") ()
 		.constructor<>() (policy::ctor::as_std_shared_ptr)
-		.property("Background", &Node2D::background, &Node2D::setBackground)
 		.property("Opacity", &Node2D::getOpacity, &Node2D::setOpacity)
-		.property("X", &Node2D::x, &Node2D::setX)
+		.property("Position", &Node2D::position, &Node2D::setPosition)
+		.property("Size", &Node2D::size, &Node2D::setSize)
+		.property("Margin", &Node2D::margin, &Node2D::setMargin)
+		.property("HorizontalAlignment", &Node2D::horizontalAlignment, &Node2D::setHorizontalAlignment)
+		.property("Background", &Node2D::background, &Node2D::setBackground)
 		;
 
 }

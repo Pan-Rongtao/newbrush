@@ -4,19 +4,12 @@ project(unittests)
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 
 # 3. Project Build
-set(BIN_NAME "unittests")
+file(GLOB_RECURSE SRC_LIST *.h *.hpp *.cpp *.c)
 
-set(INCLUDE_PREFIX ${CMAKE_SOURCE_DIR}/unittests)
-file(GLOB_RECURSE INC_LIST ${INCLUDE_PREFIX}/*.h ${INCLUDE_PREFIX}/*.hpp)
-file(GLOB_RECURSE SRC_LIST *.cpp *.c)
-if(WIN32)
-	group_by_dir(${INCLUDE_PREFIX} ${INC_LIST})
-	group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} ${SRC_LIST})
-endif()
-
-add_executable(${BIN_NAME} ${INC_LIST} ${SRC_LIST})
-set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${BIN_NAME})
-target_link_libraries(${BIN_NAME} libnb)
+add_executable(${PROJECT_NAME} ${SRC_LIST})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "../../../dist/win32/lib")
+target_link_libraries(${PROJECT_NAME} libnb)
 
 # 4. Project Install
-install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

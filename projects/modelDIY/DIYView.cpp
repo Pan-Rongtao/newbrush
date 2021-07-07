@@ -3,7 +3,7 @@
 
 void Page::add(ref<Button> btn)
 {
-	btn->Click += nbBindEventFunction(onBtnClick);
+	btn->Click += nbBindEventFunction(Page::onBtnClick);
 	addChild(btn);
 }
 
@@ -95,7 +95,7 @@ DIYView::DIYView()
 	m_stageBkg = Node2D::createWithTextureFrameName("modelDIY", "change_bg.png", true, 0.0f, 0.0f);
 	m_btnBack = Button::createWithTextureFrameName("modelDIY", "go_back_96_n.png", true, 24.0f, 24.0f);
 	m_btnBack->setBkgndPress(createRef<ImageBrush>("modelDIY", "go_back_96_p.png"));
-	m_btnBack->Click += nbBindEventFunction(onBtnClick);
+	m_btnBack->Click += nbBindEventFunction(DIYView::onBtnClick);
 
 	auto panel = Node2D::createWithTextureFrameName("modelDIY", "bg_96_192.png", true, 24.0f, 145.0f);
 	m_btnBackToGraphics = Button::createWithTextureFrameName("modelDIY", "back_to_graphics_96_n.png", true, 0.0f, 0.0f);
@@ -148,8 +148,8 @@ DIYView::DIYView()
 	m_btnNo->setBkgndPress(createRef<ImageBrush>("modelDIY", "btn_bg174_no_p.png"));
 	m_btnYes = Button::createWithTextureFrameName("modelDIY", "btn_bg174_yes_n.png", true, 413.0f, 228.0f);
 	m_btnYes->setBkgndPress(createRef<ImageBrush>("modelDIY", "btn_bg174_yes_p.png"));
-	m_btnNo->Click += nbBindEventFunction(onBtnClick);
-	m_btnYes->Click += nbBindEventFunction(onBtnClick);
+	m_btnNo->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnYes->Click += nbBindEventFunction(DIYView::onBtnClick);
 	auto txt = createRef<TextBlock>(u8"人物形象已更改，是否保存？");
 	txt->setPosition({ 137.0f, 136.0f });
 	m_popRoot->addChild(popBG);
@@ -160,12 +160,12 @@ DIYView::DIYView()
 	addChild(m_stageBkg);
 	addChild(m_editorRoot);
 
-	m_btnFace->Click += nbBindEventFunction(onBtnClick);
-	m_btnHair->Click += nbBindEventFunction(onBtnClick);
-	m_btnEye->Click += nbBindEventFunction(onBtnClick);
-	m_btnMouth->Click += nbBindEventFunction(onBtnClick);
-	m_btnClothes->Click += nbBindEventFunction(onBtnClick);
-	m_btnShoes->Click += nbBindEventFunction(onBtnClick);
+	m_btnFace->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnHair->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnEye->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnMouth->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnClothes->Click += nbBindEventFunction(DIYView::onBtnClick);
+	m_btnShoes->Click += nbBindEventFunction(DIYView::onBtnClick);
 
 	swithPage(PageE::Face);
 	showPop(false);
@@ -211,7 +211,7 @@ void DIYView::swithPage(PageE page)
 			m_pageFace->add(btn0);
 			m_pageFace->add(btn1);
 			m_pageFace->add(btn2);
-			m_pageFace->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageFace->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageFace->select(0);
 		}
 		m_itemsRoot->addChild(m_pageFace);
@@ -241,7 +241,7 @@ void DIYView::swithPage(PageE page)
 			m_pageHair->add(btn3);
 			m_pageHair->add(btn4);
 			m_pageHair->add(btn5);
-			m_pageHair->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageHair->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageHair->select(0);
 		}
 		m_itemsRoot->addChild(m_pageHair);
@@ -262,7 +262,7 @@ void DIYView::swithPage(PageE page)
 			m_pageEye->add(btn0);
 			m_pageEye->add(btn1);
 			m_pageEye->add(btn2);
-			m_pageEye->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageEye->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageEye->select(0);
 		}
 		m_itemsRoot->addChild(m_pageEye);
@@ -283,7 +283,7 @@ void DIYView::swithPage(PageE page)
 			m_pageMouth->add(btn0);
 			m_pageMouth->add(btn1);
 			m_pageMouth->add(btn2);
-			m_pageMouth->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageMouth->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageMouth->select(0);
 		}
 		m_itemsRoot->addChild(m_pageMouth);
@@ -313,7 +313,7 @@ void DIYView::swithPage(PageE page)
 			m_pageClothes->add(btn3);
 			m_pageClothes->add(btn4);
 			m_pageClothes->add(btn5);
-			m_pageClothes->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageClothes->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageClothes->select(0);
 		}
 		m_itemsRoot->addChild(m_pageClothes);
@@ -343,7 +343,7 @@ void DIYView::swithPage(PageE page)
 			m_pageShoes->add(btn3);
 			m_pageShoes->add(btn4);
 			m_pageShoes->add(btn5);
-			m_pageShoes->SelectChanged += nbBindEventFunction(onPageItemSelect);
+			m_pageShoes->SelectChanged += nbBindEventFunction(DIYView::onPageItemSelect);
 			m_pageShoes->select(0);
 		}
 		m_itemsRoot->addChild(m_pageShoes);

@@ -30,7 +30,7 @@ struct RendererData
 	unsigned whiteTextureSlot = 0;
 	unsigned usedIndexCount = 0;
 	unsigned usedTextureCount = 1;
-	std::array<unsigned, MaxTextureCount> textureIDs = { 0 };
+	std::array<unsigned, MaxTextureCount> textureIDs{{ 0 }};
 	VertexData *quadBuffer = nullptr;
 	VertexData *quadBufferPtr = nullptr;
 	Renderer2D::Stats RenderStats;

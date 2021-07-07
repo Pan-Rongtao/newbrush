@@ -9,23 +9,22 @@ SelectorView::SelectorView()
 	setBackground(SolidColorBrush::white());
 
 	auto texFrame = TextureLibrary::getFrameFromTextureAtlas("modelDIY", "bg_640.png");
-	nb::Log::info("tex:{}\nframe:{}\nsourceSize:{}\npinch:{}\nrotate:{}", texFrame.texture->id(), texFrame.frame, texFrame.sourceSize, texFrame.pinch, texFrame.rotated);
 
 	auto stage = Node2D::createWithTextureFrameName("modelDIY", "bg_640.png", true, 0.0f, 0.0f);
 
 	m_btnBackToHome = Button::createWithTextureFrameName("modelDIY", "close_96_n.png", true, 24.0f, 24.0f);
 	m_btnBackToHome->setBkgndPress(createRef<ImageBrush>("modelDIY", "close_96_p.png"));
-	m_btnBackToHome->Click += nbBindEventFunction(onBtnClick);
+	m_btnBackToHome->Click += nbBindEventFunction(SelectorView::onBtnClick);
 	m_btnEdit = Button::createWithTextureFrameName("modelDIY", "editor_96_n.png", true, 24.0f, 144.0f);
 	m_btnEdit->setBkgndPress(createRef<ImageBrush>("modelDIY", "editor_96_p.png"));
 	m_btnEdit->setVisibility(VisibilityE::Hidden);
-	m_btnEdit->Click += nbBindEventFunction(onBtnClick);
+	m_btnEdit->Click += nbBindEventFunction(SelectorView::onBtnClick);
 	m_btnDIYMode = Button::createWithTextureFrameName("modelDIY", "figure_choose_voice_image_female_n.png", true, 830.0f, 152.0f);
 	m_btnDIYMode->setBkgndCheck(createRef<ImageBrush>("modelDIY", "figure_choose_voice_image_female_p.png"));
-	m_btnDIYMode->Click += nbBindEventFunction(onBtnClick);
+	m_btnDIYMode->Click += nbBindEventFunction(SelectorView::onBtnClick);
 	m_btnXiMode = Button::createWithTextureFrameName("modelDIY", "figure_choose_xiaov_n.png", true, 1370.0f, 152.0f);
 	m_btnXiMode->setBkgndCheck(createRef<ImageBrush>("modelDIY", "figure_choose_xiaov_p.png"));
-	m_btnXiMode->Click += nbBindEventFunction(onBtnClick);
+	m_btnXiMode->Click += nbBindEventFunction(SelectorView::onBtnClick);
 
 	auto txtDiy = createRef<TextBlock>(920.0f, 532.0f, 180.0f, 36.0f);
 	txtDiy->setText(u8"自定义形象");

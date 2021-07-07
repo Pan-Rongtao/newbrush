@@ -1,12 +1,17 @@
 ﻿***为了全平台编译通过，设计到的修改点都应该执行***
+***如果需要使库的大小较小，应使用-DCMAKE_CXX_FLAGS=-Wno-c++11-narrowing -DCMAKE_CXX_FLAGS_RELEASE="${CMAKE_CXX_FLAGS_RELEASE} -s"参数***
 
 1、assimp
 	-git clone https://github.com/assimp/assimp.git
 	-git checkout v5.0.1
 	（不要编译Tests，cmake命令使用-DASSIMP_BUILD_TESTS=OFF禁用）
+	-for QNX, add on line 49 in code/CMakeLists.txt:add_definitions(-std=gnu++11);
+	-for QNX, change 'ASSIMP_BUILD_ASSIMP_TOOLS=OFF' on line 87
+	-for QNX, copy qnx.cmake to root dir
 	-windows下使用build_msvc14.bat编译win32版本
 	-windows下使用build_android.bat编译android版本
 	-Linux下使用build_linux64.sh编译linux64版本
+	-QNX: cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../dist -DQNX_ARCH=aarch64 -DCMAKE_TOOLCHAIN_FILE=../qnx.cmake -DASSIMP_BUILD_TESTS=OFF
 	
 2、GLFW
 	-git clone https://github.com/glfw/glfw.git
