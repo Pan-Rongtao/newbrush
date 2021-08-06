@@ -1,0 +1,180 @@
+{"frames": {
+
+"Car.png":
+{
+	"frame": {"x":2,"y":591,"w":188,"h":375},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":188,"h":375},
+	"sourceSize": {"w":188,"h":375}
+},
+"Parking.png":
+{
+	"frame": {"x":494,"y":2,"w":219,"h":427},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":219,"h":427},
+	"sourceSize": {"w":219,"h":427}
+},
+"ParkingBottom.png":
+{
+	"frame": {"x":2,"y":781,"w":219,"h":208},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":219,"h":208},
+	"sourceSize": {"w":219,"h":208}
+},
+"ParkingBottomLeft.png":
+{
+	"frame": {"x":2,"y":991,"w":172,"h":208},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":172,"h":208},
+	"sourceSize": {"w":172,"h":208}
+},
+"ParkingLeft.png":
+{
+	"frame": {"x":431,"y":223,"w":168,"h":427},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":168,"h":427},
+	"sourceSize": {"w":168,"h":427}
+},
+"ParkingLeftHor_n.png":
+{
+	"frame": {"x":437,"y":1069,"w":188,"h":158},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":188,"h":158},
+	"sourceSize": {"w":188,"h":158}
+},
+"ParkingLeftHor_s.png":
+{
+	"frame": {"x":817,"y":1065,"w":187,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":187,"h":159},
+	"sourceSize": {"w":187,"h":159}
+},
+"ParkingRight.png":
+{
+	"frame": {"x":2,"y":60,"w":171,"h":427},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":171,"h":427},
+	"sourceSize": {"w":171,"h":427}
+},
+"ParkingRightBottomVer_n.png":
+{
+	"frame": {"x":762,"y":527,"w":161,"h":224},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":224},
+	"sourceSize": {"w":161,"h":224}
+},
+"ParkingRightBottomVer_s.png":
+{
+	"frame": {"x":762,"y":690,"w":159,"h":223},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":159,"h":223},
+	"sourceSize": {"w":159,"h":223}
+},
+"ParkingRightHor_n.png":
+{
+	"frame": {"x":627,"y":1065,"w":188,"h":158},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":188,"h":158},
+	"sourceSize": {"w":188,"h":158}
+},
+"ParkingRightHor_s.png":
+{
+	"frame": {"x":437,"y":908,"w":188,"h":159},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":188,"h":159},
+	"sourceSize": {"w":188,"h":159}
+},
+"ParkingRightVer_n.png":
+{
+	"frame": {"x":860,"y":223,"w":161,"h":302},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":302},
+	"sourceSize": {"w":161,"h":302}
+},
+"ParkingRightVer_s.png":
+{
+	"frame": {"x":379,"y":747,"w":159,"h":299},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":159,"h":299},
+	"sourceSize": {"w":159,"h":299}
+},
+"ParkingTop.png":
+{
+	"frame": {"x":680,"y":851,"w":219,"h":212},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":219,"h":212},
+	"sourceSize": {"w":219,"h":212}
+},
+"ParkingTopLeft.png":
+{
+	"frame": {"x":223,"y":908,"w":171,"h":212},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":171,"h":212},
+	"sourceSize": {"w":171,"h":212}
+},
+"TopSwitchBtnBg.png":
+{
+	"frame": {"x":2,"y":2,"w":490,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":3,"w":490,"h":56},
+	"sourceSize": {"w":490,"h":62}
+},
+"TopSwitchBtn_n.png":
+{
+	"frame": {"x":981,"y":2,"w":1,"h":1},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":1,"h":1},
+	"sourceSize": {"w":161,"h":56}
+},
+"TopSwitchBtn_s.png":
+{
+	"frame": {"x":923,"y":2,"w":161,"h":56},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":161,"h":56},
+	"sourceSize": {"w":161,"h":56}
+},
+"autopark_pic_subline_left.png":
+{
+	"frame": {"x":2,"y":233,"w":378,"h":356},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":44,"w":378,"h":356},
+	"sourceSize": {"w":400,"h":400}
+},
+"autopark_pic_subline_right.png":
+{
+	"frame": {"x":382,"y":393,"w":378,"h":352},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":48,"w":378,"h":352},
+	"sourceSize": {"w":440,"h":400}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "intelligent_day_extra.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f41391bc18ac0ef9c3a267ab256a00a8$"
+}
+}

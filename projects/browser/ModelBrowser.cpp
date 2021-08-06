@@ -10,6 +10,8 @@ extern MessageQueue g_msgQueue;
 
 void ModelBrowser::init()
 {
+	Application::get()->mainWindow()->setTitle("browser Power By NewBrush");
+
 	m_scene = createRef<Scene>();
 	m_data = buildData();
 	if (m_data)
@@ -19,48 +21,28 @@ void ModelBrowser::init()
 			onDataChanged(args.path, args.value);
 		};
 	}
-	load(RES_DIR"/browser/girl/3.fbx");
+	load(RES_DIR"/browser/a08/fbx.fbx");
 	m_root = createRef<Node2D>();
-	m_root->setHorizontalAlignment(HorizontalAlignmentE::Center);
-	m_root->setVerticalAlignment(VerticalAlignmentE::Bottom);
-	m_root->setBackground(createRef<SolidColorBrush>(Color(100, 100, 100)));
+	m_root->setAlignmentCenter();
 	m_root->setScene(m_scene);
 	m_root->Touch += nbBindEventFunction(ModelBrowser::onTouch);
 	m_root->Scroll += nbBindEventFunction(ModelBrowser::onScroll);
 	m_root->Key += nbBindEventFunction(ModelBrowser::onKey);
 #ifdef WIN32
+	m_root->setBackground(SolidColorBrush::white());
 	Application::get()->mainWindow()->Drop += nbBindEventFunction(ModelBrowser::onDrop);
 #endif
 }
 
 void ModelBrowser::onDataChanged(const std::string &path, const var &value)
 {
-	if (path == "AllSwitch") //动画总开关数据
+	if (path == "Animation") //动画总开关数据
 	{
-		//bool bOn = value.get_value<bool>();
-		//for (auto sb : m_scene->animations)
-		//{
-		//	for (auto tl : sb->children())
-		//	{
-		//		tl->reverse = !bOn;
-		//	}
-		//}
+		auto model = as<Model>(m_scene->getChildAt(0));
+		if (!model) return;
 
-		//for (auto ani : m_scene->animations)
-		//{
-		//	ani->begin();
-		//}
-	}
-	else if (path.size() >= 5 && path.substr(0, 4) == "Door")	//动画开关数据"Door*Switch"
-	{
-		size_t animationIndex = path[4] - 48 - 1;
-		//auto ani = (m_scene->animations.empty() || animationIndex >= m_scene->animations[0]->children().size())
-		//	? nullptr : m_scene->animations[0]->children()[animationIndex];
-		//if (ani)
-		//{
-		//	ani->reverse = !value.get_value<bool>();
-		//	ani->begin();
-		//}
+		bool bOn = value.get_value<bool>();
+		bOn ? model->play() : model->pause();
 	}
 	else if (path == "NewPath") //更换模型数据（由于涉及到OGL的api调用，如果是android端，需要MessageQueue转到SurfaceView渲染线程
 	{
@@ -70,7 +52,7 @@ void ModelBrowser::onDataChanged(const std::string &path, const var &value)
 			load(newModelPath);
 		};
 
-#ifdef __ANDROID__
+#if NB_OS == NB_OS_ANDROID
 		g_msgQueue.post(task);
 #else
 		task();
@@ -175,24 +157,6 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 	case KeyCode::down:	if (light) light->position.y -= 1;						break;
 	case KeyCode::up:	if (light) light->position.y += 1;						break;
 
-	case KeyCode::kp_0:
-	{
-		auto bOn = m_data->lookup("AllSwitch")->get().get_value<bool>();
-		//setData("AllSwitch", !bOn);
-		setData("AllSwitch", true);
-	}
-	break;
-	case KeyCode::kp_1: case KeyCode::kp_2: case KeyCode::kp_3: case KeyCode::kp_4: case KeyCode::kp_5: case KeyCode::kp_6: //小键盘1~6设置动画开关数据
-	{
-		std::string doorDataPath = "Door" + std::to_string((int)e.key - (int)KeyCode::kp_0) + "Switch";
-		auto bOn = m_data->get(doorDataPath)->get().get_value<bool>();
-		setData(doorDataPath, !bOn);
-	}
-	break;
-	case KeyCode::kp_decimal:
-	{
-	}
-	break;
 	case KeyCode::minus: case KeyCode::equal:
 	{
 		auto scale = m_data->lookup("Scale")->get().get_value<glm::vec3>();
@@ -207,8 +171,7 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 
 		auto target = m_scene->getLightAt(0);
 		auto targetProperty = type::get<Light>().get_property("Ambient");
-		m_lightAnimation.beginTime = TimeSpan::fromSeconds(1);
-		m_lightAnimation.duration = TimeSpan::fromSeconds(10);
+		m_lightAnimation.beginTime = TimeSpan::fromMilliseconds(200);
 		m_lightAnimation.setTarget(target);
 		m_lightAnimation.setTargetProperty(targetProperty);
 		m_lightAnimation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(0), Colors::red));
@@ -216,19 +179,12 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 		m_lightAnimation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(3), Colors::blue));
 		m_lightAnimation.begin();
 	}
-	case KeyCode::kp_divide:
-	{
-		//m_scene->camera->projectionType = ProjectionType::Orthographic;
-		//auto scale = m_scene->children[0]->transform->getScale() * 20.0f;
-		//m_scene->children[0]->transform->setScale(scale);
-	}
-	break;
 	case KeyCode::space:
 	{
 		if (keyDown)
 		{
-			auto isPlaying = model->isPlaying();
-			!isPlaying ? model->play() : model->pause();
+			auto on = m_data->lookup("Animation")->get().get_value<bool>();
+			setData("Animation", !on);
 		}
 	}
 	break;
@@ -296,23 +252,18 @@ ref<DataObject> ModelBrowser::buildData()
 	data->add(makeDataColor("Diffuse", Color(127, 127, 127)));
 	data->add(makeDataColor("Specular", Color(127, 127, 127)));
 	data->add(makeDataVec3("LightPosition", glm::vec3(0.0f, 0.0f, 5.0f)));
-	data->add(makeDataVec3("Translate", glm::vec3(0.0f, -1.0f, 0.0f)));
+	data->add(makeDataVec3("Translate", glm::vec3(0.0f, -0.0f, 0.0f)));
 	data->add(makeDataVec3("Rotate", glm::vec3(0.0f, 0.0f, 0.0f)));
 	data->add(makeDataVec3("Scale", glm::vec3(0.020f)));
-	data->add(makeDataBool("AllSwitch", false));
-	data->add(makeDataBool("Door1Switch", false));
-	data->add(makeDataBool("Door2Switch", false));
-	data->add(makeDataBool("Door3Switch", false));
-	data->add(makeDataBool("Door4Switch", false));
-	data->add(makeDataBool("Door5Switch", false));
-	data->add(makeDataBool("Door6Switch", false));
+	data->add(makeDataBool("Animation", false));
 	data->add(makeDataString("NewPath", ""));
 	return data;
 }
 
 void ModelBrowser::binding()
 {
-	if (!m_scene || !m_data)	return;
+	if (!m_scene || !m_data)
+		return;
 
 	auto light = m_scene->hasLight() ? nb::as<PointLight>(m_scene->getLightAt(0)) : nullptr;
 	if (light)

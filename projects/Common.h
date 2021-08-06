@@ -35,10 +35,4 @@ protected:
 	nb::ref<DataObject> m_data;
 };
 
-ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale);
-
-#ifdef __ANDROID__
-#define RES_DIR "/storage/emulated/0/resource/"
-#else
-#define RES_DIR "../resource/"
-#endif
+nb::ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale);

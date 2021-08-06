@@ -429,7 +429,7 @@ class NB_API TextureLibrary
 {
 public:
 	static ref<Texture2D> addTexture2D(const std::string &name, const std::string &imagePath);
-	static void addTextureAtlas(const std::string &name, const std::string &imagePath, const std::string &cfgPath);
+	static bool addTextureAtlas(const std::string &name, const std::string &imagePath, const std::string &cfgPath);
 	static ref<TextureCubemap> addTextureCubemap(const std::string &name, const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back);
 
 	static ref<Texture2D> getTexture2D(const std::string &name);
@@ -518,8 +518,9 @@ public:
 *	纯色材质 FlatMaterial
 *	渐变色材质 LinearGrandientMaterial
 *	Phong材质 PhongMaterial
+*	纹理材质 TextureMaterial
 *	天空盒材质 SkyBoxMaterial
-*	立方体贴图材质 CubemapMaterial
+*	反射材质 ReflectMaterial
 ******************************************************/
 class NB_API Material : public Object
 {
@@ -585,6 +586,18 @@ public:
 	float opacity;					//不透明度
 };
 
+class NB_API TextureMaterial : public Material
+{
+	RTTR_ENABLE(Material)
+public:
+	TextureMaterial();
+	TextureMaterial(ref<Texture2D> cubemap);
+
+	virtual void uploadUniform(ref<Camera> camera) override;
+
+	ref<Texture2D> texture;
+};
+
 class NB_API SkyBoxMaterial : public Material
 {
 	RTTR_ENABLE(Material)
@@ -597,11 +610,11 @@ public:
 	ref<Texture> cubeMapping;
 };
 
-class NB_API CubemapMaterial : public Material
+class NB_API ReflectMaterial : public Material
 {
 	RTTR_ENABLE(Material)
 public:
-	CubemapMaterial();
+	ReflectMaterial();
 
 	virtual void uploadUniform(ref<Camera> camera) override;
 
@@ -622,6 +635,10 @@ public:
 ******************************************************/
 struct Vertex
 {
+	Vertex() = default;
+	Vertex(const glm::vec3 &pos) : position(pos) {}
+	Vertex(const glm::vec3 &pos, const glm::vec2 &_uv) : position(pos), uv(_uv) {}
+
 	glm::vec3 position;
 	glm::vec4 color;
 	glm::vec2 uv;
@@ -634,10 +651,11 @@ struct Vertex
 class NB_API Mesh
 {
 public:
+	Mesh(const std::vector<Vertex> &vertexs, ref<Material> materia);
 	Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, ref<Material> materia);
 	~Mesh();
 
-	virtual void draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>> &lights, int mode = GL_TRIANGLES) const;
+	void draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>> &lights, int mode = GL_TRIANGLES, bool drawElements = true) const;
 
 	std::string name;
 	ref<Material> material;
@@ -648,7 +666,7 @@ protected:
 	void setup(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices);
 
 private:
-	uint32_t vao, vbo, ebo, indicesSize;
+	uint32_t vao, vbo, ebo, vertexsSize, indicesSize;
 };
 
 /*****************************************************

@@ -10,7 +10,7 @@ using namespace ClipperLib;
 static const unsigned MaxQuadCount = 2000;
 static const unsigned MaxVertexCount = MaxQuadCount * 4;
 static const unsigned MaxIndexCount = MaxQuadCount * 6;
-static const unsigned MaxTextureCount = 32;
+static const unsigned MaxTextureCount = 16;	//必须跟2d.fs的纹理个数对应上
 
 struct VertexData
 {
@@ -203,7 +203,7 @@ void Renderer2D::drawPolygon(ref<Brush> brush, const std::vector<glm::vec2> &poi
 	}
 
 	auto mesh = createRef<Mesh>(vertexs, indices, material);
-	mesh->draw(glm::mat4(1.0), sharedCamera2D(), {});
+	mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), {});
 
 	_beginBatch(false);
 }
@@ -250,35 +250,8 @@ void Renderer2D::drawRect(const Rect &rc, const glm::mat4 &transform, const glm:
 
 void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity)
 {
-	auto const &tex = texFrame.texture;
-	if (!tex)
-		return;
-
-	if (g_data.usedIndexCount >= MaxIndexCount || g_data.usedTextureCount > 31)
-	{
-		endBatch();
-		_beginBatch(false);
-	}
-
-	float textureIndex = 0.0f;
-	for (auto i = 1u; i < g_data.usedTextureCount; ++i)
-	{
-		if (g_data.textureIDs[i] == tex->id())
-		{
-			textureIndex = (float)i;
-			break;
-		}
-	}
-
-	if (textureIndex == 0.0f)
-	{
-		textureIndex = (float)g_data.usedTextureCount;
-		g_data.textureIDs[g_data.usedTextureCount] = tex->id();
-		g_data.usedTextureCount++;
-	}
-
 	static const glm::vec4 &color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	_drawQuad(rc,transform, color, textureIndex, texFrame, opacity);
+	_drawImage(rc, transform, texFrame, opacity, color);
 }
 
 const Renderer2D::Stats & Renderer2D::getStats()
@@ -340,6 +313,38 @@ void Renderer2D::_drawQuad(const Rect &rc, const glm::mat4 &transform, const glm
 	g_data.RenderStats.quadCount++;
 }
 
+void Renderer2D::_drawImage(const Rect & rc, const glm::mat4 & transform, const TextureFrame & texFrame, float opacity, const glm::vec4& color)
+{
+	auto const &tex = texFrame.texture;
+	if (!tex)
+		return;
+
+	if (g_data.usedIndexCount >= MaxIndexCount || g_data.usedTextureCount > MaxTextureCount - 1)
+	{
+		endBatch();
+		_beginBatch(false);
+	}
+
+	float textureIndex = 0.0f;
+	for (auto i = 1u; i < g_data.usedTextureCount; ++i)
+	{
+		if (g_data.textureIDs[i] == tex->id())
+		{
+			textureIndex = (float)i;
+			break;
+		}
+	}
+
+	if (textureIndex == 0.0f)
+	{
+		textureIndex = (float)g_data.usedTextureCount;
+		g_data.textureIDs[g_data.usedTextureCount] = tex->id();
+		g_data.usedTextureCount++;
+	}
+
+	_drawQuad(rc, transform, color, textureIndex, texFrame, opacity);
+}
+
 void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Material> material, const std::vector<ref<Light>> &lights)
 {
 	endBatch();
@@ -360,13 +365,13 @@ void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Mat
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 	auto mesh = createRef<Mesh>(vertexs, indices, material);
-	mesh->draw(glm::mat4(1.0), sharedCamera2D(), lights);
+	mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), lights);
 
 	_beginBatch(false);
 }
 
 #include <codecvt>
-void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & text)
+void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & text, const glm::vec4 &color)
 {
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
 	std::wstring unicodeStr = cvt.from_bytes(text);
@@ -382,7 +387,7 @@ void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & 
 		Rect texRect = Rect(glyph->uv[3].x * tex->width(), glyph->uv[3].y * tex->height(), 
 			(glyph->uv[2].x - glyph->uv[3].x) * tex->width(), (glyph->uv[0].y - glyph->uv[3].y) * tex->height());
 
-		drawImage(drawRC, glm::mat4(1.0f), TextureFrame(tex, texRect), 1.0f);
+		_drawImage(drawRC, glm::mat4(1.0f), TextureFrame(tex, texRect), 1.0f, color);
 	}
 }
 
@@ -403,7 +408,7 @@ void Renderer2D::drawBorder(const Rect & rc, const glm::vec4 & color)
 	std::vector<uint16_t> indices = { 0, 1, 2, 3 };
 	auto material = createRef<FlatMaterial>(Color::fromRgbaF(color.x, color.y, color.z, color.w));
 	auto mesh = createRef<Mesh>(vertexs, indices, material);
-	mesh->draw(glm::mat4(1.0), sharedCamera2D(), {}, GL_LINE_LOOP);
+	mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), {}, GL_LINE_LOOP);
 
 	_beginBatch(false);
 }

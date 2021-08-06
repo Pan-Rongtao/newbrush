@@ -44,9 +44,11 @@ Transform::Transform(const glm::vec3 &translate, const glm::vec3 &rotation, cons
 	updateMatrix();
 }
 
-//转换为平移、旋转、缩放。注意，转换后的缩放vec可能和C4D等编辑器中显示的符号相反，
-//欧拉角也和C4D等编辑器上的数值不一致。不必在意，因为C4D使用的是左手定则，
-//只要最后相乘计算得到的矩阵=value就可以了
+/**************************************
+*	转换为平移、旋转、缩放。注意，转换后的缩放vec可能和C4D等编辑器中显示的符号相反，
+*	欧拉角也和C4D等编辑器上的数值不一致。不必在意，因为C4D使用的是左手定则，
+*	只要最后相乘计算得到的矩阵=value就可以了
+***************************************/
 void Transform::setValue(const glm::mat4x4 & value)
 {
 	glm::vec3 skew;
@@ -774,14 +776,16 @@ ref<Texture2D> TextureLibrary::addTexture2D(const std::string & name, const std:
 
 }
 
-void TextureLibrary::addTextureAtlas(const std::string &name, const std::string & imagePath, const std::string & cfgPath)
+bool TextureLibrary::addTextureAtlas(const std::string &name, const std::string & imagePath, const std::string & cfgPath)
 {
 	auto iter = g_textures.find(name);
-	nbThrowExceptionIf(iter != g_textures.end(), std::logic_error, "[%s] is already exists.", name.data());
+	if (iter != g_textures.end())
+		return false;
 
 	auto texAtlases = createRef<TextureAtlas>();
 	texAtlases->load(imagePath, cfgPath);
 	g_textures[name] = texAtlases;
+	return true;
 }
 
 ref<TextureCubemap> TextureLibrary::addTextureCubemap(const std::string &name, const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back)
@@ -977,6 +981,28 @@ void PhongMaterial::uploadUniform(ref<Camera> camera)
 	shader->setFloat("u_material.shininess", shineness);
 }
 
+TextureMaterial::TextureMaterial()
+	: TextureMaterial(nullptr)
+{}
+
+TextureMaterial::TextureMaterial(ref<Texture2D> _texture)
+	: texture(_texture)
+{
+	auto *vs =
+#include "shader/Texture.vs"
+		;
+	auto *fs =
+#include "shader/Texture.fs"
+		;
+	shader = ShaderLibrary::get("shader_texture", vs, fs);
+}
+
+void TextureMaterial::uploadUniform(ref<Camera> camera)
+{
+	if (texture)
+		texture->activeAndBind();
+}
+
 SkyBoxMaterial::SkyBoxMaterial()
 	: SkyBoxMaterial(nullptr)
 {}
@@ -1002,7 +1028,7 @@ void SkyBoxMaterial::uploadUniform(ref<Camera> camera)
 		cubeMapping->activeAndBind();
 }
 
-CubemapMaterial::CubemapMaterial()
+ReflectMaterial::ReflectMaterial()
 	: ambient(Color(128, 128, 128))
 	, diffuse(Color(0, 0, 0))
 	, specular(Color(0, 0, 0))
@@ -1017,7 +1043,7 @@ CubemapMaterial::CubemapMaterial()
 	shader = ShaderLibrary::get("shader_reflect", vs, fs);
 }
 
-void CubemapMaterial::uploadUniform(ref<Camera> camera)
+void ReflectMaterial::uploadUniform(ref<Camera> camera)
 {
 	if (!shader)
 		return;
@@ -1068,6 +1094,11 @@ bool Vertex::addBone(float boneIndex, float boneWeight)
 	return false;
 }
 
+Mesh::Mesh(const std::vector<Vertex>& vertexs, ref<Material> materia)
+	: Mesh(vertexs, {}, materia)
+{
+}
+
 Mesh::Mesh(const std::vector<Vertex> &vertexs, const std::vector<uint16_t> &indices, ref<Material> materia)
 	: material(materia)
 	, vao(0)
@@ -1086,7 +1117,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &ebo);
 }
 
-void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights, int mode) const
+void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<ref<Light>>& lights, int mode, bool drawElements) const
 {
 	if (!renderAble || !material || !material->shader)
 		return;
@@ -1112,7 +1143,14 @@ void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<r
 	}
 
 	glBindVertexArray(vao);
-	glDrawElements(mode, indicesSize, GL_UNSIGNED_SHORT, 0);
+	if (drawElements)
+	{
+		glDrawElements(mode, indicesSize, GL_UNSIGNED_SHORT, 0);
+	}
+	else
+	{
+		glDrawArrays(mode, 0, vertexsSize);
+	}
 	glBindVertexArray(0);
 
 	shader->disuse();
@@ -1120,9 +1158,8 @@ void Mesh::draw(const glm::mat4 &matrix, ref<Camera> camera, const std::vector<r
 
 void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>& indices)
 {
+	vertexsSize = vertexs.size();
 	indicesSize = indices.size();
-	if (vertexs.empty() || indices.empty())
-		return;
 
 	//vao begin
 	glGenVertexArrays(1, &vao);
@@ -1131,7 +1168,7 @@ void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>
 	//vbo
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexs.size(), &vertexs[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexs.size(), vertexs.empty() ? nullptr : &vertexs[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 	glEnableVertexAttribArray(1);
@@ -1151,7 +1188,7 @@ void Mesh::setup(const std::vector<Vertex>& vertexs, const std::vector<uint16_t>
 	//ebo
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int16_t), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int16_t), indices.empty() ? nullptr : &indices[0], GL_STATIC_DRAW);
 
 	//end vao
 	glBindVertexArray(0);

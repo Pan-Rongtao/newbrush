@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "newbrush/Node2D.h"
+#include "newbrush/Node3D.h"
 #include "newbrush/Components.h"
 #include "newbrush/Font.h"
 
@@ -130,6 +131,9 @@ public:
 	void setText(const std::string &text);
 	const std::string &text() const;
 
+	void setColor(const Color &color);
+	const Color &color() const;
+
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
@@ -138,6 +142,7 @@ protected:
 private:
 	ref<Font> m_font;
 	std::string m_text;
+	Color m_color;
 };
 
 class NB_API ButtonBase : public Node2D
@@ -150,12 +155,52 @@ public:
 	Event<EventArgs> Click;
 
 protected:
-	virtual void onTouch(const TouchEventArgs &e);
+	virtual void onTouch(const TouchEventArgs &e) override;
 	virtual void onClick();
 
 private:
 	bool m_isPressed{ false };
 	bool m_leaveWithPressed{ false };
+};
+
+/*****************************************************
+*	3D
+*
+*	堆栈容器类 Cube
+*	天空盒类 SkyBox
+*
+******************************************************/
+class NB_API Visual3D : public Node3D
+{
+	RTTR_ENABLE(Node3D)
+public:
+	void setMaterial(ref<Material> material);
+	ref<Material> material() const;
+
+protected:
+	ref<Mesh> m_mesh;
+};
+
+class NB_API Cube : public Visual3D
+{
+public:
+	Cube();
+	Cube(const glm::vec3 &center, float uniformLenght);
+	Cube(const glm::vec3 &center, float lenght, float width, float height);
+	
+protected:
+	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights) override;
+
+};
+
+class NB_API SkyBox : public Visual3D
+{
+public:
+	SkyBox();
+
+protected:
+	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights) override;
+
 };
 
 }

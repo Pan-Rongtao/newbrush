@@ -1,0 +1,332 @@
+{"frames": {
+
+"autopark_btn_back.png":
+{
+	"frame": {"x":34,"y":2,"w":102,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":35,"w":102,"h":30},
+	"sourceSize": {"w":140,"h":100}
+},
+"autopark_btn_backupline.png":
+{
+	"frame": {"x":762,"y":848,"w":727,"h":366},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":52,"w":727,"h":366},
+	"sourceSize": {"w":741,"h":428}
+},
+"autopark_pic_alert.png":
+{
+	"frame": {"x":574,"y":232,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"autopark_pic_carmask_sel.png":
+{
+	"frame": {"x":302,"y":404,"w":248,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":42,"w":248,"h":234},
+	"sourceSize": {"w":308,"h":318}
+},
+"autopark_pic_compete.png":
+{
+	"frame": {"x":2,"y":178,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"autopark_pic_pause.png":
+{
+	"frame": {"x":1720,"y":136,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"autopark_pic_subline_left.png":
+{
+	"frame": {"x":382,"y":848,"w":378,"h":356},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":44,"w":378,"h":356},
+	"sourceSize": {"w":400,"h":400}
+},
+"autopark_pic_subline_right.png":
+{
+	"frame": {"x":2,"y":848,"w":378,"h":352},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":62,"y":48,"w":378,"h":352},
+	"sourceSize": {"w":440,"h":400}
+},
+"bg_b.png":
+{
+	"frame": {"x":2,"y":1216,"w":600,"h":880},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":880},
+	"sourceSize": {"w":600,"h":880}
+},
+"bg_dialog.9.png":
+{
+	"frame": {"x":1504,"y":2,"w":212,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":212,"h":128},
+	"sourceSize": {"w":212,"h":128}
+},
+"bg_dialog2.9.png":
+{
+	"frame": {"x":1152,"y":274,"w":200,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":200},
+	"sourceSize": {"w":200,"h":200}
+},
+"bg_topbar.png":
+{
+	"frame": {"x":2,"y":746,"w":1920,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1920,"h":100},
+	"sourceSize": {"w":1920,"h":100}
+},
+"btn_62px_nor.9.png":
+{
+	"frame": {"x":768,"y":2,"w":202,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":202,"h":64},
+	"sourceSize": {"w":202,"h":64}
+},
+"btn_62px_sel.9.png":
+{
+	"frame": {"x":564,"y":2,"w":202,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":202,"h":64},
+	"sourceSize": {"w":202,"h":64}
+},
+"car_f.png":
+{
+	"frame": {"x":768,"y":268,"w":198,"h":382},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":198,"h":382},
+	"sourceSize": {"w":198,"h":382}
+},
+"icon_topbar_back.png":
+{
+	"frame": {"x":2,"y":2,"w":18,"h":30},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":8,"w":18,"h":30},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/autopark_pic_number1.png":
+{
+	"frame": {"x":306,"y":2,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/autopark_pic_number2.png":
+{
+	"frame": {"x":264,"y":2,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/autopark_pic_number3.png":
+{
+	"frame": {"x":222,"y":2,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/autopark_pic_number4.png":
+{
+	"frame": {"x":180,"y":2,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/autopark_pic_number5.png":
+{
+	"frame": {"x":138,"y":2,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"parking sapce_leftview/btn_rotate.png":
+{
+	"frame": {"x":348,"y":2,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":46,"h":46},
+	"sourceSize": {"w":50,"h":50}
+},
+"parking sapce_leftview/icon_p_fault.png":
+{
+	"frame": {"x":508,"y":2,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/icon_p_nor.png":
+{
+	"frame": {"x":452,"y":2,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/icon_p_sel.png":
+{
+	"frame": {"x":396,"y":2,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/parkingspace_fault.png":
+{
+	"frame": {"x":1416,"y":136,"w":302,"h":162},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_leftview/parkingspace_nor.9.png":
+{
+	"frame": {"x":942,"y":104,"w":302,"h":162},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_leftview/parkingspace_sel.9.png":
+{
+	"frame": {"x":638,"y":68,"w":302,"h":162},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_rightview/autopark_pic_park_sel.png":
+{
+	"frame": {"x":1640,"y":330,"w":274,"h":212},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":274,"h":212},
+	"sourceSize": {"w":274,"h":212}
+},
+"parking sapce_rightview/autopark_pic_parkright1_nor.png":
+{
+	"frame": {"x":1238,"y":2,"w":264,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":264,"h":100},
+	"sourceSize": {"w":264,"h":100}
+},
+"parking sapce_rightview/autopark_pic_parkright1_sel.png":
+{
+	"frame": {"x":972,"y":2,"w":264,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":264,"h":100},
+	"sourceSize": {"w":264,"h":100}
+},
+"parking sapce_rightview/autopark_pic_parkright5_nor.png":
+{
+	"frame": {"x":2,"y":44,"w":132,"h":202},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":202},
+	"sourceSize": {"w":132,"h":202}
+},
+"parking sapce_rightview/autopark_pic_parkright5_sel.png":
+{
+	"frame": {"x":1718,"y":2,"w":132,"h":202},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":202},
+	"sourceSize": {"w":132,"h":202}
+},
+"pic_car01.png":
+{
+	"frame": {"x":196,"y":214,"w":188,"h":376},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":146,"w":188,"h":376},
+	"sourceSize": {"w":300,"h":670}
+},
+"pic_car02.png":
+{
+	"frame": {"x":2,"y":404,"w":298,"h":232},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":77,"y":8,"w":298,"h":232},
+	"sourceSize": {"w":450,"h":240}
+},
+"pic_car03.png":
+{
+	"frame": {"x":552,"y":468,"w":304,"h":270},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":48,"w":304,"h":270},
+	"sourceSize": {"w":308,"h":318}
+},
+"pic_closedoor.png":
+{
+	"frame": {"x":858,"y":468,"w":276,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":66,"y":24,"w":276,"h":276},
+	"sourceSize": {"w":400,"h":300}
+},
+"pic_parkpause.png":
+{
+	"frame": {"x":1246,"y":104,"w":168,"h":168},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":120,"y":27,"w":168,"h":168},
+	"sourceSize": {"w":400,"h":230}
+},
+"pic_radar.png":
+{
+	"frame": {"x":206,"y":68,"w":430,"h":144},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":48,"w":430,"h":144},
+	"sourceSize": {"w":450,"h":240}
+},
+"pic_steeringwheel.png":
+{
+	"frame": {"x":1354,"y":300,"w":284,"h":202},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":48,"w":284,"h":202},
+	"sourceSize": {"w":400,"h":300}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "intelligent_day.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:84130b0528ac1083a758ea83854d2503$"
+}
+}

@@ -6,6 +6,7 @@ namespace nb{
 
 class NB_API Node3D : public Node
 {
+	RTTR_ENABLE(Node)
 public:
 	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights);
 

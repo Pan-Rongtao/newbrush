@@ -763,25 +763,25 @@ EffectBrush::EffectBrush(ref<Material> _material, ref<Light> _light)
 }
 
 static std::map<std::string, ref<Brush>> g_brushes;
-void BrushLibrary::add(const std::string & name, ref<Brush> brush)
+bool BrushLibrary::add(const std::string & name, ref<Brush> brush)
 {
 	auto ret = g_brushes.insert({ name, brush });
-	nbThrowExceptionIf(!ret.second, std::logic_error, "brush [%s] is already exist.", name.data());
+	return ret.second;
 }
 
-void BrushLibrary::addSolidColorBrush(const std::string & name, const Color & color)
+bool BrushLibrary::addSolidColorBrush(const std::string & name, const Color & color)
 {
-	add(name, createRef<SolidColorBrush>(color));
+	return add(name, createRef<SolidColorBrush>(color));
 }
 
-void BrushLibrary::addImageBrush(const std::string & name, const std::string & imagePath)
+bool BrushLibrary::addImageBrush(const std::string & name, const std::string & imagePath)
 {
-	add(name, createRef<ImageBrush>(createRef<Texture2D>(imagePath)));
+	return add(name, createRef<ImageBrush>(createRef<Texture2D>(imagePath)));
 }
 
-void BrushLibrary::addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName)
+bool BrushLibrary::addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName)
 {
-	add(name, createRef<ImageBrush>(texAtlasKey, frameName));
+	return add(name, createRef<ImageBrush>(texAtlasKey, frameName));
 }
 
 ref<Brush> BrushLibrary::get(const std::string & name)

@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include "newbrush/Core.h"
+#include "newbrush/Types.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/fmt/ostr.h"
 #if defined(__ANDROID__)
 #include "spdlog/sinks/android_sink.h"
 #endif
-#include "newbrush/Types.h"
-#include "spdlog/fmt/ostr.h"
 
 namespace nb 
 {
@@ -14,46 +14,25 @@ namespace nb
 class NB_API Log
 {
 public:
-	void setLevel(spdlog::level::level_enum level)
-	{
-		nbLogger()->set_level(level);
-	}
+	void setLevel(spdlog::level::level_enum level)						{ nbLogger()->set_level(level); }
 
 	template<typename FormatString, typename... Args>
-	static void trace(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->trace(fmt, args...);
-	}
+	static void trace(const FormatString &fmt, const Args &... args)	{ nbLogger()->trace(fmt, args...); }
 
 	template<typename FormatString, typename... Args>
-	static void debug(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->debug(fmt, args...);
-	}
+	static void debug(const FormatString &fmt, const Args &... args)	{ nbLogger()->debug(fmt, args...); }
 
 	template<typename FormatString, typename... Args>
-	static void info(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->info(fmt, args...);
-	}
+	static void info(const FormatString &fmt, const Args &... args)		{ nbLogger()->info(fmt, args...); }
 
 	template<typename FormatString, typename... Args>
-	static void warn(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->warn(fmt, args...);
-	}
+	static void warn(const FormatString &fmt, const Args &... args)		{ nbLogger()->warn(fmt, args...); }
 
 	template<typename FormatString, typename... Args>
-	static void error(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->error(fmt, args...);
-	}
+	static void error(const FormatString &fmt, const Args &... args)	{ nbLogger()->error(fmt, args...); }
 
 	template<typename FormatString, typename... Args>
-	static void critical(const FormatString &fmt, const Args &... args)
-	{
-		nbLogger()->critical(fmt, args...);
-	}
+	static void critical(const FormatString &fmt, const Args &... args) { nbLogger()->critical(fmt, args...); }
 
 private:
 	static ref<spdlog::logger> nbLogger()
@@ -75,6 +54,7 @@ private:
 
 }
 
+//自定义类型LOG注册
 FMT_BEGIN_NAMESPACE
 template<> struct formatter<nb::Point>
 {
@@ -168,4 +148,23 @@ template<> struct formatter<glm::mat4>
 			v[3][0], v[3][1], v[3][2], v[3][3]);
 	}
 };
+
+template<> struct formatter< std::vector<int> >
+{
+	auto parse(format_parse_context& ctx)->decltype(ctx.begin()) { return ctx.begin(); }
+	template <typename FormatContext> auto format(const std::vector<int>& v, FormatContext& ctx)-> decltype(ctx.out()) { return format_to(ctx.out(), fmt::format("[{}]", fmt::join(v, ", "))); }
+};
+
+template<> struct formatter< std::vector<float> >
+{
+	auto parse(format_parse_context& ctx)->decltype(ctx.begin()) { return ctx.begin(); }
+	template <typename FormatContext> auto format(const std::vector<float>& v, FormatContext& ctx)-> decltype(ctx.out()) { return format_to(ctx.out(), fmt::format("[{}]", fmt::join(v, ", "))); }
+};
+
+template<> struct formatter< std::vector<std::string> >
+{
+	auto parse(format_parse_context& ctx)->decltype(ctx.begin()) { return ctx.begin(); }
+	template <typename FormatContext> auto format(const std::vector<std::string>& v, FormatContext& ctx)-> decltype(ctx.out()) { return format_to(ctx.out(), fmt::format("[{}]", fmt::join(v, ", "))); }
+};
+
 FMT_END_NAMESPACE

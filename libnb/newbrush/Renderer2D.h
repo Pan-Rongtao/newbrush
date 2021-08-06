@@ -17,7 +17,7 @@ public:
 	static void drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity);
 	static void drawEffect(const Rect &rc, const glm::mat4 &transform, ref<Material> material, const std::vector<ref<Light>> &lights);
 
-	static void drawText(ref<Font> font, const Point &pt, const std::string &text);
+	static void drawText(ref<Font> font, const Point &pt, const std::string &text, const glm::vec4 &color = glm::vec4(0.0, 0.0, 0.0, 1.0));
 
 	static void drawBorder(const Rect &rc, const glm::vec4& color);
 
@@ -37,6 +37,7 @@ private:
 	static void init();
 	static void shutdown();
 	static void _drawQuad(const Rect &rc, const glm::mat4 &transform, const glm::vec4& color, float textureIndex, const TextureFrame &texFrame, float opacity);
+	static void _drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity, const glm::vec4& color);
 };
 
 }

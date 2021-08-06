@@ -237,6 +237,7 @@ private:
 	float m_x, m_y;
 };
 
+//使用RGBA格式可以使用render2d一样的shader，满足修改文本颜色的需求
 FontAtlas::FontAtlas(ref<Font> font, float width, float height)
 	: m_font(font)
 	, m_x(0.0f)
@@ -244,9 +245,10 @@ FontAtlas::FontAtlas(ref<Font> font, float width, float height)
 {
 	m_width = width;
 	m_height = height;
-	m_channels = 1;
+	m_channels = 4;
 	bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, (int)width, (int)height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, (int)width, (int)height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int)width, (int)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	unbind();
 }
 
@@ -259,13 +261,28 @@ ref<Glyph> FontAtlas::getGlyph(wchar_t unicode)
 	return (iter != m_glyphs.end()) ? iter->second : appendChar(unicode);
 }
 
+#define IM_COL32(R,G,B,A)	(((uint32_t)(A)<<24) | ((uint32_t)(B)<<16) | ((uint32_t)(G)<<8) | ((uint32_t)(R)<<0))
+
+std::string getTexDataAsRGBA32(const FontBm &fbm)
+{
+	auto pixels = (int)fbm.rc.width() * (int)fbm.rc.height();
+	unsigned char* p = (unsigned char*)malloc(pixels * 4);
+	const char* src = fbm.bm.data();
+	unsigned int* dst = (unsigned int *)p;
+	for (int n = pixels; n > 0; n--)
+		*dst++ = IM_COL32(255, 255, 255, (unsigned int)(*src++));
+	std::string buf(p, p + pixels * 4);
+	free(p);
+	return buf;
+}
+
 //从左下角开始
 //*(0) *(1)
 //*(3) *(2)
 ref<Glyph> FontAtlas::appendChar(wchar_t unicode)
 {
 	auto fontBM = m_font->getBitmap(unicode);
-	if (m_x + fontBM.rc.width() > m_width || m_y + fontBM.rc.height() > m_height)
+	if ((m_x + fontBM.rc.width() > m_width) && (m_y + fontBM.rc.height() > m_height))
 		return nullptr;
 
 	auto glyph = createRef<Glyph>();
@@ -273,11 +290,13 @@ ref<Glyph> FontAtlas::appendChar(wchar_t unicode)
 	glyph->rc = fontBM.rc;
 	glyph->advanceX = fontBM.advanceX;
 
+	auto dataRGBA32 = getTexDataAsRGBA32(fontBM);
 	bind();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	if (m_x + fontBM.rc.width() <= m_width)
 	{
-		glTexSubImage2D(GL_TEXTURE_2D, 0, (int)m_x, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_ALPHA, GL_UNSIGNED_BYTE, fontBM.bm.data());
+		//glTexSubImage2D(GL_TEXTURE_2D, 0, (int)m_x, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_ALPHA, GL_UNSIGNED_BYTE, fontBM.bm.data());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, (int)m_x, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_RGBA, GL_UNSIGNED_BYTE, dataRGBA32.data());
 		glyph->uv[0] = { m_x / m_width, (m_y + fontBM.rc.height()) / m_height };
 		glyph->uv[1] = { (m_x + fontBM.rc.width()) / m_width, (m_y + fontBM.rc.height()) / m_height };
 		glyph->uv[2] = { (m_x + fontBM.rc.width()) / m_width, m_y / m_height };
@@ -288,7 +307,8 @@ ref<Glyph> FontAtlas::appendChar(wchar_t unicode)
 	{
 		m_x = (float)(fontBM.rc.width());
 		m_y += m_font->getLineHeight();
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_ALPHA, GL_UNSIGNED_BYTE, fontBM.bm.data());
+		//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_ALPHA, GL_UNSIGNED_BYTE, fontBM.bm.data());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (int)m_y, (int)fontBM.rc.width(), (int)fontBM.rc.height(), GL_RGBA, GL_UNSIGNED_BYTE, dataRGBA32.data());
 		glyph->uv[0] = { 0.0f, (m_y + fontBM.rc.height()) / m_height };
 		glyph->uv[1] = { fontBM.rc.width() / m_width, (m_y + fontBM.rc.height()) / m_height };
 		glyph->uv[2] = { fontBM.rc.width() / m_width, m_y / m_height };
@@ -327,11 +347,6 @@ ref<Font> FontLibrary::addFont(const std::string & path, uint32_t size)
 	return font;
 }
 
-#ifdef __ANDROID__
-#define RES_DIR "/storage/emulated/0/resource/"
-#else
-#define RES_DIR "../resource/"
-#endif
 ref<Font> FontLibrary::getDefaultFont()
 {
 	static ref<Font> g_defaultFont;

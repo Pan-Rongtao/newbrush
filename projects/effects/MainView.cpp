@@ -40,15 +40,14 @@ void MainView::onTouch(const TouchEventArgs & e)
 		return;
 
 	static unsigned i = 0;
-	auto index = i % 3;
-	switch (index)
+	++i;
+	switch (i % 3)
 	{
 	case 0: 	m_root->setBackground(BrushLibrary::get("gaussianBlurBrush"));  break;
 	case 1: 	m_root->setBackground(BrushLibrary::get("VortexBrush"));		break;
 	case 2: 	m_root->setBackground(BrushLibrary::get("FlameBrush"));			break;
 	default:																	break;
 	}
-	++i;
 }
 
 //一定不要少了这句

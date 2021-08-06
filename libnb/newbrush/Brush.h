@@ -205,10 +205,10 @@ public:
 class NB_API BrushLibrary
 {
 public:
-	static void add(const std::string &name, ref<Brush> brush);
-	static void addSolidColorBrush(const std::string &name, const Color &color);
-	static void addImageBrush(const std::string &name, const std::string &imagePath);
-	static void addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName);
+	static bool add(const std::string &name, ref<Brush> brush);
+	static bool addSolidColorBrush(const std::string &name, const Color &color);
+	static bool addImageBrush(const std::string &name, const std::string &imagePath);
+	static bool addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName);
 	static ref<Brush> get(const std::string &name);
 };
 

@@ -11,6 +11,7 @@
 using namespace nb;
 
 static bool		g_windowSystemInitialized = false;
+static Window *g_window = nullptr;
 
 #if NB_OS == NB_OS_QNX
 
@@ -128,6 +129,7 @@ Window::Window(float width, float height, const std::string &title)
 	frameBufferSizeCallback((int)width, (int)height);
 	WindowCollection::get()->push(this);
 	Log::info("{}", SystemHelper::getSystemInfos());
+	g_window = this;
 }
 
 Window::~Window()
@@ -346,21 +348,38 @@ void Window::pollEvents()
 			{
 				int pos[2] = { 0, 0 };
 				screen_get_event_property_iv(m_qnxScreenEvent, SCREEN_PROPERTY_POSITION, pos);
-				printf("touch down: x=%d, y=%d\n", pos[0], pos[1]);
+				//printf("touch down: x=%d, y=%d\n", pos[0], pos[1]);
+				
+				TouchEventArgs e;
+				e.action = TouchActionE::down;
+				e.x = (float)pos[0];
+				e.y = (float)pos[1];
+
+				g_window->Touch.invoke(e);
+				TreeHelper::touchThunk(g_window->root, e);
 			}
 			break;
 			case SCREEN_EVENT_MTOUCH_MOVE:
 			{
 				int pos[2] = { 0, 0 };
 				screen_get_event_property_iv(m_qnxScreenEvent, SCREEN_PROPERTY_POSITION, pos);
-				printf("touch move: x=%d, y=%d\n", pos[0], pos[1]);
+				//printf("touch move: x=%d, y=%d\n", pos[0], pos[1]);
+				g_window->cusorPosCallback(pos[0], pos[1]);
 			}
 			break;
 			case SCREEN_EVENT_MTOUCH_RELEASE:
 			{
 				int pos[2] = { 0, 0 };
 				screen_get_event_property_iv(m_qnxScreenEvent, SCREEN_PROPERTY_POSITION, pos);
-				printf("touch release: x=%d, y=%d\n", pos[0], pos[1]);
+				//printf("touch release: x=%d, y=%d\n", pos[0], pos[1]);
+
+				TouchEventArgs e;
+				e.action = TouchActionE::up;
+				e.x = (float)pos[0];
+				e.y = (float)pos[1];
+
+				g_window->Touch.invoke(e);
+				TreeHelper::touchThunk(g_window->root, e);
 			}
 			break;
 		}
@@ -377,6 +396,7 @@ void Window::setWidth(float width)
 	screen_get_window_property_iv(m_qnxWindow, SCREEN_PROPERTY_SIZE, size);
 	size[0] = width;
 	screen_set_window_property_iv(m_qnxWindow, SCREEN_PROPERTY_SIZE, size);
+	frameBufferSizeCallback(size[0], size[1]);
 #endif
 }
 
@@ -389,6 +409,10 @@ void Window::setHeight(float height)
 	screen_get_window_property_iv(m_qnxWindow, SCREEN_PROPERTY_SIZE, size);
 	size[1] = height;
 	screen_set_window_property_iv(m_qnxWindow, SCREEN_PROPERTY_SIZE, size);
+	frameBufferSizeCallback(size[0], size[1]);
+
+//	int wh[2] = {1920, 1080};
+//	screen_set_window_property_iv(m_qnxWindow, SCREEN_PROPERTY_SOURCE_SIZE, wh);
 #endif
 }
 
@@ -428,12 +452,12 @@ void Window::_close(bool eraseFromCollection)
 	if (m_dispatchingCloseEvent)	return;
 
 	m_dispatchingCloseEvent = true;
-	CancelEventArgs args;
-	//onClosing(args);
-	if (!args.cancel)
+	CancelEventArgs e;
+	Closing.invoke(e);
+	if (!e.cancel)
 	{
 		destroyWindow();
-		//onClosed(args);
+		Closed.invoke(e);
 		if (eraseFromCollection)
 		{
 			WindowCollection::get()->erase(this);
@@ -479,7 +503,6 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 
 void Window::cusorPosCallback(double x, double y)
 {
-#if NB_OS == NB_OS_WINDOWS_NT
 	TouchEventArgs e;
 	e.action = TouchActionE::move;
 	e.x = (float)x;
@@ -487,7 +510,6 @@ void Window::cusorPosCallback(double x, double y)
 
 	Touch.invoke(e);
 	TreeHelper::touchThunk(root, e);
-#endif
 }
 
 void Window::cusorPosEnterCallback(int entered)
@@ -518,9 +540,6 @@ void Window::scrollCallback(double x, double y)
 void Window::keyCallback(int key, int scancode, int action, int mods)
 {
 #if NB_OS == NB_OS_WINDOWS_NT
-	if (key == GLFW_KEY_ESCAPE)
-		quick_exit(0);
-
 	KeyEventArgs e;
 	e.sender = this;
 	e.key = KeyCode(key);

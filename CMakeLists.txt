@@ -1,9 +1,11 @@
 ﻿# 0. CMake Defs
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 cmake_policy(VERSION 2.6)
-
+ 
 # 1. Project Name
 project(newbrush)
+
+option( BUILD_SHARED_LIBS "Build package with shared libraries." ON )
 
 # 2. Env (Include/Lib Path, C/CXX/LD FLAGS)
 set(SUPPORT_TARGETS win32 linux64 linux-arm android qnx64 qnx-aarch64)
@@ -84,7 +86,13 @@ add_subdirectory(unittests)
 # 5. Project Install
 install(DIRECTORY ${3RDPARTY_DIR}/include/rttr DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${3RDPARTY_DIR}/include/glm DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY ${3RDPARTY_DIR}/include/glm DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/catch2 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/effolkronium DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/spdlog DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/imgui DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/IconFontCpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/glad DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${3RDPARTY_DIR}/include/KHR DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY resource DESTINATION ${CMAKE_INSTALL_PREFIX})
 file(GLOB LIBS ${3RDPARTY_DIR}/lib/${TARGET}/*.dll ${3RDPARTY_DIR}/lib/${TARGET}/*rttr*.lib ${3RDPARTY_DIR}/lib/${TARGET}/*.so* ${3RDPARTY_DIR}/lib/${TARGET}/*.exe)
 install(FILES ${LIBS} DESTINATION ${CMAKE_INSTALL_LIBDIR})

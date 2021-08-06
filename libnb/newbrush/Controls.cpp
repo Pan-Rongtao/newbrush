@@ -313,6 +313,7 @@ void Image::onRender()
 ///////////////////
 TextBlock::TextBlock(const std::string & text)
 	: m_text(text)
+	, m_color(Colors::black)
 {}
 
 void TextBlock::setText(const std::string & text)
@@ -323,6 +324,16 @@ void TextBlock::setText(const std::string & text)
 const std::string & TextBlock::text() const
 {
 	return m_text;
+}
+
+void TextBlock::setColor(const Color &color)
+{
+	m_color = color;
+}
+
+const Color & TextBlock::color() const
+{
+	return m_color;
 }
 
 Size TextBlock::measureOverride(const Size & availableSize)
@@ -339,7 +350,7 @@ void TextBlock::onRender()
 {
 	Rect rc = getRenderRect();
 	auto font = m_font ? m_font : FontLibrary::getDefaultFont();
-	Renderer2D::drawText(font, rc.leftTop(), m_text);
+	Renderer2D::drawText(font, rc.leftTop(), m_text, glm::vec4(m_color.rf(), m_color.gf(), m_color.bf(), m_color.af()));
 }
 
 
@@ -464,4 +475,155 @@ void Polygon::onRender()
 {
 	Rect rc = getRenderRect();
 	Renderer2D::drawPolygon(background(), m_points, { rc.x(), rc.y() });
+}
+
+////////////////////
+void Visual3D::setMaterial(ref<Material> material)
+{
+	m_mesh->material = material;
+}
+
+ref<Material> Visual3D::material() const
+{
+	return m_mesh->material;
+}
+
+Cube::Cube()
+	: Cube(glm::vec3(0.0f), 1.0f)
+{}
+
+Cube::Cube(const glm::vec3 & center, float uniformLenght)
+	: Cube(center, uniformLenght, uniformLenght, uniformLenght)
+{}
+
+Cube::Cube(const glm::vec3 &center, float lenght, float width, float height)
+{
+/*	//前一个面（四个点，左上前，右上前，左下前，右下前）
+	//后一个面（四个点，左上后，右上后，右下后，左下后）
+	Vertex vtLUF, vtRUF, vtLDF, vtRDF, vtLUB, vtRUB, vtRDB, vtLDB;
+	vtLUF.position = { -lenght / 2, height / 2, width / 2 };
+	//vtLUF.uv = { 1.0f, 0.0f };
+	vtRUF.position = { lenght / 2, height / 2, width / 2 };
+	//vtRUF.uv = { 1.0f, 0.0f };
+	vtLDF.position = { lenght / 2, -height / 2, width / 2 };
+	//vtLDF.uv = { 1.0f, 0.0f };
+	vtRDF.position = { -lenght / 2, -height / 2, width / 2 };
+	//vtRDF.uv = { 0.0f, 0.0f };
+	vtLUB.position = { -lenght / 2, height / 2, -width / 2 };
+	//vtLUB.uv = { 0.0f, 1.0f };
+	vtRUB.position = { lenght / 2, height / 2, -width / 2 };
+	//vtRUB.uv = { 1.0f, 1.0f };
+	vtRDB.position = { lenght / 2, -height / 2, -width / 2 };
+	//vtRDB.uv = { 1.0f, 0.0f };
+	vtLDB.position = { -lenght / 2, -height / 2, -width / 2 };
+	//vtLDB.uv = { 0.0f, 0.0f };
+	auto vertexs = { vtLUF, vtRUF, vtLDF, vtRDF, vtLUB, vtRUB, vtRDB, vtLDB };
+	//上下左右前后
+	std::vector<uint16_t> indices =
+	{
+		1,4,5, 1,0,4,	//top
+		7,3,2, 7,2,6,	//bottom
+		0,3,7, 0,7,4,	//left
+		1,5,2, 5,6,2,	//right
+		0,1,2, 0,2,3,	//front
+		4,6,5, 4,7,6,	//back
+	};
+	m_mesh = createRef<Mesh>(vertexs, indices, nullptr);*/
+		
+	std::vector<Vertex> vertexs;
+	vertexs.reserve(36);
+
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }));
+
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
+
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }));
+
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
+
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
+
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
+
+	m_mesh = createRef<Mesh>(vertexs, nullptr);
+}
+
+void Cube::onRender(ref<Camera> camera, const std::vector<ref<Light>>& lights)
+{
+	auto const &mat = getTransform() ? getTransform()->value() : Transform::identityMatrix4();
+	m_mesh->draw(mat, camera, lights, GL_TRIANGLES, false);
+}
+
+SkyBox::SkyBox()	//天空盒的尺寸是无影响的，因为shader中使用w替代z
+{
+	//前一个面（四个点，左上前，右上前，左下前，右下前）
+	//后一个面（四个点，左上后，右上后，右下后，左下后）
+	Vertex vtLUF(glm::vec3({ -1.0f, 1.0f, 1.0f }));
+	Vertex vtRUF(glm::vec3({ 1.0f, 1.0f, 1.0f }));
+	Vertex vtLDF(glm::vec3({ 1.0f, -1.0f, 1.0f }));
+	Vertex vtRDF(glm::vec3({ -1.0f, -1.0f, 1.0f }));
+	Vertex vtLUB(glm::vec3({ -1.0f, 1.0f, -1.0f }));
+	Vertex vtRUB(glm::vec3({ 1.0f, 1.0f, -1.0f }));
+	Vertex vtRDB(glm::vec3({ 1.0f, -1.0f, -1.0f }));
+	Vertex vtLDB(glm::vec3({ -1.0f, -1.0f, -1.0f }));
+	auto vertexs = { vtLUF, vtRUF, vtLDF, vtRDF, vtLUB, vtRUB, vtRDB, vtLDB };
+	//上下左右前后
+	std::vector<uint16_t> indices =
+	{
+		1,4,5, 1,0,4,	//top
+		7,3,2, 7,2,6,	//bottom
+		0,3,7, 0,7,4,	//left
+		1,5,2, 5,6,2,	//right
+		0,1,2, 0,2,3,	//front
+		4,6,5, 4,7,6,	//back
+	};
+	m_mesh = createRef<Mesh>(vertexs, indices, nullptr);
+}
+
+void SkyBox::onRender(ref<Camera> camera, const std::vector<ref<Light>>& lights)
+{
+	GLint oldCullFace = -1, oldDepthFunc = -1;
+	glGetIntegerv(GL_CULL_FACE, &oldCullFace);
+	glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunc);
+
+	glEnable(GL_CULL_FACE);
+	glDepthFunc(GL_LEQUAL);
+	
+	auto cm = std::make_shared<PerspectiveCamera>(*(as<PerspectiveCamera>(camera).get()));
+	cm->setTranslate(glm::vec3(0.0));
+	auto const &mat = getTransform() ? getTransform()->value() : Transform::identityMatrix4();
+	m_mesh->draw(mat, cm, lights);
+
+	oldCullFace ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+	glDepthFunc(oldDepthFunc);
 }

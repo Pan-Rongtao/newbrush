@@ -1,6 +1,6 @@
 @echo off
 
-SET ANDROID_SDK_PATH=C:\Users\uidp3575\AppData\Local\Android\Sdk
+SET ANDROID_SDK_PATH=D:\android-sdk-windows
 SET ANDROID_NDK_PATH=%ANDROID_SDK_PATH%\ndk\21.0.6113669
 SET ANDROID_CMAKE_TOOLCHAIN=%ANDROID_NDK_PATH%\build\cmake\android.toolchain.cmake
 SET ANDROID_CMAKE_PATH=%ANDROID_SDK_PATH%\cmake\3.10.2.4988404

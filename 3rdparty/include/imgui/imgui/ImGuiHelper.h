@@ -34,6 +34,7 @@ public:
 	static int run(ImGuiView *view);
 	static void enableRender(bool enable);
 	static bool isEnableRender();
+	static void deinit();
 };
 
 class ImGuiWidget

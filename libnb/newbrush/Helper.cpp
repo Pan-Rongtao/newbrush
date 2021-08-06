@@ -321,12 +321,12 @@ void RttrRegistration::registerTypes()
 		.property("EmissionMapping", &PhongMaterial::emissionMapping)
 		;
 
-	registration::class_<CubemapMaterial>("nb::CubemapMaterial") ()
-		.property("Ambient", &CubemapMaterial::ambient)
-		.property("Diffuse", &CubemapMaterial::diffuse)
-		.property("Specular", &CubemapMaterial::specular)
-		.property("DiffuseMapping", &CubemapMaterial::diffuseMapping)
-		.property("SpecularMapping", &CubemapMaterial::cubeMapping)
+	registration::class_<ReflectMaterial>("nb::ReflectMaterial") ()
+		.property("Ambient", &ReflectMaterial::ambient)
+		.property("Diffuse", &ReflectMaterial::diffuse)
+		.property("Specular", &ReflectMaterial::specular)
+		.property("DiffuseMapping", &ReflectMaterial::diffuseMapping)
+		.property("SpecularMapping", &ReflectMaterial::cubeMapping)
 		;
 
 	registration::class_<Timeline>("nb::Timeline") ()

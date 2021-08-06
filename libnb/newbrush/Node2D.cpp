@@ -345,7 +345,8 @@ void Node2D::onRender()
 	drawBrush(m_background);
 	for (auto child : children())
 	{
-		child->onRender();
+		if(child->visibility() == VisibilityE::Visible)
+			child->onRender();
 	}
 
 	if (m_scene)

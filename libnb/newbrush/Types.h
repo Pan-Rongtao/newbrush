@@ -50,6 +50,7 @@ class NB_API Point3D
 {
 public:
 	Point3D() : Point3D(0.0f, 0.0f, 0.0f)						{}
+	Point3D(float n) : Point3D(n, n, n)							{}
 	Point3D(float _x, float _y, float _z) : x(_x), y(_y), z(_z)	{}
 
 	void operator = (const Point3D &p) &				{ x = p.x; y = p.y; z = p.z; }
@@ -77,6 +78,7 @@ class NB_API Size
 {
 public:
 	Size() : Size(0.0f, 0.0f)							{}
+	Size(float n) : Size(n, n)							{}
 	Size(float w, float h) : width(w), height(h)		{}
 
 	void operator = (const Size &s) &					{ width = s.width; height = s.height; }

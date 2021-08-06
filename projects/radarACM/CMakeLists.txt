@@ -3,11 +3,13 @@ project(radarACM)
 
 # 2. Project Env (Include/Lib Path, C/CXX/LD FLAGS)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
+ 
 # 3. Project Build
 file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
-if(WIN32)
+
+if(WIN32 AND USE_IMGUI)
 	get_imgui_src(${3RDPARTY_DIR}/include/imgui IMGUI_SRC_LIST)
+	add_definitions(-DNB_USE_IMGUI)
 endif()
 
 if(ANDROID)
@@ -18,11 +20,11 @@ else()
 	add_executable(${PROJECT_NAME} ${SRC_LIST} ${IMGUI_SRC_LIST})
 	set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 	set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "../../../../dist/win32/lib")
-if(WIN32)
-	target_link_libraries(${PROJECT_NAME} libnb TCPConnect)
-else()
-	target_link_libraries(${PROJECT_NAME} libnb)
-endif()
+	if(WIN32)
+		target_link_libraries(${PROJECT_NAME} libnb TCPConnect)
+	else()
+		target_link_libraries(${PROJECT_NAME} libnb)
+	endif()
 endif()
 
 

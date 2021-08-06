@@ -89,4 +89,16 @@ private:
 	MessageQueue m_msgQueue;
 };
 
+class NB_API ThemeManager
+{
+public:
+	static void setTheme(uint32_t theme);
+	static uint32_t getTheme();
+	static Event<int> &ThemeChanged();
+
+private:
+	static uint32_t m_theme;
+	static Event<int> m_themeChangedEvent;
+};
+
 }

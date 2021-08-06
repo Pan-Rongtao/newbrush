@@ -33,6 +33,14 @@ public:
 	var getValue(const property &prop) const;
 
 	template<class T>
+	T getValue(const property &prop)
+	{
+		nbThrowExceptionIf(prop.get_type() != type::get<T>(), std::logic_error, "should use get<%s> instead of get<%s> for [%s]",
+			prop.get_type().get_name().data(), typeid(T).name(), prop.get_name().data());
+		return getValue(prop).get_value<T>();
+	}
+
+	template<class T>
 	const T &getValue(const property &prop) const
 	{
 		nbThrowExceptionIf(prop.get_type() != type::get<T>(), std::logic_error, "should use get<%s> instead of get<%s> for [%s]", 

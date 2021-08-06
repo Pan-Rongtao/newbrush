@@ -20,9 +20,7 @@ foreach(src ${INC_LIST} ${SRC_LIST})
 	endif() 
 endforeach()
 
-if(WIN32)
-	group_by_dir(${INCLUDE_PREFIX} ${FILETER_SRC_LIST})
-endif()
+group_by_dir(${INCLUDE_PREFIX} ${FILETER_SRC_LIST})
 
 add_executable(${BIN_NAME}  ${FILETER_SRC_LIST})
 set_target_properties(${BIN_NAME} PROPERTIES OUTPUT_NAME ${BIN_NAME})

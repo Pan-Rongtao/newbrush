@@ -161,3 +161,25 @@ void Application::onWindowFocused(const bool &focused)
 
 	}
 }
+
+//////////////////////
+uint32_t ThemeManager::m_theme = 0;
+Event<int> ThemeManager::m_themeChangedEvent;
+void ThemeManager::setTheme(uint32_t theme)
+{
+	if (m_theme != theme)
+	{
+		m_theme = theme;
+		m_themeChangedEvent.invoke(theme);
+	}
+}
+
+uint32_t ThemeManager::getTheme()
+{
+	return m_theme;
+}
+
+Event<int> &ThemeManager::ThemeChanged()
+{
+	return m_themeChangedEvent;
+}

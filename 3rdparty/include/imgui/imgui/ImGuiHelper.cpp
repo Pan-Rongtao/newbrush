@@ -39,7 +39,7 @@ ImGuiView::ImGuiView(GLFWwindow * window)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	// Setup Platform/Renderer backends; GL 3.0 + GLSL 130
 	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
@@ -107,9 +107,7 @@ int ImGuiHelper::run(ImGuiView * view)
 		glfwSwapBuffers(window);
 	}
 
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	ImGuiHelper::deinit();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
@@ -123,6 +121,13 @@ void ImGuiHelper::enableRender(bool enable)
 bool ImGuiHelper::isEnableRender()
 {
 	return g_enableRender;
+}
+
+void ImGuiHelper::deinit()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void ImGuiWidget::showPropertyEditor(instance &obj)

@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "ECO.h"
 #include "Normal.h"
+#include "Sport.h"
 
 using namespace nb;
 
@@ -26,9 +27,13 @@ public:
 private:
 	void onKey(const KeyEventArgs &e);
 	void switchDrivingMode(DrivingModeE mode);
+	void onBtnClick(const EventArgs &e);
 
 	ref<Node2D> m_ecoNode;
+	ref<Button> m_btnEco;
 	ref<Node2D> m_normalNode;
+	ref<Button> m_btnNormal;
 	ref<Node2D> m_sportNode;
+	ref<Button> m_btnSport;
 	DrivingModeE m_mode{ DrivingModeE::none };
 };

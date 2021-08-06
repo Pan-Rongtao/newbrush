@@ -96,6 +96,12 @@ do{\
 
 #define nbArraySize(arr) sizeof(arr) / sizeof(arr[0])
 
+#if NB_OS == NB_OS_ANDROID
+#define RES_DIR "/storage/emulated/0/resource/"
+#else
+#define RES_DIR "../resource/"
+#endif
+
 namespace nb
 {
 	//获取距1970.1.1的 纳秒/微秒/毫秒/秒数

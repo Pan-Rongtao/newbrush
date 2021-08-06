@@ -5,8 +5,10 @@ project(modelDIY)
 
 # 3. Project Build
 file(GLOB_RECURSE SRC_LIST *.h *.cpp ../Common.h ../Common.cpp)
-if(WIN32)
+
+if(WIN32 AND USE_IMGUI)
 	get_imgui_src(${3RDPARTY_DIR}/include/imgui IMGUI_SRC_LIST)
+	add_definitions(-DNB_USE_IMGUI)
 endif()
 
 if(ANDROID)

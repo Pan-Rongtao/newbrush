@@ -45,7 +45,7 @@ float Timeline::getCurrentProgress() const
 
 	//如果超过总ticks，返回1.0或者0.0
 	auto passedTicks = getMilliseconds() - m_startTick;
-	if (passedTicks > totalTicks)
+	if (passedTicks >= totalTicks)
 	{
 		return autoReverse ? (!reverse ? 0.0f : 1.0f) : (!reverse ? 1.0f : 0.0f);
 	}
