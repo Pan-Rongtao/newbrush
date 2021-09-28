@@ -16,6 +16,10 @@ Node2D::Node2D(const Rect & rc)
 {}
 
 Node2D::Node2D(float x, float y, float w, float h)
+	: Node2D(x, y, w, h, nullptr)
+{}
+
+Node2D::Node2D(float x, float y, float w, float h, ref<Brush> background)
 	: m_position(x, y)
 	, m_size(w, h)
 	, m_opacity(1.0f)
@@ -27,6 +31,7 @@ Node2D::Node2D(float x, float y, float w, float h)
 	, m_isEnable(true)
 	, m_isMouseOver(false)
 	, m_parent(nullptr)
+	, m_background(background)
 {
 }
 
@@ -159,15 +164,22 @@ VisibilityE Node2D::visibility() const
 
 void Node2D::setBackground(ref<Brush> bkg)
 {
-	if (bkg != m_background)
-	{
-		m_background = bkg;
-	}
+	m_background = bkg;
 }
 
 ref<Brush> Node2D::background() const
 {
 	return m_background;
+}
+
+void Node2D::setClipRect(const Rect & clipRC)
+{
+	m_clipRC = clipRC;
+}
+
+const Rect &Node2D::getClipRect() const
+{
+	return m_clipRC;
 }
 
 void Node2D::setTransform(ref<Transform2D> transform)
@@ -311,7 +323,6 @@ Size Node2D::arrangeOverride(const Size & finalSize)
 {
 	for (auto child : children())
 	{
-		auto desiredSize = child->getDesiredSize();
 		child->arrage(Rect(0.0, 0.0, finalSize));
 	}
 	return finalSize;
@@ -343,11 +354,7 @@ void Node2D::onRender()
 		return;
 
 	drawBrush(m_background);
-	for (auto child : children())
-	{
-		if(child->visibility() == VisibilityE::Visible)
-			child->onRender();
-	}
+	drawChildren();
 
 	if (m_scene)
 	{
@@ -383,6 +390,11 @@ ref<Node2D> Node2D::createWithTextureFrame(const TextureFrame & texFrame, bool u
 	if(useBrush)
 		node->setBackground(createRef<ImageBrush>(texFrame));
 	return node;
+}
+
+ref<Node2D> Node2D::createWithTextureFrameName(const std::string & texAtlasKey, const std::string & frameName, float x, float y)
+{
+	return createWithTextureFrameName(texAtlasKey, frameName, true, x, y);
 }
 
 ref<Node2D> Node2D::createWithTextureFrameName(const std::string & texAtlasKey, const std::string & frameName, bool useBrush, float x, float y)
@@ -487,7 +499,8 @@ ref<Scene> Node2D::getScene()
 
 void Node2D::touchThunk(const TouchEventArgs & e)
 {
-	if (m_visibility != VisibilityE::Visible)
+	//if (m_visibility != VisibilityE::Visible)
+	if(!isEnable() || !TreeHelper::isActualVisible(this))
 		return;
 
 	auto hit = Node2D::hitTest(Point(e.x, e.y));
@@ -561,28 +574,37 @@ void Node2D::updateLayout(const Size & availabelSize)
 	Renderer2D::endBatch();
 }
 
+void Node2D::drawChildren()
+{
+	for (auto child : children())
+	{
+		if (child->visibility() == VisibilityE::Visible)
+			child->onRender();
+	}
+}
+
 void Node2D::drawBrush(ref<Brush> brush)
 {
 	if (brush)
 	{
 		auto renderTransform = m_transform ? m_transform->value() : Transform::identityMatrix4();
 		Rect rc = getRenderRect();
-		auto opacity = m_opacity * brush->opacity;
+		auto opacity = TreeHelper::getActualOpacity(this);
 		if (is<SolidColorBrush>(brush))
 		{
 			auto _brush = as<SolidColorBrush>(brush);
 			auto c = _brush->color;
-			Renderer2D::drawRect(rc, renderTransform, glm::vec4(c.rf(), c.gf(), c.bf(), c.af()), opacity);
+			Renderer2D::drawRect(rc, renderTransform, c.toVec4(), opacity, m_clipRC);
 		}
 		else if (is<ImageBrush>(brush))
 		{
 			auto _brush = as<ImageBrush>(brush);
-			Renderer2D::drawImage(rc, renderTransform, _brush->frame, opacity);
+			Renderer2D::drawImage(rc, renderTransform, _brush->frame, opacity, m_clipRC);
 		}
 		else if (is<EffectBrush>(brush))
 		{
 			auto _brush = as<EffectBrush>(brush);
-			Renderer2D::drawEffect(rc, renderTransform, _brush->material, std::vector<ref<Light>>{ _brush->light });
+			Renderer2D::drawEffect(rc, renderTransform, _brush->material, std::vector<ref<Light>>{ _brush->light }, m_clipRC);
 		}
 	}
 }

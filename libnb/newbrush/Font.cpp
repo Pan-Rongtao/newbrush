@@ -2,6 +2,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb/stb_truetype.h"
 #include "stb/stb_image_write.h"
+#include <codecvt>
 
 using namespace nb;
 
@@ -172,6 +173,30 @@ FontBm Font::getBitmap(wchar_t unicode) const
 
 	//stbi_write_png("d:/STB.png", w, h, 1, bitmap, w);
 	return fontBM;
+}
+
+Size Font::measure(const std::string & text) const
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
+	std::wstring unicodeStr = cvt.from_bytes(text);
+	float width = 0.0f;
+	float height = (float)(m_ascent - m_descent/* + m_lineGap * m_scale / 2*/);
+	for (int i = 0; i != unicodeStr.size(); ++i)
+	{
+		auto const &unicode = unicodeStr[i];
+		int advanceX, bearingX;
+		stbtt_GetCodepointHMetrics(m_ttFontInfo, unicode, &advanceX, &bearingX);
+		width += advanceX * m_scale;
+	}
+	return Size(width, height);
+}
+
+Size Font::measure(int unicode) const
+{
+	int advanceX, bearingX;
+	stbtt_GetCodepointHMetrics(m_ttFontInfo, unicode, &advanceX, &bearingX);
+	float height = (float)(m_ascent - m_descent);
+	return Size(advanceX * m_scale, height);
 }
 
 void Font::saveTextBitmap(const std::string & path, const std::string & text)

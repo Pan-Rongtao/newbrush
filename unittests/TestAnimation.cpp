@@ -249,3 +249,115 @@ TEST_CASE("test Vec4AnimationUsingKeyFrames", "[Vec4AnimationUsingKeyFrames]")
 	keyFrames.insert({ TimeSpan::fromSeconds(2), glm::vec4(400) });
 	testAnimationUsingKeyFrames<RttrObject, glm::vec4>(target, "vec4_p", keyFrames, TimeSpan::fromSeconds(3));
 }
+
+TEST_CASE("Storyboard", "[Storyboard]")
+{
+	std::set<ColorKeyFrame> keyFrames;
+	keyFrames.insert({ TimeSpan::fromSeconds(0), Color() });
+	keyFrames.insert({ TimeSpan::fromSeconds(1), Color(0, 125, 100) });
+	keyFrames.insert({ TimeSpan::fromSeconds(2), Color(255, 10, 233) });
+
+	ref<PropertyAnimationUsingKeyFrames<Color>> animColor = createRef<PropertyAnimationUsingKeyFrames<Color>>();
+	animColor->setTarget(target);
+	auto targetPropertyColor = type::get<RttrObject>().get_property("color_p");
+	animColor->setTargetProperty(targetPropertyColor);
+	animColor->duration = TimeSpan::fromSeconds(3);
+	animColor->setKeyFrames(keyFrames);
+
+	animColor->StateChanged += [](const EventArgs &e) {
+		Log::info("animation state chaged = {}", ((Timeline *)(e.sender))->currentState()); };
+	animColor->Completed += [](const EventArgs &e) {
+		Log::info("animation complete"); };
+	animColor->Process += [&](const EventArgs &e)
+	{
+		auto tl = (Timeline *)(e.sender);
+		auto time = tl->getCurrentTime();
+		auto progress = tl->getCurrentProgress();
+		auto vVar = target->getValue(targetPropertyColor);
+		auto v = target ? target->getValue<Color>(targetPropertyColor) : Color();
+		Log::info("animation procesing: time{}, progress[{:.3f}], color={}", time, progress, v);
+	};
+
+	std::set<Vec2KeyFrame> keyFramesVec2;
+	keyFramesVec2.insert({ TimeSpan::fromSeconds(0), glm::vec2() });
+	keyFramesVec2.insert({ TimeSpan::fromSeconds(1), glm::vec2(20) });
+	keyFramesVec2.insert({ TimeSpan::fromSeconds(2), glm::vec2(400) });
+	ref<PropertyAnimationUsingKeyFrames<glm::vec2>> animVec2 = createRef<PropertyAnimationUsingKeyFrames<glm::vec2>>();
+	animVec2->setTarget(target);
+	auto targetPropertyVec2 = type::get<RttrObject>().get_property("vec2_p");
+	animVec2->setTargetProperty(targetPropertyVec2);
+	animVec2->duration = TimeSpan::fromSeconds(3);
+	animVec2->setKeyFrames(keyFramesVec2);
+	animVec2->beginTime = TimeSpan::fromSeconds(1);
+
+	animVec2->StateChanged += [](const EventArgs &e) {
+		Log::info("animation state chaged = {}", ((Timeline *)(e.sender))->currentState()); };
+	animVec2->Completed += [](const EventArgs &e) {
+		Log::info("animation complete"); };
+	animVec2->Process += [&](const EventArgs &e)
+	{
+		auto tl = (Timeline *)(e.sender);
+		auto time = tl->getCurrentTime();
+		auto progress = tl->getCurrentProgress();
+		auto vVar = target->getValue(targetPropertyVec2);
+		auto v = target ? target->getValue<glm::vec2>(targetPropertyVec2) : glm::vec2();
+		Log::info("animation procesing: time{}, progress[{:.3f}], vec2={}", time, progress, v);
+	};
+
+	std::set<Int32KeyFrame> keyFramesInt32;
+	keyFramesInt32.insert({ TimeSpan::fromSeconds(0), -10 });
+	keyFramesInt32.insert({ TimeSpan::fromSeconds(1), 0 });
+	keyFramesInt32.insert({ TimeSpan::fromSeconds(2), 999 });
+	ref<PropertyAnimationUsingKeyFrames<int32_t>> animInt32 = createRef<PropertyAnimationUsingKeyFrames<int32_t>>();
+	animInt32->setTarget(target);
+	auto targetPropertyInt32 = type::get<RttrObject>().get_property("int32_p");
+	animInt32->setTargetProperty(targetPropertyInt32);
+	animInt32->duration = TimeSpan::fromSeconds(3);
+	animInt32->setKeyFrames(keyFramesInt32);
+
+	animInt32->StateChanged += [](const EventArgs &e) {
+		Log::info("animation state chaged = {}", ((Timeline *)(e.sender))->currentState()); };
+	animInt32->Completed += [](const EventArgs &e) {
+		Log::info("animation complete"); };
+	animInt32->Process += [&](const EventArgs &e)
+	{
+		auto tl = (Timeline *)(e.sender);
+		auto time = tl->getCurrentTime();
+		auto progress = tl->getCurrentProgress();
+		auto vVar = target->getValue(targetPropertyInt32);
+		auto v = target ? target->getValue<int32_t>(targetPropertyInt32) : int32_t();
+		Log::info("animation procesing: time{}, progress[{:.3f}], int32_t={}", time, progress, v);
+	};
+
+	//属性动画
+	auto targetPropertyfloat = type::get<RttrObject>().get_property("float_p");
+	ref<PropertyAnimation<float>> animprofloat = createRef<PropertyAnimation<float>>();
+	animprofloat->duration = TimeSpan::fromSeconds(3);;
+	animprofloat->setFrom(100.0f);
+	animprofloat->setTo(0.0f);
+	animprofloat->setTarget(target);
+	animprofloat->setTargetProperty(targetPropertyfloat);
+	animprofloat->reverse = false;
+	animprofloat->autoReverse = false;
+	animprofloat->setEasingFunction(nullptr);
+
+	animprofloat->StateChanged += [](const EventArgs &e) { Log::info("animation state chaged = {}", ((Timeline *)(e.sender))->currentState()); };
+	animprofloat->Completed += [](const EventArgs &e) { Log::info("animation complete"); };
+	animprofloat->Process += [&](const EventArgs &e)
+	{
+		auto tl = (Timeline *)(e.sender);
+		auto time = tl->getCurrentTime();
+		auto progress = tl->getCurrentProgress();
+		auto v = target ? target->getValue<float>(targetPropertyfloat) : float();
+		Log::info("animation procesing: time{}, progress[{:.3f}], float={}", time, progress, v);
+	};
+
+
+	ref<Storyboard> storyboardtest = createRef<Storyboard>();
+	storyboardtest->children().push_back(animColor);	//关键帧动画
+	storyboardtest->children().push_back(animVec2);		//关键帧动画
+	storyboardtest->children().push_back(animInt32);	//关键帧动画
+	storyboardtest->children().push_back(animprofloat);	//属性动画
+	storyboardtest->begin();
+	while (true) { Timer::driveInLoop(); }
+}

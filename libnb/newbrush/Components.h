@@ -591,11 +591,11 @@ class NB_API TextureMaterial : public Material
 	RTTR_ENABLE(Material)
 public:
 	TextureMaterial();
-	TextureMaterial(ref<Texture2D> cubemap);
+	TextureMaterial(const TextureFrame &_texFrame);
 
 	virtual void uploadUniform(ref<Camera> camera) override;
 
-	ref<Texture2D> texture;
+	TextureFrame texFrame;
 };
 
 class NB_API SkyBoxMaterial : public Material

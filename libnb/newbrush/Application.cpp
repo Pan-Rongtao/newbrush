@@ -164,13 +164,12 @@ void Application::onWindowFocused(const bool &focused)
 
 //////////////////////
 uint32_t ThemeManager::m_theme = 0;
-Event<int> ThemeManager::m_themeChangedEvent;
 void ThemeManager::setTheme(uint32_t theme)
 {
 	if (m_theme != theme)
 	{
 		m_theme = theme;
-		m_themeChangedEvent.invoke(theme);
+		ThemeChanged().invoke(theme);
 	}
 }
 
@@ -181,5 +180,27 @@ uint32_t ThemeManager::getTheme()
 
 Event<int> &ThemeManager::ThemeChanged()
 {
-	return m_themeChangedEvent;
+	static Event<int> event;
+	return event;
+}
+
+uint32_t LanguageManager::m_language = 0;
+void LanguageManager::setLanguage(uint32_t language)
+{
+	if (m_language != language)
+	{
+		m_language = language;
+		LanguageChanged().invoke(language);
+	}
+}
+
+uint32_t LanguageManager::getLanguage()
+{
+	return m_language;
+}
+
+Event<int>& LanguageManager::LanguageChanged()
+{
+	static Event<int> event;
+	return event;
 }

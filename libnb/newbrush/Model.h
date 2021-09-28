@@ -29,18 +29,22 @@ public:
 	void load(const std::string & path);
 
 	bool hasAnimation() const;
-	void play();
+	void play(bool loop = true);
 	void pause();
 	bool isPlaying() const;
 	float getFrameCount() const;
 	void gotoFrame(float frame);
 	void gotoPrevFrame(bool reverse = true);
 	void gotoNextFrame(bool reverse = true);
+	void setFrameSection(float beg, float end);
+	void getFrameSection(float &beg, float &end);
 
 	void setRenderAble(const std::string &meshName, bool renderAble);
 	void setMaterial(const std::string &meshName, ref<Material> material);
 	void setMaterial(ref<Material> material);
 	
+	Event<TimelineStateE> AnimationStateChanged;
+
 protected:
 	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights) override;
 
@@ -57,6 +61,7 @@ private:
 
 	Timer m_timer;
 	float m_curFrame;
+	float m_begFrame, m_endFrame;
 	ref<AssimpView::SceneAnimator> mAnimator;
 };
 

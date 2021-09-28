@@ -131,83 +131,6 @@ void Renderer2D::beginBatch()
 	_beginBatch(true);
 }
 
-void Renderer2D::drawPolyline(ref<Brush> brush, const std::vector<glm::vec2>& points, float size, const glm::vec2 &offset)
-{
-	Path path;
-	for (auto const &p : points)
-	{
-		path.push_back(IntPoint((cInt)(p.x), (cInt)(p.y)));
-	}
-	ClipperOffset co;
-	co.AddPath(path, jtRound, etOpenButt);
-	Paths solution;
-	co.Execute(solution, size / 2.0);
-
-	std::vector<glm::vec2> pointsX(solution[0].size());
-	for (auto i = 0u; i < pointsX.size(); ++i)
-	{
-		pointsX[i] = { solution[0][i].X, solution[0][i].Y };
-	}
-
-	drawPolygon(brush, pointsX, offset);
-}
-
-void Renderer2D::drawPolygon(ref<Brush> brush, const std::vector<glm::vec2> &points, const glm::vec2 & offset)
-{
-	std::vector<Vertex> vertexs(points.size());
-	for (auto i = 0u; i < vertexs.size(); ++i)
-	{
-		auto p0 = points[i] + offset;
-		vertexs[i].position = glm::vec3(p0, 0.0f);
-	}
-
-	using Point = std::array<float, 2>;
-	std::vector<std::vector<Point>> polygon;
-	std::vector<Point> pointsxx;
-	for (auto i = 0u; i < vertexs.size(); ++i)
-	{
-		Point p = { vertexs[i].position.x, vertexs[i].position.y };
-		pointsxx.push_back(p);
-	}
-	polygon.push_back(pointsxx);
-	std::vector<uint16_t> indices = mapbox::earcut<uint16_t>(polygon);
-
-	endBatch();
-
-	ref<Material> material;
-	if (is<SolidColorBrush>(brush))
-	{
-		auto _brush = as<SolidColorBrush>(brush);
-		material = createRef<FlatMaterial>(_brush->color);
-	}
-	else if (is<LinearGradientBrush>(brush))
-	{
-		auto box = TreeHelper::getBox(points);
-		box.x += offset.x;
-		box.y += offset.y;
-		auto _brush = as<LinearGradientBrush>(brush);
-		auto linearMaterial = createRef<LinearGrandientMaterial>();
-		linearMaterial->gradientStops = _brush->gradientStops;
-		linearMaterial->box = box;
-		linearMaterial->horizontal = _brush->horizontal;
-		material = linearMaterial;
-	}
-	else if (is<ImageBrush>(brush))
-	{
-		auto _brush = as<ImageBrush>(brush);
-	}
-	else if (is<EffectBrush>(brush))
-	{
-		auto _brush = as<EffectBrush>(brush);
-		material = _brush->material;
-	}
-
-	auto mesh = createRef<Mesh>(vertexs, indices, material);
-	mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), {});
-
-	_beginBatch(false);
-}
-
 void Renderer2D::endBatch()
 {
 	GLsizeiptr size = (uint8_t *)g_data.quadBufferPtr - (uint8_t *)g_data.quadBuffer;
@@ -234,24 +157,40 @@ void Renderer2D::endBatch()
 	g_data.RenderStats.drawCount++;
 }
 
-void Renderer2D::drawRect(const Rect &rc, const glm::mat4 &transform, const glm::vec4 & color, float opacity)
+void Renderer2D::drawRect(const Rect &rc, const glm::mat4 &transform, const glm::vec4 & color, float opacity, const Rect & rcClip)
 {
-	if (g_data.usedIndexCount >= MaxIndexCount)
+	if (rcClip.width() > 0 && rcClip.height() > 0)
 	{
-		endBatch();
-		_beginBatch(false);
+		auto material = createRef<FlatMaterial>(Color::fromRgbaF(color.x, color.y, color.z, color.w));
+		drawEffect(rc, transform, material, {}, rcClip);
 	}
-	 
-	const glm::vec4 &_color = color;
-	const float &_textureIndex = 0.0f;
-	static const TextureFrame texFrame;
-	_drawQuad(rc, transform, _color, _textureIndex, texFrame, opacity);
+	else
+	{
+		if (g_data.usedIndexCount >= MaxIndexCount)
+		{
+			endBatch();
+			_beginBatch(false);
+		}
+
+		const glm::vec4 &_color = color;
+		const float &_textureIndex = 0.0f;
+		static const TextureFrame texFrame;
+		_drawQuad(rc, transform, _color, _textureIndex, texFrame, opacity);
+	}
 }
 
-void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity)
+void Renderer2D::drawImage(const Rect &rc, const glm::mat4 &transform, const TextureFrame &texFrame, float opacity, const Rect &rcClip)
 {
-	static const glm::vec4 &color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	_drawImage(rc, transform, texFrame, opacity, color);
+	if (rcClip.width() > 0 && rcClip.height() > 0)
+	{
+		auto material = createRef<TextureMaterial>(texFrame);
+		drawEffect(rc, transform, material, {}, rcClip);
+	}
+	else
+	{
+		static const glm::vec4 &color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		_drawImage(rc, transform, texFrame, opacity, color);
+	}
 }
 
 const Renderer2D::Stats & Renderer2D::getStats()
@@ -268,7 +207,7 @@ void Renderer2D::_drawQuad(const Rect &rc, const glm::mat4 &transform, const glm
 {
 	auto const &tex = texFrame.texture;
 	auto rotated = texFrame.rotated;
-	glm::vec4 position = { rc.x(), rc.y(), 0.0f, 1.0f };
+	glm::vec4 position = { (int)rc.x(), (int)rc.y(), 0.0f, 1.0f };		//一定要取整，否则两个紧挨的节点会出现缝隙，暂未找到原因
 	glm::vec4 p0 = { texFrame.pinch.x, texFrame.pinch.y, 0.0f, 1.0f };
 	glm::vec4 p1 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), texFrame.pinch.y, 0.0f, 1.0f };
 	glm::vec4 p2 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), rc.height() - (texFrame.sourceSize.y - texFrame.frame.w - texFrame.pinch.y), 0.0f, 1.0f };
@@ -345,37 +284,82 @@ void Renderer2D::_drawImage(const Rect & rc, const glm::mat4 & transform, const 
 	_drawQuad(rc, transform, color, textureIndex, texFrame, opacity);
 }
 
-void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Material> material, const std::vector<ref<Light>> &lights)
+void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Material> material, const std::vector<ref<Light>> &lights, const Rect &rcClip)
 {
 	endBatch();
 
-	glm::vec4 position = {rc.x(), rc.y(), 0.0f, 1.0f };
-	glm::vec4 p0 = { 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 p1 = { rc.width(), 0.0f, 0.0f, 1.0f };
-	glm::vec4 p2 = { rc.width(), rc.height(), 0.0f, 1.0f };
-	glm::vec4 p3 = { 0.0f, rc.height(), 0.0f, 1.0f };
+	if (rcClip.width() > 0 && rcClip.height() > 0)
+	{
+		float vpX, vpY, vpW, vpH;
+		GLUtils::getViewport(vpX, vpY, vpW, vpH);
+		glEnable(GL_SCISSOR_TEST);
+		glScissor((int)rcClip.x(), (int)(vpH - rcClip.bottom()), (int)rcClip.width(), (int)rcClip.height());
+	}
+
 	std::vector<Vertex> vertexs(4);
-	vertexs[0].position = transform * p0 + position;
-	vertexs[1].position = transform * p1 + position;
-	vertexs[2].position = transform * p2 + position;
-	vertexs[3].position = transform * p3 + position;
-	vertexs[0].uv = glm::vec2(0.0, 0.0);
-	vertexs[1].uv = glm::vec2(1.0, 0.0);
-	vertexs[2].uv = glm::vec2(1.0, 1.0);
-	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
+	if (nb::is<TextureMaterial>(material))
+	{
+		auto texFrame = nb::as<TextureMaterial>(material)->texFrame;
+		auto const &tex = texFrame.texture;
+		auto rotated = texFrame.rotated;
+		glm::vec4 position = { (int)rc.x(), (int)rc.y(), 0.0f, 1.0f };		//一定要取整，否则两个紧挨的节点会出现缝隙，暂未找到原因
+		glm::vec4 p0 = { texFrame.pinch.x, texFrame.pinch.y, 0.0f, 1.0f };
+		glm::vec4 p1 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), texFrame.pinch.y, 0.0f, 1.0f };
+		glm::vec4 p2 = { rc.width() - (texFrame.sourceSize.x - texFrame.frame.z - texFrame.pinch.x), rc.height() - (texFrame.sourceSize.y - texFrame.frame.w - texFrame.pinch.y), 0.0f, 1.0f };
+		glm::vec4 p3 = { texFrame.pinch.x, rc.height() - (texFrame.sourceSize.y - texFrame.frame.w - texFrame.pinch.y), 0.0f, 1.0f };
+		glm::vec2 texSourceSize = tex ? glm::vec2(tex->width(), tex->height()) : glm::vec2(0.0f);
+		glm::vec2 texTargetOffset = { texFrame.frame.x, texFrame.frame.y };
+		glm::vec2 texTargetSize = rotated ? glm::vec2(texFrame.frame.w, texFrame.frame.z) : glm::vec2(texFrame.frame.z, texFrame.frame.w);
+		glm::vec2 uv0 = { texTargetOffset / texSourceSize };
+		glm::vec2 uv1 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, texTargetOffset.y / texSourceSize.y };
+		glm::vec2 uv2 = { (texTargetOffset.x + texTargetSize.x) / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
+		glm::vec2 uv3 = { texTargetOffset.x / texSourceSize.x, (texTargetOffset.y + texTargetSize.y) / texSourceSize.y };
+	
+		vertexs[0].position = transform * p0 + position;
+		vertexs[1].position = transform * p1 + position;
+		vertexs[2].position = transform * p2 + position;
+		vertexs[3].position = transform * p3 + position;
+		vertexs[0].uv = rotated ? uv1 : uv0;
+		vertexs[1].uv = rotated ? uv2 : uv1;
+		vertexs[2].uv = rotated ? uv3 : uv2;
+		vertexs[3].uv = rotated ? uv0 : uv3;;
+	}
+	else
+	{
+		glm::vec4 position = { rc.x(), rc.y(), 0.0f, 1.0f };
+		glm::vec4 p0 = { 0.0f, 0.0f, 0.0f, 1.0f };
+		glm::vec4 p1 = { rc.width(), 0.0f, 0.0f, 1.0f };
+		glm::vec4 p2 = { rc.width(), rc.height(), 0.0f, 1.0f };
+		glm::vec4 p3 = { 0.0f, rc.height(), 0.0f, 1.0f };
+
+		vertexs[0].position = transform * p0 + position;
+		vertexs[1].position = transform * p1 + position;
+		vertexs[2].position = transform * p2 + position;
+		vertexs[3].position = transform * p3 + position;
+		vertexs[0].uv = glm::vec2(0.0, 0.0);
+		vertexs[1].uv = glm::vec2(1.0, 0.0);
+		vertexs[2].uv = glm::vec2(1.0, 1.0);
+		vertexs[3].uv = glm::vec2(0.0, 1.0);
+	}
+
 	auto mesh = createRef<Mesh>(vertexs, indices, material);
 	mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), lights);
 
+	glDisable(GL_SCISSOR_TEST);
 	_beginBatch(false);
 }
 
 #include <codecvt>
-void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & text, const glm::vec4 &color)
+void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & text, const glm::vec4 &color, float opacity)
 {
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
 	std::wstring unicodeStr = cvt.from_bytes(text);
+	drawText(font, pt, unicodeStr, color, opacity);
+}
 
+void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::wstring & unicodeStr, const glm::vec4 & color, float opacity)
+{
 	Point offset = pt;
 	for (int i = 0; i != unicodeStr.size(); ++i)
 	{
@@ -384,10 +368,10 @@ void Renderer2D::drawText(ref<Font> font, const Point & pt, const std::string & 
 		offset += { glyph->advanceX, 0.0f };
 
 		auto tex = glyph->texture;
-		Rect texRect = Rect(glyph->uv[3].x * tex->width(), glyph->uv[3].y * tex->height(), 
+		Rect texRect = Rect(glyph->uv[3].x * tex->width(), glyph->uv[3].y * tex->height(),
 			(glyph->uv[2].x - glyph->uv[3].x) * tex->width(), (glyph->uv[0].y - glyph->uv[3].y) * tex->height());
 
-		_drawImage(drawRC, glm::mat4(1.0f), TextureFrame(tex, texRect), 1.0f, color);
+		_drawImage(drawRC, Transform::identityMatrix4(), TextureFrame(tex, texRect), opacity, color);
 	}
 }
 

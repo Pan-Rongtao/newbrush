@@ -114,6 +114,9 @@ public:
 	Rect(const Point &lt, const Point &rb) : Rect(lt.x, lt.y, rb.x - lt.x, rb.y - lt.y) {}
 	Rect(const Rect &other) : Rect(other.x(), other.y(), other.width(), other.height()) {}
 
+	bool operator == (const Rect &rc) const { return !(operator !=(rc)); }
+	bool operator != (const Rect &rc) const	{ return m_x != rc.m_x || m_y != rc.m_y || m_width != rc.m_width || m_height != rc.m_height; }
+
 	float x() const										{ return m_x; }
 	float y() const										{ return m_y; }
 	float left() const									{ return m_x; }
@@ -326,6 +329,7 @@ public:
 	//色调/饱和度/亮度
 	void setHsv(const glm::vec3 &hsv) &						{ /*auto rgbf = glm::rgbColor(hsv); setrf(rgbf.x); setrf(rgbf.y); setrf(rgbf.z);*/ }
 	glm::vec3 hsv() const									{ return glm::vec3{}; /*return glm::hsvColor(glm::vec3(rf(), gf(), bf()));*/ }
+	glm::vec4 toVec4() const								{ return{ rf(), gf(), bf(), af() }; }
 
 	//整数
 	void setIntegerArgb(uint32_t argb)						{ a = (argb & 0xFF000000) >> 24; r = (argb & 0x00FF0000) >> 16; g = (argb & 0x0000FF00) >> 8; b = (argb & 0x000000FF); }
@@ -336,7 +340,7 @@ public:
 	//转换为字符串RGB，形如#FFFFFF
 	void setStringValue(const std::string &sHex);
 	std::string stringValue() const							{ char arr[10] = { 0 }; snprintf(arr, sizeof(arr), "#%6X", integerRgb()); return arr; }
-
+	
 	uint8_t r,g,b,a;
 };
 

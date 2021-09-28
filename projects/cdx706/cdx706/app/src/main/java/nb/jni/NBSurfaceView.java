@@ -1,7 +1,6 @@
 package nb.jni;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -12,30 +11,26 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
+
 public class NBSurfaceView extends GLSurfaceView {
 
     private NBRenderer mRenderer;
+    private static OnEventListener mOnEventListener;
 
     public NBSurfaceView(Context context, String pluginName) {
         super(context);
 
-       // getHolder().setFormat(PixelFormat.TRANSLUCENT);
         setEGLContextClientVersion(2);
-
-        //设置窗口背景透明
-        setEGLConfigChooser(new NBConfigChooser());
-        getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        // 将GLSurfaceView置顶
-        setZOrderOnTop(true);
-
         //setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        setEGLConfigChooser(new NBConfigChooser());
         mRenderer = new NBRenderer(pluginName);
         setRenderer(mRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
         setOnTouchListener(new OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) { mRenderer.getPlugin().touch(event.getAction(), event.getX(), event.getY()); return true; }
+            public boolean onTouch(View v, MotionEvent event) { return responseTouch(v, event); }
         });
     }
 
@@ -48,6 +43,11 @@ public class NBSurfaceView extends GLSurfaceView {
     public void setDataVec3(String path, float x, float y, float z)             { mRenderer.getPlugin().setData(path, String.format("%f,%f,%f", x, y, z)); }
     public void setDataVec4(String path, float x, float y, float z, float w)    { mRenderer.getPlugin().setData(path, String.format("%f,%f,%f,%f", x, y, z, w)); }
 
+    public interface OnEventListener                                            { public void onEvent(String eventName, String args); }
+    public void setOnEventListener(OnEventListener l)                           { mOnEventListener = l; }
+    public static void onNBEvent(String eventName, String args)                 { if(mOnEventListener != null) mOnEventListener.onEvent(eventName, args); }
+
+    public boolean responseTouch(View v, MotionEvent event)                     {mRenderer.getPlugin().touch(event.getAction(), event.getX(), event.getY()); return true;}
 }
 
 class NBConfigChooser implements GLSurfaceView.EGLConfigChooser{
@@ -86,13 +86,7 @@ class NBRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)                { Log.i(LogTAG, "onSurfaceChanged"); mNB.resize(width, height); }
     @Override
-    public void onDrawFrame(GL10 gl)
-    {
-        /*gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT|GL10.GL_DEPTH_BUFFER_BIT);*/
-        //gl.glLoadIdentity();
-        /*Log.i(LogTAG, "onDrawFrame");*/ mNB.render();
-    }
+    public void onDrawFrame(GL10 gl)                                            { gl.glClear(GL_COLOR_BUFFER_BIT); /*Log.i(LogTAG, "onDrawFrame");*/ mNB.render(); }
     Newbrush getPlugin()                                                        { return mNB; }
 }
 

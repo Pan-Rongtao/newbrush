@@ -24,6 +24,7 @@ enum class StretchE
 ******************************************************/
 class NB_API Panel : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 protected:
 	Panel() = default;
 	virtual void onRender() override;
@@ -31,6 +32,7 @@ protected:
 
 class NB_API WrapPanel : public Panel
 {
+	RTTR_ENABLE(Panel)
 public:
 	WrapPanel();
 	WrapPanel(OrientationE orientation);
@@ -63,6 +65,7 @@ private:
 ******************************************************/
 class NB_API Polyline : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 public:
 	Polyline();
 	Polyline(const std::vector<glm::vec2> &points, float size);
@@ -79,10 +82,14 @@ private:
 	std::vector<glm::vec2> m_points;
 	float m_size;
 	glm::vec4 m_box;
+	bool m_pointsChanged;
+	ref<Mesh> m_mesh;
+	ref<Brush> m_oldBrush;
 };
 
 class NB_API Polygon : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 public:
 	Polygon();
 	Polygon(const std::vector<glm::vec2> &points);
@@ -98,10 +105,14 @@ protected:
 private:
 	std::vector<glm::vec2> m_points;
 	glm::vec4 m_box;
+	bool m_pointsChanged;
+	ref<Mesh> m_mesh;
+	ref<Brush> m_oldBrush;
 };
 
 class NB_API Image : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 public:
 	Image();
 
@@ -124,9 +135,10 @@ private:
 
 class NB_API TextBlock : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 public:
-	using Node2D::Node2D;
-	TextBlock(const std::string &text);
+	TextBlock(const std::string &text = "");
+	TextBlock(float x, float y, float w, float h, const std::string &text = "");
 
 	void setText(const std::string &text);
 	const std::string &text() const;
@@ -134,19 +146,33 @@ public:
 	void setColor(const Color &color);
 	const Color &color() const;
 
+	void setFont(ref<Font> font);
+	ref<Font> font() const;
+	ref<Font> getActualFont() const;
+
+	void setWrap(bool wrap);
+	bool isWrap() const;
+
 protected:
 	virtual Size measureOverride(const Size &availableSize) override;
 	virtual Size arrangeOverride(const Size &finalSize) override;
 	virtual void onRender() override;
 
 private:
+	void updateLines();
+
 	ref<Font> m_font;
 	std::string m_text;
 	Color m_color;
+	bool m_wrap;
+	bool m_needUpdateLines;
+	Rect m_oldRC;
+	std::vector<std::pair<Point, std::wstring>> m_warpLines;
 };
 
 class NB_API ButtonBase : public Node2D
 {
+	RTTR_ENABLE(Node2D)
 public:
 	using Node2D::Node2D;
 
@@ -183,6 +209,7 @@ protected:
 
 class NB_API Cube : public Visual3D
 {
+	RTTR_ENABLE(Visual3D)
 public:
 	Cube();
 	Cube(const glm::vec3 &center, float uniformLenght);
@@ -195,6 +222,7 @@ protected:
 
 class NB_API SkyBox : public Visual3D
 {
+	RTTR_ENABLE(Visual3D)
 public:
 	SkyBox();
 

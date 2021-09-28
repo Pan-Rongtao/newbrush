@@ -16,6 +16,12 @@ public:
 	Event(const Event &other) : m_callbacks(nullptr)	{ *this = other; }
 	~Event()											{ delete m_callbacks; }
 
+	std::size_t size() const							{ return m_callbacks ? m_callbacks->size() : 0; }
+	void clear()										{ if (m_callbacks) m_callbacks->clear(); }
+	void invoke(ArgsT &args) const						{ invoke(const_cast<const ArgsT &>(args)); }
+	int operator += (CallBack callback)					{ return addHandler(callback); }
+	void operator -=(int handler)						{ removeHandler(handler); }
+
 	void operator = (const Event &other)
 	{
 		CallBackContainer *pNew = other.m_callbacks ? new CallBackContainer(*(other.m_callbacks)) : nullptr;
@@ -36,48 +42,23 @@ public:
 
 	void removeHandler(int handler)
 	{
-		if (!m_callbacks)	
-			return;
-
-		auto iter = m_callbacks->find(handler);
-		if(iter != m_callbacks->end())
-			m_callbacks->erase(handler);
+		if (m_callbacks)
+		{
+			auto iter = m_callbacks->find(handler);
+			if (iter != m_callbacks->end())
+				m_callbacks->erase(handler);
+		}
 	}
 
-	void clear()
-	{
-		if (!m_callbacks)	
-			return;
-
-		m_callbacks->clear();
-	}
-
-	std::size_t size() const
-	{
-		return m_callbacks ? m_callbacks->size() : 0;
-	}
-
-	void invoke(ArgsT &args) const
-	{
-		invoke(const_cast<const ArgsT &>(args));
-	}
 
 	void invoke(const ArgsT &args) const
 	{
-		if (!m_callbacks)	return;
-		for (const auto &callback : *m_callbacks)
-			if (callback.second)
-				callback.second(const_cast<ArgsT &>(args));
-	}
-
-	void operator += (CallBack callback)
-	{
-		addHandler(callback);
-	}
-
-	void operator -=(int handler)
-	{
-		removeHandler(handler);
+		if (m_callbacks)
+		{
+			for (const auto &callback : *m_callbacks)
+				if (callback.second)
+					callback.second(const_cast<ArgsT &>(args));
+		}
 	}
 
 private:

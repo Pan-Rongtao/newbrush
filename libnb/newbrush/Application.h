@@ -98,7 +98,17 @@ public:
 
 private:
 	static uint32_t m_theme;
-	static Event<int> m_themeChangedEvent;
+};
+
+class NB_API LanguageManager
+{
+public:
+	static void setLanguage(uint32_t language);
+	static uint32_t getLanguage();
+	static Event<int> &LanguageChanged();
+
+private:
+	static uint32_t m_language;
 };
 
 }

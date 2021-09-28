@@ -15,8 +15,9 @@ private:
 	friend class StateManager;
 };
 
-class NB_API StateManager
+class NB_API StateManager : public Object
 {
+	RTTR_ENABLE(Object)
 public:
 	StateManager();
 	StateManager(uint32_t stateCount);
@@ -27,7 +28,7 @@ public:
 
 	int currentStateIndex() const;
 
-	void gotoState(uint32_t index);
+	void gotoState(int index);
 	void gotoState(ref<State> state);
 	void gotoPrevState();
 	void gotoNextState();

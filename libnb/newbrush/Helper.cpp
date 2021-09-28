@@ -9,6 +9,12 @@
 #include "IconFontCpp/IconsMaterialDesign.h"
 #include "rttr/rttr_cast.h"
 
+#include "newbrush/UserControl.h"
+
+#if NB_OS == NB_OS_WINDOWS_NT
+	#include <psapi.h>
+#else
+#endif
 
 using namespace nb;
 
@@ -35,7 +41,7 @@ Point TreeHelper::getWolrdOffset(Node2D *node)
 
 std::vector<ref<Node2D>> TreeHelper::getAllChildren(ref<Node2D> node)
 {
-	std::function<void(ref<Node2D> node, std::vector<ref<Node2D>> &nodes)> loop = [&loop](ref<Node2D> node, std::vector<ref<Node2D>> &nodes)
+	std::function<void(ref<Node2D>, std::vector<ref<Node2D>> &)> loop = [&loop](ref<Node2D> node, std::vector<ref<Node2D>> &nodes)
 	{
 		for (auto child : node->children())
 		{
@@ -56,10 +62,24 @@ void TreeHelper::touchThunk(ref<Node2D> node, const TouchEventArgs &e)
 		auto nodes = TreeHelper::getAllChildren(node);
 		for (auto node : nodes)
 		{
+			(const_cast<TouchEventArgs *>(&e))->sender = node.get();
 			node->touchThunk(e);
 		}
 	}
-
+	
+/*	if (node)
+	{
+		auto nodes = TreeHelper::getAllChildren(node);
+		for (int i = nodes.size() - 1; i >= 0; --i)
+		{
+			auto node = nodes[i];
+			node->touchThunk(e);
+			if (node->hitTest(Point(e.x, e.y)) && nb::is<Button>(node))
+			{
+				return;
+			}
+		}
+	}*/
 }
 
 void TreeHelper::scrollThunk(ref<Node2D> node, const ScrollEventArgs & e)
@@ -86,6 +106,33 @@ void TreeHelper::keyThunk(ref<Node2D> node, const KeyEventArgs & e)
 	}
 }
 
+bool TreeHelper::isActualVisible(Node2D *node)
+{
+	Node2D *p = node;
+	while (p)
+	{
+		if (p->visibility() != VisibilityE::Visible)
+			return false;
+		p = p->getParent();
+	}
+	return true;
+}
+
+float TreeHelper::getActualOpacity(Node2D * node)
+{
+	if (!node)
+		return 0.0f;
+
+	auto p = node;
+	float opacity = p->getOpacity();
+	while (p->getParent())
+	{
+		opacity *= p->getParent()->getOpacity();
+		p = p->getParent();
+	}
+	return opacity;
+}
+
 glm::vec4 TreeHelper::getBox(const std::vector<glm::vec2>& points)
 {
 	if (points.empty())
@@ -99,6 +146,35 @@ glm::vec4 TreeHelper::getBox(const std::vector<glm::vec2>& points)
 		auto box = glm::vec4(xMinMax.first->x, yMinMax.first->y, xMinMax.second->x - xMinMax.first->x, yMinMax.second->y - yMinMax.first->y);
 		return box;
 	}
+}
+
+ref<Material> TreeHelper::brushToMaterial(ref<Brush> brush, const glm::vec4 &box)
+{
+	ref<Material> material;
+	if (is<SolidColorBrush>(brush))
+	{
+		material = createRef<FlatMaterial>(as<SolidColorBrush>(brush)->color);
+	}
+	else if (is<LinearGradientBrush>(brush))
+	{
+		auto _brush = as<LinearGradientBrush>(brush);
+		auto linearMaterial = createRef<LinearGrandientMaterial>();
+		linearMaterial->gradientStops = _brush->gradientStops;
+		linearMaterial->box = box;
+		linearMaterial->horizontal = _brush->horizontal;
+		material = linearMaterial;
+	}
+	else if (is<ImageBrush>(brush))
+	{
+		auto _brush = as<ImageBrush>(brush);
+		auto texMaterial = createRef<TextureMaterial>(_brush->frame.texture);
+		material = texMaterial;
+	}
+	else if (is<EffectBrush>(brush))
+	{
+		material = as<EffectBrush>(brush)->material;
+	}
+	return material;
 }
 
 static float g_fps = 0.0f;
@@ -143,6 +219,64 @@ System Info:\n\
 	return s;
 }
 
+float SystemHelper::getCpu()
+{
+#if NB_OS == NB_OS_WINDOWS_NT
+	auto file_time_2_utc = [](const FILETIME *ftime)->uint64_t
+	{
+		LARGE_INTEGER li;
+		li.LowPart = ftime->dwLowDateTime;
+		li.HighPart = ftime->dwHighDateTime;
+		return li.QuadPart;
+	};
+
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	static auto _processor = info.dwNumberOfProcessors;
+	static auto _hProcess = GetCurrentProcess();
+	static int64_t _last_system_time = 0;
+	static int64_t _last_time = 0;
+
+	FILETIME now, creation_time, exit_time, kernel_time, user_time;
+	GetSystemTimeAsFileTime(&now);
+	if (!GetProcessTimes(_hProcess, &creation_time, &exit_time, &kernel_time, &user_time))
+		return 0.0;
+
+	auto system_time = (file_time_2_utc(&kernel_time) + file_time_2_utc(&user_time)) / _processor;
+	auto time = file_time_2_utc(&now);
+
+	//判断是否为首次计算  
+	if ((_last_system_time == 0) || (_last_time == 0))
+	{
+		_last_system_time = system_time;
+		_last_time = time;
+		return 0.0;
+	}
+
+	auto system_time_delta = system_time - _last_system_time;
+	auto time_delta = time - _last_time;
+	auto cpu = (float)system_time_delta * 100 / (float)time_delta;
+
+	_last_system_time = system_time;
+	_last_time = time;
+	return cpu * 4 / 3;// * 4 / 3是正确的，但不知道原因
+#else
+	return 0;
+#endif
+}
+
+size_t SystemHelper::getMemoryInfo()
+{
+#if NB_OS == NB_OS_WINDOWS_NT
+	HANDLE id = GetCurrentProcess();
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(id, &pmc, sizeof(pmc));
+	return pmc.WorkingSetSize;
+#else
+	return 0;
+#endif
+}
+
 void SystemHelper::printSystemInfos()
 {
 	Log::info("{}", SystemHelper::getSystemInfos());
@@ -179,7 +313,8 @@ void SystemHelper::enableFPSInfo(bool enable)
 		g_timerSystemInfo->Tick += [](const EventArgs &e)
 		{
 			auto state = Renderer2D::getStats();
-			Log::info("drawCount={}, quadCount={}, batch fps:{}", state.drawCount, state.quadCount, getFPS());
+			auto mem = getMemoryInfo();
+			Log::info("quadCount={}, drawCount={}, fps:{}, mem={}mb, cpu={:.2f}%", state.quadCount, state.drawCount, getFPS(), mem / 1024 / 1024, getCpu());
 		};
 	}
 	else
@@ -288,6 +423,13 @@ void RttrRegistration::registerTypes()
 		;
 
 	registration::class_<Transform2D>("nb::Transform2D") ()
+		;
+
+	registration::class_<RotateTransform2D>("nb::RotateTransform2D") ()
+		.constructor<>() (policy::ctor::as_std_shared_ptr)
+		.property("Angle", &RotateTransform2D::getAngle, &RotateTransform2D::setAngle)
+		.property("CenterX", &RotateTransform2D::getCenterX, &RotateTransform2D::setCenterX)
+		.property("CenterY", &RotateTransform2D::getCenterY, &RotateTransform2D::setCenterY)
 		;
 
 	registration::class_<ScaleTransform2D>("nb::ScaleTransform2D") ()
@@ -412,8 +554,23 @@ void RttrRegistration::registerTypes()
 		.property("Margin", &Node2D::margin, &Node2D::setMargin)
 		.property("HorizontalAlignment", &Node2D::horizontalAlignment, &Node2D::setHorizontalAlignment)
 		.property("Background", &Node2D::background, &Node2D::setBackground)
+		.property("Visibility", &Node2D::visibility, &Node2D::setVisibility)
 		;
 
+	registration::class_<Button>("nb::Button") ()
+		.constructor<>() (policy::ctor::as_std_shared_ptr)
+		.property("Checked", &Button::isChecked, &Button::setCheck)
+		;
+
+	registration::class_<TextBlock>("nb::TextBlock") ()
+		.constructor<>() (policy::ctor::as_std_shared_ptr)
+		.property("Text", &TextBlock::text, &TextBlock::setText)
+		;
+
+	registration::class_<StateManager>("nb::StateManager") ()
+		.constructor<>() (policy::ctor::as_std_shared_ptr)
+		.property("StateIndex", &StateManager::currentStateIndex, rttr::select_overload<void(int)>(&StateManager::gotoState))
+		;
 }
 
 #define NB_STR_TO_OBJ(objType, str, count) \

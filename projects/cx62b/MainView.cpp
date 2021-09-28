@@ -89,9 +89,9 @@ void MainView::init()
 	m_DialLeftRoot->addChild(m_SpeedPointer);
 
 	m_DialRightRoot = Node2D::createWithTextureFrameName("guage", "RPMBig_BG.png", true, 1225.0f, 29.0f);
-	auto bg_inner = Node2D::createWithTextureFrameName("guage", "Internal dial.png", true);
+	auto bg_inner = Node2D::createWithTextureFrameName("guage", "Internal dial.png", true, 0.0f, 0.0f);
 	bg_inner->setAlignmentCenter();
-	auto bg_waterTemp = Node2D::createWithTextureFrameName("guage", "WaterTemp.png", true);
+	auto bg_waterTemp = Node2D::createWithTextureFrameName("guage", "WaterTemp.png", true, 0.0f, 0.0f);
 	bg_waterTemp->setAlignmentCenter();
 	m_RpmValue = createRef<Node2D>(0.0f, 0.0f, 435.4f, 435.4f);
 	m_RpmValue->setAlignmentCenter();
@@ -120,7 +120,7 @@ void MainView::init()
 	m_DialRightRoot->addChild(Node2D::createWithTextureFrameName("guage", "rpm number/rpm_8_n.png", true, 533.0f, 486.0f));
 	m_DialRightRoot->addChild(m_RpmPointer);
 
-	m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true);
+	m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true, 0.0f, 0.0f);
 	m_TopMenu->setHorizontalAlignment(HorizontalAlignmentE::Center);
 	m_TopMenu->addChild(Node2D::createWithTextureFrameName("menu", "ic_Answer.png", true, 206.6f, 43.9f));
 
@@ -260,7 +260,7 @@ void MainView::setSpeed(int speed)
 	do
 	{
 		auto n = temp % 10;
-		auto node = Node2D::createWithTextureFrameName("guage", "number/" + std::to_string(n) + ".png", 0, 0);
+		auto node = Node2D::createWithTextureFrameName("guage", "number/" + std::to_string(n) + ".png", true, 0.0f, 0.0f);
 		speedNodes.push_back(node);
 		temp /= 10;
 	} while (temp);

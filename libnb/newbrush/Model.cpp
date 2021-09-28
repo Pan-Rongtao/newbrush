@@ -335,6 +335,8 @@ Model::Model()
 	: m_triangleCount(0)
 	, m_vertexCount(0)
 	, m_curFrame(0.0f)
+	, m_begFrame(0.0f)
+	, m_endFrame(-1.0f)
 	, m_aScene(nullptr)
 {}
 
@@ -377,16 +379,17 @@ bool Model::hasAnimation() const
 	return m_aScene && m_aScene->HasAnimations();
 }
 
-void Model::play()
+void Model::play(bool loop)
 {
 	if (hasAnimation())
 	{
 		uint64_t interval = (uint64_t)(m_aScene->mAnimations[0]->mTicksPerSecond != 0.0 ? m_aScene->mAnimations[0]->mTicksPerSecond : 25);
 		m_timer.start(interval);
 		m_timer.Tick.clear();
-		m_timer.Tick += [this](const EventArgs &e)
+		AnimationStateChanged.invoke(TimelineStateE::Active);
+		m_timer.Tick += [=](const EventArgs &e)
 		{
-			gotoNextFrame();
+			gotoNextFrame(loop);
 		};
 	}
 }
@@ -394,6 +397,7 @@ void Model::play()
 void Model::pause()
 {
 	m_timer.stop();
+	AnimationStateChanged.invoke(TimelineStateE::Filling);
 }
 
 bool Model::isPlaying() const
@@ -419,7 +423,8 @@ void Model::gotoFrame(float frame)
 
 	if (mAnimator)
 	{
-		mAnimator->Calculate(frame);
+		auto pTime = frame * 1 / (m_aScene->mAnimations[0]->mTicksPerSecond != 0.0 ? m_aScene->mAnimations[0]->mTicksPerSecond : 25);
+		mAnimator->Calculate(pTime);
 		m_curFrame = frame;
 	}
 }
@@ -430,11 +435,12 @@ void Model::gotoPrevFrame(bool reverse)
 	if (frameCount == 0)
 		return;
 
-	auto seconds = m_timer.interval() / 1000.0f;
-	auto state = m_curFrame - seconds;
-	if (state <= 0.0)
-		state = reverse ? frameCount * m_timer.interval() / 1000.0f : 0.0f;
-	gotoFrame(state);
+	auto begFrame = m_begFrame < 0.0f ? 0.0f : m_begFrame;
+	auto endFrame = m_endFrame < 0.0f ? frameCount - 1 : m_endFrame;
+	auto frame = m_curFrame - 1;
+	if (frame < begFrame)
+		frame = reverse ? endFrame : begFrame;
+	gotoFrame(frame);
 }
 
 void Model::gotoNextFrame(bool reverse)
@@ -443,11 +449,28 @@ void Model::gotoNextFrame(bool reverse)
 	if (frameCount == 0)
 		return;
 
-	auto seconds = m_timer.interval() / 1000.0f;
-	auto state = m_curFrame + seconds;
-	if (state >= frameCount * m_timer.interval())
-		state = reverse ? 0.0f : frameCount * m_timer.interval() / 1000.0f;
-	gotoFrame(state);
+	auto begFrame = m_begFrame < 0.0f ? 0.0f : m_begFrame;
+	auto endFrame = m_endFrame < 0.0f ? frameCount - 1 : m_endFrame;
+	auto frame = m_curFrame + 1;
+	if (frame > endFrame)
+		frame = reverse ? begFrame : endFrame;
+	gotoFrame(frame);
+	if (frame >= endFrame && !reverse)
+		pause();
+}
+
+void Model::setFrameSection(float beg, float end)
+{
+	//nbThrowExceptionIf(beg > end, std::logic_error, "beg > end");
+	m_begFrame = beg;
+	m_endFrame = end;
+	m_curFrame = m_begFrame;
+}
+
+void Model::getFrameSection(float & beg, float & end)
+{
+	beg = m_begFrame;
+	end = m_endFrame;
 }
 
 void Model::setRenderAble(const std::string & meshName, bool renderAble)
@@ -532,6 +555,12 @@ void Model::parseMaterials()
 			auto diffuseMapping = getTexture(aMaterial, aiTextureType_DIFFUSE);
 			auto specularMapping = getTexture(aMaterial, aiTextureType_SPECULAR);
 			auto emissionMapping = getTexture(aMaterial, aiTextureType_EMISSIVE);
+			auto opacityMapping = getTexture(aMaterial, aiTextureType_OPACITY);
+			if (opacityMapping)
+			{
+				int x = 10;
+				++x;
+			}
 			if (specularMapping) Log::warn("[{}] has specularMapping.", name);
 
 			//构建材质

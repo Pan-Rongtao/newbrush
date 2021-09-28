@@ -28,6 +28,7 @@ private:
 	void onKey(const KeyEventArgs &e);
 	void switchDrivingMode(DrivingModeE mode);
 	void onBtnClick(const EventArgs &e);
+	void onTouch(const TouchEventArgs &e);
 
 	ref<Node2D> m_ecoNode;
 	ref<Button> m_btnEco;

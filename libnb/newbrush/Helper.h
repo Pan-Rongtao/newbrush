@@ -15,13 +15,20 @@ public:
 	static void scrollThunk(ref<Node2D> node, const ScrollEventArgs &e);
 	static void keyThunk(ref<Node2D> node, const KeyEventArgs &e);
 
+	static bool isActualVisible(Node2D *node);
+	static float getActualOpacity(Node2D *node);
+
 	static glm::vec4 getBox(const std::vector<glm::vec2> &points);
+
+	static ref<Material> brushToMaterial(ref<Brush> brush, const glm::vec4 &box = glm::vec4(0.0f));
 };
 
 class NB_API SystemHelper
 {
 public:
 	static std::string getSystemInfos();
+	static float getCpu();
+	static size_t getMemoryInfo();
 	static void printSystemInfos();
 
 	static void updateFPS();

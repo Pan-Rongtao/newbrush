@@ -2,8 +2,12 @@
 #include "newbrush/Helper.h"
 #include "newbrush/Renderer2D.h"
 #include <queue>
+#include <codecvt>
+#include "clipper/clipper.hpp"
+#include "mapbox/earcut.hpp"
 
 using namespace nb;
+using namespace ClipperLib;
 
 void Panel::onRender()
 {
@@ -306,19 +310,31 @@ void Image::onRender()
 	Rect rc = getRenderRect();
 	if (m_texture)
 	{
-		Renderer2D::drawImage(rc, glm::mat4(1.0f), TextureFrame(m_texture), getOpacity());
+		auto op = TreeHelper::getActualOpacity(this);
+		Renderer2D::drawImage(rc, Transform::identityMatrix4(), TextureFrame(m_texture), op);
 	}
 }
 
 ///////////////////
 TextBlock::TextBlock(const std::string & text)
-	: m_text(text)
+	: TextBlock(0.0f, 0.0f, NAN, NAN, text)
+{}
+
+TextBlock::TextBlock(float x, float y, float w, float h, const std::string &text)
+	: Node2D(x, y, w, h)
+	, m_text(text)
 	, m_color(Colors::black)
+	, m_wrap(false)
+	, m_needUpdateLines(true)
 {}
 
 void TextBlock::setText(const std::string & text)
 {
 	m_text = text;
+	if (m_wrap)
+	{
+		m_needUpdateLines = true;
+	}
 }
 
 const std::string & TextBlock::text() const
@@ -336,6 +352,35 @@ const Color & TextBlock::color() const
 	return m_color;
 }
 
+void TextBlock::setFont(ref<Font> font)
+{
+	m_font = font;
+}
+
+ref<Font> TextBlock::font() const
+{
+	return m_font;
+}
+
+ref<Font> TextBlock::getActualFont() const
+{
+	return m_font ? m_font : FontLibrary::getDefaultFont();
+}
+
+void TextBlock::setWrap(bool wrap)
+{
+	m_wrap = wrap;
+	if (m_wrap)
+	{
+		m_needUpdateLines = true;
+	}
+}
+
+bool TextBlock::isWrap() const
+{
+	return m_wrap;
+}
+
 Size TextBlock::measureOverride(const Size & availableSize)
 {
 	return availableSize;
@@ -343,14 +388,96 @@ Size TextBlock::measureOverride(const Size & availableSize)
 
 Size TextBlock::arrangeOverride(const Size & finalSize)
 {
-	return finalSize;
+	if (m_wrap)
+	{
+		return finalSize;
+	}
+	else
+	{
+		auto textSize = getActualFont()->measure(m_text);
+		return textSize;
+	}
 }
 
 void TextBlock::onRender()
 {
+	drawBrush(background());
+	auto font = getActualFont();
+	if (!font || m_text.empty())
+		return;
+
 	Rect rc = getRenderRect();
-	auto font = m_font ? m_font : FontLibrary::getDefaultFont();
-	Renderer2D::drawText(font, rc.leftTop(), m_text, glm::vec4(m_color.rf(), m_color.gf(), m_color.bf(), m_color.af()));
+	auto op = TreeHelper::getActualOpacity(this);
+	if(m_wrap)
+	{
+		if (m_needUpdateLines || m_oldRC != rc)
+		{
+			updateLines();
+			m_needUpdateLines = false;
+			m_oldRC = rc;
+		}
+		for (auto const &pair : m_warpLines)
+		{
+			auto const &pt = pair.first;
+			auto const &str = pair.second;
+			Renderer2D::drawText(font, pt, str, m_color.toVec4(), op);
+		}
+	}
+	else
+	{
+		Renderer2D::drawText(font, rc.leftTop(), m_text, m_color.toVec4(), op);
+	}
+}
+
+void TextBlock::updateLines()
+{
+	m_warpLines.clear();
+
+	auto font = getActualFont();
+	Rect rc = getRenderRect();
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> cvt;
+	std::wstring unicodeStr = cvt.from_bytes(m_text);
+	
+	size_t start = 0;
+	int line = 0;
+	int i = 0;
+	float width = 0.0f;
+	while (start < unicodeStr.size())
+	{
+		auto const &unicode = unicodeStr[start + i];
+		auto charSize = font->measure(unicode);
+		if (unicode == '\n')
+		{
+			m_warpLines.emplace_back(Point(rc.x(), rc.top() + line * charSize.height), unicodeStr.substr(start, i));
+			start = start + i + 1;
+			i = 0;
+			width = 0.0f;
+			++line;
+		}
+		else
+		{
+			width += charSize.width;
+			if (width < rc.width())
+			{
+				++i;
+				if (start + i >= unicodeStr.size())
+				{
+					m_warpLines.emplace_back(Point(rc.x(), rc.top() + line * charSize.height), unicodeStr.substr(start, i));
+					break;
+				}
+			}
+			else
+			{
+				if (i == 0)	return;	//i == 0 代表一个字符都放不下，不用更新了
+
+				m_warpLines.emplace_back(Point(rc.x(), rc.top() + line * charSize.height), unicodeStr.substr(start, i));
+				start = start + i;
+				i = 0;
+				width = 0.0f;
+				++line;
+			}
+		}
+	}
 }
 
 
@@ -403,6 +530,32 @@ void ButtonBase::onClick()
 	Click.invoke({this});
 }
 
+///////////////////////
+ref<Mesh> createMeshByPoint(ref<Brush> brush, const std::vector<glm::vec2> &points, const glm::vec2 &offset, const glm::vec4 &box)
+{		
+	//计算vertexs和indices开始
+	std::vector<Vertex> vertexs(points.size());
+	for (auto i = 0u; i < vertexs.size(); ++i)
+	{
+		vertexs[i].position = glm::vec3(points[i] + offset, 0.0f);
+	}
+
+	using PointEx = std::array<float, 2>;
+	std::vector<PointEx> pts;
+	for (auto i = 0u; i < vertexs.size(); ++i)
+	{
+		pts.emplace_back(PointEx{ vertexs[i].position.x, vertexs[i].position.y });
+	}
+	std::vector<std::vector<PointEx>> polygon(1, pts);
+	std::vector<uint16_t> indices = mapbox::earcut<uint16_t>(polygon);
+	//计算vertexs和indices结束
+
+	glm::vec4 boxX(box.x + offset.x, box.y + offset.y, box.z, box.w);
+	auto material = TreeHelper::brushToMaterial(brush, boxX);
+	auto mesh = createRef<Mesh>(vertexs, indices, material);
+	return mesh;
+}
+
 Polyline::Polyline()
 	: Polyline({}, 10.0f)
 {}
@@ -417,6 +570,7 @@ void Polyline::setPoints(const std::vector<glm::vec2> &points)
 {
 	m_points = points;
 	m_box = TreeHelper::getBox(m_points);
+	m_pointsChanged = true;
 }
 
 const std::vector<glm::vec2> &Polyline::points() const
@@ -436,8 +590,34 @@ Size Polyline::arrangeOverride(const Size & finalSize)
 
 void Polyline::onRender()
 {
-	Rect rc = getRenderRect();
-	Renderer2D::drawPolyline(background(), m_points, m_size, { rc.x(), rc.y() });
+	auto brush = background();
+	if (m_pointsChanged || m_oldBrush != brush)
+	{
+		Path path;
+		for (auto const &p : m_points)
+		{
+			path.push_back(IntPoint((cInt)(p.x), (cInt)(p.y)));
+		}
+		ClipperOffset co;
+		co.AddPath(path, jtRound, etOpenButt);
+		Paths solution;
+		co.Execute(solution, m_size / 2.0);
+
+		std::vector<glm::vec2> pts(solution[0].size());
+		for (auto i = 0u; i < pts.size(); ++i)
+		{
+			pts[i] = { solution[0][i].X, solution[0][i].Y };
+		}
+
+		Rect rc = getRenderRect();
+		m_mesh = createMeshByPoint(brush, pts, { rc.x(), rc.y() }, m_box);
+		m_pointsChanged = false;
+		m_oldBrush = brush;
+	}
+
+	Renderer2D::endBatch();
+	m_mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), {});
+	Renderer2D::_beginBatch(false);
 }
 
 ////////////////////
@@ -446,6 +626,7 @@ Polygon::Polygon()
 {}
 
 Polygon::Polygon(const std::vector<glm::vec2>& points)
+	: m_pointsChanged(false)
 {
 	setPoints(points);
 }
@@ -454,6 +635,7 @@ void Polygon::setPoints(const std::vector<glm::vec2>& points)
 {
 	m_points = points;
 	m_box = TreeHelper::getBox(m_points);
+	m_pointsChanged = true;
 }
 
 const std::vector<glm::vec2>& Polygon::points() const
@@ -473,8 +655,18 @@ Size Polygon::arrangeOverride(const Size & finalSize)
 
 void Polygon::onRender()
 {
-	Rect rc = getRenderRect();
-	Renderer2D::drawPolygon(background(), m_points, { rc.x(), rc.y() });
+	auto brush = background();
+	if (m_pointsChanged || m_oldBrush != brush)
+	{
+		Rect rc = getRenderRect();
+		m_mesh = createMeshByPoint(brush, m_points, { rc.x(), rc.y() }, m_box);
+		m_pointsChanged = false;
+		m_oldBrush = brush;
+	}
+
+	Renderer2D::endBatch();
+	m_mesh->draw(Transform::identityMatrix4(), sharedCamera2D(), {});
+	Renderer2D::_beginBatch(false);
 }
 
 ////////////////////
@@ -498,38 +690,6 @@ Cube::Cube(const glm::vec3 & center, float uniformLenght)
 
 Cube::Cube(const glm::vec3 &center, float lenght, float width, float height)
 {
-/*	//前一个面（四个点，左上前，右上前，左下前，右下前）
-	//后一个面（四个点，左上后，右上后，右下后，左下后）
-	Vertex vtLUF, vtRUF, vtLDF, vtRDF, vtLUB, vtRUB, vtRDB, vtLDB;
-	vtLUF.position = { -lenght / 2, height / 2, width / 2 };
-	//vtLUF.uv = { 1.0f, 0.0f };
-	vtRUF.position = { lenght / 2, height / 2, width / 2 };
-	//vtRUF.uv = { 1.0f, 0.0f };
-	vtLDF.position = { lenght / 2, -height / 2, width / 2 };
-	//vtLDF.uv = { 1.0f, 0.0f };
-	vtRDF.position = { -lenght / 2, -height / 2, width / 2 };
-	//vtRDF.uv = { 0.0f, 0.0f };
-	vtLUB.position = { -lenght / 2, height / 2, -width / 2 };
-	//vtLUB.uv = { 0.0f, 1.0f };
-	vtRUB.position = { lenght / 2, height / 2, -width / 2 };
-	//vtRUB.uv = { 1.0f, 1.0f };
-	vtRDB.position = { lenght / 2, -height / 2, -width / 2 };
-	//vtRDB.uv = { 1.0f, 0.0f };
-	vtLDB.position = { -lenght / 2, -height / 2, -width / 2 };
-	//vtLDB.uv = { 0.0f, 0.0f };
-	auto vertexs = { vtLUF, vtRUF, vtLDF, vtRDF, vtLUB, vtRUB, vtRDB, vtLDB };
-	//上下左右前后
-	std::vector<uint16_t> indices =
-	{
-		1,4,5, 1,0,4,	//top
-		7,3,2, 7,2,6,	//bottom
-		0,3,7, 0,7,4,	//left
-		1,5,2, 5,6,2,	//right
-		0,1,2, 0,2,3,	//front
-		4,6,5, 4,7,6,	//back
-	};
-	m_mesh = createRef<Mesh>(vertexs, indices, nullptr);*/
-		
 	std::vector<Vertex> vertexs;
 	vertexs.reserve(36);
 

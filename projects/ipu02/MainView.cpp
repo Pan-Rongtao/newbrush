@@ -1,8 +1,8 @@
 ﻿#include "MainView.h"
 #include "newbrush/Log.h"
-#include "ManualParkingView.h"
-#include "IntelligentParkingView.h"
-#include "MemoryParking.h"
+#include "AVMView.h"
+#include "AIView.h"
+#include "PAPView.h"
 
 static MainView *g_instance = nullptr;
 
@@ -15,25 +15,41 @@ void MainView::init()
 	m_root = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
 #else
 	Application::get()->mainWindow()->setHeight(1080.0f);
+	Application::get()->mainWindow()->setPosition(0.0f, 0.0f);
 	m_root = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 1080.0f);
 #endif
 	Application::get()->mainWindow()->setTitle("ipu02 Power By NewBrush");
 
-	m_root->setBackground(SolidColorBrush::white());
+	m_root->setBackground(createRef<SolidColorBrush>(Color(238, 240, 245)));
+#ifndef WIN32
 	m_root->setAlignmentCenter();
+#endif
 
-	//switchView<IntelligentParkingView>();
-	switchView<ManualParkingView>();
+	switchView<PAPView>();
 
 	m_root->Key += [&](const KeyEventArgs &e)
 	{
 		switch (e.key)
 		{
-		case KeyCode::_1: switchView<ManualParkingView>();			break;
-		case KeyCode::_2: switchView<IntelligentParkingView>();		break;
-		case KeyCode::_3: switchView<MemoryParking>();				break;
-		default:													break;
+		case KeyCode::_1: ThemeManager::setTheme(0);	break;
+		case KeyCode::_2: ThemeManager::setTheme(1);	break;
+		case KeyCode::_8: LanguageManager::setLanguage(0);	break;
+		case KeyCode::_9: LanguageManager::setLanguage(1);	break;
+		default:											break;
 		}
+	};
+
+	ThemeManager::ThemeChanged() += [&](const int &theme)
+	{
+		if (theme == 0)
+		{
+			m_root->setBackground(createRef<SolidColorBrush>(Color(238, 240, 245)));
+		}
+		else if (theme == 1)
+		{
+			m_root->setBackground(createRef<SolidColorBrush>(Color(0, 0, 0)));
+		}
+
 	};
 }
 

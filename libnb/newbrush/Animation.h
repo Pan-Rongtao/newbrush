@@ -500,7 +500,7 @@ template<> inline void PropertyAnimationUsingKeyFrames<bool>::onProcessing()
 			break;
 		}
 	}
-	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
+	if (curTicks >= m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
 		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}
@@ -525,7 +525,7 @@ template<> inline void PropertyAnimationUsingKeyFrames<std::string>::onProcessin
 			break;
 		}
 	}
-	if (curTicks == m_keyFrames.crbegin()->keyTime().totalMilliseconds())
+	if (curTicks >= m_keyFrames.crbegin()->keyTime().totalMilliseconds())
 	{
 		target().lock()->setValue(targetProperty(), m_keyFrames.crbegin()->value());
 	}

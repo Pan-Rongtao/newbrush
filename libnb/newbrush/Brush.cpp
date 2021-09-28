@@ -739,6 +739,10 @@ LinearGradientBrush::LinearGradientBrush(const std::vector<GradientStop> &stops)
 ImageBrush::ImageBrush()
 {}
 
+ImageBrush::ImageBrush(const std::string &path)
+	: ImageBrush(createRef<Texture2D>(path))
+{}
+
 ImageBrush::ImageBrush(ref<Texture2D> texture)
 	: frame(texture)
 {}

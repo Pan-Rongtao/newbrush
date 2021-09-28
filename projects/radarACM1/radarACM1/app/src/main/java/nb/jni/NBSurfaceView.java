@@ -14,6 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class NBSurfaceView extends GLSurfaceView {
 
     private NBRenderer mRenderer;
+    private static OnEventListener mOnEventListener;
 
     public NBSurfaceView(Context context, String pluginName) {
         super(context);
@@ -41,6 +42,9 @@ public class NBSurfaceView extends GLSurfaceView {
     public void setDataVec3(String path, float x, float y, float z)             { mRenderer.getPlugin().setData(path, String.format("%f,%f,%f", x, y, z)); }
     public void setDataVec4(String path, float x, float y, float z, float w)    { mRenderer.getPlugin().setData(path, String.format("%f,%f,%f,%f", x, y, z, w)); }
 
+    public interface OnEventListener                                            { public void onEvent(String eventName, String args); }
+    public void setOnEventListener(OnEventListener l)                           { mOnEventListener = l; }
+    public static void onNBEvent(String eventName, String args)                 { if(mOnEventListener != null) mOnEventListener.onEvent(eventName, args); }
 }
 
 class NBConfigChooser implements GLSurfaceView.EGLConfigChooser{

@@ -271,14 +271,14 @@ void Trianglegroup::buildtrianglegroup()
 {
 	ref<TriangleNode> temp_node3d;
 	Point pos(0.0f,0.0f);
-	float Side_length = 0.1;
-	const float PI = 3.1415926;
+	float Side_length = 0.1f;
+	const double PI = 3.1415926;
 	for (int i = -7;i < 8;i++)
 	{
-		pos.x = i * Side_length;
+		pos.x = float(i * Side_length);
 		for (int j = -8;j<8;j++)
 		{
-			pos.y = j * Side_length * sin((60.0 / 180.0)*PI);
+			pos.y = float(j * Side_length * sin((60.0 / 180.0)*PI));
 			temp_node3d = createRef<TriangleNode>(pos, Side_length, true);
 			addChild(temp_node3d);
 			temp_node3d = createRef<TriangleNode>(pos, Side_length, false);
@@ -334,7 +334,7 @@ ref<Material> TriangleNode::getmaterial()
 
 TriangleNode::TriangleNode(Point pos, const float Side_length, bool up)
 {
-	const float PI = 3.1415926;
+	const double PI = 3.1415926;
 	std::vector<Vertex> vertexs(3);	
 	if (up == true)
 	{
@@ -569,8 +569,8 @@ void SportNode::onTick(const EventArgs & e)
 
 		auto timeAngle = anglePerMS * mses+90;
 
-		float Radias = 0.48;
-		m_Trianglegroupmodel->setpos(Point(-Radias * cos((timeAngle / 180.0)*3.1415926), Radias * sin((timeAngle / 180.0)*3.1415926)));
+		double Radias = 0.48;
+		m_Trianglegroupmodel->setpos(Point(-float(Radias * cos((timeAngle / 180.0)*3.1415926)), float(Radias * sin((timeAngle / 180.0)*3.1415926))));
 		
 		for (auto child : m_Trianglegroupmodel->children())
 		{

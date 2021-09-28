@@ -184,6 +184,7 @@ class NB_API ImageBrush : public Brush
 	RTTR_ENABLE(Brush)
 public:
 	ImageBrush();
+	ImageBrush(const std::string &path);
 	ImageBrush(ref<Texture2D> texture);
 	ImageBrush(const TextureFrame &frame);
 	ImageBrush(const std::string &texAtlasKey, const std::string &frameName);
@@ -211,5 +212,8 @@ public:
 	static bool addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName);
 	static ref<Brush> get(const std::string &name);
 };
+
+#define SCBR(color)						createRef<SolidColorBrush>(color)
+#define IMGBR(texAtlasKey, frameName)	createRef<ImageBrush>(texAtlasKey, frameName)
 
 }

@@ -637,6 +637,13 @@ void Window::render()
 #elif NB_OS == NB_OS_QNX
 	eglSwapBuffers(m_eglDisplay, m_eglSurface);
 #endif
+
+	static bool once = false;
+	if (!once)
+	{
+		ContentRendered.invoke({});
+		once = true;
+	}
 }
 
 void Window::init()

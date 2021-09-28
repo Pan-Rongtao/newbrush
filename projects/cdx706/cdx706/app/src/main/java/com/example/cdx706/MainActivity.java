@@ -5,8 +5,12 @@ import androidx.core.app.ActivityCompat;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -15,6 +19,7 @@ import nb.jni.NBSurfaceView;
 public class MainActivity extends AppCompatActivity {
 
     static private MainActivity s_instance;
+    static private int mode = 0;
     public NBSurfaceView mModelView;
 
     public static MainActivity getInstance() { return s_instance; }
@@ -32,33 +37,36 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI() {
         mModelView = new NBSurfaceView(this, "nb_jni_cdx706");
-        //this.addContentView(mModelView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        /*ViewGroup viewGroup = (ViewGroup) getLayoutInflater().from(this).inflate(R.layout.activity_main, null);
-        viewGroup.addView(mModelView);*/
-        RelativeLayout rly = new RelativeLayout(this);
-        RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        Button btnOne = new Button(this);
-        btnOne.setText("按钮1");
-        // 为按钮1设置一个id值
-        btnOne.setId(123);
-        // 设置按钮1的位置,在父容器中居中
-        RelativeLayout.LayoutParams rlp1 = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rlp1.addRule(RelativeLayout.CENTER_IN_PARENT);
-        // 设置按钮2的位置,在按钮1的下方,并且对齐父容器右面
-        RelativeLayout.LayoutParams rlp2 = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rlp2.width = 756;
-        rlp2.height = 756;
-        rlp2.addRule(RelativeLayout.BELOW, 123);
-        rlp2.addRule(RelativeLayout.CENTER_IN_PARENT);
-        // 将组件添加到外部容器中
-        rly.addView(mModelView, rlp2);
-        //rly.addView(btnOne, rlp1);
-        //rly.addView(mModelView);
-        setContentView(rly);
+        mModelView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        mModelView.setZOrderOnTop(true);
+        mModelView.setLayoutParams(new ViewGroup.LayoutParams(756, 756));
+        mModelView.setBackgroundResource(R.drawable.normal_bg);
+        mModelView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mModelView.responseTouch(v, event);
+                    if (mode == 0) {
+                        mModelView.setBackgroundResource(R.drawable.sport_bg);
+                        mode = 1;
+                    } else if (mode == 1) {
+                        mModelView.setBackgroundResource(R.drawable.eco_bg);
+                        mode = 2;
+                    } else if (mode == 2) {
+                        mModelView.setBackgroundResource(R.drawable.normal_bg);
+                        mode = 0;
+                    }
+                }
+                return true;
+            }
+        });
+        this.addContentView(mModelView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //setContentView(mModelView);
+        //隐藏标题栏, 隐藏系统状态栏, 隐藏导航栏
+        if (getSupportActionBar()!=null)    getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        getWindow().getDecorView().setSystemUiVisibility(uiOptions);
     }
 
     private static Boolean hasStoragePermission(Activity activity)

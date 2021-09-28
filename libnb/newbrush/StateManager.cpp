@@ -41,9 +41,9 @@ int StateManager::currentStateIndex() const
 	return m_currentStateIndex;
 }
 
-void StateManager::gotoState(uint32_t index)
+void StateManager::gotoState(int index)
 {
-	nbThrowExceptionIf(index >= stateCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)stateCount());
+	nbThrowExceptionIf(index >= (int)stateCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)stateCount());
 	gotoState(m_states[index]);
 }
 

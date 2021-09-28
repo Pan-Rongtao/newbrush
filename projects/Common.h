@@ -36,3 +36,9 @@ protected:
 };
 
 nb::ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale);
+
+#if NB_OS == NB_OS_ANDROID
+extern "C" {
+	void nofityAndroid(const std::string &eventName, const std::string &args);
+}
+#endif

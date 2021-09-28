@@ -50,6 +50,7 @@ public:
 	Node2D();
 	Node2D(const Rect &rc);
 	Node2D(float x, float y, float w, float h);
+	Node2D(float x, float y, float w, float h, ref<Brush> background);
 
 	float x() const;
 	void setX(float x);
@@ -91,6 +92,9 @@ public:
 
 	void setBackground(ref<Brush> brush);
 	ref<Brush> background() const;
+
+	void setClipRect(const Rect &clipRC);
+	const Rect & getClipRect() const;
 
 	void setTransform(ref<Transform2D> transform);
 	ref<Transform2D> getTransform() const;
@@ -136,8 +140,9 @@ public:
 
 	bool hitTest(const Point &pt) const;
 
-	static ref<Node2D> createWithTextureFrame(const TextureFrame &texFrame, bool useBrush = true, float x = 0.0f, float y = 0.0f);
-	static ref<Node2D> createWithTextureFrameName(const std::string &texAtlasKey, const std::string &frameName, bool useBrush = true, float x = 0.0f, float y = 0.0f);
+	static ref<Node2D> createWithTextureFrame(const TextureFrame &texFrame, bool useBrush, float x, float y);
+	static ref<Node2D> createWithTextureFrameName(const std::string &texAtlasKey, const std::string &frameName, float x, float y);
+	static ref<Node2D> createWithTextureFrameName(const std::string &texAtlasKey, const std::string &frameName, bool useBrush, float x, float y);
 
 protected:
 	virtual Size measureOverride(const Size &availableSize);
@@ -148,6 +153,7 @@ protected:
 	virtual void onFocusChanged(const FocusEventArgs &e);
 
 	void drawBrush(ref<Brush> brush);
+	void drawChildren();
 
 private:
 	Point m_position;
@@ -173,6 +179,7 @@ private:
 	Node2D *m_parent;
 	std::vector<ref<Node2D>> m_children;
 	ref<Scene> m_scene;
+	Rect m_clipRC;
 };
 
 }

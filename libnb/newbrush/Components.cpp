@@ -982,11 +982,11 @@ void PhongMaterial::uploadUniform(ref<Camera> camera)
 }
 
 TextureMaterial::TextureMaterial()
-	: TextureMaterial(nullptr)
+	: TextureMaterial(TextureFrame())
 {}
 
-TextureMaterial::TextureMaterial(ref<Texture2D> _texture)
-	: texture(_texture)
+TextureMaterial::TextureMaterial(const TextureFrame &_texFrame)
+	: texFrame(_texFrame)
 {
 	auto *vs =
 #include "shader/Texture.vs"
@@ -999,8 +999,8 @@ TextureMaterial::TextureMaterial(ref<Texture2D> _texture)
 
 void TextureMaterial::uploadUniform(ref<Camera> camera)
 {
-	if (texture)
-		texture->activeAndBind();
+	if (texFrame.texture)
+		texFrame.texture->activeAndBind();
 }
 
 SkyBoxMaterial::SkyBoxMaterial()

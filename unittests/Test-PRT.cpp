@@ -1,6 +1,7 @@
 #include "catch2/catch.hpp"
 #include "newbrush/Log.h"
 #include "Tr.h"
+#include "newbrush/Helper.h"
 
 using namespace nb;
 
@@ -30,4 +31,10 @@ TEST_CASE("TR", "[TR]")
 		}
 		printf("\n");
 	}
+}
+
+TEST_CASE("SystemInfo", "[SystemInfo]")
+{
+	SystemHelper::getMemoryInfo();
+	SystemHelper::getCpu();
 }

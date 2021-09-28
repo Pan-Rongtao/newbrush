@@ -5,6 +5,7 @@
 #include "newbrush/Components.h"
 #include "newbrush/Scene.h"
 #include "newbrush/Log.h"
+#include "newbrush/PhysicsMovePage.h"
 
 using namespace nb;
 
@@ -40,11 +41,33 @@ TEST_CASE("Node2D", "[Node2D]")
 	app.run();
 }
 
+TEST_CASE("Image", "[Image]")
+{
+	Application app;
+
+	Window w(1920.0f, 1080.0f);
+
+	auto root = createRef<Node2D>(0.0f,0.0f,800.0f,600.0f);
+	root->setAlignmentCenter();
+	root->setBackground(SolidColorBrush::wheat());
+
+	auto node0 = createRef<Node2D>(100.0f, 100.0f, 12.0f, 12.0f);
+	//node0->setBackground(createRef<ImageBrush>(createRef<Texture2D>("d:/test/pop_1.png")));
+	auto node1 = createRef<Node2D>(100.0f, 112.0f, 12.0f, 12.0f);
+	//node1->setBackground(createRef<ImageBrush>(createRef<Texture2D>("d:/test/pop_5.png")));
+
+	root->addChild(node0);
+	root->addChild(node1);
+	w.root = root;
+
+	app.run();
+}
+
 TEST_CASE("TestRectangle", "[TestRectangle]")
 {
 	Application app;
 
-	Window w(800, 600);
+	Window w(800.0f, 600.0f);
 
 	auto node = createRef<Node2D>();
 	node->setX(0.0f);
@@ -72,20 +95,56 @@ TEST_CASE("TestRectangle", "[TestRectangle]")
 	app.run();
 }
 
+TEST_CASE("Event", "[Event]")
+{
+	Application app;
+
+	Window w(800.0f, 600.0f);
+
+	auto btn0 = createRef<Button>(0.0f, 0.0f, 100.0f, 50.0f);
+	btn0->setBkgndNormal(SolidColorBrush::blue());
+	btn0->setBkgndPress(SolidColorBrush::yellow());
+	btn0->setBkgndCheck(SolidColorBrush::red());
+	btn0->Click += [&](const EventArgs &e) { Log::info("click"); btn0->setCheck(!btn0->isChecked()); };
+	auto btn1 = createRef<Button>(0.0f, 0.0f, 50.0f, 100.0f);
+	btn1->setBkgndNormal(SolidColorBrush::green());
+	btn1->setBkgndPress(SolidColorBrush::antiqueWhite());
+
+	auto root = createRef<Node2D>();
+	root->addChild(btn0);
+	//root->addChild(btn1);
+	w.root = root;
+
+	app.run();
+}
+
 TEST_CASE("Button", "[Button]")
 {
 	Application app;
 
-	Window w(800, 600);
+	Window w(800.0f, 600.0f);
 	w.root = createRef<Node2D>();
 	w.root->setBackground(SolidColorBrush::blue());
 	TextureLibrary::addTextureAtlas("modelDIY", "../resource/modelDIY/modelDIY.png", "../resource/modelDIY/modelDIY.txt");
+	TextureLibrary::addTextureAtlas("memory", RES_DIR"ipu02/memory.png", RES_DIR"ipu02/memory.txt");
+	auto font = createRef<Font>(RES_DIR"fonts/siyuanheiti.otf", 28);
 	
-	auto btn0 = Button::createWithTextureFrameName("modelDIY", "parts_face_01.png", true, 0.0f, 0.0f);
-	btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "parts_face_01_s.png"));
+	auto p = createRef<Node2D>();
+
+	auto btn0 = Button::createWithTextureFrameName("memory", "autopark_btn_56px_nor.png", true, 0.0f, 0.0f);
+	//btn0->setBkgndCheck(createRef<ImageBrush>("modelDIY", "autopark_btn_56px_nor.png"));
+	btn0->setIcon(createRef<ImageBrush>("memory", "music_search_icon_search.png"));
+	btn0->setText(u8"教程");
+	btn0->setFont(font);
+	btn0->setTextColor(Colors::black, Colors::green, Colors::red);
+	btn0->setIconOffset({36.0f, 5.0f});
+	btn0->setTextOffset({82.0f, 14.0f});
 	btn0->Click += [&](const EventArgs &e) { Log::info("click"); btn0->setCheck(!btn0->isChecked()); };
 
-	w.root->addChild(btn0);
+	p->addChild(btn0);
+	//p->setVisibility(VisibilityE::Hidden);
+
+	w.root->addChild(p);
 
 	//w.root->setVisibility(VisibilityE::Hidden);
 
@@ -95,7 +154,7 @@ TEST_CASE("Button", "[Button]")
 TEST_CASE("ToggleButton", "[ToggleButton]")
 {
 	Application app;
-	Window w(800, 600);
+	Window w(800.0f, 600.0f);
 	w.root = createRef<Node2D>();
 	w.root->setBackground(SolidColorBrush::white());
 
@@ -125,16 +184,24 @@ TEST_CASE("TextBlock", "[TextBlock]")
 	Application app;
 	Window w;
 
-	auto text = createRef<TextBlock>("OpenGL");
-	text->setRect({ 0, 0, 100, 30 });
+	auto text = createRef<TextBlock>(0.0f, 0.0f, 200.0f, 200.0f, u8"abcd\n\nefghijklmnopqrstuvwxyz");
 	text->setAlignmentCenter();
+	text->setWrap(true);
+	text->setBackground(SolidColorBrush::red());
+
+
+	auto text1 = createRef<TextBlock>(u8"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	auto font = createRef<Font>(RES_DIR"fonts/siyuanheiti.otf", 16);
+	text1->setFont(font);
 
 	auto root = createRef<Node2D>();
-	BrushLibrary::addImageBrush("bgBrush", "../resource/cxd706/img_text_colour.png");
-	root->setBackground(BrushLibrary::get("bgBrush"));
-	//root->setBackground(SolidColorBrush::red());
+	//root->setName("Root");
+	//BrushLibrary::addImageBrush("bgBrush", "../resource/cxd706/img_text_colour.png");
+	//root->setBackground(BrushLibrary::get("bgBrush"));
+	root->setBackground(SolidColorBrush::blue());
 
 	root->addChild(text);
+	root->addChild(text1);
 
 	w.root = root;
 
@@ -220,7 +287,7 @@ TEST_CASE("Cube", "[Cube]")
 			else if (e.key == KeyCode::_3)
 			{
 				auto material = createRef<TextureMaterial>();
-				material->texture = createRef<Texture2D>(RES_DIR"effects/hollow_knight.jpg");
+				material->texFrame.texture = createRef<Texture2D>(RES_DIR"effects/hollow_knight.jpg");
 				cube->setMaterial(material);
 			}
 			else if (e.key == KeyCode::_4)
@@ -309,5 +376,223 @@ TEST_CASE("Theme", "[Theme]")
 	};
 
 	w.root = btn;
+	app.run();
+}
+
+TEST_CASE("NinePatchImage", "[NinePatchImage]")
+{
+	Application app;
+	Window w(800.0f, 600.0f);
+	w.root = createRef<Node2D>();
+	w.root->setBackground(SolidColorBrush::white());
+	w.root->setAlignmentCenter();
+
+	TextureLibrary::addTextureAtlas("avm", RES_DIR"ipu02/AVM.png", RES_DIR"ipu02/AVM.txt");
+
+	auto nine = createRef<NinePatchImage>(100.0f, 100.0f, 400.0f, 86.0f);
+	nine->setImages(IMGBR("avm", "nine00.png"), IMGBR("avm", "nine22.png"), IMGBR("avm", "nine33.png"), IMGBR("avm", "nine11.png"), IMGBR("avm", "nine44.png"));
+	w.root->addChild(nine);
+
+	app.run();
+}
+
+TEST_CASE("MovieImage", "[MovieImage]")
+{
+	Application app;
+	Window w;
+
+	Application::get()->mainWindow()->setWidth(1920.0f);
+	Application::get()->mainWindow()->setHeight(720.0f);
+
+	auto m_root = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	m_root->setAlignmentCenter();
+	m_root->setBackground(SolidColorBrush::white());
+	auto node = createRef<MovieImage>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00000.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00001.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00002.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00003.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00004.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00005.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00006.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00007.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00008.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00009.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00010.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00011.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00012.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00013.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00014.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00015.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00016.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00017.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00018.png"));
+	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00019.png"));
+	node->setInterval(20);
+	//node->setReverse(true);
+	//node->stopMovieInFrame(6);
+	m_root->addChild(node);
+	node->startMovie();
+
+
+	w.root = m_root;
+
+	app.run();
+}
+
+TEST_CASE("PhysicsMovePage", "[PhysicsMovePage]")
+{
+	Application app;
+	Window w;
+
+	Application::get()->mainWindow()->setWidth(1920.0f);
+	Application::get()->mainWindow()->setHeight(720.0f);
+	
+	auto m_root = createRef<PhysicsMovePage>(0.0f, 0.0f, 1920.0f, 720.0f);
+	m_root->setBackground(SolidColorBrush::white());
+	m_root->setAlignmentCenter();
+
+	auto node = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node->setBackground(SolidColorBrush::pink());
+	auto node1 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node1->setBackground(SolidColorBrush::red());
+	auto node2 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node2->setBackground(SolidColorBrush::blue());
+	auto node3 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node3->setBackground(SolidColorBrush::green());
+	auto node4 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
+	node4->setBackground(SolidColorBrush::greenYellow());
+
+	m_root->addPage(node);
+	m_root->addPage(node1);
+	m_root->addPage(node2);
+	m_root->addPage(node3);
+	m_root->addPage(node4);
+
+
+	w.root = m_root;
+	app.run();
+}
+
+TEST_CASE("SlideButton", "[SlideButton]")
+{
+	Application app;
+	Window w;
+
+	auto root = createRef<Node2D>();
+	root->setBackground(SolidColorBrush::red());
+
+	TextureLibrary::addTextureAtlas("ap", RES_DIR"ipu02/ap_day.png", RES_DIR"ipu02/ap_day.txt");
+	auto slideBtn = createRef<SlideButton>(660.0f, 19.0f, 490.0f, 62.0f);
+	slideBtn->setBackground(IMGBR("ap", "btn_62px_nor.9.png"));
+	slideBtn->setBtn(IMGBR("ap", "btn_62px_sel.9.png"));
+	slideBtn->addItem(u8"自动泊车");
+	slideBtn->addItem(u8"遥控泊车");
+	slideBtn->addItem(u8"自选车位");
+	slideBtn->setTextColor(Colors::black, Colors::white, Colors::gray);
+	slideBtn->setCurSel(0);
+	slideBtn->enableItem(1, false);
+
+	root->addChild(slideBtn);
+	w.root = root;
+	app.run();
+}
+
+TEST_CASE("Clip", "[Clip]")
+{
+	Application app;
+	Window w;
+
+	auto root = createRef<Node2D>();
+	root->setBackground(SolidColorBrush::white());
+
+	auto parent = createRef<Node2D>(50.0f, 50.0f, 400.0f, 400.0f);
+	parent->setBackground(SolidColorBrush::red());
+
+	auto rc = createRef<Node2D>(100.0f, 100.0f, 500.0f, 500.0f);
+	rc->setBackground(SolidColorBrush::blue());
+	rc->setClipRect(parent->rect());
+
+	auto img = createRef<Node2D>(-100.0f, -100.0f, 200.0f, 200.0f);
+	img->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"effects/hollow_knight.jpg")));
+	img->setClipRect(parent->rect());
+
+	w.Key += [&](const KeyEventArgs &e)
+	{
+		if (e.action == KeyAction::down)
+		{
+			if (e.key == KeyCode::space)
+			{
+				rc->setClipRect(rc->getClipRect().x() < 0.0f ? parent->rect() : Rect(-1.0f, -1.0f, -1.0f, -1.0f));
+				img->setClipRect(img->getClipRect().x() < 0.0f ? parent->rect() : Rect(-1.0f, -1.0f, -1.0f, -1.0f));
+			}
+		}
+	};
+
+	parent->addChild(rc);
+	parent->addChild(img);
+
+	root->addChild(parent);
+
+	w.root = root;
+	app.run();
+}
+
+TEST_CASE("ActualOpacity", "[ActualOpacity]")
+{
+	Application app;
+	Window w;
+
+	auto root = createRef<Node2D>();
+	root->setBackground(SolidColorBrush::white());
+
+	auto parent = createRef<Node2D>(50.0f, 50.0f, 400.0f, 400.0f);
+	parent->setBackground(SolidColorBrush::red());
+	parent->setOpacity(0.5);
+
+	auto rc = createRef<Node2D>(100.0f, 100.0f, 500.0f, 500.0f);
+	rc->setBackground(SolidColorBrush::blue());
+	rc->setOpacity(0.1f);
+
+	parent->addChild(rc);
+	root->addChild(parent);
+	w.root = root;
+	app.run();
+}
+
+TEST_CASE("DotListCtrl", "[DotListCtrl]")
+{
+	Application app;
+	Window w;
+
+	auto root = createRef<Node2D>();
+	root->setBackground(SolidColorBrush::white());
+
+	auto dotList = createRef<DotListCtrl>(0.0f, 0.0f, 140.0f, 50.0f);
+	dotList->setBackground(SolidColorBrush::red());
+	dotList->setAlignmentCenter();
+	dotList->setDotCount(5);
+	dotList->setDotImage(createRef<ImageBrush>(RES_DIR"unitests/dot_n.png"), createRef<ImageBrush>(RES_DIR"unitests/dot_s.png"));
+	dotList->setCurSel(0);
+
+	w.Key += [&](const KeyEventArgs &e)
+	{
+		if (e.action == KeyAction::down)
+		{
+			auto nCurSel = dotList->getCurSel();
+			switch (e.key)
+			{
+			case KeyCode::left: --nCurSel;	break;
+			case KeyCode::right: ++nCurSel;	break;
+			default:						break;
+			}
+			nCurSel = nb::clamp(nCurSel, 0, dotList->dotCount() -1);
+			dotList->setCurSel(nCurSel);
+		}
+	};
+
+	root->addChild(dotList);
+	w.root = root;
 	app.run();
 }

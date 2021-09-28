@@ -1,0 +1,1 @@
+3ds.3ds：assimp view读取没问题，nb有问题，头部渲染错位

@@ -11,20 +11,21 @@ void MainView::init()
 	m_root = createRef<Node2D>();
 	//m_root->setBackground(SolidColorBrush::white());
 	m_root->Key += nbBindEventFunction(MainView::onKey);
+	m_root->Touch += nbBindEventFunction(MainView::onTouch);
 
-	m_btnEco = createRef<Button>(315, 800, 27, 26);
+	m_btnEco = createRef<Button>(315.0f, 800.0f, 27.0f, 26.0f);
 	auto texEco = createRef<Texture2D>(RES_DIR"cxd706/Button1.png");
 	m_btnEco->setBkgndNormal(createRef<ImageBrush>(texEco));
 	m_btnEco->setBkgndPress(createRef<ImageBrush>(texEco));
 	m_btnEco->Click += nbBindEventFunction(MainView::onBtnClick);
 
-	m_btnNormal = createRef<Button>(365, 800, 27, 26);
+	m_btnNormal = createRef<Button>(365.0f, 800.0f, 27.0f, 26.0f);
 	auto texNormal = createRef<Texture2D>(RES_DIR"cxd706/Button2.png");
 	m_btnNormal->setBkgndNormal(createRef<ImageBrush>(texNormal));
 	m_btnNormal->setBkgndPress(createRef<ImageBrush>(texNormal));
 	m_btnNormal->Click += nbBindEventFunction(MainView::onBtnClick);
 
-	m_btnSport = createRef<Button>(415, 800, 27, 26);
+	m_btnSport = createRef<Button>(415.0f, 800.0f, 27.0f, 26.0f);
 	auto texSport = createRef<Texture2D>(RES_DIR"cxd706/Button3.png");
 	m_btnSport->setBkgndNormal(createRef<ImageBrush>(texSport));
 	m_btnSport->setBkgndPress(createRef<ImageBrush>(texSport));
@@ -34,6 +35,7 @@ void MainView::init()
 	m_root->addChild(m_btnNormal);
 	m_root->addChild(m_btnSport);*/
 	switchDrivingMode(DrivingModeE::normal);
+	m_mode = DrivingModeE::normal;
 }
 
 float MainView::getAngleForTime()
@@ -136,6 +138,28 @@ void MainView::onBtnClick(const EventArgs & e)
 	else if (e.sender == m_btnSport.get())
 	{
 		switchDrivingMode(DrivingModeE::sport);
+	}
+}
+
+void MainView::onTouch(const TouchEventArgs & e)
+{
+	if (e.action != TouchActionE::down)
+		return;
+
+	if (m_mode == DrivingModeE::eco)
+	{
+		switchDrivingMode(DrivingModeE::normal);
+		m_mode = DrivingModeE::normal;
+	}
+	else if (m_mode == DrivingModeE::normal)
+	{
+		switchDrivingMode(DrivingModeE::sport);
+		m_mode = DrivingModeE::sport;
+	}
+	else if (m_mode == DrivingModeE::sport)
+	{
+		switchDrivingMode(DrivingModeE::eco);
+		m_mode = DrivingModeE::eco;
 	}
 }
 

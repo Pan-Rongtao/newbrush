@@ -75,7 +75,10 @@ ECONode::ECONode()
 {
 	setWidth(756.0f);
 	setHeight(756.0f);
+
+#ifndef __ANDROID__
 	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/eco_background.png")));
+#endif	
 
 	m_dotPanel = createRef<Node2D>(0.0f, 0.0f, 584.0f, 538.0f);
 	m_dotPanel->setAlignmentCenter();

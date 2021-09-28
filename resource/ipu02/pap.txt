@@ -1,0 +1,772 @@
+{"frames": {
+
+"autopark_btn_42px_nor.png":
+{
+	"frame": {"x":915,"y":510,"w":120,"h":42},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":42},
+	"sourceSize": {"w":120,"h":42}
+},
+"autopark_btn_56px_nor.png":
+{
+	"frame": {"x":966,"y":184,"w":180,"h":56},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":180,"h":56},
+	"sourceSize": {"w":180,"h":56}
+},
+"autopark_btn_56px_sel.png":
+{
+	"frame": {"x":966,"y":2,"w":180,"h":56},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":180,"h":56},
+	"sourceSize": {"w":180,"h":56}
+},
+"autopark_btn_62px_nor.png":
+{
+	"frame": {"x":599,"y":816,"w":200,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":62},
+	"sourceSize": {"w":200,"h":62}
+},
+"autopark_btn_62px_nor1.png":
+{
+	"frame": {"x":2,"y":1108,"w":240,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":62},
+	"sourceSize": {"w":240,"h":62}
+},
+"autopark_btn_62px_sel.png":
+{
+	"frame": {"x":599,"y":752,"w":200,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":62},
+	"sourceSize": {"w":200,"h":62}
+},
+"autopark_btn_62px_sel2.png":
+{
+	"frame": {"x":2,"y":1044,"w":240,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":62},
+	"sourceSize": {"w":240,"h":62}
+},
+"autopark_btn_62px_warn.png":
+{
+	"frame": {"x":260,"y":1020,"w":200,"h":62},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":62},
+	"sourceSize": {"w":200,"h":62}
+},
+"autopark_btn_62px_warn2.png":
+{
+	"frame": {"x":959,"y":548,"w":240,"h":62},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":62},
+	"sourceSize": {"w":240,"h":62}
+},
+"autopark_btn_back.png":
+{
+	"frame": {"x":949,"y":790,"w":60,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":35,"w":60,"h":30},
+	"sourceSize": {"w":100,"h":100}
+},
+"autopark_pic_car.png":
+{
+	"frame": {"x":2,"y":912,"w":130,"h":256},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":31,"w":130,"h":256},
+	"sourceSize": {"w":140,"h":320}
+},
+"autopark_pic_subline.png":
+{
+	"frame": {"x":316,"y":284,"w":185,"h":180},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":185,"h":180},
+	"sourceSize": {"w":185,"h":180}
+},
+"bg_dialog2.png":
+{
+	"frame": {"x":316,"y":466,"w":174,"h":174},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":17,"w":174,"h":174},
+	"sourceSize": {"w":198,"h":198}
+},
+"btn_delete.png":
+{
+	"frame": {"x":468,"y":970,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"btn_detail.png":
+{
+	"frame": {"x":503,"y":360,"w":78,"h":42},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":78,"h":42},
+	"sourceSize": {"w":78,"h":42}
+},
+"btn_off_blue.png":
+{
+	"frame": {"x":727,"y":934,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":6,"w":28,"h":28},
+	"sourceSize": {"w":40,"h":40}
+},
+"btn_on_blue.png":
+{
+	"frame": {"x":761,"y":919,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":6,"w":28,"h":28},
+	"sourceSize": {"w":40,"h":40}
+},
+"dialog3_nor.png":
+{
+	"frame": {"x":503,"y":712,"w":306,"h":72},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":16,"w":306,"h":72},
+	"sourceSize": {"w":306,"h":96}
+},
+"dialog3_warn.png":
+{
+	"frame": {"x":503,"y":404,"w":306,"h":72},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":16,"w":306,"h":72},
+	"sourceSize": {"w":306,"h":96}
+},
+"dot_n.png":
+{
+	"frame": {"x":244,"y":1058,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
+"dot_s.png":
+{
+	"frame": {"x":244,"y":1044,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12}
+},
+"icon_angelp_sel.png":
+{
+	"frame": {"x":503,"y":296,"w":62,"h":78},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":9,"w":62,"h":78},
+	"sourceSize": {"w":88,"h":88}
+},
+"icon_back.png":
+{
+	"frame": {"x":292,"y":978,"w":20,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":12,"w":20,"h":34},
+	"sourceSize": {"w":60,"h":60}
+},
+"icon_delete.png":
+{
+	"frame": {"x":577,"y":880,"w":116,"h":116},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":116,"h":116},
+	"sourceSize": {"w":116,"h":116}
+},
+"icon_edit_nor.png":
+{
+	"frame": {"x":964,"y":424,"w":56,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":56,"h":56},
+	"sourceSize": {"w":64,"h":64}
+},
+"icon_error.png":
+{
+	"frame": {"x":915,"y":674,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"icon_home.png":
+{
+	"frame": {"x":801,"y":768,"w":146,"h":146},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":146,"h":146},
+	"sourceSize": {"w":146,"h":146}
+},
+"icon_loading.png":
+{
+	"frame": {"x":915,"y":716,"w":38,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":38,"h":38},
+	"sourceSize": {"w":40,"h":40}
+},
+"icon_loading_blue_150px.png":
+{
+	"frame": {"x":316,"y":868,"w":150,"h":150},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":150},
+	"sourceSize": {"w":150,"h":150}
+},
+"icon_p_sel3.png":
+{
+	"frame": {"x":260,"y":978,"w":30,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":5,"w":30,"h":34},
+	"sourceSize": {"w":44,"h":44}
+},
+"icon_pass.png":
+{
+	"frame": {"x":915,"y":632,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40}
+},
+"icon_speedalert.png":
+{
+	"frame": {"x":504,"y":126,"w":96,"h":96},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":96,"h":96},
+	"sourceSize": {"w":100,"h":100}
+},
+"icon_stop.png":
+{
+	"frame": {"x":964,"y":366,"w":56,"h":56},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":22,"w":56,"h":56},
+	"sourceSize": {"w":100,"h":100}
+},
+"mask_alert.png":
+{
+	"frame": {"x":2,"y":2,"w":600,"h":122},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":122},
+	"sourceSize": {"w":600,"h":880}
+},
+"music_search_icon_search.png":
+{
+	"frame": {"x":729,"y":902,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":8,"w":30,"h":30},
+	"sourceSize": {"w":46,"h":46}
+},
+"pic_parking_road.png":
+{
+	"frame": {"x":2,"y":126,"w":156,"h":500},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":156,"h":500},
+	"sourceSize": {"w":156,"h":500}
+},
+"pic_parking_spaces.png":
+{
+	"frame": {"x":316,"y":642,"w":224,"h":158},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":10,"w":224,"h":158},
+	"sourceSize": {"w":234,"h":178}
+},
+"pic_parking_spaces2.png":
+{
+	"frame": {"x":2,"y":1172,"w":138,"h":236},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":10,"w":138,"h":236},
+	"sourceSize": {"w":148,"h":256}
+},
+"pic_parkingspace1.png":
+{
+	"frame": {"x":602,"y":220,"w":216,"h":360},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":216,"h":360},
+	"sourceSize": {"w":216,"h":360}
+},
+"pic_parkingspace2.png":
+{
+	"frame": {"x":604,"y":2,"w":216,"h":360},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":216,"h":360},
+	"sourceSize": {"w":216,"h":360}
+},
+"pic_process_nor.png":
+{
+	"frame": {"x":801,"y":756,"w":150,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":10},
+	"sourceSize": {"w":150,"h":10}
+},
+"pic_process_sel.png":
+{
+	"frame": {"x":244,"y":1072,"w":150,"h":10},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":10},
+	"sourceSize": {"w":150,"h":10}
+},
+"radar_highversion/autopark_pic_reddown_11.png":
+{
+	"frame": {"x":695,"y":902,"w":32,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":254,"w":32,"h":29},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_12.png":
+{
+	"frame": {"x":915,"y":474,"w":34,"h":45},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":261,"w":34,"h":45},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_13.png":
+{
+	"frame": {"x":915,"y":438,"w":34,"h":45},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":261,"w":34,"h":45},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_14.png":
+{
+	"frame": {"x":983,"y":885,"w":32,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":254,"w":32,"h":29},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_21.png":
+{
+	"frame": {"x":476,"y":744,"w":32,"h":25},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":263,"w":32,"h":25},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_22.png":
+{
+	"frame": {"x":468,"y":936,"w":32,"h":33},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":271,"w":32,"h":33},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_23.png":
+{
+	"frame": {"x":468,"y":902,"w":32,"h":33},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":271,"w":32,"h":33},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_24.png":
+{
+	"frame": {"x":476,"y":710,"w":32,"h":25},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":263,"w":32,"h":25},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_31.png":
+{
+	"frame": {"x":985,"y":822,"w":34,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":283,"w":34,"h":27},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_32.png":
+{
+	"frame": {"x":949,"y":822,"w":34,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":283,"w":34,"h":27},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_41.png":
+{
+	"frame": {"x":577,"y":512,"w":36,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":295,"w":36,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_reddown_42.png":
+{
+	"frame": {"x":577,"y":474,"w":36,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":295,"w":36,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_redup_11.png":
+{
+	"frame": {"x":949,"y":885,"w":32,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":50,"w":32,"h":29},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_redup_12.png":
+{
+	"frame": {"x":468,"y":1004,"w":32,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":50,"w":32,"h":29},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_redup_21.png":
+{
+	"frame": {"x":476,"y":676,"w":32,"h":25},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":46,"w":32,"h":25},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_highversion/autopark_pic_redup_22.png":
+{
+	"frame": {"x":476,"y":642,"w":32,"h":25},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":46,"w":32,"h":25},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_11.png":
+{
+	"frame": {"x":504,"y":278,"w":16,"h":95},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":167,"w":16,"h":95},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_12.png":
+{
+	"frame": {"x":476,"y":778,"w":24,"h":17},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":31,"y":255,"w":24,"h":17},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_13.png":
+{
+	"frame": {"x":577,"y":457,"w":22,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":52,"y":259,"w":22,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_14.png":
+{
+	"frame": {"x":577,"y":440,"w":22,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":259,"w":22,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_15.png":
+{
+	"frame": {"x":583,"y":380,"w":24,"h":17},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":255,"w":24,"h":17},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_16.png":
+{
+	"frame": {"x":504,"y":260,"w":16,"h":95},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":112,"y":167,"w":16,"h":95},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_21.png":
+{
+	"frame": {"x":695,"y":880,"w":20,"h":103},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":168,"w":20,"h":103},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_22.png":
+{
+	"frame": {"x":577,"y":640,"w":28,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":263,"w":28,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_23.png":
+{
+	"frame": {"x":881,"y":916,"w":26,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":48,"y":271,"w":26,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_24.png":
+{
+	"frame": {"x":853,"y":916,"w":26,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":271,"w":26,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_25.png":
+{
+	"frame": {"x":577,"y":610,"w":28,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":263,"w":28,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_26.png":
+{
+	"frame": {"x":577,"y":775,"w":20,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":120,"y":168,"w":20,"h":103},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_31.png":
+{
+	"frame": {"x":583,"y":296,"w":30,"h":17},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":282,"w":30,"h":17},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_32.png":
+{
+	"frame": {"x":793,"y":916,"w":30,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":283,"w":30,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_41.png":
+{
+	"frame": {"x":985,"y":868,"w":34,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":295,"w":34,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_reddown_42.png":
+{
+	"frame": {"x":949,"y":868,"w":34,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":295,"w":34,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_11.png":
+{
+	"frame": {"x":504,"y":242,"w":16,"h":95},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":71,"w":16,"h":95},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_12.png":
+{
+	"frame": {"x":583,"y":354,"w":24,"h":17},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":31,"y":62,"w":24,"h":17},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_13.png":
+{
+	"frame": {"x":577,"y":423,"w":22,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":52,"y":59,"w":22,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_14.png":
+{
+	"frame": {"x":577,"y":406,"w":22,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":59,"w":22,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_15.png":
+{
+	"frame": {"x":583,"y":328,"w":24,"h":17},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":62,"w":24,"h":17},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_16.png":
+{
+	"frame": {"x":504,"y":224,"w":16,"h":95},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":112,"y":71,"w":16,"h":95},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_21.png":
+{
+	"frame": {"x":476,"y":797,"w":20,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":65,"w":20,"h":103},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_22.png":
+{
+	"frame": {"x":577,"y":580,"w":28,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":50,"w":28,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_23.png":
+{
+	"frame": {"x":825,"y":916,"w":26,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":48,"y":47,"w":26,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_24.png":
+{
+	"frame": {"x":695,"y":950,"w":26,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":47,"w":26,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_25.png":
+{
+	"frame": {"x":577,"y":550,"w":28,"h":21},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":50,"w":28,"h":21},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_26.png":
+{
+	"frame": {"x":577,"y":670,"w":20,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":120,"y":63,"w":20,"h":103},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_31.png":
+{
+	"frame": {"x":761,"y":902,"w":30,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":36,"w":30,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_32.png":
+{
+	"frame": {"x":695,"y":933,"w":30,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":36,"w":30,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_41.png":
+{
+	"frame": {"x":985,"y":851,"w":34,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":40,"y":24,"w":34,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"radar_topversion/autopark_pic_redup_42.png":
+{
+	"frame": {"x":949,"y":851,"w":34,"h":15},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":76,"y":24,"w":34,"h":15},
+	"sourceSize": {"w":150,"h":335}
+},
+"stagelight_fault.png":
+{
+	"frame": {"x":601,"y":438,"w":312,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":312,"h":312},
+	"sourceSize": {"w":320,"h":320}
+},
+"stagelight_nor.png":
+{
+	"frame": {"x":2,"y":598,"w":312,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":312,"h":312},
+	"sourceSize": {"w":320,"h":320}
+},
+"stagelight_right.png":
+{
+	"frame": {"x":2,"y":284,"w":312,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":312,"h":312},
+	"sourceSize": {"w":320,"h":320}
+},
+"video_btn_play_nor.png":
+{
+	"frame": {"x":962,"y":482,"w":60,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":12,"w":60,"h":64},
+	"sourceSize": {"w":88,"h":88}
+},
+"video_btn_suspend_nor.png":
+{
+	"frame": {"x":260,"y":912,"w":54,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":12,"w":54,"h":64},
+	"sourceSize": {"w":88,"h":88}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "pap.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8db521d1e6572a072087be5ffc236426$"
+}
+}

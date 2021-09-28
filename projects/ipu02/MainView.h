@@ -2,22 +2,7 @@
 #include "../Common.h"
 
 using namespace nb;
-/*
-enum class IPU02Scene
-{
-	None,					//无
-	ManualParking,			//手动泊车
-	AutomaticParking,		//智能泊车_自动泊车
-	RemoteParking,			//智能泊车_遥控泊车
-	SelfSelectionParking,	//智能泊车_自选车位泊车
-	TrainedParking_Protocol,//记忆泊车_协议
-	TrainedParking_Brief,	//记忆泊车_简介
-	TrainedParking_Main,	//记忆泊车_主页
-	TrainedParking_New_Ruku,//记忆泊车_新建入库
-	TrainedParking_New_Chuku,//记忆泊车_新建出库
-	TrainedParking_ParkingTask,//记忆泊车_执行泊车
-};
-*/
+
 class MainView : public ViewBase
 {
 public:
@@ -25,7 +10,7 @@ public:
 
 	template<class T>
 	void switchView();
-
+	
 protected:
 	virtual void init() override;
 

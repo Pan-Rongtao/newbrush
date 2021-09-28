@@ -31,6 +31,9 @@ public:
 
 	FontBm getBitmap(wchar_t unicode) const;
 
+	Size measure(const std::string &text) const;
+	Size measure(int unicode) const;
+
 	/***for test***/
 	//path: d:/1.png
 	void saveTextBitmap(const std::string &path, const std::string &text);

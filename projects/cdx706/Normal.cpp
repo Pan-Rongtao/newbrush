@@ -324,7 +324,7 @@ NormalNode::NormalNode()
 	m_scene->setCamera(temp_camera);
 	
 	m_dotPanel3D = createRef<dotPanel3D>();
-	m_point = createRef<secondpoint>(glm::vec2((278.0f + 378.0f - 3.8f), (378.0f - 2.0f)), 5.0, 5.0);
+	m_point = createRef<secondpoint>(glm::vec2((278.0f + 378.0f - 3.8f), (378.0f - 2.0f)), 5.0f, 5.0f);
 	m_halo = createRef<halo>();
 	m_shrinkrect = createRef<ShrinkRectangle>();
 	m_scene->addChild(m_dotPanel3D);
@@ -411,12 +411,12 @@ void NormalNode::onTick(const EventArgs & e)
 		}
 
 		as<RectangleMaterial>(m_halo->getmaterial())->angle = timeAngle;
-		setSecondPointer(-timeAngle + 90);
+		setSecondPointer(-timeAngle + 90.0f);
 
 		//return;
 		static constexpr float circleR = 40.0f;
-		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle + 90);
-		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle + 90);
+		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle + 90.0f);
+		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle + 90.0f);
 
 		//static auto lastMinute = now.minute();
 		//if (lastMinute != now.minute())
@@ -528,10 +528,10 @@ RectangleObj::RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix)
 
 
 	glm::mat4 temp = glm::mat4(1.0f);
-	temp[0][0] = cos(45);
-	temp[0][1] = -sin(45);
-	temp[1][0] = sin(45);
-	temp[1][1] = cos(45);
+	temp[0][0] = float(cos(45));
+	temp[0][1] = -float(sin(45));
+	temp[1][0] = float(sin(45));
+	temp[1][1] = float(cos(45));
 	p0 = temp * p0;
 	p1 = temp * p1;
 	p2 = temp * p2;
@@ -712,10 +712,10 @@ secondpoint::secondpoint(glm::vec2 pos, float w, float h)
 	glm::vec4 p3 = { -w / 2, h / 2, 0.0f, 1.0f };
 
 	glm::mat4 temp = glm::mat4(1.0f);
-	temp[0][0] = cos(45);
-	temp[0][1] = -sin(45);
-	temp[1][0] = sin(45);
-	temp[1][1] = cos(45);
+	temp[0][0] = float(cos(45));
+	temp[0][1] = -float(sin(45));
+	temp[1][0] = float(sin(45));
+	temp[1][1] = float(cos(45));
 	p0 = temp * p0;
 	p1 = temp * p1;
 	p2 = temp * p2;

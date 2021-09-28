@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">app</string>
+    <drawable name="bkcolor">#00ff00</drawable>
+</resources>

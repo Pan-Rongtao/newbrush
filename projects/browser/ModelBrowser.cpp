@@ -21,7 +21,7 @@ void ModelBrowser::init()
 			onDataChanged(args.path, args.value);
 		};
 	}
-	load(RES_DIR"/browser/a08/fbx.fbx");
+	load(RES_DIR"/browser/am8/fbx.fbx");
 	m_root = createRef<Node2D>();
 	m_root->setAlignmentCenter();
 	m_root->setScene(m_scene);
@@ -170,7 +170,7 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 			return;
 
 		auto target = m_scene->getLightAt(0);
-		auto targetProperty = type::get<Light>().get_property("Ambient");
+		auto targetProperty = type::get<Light>().get_property("Diffuse");
 		m_lightAnimation.beginTime = TimeSpan::fromMilliseconds(200);
 		m_lightAnimation.setTarget(target);
 		m_lightAnimation.setTargetProperty(targetProperty);
