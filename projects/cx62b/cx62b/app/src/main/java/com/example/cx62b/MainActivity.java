@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mModelView = new NBSurfaceView(this, "nb_jni_cx62b");
+        mModelView = new NBSurfaceView(this, "nb_jni_cx62b", "/storage/emulated/0/resource/");
         //mModelView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         //mModelView.setZOrderOnTop(true);
         this.addContentView(mModelView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -386,7 +386,7 @@ void Model::play(bool loop)
 		uint64_t interval = (uint64_t)(m_aScene->mAnimations[0]->mTicksPerSecond != 0.0 ? m_aScene->mAnimations[0]->mTicksPerSecond : 25);
 		m_timer.start(interval);
 		m_timer.Tick.clear();
-		AnimationStateChanged.invoke(TimelineStateE::Active);
+		AnimationStateChanged.invoke(TimelineState::Active);
 		m_timer.Tick += [=](const EventArgs &e)
 		{
 			gotoNextFrame(loop);
@@ -397,7 +397,7 @@ void Model::play(bool loop)
 void Model::pause()
 {
 	m_timer.stop();
-	AnimationStateChanged.invoke(TimelineStateE::Filling);
+	AnimationStateChanged.invoke(TimelineState::Stopped);
 }
 
 bool Model::isPlaying() const
@@ -556,11 +556,6 @@ void Model::parseMaterials()
 			auto specularMapping = getTexture(aMaterial, aiTextureType_SPECULAR);
 			auto emissionMapping = getTexture(aMaterial, aiTextureType_EMISSIVE);
 			auto opacityMapping = getTexture(aMaterial, aiTextureType_OPACITY);
-			if (opacityMapping)
-			{
-				int x = 10;
-				++x;
-			}
 			if (specularMapping) Log::warn("[{}] has specularMapping.", name);
 
 			//构建材质

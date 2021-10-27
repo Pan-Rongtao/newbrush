@@ -18,13 +18,13 @@ public class NBSurfaceView extends GLSurfaceView {
     private NBRenderer mRenderer;
     private static OnEventListener mOnEventListener;
 
-    public NBSurfaceView(Context context, String pluginName) {
+    public NBSurfaceView(Context context, String pluginName, String resDir) {
         super(context);
 
         setEGLContextClientVersion(2);
         //setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         setEGLConfigChooser(new NBConfigChooser());
-        mRenderer = new NBRenderer(pluginName);
+        mRenderer = new NBRenderer(pluginName, resDir);
         setRenderer(mRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
@@ -77,10 +77,11 @@ class NBRenderer implements GLSurfaceView.Renderer
 {
     static String LogTAG = "[ModelRenderer]";
     private Newbrush mNB;
+    private String mResDir;
 
-    public NBRenderer(String pluginName)                                     { Log.i(LogTAG, "ModelRenderer create "); mNB = new Newbrush(pluginName); }
+    public NBRenderer(String pluginName, String resDir)                         { Log.i(LogTAG, "ModelRenderer create "); mNB = new Newbrush(pluginName); mResDir = resDir;}
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config)                     { gl.glClearColor(0,0,0,0); Log.i(LogTAG, "onSurfaceCreated"); mNB.init(); }
+    public void onSurfaceCreated(GL10 gl, EGLConfig config)                     { gl.glClearColor(0,0,0,0); Log.i(LogTAG, "onSurfaceCreated"); mNB.init(mResDir); }
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)                { Log.i(LogTAG, "onSurfaceChanged"); mNB.resize(width, height); }
     @Override
@@ -95,7 +96,7 @@ class Newbrush {
         System.loadLibrary(soPath);
     }
 
-    public native void init();
+    public native void init(String resDir);
     public native void resize(int width, int height);
     public native void render();
     public native void touch(int action, float x, float y);

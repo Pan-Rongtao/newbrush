@@ -9,31 +9,22 @@
 using namespace nb;
 using namespace ClipperLib;
 
-void Panel::onRender()
-{
-	drawBrush(background());
-	for (auto child : children())
-	{
-		child->onRender();
-	}
-}
-
 WrapPanel::WrapPanel()
-	: WrapPanel(OrientationE::Horizontal)
+	: WrapPanel(nb::Orientation::Horizontal)
 {}
 
-WrapPanel::WrapPanel(OrientationE orientation)
+WrapPanel::WrapPanel(nb::Orientation orientation)
 	: m_orientation(orientation)
 	, m_itemWidth(NAN)
 	, m_itemHeight(NAN)
 {}
 
-void WrapPanel::setOrientation(OrientationE orientation)
+void WrapPanel::setOrientation(nb::Orientation orientation)
 {
 	m_orientation = orientation;
 }
 
-OrientationE WrapPanel::orientation() const
+nb::Orientation WrapPanel::orientation() const
 {
 	return m_orientation;
 }
@@ -74,8 +65,8 @@ Size WrapPanel::measureOverride(const Size & availableSize)
 	return availableSize;
 }
 //arrange两个方向维度进行：
-//当Orientation == OrientationE::Horizontal时，分两种情况：1、指定了ItemHeight，则每一行高度为ItemHeight，累加每个item，当累加宽度超过finnalSize.width时，换行；2、未指定ItemHeight，先遍历items，确定行信息（每一行的开头下标，以及最高项作为该行的高）
-//当Orientation == OrientationE::Vertical时，分两种情况：1、指定了ItemWdith，则每一行高度为ItemWidth，累加每个item，当累加高度超过finalSize.height时，换列；2、未指定ItemWidth，先遍历items，确定列信息（每一列的开头下标，以及最宽项作为该列的宽）
+//当Orientation == Orientation::Horizontal时，分两种情况：1、指定了ItemHeight，则每一行高度为ItemHeight，累加每个item，当累加宽度超过finnalSize.width时，换行；2、未指定ItemHeight，先遍历items，确定行信息（每一行的开头下标，以及最高项作为该行的高）
+//当Orientation == Orientation::Vertical时，分两种情况：1、指定了ItemWdith，则每一行高度为ItemWidth，累加每个item，当累加高度超过finalSize.height时，换列；2、未指定ItemWidth，先遍历items，确定列信息（每一列的开头下标，以及最宽项作为该列的宽）
 Size WrapPanel::arrangeOverride(const Size & finalSize)
 {
 	//计算行（列）信息，返回没行（列）的起始index和高（宽）std::queue<std::pair<int, float>>
@@ -93,7 +84,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			auto one = 0.0f;
 			auto maxLen = 0.0f;
 			auto const &childDesiredSize = child->getDesiredSize();
-			if (m_orientation == OrientationE::Horizontal)
+			if (m_orientation == Orientation::Horizontal)
 			{
 				maxLen = finalSize.width;
 				one = !std::isnan(m_itemWidth) ? m_itemWidth : childDesiredSize.width;
@@ -107,12 +98,12 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 			if (sum + one <= maxLen)
 			{
 				ret.back().first = i;
-				ret.back().second = std::max<float>(ret.back().second, m_orientation == OrientationE::Horizontal ? childDesiredSize.height : childDesiredSize.width);
+				ret.back().second = std::max<float>(ret.back().second, m_orientation == Orientation::Horizontal ? childDesiredSize.height : childDesiredSize.width);
 				sum += one;
 			}
 			else
 			{
-				ret.push({ i, (m_orientation == OrientationE::Horizontal ? childDesiredSize.height : childDesiredSize.width) });
+				ret.push({ i, (m_orientation == Orientation::Horizontal ? childDesiredSize.height : childDesiredSize.width) });
 				sum = one;
 			}
 		}
@@ -122,7 +113,7 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 	auto x = 0.0f;
 	auto y = 0.0f;
 	Rect arrangeRect;
-	if (m_orientation == OrientationE::Horizontal)
+	if (m_orientation == Orientation::Horizontal)
 	{
 		//指定了ItemHeight，每个item的高度都为iItemHeight
 		//否则，需要先计算每一行的最高item作为那一行的高度
@@ -224,15 +215,24 @@ Size WrapPanel::arrangeOverride(const Size & finalSize)
 }
 
 Image::Image()
-	: m_stretch(StretchE::Origion)
+	: Image(0.0f, 0.0f, NAN, NAN)
 {}
 
-void Image::setStretch(const StretchE &stretch)
+Image::Image(const Rect &rc)
+	: Image(rc.x(), rc.y(), rc.width(), rc.height())
+{}
+
+Image::Image(float x, float y, float w, float h)
+	: Node2D(x, y, w, h)
+	, m_stretch(Stretch::Origion)
+{}
+
+void Image::setStretch(const Stretch &stretch)
 {
 	m_stretch = stretch;
 }
 
-const StretchE &Image::stretch() const
+const Stretch &Image::stretch() const
 {
 	return m_stretch;
 }
@@ -263,15 +263,15 @@ Size Image::arrangeOverride(const Size & finalSize)
 
 	switch (m_stretch)
 	{
-	case StretchE::Origion:
+	case Stretch::Origion:
 	{
 		return textureSize;
 	}
-	case StretchE::Fill:
+	case Stretch::Fill:
 	{
 		return m_availableSize;
 	}
-	case StretchE::Uniform:
+	case Stretch::Uniform:
 	{
 		Size sz;
 		auto pixelRatio = textureSize.width / textureSize.height;
@@ -286,7 +286,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 		}
 		return sz;
 	}
-	case StretchE::UniformToFill:
+	case Stretch::UniformToFill:
 	{
 		Size sz;
 		auto pixelRatio = textureSize.width / textureSize.height;
@@ -301,7 +301,7 @@ Size Image::arrangeOverride(const Size & finalSize)
 		}
 		return sz;
 	}
-	default: nbThrowException(std::invalid_argument, "invalid StretchE"); break;
+	default: nbThrowException(std::invalid_argument, "invalid Stretch"); break;
 	}
 }
 
@@ -367,6 +367,17 @@ ref<Font> TextBlock::getActualFont() const
 	return m_font ? m_font : FontLibrary::getDefaultFont();
 }
 
+void TextBlock::setFontSize(float size)
+{
+	auto f = FontLibrary::addFont(getActualFont()->path(), (uint32_t)size);
+	setFont(f);
+}
+
+float TextBlock::fontSize() const
+{
+	return getActualFont()->size();
+}
+
 void TextBlock::setWrap(bool wrap)
 {
 	m_wrap = wrap;
@@ -420,12 +431,12 @@ void TextBlock::onRender()
 		{
 			auto const &pt = pair.first;
 			auto const &str = pair.second;
-			Renderer2D::drawText(font, pt, str, m_color.toVec4(), op);
+			Renderer2D::drawText(font, pt, str, nb::colorToVec4(m_color), op);
 		}
 	}
 	else
 	{
-		Renderer2D::drawText(font, rc.leftTop(), m_text, m_color.toVec4(), op);
+		Renderer2D::drawText(font, rc.leftTop(), m_text, nb::colorToVec4(m_color), op);
 	}
 }
 
@@ -492,24 +503,24 @@ void ButtonBase::onTouch(const TouchEventArgs & e)
 	Node2D::onTouch(e);
 	switch (e.action)
 	{
-	case TouchActionE::down:
+	case TouchAction::Down:
 	{
 		m_isPressed = true;
 	}
 	break;
-	case TouchActionE::enter:
+	case TouchAction::Enter:
 	{
 		if (m_leaveWithPressed)
 			m_isPressed = true;
 	}
 	break;
-	case TouchActionE::leave:
+	case TouchAction::Leave:
 	{
 		m_leaveWithPressed = m_isPressed;
 		m_isPressed = false;
 	}
 	break;
-	case TouchActionE::up:
+	case TouchAction::Up:
 	{
 		bool bShouldClick = m_isPressed;
 		m_isPressed = false;
@@ -693,53 +704,60 @@ Cube::Cube(const glm::vec3 &center, float lenght, float width, float height)
 	std::vector<Vertex> vertexs;
 	vertexs.reserve(36);
 
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }, { 0.0f, 0.0f, -1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }));
 
-	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }));
 
-	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 1.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }, { -1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 1.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }));
 
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }));
 
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }, { 0.0f, -1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, -lenght }, { 1.0f, 1.0f }, { 0.0f, -1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, -height, lenght }, { 1.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, lenght }, { 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, -height, -lenght }, { 0.0f, 1.0f }, { 0.0f, -1.0f, 0.0f }));
 
-	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }));
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 0.0f }));
-	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, -lenght }, { 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ width, height, lenght }, { 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, lenght }, { 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
+	vertexs.emplace_back(Vertex({ -width, height, -lenght }, { 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }));
 
 	m_mesh = createRef<Mesh>(vertexs, nullptr);
 }
 
 void Cube::onRender(ref<Camera> camera, const std::vector<ref<Light>>& lights)
 {
+	auto shader = material()->shader;
+	if (shader)
+	{
+		shader->use();
+		shader->setMat4("u_rootMatrix", glm::mat4(1.0f));
+		shader->disuse();
+	}
 	auto const &mat = getTransform() ? getTransform()->value() : Transform::identityMatrix4();
 	m_mesh->draw(mat, camera, lights, GL_TRIANGLES, false);
 }

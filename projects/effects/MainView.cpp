@@ -36,7 +36,7 @@ void MainView::onKey(const KeyEventArgs &e)
 
 void MainView::onTouch(const TouchEventArgs & e)
 {
-	if (e.action != TouchActionE::down)
+	if (e.action != TouchAction::Down)
 		return;
 
 	static unsigned i = 0;

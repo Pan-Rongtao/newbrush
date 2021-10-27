@@ -20,6 +20,8 @@ public:
 	//数据更新，重写以处理逻辑
 	virtual void onDataChanged(const std::string &path, const var &value) {};
 
+	void setResourceDir(const std::string &resDir);
+
 	//设置数据
 	//value可接受任意类型，该类型需与path的数据类型保持一致
 	//否则，将检查这两者类型是否可以转换（转换注册请查看RttrRegistration.cpp）
@@ -33,6 +35,7 @@ protected:
 	Size m_size;
 	nb::ref<Node2D> m_root;
 	nb::ref<DataObject> m_data;
+	std::string m_resDir;
 };
 
 nb::ref<Model> loadModel(const std::string & path, const glm::vec3 &translate, const glm::vec3 &rotate, const glm::vec3 &scale);

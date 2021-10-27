@@ -54,7 +54,7 @@
 #endif
 
 #ifndef NB_OS
-#error "can't recognize NB_OS, check [model/Core.h]"
+#error "can't recognize NB_OS, check [Core.h]"
 #endif
 
 #define NB_ARCH_AMD		0x00000001
@@ -114,19 +114,14 @@ namespace nb
 	NB_API uint64_t getStarupMilliseconds();
 
 	//获取本进程id
-	NB_API uint32_t getPid();
+	NB_API uint64_t getPid();
 
 	//获取本线程id
-	NB_API inline uint32_t getTid()
-	{
-		std::stringstream os; 
-		os << std::this_thread::get_id();
-		return std::stoi(os.str());
-	}
+	NB_API uint64_t getTid();
 
 	//约等于
 	NB_API inline bool epsilonEqual(float a, float b, float epsilon = 1e-6)		{ return fabs(a - b) <= epsilon; }
-	NB_API inline bool epsilonEqual(double a, double b, double epsilon = 1e-6)	{return fabs(a - b) <= epsilon; }
+	NB_API inline bool epsilonEqual(double a, double b, double epsilon = 1e-6)	{ return fabs(a - b) <= epsilon; }
 
 	NB_API void stringTrim(std::string& token);
 	NB_API std::vector<std::string> stringSplit(const std::string & str, const std::string & separators, bool ignoreEmpty, bool doTrim = false);

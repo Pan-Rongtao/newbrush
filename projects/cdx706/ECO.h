@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../Common.h"
+#include "MainView.h"
 
 using namespace nb;
 

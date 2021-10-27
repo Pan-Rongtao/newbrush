@@ -66,11 +66,11 @@ void MainView::init()
 	auto nodeValue = createRef<Node2D>(0.0f, 26.0f, 300.0f, 250.0f);
 	nodeValue->setAlignmentCenter();
 	m_SpeedValue = Node2D::createWithTextureFrameName("guage", "number/9.png", true, 0.0f, 53.0f);
-	m_SpeedValue->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	m_SpeedValue->setHorizontalAlignment(HorizontalAlignment::Center);
 	m_SpeedPointer = Node2D::createWithTextureFrameName("guage", "pointer.png", true, 0.0f, 264.0f);
 	m_SpeedPointer->setTransform(createRef<RotateTransform2D>(0.0f, 333.0f, 67.0f));
 	auto kmNode = Node2D::createWithTextureFrameName("guage", "kmh.png", true, 0.0f, 170.0f);
-	kmNode->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	kmNode->setHorizontalAlignment(HorizontalAlignment::Center);
 	nodeValue->addChild(m_SpeedValue);
 	nodeValue->addChild(kmNode);
 	m_DialLeftRoot->addChild(Node2D::createWithTextureFrameName("guage", "speed number/0_n.png", true, 57.0f, 483.0f));
@@ -121,7 +121,7 @@ void MainView::init()
 	m_DialRightRoot->addChild(m_RpmPointer);
 
 	m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true, 0.0f, 0.0f);
-	m_TopMenu->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	m_TopMenu->setHorizontalAlignment(HorizontalAlignment::Center);
 	m_TopMenu->addChild(Node2D::createWithTextureFrameName("menu", "ic_Answer.png", true, 206.6f, 43.9f));
 
 	m_Menu = Node2D::createWithTextureFrameName("menu", "DrivingInfo/img_Tire pressure_car.png", true, 0.0f, 29.0f);

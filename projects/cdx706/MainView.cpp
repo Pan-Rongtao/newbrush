@@ -2,6 +2,7 @@
 #include "newbrush/Log.h"
 #include "newbrush/Helper.h"
 
+extern MessageQueue g_msgQueue;
 void MainView::init()
 {
 	Application::get()->mainWindow()->setWidth(756.0f);
@@ -9,33 +10,50 @@ void MainView::init()
 	Application::get()->mainWindow()->setTitle("clock effect Power By NewBrush");
 
 	m_root = createRef<Node2D>();
-	//m_root->setBackground(SolidColorBrush::white());
-	m_root->Key += nbBindEventFunction(MainView::onKey);
+#ifdef WIN32
 	m_root->Touch += nbBindEventFunction(MainView::onTouch);
+#endif // WIN32	
+	//m_root->setBackground(SolidColorBrush::white());
 
-	m_btnEco = createRef<Button>(315.0f, 800.0f, 27.0f, 26.0f);
-	auto texEco = createRef<Texture2D>(RES_DIR"cxd706/Button1.png");
-	m_btnEco->setBkgndNormal(createRef<ImageBrush>(texEco));
-	m_btnEco->setBkgndPress(createRef<ImageBrush>(texEco));
-	m_btnEco->Click += nbBindEventFunction(MainView::onBtnClick);
+	m_mode = DrivingMode::None;
 
-	m_btnNormal = createRef<Button>(365.0f, 800.0f, 27.0f, 26.0f);
-	auto texNormal = createRef<Texture2D>(RES_DIR"cxd706/Button2.png");
-	m_btnNormal->setBkgndNormal(createRef<ImageBrush>(texNormal));
-	m_btnNormal->setBkgndPress(createRef<ImageBrush>(texNormal));
-	m_btnNormal->Click += nbBindEventFunction(MainView::onBtnClick);
+	m_data = buildData();
+	if (m_data)
+	{
+		m_data->ValueChanged += [&](const DataContext::ValueChangedArgs & args)
+		{
+			if (args.path == "mode")
+			{
+				auto task = [=]()
+				{
+					int mode = args.value.get_value<int>();
+					if (mode == 0)
+					{
+						switchDrivingMode(DrivingMode::None);
+					}
+					else if (mode == 1)
+					{
+						switchDrivingMode(DrivingMode::Eco);
+					}
+					else if (mode == 2)
+					{
+						switchDrivingMode(DrivingMode::Normal);
+					}
+					else if (mode == 3)
+					{
+						switchDrivingMode(DrivingMode::Sport);
+					}
+				};
+#if NB_OS == NB_OS_ANDROID
+				g_msgQueue.post(task);
+#else
+				task();
+#endif
+			}
+		};
+	}
 
-	m_btnSport = createRef<Button>(415.0f, 800.0f, 27.0f, 26.0f);
-	auto texSport = createRef<Texture2D>(RES_DIR"cxd706/Button3.png");
-	m_btnSport->setBkgndNormal(createRef<ImageBrush>(texSport));
-	m_btnSport->setBkgndPress(createRef<ImageBrush>(texSport));
-	m_btnSport->Click += nbBindEventFunction(MainView::onBtnClick);
-
-	/*m_root->addChild(m_btnEco);
-	m_root->addChild(m_btnNormal);
-	m_root->addChild(m_btnSport);*/
-	switchDrivingMode(DrivingModeE::normal);
-	m_mode = DrivingModeE::normal;
+	switchDrivingMode(DrivingMode::Eco);
 }
 
 float MainView::getAngleForTime()
@@ -51,21 +69,52 @@ void MainView::onKey(const KeyEventArgs &e)
 {
 	switch (e.key)
 	{
-	case KeyCode::_1: switchDrivingMode(DrivingModeE::eco);		break;
-	case KeyCode::_2: switchDrivingMode(DrivingModeE::normal);	break;
-	case KeyCode::_3: switchDrivingMode(DrivingModeE::sport);	break;
+	case KeyCode::_1: switchDrivingMode(DrivingMode::Eco);		break;
+	case KeyCode::_2: switchDrivingMode(DrivingMode::Normal);	break;
+	case KeyCode::_3: switchDrivingMode(DrivingMode::Sport);	break;
 	default:													break;
 	}
 }
 
-void MainView::switchDrivingMode(DrivingModeE mode)
+#ifdef WIN32
+void MainView::onTouch(const TouchEventArgs &e)
+{
+	if (e.action != TouchAction::Down)
+		return;
+
+	if (m_mode == DrivingMode::None)
+	{
+		switchDrivingMode(DrivingMode::Eco);
+	}
+	else if (m_mode == DrivingMode::Eco)
+	{
+		switchDrivingMode(DrivingMode::Normal);
+	}
+	else if (m_mode == DrivingMode::Normal)
+	{
+		switchDrivingMode(DrivingMode::Sport);
+	}
+	else if (m_mode == DrivingMode::Sport)
+	{
+		switchDrivingMode(DrivingMode::Eco);
+	}
+}
+#endif // WIN32
+
+void MainView::switchDrivingMode(DrivingMode mode)
 {
 	if (mode == m_mode)
 		return;
 
 	switch (mode)
 	{
-	case DrivingModeE::eco:
+	case DrivingMode::None:
+	{
+		m_root->clearChildren();
+		m_mode = DrivingMode::None;
+		break;
+	}
+	case DrivingMode::Eco:
 	{
 		if (!m_ecoNode)
 		{
@@ -73,13 +122,11 @@ void MainView::switchDrivingMode(DrivingModeE mode)
 			m_ecoNode->setAlignmentCenter();
 		}
 		m_root->clearChildren();
-		/*m_root->addChild(m_btnEco);
-		m_root->addChild(m_btnNormal);
-		m_root->addChild(m_btnSport);*/
 		m_root->addChild(m_ecoNode);
+		m_mode = DrivingMode::Eco;
+		break;
 	}
-	break;
-	case DrivingModeE::normal:
+	case DrivingMode::Normal:
 	{
 		if (!m_normalNode)
 		{
@@ -87,13 +134,11 @@ void MainView::switchDrivingMode(DrivingModeE mode)
 			m_normalNode->setAlignmentCenter();
 		}
 		m_root->clearChildren();
-		/*m_root->addChild(m_btnEco);
-		m_root->addChild(m_btnNormal);
-		m_root->addChild(m_btnSport);*/
 		m_root->addChild(m_normalNode);
+		m_mode = DrivingMode::Normal;
+		break;
 	}
-	break;
-	case DrivingModeE::sport:
+	case DrivingMode::Sport:
 	{
 		if (!m_sportNode)
 		{
@@ -101,12 +146,10 @@ void MainView::switchDrivingMode(DrivingModeE mode)
 			m_sportNode->setAlignmentCenter();
 		}
 		m_root->clearChildren();
-		/*m_root->addChild(m_btnEco);
-		m_root->addChild(m_btnNormal);
-		m_root->addChild(m_btnSport);*/
 		m_root->addChild(m_sportNode);
+		m_mode = DrivingMode::Sport;
+		break;
 	}
-	break;
 	default:
 		break;
 	}
@@ -125,42 +168,11 @@ float MainView::getAngle(float x, float y, float centerX, float centerY)
 	return (float)((int)(a + 360) % 360);
 }
 
-void MainView::onBtnClick(const EventArgs & e)
+ref<DataObject> MainView::buildData()
 {
-	if (e.sender == m_btnEco.get())
-	{
-		switchDrivingMode(DrivingModeE::eco);
-	}
-	else if (e.sender == m_btnNormal.get())
-	{
-		switchDrivingMode(DrivingModeE::normal);
-	}
-	else if (e.sender == m_btnSport.get())
-	{
-		switchDrivingMode(DrivingModeE::sport);
-	}
-}
-
-void MainView::onTouch(const TouchEventArgs & e)
-{
-	if (e.action != TouchActionE::down)
-		return;
-
-	if (m_mode == DrivingModeE::eco)
-	{
-		switchDrivingMode(DrivingModeE::normal);
-		m_mode = DrivingModeE::normal;
-	}
-	else if (m_mode == DrivingModeE::normal)
-	{
-		switchDrivingMode(DrivingModeE::sport);
-		m_mode = DrivingModeE::sport;
-	}
-	else if (m_mode == DrivingModeE::sport)
-	{
-		switchDrivingMode(DrivingModeE::eco);
-		m_mode = DrivingModeE::eco;
-	}
+	auto data = nb::makeDataObject("m_root");
+	data->add(makeDataInt("mode", 1));
+	return data;
 }
 
 //一定不要少了这句

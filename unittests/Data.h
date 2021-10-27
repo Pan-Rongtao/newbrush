@@ -23,6 +23,8 @@ public:
 	char32_t		char32_p = 0;
 	short			short_p = 0;
 	unsigned short	ushort_p = 0;
+	int				int8_p = 0;
+	int				int16_p = 0;
 	int				int32_p = 0;
 	unsigned int	uint32_p = 0;
 	long			long_p = 0;
@@ -67,6 +69,8 @@ RTTR_REGISTRATION
 	.property("short_p", &RttrObject::short_p)
 	.property("string_p", &RttrObject::string_p)
 	.property("ushort_p", &RttrObject::ushort_p)
+	.property("int8_p", &RttrObject::int8_p)
+	.property("int16_p", &RttrObject::int16_p)
 	.property("int32_p", &RttrObject::int32_p)
 	.property("uint32_p", &RttrObject::uint32_p)
 	.property("long_p", &RttrObject::long_p)

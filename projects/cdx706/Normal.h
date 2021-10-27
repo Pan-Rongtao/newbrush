@@ -1,12 +1,13 @@
-#pragma once
+﻿#pragma once
 #include "../Common.h"
+#include "MainView.h"
 
 using namespace nb;
 
 class RectangleObj : public Node3D
 {
 public:
-	RectangleObj(glm::vec2 pos,float w,float h, glm::mat4 matrix);
+	RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix);
 	ref<Material> getmaterial();
 
 protected:
@@ -103,17 +104,17 @@ class NormalNode : public Node2D
 public:
 	NormalNode();
 
-	void setTime(ref<Node2D> parent, int value, const std::string &imagePrefix, float space, bool useEffect, float angle);
-
 private:
 	void onKey(const KeyEventArgs &e);
 	void onTick(const EventArgs & e);
+	void setTime(ref<Node2D> parent, int value, const std::string &imagePrefix, float space, bool useEffect, float angle);
 
 	void moveShadowNumberCircle(ref<Node2D> node, float x, float y, float r, float angle);
 	void moveEffectNumberCircle(ref<Node2D> node, float angle);
 
 	void setSecondPointer(float angle);
 
+	void updatemodel();
 
 	ref<Node2D> m_hourParent;
 	ref<Node2D> m_minuteParent;
@@ -123,9 +124,6 @@ private:
 	ref<Node2D> m_minuteShadow;
 
 	Timer m_timer;
-
-
-
 	ref<Scene> m_scene;
 	ref<dotPanel3D> m_dotPanel3D;
 	ref<secondpoint> m_point;
@@ -133,7 +131,7 @@ private:
 	ref<halo> m_halo;
 	ref<ShrinkRectangle>m_shrinkrect;
 	FloatAnimation m_shrinkanimation;
-	int lasttime = 0;
-	int curtime = 0;
-	bool startanimation = false;
+	int m_lasttime = 0;
+	int m_curtime = 0;
+	bool m_bstartanimation = false;
 };

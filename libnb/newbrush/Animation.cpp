@@ -10,24 +10,19 @@ Timeline::Timeline(const TimeSpan &_beginTime, const TimeSpan &_duration, const 
 	, duration(_duration)
 	, reverse(false)
 	, autoReverse(false)
-	, fillBehavior(FillBehaviorE::HoldEnd)
 	, repeatBehavior(_repeatBehavior)
 	, m_timer(1)
 	, m_startTick(0)
-	, m_state(TimelineStateE::Stopped)
+	, m_state(TimelineState::Stopped)
 {
 	m_timer.Tick += std::bind(&Timeline::onTick, this, std::placeholders::_1);
-}
-
-Timeline::~Timeline()
-{
 }
 
 void Timeline::begin()
 {
 	auto bt = beginTime < TimeSpan::zero() ? TimeSpan::zero() : beginTime;
 	m_startTick = (uint64_t)(getMilliseconds() + bt.totalMilliseconds());
-	m_state = TimelineStateE::Active;
+	m_state = TimelineState::Active;
 	StateChanged.invoke({ this });
 	onStateChanged();
 	m_timer.start();
@@ -38,7 +33,7 @@ float Timeline::getCurrentProgress() const
 	//以下几种情况直接返回起始进度值
 	//非激活状态、总ticks为0
 	auto totalTicks = getTotalTicks();
-	if (m_state != TimelineStateE::Active || totalTicks == 0)
+	if (m_state != TimelineState::Active || totalTicks == 0)
 	{
 		return reverse ? 1.0f : 0.0f;
 	}
@@ -116,7 +111,7 @@ void Timeline::onTick(const EventArgs & args)
 			if (curTicks >= endTicks)
 			{
 				m_timer.stop();
-				m_state = TimelineStateE::Filling;
+				m_state = TimelineState::Stopped;
 				StateChanged.invoke({ this });
 				onStateChanged();
 				Completed.invoke({ this });
@@ -139,10 +134,6 @@ void Animation::setTarget(std::weak_ptr<Object> target)
 		bool derived = t0 != t1 && t0.is_derived_from(t1);
 		nbThrowExceptionIf(!derived, std::runtime_error, "[%s] is not derived from [%s], forgot to use RTTR_ENABLE ?", t0.get_name().data(), t1.get_name().data());
 	}
-}
-
-void Animation::setTargetName(const std::string & name)
-{
 }
 
 std::weak_ptr<Object> Animation::target() const
@@ -183,12 +174,11 @@ Animation::Animation()
 	: m_targetProperty(type::get<Object>().get_property("none"))
 	, m_targetPropertyNameMode(false)
 	, m_needUpdateTargetProperty(false)
-{
-}
+{}
 
 void Animation::onStateChanged()
 {
-	if (currentState() == TimelineStateE::Active)
+	if (currentState() == TimelineState::Active)
 	{
 		nbThrowExceptionIf(!target().lock(), std::runtime_error, "'target' is nullptr for animation");
 		nbThrowExceptionIf(!targetProperty(), std::runtime_error, "'targetProperty' is invalid for animation");

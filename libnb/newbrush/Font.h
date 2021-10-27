@@ -26,6 +26,9 @@ public:
 	Font(const std::string &path, uint32_t size);
 	~Font();
 
+	float size() const;
+	const std::string &path() const;
+
 	float getBaseline() const;
 	float getLineHeight() const;
 
@@ -37,8 +40,9 @@ public:
 	/***for test***/
 	//path: d:/1.png
 	void saveTextBitmap(const std::string &path, const std::string &text);
-
+	
 private:
+	std::string m_path;
 	float m_size;
 	float m_scale;
 	int m_ascent;	//基线到顶部的高度
@@ -52,7 +56,6 @@ class NB_API FontLibrary
 public:
 	static ref<Font> addFont(const std::string &path, uint32_t size);
 	static ref<Font> getDefaultFont();
-
 };
 
 NB_API ref<Glyph> getGlyph(ref<Font> font, wchar_t unicode);

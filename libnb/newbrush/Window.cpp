@@ -62,7 +62,7 @@ Window::Window(float width, float height, const std::string &title)
 	: m_dispatchingCloseEvent(false)
 	, m_processingCallback(false)
 	, m_processingWindowStateChanged(false)
-	, m_lastWindowState(WindowStateE::Normal)
+	, m_lastWindowState(WindowState::Normal)
 	, m_title(title)
 {
 #if NB_OS == NB_OS_ANDROID
@@ -195,20 +195,20 @@ bool Window::isShow() const
 	return true;
 }
 
-void Window::setWindowState(WindowStateE state)
+void Window::setWindowState(WindowState state)
 {
 #if NB_OS == NB_OS_WINDOWS_NT
-	m_lastWindowState = WindowStateE::Normal;
+	m_lastWindowState = WindowState::Normal;
 	if (!m_processingCallback)
 	{
 		m_processingWindowStateChanged = true;
 		switch (state)
 		{
-			//处理WindowStateE::Normal，多加一个glfwMaximizeWindow的原因，是当出现连续设置glfwMaximizeWindow、glfwIconifyWindow、glfwRestoreWindow时，
+			//处理WindowState::Normal，多加一个glfwMaximizeWindow的原因，是当出现连续设置glfwMaximizeWindow、glfwIconifyWindow、glfwRestoreWindow时，
 			//glfw恢复到了max状态，这和预期是不符合的，这是glfw的固有表现；在glfwRestoreWindow前加一个glfwMaximizeWindow则可以保证恢复到normal状态
-		case WindowStateE::Normal:		glfwMaximizeWindow(m_implWindow); glfwRestoreWindow(m_implWindow);	break;
-		case WindowStateE::Maximized:	glfwMaximizeWindow(m_implWindow);									break;
-		case WindowStateE::Minimized:	glfwIconifyWindow(m_implWindow);									break;
+		case WindowState::Normal:		glfwMaximizeWindow(m_implWindow); glfwRestoreWindow(m_implWindow);	break;
+		case WindowState::Maximized:	glfwMaximizeWindow(m_implWindow);									break;
+		case WindowState::Minimized:	glfwIconifyWindow(m_implWindow);									break;
 		default:																							break;
 		}
 	}
@@ -216,27 +216,27 @@ void Window::setWindowState(WindowStateE state)
 #endif
 }
 
-WindowStateE Window::windowState() const
+WindowState Window::windowState() const
 {
-	return WindowStateE();
+	return WindowState();
 }
 
-void Window::setWindowsStyle(WindowStyleE style)
+void Window::setWindowsStyle(WindowStyle style)
 {
 #if NB_OS == NB_OS_WINDOWS_NT
 	switch (style)
 	{
-	case WindowStyleE::None:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, false);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, true);	break;
-	case WindowStyleE::Fixed:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, true);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, false);	break;
-	case WindowStyleE::SizeBox:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, true);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, true);	break;
+	case WindowStyle::None:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, false);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, true);	break;
+	case WindowStyle::Fixed:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, true);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, false);	break;
+	case WindowStyle::SizeBox:	glfwSetWindowAttrib(m_implWindow, GLFW_DECORATED, true);	glfwSetWindowAttrib(m_implWindow, GLFW_RESIZABLE, true);	break;
 	default:																																			break;
 	}
 #endif
 }
 
-WindowStyleE Window::windowStyle() const
+WindowStyle Window::windowStyle() const
 {
-	return WindowStyleE();
+	return WindowStyle();
 }
 
 void Window::setTopmost(bool topmost)
@@ -348,10 +348,10 @@ void Window::pollEvents()
 			{
 				int pos[2] = { 0, 0 };
 				screen_get_event_property_iv(m_qnxScreenEvent, SCREEN_PROPERTY_POSITION, pos);
-				//printf("touch down: x=%d, y=%d\n", pos[0], pos[1]);
+				//printf("touch Down: x=%d, y=%d\n", pos[0], pos[1]);
 				
 				TouchEventArgs e;
-				e.action = TouchActionE::down;
+				e.action = TouchAction::Down;
 				e.x = (float)pos[0];
 				e.y = (float)pos[1];
 
@@ -374,7 +374,7 @@ void Window::pollEvents()
 				//printf("touch release: x=%d, y=%d\n", pos[0], pos[1]);
 
 				TouchEventArgs e;
-				e.action = TouchActionE::up;
+				e.action = TouchAction::Up;
 				e.x = (float)pos[0];
 				e.y = (float)pos[1];
 
@@ -491,7 +491,7 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 		glfwGetCursorPos(m_implWindow, &x, &y);
 
 		TouchEventArgs e;
-		e.action = action == GLFW_PRESS ? TouchActionE::down : TouchActionE::up;
+		e.action = action == GLFW_PRESS ? TouchAction::Down : TouchAction::Up;
 		e.x = (float)x;
 		e.y = (float)y;
 
@@ -504,7 +504,7 @@ void Window::mouseButtonCallback(int button, int action, int mods)
 void Window::cusorPosCallback(double x, double y)
 {
 	TouchEventArgs e;
-	e.action = TouchActionE::move;
+	e.action = TouchAction::Move;
 	e.x = (float)x;
 	e.y = (float)y;
 
@@ -544,7 +544,7 @@ void Window::keyCallback(int key, int scancode, int action, int mods)
 	e.sender = this;
 	e.key = KeyCode(key);
 	e.scancode = scancode;
-	e.action = action == GLFW_PRESS ? KeyAction::down : action == GLFW_RELEASE ? KeyAction::up : KeyAction::repeat;
+	e.action = action == GLFW_PRESS ? KeyAction::Down : action == GLFW_RELEASE ? KeyAction::Up : KeyAction::Repeat;
 	e.mods = mods;
 	Key.invoke(e);
 	TreeHelper::keyThunk(root, e);
@@ -571,7 +571,7 @@ void Window::iconifyCallback(int iconified)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)	//如果从WindowStateChanged来的，则不再setValue
 	{
-		setWindowState(iconified ? WindowStateE::Minimized : m_lastWindowState);
+		setWindowState(iconified ? WindowState::Minimized : m_lastWindowState);
 	}
 	m_processingCallback = false;
 }
@@ -581,7 +581,7 @@ void Window::maximizeCallback(int maximized)
 	m_processingCallback = true;
 	if (!m_processingWindowStateChanged)
 	{
-		setWindowState(maximized ? WindowStateE::Maximized : WindowStateE::Normal);
+		setWindowState(maximized ? WindowState::Maximized : WindowState::Normal);
 	}
 	m_processingCallback = false;
 }

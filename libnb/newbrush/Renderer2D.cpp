@@ -323,7 +323,7 @@ void Renderer2D::drawEffect(const Rect& rc, const glm::mat4 & transform, ref<Mat
 		vertexs[0].uv = rotated ? uv1 : uv0;
 		vertexs[1].uv = rotated ? uv2 : uv1;
 		vertexs[2].uv = rotated ? uv3 : uv2;
-		vertexs[3].uv = rotated ? uv0 : uv3;;
+		vertexs[3].uv = rotated ? uv0 : uv3;
 	}
 	else
 	{

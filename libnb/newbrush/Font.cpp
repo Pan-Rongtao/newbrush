@@ -9,104 +9,6 @@ using namespace nb;
 //https://www.zhihu.com/search?type=content&q=stb_truetype
 //https://blog.csdn.net/finewind/article/details/38009731
 
-//int func()
-//{
-//	/* 加载字体（.ttf）文件 */
-//	long int size = 0;
-//	unsigned char *fontBuffer = NULL;
-//
-//	FILE *fontFile = fopen("../resource/fonts/siyuanheiti.otf", "rb");
-//	if (fontFile == NULL)
-//	{
-//		printf("Can not open font file!\n");
-//		return 0;
-//	}
-//	fseek(fontFile, 0, SEEK_END); /* 设置文件指针到文件尾，基于文件尾偏移0字节 */
-//	size = ftell(fontFile);       /* 获取文件大小（文件尾 - 文件头  单位：字节） */
-//	fseek(fontFile, 0, SEEK_SET); /* 重新设置文件指针到文件头 */
-//
-//	fontBuffer = (unsigned char*)calloc(size, sizeof(unsigned char));
-//	fread(fontBuffer, size, 1, fontFile);
-//	fclose(fontFile);
-//
-//	/* 初始化字体 */
-//	stbtt_fontinfo info;
-//	if (!stbtt_InitFont(&info, fontBuffer, 0))
-//	{
-//		printf("stb init font failed\n");
-//	}
-//
-//	/* 创建位图 */
-//	int bitmap_w = 512; /* 位图的宽 */
-//	int bitmap_h = 128; /* 位图的高 */
-//	unsigned char *bitmap = (unsigned char*)calloc(bitmap_w * bitmap_h, sizeof(unsigned char));
-//
-//	/* "STB"的 unicode 编码 */
-//	char word[20] = { 'O', 'p', 'e', 'n', 'G', 'L' };
-//
-//	/* 计算字体缩放 */
-//	float pixels = 64.0;                                    /* 字体大小（字号） */
-//	float scale = stbtt_ScaleForPixelHeight(&info, pixels); /* scale = pixels / (ascent - descent) */
-//
-//															/**
-//															* 获取垂直方向上的度量
-//															* ascent：字体从基线到顶部的高度；
-//															* descent：基线到底部的高度，通常为负值；
-//															* lineGap：两个字体之间的间距；
-//															* 行间距为：ascent - descent + lineGap。
-//															*/
-//	int ascent = 0;
-//	int descent = 0;
-//	int lineGap = 0;
-//	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
-//
-//	/* 根据缩放调整字高 */
-//	ascent = roundf(ascent * scale);
-//	descent = roundf(descent * scale);
-//
-//	int x = 0; /*位图的x*/
-//
-//			   /* 循环加载word中每个字符 */
-//	for (int i = 0; i < strlen(word); ++i)
-//	{
-//		/**
-//		* 获取水平方向上的度量
-//		* advanceWidth：字宽；
-//		* leftSideBearing：左侧位置；
-//		*/
-//		int advanceWidth = 0;
-//		int leftSideBearing = 0;
-//		stbtt_GetCodepointHMetrics(&info, word[i], &advanceWidth, &leftSideBearing);
-//
-//		/* 获取字符的边框（边界） */
-//		int c_x1, c_y1, c_x2, c_y2;
-//		stbtt_GetCodepointBitmapBox(&info, word[i], scale, scale, &c_x1, &c_y1, &c_x2, &c_y2);
-//
-//		/* 计算位图的y (不同字符的高度不同） */
-//		int y = ascent + c_y1;
-//
-//		/* 渲染字符 */
-//		int byteOffset = x + roundf(leftSideBearing * scale) + (y * bitmap_w);
-//		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, bitmap_w, scale, scale, word[i]);
-//
-//		/* 调整x */
-//		x += roundf(advanceWidth * scale);
-//
-//		/* 调整字距 */
-//		int kern;
-//		kern = stbtt_GetCodepointKernAdvance(&info, word[i], word[i + 1]);
-//		x += roundf(kern * scale);
-//	}
-//
-//	/* 将位图数据保存到1通道的png图像中 */
-//	stbi_write_png("STB.png", bitmap_w, bitmap_h, 1, bitmap, bitmap_w);
-//
-//	free(fontBuffer);
-//	free(bitmap);
-//
-//	return 0;
-//}
-
 Font::Font(const std::string & path, uint32_t size)
 	: m_ttFontInfo(new stbtt_fontinfo())
 	, m_size(0.0f)
@@ -120,14 +22,18 @@ Font::Font(const std::string & path, uint32_t size)
 	fseek(f, 0, SEEK_SET);
 	unsigned char *buffer = new unsigned char[fileSize];
 	auto n = fread(buffer, fileSize, 1, f);
+	fclose(f);
 
 	if (!stbtt_InitFont(m_ttFontInfo, buffer, 0))
 	{
+		delete[]buffer;
 		nbThrowException(std::runtime_error, "fail to init font [%s]", path.data())
 	}
+	//delete[]buffer;
 
 	m_scale = stbtt_ScaleForPixelHeight(m_ttFontInfo, (float)size);
 	m_size = (float)size;
+	m_path = path;
 	/**
 	* 获取垂直方向上的度量
 	* ascent：字体从基线到顶部的高度；
@@ -137,11 +43,25 @@ Font::Font(const std::string & path, uint32_t size)
 	stbtt_GetFontVMetrics(m_ttFontInfo, &m_ascent, &m_descent, &m_lineGap);
 	m_ascent = (int)roundf((float)m_ascent * m_scale);
 	m_descent = (int)roundf((float)m_descent * m_scale);
+
+//	int len = 256;
+//	auto x = stbtt_GetFontNameString(m_ttFontInfo, &len, STBTT_PLATFORM_ID_MICROSOFT, STBTT_MS_EID_SYMBOL, STBTT_MS_LANG_ENGLISH, 1);
+
 }
 
 Font::~Font()
 {
 	delete m_ttFontInfo;
+}
+
+float nb::Font::size() const
+{
+	return m_size;
+}
+
+const std::string & nb::Font::path() const
+{
+	return m_path;
 }
 
 float Font::getBaseline() const
@@ -364,20 +284,24 @@ ref<Glyph> nb::getGlyph(ref<Font> font, wchar_t unicode)
 	return newFontAtlas->getGlyph(unicode);
 }
 
-static std::set<ref<Font>> g_fonts;
+static std::vector<ref<Font>> g_fonts;
 ref<Font> FontLibrary::addFont(const std::string & path, uint32_t size)
 {
+	for (auto f : g_fonts)
+	{
+		if (path == f->path() && size == f->size())
+			return f;
+	}
 	auto font = createRef<Font>(path, size);
-	g_fonts.insert(font);
+	g_fonts.push_back(font);
 	return font;
 }
 
 ref<Font> FontLibrary::getDefaultFont()
 {
-	static ref<Font> g_defaultFont;
-	if (!g_defaultFont)
+	if (g_fonts.empty())
 	{
-		g_defaultFont = createRef<Font>(RES_DIR"fonts/siyuanheiti.otf", 32);
+		addFont(RES_DIR"fonts/siyuanheiti.otf", 32);
 	}
-	return g_defaultFont;
+	return g_fonts[0];
 }

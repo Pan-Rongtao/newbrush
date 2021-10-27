@@ -3,16 +3,15 @@
 using namespace nb;
 
 Binding::Binding()
-	: Binding(nullptr, "", BindingModeE::OneWayToTarget) 
+	: Binding(nullptr, "") 
 {}
 
 Binding::Binding(const std::string &path)
-	: Binding(nullptr, path, BindingModeE::OneWayToTarget) 
+	: Binding(nullptr, path) 
 {}
 
-Binding::Binding(ref<DataContext> _source, const std::string &_path, BindingModeE _mode)
+Binding::Binding(ref<DataContext> _source, const std::string &_path)
 	: path(_path)
-	, mode(_mode)
 	, m_handle(-1)
 {
 	setSource(_source);

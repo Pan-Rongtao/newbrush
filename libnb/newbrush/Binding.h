@@ -145,9 +145,9 @@ public:
 			}
 		}
 	}
-	virtual var get() const override { return m_v; }
 
-	virtual rttr::type type() const override { return type::get<T>(); }
+	virtual var get() const override			{ return m_v; }
+	virtual rttr::type type() const override	{ return type::get<T>(); }
 	
 private:
 	var	m_v;
@@ -164,9 +164,9 @@ public:
 		m_template = temp;
 	}
 
-	const ref<DataObject> &getTemplate() const { return m_template; }
-
-	void addItem(ref<DataObject> item) { m_items.push_back(item); }
+	const ref<DataObject> &getTemplate() const	{ return m_template; }
+	void addItem(ref<DataObject> item)			{ m_items.push_back(item); }
+	size_t itemCount() const					{ return m_items.size(); }
 
 	void removeItem(std::size_t index) 
 	{
@@ -179,8 +179,6 @@ public:
 		nbThrowExceptionIf(index >= itemCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)itemCount());
 		return m_items[index];
 	}
-
-	size_t itemCount() const { return m_items.size(); }
 
 private:
 	std::vector<ref<DataObject>> m_items;
@@ -207,26 +205,16 @@ static ref<DataVar<glm::vec2>> makeDataVec2(const std::string &name, const glm::
 static ref<DataVar<glm::vec3>> makeDataVec3(const std::string &name, const glm::vec3 &v = glm::vec3())	{ return makeDataVar<glm::vec3>(name, v); }
 static ref<DataVar<glm::vec4>> makeDataVec4(const std::string &name, const glm::vec4 &v = glm::vec4())	{ return makeDataVar<glm::vec4>(name, v); }
 
-
-//数据流方向
-enum class BindingModeE
-{
-	OneTime,		//仅一次
-	OneWayToTarget,	//单向到目标
-	OneWayToSource,	//单向到源
-	TwoWay,			//双向
-};
-
+/////////////////////
 class NB_API Binding : public std::enable_shared_from_this<Binding>, public Object
 {
 public:
 	Binding();
 	Binding(const std::string &path);
-	Binding(ref<DataContext> _source, const std::string &_path, BindingModeE _mode = BindingModeE::OneWayToTarget);
+	Binding(ref<DataContext> _source, const std::string &_path);
 	~Binding();
 
 	std::string path;
-	BindingModeE mode;
 
 	//源
 	void setSource(ref<DataContext> source);

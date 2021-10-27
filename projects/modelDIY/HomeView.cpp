@@ -15,9 +15,9 @@ HomeView::HomeView()
 	m_area->Click += nbBindEventFunction(HomeView::onBtnClick);
 	m_area->Touch += [](const TouchEventArgs &e)
 	{
-		if (e.action == TouchActionE::move)
+		if (e.action == TouchAction::Move)
 			g_move = true;
-		else if(e.action == TouchActionE::down)
+		else if(e.action == TouchAction::Down)
 			g_move = false;
 	};
 	 

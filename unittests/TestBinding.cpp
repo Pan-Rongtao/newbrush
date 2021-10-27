@@ -5,7 +5,7 @@
 
 using namespace nb;
 
-TEST_CASE("TestBinding", "[TestBinding]")
+TEST_CASE("Binding", "[Binding]")
 {
 	auto obj = createRef<RttrObject>();
 

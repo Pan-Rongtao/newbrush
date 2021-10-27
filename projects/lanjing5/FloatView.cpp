@@ -13,7 +13,8 @@ void FloatView::init()
 	m_root->setBackground(SolidColorBrush::white());
 #endif
 
-	auto model = loadModel(RES_DIR"lanjing5/1.fbx", glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, glm::radians(180.0f), 0.0f), glm::vec3(0.004f));
+	auto resDir = m_resDir.empty() ? RES_DIR : m_resDir;
+	auto model = loadModel(resDir + "lanjing5/1.fbx", glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, glm::radians(180.0f), 0.0f), glm::vec3(0.004f));
 	auto light = createRef<PointLight>();
 #ifdef WIN32
 	light->ambient = {50, 50, 50};
@@ -32,22 +33,27 @@ void FloatView::init()
 	m_data = data;
 	m_data->ValueChanged += [&](const DataContext::ValueChangedArgs & args) { onDataChanged(args.path, args.value); };
 
-//	setData("AnimationType", 0);
-	model->AnimationStateChanged += [=](const TimelineStateE &state)
+	model->AnimationStateChanged += [=](const TimelineState &state)
 	{
 		float beg, end;
 		model->getFrameSection(beg, end);
 		auto aniIndex = -1;
-		if (end == 210.0f)		aniIndex = 0;
-		else if (end == 375.0f)	aniIndex = 1;
-		else if (end == 545.0f)	aniIndex = 2;
-		else if (end == 698.0f)	aniIndex = 3;
+		if (end == 110.0f)		aniIndex = 0;
+		else if (end == 210.0f)	aniIndex = 1;
+		else if (end == 375.0f)	aniIndex = 2;
+		else if (end == 545.0f)	aniIndex = 3;
+		else if (end == 650.0f)	aniIndex = 4;
+		else if (end == 730.0f)	aniIndex = 5;
 		auto st = (int)state;
 		auto args = std::to_string(aniIndex) + "," + std::to_string(st);
 #if NB_OS == NB_OS_ANDROID
 		nofityAndroid("AnimationStateChangedEvent", args);
 #endif
 	};
+	//	setData("AnimationType", 0);
+#if NB_OS == NB_OS_ANDROID
+	nofityAndroid("InitDoneEvent", "");
+#endif
 }
 
 void FloatView::onDataChanged(const std::string & path, const var & value)
@@ -66,10 +72,12 @@ void FloatView::onDataChanged(const std::string & path, const var & value)
 			int type = x & 0x0fffffff;
 			switch (type)
 			{
-			case 0:	model->setFrameSection(0.0, 210.0f);	model->play(!onceAni); break;
-			case 1:	model->setFrameSection(220.0, 375.0f);	model->play(!onceAni); break;
-			case 2:	model->setFrameSection(385.0, 545.0f);	model->play(!onceAni); break;
-			case 3:	model->setFrameSection(555.0, 698.0f);	model->play(!onceAni); break;
+			case 0:	model->setFrameSection(0.0, 110);	model->play(!onceAni); break;
+			case 1:	model->setFrameSection(120.0, 210.0f);	model->play(!onceAni); break;
+			case 2:	model->setFrameSection(220.0, 375.0f);	model->play(!onceAni); break;
+			case 3:	model->setFrameSection(385.0, 545.0f);	model->play(!onceAni); break;
+			case 4:	model->setFrameSection(545.0, 650.0f);	model->play(!onceAni); break;
+			case 5:	model->setFrameSection(660.0, 730.0f);	model->play(!onceAni); break;
 			case 9:	model->setFrameSection(0.0, -1.0f);		model->play(!onceAni); break;
 			default:	break;
 			}
@@ -86,12 +94,12 @@ void FloatView::onDataChanged(const std::string & path, const var & value)
 void FloatView::onTouch(const TouchEventArgs & e)
 {
 	Point p = { e.x, e.y };
-	if (e.action == TouchActionE::down)
+	if (e.action == TouchAction::Down)
 	{
 		m_pressed = true;
 		m_pressedPoint = p;
 	}
-	else if (e.action == TouchActionE::move)
+	else if (e.action == TouchAction::Move)
 	{
 		if (!m_pressed) return;
 
@@ -107,7 +115,7 @@ void FloatView::onTouch(const TouchEventArgs & e)
 		rotate.y = glm::radians(newAngle);
 		model->getTransform()->setRotate(rotate);
 	}
-	else if (e.action == TouchActionE::up)
+	else if (e.action == TouchAction::Up)
 	{
 		m_pressed = false;
 	}
@@ -115,7 +123,7 @@ void FloatView::onTouch(const TouchEventArgs & e)
 
 void FloatView::onKey(const KeyEventArgs &e)
 {
-	if (e.action != KeyAction::down)
+	if (e.action != KeyAction::Down)
 		return;
 
 	switch (e.key)
@@ -124,8 +132,10 @@ void FloatView::onKey(const KeyEventArgs &e)
 	case KeyCode::_2:	setData("AnimationType", 1); break;
 	case KeyCode::_3:	setData("AnimationType", 2); break;
 	case KeyCode::_4:	setData("AnimationType", 3); break;
+	case KeyCode::_5:	setData("AnimationType", 4); break;
+	case KeyCode::_6:	setData("AnimationType", 5); break;
 	case KeyCode::_9:	setData("AnimationType", 9); break;
-	case KeyCode::kp_1:	setData("AnimationType", 0x10000000 | 2);	break;
+	case KeyCode::KP_1:	setData("AnimationType", 0x10000000 | 2);	break;
 	default:														break;
 	}
 }

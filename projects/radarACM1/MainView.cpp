@@ -24,7 +24,7 @@ void MainView::init()
 	Application::get()->mainWindow()->setWidth(1920.0f);
 	Application::get()->mainWindow()->setHeight(1080.0f);
 	Application::get()->mainWindow()->setPosition(0.0f, 0.0f);
-	Application::get()->mainWindow()->setWindowsStyle(WindowStyleE::None);
+	Application::get()->mainWindow()->setWindowsStyle(WindowStyle::None);
 	Application::get()->mainWindow()->setTitle("RadarACM1 Power By NewBrush");
 
 	TextureLibrary::addTextureAtlas("radarACM1", RES_DIR"radarACM1/radarACM1.png", RES_DIR"radarACM1/radarACM1.txt");

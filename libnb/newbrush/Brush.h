@@ -211,6 +211,8 @@ public:
 	static bool addImageBrush(const std::string &name, const std::string &imagePath);
 	static bool addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName);
 	static ref<Brush> get(const std::string &name);
+	template<class T>
+	static ref<T> get(const std::string &name) { return as<T>(get(name)); };
 };
 
 #define SCBR(color)						createRef<SolidColorBrush>(color)

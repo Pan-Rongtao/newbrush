@@ -22,11 +22,11 @@
 namespace nb 
 {
 	
-enum class EasingModeE : uint8_t
+enum class EasingMode : uint8_t
 {
-	EaseIn,
-	EaseOut,
-	EaseInOut,
+	In,
+	Out,
+	InOut,
 };
 
 //缓动函数基类
@@ -38,7 +38,8 @@ public:
 	//子类需重写此方法来给出f(t)值，即随时间变化后的进度值（0.0~1.0)
 	//t：动画的归一化时间，0.0~1.0之间
 	virtual double easeInCore(double t) = 0;
-	EasingModeE	mode{ EasingModeE::EaseIn };
+
+	EasingMode	mode{ EasingMode::In };
 };
 
 //LinearEase（线型缓冲）
@@ -58,7 +59,7 @@ public:
 
 	virtual double easeInCore(double t) override 
 	{ 
-		return mode == EasingModeE::EaseIn ? glm::backEaseIn(t, amplitude) : mode == EasingModeE::EaseOut ? glm::backEaseOut(t, amplitude) : glm::backEaseInOut(t, amplitude); 
+		return mode == EasingMode::In ? glm::backEaseIn(t, amplitude) : mode == EasingMode::Out ? glm::backEaseOut(t, amplitude) : glm::backEaseInOut(t, amplitude); 
 	}
 };
 
@@ -73,7 +74,7 @@ public:
 
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::bounceEaseIn(t) : mode == EasingModeE::EaseOut ? glm::bounceEaseOut(t) : glm::bounceEaseInOut(t);
+		return mode == EasingMode::In ? glm::bounceEaseIn(t) : mode == EasingMode::Out ? glm::bounceEaseOut(t) : glm::bounceEaseInOut(t);
 	}
 };
 
@@ -83,7 +84,7 @@ class NB_API CircleEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::circularEaseIn(t) : mode == EasingModeE::EaseOut ? glm::circularEaseOut(t) : glm::circularEaseInOut(t);
+		return mode == EasingMode::In ? glm::circularEaseIn(t) : mode == EasingMode::Out ? glm::circularEaseOut(t) : glm::circularEaseInOut(t);
 	}
 };
 
@@ -93,7 +94,7 @@ class NB_API CubicEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::cubicEaseIn(t) : mode == EasingModeE::EaseOut ? glm::cubicEaseOut(t) : glm::cubicEaseInOut(t);
+		return mode == EasingMode::In ? glm::cubicEaseIn(t) : mode == EasingMode::Out ? glm::cubicEaseOut(t) : glm::cubicEaseInOut(t);
 	}
 };
 
@@ -103,7 +104,7 @@ class NB_API ElasticEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::elasticEaseIn(t) : mode == EasingModeE::EaseOut ? glm::elasticEaseOut(t) : glm::elasticEaseInOut(t);
+		return mode == EasingMode::In ? glm::elasticEaseIn(t) : mode == EasingMode::Out ? glm::elasticEaseOut(t) : glm::elasticEaseInOut(t);
 	}
 };
 
@@ -113,7 +114,7 @@ class NB_API ExponentialEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::exponentialEaseIn(t) : mode == EasingModeE::EaseOut ? glm::exponentialEaseOut(t) : glm::exponentialEaseInOut(t);
+		return mode == EasingMode::In ? glm::exponentialEaseIn(t) : mode == EasingMode::Out ? glm::exponentialEaseOut(t) : glm::exponentialEaseInOut(t);
 	}
 };
 
@@ -127,7 +128,7 @@ public:
 
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? pow(t, power) : mode == EasingModeE::EaseOut ? 1 - pow(1 - t, power) : (t < 0.5) ? (0.5 * pow(2 * t, power)) : (1 - 0.5 * pow(2 - 2 * t, power));
+		return mode == EasingMode::In ? pow(t, power) : mode == EasingMode::Out ? 1 - pow(1 - t, power) : (t < 0.5) ? (0.5 * pow(2 * t, power)) : (1 - 0.5 * pow(2 - 2 * t, power));
 	}
 };
 
@@ -137,7 +138,7 @@ class NB_API QuadraticEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::quadraticEaseIn(t) : mode == EasingModeE::EaseOut ? glm::quadraticEaseOut(t) : glm::quadraticEaseInOut(t);
+		return mode == EasingMode::In ? glm::quadraticEaseIn(t) : mode == EasingMode::Out ? glm::quadraticEaseOut(t) : glm::quadraticEaseInOut(t);
 	}
 };
 
@@ -147,7 +148,7 @@ class NB_API QuarticEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::quarticEaseIn(t) : mode == EasingModeE::EaseOut ? glm::quarticEaseOut(t) : glm::quarticEaseInOut(t);
+		return mode == EasingMode::In ? glm::quarticEaseIn(t) : mode == EasingMode::Out ? glm::quarticEaseOut(t) : glm::quarticEaseInOut(t);
 	}
 };
 
@@ -157,7 +158,7 @@ class NB_API QuinticEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::quinticEaseIn(t) : mode == EasingModeE::EaseOut ? glm::quinticEaseOut(t) : glm::quinticEaseInOut(t);
+		return mode == EasingMode::In ? glm::quinticEaseIn(t) : mode == EasingMode::Out ? glm::quinticEaseOut(t) : glm::quinticEaseInOut(t);
 	}
 };
 
@@ -167,7 +168,7 @@ class NB_API SineEase : public EasingBase
 public:
 	virtual double easeInCore(double t) override
 	{
-		return mode == EasingModeE::EaseIn ? glm::sineEaseIn(t) : mode == EasingModeE::EaseOut ? glm::sineEaseOut(t) : glm::sineEaseInOut(t);
+		return mode == EasingMode::In ? glm::sineEaseIn(t) : mode == EasingMode::Out ? glm::sineEaseOut(t) : glm::sineEaseInOut(t);
 	}
 };
 
@@ -186,7 +187,7 @@ public:
 	bool hasDuration() const										{ return m_type == Type::Duration; }
 	bool isForever() const											{ return m_type == Type::Forever; }
 	float getCount() const											{ return m_count; }
-	TimeSpan getDuration() const									{ return m_duration; }
+	const TimeSpan &getDuration() const								{ return m_duration; }
 
 private:
 	enum class Type : uint8_t
@@ -201,16 +202,9 @@ private:
 	TimeSpan	m_duration;
 };
 
-enum class FillBehaviorE
-{
-	HoldEnd,		//保持结束值
-	Stop,			//返回初始值
-};
-
-enum class TimelineStateE
+enum class TimelineState : uint8_t
 {
 	Active,
-	Filling,
 	Stopped,
 };
 
@@ -223,7 +217,7 @@ public:
 	Timeline(const TimeSpan &_beginTime, const TimeSpan &_duration) : Timeline(_beginTime, _duration, RepeatBehavior(1)) {}
 	Timeline(const TimeSpan &_beginTime, const TimeSpan &_duration, const RepeatBehavior &_repeatBehavior);
 
-	virtual ~Timeline();
+	virtual ~Timeline() = default;
 
 	//开始
 	virtual void begin();
@@ -233,7 +227,7 @@ public:
 	virtual TimeSpan getActualDurationTimespan() const	{ return duration; }
 
 	//获取当前状态
-	TimelineStateE currentState() const					{ return m_state; }
+	TimelineState currentState() const					{ return m_state; }
 
 	//获取当前时间（相对于duration）
 	TimeSpan getCurrentTime() const						{ return TimeSpan::fromMilliseconds((int)(getCurrentProgress() * getActualDurationTimespan().totalMilliseconds())); }
@@ -241,12 +235,10 @@ public:
 	//获取当前进度
 	float getCurrentProgress() const;
 
-	std::string	name;
 	TimeSpan beginTime;
 	TimeSpan duration;
 	bool reverse;
 	bool autoReverse;
-	FillBehaviorE fillBehavior;
 	RepeatBehavior repeatBehavior;
 
 	Event<EventArgs> StateChanged;	//状态改变
@@ -263,7 +255,7 @@ private:
 	void onTick(const EventArgs &args);
 
 	Timer m_timer;
-	TimelineStateE m_state;
+	TimelineState m_state;
 	uint64_t m_startTick;
 };
 
@@ -274,7 +266,6 @@ public:
 	virtual ~Animation() = default;
 
 	void setTarget(std::weak_ptr<Object> target);
-	void setTargetName(const std::string &name);
 	std::weak_ptr<Object> target() const;
 
 	void setTargetProperty(property property);
@@ -315,7 +306,7 @@ protected:
 	virtual void onStateChanged() override
 	{
 		Animation::onStateChanged();
-		if (currentState() == TimelineStateE::Active)
+		if (currentState() == TimelineState::Active)
 		{
 			nbThrowExceptionIf(type::get<T>() != type::get(targetProperty()), std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().get_type().get_name().data());
 
@@ -446,7 +437,7 @@ protected:
 	virtual void onStateChanged() override
 	{
 		Animation::onStateChanged();
-		if (currentState() == TimelineStateE::Active)
+		if (currentState() == TimelineState::Active)
 		{
 			nbThrowExceptionIf(type::get<T>() != type::get(targetProperty()), std::logic_error, "unmatch property animation type[%s] for property type[%s]", typeid(T).name(), targetProperty().get_type().get_name().data());
 		}

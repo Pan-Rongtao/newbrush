@@ -107,10 +107,10 @@ glm::mat4x4 TransformGroup2D::value()
 /**************************************
 *	摄像头相关
 ***************************************/
-PerspectiveCamera::PerspectiveCamera()
-	: m_translate(0.0f, 0.0f, -10.0f)
-	, m_rotate(0.0)
-	, m_scale(1.0)
+PerspectiveCamera::PerspectiveCamera(const glm::vec3 &position, const glm::vec3 &rotation, const glm::vec3 &scale)
+	: m_translate(position)
+	, m_rotate(rotation)
+	, m_scale(scale)
 	, m_fov(45.0f)
 	, m_aspect(1.7777777f)
 	, m_nearPlane(0.3f)
@@ -459,10 +459,10 @@ void Texture::active()
 void initTextureParams(Texture *tex)
 {
 	tex->bind();
-	tex->setWrappingS(TextureWrappingE::Repeat);
-	tex->setWrappingT(TextureWrappingE::Repeat);
-	tex->setMagnifyFilter(TextureFilterE::Point);
-	tex->setNarrowFilter(TextureFilterE::Point);
+	tex->setWrappingS(TextureWrapping::Repeat);
+	tex->setWrappingT(TextureWrapping::Repeat);
+	tex->setMagnifyFilter(TextureFilter::Point);
+	tex->setNarrowFilter(TextureFilter::Point);
 	tex->unbind();
 }
 
@@ -493,52 +493,52 @@ void Texture2D::unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture2D::setWrappingS(TextureWrappingE wrapping)
+void Texture2D::setWrappingS(TextureWrapping wrapping)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int)(wrapping));
 }
 
-void Texture2D::setWrappingT(TextureWrappingE wrapping)
+void Texture2D::setWrappingT(TextureWrapping wrapping)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)(wrapping));
 }
 
-TextureWrappingE Texture2D::wrappingS() const
+TextureWrapping Texture2D::wrappingS() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, &v);
-	return (TextureWrappingE)v;
+	return (TextureWrapping)v;
 }
 
-TextureWrappingE Texture2D::wrappingT() const
+TextureWrapping Texture2D::wrappingT() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, &v);
-	return (TextureWrappingE)v;
+	return (TextureWrapping)v;
 }
 
-void Texture2D::setMagnifyFilter(TextureFilterE filter)
+void Texture2D::setMagnifyFilter(TextureFilter filter)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)(filter));
 }
 
-void Texture2D::setNarrowFilter(TextureFilterE filter)
+void Texture2D::setNarrowFilter(TextureFilter filter)
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)(filter));
 }
 
-TextureFilterE Texture2D::magnifyFilter() const
+TextureFilter Texture2D::magnifyFilter() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &v);
-	return (TextureFilterE)v;
+	return (TextureFilter)v;
 }
 
-TextureFilterE Texture2D::narrowFilter() const
+TextureFilter Texture2D::narrowFilter() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &v);
-	return (TextureFilterE)v;
+	return (TextureFilter)v;
 }
 
 void Texture2D::update(const std::string & path)
@@ -603,52 +603,52 @@ void TextureCubemap::unbind()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void TextureCubemap::setWrappingS(TextureWrappingE wrapping)
+void TextureCubemap::setWrappingS(TextureWrapping wrapping)
 {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, (int)(wrapping));
 }
 
-void TextureCubemap::setWrappingT(TextureWrappingE wrapping)
+void TextureCubemap::setWrappingT(TextureWrapping wrapping)
 {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, (int)(wrapping));
 }
 
-TextureWrappingE TextureCubemap::wrappingS() const
+TextureWrapping TextureCubemap::wrappingS() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, &v);
-	return (TextureWrappingE)v;
+	return (TextureWrapping)v;
 }
 
-TextureWrappingE TextureCubemap::wrappingT() const
+TextureWrapping TextureCubemap::wrappingT() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, &v);
-	return (TextureWrappingE)v;
+	return (TextureWrapping)v;
 }
 
-void TextureCubemap::setMagnifyFilter(TextureFilterE filter)
+void TextureCubemap::setMagnifyFilter(TextureFilter filter)
 {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, (int)(filter));
 }
 
-void TextureCubemap::setNarrowFilter(TextureFilterE filter)
+void TextureCubemap::setNarrowFilter(TextureFilter filter)
 {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, (int)(filter));
 }
 
-TextureFilterE TextureCubemap::magnifyFilter() const
+TextureFilter TextureCubemap::magnifyFilter() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, &v);
-	return (TextureFilterE)v;
+	return (TextureFilter)v;
 }
 
-TextureFilterE TextureCubemap::narrowFilter() const
+TextureFilter TextureCubemap::narrowFilter() const
 {
 	int v = 0;
 	glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, &v);
-	return (TextureFilterE)v;
+	return (TextureFilter)v;
 }
 
 void TextureCubemap::update(const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back)
@@ -802,6 +802,15 @@ ref<TextureCubemap> TextureLibrary::addTextureCubemap(const std::string &name, c
 		texCubemap->update(top, bottom, left, right, front, back);
 		g_textures[name] = texCubemap;
 		return texCubemap;
+	}
+}
+
+void TextureLibrary::remove(const std::string & name)
+{
+	auto iter = g_textures.find(name);
+	if (iter != g_textures.end())
+	{
+		g_textures.erase(iter);
 	}
 }
 
@@ -1054,6 +1063,8 @@ void ReflectMaterial::uploadUniform(ref<Camera> camera)
 	if (diffuseMapping)
 	{
 		shader->setBool("u_hasTexture", true);
+		diffuseMapping->setSamplerUnit(0);
+		shader->setInt("u_material.diffuseSampler", 0);
 		diffuseMapping->activeAndBind();
 	}
 	else
@@ -1064,6 +1075,8 @@ void ReflectMaterial::uploadUniform(ref<Camera> camera)
 	if (cubeMapping)
 	{
 		shader->setBool("u_hasCubemap", true);
+		cubeMapping->setSamplerUnit(1);
+		shader->setInt("u_material.cubeSampler", 1);
 		cubeMapping->activeAndBind();
 	}
 	else
@@ -1219,7 +1232,7 @@ void Timer::driveInLoop()
 			m_onDispatching = true;			//标记以使记录在dispatch期间调用stop()/remove()的timer，供是否重新add该timer提供判断依据
 			timer->Tick.invoke({ timer });
 			m_onDispatching = false;
-			iter = remove(timer);
+			iter = remove(timer);			//此处有个bug，在Tick回调中add的，在此也会被remove掉，应该记录一下m_timerAddedOnDispatching来过滤掉不remove：todo
 			// 假如timer是单次触发模式，或者在dispatch期间已经被stop，不再将此timer重新加入到队列中
 			if (!timer->isSingleShot() && m_timerRemovedOnDispatching.find(timer) == m_timerRemovedOnDispatching.end())
 			{

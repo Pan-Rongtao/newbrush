@@ -1,7 +1,12 @@
-#include "catch2/catch.hpp"
-#include "newbrush/Log.h"
+﻿#include "catch2/catch.hpp"
 #include "Tr.h"
 #include "newbrush/Helper.h"
+#include "newbrush/Application.h"
+#include "newbrush/Controls.h"
+#include "newbrush/UserControl.h"
+#include "newbrush/Components.h"
+#include "newbrush/Scene.h"
+#include "newbrush/Log.h"
 
 using namespace nb;
 

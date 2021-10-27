@@ -6,7 +6,7 @@
 
 using namespace nb;
 
-TEST_CASE("TestGlobalProperties", "[TestGlobalProperties]")
+TEST_CASE("GlobalProperties", "[GlobalProperties]")
 {
 	bool b = addGlobalProperty<int>("IntProperty", 1);
 	b = addGlobalProperty<int>("IntProperty", 1);
@@ -19,7 +19,7 @@ TEST_CASE("Shader", "[Shader]")
 	auto mss = y - x;
 }
 
-TEST_CASE("TestTimer", "[TestTimer]")
+TEST_CASE("Timer", "[Timer]")
 {
 	Timer t(0, true);
 	t.Tick += [](const EventArgs &e)

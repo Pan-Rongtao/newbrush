@@ -43,9 +43,14 @@ std::vector<ref<Node2D>> TreeHelper::getAllChildren(ref<Node2D> node)
 {
 	std::function<void(ref<Node2D>, std::vector<ref<Node2D>> &)> loop = [&loop](ref<Node2D> node, std::vector<ref<Node2D>> &nodes)
 	{
+		if (node->visibility() != VisibilityE::Visible || !node->isEnable())
+			return;
+
 		for (auto child : node->children())
 		{
-			nodes.push_back(child);
+			if(child->visibility() == VisibilityE::Visible && child->isEnable())
+				nodes.push_back(child);
+
 			if (!child->children().empty())
 				loop(child, nodes);
 		}
@@ -104,18 +109,6 @@ void TreeHelper::keyThunk(ref<Node2D> node, const KeyEventArgs & e)
 			node->keyThunk(e);
 		}
 	}
-}
-
-bool TreeHelper::isActualVisible(Node2D *node)
-{
-	Node2D *p = node;
-	while (p)
-	{
-		if (p->visibility() != VisibilityE::Visible)
-			return false;
-		p = p->getParent();
-	}
-	return true;
 }
 
 float TreeHelper::getActualOpacity(Node2D * node)
@@ -369,32 +362,25 @@ void RttrRegistration::doRegister()
 
 void RttrRegistration::registerEnums()
 {
-	registration::enumeration<HorizontalAlignmentE>("nb::HorizontalAlignmentE")
+	registration::enumeration<HorizontalAlignment>("nb::HorizontalAlignment")
 		(
-			value("Left", HorizontalAlignmentE::Left),
-			value("Center", HorizontalAlignmentE::Center),
-			value("Right", HorizontalAlignmentE::Right),
-			value("Stretch", HorizontalAlignmentE::Stretch)
+			value("Left", HorizontalAlignment::Left),
+			value("Center", HorizontalAlignment::Center),
+			value("Right", HorizontalAlignment::Right),
+			value("Stretch", HorizontalAlignment::Stretch)
 		);
 
-	registration::enumeration<EasingModeE>("nb::EasingModeE")
+	registration::enumeration<EasingMode>("nb::EasingMode")
 		(
-			value("EaseIn", EasingModeE::EaseIn),
-			value("EaseOut", EasingModeE::EaseOut),
-			value("EaseInOut", EasingModeE::EaseInOut)
+			value("In", EasingMode::In),
+			value("Out", EasingMode::Out),
+			value("InOut", EasingMode::InOut)
 		);
 
-	registration::enumeration<FillBehaviorE>("nb::FillBehaviorE")
+	registration::enumeration<TimelineState>("nb::TimelineState")
 		(
-			value("HoldEnd", FillBehaviorE::HoldEnd),
-			value("Stop", FillBehaviorE::Stop)
-		);
-
-	registration::enumeration<TimelineStateE>("nb::TimelineStateE")
-		(
-			value("Active", TimelineStateE::Active),
-			value("Filling", TimelineStateE::Filling),
-			value("Stopped", TimelineStateE::Stopped)
+			value("Active", TimelineState::Active),
+			value("Stopped", TimelineState::Stopped)
 		);
 
 }
@@ -476,11 +462,9 @@ void RttrRegistration::registerTypes()
 		.property("Duration", &Timeline::duration)
 		.property("AutoReverse", &Timeline::autoReverse)
 		.property("Reverse", &Timeline::reverse)
-		.property("FillBehavior", &Timeline::fillBehavior)
 		;
 
 	registration::class_<Animation>("nb::Animation") ()
-		.property("Name", &Animation::name)
 		.property("Target", &Animation::target, &Animation::setTarget)
 		.property("TargetProperty", &Animation::targetProperty, &Animation::setTargetProperty)
 		.property("TargetPropertyName", &Animation::targetPropertyName, &Animation::setTargetPropertyName)

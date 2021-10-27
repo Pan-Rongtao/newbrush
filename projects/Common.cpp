@@ -19,6 +19,11 @@ void ViewBase::render()
 	m_root->updateLayout(m_size);
 }
 
+void ViewBase::setResourceDir(const std::string &resDir)
+{
+	m_resDir = resDir;
+}
+
 void ViewBase::setData(const std::string & path, const var & value)
 {
 	if (!m_data)
@@ -107,7 +112,7 @@ Java_nb_jni_Newbrush_init、Java_nb_jni_Newbrush_resize、Java_nb_jni_Newbrush_r
 Java_nb_jni_Newbrush_touch会在android UI主线程中调用
 Java_nb_jni_Newbrush_setData则在android使用的线程调用，可能是UI线程也可能是非UI线程，取决于调用者调用的地方
 *****************************************************/
-JNIEXPORT void JNICALL Java_nb_jni_Newbrush_init(JNIEnv *env, jobject thiz)
+JNIEXPORT void JNICALL Java_nb_jni_Newbrush_init(JNIEnv *env, jobject thiz, jstring resDir)
 {
 	Log::info("Java_nb_jni_Newbrush_init begin");
 	//记录JNIEnv、jclass、jmethodID
@@ -117,9 +122,11 @@ JNIEXPORT void JNICALL Java_nb_jni_Newbrush_init(JNIEnv *env, jobject thiz)
 	nbThrowExceptionIf(!g_javaClass, std::runtime_error, "can't find android class %s", ANDROID_CLASS);
 	g_javaCallback = env->GetStaticMethodID(g_javaClass, "onNBEvent", "(Ljava/lang/String;Ljava/lang/String;)V");
 	nbThrowExceptionIf(!g_javaCallback, std::runtime_error, "can't find NBSurfaceView::onNBEvent(String, String)");
-
+	
 	SystemHelper::printSystemInfos();
 	auto k = getMilliseconds();
+	const char* _resDir = env->GetStringUTFChars(resDir, 0);
+	g_view->setResourceDir(std::string(_resDir));
 	g_view->init();
 	
 	Log::info("Java_nb_jni_Newbrush_init finish cost {} ms", getMilliseconds() - k);
@@ -150,7 +157,7 @@ JNIEXPORT void JNICALL Java_nb_jni_Newbrush_touch(JNIEnv *env, jobject thiz, jin
 	if (action == 1) Log::info("Java_nb_jni_Newbrush_touch up, x={}, y={}", x, y);
 
 	TouchEventArgs e;
-	e.action = (action == 0 ? TouchActionE::down : action == 1 ? TouchActionE::up : TouchActionE::move);
+	e.action = (action == 0 ? TouchAction::Down : action == 1 ? TouchAction::Up : TouchAction::Move);
 	e.x = (float)x;
 	e.y = (float)y;
 	g_msgQueue.post([e]() {TreeHelper::touchThunk(g_view->getRoot(), e); });
@@ -198,7 +205,7 @@ int main(int argc, char **argv)
 		window.Touch += [&](const TouchEventArgs &e)
 		{
 #ifdef NB_USE_IMGUI
-			if (e.action == TouchActionE::down && !imView->MouseInWindow)
+			if (e.action == TouchAction::Down && !imView->MouseInWindow)
 				window.selectItem(e.x, e.y);
 #endif
 		};
@@ -211,7 +218,7 @@ int main(int argc, char **argv)
 		};
 		window.Key += [&window](const KeyEventArgs &e)
 		{
-			if (e.key == KeyCode::escape)
+			if (e.key == KeyCode::Escape)
 				window.close();
 
 #ifdef NB_USE_IMGUI

@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include "../Common.h"
+#include "MainView.h"
 
 using namespace nb;
 
@@ -8,11 +9,11 @@ using namespace nb;
 class TriangleNode : public Node3D
 {
 public:
-	TriangleNode(Point pos, const float Side_length = 1, bool up = true );
+	TriangleNode(Point pos, const float Side_length = 1, bool up = true);
 
 	Point getpos();
 	void startanimation();
-	TimelineStateE isactive();
+	TimelineState isactive();
 	ref<Material> getmaterial();
 protected:
 	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights);
@@ -77,7 +78,7 @@ class SportNode : public Node2D
 {
 public:
 	SportNode();
-	
+
 private:
 	void onKey(const KeyEventArgs &e);
 	void onTick(const EventArgs & e);
@@ -87,15 +88,17 @@ private:
 	void moveShadowNumberCircle(ref<Node2D> node, float x, float y, float r, float angle);
 	void moveEffectNumberCircle(ref<Node2D> node, float angle);
 
+	void updatemodel();
+
 	Timer m_timer;
 	ref<Scene> m_scene;
 	ref<Trianglegroup> m_Trianglegroupmodel;
 	ref<RectangleClass> m_Rectangle;
 	ref<HaloRectangle> m_HaloRectangle;
 	FloatAnimation m_haloanimation;
-	int lasttime = 0;
-	int curtime = 0;
-	bool startanimation = false;
+	int m_lasttime = 0;
+	int m_curtime = 0;
+	bool m_bstartanimation = false;
 
 	ref<Node2D> m_hourParent;
 	ref<Node2D> m_minuteParent;

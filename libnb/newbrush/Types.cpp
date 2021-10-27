@@ -58,7 +58,7 @@ w=y+[y/4]+[c/4]-2c+[26(m+1)/10]+d-1
 =49+12+5-40+28
 =54 (除以7余5)
 ************************************************************************/
-WeekE Date::week() const
+Week Date::week() const
 {
 	unsigned y = 0, c = 0, m = 0, d = 0;
 	if (m_month == 1 || m_month == 2)
@@ -77,7 +77,7 @@ WeekE Date::week() const
 	}
 	int nWeek = y + y / 4 + c / 4 - 2 * c + 26 * (m + 1) / 10 + d - 1;  //蔡勒公式
 	nWeek = nWeek >= 0 ? (nWeek % 7) : (nWeek % 7 + 7);					//nWeek为负时取模
-	return (WeekE)nWeek;
+	return (Week)nWeek;
 }
 Date Date::addYears(int years) const
 {

@@ -25,7 +25,7 @@ void MainView::init()
 	Application::get()->mainWindow()->setWidth(1920.0f);
 	Application::get()->mainWindow()->setHeight(1080.0f);
 	Application::get()->mainWindow()->setPosition(0.0f, 0.0f);
-	Application::get()->mainWindow()->setWindowsStyle(WindowStyleE::None);
+	Application::get()->mainWindow()->setWindowsStyle(WindowStyle::None);
 	Application::get()->mainWindow()->setTitle("RadarACM Power By NewBrush");
 
 	BrushLibrary::addImageBrush("brushBg", RES_DIR"radarACM/BG1.png");
@@ -37,12 +37,12 @@ void MainView::init()
 	m_root->setAlignmentCenter();
 
 	m_recognizeRect = createRef<Image>();
-	m_recognizeRect->setStretch(StretchE::Origion);
+	m_recognizeRect->setStretch(Stretch::Origion);
 	m_recognizeRect->setPosition({0, 0});
 	m_recognizeRect->setAlignmentCenter();
 
 	m_recognizeRect1 = createRef<Image>();
-	m_recognizeRect1->setStretch(StretchE::Origion);
+	m_recognizeRect1->setStretch(Stretch::Origion);
 	m_recognizeRect1->setPosition({ -13.0f, -5.0f });
 	m_recognizeRect1->setAlignmentCenter();
 	m_recognizeRect1->setTexture(createRef<Texture2D>(RES_DIR"radarACM/ManLine2.png"));
@@ -124,7 +124,7 @@ void MainView::setValueNodes(nb::ref<Node2D> parent, int value, const std::strin
 		auto n = temp % 10;
 		auto nodeImagePath = imagePrefix + std::to_string(n) + ".png";
 		auto node = createRef<Node2D>(0.0f, 0.0f, 52.0f, 80.0f);
-		node->setVerticalAlignment(VerticalAlignmentE::Center);
+		node->setVerticalAlignment(VerticalAlignment::Center);
 		node->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR + std::string("radarACM/") + nodeImagePath)));
 		nodes.push_back(node);
 		temp /= 10;

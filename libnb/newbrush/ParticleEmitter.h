@@ -149,13 +149,13 @@ public:
 
 
 
-enum class ParticleFacingTypeE
+enum class ParticleFacingType
 {
 	Billboard2D,
 	Billboard3D,
 };
 
-enum class ParticleBlendModeE
+enum class ParticleBlendMode
 {
 	AlphaBlend,
 	Additive,

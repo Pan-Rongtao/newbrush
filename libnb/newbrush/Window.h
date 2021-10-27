@@ -2,7 +2,6 @@
 #include <string>
 #include "newbrush/Object.h"
 #include "newbrush/Event.h"
-#include "newbrush/Types.h"
 
 #if NB_OS == NB_OS_WINDOWS_NT
 	struct GLFWwindow;
@@ -15,14 +14,14 @@
 namespace nb 
 {
 
-enum class WindowStateE
+enum class WindowState
 {
 	Normal,		//还原
 	Maximized,	//最大化
 	Minimized,	//最小化
 };
 
-enum class WindowStyleE
+enum class WindowStyle
 {
 	None,		//仅工作区可见
 	Fixed,		//不可改变尺寸
@@ -63,12 +62,12 @@ public:
 	bool isShow() const;
 
 	//窗口状态
-	void setWindowState(WindowStateE state);
-	WindowStateE windowState() const;
+	void setWindowState(WindowState state);
+	WindowState windowState() const;
 
 	//窗口样式
-	void setWindowsStyle(WindowStyleE style);
-	WindowStyleE windowStyle() const;
+	void setWindowsStyle(WindowStyle style);
+	WindowStyle windowStyle() const;
 
 	//窗口置顶
 	void setTopmost(bool topmost);
@@ -144,7 +143,7 @@ private:
 	bool			m_dispatchingCloseEvent;
 	bool			m_processingCallback;
 	bool			m_processingWindowStateChanged;
-	WindowStateE	m_lastWindowState;
+	WindowState	m_lastWindowState;
 	std::string		m_title;
 	ref<Node2D>		m_selectItem;
 	friend class Application;

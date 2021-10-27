@@ -5,7 +5,6 @@
 #include "newbrush/Components.h"
 #include "newbrush/Scene.h"
 #include "newbrush/Log.h"
-#include "newbrush/PhysicsMovePage.h"
 
 using namespace nb;
 
@@ -30,7 +29,7 @@ TEST_CASE("Node2D", "[Node2D]")
 	node->setBackground(SolidColorBrush::red());
 
 	//auto m_TopMenu = Node2D::createWithTextureFrameName("menu", "pop_bg.png", true);
-	//m_TopMenu->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	//m_TopMenu->setHorizontalAlignment(HorizontalAlignment::Center);
 	//m_TopMenu->addChild(Node2D::createWithTextureFrameName("menu", "ic_Answer.png", true, 0.0f, 43.9f));
 	//m_root->addChild(m_LED_EleSteerLock);
 	m_root->addChild(node);
@@ -51,19 +50,18 @@ TEST_CASE("Image", "[Image]")
 	root->setAlignmentCenter();
 	root->setBackground(SolidColorBrush::wheat());
 
-	auto node0 = createRef<Node2D>(100.0f, 100.0f, 12.0f, 12.0f);
-	//node0->setBackground(createRef<ImageBrush>(createRef<Texture2D>("d:/test/pop_1.png")));
-	auto node1 = createRef<Node2D>(100.0f, 112.0f, 12.0f, 12.0f);
-	//node1->setBackground(createRef<ImageBrush>(createRef<Texture2D>("d:/test/pop_5.png")));
+	auto img = createRef<Image>();
+	img->setAlignmentCenter();
+	img->setStretch(Stretch::Uniform);
+	img->setTexture(createRef<Texture2D>(RES_DIR"effects/hollow_knight.jpg"));
 
-	root->addChild(node0);
-	root->addChild(node1);
+	root->addChild(img);
 	w.root = root;
 
 	app.run();
 }
 
-TEST_CASE("TestRectangle", "[TestRectangle]")
+TEST_CASE("Rectangle", "[Rectangle]")
 {
 	Application app;
 
@@ -74,7 +72,7 @@ TEST_CASE("TestRectangle", "[TestRectangle]")
 	//node->setWidth(100);
 	//node->setHeight(100);
 	node->setBackground(createRef<SolidColorBrush>(Colors::blue));
-	node->setHorizontalAlignment(HorizontalAlignmentE::Left);
+	node->setHorizontalAlignment(HorizontalAlignment::Left);
 	
 	auto node1 = createRef<Image>();
 //	node1->setWidth(100);
@@ -83,7 +81,7 @@ TEST_CASE("TestRectangle", "[TestRectangle]")
 //	texture->update(0, createRef<Bitmap>("f:/1.jpg"));
 //	node1->setBackground(createRef<ImageBrush>(texture));
 	node1->setTexture(texture);
-//	node1->setHorizontalAlignment(HorizontalAlignmentE::Left);
+//	node1->setHorizontalAlignment(HorizontalAlignment::Left);
 
 	auto parent = createRef<Node2D>();
 
@@ -192,7 +190,8 @@ TEST_CASE("TextBlock", "[TextBlock]")
 
 	auto text1 = createRef<TextBlock>(u8"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	auto font = createRef<Font>(RES_DIR"fonts/siyuanheiti.otf", 16);
-	text1->setFont(font);
+	//text1->setFont(font);
+	text1->setFontSize(48);
 
 	auto root = createRef<Node2D>();
 	//root->setName("Root");
@@ -256,12 +255,12 @@ TEST_CASE("Cube", "[Cube]")
 	root->Touch += [&](const TouchEventArgs &e)
 	{	
 		Point p = { e.x, e.y };
-		if (e.action == TouchActionE::down)
+		if (e.action == TouchAction::Down)
 		{
 			m_pressed = true;
 			m_pressedPoint = p;
 		}
-		else if (e.action == TouchActionE::move)
+		else if (e.action == TouchAction::Move)
 		{
 			if (!m_pressed) return;
 
@@ -273,14 +272,14 @@ TEST_CASE("Cube", "[Cube]")
 			rotate.x = glm::radians(glm::degrees(rotate.x) - ptOffset.y);
 			cube->getTransform()->setRotate(rotate);
 		}
-		else if (e.action == TouchActionE::up)
+		else if (e.action == TouchAction::Up)
 		{
 			m_pressed = false;
 		}
 	};
 	root->Key += [&](const KeyEventArgs &e)
 	{
-		if (e.action == KeyAction::down)
+		if (e.action == KeyAction::Down)
 		{
 			if (e.key == KeyCode::_1)		cube->setMaterial(createRef<FlatMaterial>(Colors::red));
 			else if (e.key == KeyCode::_2)	cube->setMaterial(createRef<FlatMaterial>(Colors::blue));
@@ -323,7 +322,10 @@ TEST_CASE("SkyBox", "[SkyBox]")
 
 	auto cube = createRef<Cube>(glm::vec3(0.0f), 2.0f);
 	cube->setTransform(createRef<Transform>());
-	cube->setMaterial(createRef<FlatMaterial>(Colors::red));
+	//cube->setMaterial(createRef<FlatMaterial>(Colors::red));
+	auto reflectmaterial = createRef<ReflectMaterial>();
+	reflectmaterial->cubeMapping = cubemap;
+	cube->setMaterial(reflectmaterial);
 
 	root->getScene()->addChild(skybox);
 	root->getScene()->addChild(cube);
@@ -334,12 +336,12 @@ TEST_CASE("SkyBox", "[SkyBox]")
 	root->Touch += [&](const TouchEventArgs &e)
 	{
 		Point p = { e.x, e.y };
-		if (e.action == TouchActionE::down)
+		if (e.action == TouchAction::Down)
 		{
 			m_pressed = true;
 			m_pressedPoint = p;
 		}
-		else if (e.action == TouchActionE::move)
+		else if (e.action == TouchAction::Move)
 		{
 			if (!m_pressed) return;
 
@@ -350,8 +352,13 @@ TEST_CASE("SkyBox", "[SkyBox]")
 			rotate.y = glm::radians(glm::degrees(rotate.y) + ptOffset.x);
 			rotate.x = glm::radians(glm::degrees(rotate.x) - ptOffset.y);
 			cube->getTransform()->setRotate(rotate);
+
+			/*auto rotate = skybox->getTransform()->getRotate();
+			rotate.y = glm::radians(glm::degrees(rotate.y) + ptOffset.x);
+			rotate.x = glm::radians(glm::degrees(rotate.x) - ptOffset.y);
+			skybox->getTransform()->setRotate(rotate);*/
 		}
-		else if (e.action == TouchActionE::up)
+		else if (e.action == TouchAction::Up)
 		{
 			m_pressed = false;
 		}
@@ -408,7 +415,7 @@ TEST_CASE("MovieImage", "[MovieImage]")
 	m_root->setAlignmentCenter();
 	m_root->setBackground(SolidColorBrush::white());
 	auto node = createRef<MovieImage>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node->setHorizontalAlignment(HorizontalAlignmentE::Center);
+	node->setHorizontalAlignment(HorizontalAlignment::Center);
 	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00000.png"));
 	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00001.png"));
 	node->addFrame(createRef<Texture2D>(RES_DIR"cxd706/Sequence_frame/light_00002.png"));
@@ -438,40 +445,6 @@ TEST_CASE("MovieImage", "[MovieImage]")
 
 	w.root = m_root;
 
-	app.run();
-}
-
-TEST_CASE("PhysicsMovePage", "[PhysicsMovePage]")
-{
-	Application app;
-	Window w;
-
-	Application::get()->mainWindow()->setWidth(1920.0f);
-	Application::get()->mainWindow()->setHeight(720.0f);
-	
-	auto m_root = createRef<PhysicsMovePage>(0.0f, 0.0f, 1920.0f, 720.0f);
-	m_root->setBackground(SolidColorBrush::white());
-	m_root->setAlignmentCenter();
-
-	auto node = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node->setBackground(SolidColorBrush::pink());
-	auto node1 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node1->setBackground(SolidColorBrush::red());
-	auto node2 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node2->setBackground(SolidColorBrush::blue());
-	auto node3 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node3->setBackground(SolidColorBrush::green());
-	auto node4 = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
-	node4->setBackground(SolidColorBrush::greenYellow());
-
-	m_root->addPage(node);
-	m_root->addPage(node1);
-	m_root->addPage(node2);
-	m_root->addPage(node3);
-	m_root->addPage(node4);
-
-
-	w.root = m_root;
 	app.run();
 }
 
@@ -520,9 +493,9 @@ TEST_CASE("Clip", "[Clip]")
 
 	w.Key += [&](const KeyEventArgs &e)
 	{
-		if (e.action == KeyAction::down)
+		if (e.action == KeyAction::Down)
 		{
-			if (e.key == KeyCode::space)
+			if (e.key == KeyCode::Space)
 			{
 				rc->setClipRect(rc->getClipRect().x() < 0.0f ? parent->rect() : Rect(-1.0f, -1.0f, -1.0f, -1.0f));
 				img->setClipRect(img->getClipRect().x() < 0.0f ? parent->rect() : Rect(-1.0f, -1.0f, -1.0f, -1.0f));
@@ -578,13 +551,13 @@ TEST_CASE("DotListCtrl", "[DotListCtrl]")
 
 	w.Key += [&](const KeyEventArgs &e)
 	{
-		if (e.action == KeyAction::down)
+		if (e.action == KeyAction::Down)
 		{
 			auto nCurSel = dotList->getCurSel();
 			switch (e.key)
 			{
-			case KeyCode::left: --nCurSel;	break;
-			case KeyCode::right: ++nCurSel;	break;
+			case KeyCode::Left: --nCurSel;	break;
+			case KeyCode::Right: ++nCurSel;	break;
 			default:						break;
 			}
 			nCurSel = nb::clamp(nCurSel, 0, dotList->dotCount() -1);
@@ -593,6 +566,42 @@ TEST_CASE("DotListCtrl", "[DotListCtrl]")
 	};
 
 	root->addChild(dotList);
+	w.root = root;
+	app.run();
+}
+
+TEST_CASE("PageCtrl", "[PageCtrl]")
+{
+	Application app;
+	Window w(1280.0f, 720.0f);
+
+	auto root = createRef<Node2D>();
+	root->setBackground(SolidColorBrush::white());
+
+	auto pageCtrl = createRef<PageCtrl>(0.0f, 0.0f, 400.0f, 400.0f);
+	pageCtrl->setAlignmentCenter();
+	pageCtrl->setBackground(SolidColorBrush::black());
+
+	auto page0 = createRef<Node2D>(0.0f, 0.0f, pageCtrl->width(), pageCtrl->height() - 100.0f, SolidColorBrush::red());
+	pageCtrl->CurPageChanged += [](const int &e) { Log::info("cur page={}", e); };
+	pageCtrl->addPage(page0);
+	auto page1 = createRef<Node2D>(0.0f, 0.0f, pageCtrl->width(), pageCtrl->height() - 100.0f, SolidColorBrush::green());
+	pageCtrl->addPage(page1);
+	auto page2 = createRef<Node2D>(0.0f, 0.0f, pageCtrl->width(), pageCtrl->height() - 100.0f, SolidColorBrush::blue());
+	pageCtrl->addPage(page2);
+	auto page3 = createRef<Node2D>(0.0f, 0.0f, pageCtrl->width(), pageCtrl->height() - 100.0f, SolidColorBrush::gray());
+	pageCtrl->addPage(page3);
+	auto page4 = createRef<Node2D>(0.0f, 0.0f, pageCtrl->width(), pageCtrl->height() - 100.0f, SolidColorBrush::yellow());
+	pageCtrl->addPage(page4);
+	auto dotListCtrl = createRef<DotListCtrl>(0.0f, 606.0f, 140.0f, 50.0f);
+	dotListCtrl->setHorizontalAlignment(HorizontalAlignment::Center);
+	dotListCtrl->setDotCount(5);
+	dotListCtrl->setDotImage(createRef<ImageBrush>(RES_DIR"ipu02/pap/dot_n.png"), createRef<ImageBrush>(RES_DIR"ipu02/pap/dot_s.png"));
+	pageCtrl->bindDotListCtrl(dotListCtrl);
+
+	root->addChild(pageCtrl);
+	root->addChild(dotListCtrl);
+
 	w.root = root;
 	app.run();
 }

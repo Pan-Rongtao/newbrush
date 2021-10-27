@@ -6,7 +6,7 @@
 
 namespace nb{
 	
-enum class ShutdownModeE : uint8_t
+enum class ShutdownMode : uint8_t
 {
 	OnExplicitShutdown,		//仅调用shutdown时关闭应用程序
 	OnLastWindowClose,		//最后一个窗口关闭或调用shutdown时关闭应用程序
@@ -37,8 +37,8 @@ public:
 	static Application *get();
 
 	//关闭模式
-	void setShutdownMode(ShutdownModeE mode);
-	ShutdownModeE shutdownMode() const;
+	void setShutdownMode(ShutdownMode mode);
+	ShutdownMode shutdownMode() const;
 
 	//窗口
 	const WindowCollection &windows() const;
@@ -61,10 +61,7 @@ public:
 
 	//注册插件
 	template<class PluginT>
-	void registerStudioPlugin()
-	{
-		_registerPlugin(createRef<PluginT>());
-	}
+	void registerStudioPlugin() { _registerPlugin(createRef<PluginT>()); }
 
 	Event<EventArgs>						Activated;				//当应用程序成为前台应用程序，发生
 	Event<EventArgs>						Deactivated;			//当应用程序不再是前台应用程序，发生
@@ -84,7 +81,7 @@ private:
 	void onWindowFocused(const bool &focused);
 
 	bool m_exitFlag;
-	ShutdownModeE m_shutdownMode;
+	ShutdownMode m_shutdownMode;
 	ref<ResourceDictionary> m_resources;
 	MessageQueue m_msgQueue;
 };

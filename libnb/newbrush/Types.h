@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <regex>
 #include <ratio>
-#include <mutex>
 #include "newbrush/Core.h"
 //要使GLM_FORCE_XYZW_ONLY生效，不能include单独的glm/glm.hpp或者其他glm头文件，只能include此文件
 #ifndef GLM_FORCE_XYZW_ONLY
@@ -326,11 +325,6 @@ public:
 	float bf() const										{ return b / 255.0f; }
 	float af() const										{ return a / 255.0f; }
 
-	//色调/饱和度/亮度
-	void setHsv(const glm::vec3 &hsv) &						{ /*auto rgbf = glm::rgbColor(hsv); setrf(rgbf.x); setrf(rgbf.y); setrf(rgbf.z);*/ }
-	glm::vec3 hsv() const									{ return glm::vec3{}; /*return glm::hsvColor(glm::vec3(rf(), gf(), bf()));*/ }
-	glm::vec4 toVec4() const								{ return{ rf(), gf(), bf(), af() }; }
-
 	//整数
 	void setIntegerArgb(uint32_t argb)						{ a = (argb & 0xFF000000) >> 24; r = (argb & 0x00FF0000) >> 16; g = (argb & 0x0000FF00) >> 8; b = (argb & 0x000000FF); }
 	void setIntegerRgb(uint32_t rgb)						{ setIntegerArgb(rgb | 0xFF000000); }
@@ -416,7 +410,7 @@ private:
 	int64_t	m_micros;
 };
 
-enum class WeekE
+enum class Week
 {
 	Sunday = 0,
 	Monday,
@@ -458,7 +452,7 @@ public:
 	int year() const										{ return m_year; }
 	int month() const										{ return m_month; }
 	int day() const											{ return m_day; }
-	WeekE week() const;
+	Week week() const;
 
 	//自1月1日经过的天数，包括当天
 	int dayOfYear() const									{ int days = 0; for (int i = 1; i <= m_month - 1; ++i) days += daysInMonth(m_year, i); return days + m_day; }
@@ -579,7 +573,7 @@ public:
 	int year() const										{ return m_date.year(); }
 	int month() const										{ return m_date.month(); }
 	int day() const											{ return m_date.day(); }
-	WeekE week() const										{ return m_date.week(); }
+	Week week() const										{ return m_date.week(); }
 	int hour() const										{ return m_time.hour(); }
 	int minute() const										{ return m_time.minute(); }
 	int second() const										{ return m_time.second(); }

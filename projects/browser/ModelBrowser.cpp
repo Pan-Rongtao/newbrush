@@ -74,12 +74,12 @@ void ModelBrowser::load(const std::string & path)
 void ModelBrowser::onTouch(const TouchEventArgs & e)
 {
 	Point p = { e.x, e.y };
-	if (e.action == TouchActionE::down)
+	if (e.action == TouchAction::Down)
 	{
 		m_pressed = true;
 		m_pressedPoint = p;
 	}
-	else if (e.action == TouchActionE::move)
+	else if (e.action == TouchAction::Move)
 	{
 		if (!m_pressed) return;
 
@@ -100,7 +100,7 @@ void ModelBrowser::onTouch(const TouchEventArgs & e)
 		}
 		model->getTransform()->setRotate(rotate);
 	}
-	else if (e.action == TouchActionE::up)
+	else if (e.action == TouchAction::Up)
 	{
 		m_pressed = false;
 	}
@@ -115,7 +115,7 @@ void ModelBrowser::onScroll(const ScrollEventArgs & e)
 
 void ModelBrowser::onKey(const KeyEventArgs &e)
 {
-	auto keyDown = e.action == KeyAction::down;
+	auto keyDown = e.action == KeyAction::Down;
 	auto model = as<Model>( m_scene->getChildAt(0) );
 	auto light = m_scene->hasLight() ? nb::as<PointLight>(m_scene->getLightAt(0)) : nullptr;
 	auto camera = m_scene->getCamera();
@@ -152,19 +152,19 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 	case KeyCode::K:	cameraRotate.x += 0.1f; camera->setRotate(cameraRotate);break;
 	case KeyCode::I:	cameraRotate.x -= 0.1f; camera->setRotate(cameraRotate);break;
 
-	case KeyCode::right:if (light) light->position.x += 1;						break;
-	case KeyCode::left:	if (light) light->position.x -= 1;						break;
-	case KeyCode::down:	if (light) light->position.y -= 1;						break;
-	case KeyCode::up:	if (light) light->position.y += 1;						break;
+	case KeyCode::Right:if (light) light->position.x += 1;						break;
+	case KeyCode::Left:	if (light) light->position.x -= 1;						break;
+	case KeyCode::Down:	if (light) light->position.y -= 1;						break;
+	case KeyCode::Up:	if (light) light->position.y += 1;						break;
 
-	case KeyCode::minus: case KeyCode::equal:
+	case KeyCode::Minus: case KeyCode::Equal:
 	{
 		auto scale = m_data->lookup("Scale")->get().get_value<glm::vec3>();
-		auto newScale = e.key == KeyCode::minus ? scale - glm::vec3(0.002f) : scale + glm::vec3(0.002f);
+		auto newScale = e.key == KeyCode::Minus ? scale - glm::vec3(0.002f) : scale + glm::vec3(0.002f);
 		setData("Scale", newScale);
 	}
 	break;
-	case KeyCode::kp_enter:
+	case KeyCode::KP_Enter:
 	{
 		if (!m_scene->hasLight())
 			return;
@@ -179,7 +179,7 @@ void ModelBrowser::onKey(const KeyEventArgs &e)
 		m_lightAnimation.keyFrames().insert(ColorKeyFrame(TimeSpan::fromSeconds(3), Colors::blue));
 		m_lightAnimation.begin();
 	}
-	case KeyCode::space:
+	case KeyCode::Space:
 	{
 		if (keyDown)
 		{

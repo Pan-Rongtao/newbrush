@@ -25,7 +25,7 @@ void main()
 	{
 		_colorRgb *= u_material.ambientColor;
 		_colorRgb += u_material.specularColor;
-		vec3 I = normalize(v_fragPos - u_cameraPosition);
+		vec3 I = normalize(v_fragPos + u_cameraPosition);
 		vec3 R = reflect(I, normalize(v_normal));
 		_colorRgb += textureCube(u_material.cubeSampler, R).rgb * u_material.cubemapColor;
 	}

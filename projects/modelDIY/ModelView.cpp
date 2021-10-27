@@ -107,12 +107,12 @@ ref<Model> ModelView::getModel()
 void ModelView::onTouch(const TouchEventArgs & e)
 {
 	Point p = { e.x, e.y };
-	if (e.action == TouchActionE::down)
+	if (e.action == TouchAction::Down)
 	{
 		m_pressed = true;
 		m_pressedPoint = p;
 	}
-	else if (e.action == TouchActionE::move)
+	else if (e.action == TouchAction::Move)
 	{
 		if (!m_pressed) return;
 
@@ -128,7 +128,7 @@ void ModelView::onTouch(const TouchEventArgs & e)
 		rotate.y = glm::radians(newAngle);
 		model->getTransform()->setRotate(rotate);
 	}
-	else if (e.action == TouchActionE::up)
+	else if (e.action == TouchAction::Up)
 	{
 		m_pressed = false;
 	}

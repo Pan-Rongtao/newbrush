@@ -13,7 +13,7 @@ enum class VisibilityE
 	Collapsed,	//不要显示元素，并且不希望它的保留空间
 };
 
-enum class HorizontalAlignmentE
+enum class HorizontalAlignment
 {
 	Left,
 	Center,
@@ -21,7 +21,7 @@ enum class HorizontalAlignmentE
 	Stretch,
 };
 
-enum class VerticalAlignmentE
+enum class VerticalAlignment
 {
 	Top,
 	Center,
@@ -29,13 +29,7 @@ enum class VerticalAlignmentE
 	Stretch,
 };
 
-enum class FlowDirectionE
-{
-	LeftToRight,
-	RightToLeft,
-};
-
-enum class OrientationE
+enum class Orientation
 {
 	Horizontal,
 	Vertical,
@@ -79,11 +73,11 @@ public:
 	void setOpacity(float opacity);
 	float getOpacity() const;
 
-	void setHorizontalAlignment(HorizontalAlignmentE h);
-	HorizontalAlignmentE horizontalAlignment() const;
+	void setHorizontalAlignment(HorizontalAlignment h);
+	HorizontalAlignment horizontalAlignment() const;
 
-	void setVerticalAlignment(VerticalAlignmentE v);
-	VerticalAlignmentE verticalAlignment() const;
+	void setVerticalAlignment(VerticalAlignment v);
+	VerticalAlignment verticalAlignment() const;
 
 	void setAlignmentCenter();
 
@@ -115,6 +109,7 @@ public:
 	unsigned childCount() const;
 	bool hasChild() const;
 	ref<Node2D> getChildAt(unsigned index);
+	void setChildAt(unsigned index, ref<Node2D> newChild);
 	void clearChildren();
 	const std::vector<ref<Node2D>> &children() const;
 	Node2D *getParent() const;
@@ -163,8 +158,8 @@ private:
 	bool m_hasFocus;
 	Thickness m_margin;
 	VisibilityE m_visibility;
-	HorizontalAlignmentE m_horizontalAlignment;
-	VerticalAlignmentE m_verticalAlignment;
+	HorizontalAlignment m_horizontalAlignment;
+	VerticalAlignment m_verticalAlignment;
 
 	ref<Brush> m_background;
 	ref<Transform2D> m_transform;

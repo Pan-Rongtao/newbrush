@@ -53,7 +53,7 @@ void SelectorView::selectMode(ModelMode mode)
 		m_btnDIYMode->setCheck(!m_btnDIYMode->isChecked());
 		m_btnEdit->setVisibility(VisibilityE::Visible);
 		MainView::get()->modelNode->load(ModelType::DIY);
-		MainView::get()->modelNode->setHorizontalAlignment(HorizontalAlignmentE::Left);
+		MainView::get()->modelNode->setHorizontalAlignment(HorizontalAlignment::Left);
 	}
 		break;
 	case ModelMode::XiaoXi:
@@ -62,7 +62,7 @@ void SelectorView::selectMode(ModelMode mode)
 		m_btnXiMode->setCheck(!m_btnXiMode->isChecked());
 		m_btnEdit->setVisibility(VisibilityE::Hidden);
 		MainView::get()->modelNode->load(ModelType::XiaoV);
-		MainView::get()->modelNode->setHorizontalAlignment(HorizontalAlignmentE::Left);
+		MainView::get()->modelNode->setHorizontalAlignment(HorizontalAlignment::Left);
 	}
 		break;
 	default:

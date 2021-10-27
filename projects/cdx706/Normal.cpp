@@ -1,5 +1,4 @@
 #include "Normal.h"
-#include "MainView.h"
 
 constexpr char Mix_vs[] = R"(
 attribute vec3 position;
@@ -314,7 +313,7 @@ NormalNode::NormalNode()
 	setWidth(756.0f);
 	setHeight(756.0f);
 #ifndef __ANDROID__
-	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/normal/background.png")));
+	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cdx706/normal/background.png")));
 #endif
 	m_scene = createRef<Scene>();
 	ref<PerspectiveCamera> temp_camera = createRef<PerspectiveCamera>();
@@ -322,15 +321,15 @@ NormalNode::NormalNode()
 	temp_camera->setTranslate(translate1);
 	temp_camera->setAspect(1.0f);
 	m_scene->setCamera(temp_camera);
-	
+
 	m_dotPanel3D = createRef<dotPanel3D>();
 	m_point = createRef<secondpoint>(glm::vec2((278.0f + 378.0f - 3.8f), (378.0f - 2.0f)), 5.0f, 5.0f);
-	m_halo = createRef<halo>();
-	m_shrinkrect = createRef<ShrinkRectangle>();
+	//m_halo = createRef<halo>();
+	//m_shrinkrect = createRef<ShrinkRectangle>();
 	m_scene->addChild(m_dotPanel3D);
 	m_scene->addChild(m_point);
 	//m_scene->addChild(m_halo);
-	m_scene->addChild(m_shrinkrect);
+	//m_scene->addChild(m_shrinkrect);
 	this->setScene(m_scene);
 
 
@@ -361,11 +360,13 @@ NormalNode::NormalNode()
 	m_pointanimation.duration = TimeSpan::fromMilliseconds(150);
 	m_pointanimation.autoReverse = true;
 
-	m_shrinkanimation.setTarget(m_shrinkrect);
+	/*m_shrinkanimation.setTarget(m_shrinkrect);
 	m_shrinkanimation.setTargetPropertyName("Velocity");
 	m_shrinkanimation.setFrom(1.0f);
 	m_shrinkanimation.setTo(0.0f);
-	m_shrinkanimation.duration = TimeSpan::fromMilliseconds(1000);
+	m_shrinkanimation.duration = TimeSpan::fromMilliseconds(1000);*/
+
+	updatemodel();
 }
 
 void NormalNode::onKey(const KeyEventArgs &e)
@@ -374,7 +375,7 @@ void NormalNode::onKey(const KeyEventArgs &e)
 	{
 	case KeyCode::_9:
 	{
-		m_shrinkanimation.begin();
+		//m_shrinkanimation.begin();
 		break;
 	}
 	default:													break;
@@ -386,39 +387,14 @@ void NormalNode::onTick(const EventArgs & e)
 	if (e.sender == &m_timer)
 	{
 		auto timeAngle = MainView::getAngleForTime();
-		auto timeRadius = glm::radians(timeAngle);
 
-		static float anglePerMS = 0.006f;
-		auto now = Time::now();
-		auto mses = now.second() * 1000 + now.millisecond();
+		updatemodel();
 
-		curtime = mses;
-		if (curtime < lasttime)
-		{
-			startanimation = true;
-		}
-		lasttime = curtime;
-
-		for (auto child : m_dotPanel3D->children())
-		{			
-			if (is<RectangleObj>(child))
-			{
-				if (is<MixMaterial>(as<RectangleObj>(child)->getmaterial()))
-				{
-					as<MixMaterial>(as<RectangleObj>(child)->getmaterial())->angle = timeAngle;
-				}
-			}
-		}
-
-		as<RectangleMaterial>(m_halo->getmaterial())->angle = timeAngle;
-		setSecondPointer(-timeAngle + 90.0f);
-
-		//return;
 		static constexpr float circleR = 40.0f;
 		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle + 90.0f);
 		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle + 90.0f);
 
-		//static auto lastMinute = now.minute();
+		//static auto lastMinute = Time::now().minute();
 		//if (lastMinute != now.minute())
 		{
 			setTime(m_hourShadowParent, 10, "_shadow", 50.0f, false, timeAngle);
@@ -426,14 +402,7 @@ void NormalNode::onTick(const EventArgs & e)
 			setTime(m_hourParent, 10, "", 50.0f, true, timeAngle);
 			setTime(m_minuteParent, 33, "", 75.0f, true, timeAngle);
 		}
-
-		if (startanimation)
-		{
-			startanimation = false;
-			m_shrinkanimation.begin();
-		}
 	}
-
 }
 
 void NormalNode::moveShadowNumberCircle(ref<Node2D> node, float x, float y, float r, float angle)
@@ -466,10 +435,10 @@ void NormalNode::setTime(ref<Node2D> parent, int value, const std::string &image
 	{
 		auto n = temp % 10;
 		auto nodeImagePath = std::to_string(n) + imagePrefix + ".png";
-		auto tex = createRef<Texture2D>(RES_DIR"cxd706/" + nodeImagePath);
+		auto tex = createRef<Texture2D>(RES_DIR"cdx706/" + nodeImagePath);
 		auto brush = createRef<ImageBrush>(tex);
 
-		static auto tex1 = createRef<Texture2D>(RES_DIR"cxd706/img_text_colour.png");
+		static auto tex1 = createRef<Texture2D>(RES_DIR"cdx706/img_text_colour.png");
 		auto tex2 = tex;
 		tex2->setSamplerUnit(1);
 		auto numberMaterial = createRef<NumberMaterial>(tex1, tex2);
@@ -477,7 +446,7 @@ void NormalNode::setTime(ref<Node2D> parent, int value, const std::string &image
 		auto numberBrush = createRef<EffectBrush>(numberMaterial, nullptr);
 
 		auto node = createRef<Node2D>(0.0f, 0.0f, tex->width(), tex->height());
-		node->setVerticalAlignment(VerticalAlignmentE::Center);
+		node->setVerticalAlignment(VerticalAlignment::Center);
 		if (useEffect)
 			node->setBackground(numberBrush);
 		else
@@ -518,13 +487,47 @@ void NormalNode::setSecondPointer(float angle)
 	}
 }
 
+void NormalNode::updatemodel()
+{
+	auto timeAngle = MainView::getAngleForTime();
+
+	auto now = Time::now();
+	auto mses = now.second() * 1000 + now.millisecond();
+
+	m_curtime = mses;
+	if (m_curtime < m_lasttime)
+	{
+		m_bstartanimation = true;
+	}
+	m_lasttime = m_curtime;
+
+	for (auto child : m_dotPanel3D->children())
+	{
+		if (is<RectangleObj>(child))
+		{
+			if (is<MixMaterial>(as<RectangleObj>(child)->getmaterial()))
+			{
+				as<MixMaterial>(as<RectangleObj>(child)->getmaterial())->angle = timeAngle;
+			}
+		}
+	}
+
+	//as<RectangleMaterial>(m_halo->getmaterial())->angle = timeAngle;
+	setSecondPointer(-timeAngle + 90.0f);
+	if (m_bstartanimation)
+	{
+		m_bstartanimation = false;
+		//m_shrinkanimation.begin();
+	}
+}
+
 RectangleObj::RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix)
 {
 	glm::vec4 position = { pos.x, pos.y, 0.0f, 1.0f };
-	glm::vec4 p0 = { -w/2, -h/2, 0.0f, 1.0f };
-	glm::vec4 p1 = { w/2, -w/2, 0.0f, 1.0f };
-	glm::vec4 p2 = { w/2, h/2, 0.0f, 1.0f };
-	glm::vec4 p3 = { -w/2, h/2, 0.0f, 1.0f };
+	glm::vec4 p0 = { -w / 2, -h / 2, 0.0f, 1.0f };
+	glm::vec4 p1 = { w / 2, -w / 2, 0.0f, 1.0f };
+	glm::vec4 p2 = { w / 2, h / 2, 0.0f, 1.0f };
+	glm::vec4 p3 = { -w / 2, h / 2, 0.0f, 1.0f };
 
 
 	glm::mat4 temp = glm::mat4(1.0f);
@@ -544,9 +547,9 @@ RectangleObj::RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix)
 	vertexs[2].position = (p2 + position - 378.0f) / 378.0f;
 	vertexs[3].position = (p3 + position - 378.0f) / 378.0f;
 
-	for (int i=0;i<4;i++)
+	for (int i = 0; i<4; i++)
 	{
-		auto temp = glm::vec4(vertexs[i].position,1.0f);
+		auto temp = glm::vec4(vertexs[i].position, 1.0f);
 		temp = matrix * temp;
 		vertexs[i].position = glm::vec3(temp);
 	}
@@ -558,10 +561,10 @@ RectangleObj::RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix)
 	temp[1][1] = cos(r);*/
 	/*for (int i=0;i<4;i++)
 	{
-		float x_or = vertexs[i].position.x;
-		float y_or = vertexs[i].position.y;
-		vertexs[i].position.x = x_or *cos(r) - y_or*sin(r);
-		vertexs[i].position.y = x_or *sin(r) + y_or*cos(r);
+	float x_or = vertexs[i].position.x;
+	float y_or = vertexs[i].position.y;
+	vertexs[i].position.x = x_or *cos(r) - y_or*sin(r);
+	vertexs[i].position.y = x_or *sin(r) + y_or*cos(r);
 	}*/
 	/*vertexs[0].position.z = 0.0f;
 	vertexs[1].position.z =	0.0f;
@@ -574,8 +577,8 @@ RectangleObj::RectangleObj(glm::vec2 pos, float w, float h, glm::mat4 matrix)
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto mixtex0 = createRef<Texture2D>(RES_DIR"cxd706/normal/spot4x4_2.png");
-	static auto mixtex1 = createRef<Texture2D>(RES_DIR"cxd706/normal/NORMAL_MASK_TEST4.png");
+	static auto mixtex0 = createRef<Texture2D>(RES_DIR"cdx706/normal/spot4x4_2.png");
+	static auto mixtex1 = createRef<Texture2D>(RES_DIR"cdx706/normal/NORMAL_MASK_TEST4.png");
 	m_materials = createRef<MixMaterial>(mixtex0, mixtex1);
 
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
@@ -607,27 +610,27 @@ void dotPanel3D::onRender(ref<Camera> camera, const std::vector<ref<Light>> &lig
 /*
 void dotPanel3D::builddotPanel3D()
 {
-	float width_rc = 5.0f;
-	float height_rc = 5.0f;
+float width_rc = 5.0f;
+float height_rc = 5.0f;
 
-	float R = 278.0f;
-	int DotsCount = 36 * 4;
-	float RadiusStep = glm::two_pi<float>() / DotsCount;
-	float DotsAngleRange = 360.0f;
+float R = 278.0f;
+int DotsCount = 36 * 4;
+float RadiusStep = glm::two_pi<float>() / DotsCount;
+float DotsAngleRange = 360.0f;
 
-	glm::vec2 center(756 / 2.0f, 756 / 2.0f);
-	for (int k = 0; k <= 15; ++k)
-	{
-		for (int i = 0; i != DotsCount; ++i)
-		{
-			auto radiuses = RadiusStep * i;
-			glm::vec2 pt = glm::vec2(R * cos(radiuses), R * sin(radiuses)) + center - glm::vec2(width_rc / 2, height_rc / 2);
+glm::vec2 center(756 / 2.0f, 756 / 2.0f);
+for (int k = 0; k <= 15; ++k)
+{
+for (int i = 0; i != DotsCount; ++i)
+{
+auto radiuses = RadiusStep * i;
+glm::vec2 pt = glm::vec2(R * cos(radiuses), R * sin(radiuses)) + center - glm::vec2(width_rc / 2, height_rc / 2);
 
-			auto node = createRef<RectangleObj>(pt, width_rc, height_rc, radiuses);
-			addChild(node);
-		}
-		R -= 8.0f;
-	}
+auto node = createRef<RectangleObj>(pt, width_rc, height_rc, radiuses);
+addChild(node);
+}
+R -= 8.0f;
+}
 }*/
 
 void dotPanel3D::builddotPanel3D()
@@ -646,10 +649,10 @@ void dotPanel3D::builddotPanel3D()
 		for (int i = 0; i != DotsCount; ++i)
 		{
 			auto radiuses = RadiusStep * i;
-			glm::vec2 pt = glm::vec2(R , 0) + center - glm::vec2(width_rc / 2, height_rc / 2);
+			glm::vec2 pt = glm::vec2(R, 0) + center - glm::vec2(width_rc / 2, height_rc / 2);
 
 			glm::vec3 rotate = glm::vec3(0.0f, 0.0f, radiuses);
-			glm::mat4 matrix =  glm::yawPitchRoll(rotate.y, rotate.x, rotate.z);
+			glm::mat4 matrix = glm::yawPitchRoll(rotate.y, rotate.x, rotate.z);
 
 			auto node = createRef<RectangleObj>(pt, width_rc, height_rc, matrix);
 			addChild(node);
@@ -672,7 +675,7 @@ halo::halo()
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/normal/t1_normal_zz_g_1.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/normal/t1_normal_zz_g_1.png");
 	m_materials = createRef<RectangleMaterial>(tex);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 }
@@ -728,9 +731,9 @@ secondpoint::secondpoint(glm::vec2 pos, float w, float h)
 	vertexs[3].position = (p3 + position - 378.0f) / 378.0f;
 
 	vertexs[0].position.z = -0.98f;
-	vertexs[1].position.z =	-0.98f;
-	vertexs[2].position.z =	-0.98f;
-	vertexs[3].position.z =	-0.98f;
+	vertexs[1].position.z = -0.98f;
+	vertexs[2].position.z = -0.98f;
+	vertexs[3].position.z = -0.98f;
 
 	vertexs[0].uv = glm::vec2(0.0, 0.0);
 	vertexs[1].uv = glm::vec2(1.0, 0.0);
@@ -738,8 +741,8 @@ secondpoint::secondpoint(glm::vec2 pos, float w, float h)
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto secondtex0 = createRef<Texture2D>(RES_DIR"cxd706/normal/123.png");
-	
+	static auto secondtex0 = createRef<Texture2D>(RES_DIR"cdx706/normal/123.png");
+
 	m_materials = createRef<SecondMaterial>(secondtex0);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 }
@@ -779,14 +782,14 @@ ShrinkRectangle::ShrinkRectangle()
 	vertexs[1].position = glm::vec3(1.0, -1.0, -0.998);
 	vertexs[2].position = glm::vec3(1.0, 1.0, -0.998);
 	vertexs[3].position = glm::vec3(-1.0, 1.0, -0.998);
-	
+
 	vertexs[0].uv = glm::vec2(0.0, 1.0);
 	vertexs[1].uv = glm::vec2(1.0, 1.0);
 	vertexs[2].uv = glm::vec2(1.0, 0.0);
 	vertexs[3].uv = glm::vec2(0.0, 0.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/Normalpointtest2.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/normal/Normalpointtest2.png");
 	m_materials = createRef<ShrinkMaterial>(tex);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 }
@@ -818,7 +821,7 @@ RTTR_PLUGIN_REGISTRATION
 	.constructor<>() (policy::ctor::as_std_shared_ptr)
 	.property("Opacity", &secondpoint::getOpacity, &secondpoint::setOpacity);
 
-	registration::class_<ShrinkRectangle>("ShrinkRectangle") ()
-	.constructor<>() (policy::ctor::as_std_shared_ptr)
-	.property("Velocity", &ShrinkRectangle::getVelocity, &ShrinkRectangle::setVelocity);
+registration::class_<ShrinkRectangle>("ShrinkRectangle") ()
+.constructor<>() (policy::ctor::as_std_shared_ptr)
+.property("Velocity", &ShrinkRectangle::getVelocity, &ShrinkRectangle::setVelocity);
 }

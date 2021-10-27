@@ -7,7 +7,7 @@
 namespace nb
 {
 
-enum class StretchE
+enum class Stretch
 {
 	Origion			= 0,	//保持原内容大小
 	Fill			= 1,	//不保持内容纵横比，调节内容大小以完全且刚好填充目标尺寸
@@ -27,7 +27,6 @@ class NB_API Panel : public Node2D
 	RTTR_ENABLE(Node2D)
 protected:
 	Panel() = default;
-	virtual void onRender() override;
 };
 
 class NB_API WrapPanel : public Panel
@@ -35,10 +34,10 @@ class NB_API WrapPanel : public Panel
 	RTTR_ENABLE(Panel)
 public:
 	WrapPanel();
-	WrapPanel(OrientationE orientation);
+	WrapPanel(Orientation orientation);
 
-	void setOrientation(OrientationE orientation);
-	OrientationE orientation() const;
+	void setOrientation(Orientation orientation);
+	Orientation orientation() const;
 
 	void setItemWidth(float width);
 	float itemWidth() const;
@@ -51,7 +50,7 @@ protected:
 	virtual Size arrangeOverride(const Size &finalSize) override;
 
 private:
-	OrientationE m_orientation;
+	Orientation m_orientation;
 	float m_itemWidth;
 	float m_itemHeight;
 };
@@ -115,9 +114,11 @@ class NB_API Image : public Node2D
 	RTTR_ENABLE(Node2D)
 public:
 	Image();
+	Image(const Rect &rc);
+	Image(float x, float y, float w, float h);
 
-	void setStretch(const StretchE &stretch);
-	const StretchE &stretch() const;
+	void setStretch(const Stretch &stretch);
+	const Stretch &stretch() const;
 
 	void setTexture(ref<Texture2D> texture);
 	ref<Texture2D> texture() const;
@@ -128,7 +129,7 @@ protected:
 	virtual void onRender() override;
 
 private:
-	StretchE m_stretch;
+	Stretch m_stretch;
 	ref<Texture2D> m_texture;
 	Size m_availableSize;
 };
@@ -149,6 +150,9 @@ public:
 	void setFont(ref<Font> font);
 	ref<Font> font() const;
 	ref<Font> getActualFont() const;
+
+	void setFontSize(float size);
+	float fontSize() const;
 
 	void setWrap(bool wrap);
 	bool isWrap() const;

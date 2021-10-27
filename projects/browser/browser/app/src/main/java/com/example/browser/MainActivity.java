@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mModelView = new NBSurfaceView(this, "nb_jni_browser");
+        mModelView = new NBSurfaceView(this, "nb_jni_browser", "/storage/emulated/0/resource/");
         mModelView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mModelView.setZOrderOnTop(true);
         mControlView = new ControlView(this);

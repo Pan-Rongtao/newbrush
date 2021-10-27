@@ -14,8 +14,7 @@ Bitmap::Bitmap()
 	, m_width(0)
 	, m_height(0)
 	, m_channels(0)
-{
-}
+{}
 
 Bitmap::Bitmap(const std::string &path)
 	: m_data(nullptr)

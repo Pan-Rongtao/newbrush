@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "newbrush/Bitmap.h"
 #include "newbrush/Object.h"
-#include "newbrush/Types.h"
 #include "newbrush/Event.h"
 
 #if (defined NB_OS_FAMILY_WINDOWS) || (NB_OS == NB_OS_LINUX && NB_ARCH != NB_ARCH_ARM)
@@ -175,7 +174,7 @@ class NB_API PerspectiveCamera : public Camera
 public:
 	//构建一个摄像机，它的变换为transform
 	//水平夹角为fov，宽高比为aspect，近截面为nearPlane，远截面为farPlane
-	PerspectiveCamera();
+	PerspectiveCamera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, -10.0f), const glm::vec3 &rotation = glm::vec3(0.0), const glm::vec3 &scale = glm::vec3(1.0));
 
 	void setTranslate(const glm::vec3 &translate)				{ m_translate = translate; updateMatrix(); }
 	void setRotate(const glm::vec3 &rotate)						{ m_rotate = rotate; updateMatrix(); }
@@ -303,7 +302,7 @@ private:
 *	2D纹理		Texture2D
 *	立方体纹理	TextureCubemap
 ****************************************/
-enum class TextureWrappingE		//纹理环绕方式
+enum class TextureWrapping		//纹理环绕方式
 {
 	Repeat			= 0x2901,	//重复
 	MirroredRepeat	= 0x8370,	//镜像重复
@@ -311,7 +310,7 @@ enum class TextureWrappingE		//纹理环绕方式
 	ClampToBorder	= 0xFFFF,	//用户颜色边缘延伸
 };
 
-enum class TextureFilterE		//纹理过滤方式，依次向下，纹理细节表现质量越好，性能要求越大。放大过滤只支持Point和Bilinear，缩小过滤支持所有的过滤方式
+enum class TextureFilter		//纹理过滤方式，依次向下，纹理细节表现质量越好，性能要求越大。放大过滤只支持Point和Bilinear，缩小过滤支持所有的过滤方式
 {
 	Point			= 0x2600,	//最邻近过滤，指取最接近浮点的整型像素点位置
 	Bilinear		= 0x2601,	//双线性过滤，对邻近的四个点进行线性插值算法，两个维度三次运算
@@ -335,16 +334,16 @@ public:
 	virtual void unbind() = 0;
 
 	//纹理环绕方式
-	virtual void setWrappingS(TextureWrappingE wrapping) = 0;
-	virtual void setWrappingT(TextureWrappingE wrapping) = 0;
-	virtual TextureWrappingE wrappingS() const = 0;
-	virtual TextureWrappingE wrappingT() const = 0;
+	virtual void setWrappingS(TextureWrapping wrapping) = 0;
+	virtual void setWrappingT(TextureWrapping wrapping) = 0;
+	virtual TextureWrapping wrappingS() const = 0;
+	virtual TextureWrapping wrappingT() const = 0;
 
 	//纹理过滤方式
-	virtual void setMagnifyFilter(TextureFilterE filter) = 0;
-	virtual void setNarrowFilter(TextureFilterE filter) = 0;
-	virtual TextureFilterE magnifyFilter() const = 0;
-	virtual TextureFilterE narrowFilter() const = 0;
+	virtual void setMagnifyFilter(TextureFilter filter) = 0;
+	virtual void setNarrowFilter(TextureFilter filter) = 0;
+	virtual TextureFilter magnifyFilter() const = 0;
+	virtual TextureFilter narrowFilter() const = 0;
 
 protected:
 	Texture();
@@ -362,14 +361,14 @@ public:
 
 	virtual void bind() override;
 	virtual void unbind() override;
-	virtual void setWrappingS(TextureWrappingE wrapping) override;
-	virtual void setWrappingT(TextureWrappingE wrapping) override;
-	virtual TextureWrappingE wrappingS() const override;
-	virtual TextureWrappingE wrappingT() const override;
-	virtual void setMagnifyFilter(TextureFilterE filter) override;
-	virtual void setNarrowFilter(TextureFilterE filter) override;
-	virtual TextureFilterE magnifyFilter() const override;
-	virtual TextureFilterE narrowFilter() const override;
+	virtual void setWrappingS(TextureWrapping wrapping) override;
+	virtual void setWrappingT(TextureWrapping wrapping) override;
+	virtual TextureWrapping wrappingS() const override;
+	virtual TextureWrapping wrappingT() const override;
+	virtual void setMagnifyFilter(TextureFilter filter) override;
+	virtual void setNarrowFilter(TextureFilter filter) override;
+	virtual TextureFilter magnifyFilter() const override;
+	virtual TextureFilter narrowFilter() const override;
 
 	//上传数据到GPU
 	void update(const std::string &path);
@@ -398,14 +397,14 @@ public:
 
 	virtual void bind() override;
 	virtual void unbind() override;
-	virtual void setWrappingS(TextureWrappingE wrapping) override;
-	virtual void setWrappingT(TextureWrappingE wrapping) override;
-	virtual TextureWrappingE wrappingS() const override;
-	virtual TextureWrappingE wrappingT() const override;
-	virtual void setMagnifyFilter(TextureFilterE filter) override;
-	virtual void setNarrowFilter(TextureFilterE filter) override;
-	virtual TextureFilterE magnifyFilter() const override;
-	virtual TextureFilterE narrowFilter() const override;
+	virtual void setWrappingS(TextureWrapping wrapping) override;
+	virtual void setWrappingT(TextureWrapping wrapping) override;
+	virtual TextureWrapping wrappingS() const override;
+	virtual TextureWrapping wrappingT() const override;
+	virtual void setMagnifyFilter(TextureFilter filter) override;
+	virtual void setNarrowFilter(TextureFilter filter) override;
+	virtual TextureFilter magnifyFilter() const override;
+	virtual TextureFilter narrowFilter() const override;
 
 	//更新六面数据(右、左、底、顶、后、前)
 	void update(const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back);
@@ -431,6 +430,7 @@ public:
 	static ref<Texture2D> addTexture2D(const std::string &name, const std::string &imagePath);
 	static bool addTextureAtlas(const std::string &name, const std::string &imagePath, const std::string &cfgPath);
 	static ref<TextureCubemap> addTextureCubemap(const std::string &name, const std::string & top, const std::string & bottom, const std::string & left, const std::string & right, const std::string & front, const std::string & back);
+	static void remove(const std::string &name);
 
 	static ref<Texture2D> getTexture2D(const std::string &name);
 	static const TextureFrame &getFrameFromTextureAtlas(const std::string &name, const std::string &frameName);
@@ -638,6 +638,7 @@ struct Vertex
 	Vertex() = default;
 	Vertex(const glm::vec3 &pos) : position(pos) {}
 	Vertex(const glm::vec3 &pos, const glm::vec2 &_uv) : position(pos), uv(_uv) {}
+	Vertex(const glm::vec3 &pos, const glm::vec2 &_uv, const glm::vec3 &_normal) : position(pos), uv(_uv), normal(_normal) {}
 
 	glm::vec3 position;
 	glm::vec4 color;

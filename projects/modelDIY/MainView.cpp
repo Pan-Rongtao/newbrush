@@ -55,7 +55,7 @@ void MainView::switchView(ViewE view)
 		m_root->clearChildren();
 		m_root->addChild(selectNode);
 		m_root->addChild(modelNode);
-		modelNode->setHorizontalAlignment(HorizontalAlignmentE::Left);
+		modelNode->setHorizontalAlignment(HorizontalAlignment::Left);
 	}
 	break;
 	case ViewE::DIY:
@@ -68,7 +68,7 @@ void MainView::switchView(ViewE view)
 		m_root->clearChildren();
 		m_root->addChild(diyNode);
 		m_root->addChild(modelNode);
-		modelNode->setHorizontalAlignment(HorizontalAlignmentE::Left);
+		modelNode->setHorizontalAlignment(HorizontalAlignment::Left);
 	}
 	break;
 	default:

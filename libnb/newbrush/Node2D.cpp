@@ -26,8 +26,8 @@ Node2D::Node2D(float x, float y, float w, float h, ref<Brush> background)
 	, m_focusAble(true)
 	, m_hasFocus(false)
 	, m_visibility(VisibilityE::Visible)
-	, m_horizontalAlignment(HorizontalAlignmentE::Left)
-	, m_verticalAlignment(VerticalAlignmentE::Top)
+	, m_horizontalAlignment(HorizontalAlignment::Left)
+	, m_verticalAlignment(VerticalAlignment::Top)
 	, m_isEnable(true)
 	, m_isMouseOver(false)
 	, m_parent(nullptr)
@@ -126,30 +126,30 @@ float Node2D::getOpacity() const
 	return m_opacity;
 }
 
-void Node2D::setHorizontalAlignment(HorizontalAlignmentE h)
+void Node2D::setHorizontalAlignment(HorizontalAlignment h)
 {
 	m_horizontalAlignment = h;
 }
 
-HorizontalAlignmentE Node2D::horizontalAlignment() const
+HorizontalAlignment Node2D::horizontalAlignment() const
 {
 	return m_horizontalAlignment;
 }
 
-void Node2D::setVerticalAlignment(VerticalAlignmentE v)
+void Node2D::setVerticalAlignment(VerticalAlignment v)
 {
 	m_verticalAlignment = v;
 }
 
-VerticalAlignmentE Node2D::verticalAlignment() const
+VerticalAlignment Node2D::verticalAlignment() const
 {
 	return m_verticalAlignment;
 }
 
 void Node2D::setAlignmentCenter()
 {
-	setHorizontalAlignment(HorizontalAlignmentE::Center);
-	setVerticalAlignment(VerticalAlignmentE::Center);
+	setHorizontalAlignment(HorizontalAlignment::Center);
+	setVerticalAlignment(VerticalAlignment::Center);
 }
 
 void Node2D::setVisibility(VisibilityE visibility)
@@ -271,8 +271,8 @@ void Node2D::arrage(const Rect & finalRect)
 	//如果Aligment不是Stretch，直接将arrangeSize设置为DesiredSize，以保证传入arrangeOverride的arrangeSize没有Stretch
 	auto const &horizontalAlignment = m_horizontalAlignment;
 	auto const &verticalAlignment = m_verticalAlignment;
-	if (horizontalAlignment != HorizontalAlignmentE::Stretch)	arrangeSize.width = m_desiredSize.width;
-	if (verticalAlignment != VerticalAlignmentE::Stretch)		arrangeSize.height = m_desiredSize.height;
+	if (horizontalAlignment != HorizontalAlignment::Stretch)	arrangeSize.width = m_desiredSize.width;
+	if (verticalAlignment != VerticalAlignment::Stretch)		arrangeSize.height = m_desiredSize.height;
 
 	//如果手动设置了Width，调整Width到bound(MinWidth, MaxWidth, Width)
 	//否则，调整Width到(MinWidth, MaxWidth, arrangeSize.width())
@@ -292,16 +292,16 @@ void Node2D::arrage(const Rect & finalRect)
 	float offsetX = 0.0f, offsetY = 0.0f;
 	switch (horizontalAlignment)
 	{
-	case HorizontalAlignmentE::Left:	offsetX = finalRect.x() + margin.left;												break;
-	case HorizontalAlignmentE::Center:	offsetX = finalRect.x() + margin.left + (clientSize.width - renderSize.width) / 2;	break;
-	case HorizontalAlignmentE::Right:	offsetX = finalRect.width() - margin.right - renderSize.width;						break;
+	case HorizontalAlignment::Left:	offsetX = finalRect.x() + margin.left;												break;
+	case HorizontalAlignment::Center:	offsetX = finalRect.x() + margin.left + (clientSize.width - renderSize.width) / 2;	break;
+	case HorizontalAlignment::Right:	offsetX = finalRect.width() - margin.right - renderSize.width;						break;
 	default:							offsetX = renderSize.width >= clientSize.width ? finalRect.left() + margin.left : finalRect.x() + margin.left + (clientSize.width - renderSize.width) / 2;	break;
 	}
 	switch (verticalAlignment)
 	{
-	case VerticalAlignmentE::Top:		offsetY = finalRect.y() + margin.top;												break;
-	case VerticalAlignmentE::Center:	offsetY = finalRect.y() + margin.top + (clientSize.height - renderSize.height) / 2;	break;
-	case VerticalAlignmentE::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - renderSize.height);	break;
+	case VerticalAlignment::Top:		offsetY = finalRect.y() + margin.top;												break;
+	case VerticalAlignment::Center:	offsetY = finalRect.y() + margin.top + (clientSize.height - renderSize.height) / 2;	break;
+	case VerticalAlignment::Bottom:	offsetY = finalRect.y() + (finalRect.height() - margin.bottom - renderSize.height);	break;
 	default:							offsetY = renderSize.height >= clientSize.height ? finalRect.top() + margin.top : finalRect.y() + margin.top + (clientSize.height - renderSize.height) / 2;	break;
 	}
 	m_offsetToParent = Point(offsetX, offsetY) + m_position;
@@ -472,6 +472,13 @@ ref<Node2D> Node2D::getChildAt(unsigned index)
 	return m_children[index];
 }
 
+void Node2D::setChildAt(unsigned index, ref<Node2D> newChild)
+{
+	nbThrowExceptionIf(index >= childCount(), std::out_of_range, "index[%d] is out of range[0, %d)", (int)index, (int)childCount());
+	newChild->m_parent = this;
+	m_children[index] = newChild;
+}
+
 void Node2D::clearChildren()
 {
 	m_children.clear();
@@ -499,49 +506,45 @@ ref<Scene> Node2D::getScene()
 
 void Node2D::touchThunk(const TouchEventArgs & e)
 {
-	//if (m_visibility != VisibilityE::Visible)
-	if(!isEnable() || !TreeHelper::isActualVisible(this))
-		return;
-
 	auto hit = Node2D::hitTest(Point(e.x, e.y));
 
 	TouchEventArgs ex = e;
-	if (e.action == TouchActionE::down)
+	if (e.action == TouchAction::Down)
 	{
 		if (hit)
 		{
 			onTouch(e);
 		}
 	}
-	else if (e.action == TouchActionE::move)
+	else if (e.action == TouchAction::Move)
 	{
 		if (hit)
 		{
 			if (!m_isMouseOver)
 			{
-				ex.action = TouchActionE::enter;
+				ex.action = TouchAction::Enter;
 				onTouch(ex);
 				m_isMouseOver = true;
 			}
-			ex.action = TouchActionE::move;
+			ex.action = TouchAction::Move;
 			onTouch(ex);
 		}
 		else
 		{
 			if (m_isMouseOver)
 			{
-				ex.action = TouchActionE::leave;
+				ex.action = TouchAction::Leave;
 				onTouch(ex);
 				m_isMouseOver = false;
 			}
 			else
 			{
-				ex.action = TouchActionE::move;
+				ex.action = TouchAction::Move;
 				onTouch(ex);
 			}
 		}
 	}
-	else if (e.action == TouchActionE::up)
+	else if (e.action == TouchAction::Up)
 	{
 		onTouch(e);
 	}
@@ -594,7 +597,7 @@ void Node2D::drawBrush(ref<Brush> brush)
 		{
 			auto _brush = as<SolidColorBrush>(brush);
 			auto c = _brush->color;
-			Renderer2D::drawRect(rc, renderTransform, c.toVec4(), opacity, m_clipRC);
+			Renderer2D::drawRect(rc, renderTransform, nb::colorToVec4(c), opacity, m_clipRC);
 		}
 		else if (is<ImageBrush>(brush))
 		{

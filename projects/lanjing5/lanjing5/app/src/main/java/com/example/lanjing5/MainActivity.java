@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnAnim1;
     private Button mBtnAnim2;
     private Button mBtnAnim3;
+    private Button[] mBtnAnims = new Button[5];
 
     public static MainActivity getInstance() { return s_instance; }
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     float touchDownX = 0.0f;
     float touchDownY = 0.0f;
     private void initUI() {
-        mModelView = new NBSurfaceView(this, "nb_jni_lanjing5");
+        mModelView = new NBSurfaceView(this, "nb_jni_lanjing5", "/storage/emulated/0/resource/");
         mModelView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mModelView.setZOrderOnTop(true);
         mModelView.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
@@ -78,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                         mModelView.setDataInt("AnimationType", 0);
                     }
                 }
+                else if(eventName.equals("InitDoneEvent"))
+                {
+                    mModelView.setDataInt("AnimationType", 0);
+                }
                 else
                 {
                     Log.i("onEvent", "unknown event");
@@ -93,41 +98,34 @@ public class MainActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(uiOptions);
         //this.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.bkcolor));
 
-        mBtnAnim0 = new Button(this);
-        mBtnAnim0.setText("动画0");
-        mBtnAnim1 = new Button(this);
-        mBtnAnim1.setText("动画1");
-        mBtnAnim1.setTranslationX(100);
-        mBtnAnim2 = new Button(this);
-        mBtnAnim2.setText("动画2");
-        mBtnAnim2.setTranslationX(200);
-        mBtnAnim3 = new Button(this);
-        mBtnAnim3.setText("动画3");
-        mBtnAnim3.setTranslationX(300);
-        mBtnAnim0.setOnClickListener(clickListener);
-        mBtnAnim1.setOnClickListener(clickListener);
-        mBtnAnim2.setOnClickListener(clickListener);
-        mBtnAnim3.setOnClickListener(clickListener);
-        this.addContentView(mBtnAnim0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        this.addContentView(mBtnAnim1, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        this.addContentView(mBtnAnim2, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        this.addContentView(mBtnAnim3, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        for(int i = 0; i < mBtnAnims.length; ++i)
+        {
+            Button btn = new Button(this);
+            mBtnAnims[i] = btn;
+            mBtnAnims[i].setText("动画" + Integer.toString(i + 1));
+            mBtnAnims[i].setTranslationX(i * 300);
+            mBtnAnims[i].setOnClickListener(clickListener);
+            this.addContentView(mBtnAnims[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
     }
 
     private Button.OnClickListener clickListener = new Button.OnClickListener(){
         @Override
         public void onClick(View v) {
-            if(v == mBtnAnim0) {
+            if(v == mBtnAnims[0]) {
                 mModelView.setDataInt("AnimationType", 0);
             }
-            else if(v == mBtnAnim1) {
+            else if(v == mBtnAnims[1]) {
                 mModelView.setDataInt("AnimationType", 1);
             }
-            else if(v == mBtnAnim2) {
+            else if(v == mBtnAnims[2]) {
                 mModelView.setDataInt("AnimationType", 0x10000000 | 2);
             }
-            else if(v == mBtnAnim3) {
+            else if(v == mBtnAnims[3]) {
                 mModelView.setDataInt("AnimationType", 3);
+            }
+            else if(v == mBtnAnims[4]) {
+                mModelView.setDataInt("AnimationType", 4);
             }
         }
     };

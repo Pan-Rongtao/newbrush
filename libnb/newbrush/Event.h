@@ -1,13 +1,13 @@
 ﻿#pragma once
-#include "newbrush/Core.h"
 #include <unordered_map>
 #include <functional>
+#include <vector>
 
 namespace nb
 {
 
 template<class ArgsT>
-class NB_API Event
+class Event
 {
 	using CallBack = std::function<void(ArgsT &)>;
 	using CallBackContainer = std::unordered_map<int, CallBack>;
@@ -72,13 +72,13 @@ struct EventArgs
 	Object *sender;
 };
 
-enum class TouchActionE : uint8_t
+enum class TouchAction : uint8_t
 {
-	enter,
-	down,
-	move,
-	up,
-	leave,
+	Enter,
+	Down,
+	Move,
+	Up,
+	Leave,
 };
 
 struct ExitEventArgs : public EventArgs
@@ -98,7 +98,7 @@ struct CancelEventArgs : public EventArgs
 
 struct TouchEventArgs : public EventArgs 
 {
-	TouchActionE action;
+	TouchAction action;
 	float x;
 	float y;
 };
@@ -120,52 +120,52 @@ struct FocusEventArgs : public EventArgs
 
 enum class KeyCode
 {
-	space			= 32,
-	apostrophe		= 39,  /* ' */
-	comma			= 44,  /* , */
-	minus			= 45,  /* - */
-	period			= 46,  /* . */
-	slash			= 47,  /* / */
+	Space			= 32,
+	Apostrophe		= 39,  /* ' */
+	Comma			= 44,  /* , */
+	Minus			= 45,  /* - */
+	Period			= 46,  /* . */
+	Slash			= 47,  /* / */
 	_0				= 48, _1, _2, _3, _4, _5, _6, _7, _8, _9,
-	semicolon		= 59,  /* ; */
-	equal			= 61,  /* = */
+	Semicolon		= 59,  /* ; */
+	Equal			= 61,  /* = */
 	A				= 65, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-	leftBracket		= 91,  /* [ */
-	backSlash		= 92,  /* \ */
-	rightBracket	= 93,  /* ] */
-	graveAccent		= 96,  /* ` */
-	world1			= 161, /* non-US #1 */
-	world2			= 162, /* non-US #2 */
+	LeftBracket		= 91,  /* [ */
+	BackSlash		= 92,  /* \ */
+	RightBracket	= 93,  /* ] */
+	GraveAccent		= 96,  /* ` */
+	World1			= 161, /* non-US #1 */
+	World2			= 162, /* non-US #2 */
 
 	/* Function keys */
-	escape			= 256, enter, tab, backspace, insert, del, right, left, down, up, pageUp, pageDown, home, end,
-	capsLock		= 280,
-	scrollLock		= 281,
-	numLock			= 282,
-	printScreen		= 283,
-	pause			= 284,
+	Escape			= 256, Enter, Tab, Backspace, Insert, Del, Right, Left, Down, Up, PageUp, PageDown, Home, End,
+	CapsLock		= 280,
+	ScrollLock		= 281,
+	NumLock			= 282,
+	PrintScreen		= 283,
+	Pause			= 284,
 	F1				= 290, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, F16, F17, F18, F19, F20, F21, F22, F23, F24, F25,
-	kp_0			= 320, kp_1, kp_2, kp_3, kp_4, kp_5, kp_6, kp_7, kp_8, kp_9, 
-	kp_decimal		= 330, kp_divide, kp_multiply, kp_subtract, kp_add, kp_enter, kp_equal,
-	leftShift		= 340, leftControl, leftAlt, leftSuper, rightShift, rightControl, rightAlt, rightSuper,
-	menu			= 348,
+	KP_0			= 320, KP_1, KP_2, KP_3, KP_4, KP_5, KP_6, KP_7, KP_8, KP_9,
+	KP_Decimal		= 330, KP_Divide, KP_Multiply, KP_Subtract, KP_Add, KP_Enter, KP_Equal,
+	LeftShift		= 340, LeftControl, LeftAlt, LeftSuper, RightShift, RightControl, RightAlt, RightSuper,
+	Menu			= 348,
 };
 
 enum class KeyAction
 {
-	down,
-	up,
-	repeat,
+	Down,
+	Up,
+	Repeat,
 };
 
 enum KeyMode
 {
-	shift		= 0x0001,
-	control		= 0x0002,
-	alt			= 0x0004,
-	super		= 0x0008,
-	capsLock	= 0x0010,
-	numLock		= 0x0020,
+	Shift		= 0x0001,
+	Control		= 0x0002,
+	Alt			= 0x0004,
+	Super		= 0x0008,
+	CapsLock	= 0x0010,
+	NumLock		= 0x0020,
 };
 
 struct KeyEventArgs : public EventArgs

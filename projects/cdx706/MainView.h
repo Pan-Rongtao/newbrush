@@ -6,12 +6,12 @@
 
 using namespace nb;
 
-enum class DrivingModeE
+enum class DrivingMode
 {
-	none,
-	eco,
-	normal,
-	sport,
+	None,
+	Eco,
+	Normal,
+	Sport,
 };
 
 class MainView : public ViewBase
@@ -26,15 +26,17 @@ public:
 
 private:
 	void onKey(const KeyEventArgs &e);
-	void switchDrivingMode(DrivingModeE mode);
-	void onBtnClick(const EventArgs &e);
+#ifdef WIN32
 	void onTouch(const TouchEventArgs &e);
+#endif // Win32
+
+
+	void switchDrivingMode(DrivingMode mode);
+
+	ref<DataObject> buildData();
 
 	ref<Node2D> m_ecoNode;
-	ref<Button> m_btnEco;
 	ref<Node2D> m_normalNode;
-	ref<Button> m_btnNormal;
 	ref<Node2D> m_sportNode;
-	ref<Button> m_btnSport;
-	DrivingModeE m_mode{ DrivingModeE::none };
+	DrivingMode m_mode{ DrivingMode::None };
 };

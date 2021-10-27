@@ -1,0 +1,260 @@
+{"frames": {
+
+"autopark_pic_alert.png":
+{
+	"frame": {"x":812,"y":1702,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"autopark_pic_bgroad.png":
+{
+	"frame": {"x":2,"y":2,"w":1310,"h":880},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1310,"h":880},
+	"sourceSize": {"w":1310,"h":880}
+},
+"autopark_pic_compete.png":
+{
+	"frame": {"x":812,"y":1508,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"autopark_pic_pause.png":
+{
+	"frame": {"x":812,"y":1314,"w":192,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":24,"w":192,"h":192},
+	"sourceSize": {"w":240,"h":240}
+},
+"btn_62px_sel.9.png":
+{
+	"frame": {"x":884,"y":942,"w":200,"h":64},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":64},
+	"sourceSize": {"w":200,"h":64}
+},
+"number/1_d.png":
+{
+	"frame": {"x":884,"y":1270,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/1_n.png":
+{
+	"frame": {"x":926,"y":1266,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/2_d.png":
+{
+	"frame": {"x":968,"y":1224,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/2_n.png":
+{
+	"frame": {"x":884,"y":1228,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/3_d.png":
+{
+	"frame": {"x":926,"y":1224,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/3_n.png":
+{
+	"frame": {"x":968,"y":1182,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/4_d.png":
+{
+	"frame": {"x":884,"y":1186,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/4_n.png":
+{
+	"frame": {"x":926,"y":1182,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/5_d.png":
+{
+	"frame": {"x":884,"y":1144,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"number/5_n.png":
+{
+	"frame": {"x":950,"y":1140,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":40,"h":40},
+	"sourceSize": {"w":46,"h":46}
+},
+"parking sapce_leftview/btn_rotate.png":
+{
+	"frame": {"x":950,"y":1092,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":46,"h":46},
+	"sourceSize": {"w":50,"h":50}
+},
+"parking sapce_leftview/icon_p_fault.png":
+{
+	"frame": {"x":950,"y":1042,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/icon_p_nor.png":
+{
+	"frame": {"x":950,"y":992,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/icon_p_sel.png":
+{
+	"frame": {"x":950,"y":942,"w":48,"h":54},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":48,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"parking sapce_leftview/parkingspace_fault.png":
+{
+	"frame": {"x":420,"y":1314,"w":302,"h":162},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_leftview/parkingspace_nor.9.png":
+{
+	"frame": {"x":370,"y":1620,"w":302,"h":162},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_leftview/parkingspace_sel.9.png":
+{
+	"frame": {"x":206,"y":1620,"w":302,"h":162},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":302,"h":162},
+	"sourceSize": {"w":302,"h":162}
+},
+"parking sapce_rightview/autopark_pic_parkright1_nor.png":
+{
+	"frame": {"x":884,"y":676,"w":264,"h":100},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":264,"h":100},
+	"sourceSize": {"w":264,"h":100}
+},
+"parking sapce_rightview/autopark_pic_parkright1_sel.png":
+{
+	"frame": {"x":884,"y":410,"w":264,"h":100},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":264,"h":100},
+	"sourceSize": {"w":264,"h":100}
+},
+"parking sapce_rightview/autopark_pic_parkright5_nor.png":
+{
+	"frame": {"x":884,"y":206,"w":132,"h":202},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":202},
+	"sourceSize": {"w":132,"h":202}
+},
+"parking sapce_rightview/autopark_pic_parkright5_sel.png":
+{
+	"frame": {"x":884,"y":2,"w":132,"h":202},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":202},
+	"sourceSize": {"w":132,"h":202}
+},
+"pic_car03.png":
+{
+	"frame": {"x":148,"y":1314,"w":304,"h":270},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":48,"w":304,"h":270},
+	"sourceSize": {"w":308,"h":318}
+},
+"pic_closedoor.png":
+{
+	"frame": {"x":534,"y":1618,"w":276,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":66,"y":24,"w":276,"h":276},
+	"sourceSize": {"w":400,"h":300}
+},
+"pic_parkpause.png":
+{
+	"frame": {"x":584,"y":1314,"w":168,"h":168},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":120,"y":27,"w":168,"h":168},
+	"sourceSize": {"w":400,"h":230}
+},
+"pic_radar.png":
+{
+	"frame": {"x":2,"y":1314,"w":430,"h":144},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":48,"w":430,"h":144},
+	"sourceSize": {"w":450,"h":240}
+},
+"pic_steeringwheel.png":
+{
+	"frame": {"x":2,"y":1746,"w":284,"h":202},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":58,"y":48,"w":284,"h":202},
+	"sourceSize": {"w":400,"h":300}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "ai.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:2fa0e2c46f63f3c5f220358a24b4a723$"
+}
+}

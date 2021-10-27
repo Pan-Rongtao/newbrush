@@ -11,13 +11,20 @@ NB_API uint64_t nb::getStarupMilliseconds()
 	return g_starupMilliseconds;
 }
 
-uint32_t nb::getPid()
+uint64_t nb::getPid()
 {
 #ifdef NB_OS_FAMILY_WINDOWS
 	return ::GetCurrentProcessId();
 #else
 	return getpid();
 #endif
+}
+
+uint64_t nb::getTid()
+{
+	std::stringstream os;
+	os << std::this_thread::get_id();
+	return std::stoull(os.str());
 }
 
 void nb::stringTrim(std::string& str)

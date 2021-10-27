@@ -25,12 +25,18 @@ public:
 	void setText(const std::string &text);
 	const std::string &text() const;
 
+	void setTextColorNormal(const Color &c);
+	void setTextColorPress(const Color &c);
+	void setTextColorCheck(const Color &c);
+	void setTextColorDisable(const Color &c);
+	void setTextColorFocus(const Color &c);
 	void setTextColor(const Color &normal, const Color &press, const Color &check = Colors::black, const Color &disable = Colors::black, const Color &focus = Colors::black);
 
 	void setIconOffset(const Point &offset);
 	void setTextOffset(const Point &offset);
 	void setIconTextOffset(const Point &iconOffset, const Point &textOffset);
 	void setFont(ref<Font> font);
+	void setFontSize(float size);
 
 	void setCheck(bool check);
 	bool isChecked() const;
@@ -146,8 +152,8 @@ public:
 	//获取是否反向播放信息
 	bool getReverse();
 
-	virtual void onRender() override;
-
+	//通知调用者已经播放完所有序列的事件
+	Event<EventArgs> MovieCompleteEvent;
 private:
 	//默认播放时间间隔
 	void init(void);
@@ -165,10 +171,7 @@ private:
 	Timer m_timer;
 	int m_nCurrFrame;
 	int m_nStopMovieInFrame;
-	std::vector<ref<Texture2D>> m_vecTex;
-	//std::vector<ref<ImageBrush>> m_vecBrush;
-	ref<ImageBrush> m_CurImageBrush;
-	Event<EventArgs> MovieCompleteEvent;
+	std::vector<ref<ImageBrush>> m_vecBrush;
 	bool m_reverse;
 };
 
@@ -181,6 +184,7 @@ public:
 
 	void setBtn(ref<ImageBrush> normal);
 	void setTextColor(const Color &normal, const Color &select, const Color &disable);
+
 	void addItem(const std::string &txt);
 	void setItemText(uint32_t index, const std::string &txt);
 
@@ -189,7 +193,14 @@ public:
 
 	void enableItem(uint32_t index, bool enable);
 	bool isItemEnable(uint32_t index) const;
-	
+
+	void setFont(ref<Font> font);
+	ref<Font> font() const;
+	ref<Font> getActualFont() const;
+
+	void setFontSize(float size);
+	float fontSize() const;
+
 	Event<int> SelectChanged;
 
 protected:
@@ -218,6 +229,7 @@ private:
 	Color m_clrTxtDisable;
 	int m_curSel;
 	std::vector<ItemInfo> m_items;
+	ref<Font> m_font;
 };
 
 class NB_API DotListCtrl : public Node2D
@@ -243,11 +255,54 @@ private:
 
 	int m_nCurSel;
 	int m_nDotCount;
-	OrientationE m_eOrientation;
+	Orientation m_eOrientation;
 	ref<ImageBrush> m_normalBrush;
 	ref<ImageBrush> m_selectBrush;
 	std::vector<Point> m_vtPoints;
 	bool m_bNeedUpdatePositions;
+};
+
+class NB_API PageCtrl : public Node2D
+{
+public:
+	PageCtrl();
+	PageCtrl(const Rect &rc);
+	PageCtrl(float x, float y, float w, float h);
+
+	void addPage(ref<Node2D> page);
+	void removePage(int index);
+	ref<Node2D> getPage(int index);
+	int pageCount() const;
+
+	void setCurPage(int page);
+	int curPage() const;
+
+	void bindDotListCtrl(ref<DotListCtrl> dotListCtrl);
+
+	Event<int> CurPageChanged;
+
+protected:
+	virtual void onTouch(const TouchEventArgs &e) override;
+
+private:
+	void onTimeLineProgress(const EventArgs &e);
+
+	float calcOffsetFromPage(int page);
+	int calcPageFromOffset(float xOffset);
+	void updatePagePositions(float xOffset);
+
+	int m_curPage;
+	Point m_ptPress;
+	float m_curOffset;
+	float m_offsetWhenPress;
+	uint64_t m_tickWhenPress;
+
+	float m_aniFromOffset;
+	float m_aniEndOffset;
+	Timeline m_tlSwitchPage;
+	ref<EasingBase> m_easingFunction;
+
+	ref<DotListCtrl> m_dotListCtrl;
 };
 
 }

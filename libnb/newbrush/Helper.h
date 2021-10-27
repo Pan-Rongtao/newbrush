@@ -15,12 +15,11 @@ public:
 	static void scrollThunk(ref<Node2D> node, const ScrollEventArgs &e);
 	static void keyThunk(ref<Node2D> node, const KeyEventArgs &e);
 
-	static bool isActualVisible(Node2D *node);
 	static float getActualOpacity(Node2D *node);
 
 	static glm::vec4 getBox(const std::vector<glm::vec2> &points);
 
-	static ref<Material> brushToMaterial(ref<Brush> brush, const glm::vec4 &box = glm::vec4(0.0f));
+	static ref<Material> brushToMaterial(ref<Brush> brush, const glm::vec4 &box);
 };
 
 class NB_API SystemHelper
@@ -48,5 +47,7 @@ private:
 	static void registerTypes();
 	static void registerConverters();
 };
+
+NB_API inline glm::vec4 colorToVec4(const Color &c) { return { c.rf(), c.gf(), c.bf(), c.af() }; }
 
 }

@@ -780,7 +780,8 @@ bool BrushLibrary::addSolidColorBrush(const std::string & name, const Color & co
 
 bool BrushLibrary::addImageBrush(const std::string & name, const std::string & imagePath)
 {
-	return add(name, createRef<ImageBrush>(createRef<Texture2D>(imagePath)));
+	auto p = get(name);
+	return p ? false : add(name, createRef<ImageBrush>(createRef<Texture2D>(imagePath)));
 }
 
 bool BrushLibrary::addImageBrushFromTextureAtlas(const std::string &name, const std::string &texAtlasKey, const std::string &frameName)

@@ -19,7 +19,7 @@ import nb.jni.NBSurfaceView;
 public class MainActivity extends AppCompatActivity {
 
     static private MainActivity s_instance;
-    static private int mode = 0;
+    static private int mode = 1;
     public NBSurfaceView mModelView;
 
     public static MainActivity getInstance() { return s_instance; }
@@ -36,25 +36,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mModelView = new NBSurfaceView(this, "nb_jni_cdx706");
+        mModelView = new NBSurfaceView(this, "nb_jni_cdx706", "/storage/emulated/0/resource/");
         mModelView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mModelView.setZOrderOnTop(true);
         mModelView.setLayoutParams(new ViewGroup.LayoutParams(756, 756));
-        mModelView.setBackgroundResource(R.drawable.normal_bg);
         mModelView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mModelView.responseTouch(v, event);
-                    if (mode == 0) {
-                        mModelView.setBackgroundResource(R.drawable.sport_bg);
+                    //mModelView.responseTouch(v, event);
+                    if (mode == 3) {
                         mode = 1;
+                        //mModelView.setBackgroundResource(R.drawable.eco_bg);
+                        mModelView.setDataInt("mode", 1);
                     } else if (mode == 1) {
-                        mModelView.setBackgroundResource(R.drawable.eco_bg);
                         mode = 2;
+                        //mModelView.setBackgroundResource(R.drawable.normal_bg);
+                        mModelView.setDataInt("mode", 2);
                     } else if (mode == 2) {
-                        mModelView.setBackgroundResource(R.drawable.normal_bg);
-                        mode = 0;
+                        mode = 3;
+                        //mModelView.setBackgroundResource(R.drawable.sport_bg);
+                        mModelView.setDataInt("mode", 3);
                     }
                 }
                 return true;

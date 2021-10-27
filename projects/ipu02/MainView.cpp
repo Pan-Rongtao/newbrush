@@ -2,14 +2,21 @@
 #include "newbrush/Log.h"
 #include "AVMView.h"
 #include "AIView.h"
-#include "PAPView.h"
+#include "HPAView.h"
 
 static MainView *g_instance = nullptr;
+
+ref<Node2D> MainView::getCurrentView() const
+{
+	return m_current;
+}
 
 void MainView::init()
 {
 	g_instance = this;
 	Application::get()->mainWindow()->setWidth(1920.0f);
+	Application::get()->mainWindow()->setTitle("ipu02 Power By NewBrush");
+
 #if NB_OS == NB_OS_QNX
 	Application::get()->mainWindow()->setHeight(720.0f);
 	m_root = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 720.0f);
@@ -17,15 +24,14 @@ void MainView::init()
 	Application::get()->mainWindow()->setHeight(1080.0f);
 	Application::get()->mainWindow()->setPosition(0.0f, 0.0f);
 	m_root = createRef<Node2D>(0.0f, 0.0f, 1920.0f, 1080.0f);
-#endif
-	Application::get()->mainWindow()->setTitle("ipu02 Power By NewBrush");
-
-	m_root->setBackground(createRef<SolidColorBrush>(Color(238, 240, 245)));
 #ifndef WIN32
 	m_root->setAlignmentCenter();
 #endif
+#endif
 
-	switchView<PAPView>();
+	m_root->setBackground(createRef<SolidColorBrush>(Color(238, 240, 245)));
+	m_topBar = createRef<TopBar>();
+	switchView<AVMView>();
 
 	m_root->Key += [&](const KeyEventArgs &e)
 	{
@@ -56,6 +62,11 @@ void MainView::init()
 MainView * MainView::get()
 {
 	return g_instance;
+}
+
+ref<TopBar> MainView::topbar()
+{
+	return m_topBar;
 }
 
 //一定不要少了这句

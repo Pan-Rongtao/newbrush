@@ -22,7 +22,7 @@ MessageQueue::Task MessageQueue::pick()
 
 static Application *g_app = nullptr;
 Application::Application()
-	: m_shutdownMode(ShutdownModeE::OnLastWindowClose)
+	: m_shutdownMode(ShutdownMode::OnLastWindowClose)
 	, m_exitFlag(false)
 	, m_resources(createRef<ResourceDictionary>())
 {
@@ -37,12 +37,12 @@ Application *Application::get()
 	return g_app;
 }
 
-void Application::setShutdownMode(ShutdownModeE mode)
+void Application::setShutdownMode(ShutdownMode mode)
 {
 	m_shutdownMode = mode;
 }
 
-ShutdownModeE Application::shutdownMode() const
+ShutdownMode Application::shutdownMode() const
 {
 	return m_shutdownMode;
 }
@@ -142,9 +142,9 @@ void Application::onStartUp(const StartupEventArgs & args)
 void Application::onWindowClosed(const bool &isMain)
 {
 	auto mode = shutdownMode();
-	if ((mode == ShutdownModeE::OnLastWindowClose && WindowCollection::get()->windows().empty())
-		|| (mode == ShutdownModeE::OnMainWindowClose && isMain)
-		|| (mode == ShutdownModeE::OnExplicitShutdown && WindowCollection::get()->windows().empty() && m_exitFlag))
+	if ((mode == ShutdownMode::OnLastWindowClose && WindowCollection::get()->windows().empty())
+		|| (mode == ShutdownMode::OnMainWindowClose && isMain)
+		|| (mode == ShutdownMode::OnExplicitShutdown && WindowCollection::get()->windows().empty() && m_exitFlag))
 	{
 		shutdown();
 	}

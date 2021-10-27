@@ -66,4 +66,6 @@ void Scene::onRender()
 	{
 		child->onRender(m_camera, m_lights);
 	}
+
+	glDisable(GL_DEPTH_TEST);
 }

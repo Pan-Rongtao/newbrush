@@ -1,4 +1,4 @@
-#include "Sport.h"
+Ôªø#include "Sport.h"
 
 constexpr char clockSPORT_vs[] = R"(
 attribute vec3 position;
@@ -270,13 +270,13 @@ Trianglegroup::Trianglegroup()
 void Trianglegroup::buildtrianglegroup()
 {
 	ref<TriangleNode> temp_node3d;
-	Point pos(0.0f,0.0f);
+	Point pos(0.0f, 0.0f);
 	float Side_length = 0.1f;
 	const double PI = 3.1415926;
-	for (int i = -7;i < 8;i++)
+	for (int i = -7; i < 8; i++)
 	{
 		pos.x = float(i * Side_length);
-		for (int j = -8;j<8;j++)
+		for (int j = -8; j<8; j++)
 		{
 			pos.y = float(j * Side_length * sin((60.0 / 180.0)*PI));
 			temp_node3d = createRef<TriangleNode>(pos, Side_length, true);
@@ -309,7 +309,7 @@ void TriangleNode::startanimation()
 {
 	m_Animation->setTarget(getTransform());
 	m_Animation->setTargetPropertyName("Translate");
-	m_Animation->setFrom(glm::vec3(0,0,0));
+	m_Animation->setFrom(glm::vec3(0, 0, 0));
 	m_Animation->setTo(glm::vec3(0, 0, 0.05));
 	m_Animation->setEasingFunction(createRef<SineEase>());
 	m_Animation->duration = TimeSpan::fromMilliseconds(3500);
@@ -318,7 +318,7 @@ void TriangleNode::startanimation()
 	m_Animation->begin();
 }
 
-TimelineStateE TriangleNode::isactive()
+TimelineState TriangleNode::isactive()
 {
 	return m_Animation->currentState();
 }
@@ -335,7 +335,7 @@ ref<Material> TriangleNode::getmaterial()
 TriangleNode::TriangleNode(Point pos, const float Side_length, bool up)
 {
 	const double PI = 3.1415926;
-	std::vector<Vertex> vertexs(3);	
+	std::vector<Vertex> vertexs(3);
 	if (up == true)
 	{
 		for (int i = 0; i < 3; i++)
@@ -356,11 +356,11 @@ TriangleNode::TriangleNode(Point pos, const float Side_length, bool up)
 		{
 			if ((i % 2) == 0)
 			{
-				vertexs[i+1].position = { pos.x + Side_length * i * cos((60.0 / 180.0)*PI), pos.y ,0 };
+				vertexs[i + 1].position = { pos.x + Side_length * i * cos((60.0 / 180.0)*PI), pos.y ,0 };
 			}
 			else
 			{
-				vertexs[i+1].position = { pos.x + Side_length * i * cos((60.0 / 180.0)*PI), pos.y + Side_length * sin((60.0 / 180.0)*PI) ,0 };
+				vertexs[i + 1].position = { pos.x + Side_length * i * cos((60.0 / 180.0)*PI), pos.y + Side_length * sin((60.0 / 180.0)*PI) ,0 };
 			}
 		}
 	}
@@ -371,7 +371,7 @@ TriangleNode::TriangleNode(Point pos, const float Side_length, bool up)
 	std::vector<uint16_t> indices = { 0, 1, 2 };
 
 	m_pos = caltrianglepos(vertexs);
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/img_clock_000021.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/sport/img_clock_000021.png");
 	m_materials = createRef<TriangleMaterial>(tex);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 	ref<Transform> temp_transform = createRef<Transform>();
@@ -420,7 +420,7 @@ RectangleClass::RectangleClass()
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/img_clock_000001.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/sport/img_clock_000001.png");
 	m_materials = createRef<RectangleMaterial1>(tex);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 
@@ -450,7 +450,7 @@ HaloRectangle::HaloRectangle()
 	vertexs[3].uv = glm::vec2(0.0, 1.0);
 	std::vector<uint16_t> indices = { 0, 1, 2, 0, 2, 3 };
 
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/Clock_60.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/Clock_60.png");
 	m_materials = createRef<HaloMaterial>(tex);
 	m_mesh = createRef<Mesh>(vertexs, indices, m_materials);
 }
@@ -481,30 +481,30 @@ void HaloRectangle::setVelocity(float Velocity)
 
 SportNode::SportNode()
 {
-	setWidth(756);
-	setHeight(756);
+	setWidth(756.0f);
+	setHeight(756.0f);
 	//Clock initial
 	m_scene = createRef<Scene>();
-	//…Ë÷√…„œÒÕ∑
+	//ËÆæÁΩÆÊëÑÂÉèÂ§¥
 	ref<PerspectiveCamera> temp_camera = createRef<PerspectiveCamera>();
 	glm::vec3 translate1(0.0f, 0.0f, -1.5f);
 	temp_camera->setTranslate(translate1);
 	temp_camera->setAspect(1.0f);
 	m_scene->setCamera(temp_camera);
-	//ƒ¨»œÃÌº”“ª∏ˆµ„π‚‘¥£¨∑Ò‘Ú‰÷»æ∫‹∫⁄
+	//ÈªòËÆ§Ê∑ªÂä†‰∏Ä‰∏™ÁÇπÂÖâÊ∫êÔºåÂê¶ÂàôÊ∏≤ÊüìÂæàÈªë
 	m_scene->addLight(createRef<PointLight>());
 
 	m_Trianglegroupmodel = createRef<Trianglegroup>();
 	m_Rectangle = createRef<RectangleClass>();
-	m_HaloRectangle = createRef<HaloRectangle>();
+	//m_HaloRectangle = createRef<HaloRectangle>();
 	m_scene->addChild(m_Trianglegroupmodel);
 	m_scene->addChild(m_Rectangle);
-	m_scene->addChild(m_HaloRectangle);
+	//m_scene->addChild(m_HaloRectangle);
 
 	this->setScene(m_scene);
 	//this->setBackground(createRef<SolidColorBrush>(Color(255, 255, 0)));
 #ifndef __ANDROID__
-	this->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/bg_b.png")));
+	this->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cdx706/sport/bg_b.png")));
 #endif
 
 	m_hourShadowParent = createRef<Node2D>(0.0f, -80.0f, 180.0f, 151.0f);
@@ -530,12 +530,14 @@ SportNode::SportNode()
 	m_timer.Tick += nbBindEventFunction(SportNode::onTick);
 
 
-	m_haloanimation.setTarget(m_HaloRectangle);
+	/*m_haloanimation.setTarget(m_HaloRectangle);
 	m_haloanimation.setTargetPropertyName("Velocity");
 	m_haloanimation.setFrom(0.0f);
 	m_haloanimation.setTo(1.5f);
-	m_haloanimation.duration = TimeSpan::fromMilliseconds(1000);
+	m_haloanimation.duration = TimeSpan::fromMilliseconds(1000);*/
 	//m_haloanimation.autoReverse = true;
+
+	updatemodel();
 }
 
 void SportNode::onKey(const KeyEventArgs &e)
@@ -544,7 +546,7 @@ void SportNode::onKey(const KeyEventArgs &e)
 	{
 	case KeyCode::_9:
 	{
-		m_haloanimation.begin();
+		//m_haloanimation.begin();
 		break;
 	}
 	default:													break;
@@ -556,60 +558,25 @@ void SportNode::onTick(const EventArgs & e)
 	if (e.sender == &m_timer)
 	{
 		//Time Action
-		static float anglePerMS = 0.006f;
+		/*static float anglePerMS = 0.006f;
 		auto now = Time::now();
 		auto mses = now.second() * 1000 + now.millisecond();
+		auto timeAngle = anglePerMS * mses + 90;*/
+		auto timeAngle = MainView::getAngleForTime();
 
-		curtime = mses;
-		if (curtime < lasttime)
-		{
-			startanimation = true;
-		}
-		lasttime = curtime;
-
-		auto timeAngle = anglePerMS * mses+90;
-
-		double Radias = 0.48;
-		m_Trianglegroupmodel->setpos(Point(-float(Radias * cos((timeAngle / 180.0)*3.1415926)), float(Radias * sin((timeAngle / 180.0)*3.1415926))));
-		
-		for (auto child : m_Trianglegroupmodel->children())
-		{
-			if (is<TriangleNode>(child))
-			{
-				if (is<TriangleMaterial>(as<TriangleNode>(child)->getmaterial()))
-				{
-					as<TriangleMaterial>(as<TriangleNode>(child)->getmaterial())->angle = timeAngle;
-				}
-				Point pos = as<TriangleNode>(child)->getpos();
-				Point curpos = m_Trianglegroupmodel->getpos();
-				float length = sqrtf(abs(((pos.x - curpos.x) * (pos.x - curpos.x)) + ((pos.y - curpos.y) * (pos.y - curpos.y))));
-				if ((length < 0.10) && ((as<TriangleNode>(child)->isactive() != TimelineStateE::Active)))
-				{
-					as<TriangleNode>(child)->startanimation();
-				}
-			}			
-		}
-		
-		as<RectangleMaterial1>(m_Rectangle->getmaterial())->angle = timeAngle;
+		updatemodel();
 
 		static constexpr float circleR = 40.0f;
 		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle/* + 90*/);
 		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle/* + 90*/);
 
-		static auto lastMinute = now.minute();
+		//static auto lastMinute = Time::now().minute();
 		//if (lastMinute != now.minute())
 		{
 			setTime(m_hourShadowParent, 10, "_shadow", 50.0f, false, timeAngle);
 			setTime(m_minuteShadowParent, 33, "_shadow", 75.0f, false, timeAngle);
-			setTime(m_hourParent, 10, "", 50.0f, true, timeAngle-90);
-			setTime(m_minuteParent, 33, "", 75.0f, true, timeAngle-90);
-		}
-
-
-		if (startanimation)
-		{
-			startanimation = false;
-			m_haloanimation.begin();
+			setTime(m_hourParent, 10, "", 50.0f, true, timeAngle);
+			setTime(m_minuteParent, 33, "", 75.0f, true, timeAngle);
 		}
 	}
 }
@@ -644,10 +611,10 @@ void SportNode::setTime(ref<Node2D> parent, int value, const std::string &imageP
 	{
 		auto n = temp % 10;
 		auto nodeImagePath = std::to_string(n) + imagePrefix + ".png";
-		auto tex = createRef<Texture2D>(RES_DIR"cxd706/" + nodeImagePath);
+		auto tex = createRef<Texture2D>(RES_DIR"cdx706/" + nodeImagePath);
 		auto brush = createRef<ImageBrush>(tex);
 
-		static auto tex1 = createRef<Texture2D>(RES_DIR"cxd706/img_text_colour.png");
+		static auto tex1 = createRef<Texture2D>(RES_DIR"cdx706/img_text_colour.png");
 		auto tex2 = tex;
 		tex2->setSamplerUnit(1);
 		auto numberMaterial = createRef<NumberMaterial>(tex1, tex2);
@@ -655,7 +622,7 @@ void SportNode::setTime(ref<Node2D> parent, int value, const std::string &imageP
 		auto numberBrush = createRef<EffectBrush>(numberMaterial, nullptr);
 
 		auto node = createRef<Node2D>(0.0f, 0.0f, tex->width(), tex->height());
-		node->setVerticalAlignment(VerticalAlignmentE::Center);
+		node->setVerticalAlignment(VerticalAlignment::Center);
 		if (useEffect)
 			node->setBackground(numberBrush);
 		else
@@ -670,6 +637,48 @@ void SportNode::setTime(ref<Node2D> parent, int value, const std::string &imageP
 		node->setX(space * k);
 		parent->addChild(nodes[i]);
 		++k;
+	}
+}
+
+void SportNode::updatemodel()
+{
+	auto timeAngle = MainView::getAngleForTime() + 90.0f;
+
+	auto now = Time::now();
+	auto mses = now.second() * 1000 + now.millisecond();
+
+	m_curtime = mses;
+	if (m_curtime < m_lasttime)
+	{
+		m_bstartanimation = true;
+	}
+	m_lasttime = m_curtime;
+
+	double Radias = 0.48;
+	m_Trianglegroupmodel->setpos(Point(-float(Radias * cos((timeAngle / 180.0)*3.1415926)), float(Radias * sin((timeAngle / 180.0)*3.1415926))));
+
+	for (auto child : m_Trianglegroupmodel->children())
+	{
+		if (is<TriangleNode>(child))
+		{
+			if (is<TriangleMaterial>(as<TriangleNode>(child)->getmaterial()))
+			{
+				as<TriangleMaterial>(as<TriangleNode>(child)->getmaterial())->angle = timeAngle;
+			}
+			Point pos = as<TriangleNode>(child)->getpos();
+			Point curpos = m_Trianglegroupmodel->getpos();
+			float length = sqrtf(abs(((pos.x - curpos.x) * (pos.x - curpos.x)) + ((pos.y - curpos.y) * (pos.y - curpos.y))));
+			if ((length < 0.10) && ((as<TriangleNode>(child)->isactive() != TimelineState::Active)))
+			{
+				as<TriangleNode>(child)->startanimation();
+			}
+		}
+	}
+	as<RectangleMaterial1>(m_Rectangle->getmaterial())->angle = timeAngle;
+	if (m_bstartanimation)
+	{
+		m_bstartanimation = false;
+		//m_haloanimation.begin();
 	}
 }
 

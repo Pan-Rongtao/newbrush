@@ -1,5 +1,4 @@
 ﻿#include "ECO.h"
-#include "MainView.h"
 
 float circleR = 300.0f;
 
@@ -77,7 +76,7 @@ ECONode::ECONode()
 	setHeight(756.0f);
 
 #ifndef __ANDROID__
-	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/eco_background.png")));
+	setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cdx706/eco/eco_background.png")));
 #endif	
 
 	m_dotPanel = createRef<Node2D>(0.0f, 0.0f, 584.0f, 538.0f);
@@ -87,7 +86,7 @@ ECONode::ECONode()
 
 	m_pionter = createRef<Node2D>(0.0f, 0.0f, 584.0f, 538.0f);
 	m_pionter->setAlignmentCenter();
-	m_pionter->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cxd706/img_clock.png")));
+	m_pionter->setBackground(createRef<ImageBrush>(createRef<Texture2D>(RES_DIR"cdx706/eco/img_clock.png")));
 	m_pionter->setTransform(createRef<RotateTransform2D>(0.0f, 278.0f, 272.0f));
 
 	m_hourShadowParent = createRef<Node2D>(0.0f, -80.0f, 180.0f, 151.0f);
@@ -112,16 +111,21 @@ ECONode::ECONode()
 	m_timer.start(10);
 	m_timer.Tick += nbBindEventFunction(ECONode::onTick);
 
+
+	auto timeAngle = MainView::getAngleForTime();
+	nb::as<RotateTransform2D>(m_pionter->getTransform())->setAngle(timeAngle - 90);
+	setDotsAngle(timeAngle - 90, 45.0f, circleR);
 }
 
 void ECONode::onTick(const EventArgs & e)
 {
 	if (e.sender == &m_timer)
 	{
-		static float anglePerMS = 0.006f;
+		/*static float anglePerMS = 0.006f;
 		auto now = Time::now();
 		auto mses = now.second() * 1000 + now.millisecond();
-		auto timeAngle = anglePerMS * mses;
+		auto timeAngle = anglePerMS * mses;*/
+		auto timeAngle = MainView::getAngleForTime();
 
 		nb::as<RotateTransform2D>(m_pionter->getTransform())->setAngle(timeAngle - 90);
 		setDotsAngle(timeAngle - 90, 45.0f, circleR);
@@ -130,7 +134,7 @@ void ECONode::onTick(const EventArgs & e)
 		moveShadowNumberCircle(m_hourShadowParent, 0.0f, -80.0f, circleR, timeAngle + 90);
 		moveShadowNumberCircle(m_minuteShadowParent, 0.0f, 80.0f, circleR, timeAngle + 90);
 
-		static auto lastMinute = now.minute();
+		//static auto lastMinute = Time::now().minute();
 		//if (lastMinute != now.minute())
 		{
 			setTime(m_hourShadowParent, 10, "_shadow", 50.0f, false, timeAngle);
@@ -187,7 +191,7 @@ void ECONode::makeDots(float startAngle, float angleRange, float r)
 
 	auto angleEnd = int(startAngle + 360) % 360;
 
-	static auto tex = createRef<Texture2D>(RES_DIR"cxd706/spot.png");
+	static auto tex = createRef<Texture2D>(RES_DIR"cdx706/eco/spot.png");
 	float nodeDistanceX = horSpace + tex->width();
 	float nodeDistanceY = verSpace + tex->height();
 
@@ -264,17 +268,17 @@ void ECONode::setTime(ref<Node2D> parent, int value, const std::string &imagePre
 	{
 		auto n = temp % 10;
 		auto nodeImagePath = std::to_string(n) + imagePrefix + ".png";
-		auto tex = createRef<Texture2D>(RES_DIR"cxd706/" + nodeImagePath);
+		auto tex = createRef<Texture2D>(RES_DIR"cdx706/" + nodeImagePath);
 		auto brush = createRef<ImageBrush>(tex);
 
-		static auto tex1 = createRef<Texture2D>(RES_DIR"cxd706/img_text_colour.png");
+		static auto tex1 = createRef<Texture2D>(RES_DIR"cdx706/img_text_colour.png");
 		auto tex2 = tex;
 		auto numberMaterial = createRef<NumberMaterial>(tex1, tex2);
 		numberMaterial->angle = angle;
 		auto numberBrush = createRef<EffectBrush>(numberMaterial, nullptr);
 
 		auto node = createRef<Node2D>(0.0f, 0.0f, tex->width(), tex->height());
-		node->setVerticalAlignment(VerticalAlignmentE::Center);
+		node->setVerticalAlignment(VerticalAlignment::Center);
 		if (useEffect)
 			node->setBackground(numberBrush);
 		else

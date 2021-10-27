@@ -43,7 +43,7 @@ public:
 	void setMaterial(const std::string &meshName, ref<Material> material);
 	void setMaterial(ref<Material> material);
 	
-	Event<TimelineStateE> AnimationStateChanged;
+	Event<TimelineState> AnimationStateChanged;
 
 protected:
 	virtual void onRender(ref<Camera> camera, const std::vector<ref<Light>> &lights) override;
